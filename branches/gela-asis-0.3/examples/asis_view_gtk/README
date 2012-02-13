@@ -1,0 +1,17 @@
+                              asis_view_gtk
+Version 0.6
+
+A simple tool for explore Ada program over ASIS.
+
+To make this program you need ASIS and GtkAda installed.
+
+Compilation (from Gela ASIS root directory):
+make asis_view
+ 
+Starting:
+.build/asis_view/asis_view
+
+Then choose parameter for Asis.Ada_Environments.Associate.
+For example: examples/hello_world/example.adb
+Then select compilation unit for viewing in drop-down lists.
+
