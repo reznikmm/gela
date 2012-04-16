@@ -1,0 +1,15 @@
+with "league";
+
+project Gela_Tests is
+
+   for Source_Dirs use ("../../source", ".");
+   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+
+   for Main use ("gela-test_driver.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-gnatwae", "-gnatW8", "-gnatiw", "-gnaty",
+         "-gnatVa", "-gnat05", "-g");
+   end Compiler;
+end Gela_Tests;
