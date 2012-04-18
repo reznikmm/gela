@@ -20,7 +20,7 @@ package body Gela.Bitten_Report is
 
    Duration  : constant League.Strings.Universal_String := +"duration";
    Name      : constant League.Strings.Universal_String := +"name";
-   Fixture   : constant League.Strings.Universal_String := +"fixture";
+--   Fixture   : constant League.Strings.Universal_String := +"fixture";
    File      : constant League.Strings.Universal_String := +"file";
    Report    : constant League.Strings.Universal_String := +"report";
    Status    : constant League.Strings.Universal_String := +"status";
@@ -69,7 +69,7 @@ package body Gela.Bitten_Report is
             Attrs.Set_Value (Duration, +"0");
             Attrs.Set_Value (Status, Image (Test.Status));
             Attrs.Set_Value (Name, Test.Name);
-            Attrs.Set_Value (Fixture, Test.Fixture);
+            --  Attrs.Set_Value (Fixture, Test.Fixture);
             Attrs.Set_Value (File, Test.File);
 
             Writer.Start_Element

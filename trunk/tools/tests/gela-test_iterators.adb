@@ -17,10 +17,13 @@ package body Gela.Test_Iterators is
    -- Create --
    ------------
 
-   function Create (Path : League.Strings.Universal_String) return Iterator is
+   function Create
+     (Source, Build : League.Strings.Universal_String)
+     return Iterator
+   is
       use Ada.Directories;
 
-      Root : constant String := Conv.To_String (Path);
+      Root : constant String := Conv.To_String (Source);
       Each : Search_Type;
       Item : Directory_Entry_Type;
       Test : Gela.Test_Cases.Test_Case_Access;
@@ -33,7 +36,7 @@ package body Gela.Test_Iterators is
          Get_Next_Entry (Each, Item);
 
          Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Ada_Test_Cases.Create (Item));
+           (Gela.Ada_Test_Cases.Create (Build, Item));
 
          Result.Map.Insert
            (Conv.To_Universal_String (Simple_Name (Item)), Test);

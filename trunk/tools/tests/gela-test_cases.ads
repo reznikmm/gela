@@ -38,7 +38,7 @@ package Gela.Test_Cases is
 
    function File (Self : Test_Case) return League.Strings.Universal_String
       is abstract;
-   --  Path to test file
+   --  Path to test file inside svn tree
 
    function Output (Self : Test_Case) return League.Strings.Universal_String
       is abstract;

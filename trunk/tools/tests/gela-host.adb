@@ -9,6 +9,7 @@
 
 with Ada.Directories;
 with Ada.Streams.Stream_IO;
+with Ada.Wide_Wide_Text_IO;
 with Gela.Conv;
 with GNAT.OS_Lib;
 with League.Application;
@@ -56,7 +57,7 @@ package body Gela.Host is
       Result      : out GNAT.OS_Lib.File_Descriptor) is
    begin
       if Output_File.Is_Empty then
-         Output_File := +"aaa";
+         Output_File := +"aaa1";
       end if;
 
       if not Is_Absolute_Path (Output_File) then
@@ -84,6 +85,7 @@ package body Gela.Host is
       Exe  : constant League.Strings.Universal_String := Command & Exe_Suffix;
       Exec : GNAT.OS_Lib.String_Access;
       Name : League.Strings.Universal_String := Output_File;
+      Text : League.Strings.Universal_String;
    begin
       Create_Output (Name, Log);
 
@@ -96,6 +98,12 @@ package body Gela.Host is
       for J in Args'Range loop
          Args (J) := new String'(Conv.To_String (Arguments.Element (J)));
       end loop;
+
+      Text := Conv.To_Universal_String (Exec.all);
+      Text.Append (' ');
+      Text.Append (Arguments.Join (' '));
+
+      Ada.Wide_Wide_Text_IO.Put_Line (Text.To_Wide_Wide_String);
 
       GNAT.OS_Lib.Spawn
         (Program_Name => Exec.all,

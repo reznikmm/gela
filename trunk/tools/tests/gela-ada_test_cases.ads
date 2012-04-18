@@ -18,7 +18,7 @@ package Gela.Ada_Test_Cases is
 
    procedure Run (Self : in out Test_Case);
    --  Compile source into executable:
-   --         gprbuild -p -aP ../source/ \
+   --         gprbuild -p -aP ../source/ -aP <TEST>/.. \
    --             -XGELA_LIB_DIR=$(TEST_HOME)/gela \
    --             -XSOURCE_DIR=<TEST> \
    --             -XOBJECT_DIR=$(TEST_HOME)/<TEST> \
@@ -43,7 +43,8 @@ package Gela.Ada_Test_Cases is
      (Self : Test_Case) return League.Strings.Universal_String;
 
    function Create
-     (Directory : Ada.Directories.Directory_Entry_Type)
+     (Test_Home : League.Strings.Universal_String;
+      Directory : Ada.Directories.Directory_Entry_Type)
      return Test_Cases.Test_Case'Class;
 
 private
@@ -51,6 +52,8 @@ private
    use League.Strings;
 
    type Test_Case is new Test_Cases.Test_Case with record
+      Test_Home : League.Strings.Universal_String;
+      Full_Path : League.Strings.Universal_String;
       Name      : League.Strings.Universal_String;
       Status    : Test_Cases.Status_Kind;
       Duration  : League.Calendars.Time;
@@ -61,6 +64,7 @@ private
    end record;
 
    function Source (Self : Test_Case) return Universal_String;
+   function Parent (Self : Test_Case) return Universal_String;
    function XGELA_LIB_DIR (Self : Test_Case) return Universal_String;
    function XSOURCE_DIR (Self : Test_Case) return Universal_String;
    function XOBJECT_DIR (Self : Test_Case) return Universal_String;

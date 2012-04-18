@@ -9,32 +9,38 @@
 
 with Gela.Conv;
 with Gela.Host;
-with League.Application;
+--  with League.Application;
 with League.String_Vectors;
 
 package body Gela.Ada_Test_Cases is
 
-   Test_Home : constant League.Strings.Universal_String :=
-     League.Strings.To_Universal_String ("TEST_HOME");
-
-   Test_Home_Value : constant League.Strings.Universal_String :=
-     League.Application.Environment.Value (Test_Home);
+   function "+"
+     (Text : Wide_Wide_String)
+     return League.Strings.Universal_String
+     renames League.Strings.To_Universal_String;
 
    ------------
    -- Create --
    ------------
 
    function Create
-     (Directory : Ada.Directories.Directory_Entry_Type)
+     (Test_Home : League.Strings.Universal_String;
+      Directory : Ada.Directories.Directory_Entry_Type)
      return Test_Cases.Test_Case'Class
    is
       use Ada.Directories;
+
+      Name : constant League.Strings.Universal_String :=
+        Conv.To_Universal_String (Simple_Name (Directory));
+
       Result : constant Test_Case :=
-        (Name    => Conv.To_Universal_String (Simple_Name (Directory)),
-         Status  => Test_Cases.Error,
-         Fixture => League.Strings.To_Universal_String ("Ada_Test_Cases"),
-         File    => Conv.To_Universal_String (Full_Name (Directory)),
-         others  => <>);
+        (Test_Home => Test_Home,
+         Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
+         Name      => Name,
+         Status    => Test_Cases.Error,
+         Fixture   => League.Strings.To_Universal_String ("Ada_Test_Cases"),
+         File      => (+"tests/") & Name,
+         others    => <>);
    begin
       return Result;
    end Create;
@@ -99,11 +105,6 @@ package body Gela.Ada_Test_Cases is
 
       procedure Run_Gprbuild is
 
-         function "+"
-           (Text : Wide_Wide_String)
-           return League.Strings.Universal_String
-           renames League.Strings.To_Universal_String;
-
          Gprbuild  : constant League.Strings.Universal_String :=
            +"gprbuild";
 
@@ -114,6 +115,8 @@ package body Gela.Ada_Test_Cases is
          Arguments.Append (+"-p");
          Arguments.Append (+"-aP");
          Arguments.Append (Self.Source);
+         Arguments.Append (+"-aP");
+         Arguments.Append (Self.Parent);
          Arguments.Append (Self.XGELA_LIB_DIR);
          Arguments.Append (Self.XSOURCE_DIR);
          Arguments.Append (Self.XOBJECT_DIR);
@@ -122,7 +125,7 @@ package body Gela.Ada_Test_Cases is
          Arguments.Append (+"main.adb");
 
          Host.Execute
-           (Gprbuild, Arguments, Code, Self.Output);
+           (Gprbuild, Arguments, Code, Self.Output, Self.Output_File);
 
          if Code = 0 then
             Self.Status := Test_Cases.Success;
@@ -148,8 +151,9 @@ package body Gela.Ada_Test_Cases is
 
    function Source (Self : Test_Case) return Universal_String is
       Tests : constant String := Ada.Directories.Containing_Directory
-        (Conv.To_String (Self.File));
-      Source : constant String := Ada.Directories.Containing_Directory (Tests);
+        (Conv.To_String (Self.Full_Path));
+      Parent : constant String := Ada.Directories.Containing_Directory (Tests);
+      Source : constant String := Ada.Directories.Compose (Parent, "source");
    begin
       return Conv.To_Universal_String (Source);
    end Source;
@@ -180,9 +184,8 @@ package body Gela.Ada_Test_Cases is
    -------------------
 
    function XGELA_LIB_DIR (Self : Test_Case) return Universal_String is
-      pragma Unreferenced (Self);
       Gela : constant String := Ada.Directories.Compose
-        (Conv.To_String (Test_Home_Value), "gela");
+        (Conv.To_String (Self.Test_Home), "gela");
    begin
       return "-XGELA_LIB_DIR=" & Conv.To_Universal_String (Gela);
    end XGELA_LIB_DIR;
@@ -193,7 +196,7 @@ package body Gela.Ada_Test_Cases is
 
    function XSOURCE_DIR (Self : Test_Case) return Universal_String is
    begin
-      return "-XSOURCE_DIR=" & Self.File;
+      return "-XSOURCE_DIR=" & Self.Full_Path;
    end XSOURCE_DIR;
 
    -----------------
@@ -201,10 +204,10 @@ package body Gela.Ada_Test_Cases is
    -----------------
 
    function XOBJECT_DIR (Self : Test_Case) return Universal_String is
-      File : constant String := Conv.To_String (Self.File);
+      File : constant String := Conv.To_String (Self.Full_Path);
       Name : constant String := Ada.Directories.Simple_Name (File);
       Obj  : constant String := Ada.Directories.Compose
-        (Conv.To_String (Test_Home_Value), Name);
+        (Conv.To_String (Self.Test_Home), Name);
    begin
       return "-XOBJECT_DIR=" & Conv.To_Universal_String (Obj);
    end XOBJECT_DIR;
@@ -214,9 +217,18 @@ package body Gela.Ada_Test_Cases is
    -----------------
 
    function Output_File (Self : Test_Case) return Universal_String is
-      pragma Unreferenced (Self);
+      Result : Universal_String := Self.Name;
    begin
-      return Empty_Universal_String;
+      Result.Append (".log");
+
+      return Result;
    end Output_File;
+
+   function Parent (Self : Test_Case) return Universal_String is
+      Tests : constant String := Ada.Directories.Containing_Directory
+        (Conv.To_String (Self.Full_Path));
+   begin
+      return Conv.To_Universal_String (Tests);
+   end Parent;
 
 end Gela.Ada_Test_Cases;

@@ -16,7 +16,8 @@ package Gela.Test_Iterators is
 
    type Iterator is tagged private;
 
-   function Create (Path : League.Strings.Universal_String) return Iterator;
+   function Create
+     (Source, Build : League.Strings.Universal_String) return Iterator;
 
    procedure Start (Self : in out Iterator);
 
