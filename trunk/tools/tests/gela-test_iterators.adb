@@ -8,8 +8,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Directories;
-with Ada.Characters.Conversions;
-with League.Text_Codecs;
+with Gela.Conv;
+with Gela.Ada_Test_Cases;
 
 package body Gela.Test_Iterators is
 
@@ -20,9 +20,10 @@ package body Gela.Test_Iterators is
    function Create (Path : League.Strings.Universal_String) return Iterator is
       use Ada.Directories;
 
-      Root : constant String := League.Text_Codecs.To_Exception_Message (Path);
+      Root : constant String := Conv.To_String (Path);
       Each : Search_Type;
       Item : Directory_Entry_Type;
+      Test : Gela.Test_Cases.Test_Case_Access;
 
       Result : Iterator;
    begin
@@ -31,14 +32,11 @@ package body Gela.Test_Iterators is
       while More_Entries (Each) loop
          Get_Next_Entry (Each, Item);
 
-         declare
-            Name : constant Wide_Wide_String :=
-              Ada.Characters.Conversions.To_Wide_Wide_String
-                (Simple_Name (Item));
-         begin
-            Result.Map.Insert
-              (League.Strings.To_Universal_String (Name), null);
-         end;
+         Test := new Gela.Test_Cases.Test_Case'Class'
+           (Gela.Ada_Test_Cases.Create (Item));
+
+         Result.Map.Insert
+           (Conv.To_Universal_String (Simple_Name (Item)), Test);
       end loop;
 
       return Result;
