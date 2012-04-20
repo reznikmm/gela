@@ -84,6 +84,19 @@ package body Gela.Ada_Test_Cases is
       return Self.Name;
    end Name;
 
+   ----------------
+   -- Object_Dir --
+   ----------------
+
+   function Object_Dir (Self : Test_Case) return Universal_String is
+      File : constant String := Conv.To_String (Self.Full_Path);
+      Name : constant String := Ada.Directories.Simple_Name (File);
+      Obj  : constant String := Ada.Directories.Compose
+        (Conv.To_String (Self.Test_Home), Name);
+   begin
+      return Conv.To_Universal_String (Obj);
+   end Object_Dir;
+
    ------------
    -- Output --
    ------------
@@ -102,6 +115,35 @@ package body Gela.Ada_Test_Cases is
 
    procedure Run (Self : in out Test_Case) is
       procedure Run_Gprbuild;
+      procedure Run_Test;
+      procedure Check_Output;
+      function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind;
+
+      procedure Check_Output is
+         Out_File   : constant League.Strings.Universal_String :=
+           Self.Full_Path & "/" & Self.Name & ".out";
+         Expect : League.Strings.Universal_String;
+      begin
+         if Ada.Directories.Exists (Conv.To_String (Out_File)) then
+            Expect := Conv.Read_File (Out_File);
+         else
+            Expect := +"OK";
+            Expect.Append (Wide_Wide_Character'Val (10));
+         end if;
+
+         if Expect /= Self.Output then
+            Self.Status := Test_Cases.Failure;
+         end if;
+      end Check_Output;
+
+      function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind is
+      begin
+         if Code = 0 then
+            return Test_Cases.Success;
+         else
+            return Test_Cases.Failure;
+         end if;
+      end Code_To_Status;
 
       procedure Run_Gprbuild is
 
@@ -127,20 +169,37 @@ package body Gela.Ada_Test_Cases is
          Host.Execute
            (Gprbuild, Arguments, Code, Self.Output, Self.Output_File);
 
-         if Code = 0 then
-            Self.Status := Test_Cases.Success;
-         else
-            Self.Status := Test_Cases.Failure;
-         end if;
-
+         Self.Status := Code_To_Status (Code);
       end Run_Gprbuild;
 
+      procedure Run_Test is
+         Code   : Integer;
+      begin
+         Host.Execute
+           (Command     => Self.Object_Dir & "/main",
+            Exit_Code   => Code,
+            Output      => Self.Output,
+            Output_File => Self.Output_File,
+            Directory   => Self.Full_Path);
+
+         Self.Status := Code_To_Status (Code);
+      end Run_Test;
+
       use type League.Calendars.Date_Time;
+      use type Test_Cases.Status_Kind;
 
 --      Started : constant League.Calendars.Date_Time :=
 --        League.Calendars.Clock;
    begin
       Run_Gprbuild;
+
+      if Self.Status = Test_Cases.Success then
+         Run_Test;
+      end if;
+
+      if Self.Status = Test_Cases.Success then
+         Check_Output;
+      end if;
 
 --      Self.Duration := League.Calendars.Clock - Started;
    end Run;
@@ -204,12 +263,8 @@ package body Gela.Ada_Test_Cases is
    -----------------
 
    function XOBJECT_DIR (Self : Test_Case) return Universal_String is
-      File : constant String := Conv.To_String (Self.Full_Path);
-      Name : constant String := Ada.Directories.Simple_Name (File);
-      Obj  : constant String := Ada.Directories.Compose
-        (Conv.To_String (Self.Test_Home), Name);
    begin
-      return "-XOBJECT_DIR=" & Conv.To_Universal_String (Obj);
+      return "-XOBJECT_DIR=" & Self.Object_Dir;
    end XOBJECT_DIR;
 
    -----------------

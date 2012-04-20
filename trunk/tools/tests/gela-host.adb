@@ -8,12 +8,10 @@
 ------------------------------------------------------------------------------
 
 with Ada.Directories;
-with Ada.Streams.Stream_IO;
 with Ada.Wide_Wide_Text_IO;
 with Gela.Conv;
 with GNAT.OS_Lib;
 with League.Application;
-with League.Text_Codecs;
 
 package body Gela.Host is
 
@@ -44,10 +42,6 @@ package body Gela.Host is
 
    function Temp_Directory return League.Strings.Universal_String;
 
-   function Read_File
-     (File_Name : League.Strings.Universal_String)
-     return League.Strings.Universal_String;
-
    -------------------
    -- Create_Output --
    -------------------
@@ -74,10 +68,13 @@ package body Gela.Host is
 
    procedure Execute
      (Command     : League.Strings.Universal_String;
-      Arguments   : League.String_Vectors.Universal_String_Vector;
+      Arguments   : League.String_Vectors.Universal_String_Vector :=
+        League.String_Vectors.Empty_Universal_String_Vector;
       Exit_Code   : out Integer;
       Output      : out League.Strings.Universal_String;
       Output_File : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String;
+      Directory   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String)
    is
       Args : GNAT.OS_Lib.Argument_List (1 .. Arguments.Length);
@@ -86,6 +83,7 @@ package body Gela.Host is
       Exec : GNAT.OS_Lib.String_Access;
       Name : League.Strings.Universal_String := Output_File;
       Text : League.Strings.Universal_String;
+      Dir  : constant String := Ada.Directories.Current_Directory;
    begin
       Create_Output (Name, Log);
 
@@ -103,6 +101,13 @@ package body Gela.Host is
       Text.Append (' ');
       Text.Append (Arguments.Join (' '));
 
+      if not Directory.Is_Empty then
+         Ada.Directories.Set_Directory (Conv.To_String (Directory));
+         Text.Append ("[ in ");
+         Text.Append (Directory);
+         Text.Append ("]");
+      end if;
+
       Ada.Wide_Wide_Text_IO.Put_Line (Text.To_Wide_Wide_String);
 
       GNAT.OS_Lib.Spawn
@@ -111,7 +116,11 @@ package body Gela.Host is
          Output_File_Descriptor => Log,
          Return_Code  => Exit_Code);
 
-      Output := Read_File (Name);
+      if not Directory.Is_Empty then
+         Ada.Directories.Set_Directory (Dir);
+      end if;
+
+      Output := Conv.Read_File (Name);
    end Execute;
 
    ----------------------
@@ -127,37 +136,6 @@ package body Gela.Host is
    begin
       return Name /= Simple_Name (Name);
    end Is_Absolute_Path;
-
-   ---------------
-   -- Read_File --
-   ---------------
-
-   function Read_File
-     (File_Name : League.Strings.Universal_String)
-     return League.Strings.Universal_String
-   is
-      Decoder : constant League.Text_Codecs.Text_Codec :=
-        League.Text_Codecs.Codec (+"utf-8");
-
-      Name : constant String := Conv.To_String (File_Name);
-
-      Size : constant Ada.Directories.File_Size :=
-        Ada.Directories.Size (Name);
-
-      Length : constant Ada.Streams.Stream_Element_Offset :=
-        Ada.Streams.Stream_Element_Count (Size);
-
-      File   : Ada.Streams.Stream_IO.File_Type;
-      Data   : Ada.Streams.Stream_Element_Array (1 .. Length);
-      Last   : Ada.Streams.Stream_Element_Offset;
-   begin
-      Ada.Streams.Stream_IO.Open
-        (File, Ada.Streams.Stream_IO.In_File, Name);
-      Ada.Streams.Stream_IO.Read (File, Data, Last);
-      Ada.Streams.Stream_IO.Close (File);
-
-      return Decoder.Decode (Data (1 .. Last));
-   end Read_File;
 
    --------------------
    -- Temp_Directory --

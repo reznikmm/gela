@@ -11,6 +11,10 @@ with League.Strings;
 
 package Gela.Conv is
 
+   function Read_File
+     (File_Name : League.Strings.Universal_String)
+     return League.Strings.Universal_String;
+
    function To_Universal_String
      (Text : String) return League.Strings.Universal_String;
 

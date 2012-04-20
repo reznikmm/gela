@@ -64,6 +64,7 @@ private
    end record;
 
    function Source (Self : Test_Case) return Universal_String;
+   function Object_Dir (Self : Test_Case) return Universal_String;
    function Parent (Self : Test_Case) return Universal_String;
    function XGELA_LIB_DIR (Self : Test_Case) return Universal_String;
    function XSOURCE_DIR (Self : Test_Case) return Universal_String;

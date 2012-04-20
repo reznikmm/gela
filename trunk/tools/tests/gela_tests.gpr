@@ -12,4 +12,7 @@ project Gela_Tests is
         ("-gnatwae", "-gnatW8", "-gnatiw", "-gnaty",
          "-gnatVa", "-gnat05", "-g");
    end Compiler;
+   package Binder is
+      for Default_Switches ("ada") use ("-E");
+   end Binder;
 end Gela_Tests;

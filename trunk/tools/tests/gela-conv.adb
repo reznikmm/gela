@@ -8,9 +8,44 @@
 ------------------------------------------------------------------------------
 
 with Ada.Characters.Conversions;
+with Ada.Directories;
+with Ada.Streams.Stream_IO;
 with League.Text_Codecs;
 
 package body Gela.Conv is
+
+   ---------------
+   -- Read_File --
+   ---------------
+
+   function Read_File
+     (File_Name : League.Strings.Universal_String)
+     return League.Strings.Universal_String
+   is
+      UTF_8   : constant League.Strings.Universal_String :=
+        League.Strings.To_Universal_String ("utf-8");
+      Decoder : constant League.Text_Codecs.Text_Codec :=
+        League.Text_Codecs.Codec (UTF_8);
+
+      Name : constant String := Conv.To_String (File_Name);
+
+      Size : constant Ada.Directories.File_Size :=
+        Ada.Directories.Size (Name);
+
+      Length : constant Ada.Streams.Stream_Element_Offset :=
+        Ada.Streams.Stream_Element_Count (Size);
+
+      File   : Ada.Streams.Stream_IO.File_Type;
+      Data   : Ada.Streams.Stream_Element_Array (1 .. Length);
+      Last   : Ada.Streams.Stream_Element_Offset;
+   begin
+      Ada.Streams.Stream_IO.Open
+        (File, Ada.Streams.Stream_IO.In_File, Name);
+      Ada.Streams.Stream_IO.Read (File, Data, Last);
+      Ada.Streams.Stream_IO.Close (File);
+
+      return Decoder.Decode (Data (1 .. Last));
+   end Read_File;
 
    ---------------
    -- To_String --
