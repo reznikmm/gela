@@ -22,5 +22,11 @@ package Gela.Host is
         League.Strings.Empty_Universal_String;
       Directory   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String);
+   --  Execute Command with Arguments in Directory, place execution output
+   --  to Output_File and return it's content as Output parameter.
+   --  Return execution status in Exit_Code.
+   --  If Command is simple file name, then search Command in PATH.
+   --  If Output_File is empty, use unique file name.
+   --  If Output_File is simple file name, when place it in temp directory.
 
 end Gela.Host;

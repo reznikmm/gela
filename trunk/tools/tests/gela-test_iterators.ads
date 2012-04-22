@@ -18,6 +18,8 @@ package Gela.Test_Iterators is
 
    function Create
      (Source, Build : League.Strings.Universal_String) return Iterator;
+   --  Create iterator for enumerating tests containing in Source directory.
+   --  Build point to directory where tests will be build.
 
    procedure Start (Self : in out Iterator);
 

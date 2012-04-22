@@ -19,9 +19,9 @@ package Gela.Ada_Test_Cases is
    procedure Run (Self : in out Test_Case);
    --  Compile source into executable:
    --         gprbuild -p -aP ../source/ -aP <TEST>/.. \
-   --             -XGELA_LIB_DIR=$(TEST_HOME)/gela \
+   --             -XGELA_LIB_DIR=$(BUILD)/gela \
    --             -XSOURCE_DIR=<TEST> \
-   --             -XOBJECT_DIR=$(TEST_HOME)/<TEST> \
+   --             -XOBJECT_DIR=$(BUILD)/<TEST> \
    --             -P simple.gpr main.adb
    --  Run executable:
    --         cd <TEST>; $(TEST_HOME)/$</main > $(TEST_HOME)/$@
@@ -43,16 +43,18 @@ package Gela.Ada_Test_Cases is
      (Self : Test_Case) return League.Strings.Universal_String;
 
    function Create
-     (Test_Home : League.Strings.Universal_String;
-      Directory : Ada.Directories.Directory_Entry_Type)
+     (Directory : Ada.Directories.Directory_Entry_Type;
+      Build     : League.Strings.Universal_String)
      return Test_Cases.Test_Case'Class;
+   --  Directory point where test locates.
+   --  Build point to directory where tests will be build.
 
 private
 
    use League.Strings;
 
    type Test_Case is new Test_Cases.Test_Case with record
-      Test_Home : League.Strings.Universal_String;
+      Build     : League.Strings.Universal_String;
       Full_Path : League.Strings.Universal_String;
       Name      : League.Strings.Universal_String;
       Status    : Test_Cases.Status_Kind;
@@ -64,11 +66,19 @@ private
    end record;
 
    function Source (Self : Test_Case) return Universal_String;
+   --  Path to Gela sources (trunk/source/)
+
    function Object_Dir (Self : Test_Case) return Universal_String;
+   --  Path to test's object directory ($(BUILD)/<TEST>/)
+
    function Parent (Self : Test_Case) return Universal_String;
+   --  Path to directory containing tests (truck/tests/)
+
+   function Output_File (Self : Test_Case) return Universal_String;
+   --  Where to save test's output (<TEST>.log)
+
    function XGELA_LIB_DIR (Self : Test_Case) return Universal_String;
    function XSOURCE_DIR (Self : Test_Case) return Universal_String;
    function XOBJECT_DIR (Self : Test_Case) return Universal_String;
-   function Output_File (Self : Test_Case) return Universal_String;
 
 end Gela.Ada_Test_Cases;

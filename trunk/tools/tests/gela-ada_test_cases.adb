@@ -9,7 +9,6 @@
 
 with Gela.Conv;
 with Gela.Host;
---  with League.Application;
 with League.String_Vectors;
 
 package body Gela.Ada_Test_Cases is
@@ -24,8 +23,8 @@ package body Gela.Ada_Test_Cases is
    ------------
 
    function Create
-     (Test_Home : League.Strings.Universal_String;
-      Directory : Ada.Directories.Directory_Entry_Type)
+     (Directory : Ada.Directories.Directory_Entry_Type;
+      Build     : League.Strings.Universal_String)
      return Test_Cases.Test_Case'Class
    is
       use Ada.Directories;
@@ -34,7 +33,7 @@ package body Gela.Ada_Test_Cases is
         Conv.To_Universal_String (Simple_Name (Directory));
 
       Result : constant Test_Case :=
-        (Test_Home => Test_Home,
+        (Build => Build,
          Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
          Name      => Name,
          Status    => Test_Cases.Error,
@@ -92,7 +91,7 @@ package body Gela.Ada_Test_Cases is
       File : constant String := Conv.To_String (Self.Full_Path);
       Name : constant String := Ada.Directories.Simple_Name (File);
       Obj  : constant String := Ada.Directories.Compose
-        (Conv.To_String (Self.Test_Home), Name);
+        (Conv.To_String (Self.Build), Name);
    begin
       return Conv.To_Universal_String (Obj);
    end Object_Dir;
@@ -188,8 +187,8 @@ package body Gela.Ada_Test_Cases is
       use type League.Calendars.Date_Time;
       use type Test_Cases.Status_Kind;
 
---      Started : constant League.Calendars.Date_Time :=
---        League.Calendars.Clock;
+      Started : constant League.Calendars.Date_Time :=
+        League.Calendars.Clock;
    begin
       Run_Gprbuild;
 
@@ -201,7 +200,7 @@ package body Gela.Ada_Test_Cases is
          Check_Output;
       end if;
 
---      Self.Duration := League.Calendars.Clock - Started;
+      Self.Duration := League.Calendars.Clock - Started;
    end Run;
 
    ------------
@@ -244,7 +243,7 @@ package body Gela.Ada_Test_Cases is
 
    function XGELA_LIB_DIR (Self : Test_Case) return Universal_String is
       Gela : constant String := Ada.Directories.Compose
-        (Conv.To_String (Self.Test_Home), "gela");
+        (Conv.To_String (Self.Build), "gela");
    begin
       return "-XGELA_LIB_DIR=" & Conv.To_Universal_String (Gela);
    end XGELA_LIB_DIR;

@@ -21,8 +21,11 @@ procedure Gela.Test_Driver is
    Args     : constant League.String_Vectors.Universal_String_Vector :=
      League.Application.Arguments;
    Source   : constant League.Strings.Universal_String := Args.Element (1);
+   --  Path to directory containing tests' sources (trunk/tests/)
    Build    : constant League.Strings.Universal_String := Args.Element (2);
+   --  Directory where build tests (/tmp/build/)
    Output   : constant League.Strings.Universal_String := Args.Element (3);
+   --  Where to store report file (/tmp/build/output.xml)
    Iterator : Gela.Test_Iterators.Iterator :=
      Gela.Test_Iterators.Create (Source, Build);
    Test     : Gela.Test_Cases.Test_Case_Access;

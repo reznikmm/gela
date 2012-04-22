@@ -15,5 +15,6 @@ package Gela.Bitten_Report is
    procedure Generate
      (Iterator : in out Test_Iterators.Iterator;
       Result   : out League.Strings.Universal_String);
+   --  Fill bitten report file with execution's result.
 
 end Gela.Bitten_Report;

@@ -13,6 +13,7 @@ with League.Strings;
 package Gela.Test_Cases is
 
    type Test_Case is abstract tagged null record;
+   --  Interface to test case.
 
    type Test_Case_Access is access all Test_Case'Class;
 

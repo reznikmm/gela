@@ -36,7 +36,7 @@ package body Gela.Test_Iterators is
          Get_Next_Entry (Each, Item);
 
          Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Ada_Test_Cases.Create (Build, Item));
+           (Gela.Ada_Test_Cases.Create (Item, Build));
 
          Result.Map.Insert
            (Conv.To_Universal_String (Simple_Name (Item)), Test);

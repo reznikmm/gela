@@ -8,8 +8,10 @@
 ------------------------------------------------------------------------------
 
 with Gela.Test_Cases;
+with League.Calendars.ISO_8601;
 with XML.SAX.Attributes;
 with XML.SAX.Pretty_Writers;
+with Ada.Wide_Wide_Text_IO;
 
 package body Gela.Bitten_Report is
 
@@ -17,6 +19,10 @@ package body Gela.Bitten_Report is
      (Item : Wide_Wide_String)
      return League.Strings.Universal_String
      renames League.Strings.To_Universal_String;
+
+   function Time_Image
+     (Value : League.Calendars.Time)
+     return League.Strings.Universal_String;
 
    Duration  : constant League.Strings.Universal_String := +"duration";
    Name      : constant League.Strings.Universal_String := +"name";
@@ -66,7 +72,7 @@ package body Gela.Bitten_Report is
          begin
             Iterator.Next (Test);
 
-            Attrs.Set_Value (Duration, +"0");
+            Attrs.Set_Value (Duration, Time_Image (Test.Duration));
             Attrs.Set_Value (Status, Image (Test.Status));
             Attrs.Set_Value (Name, Test.Name);
             --  Attrs.Set_Value (Fixture, Test.Fixture);
@@ -96,5 +102,27 @@ package body Gela.Bitten_Report is
 
       Result := Writer.Text;
    end Generate;
+
+   ----------------
+   -- Time_Image --
+   ----------------
+
+   function Time_Image
+     (Value : League.Calendars.Time)
+     return League.Strings.Universal_String
+   is
+      use League.Calendars.ISO_8601;
+      package IO is new Ada.Wide_Wide_Text_IO.Integer_IO
+        (Nanosecond_100_Number);
+
+      S : constant Second_Number := Second (Value);
+      N : constant Nanosecond_100_Number := Nanosecond_100 (Value);
+      S_Image : constant Wide_Wide_String := Second_Number'Wide_Wide_Image (S);
+      N_Image : Wide_Wide_String (1 .. 8);
+   begin
+      IO.Put (N_Image, N);
+      return +(S_Image (2 .. S_Image'Last) & "."
+                 & N_Image (2 .. N_Image'Last));
+   end Time_Image;
 
 end Gela.Bitten_Report;
