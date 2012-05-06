@@ -7,6 +7,9 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with Ada.Command_Line;
+with Ada.Wide_Wide_Text_IO;
+
 with Gela.Bitten_Report;
 with Gela.Conv;
 with Gela.Test_Cases;
@@ -15,7 +18,6 @@ with Gela.Test_Iterators;
 with League.Application;
 with League.Strings;
 with League.String_Vectors;
-with Ada.Wide_Wide_Text_IO;
 
 procedure Gela.Test_Driver is
    Args     : constant League.String_Vectors.Universal_String_Vector :=
@@ -30,12 +32,22 @@ procedure Gela.Test_Driver is
      Gela.Test_Iterators.Create (Source, Build);
    Test     : Gela.Test_Cases.Test_Case_Access;
    Report   : League.Strings.Universal_String;
+   Failed   : Boolean := False;
 begin
    Iterator.Start;
 
    while Iterator.Has_More_Tests loop
       Iterator.Next (Test);
       Test.Run;
+
+      case Test.Status is
+         when Gela.Test_Cases.Failure
+           | Gela.Test_Cases.Error =>
+
+            Failed := True;
+         when others =>
+            null;
+      end case;
    end loop;
 
    Gela.Bitten_Report.Generate (Iterator, Report);
@@ -48,4 +60,9 @@ begin
       Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Close (File);
    end;
+
+   if Failed then
+      Ada.Wide_Wide_Text_IO.Put_Line ("Some tests failed");
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+   end if;
 end Gela.Test_Driver;
