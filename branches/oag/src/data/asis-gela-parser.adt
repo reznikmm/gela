@@ -1,0 +1,295 @@
+pragma_r :
+    error semicolon
+{
+   declare
+      New_Node : constant Element_Index := New_Element (C, A_Pragma);
+      Pos      : YYSTYPE;
+   begin
+      $$.Index := New_Node;
+      Pos.Index := 0;
+      Pos.Start_Line := Current_Line;
+      Pos.Start_Column := Current_Column - 1;
+      Pos.End_Column := Pos.Start_Column;
+      Pos.From := Buffer_Start;
+      Pos.To := Buffer_Start;
+      Set_Start_Position (New_Node, Pos);
+      Set_Image (New_Node, Pragma_Name_Image, Pos, Name_Image);
+      Set (C, New_Node, Pragma_Kind,
+           Pragma_Kinds'Pos (An_Implementation_Defined_Pragma));
+      Set_End_Position (New_Node, Pos);
+   end;
+}
+;
+
+mode :
+     in     { $$.Index := Mode_Kinds'Pos (An_In_Mode); }
+   | in out { $$.Index := Mode_Kinds'Pos (An_In_Out_Mode); }
+   | out    { $$.Index := Mode_Kinds'Pos (An_Out_Mode); }
+;
+
+overriding_indicator :
+     not overriding
+ {
+   $$.Index := Overriding_Indicator_Kinds'Pos (An_Indicator_of_Not_Overriding);
+ }
+   | overriding
+ {
+   $$.Index := Overriding_Indicator_Kinds'Pos (An_Indicator_of_Overriding);
+ }
+;
+
+formal_access_type_definition :
+   access_type_definition
+{
+  $$.Index := $1.Index;
+  Replace.Access_To_Formal_Accee (C, $1.Index);
+}
+;
+
+%%
+with Asis.Gela.Contexts;
+with Asis.Gela.Compilations;
+
+##
+   procedure Run
+     (Context : in out Contexts.Context_Node;
+      C       : in     Compilations.Compilation;
+      Result  :    out Asis.ASIS_Natural);
+##
+
+with Gela.Source_Buffers; use Gela;
+with Asis.Gela.Scanners;
+with Asis.Gela.Scanner_Tables;
+with Gela.Classificators;
+with Asis.Gela.Classificators_Create;
+with Asis.Gela.Properties;
+with Asis.Gela.Elements;
+with Asis.Gela.Replace;
+with Ada.Text_IO;
+
+with Asis.Gela.Lists;
+
+with Asis.Extensions.Errors;
+
+##
+
+   package text_io renames Ada.Text_IO;
+
+   procedure Run
+     (Context : in out Contexts.Context_Node;
+      C       : in     Compilations.Compilation;
+      Result  :    out Asis.ASIS_Natural)
+   is
+      use Asis.Gela.Lists;
+      use Asis.Gela.Elements;
+      use Asis.Gela.Properties;
+      use type Source_Buffers.Cursor;
+
+      Chooser : aliased Classificators.Classificator'Class :=
+        Classificators_Create (C.Encoding, C.Decoder.all);
+      Scanner : Scanners.Scanner (Chooser'Access);
+
+      --  use Ada.Characters.Handling;
+
+      Last_Compilation   : Asis.ASIS_Natural;
+      Current_Line       : Asis.ASIS_Positive := 1;
+      Current_Column     : Asis.ASIS_Positive := 1;
+      Line               : Compilations.Line;
+      Has_Comment        : Boolean := False;
+      Comment            : Source_Buffers.Cursor;
+      Last_Overriding    : Asis.ASIS_Natural;
+      Buffer_Start       : constant Source_Buffers.Cursor :=
+        Source_Buffers.Buffer_Start (C.Buffer.all);
+
+      procedure Set_Start_Position
+        (Element : Element_Index;
+         Source  : YYSTYPE) is
+      begin
+         if Source.Index = 0 then
+            Set (C, Element, Start_Line, Source.Start_Line);
+            Set (C, Element, Start_Column, Source.Start_Column);
+         else
+            Elements.Set_Start_Position (C, Element, Source.Index);
+         end if;
+      end Set_Start_Position;
+
+      procedure Set_Start_Position
+        (Element : Element_Index;
+         Source  : Element_Index) is
+      begin
+         Elements.Set_Start_Position (C, Element, Source);
+      end Set_Start_Position;
+
+      procedure Set_End_Position
+        (Element : Element_Index;
+         Source  : YYSTYPE) is
+      begin
+         if Source.Index = 0 then
+            --  End line is the same as start line for tokens
+            Set (C, Element, End_Line, Source.Start_Line);
+            Set (C, Element, End_Column, Source.End_Column);
+         else
+            Elements.Set_End_Position (C, Element, Source.Index);
+         end if;
+      end Set_End_Position;
+
+      procedure Set_End_Position
+        (Element : Element_Index;
+         Source  : Element_Index) is
+      begin
+         Elements.Set_End_Position (C, Element, Source);
+      end Set_End_Position;
+
+      function YYLex return Parser_Tokens.Token is
+         Create : constant array (Identifier_Token .. String_Literal_Token)
+           of Global_Kinds :=
+           (Identifier_Token        => An_Identifier,
+            Integer_Literal_Token   => An_Integer_Literal,
+            Real_Literal_Token      => A_Real_Literal,
+            Character_Literal_Token => A_Character_Literal,
+            String_Literal_Token    => A_String_Literal);
+
+         Image : constant array (Identifier_Token .. String_Literal_Token)
+           of Property_Kinds :=
+           (Identifier_Token        => Name_Image,
+            Integer_Literal_Token   => Value_Image,
+            Real_Literal_Token      => Value_Image,
+            Character_Literal_Token => Name_Image,
+            String_Literal_Token    => Value_Image);
+
+         Token   : Parser_Tokens.Token;
+         From    : Source_Buffers.Cursor;
+         To      : Source_Buffers.Cursor;
+         Length  : ASIS_Positive;
+      begin
+         Scanners.Next_Token (Scanner, Token);
+         Length := ASIS_Positive (Scanners.Token_Length (Scanner));
+--text_io.put_Line (Token'Img & To_String (Get_Token_Value));
+         Scanners.Token_Span (Scanner, From, To);
+         Current_Column := Current_Column + Length;
+
+         while Token = New_Line_Token or
+           Token = Separator_Token or
+           Token = Comment_Token
+         loop
+            if Token = New_Line_Token then
+               if Has_Comment then
+                  Has_Comment := False;
+                  Line.Comment := ASIS_Natural (Comment - Buffer_Start);
+               else
+                  Line.Comment := ASIS_Natural (From - Buffer_Start);
+               end if;
+
+               Line.To := ASIS_Natural (From - Buffer_Start);
+               Compilations.Line_Vectors.Add (C.Line_List, Line);
+
+               Line.From := ASIS_Natural (To - Buffer_Start);
+               Current_Line := Current_Line + 1;
+               Current_Column := 1;
+            elsif Token = Comment_Token then
+               Has_Comment := True;
+               Comment := From;
+            end if;
+
+            Scanners.Next_Token (Scanner, Token);
+            Length := ASIS_Positive (Scanners.Token_Length (Scanner));
+--text_io.put_Line (Token'Img & To_String (Get_Token_Value));
+            Scanners.Token_Span (Scanner, From, To);
+            Current_Column := Current_Column + Length;
+         end loop;
+
+         case Token is
+            when Identifier_Token .. String_Literal_Token =>
+               yylval.Index := New_Element (C, Create (Token));
+               yylval.Start_Column := 0;
+               Set (C, yylval.Index, Start_Line, Current_Line);
+               Set (C, yylval.Index, Start_Column, Current_Column - Length);
+               Set (C, yylval.Index, End_Line, Current_Line);
+               Set (C, yylval.Index, End_Column, Current_Column - 1);
+               Set (C, yylval.Index, Image (Token),
+                    ASIS_Natural (From - Buffer_Start));
+               Set (C, yylval.Index, Image_End,
+                    ASIS_Natural (To - Buffer_Start));
+            when others =>
+               yylval.Index := 0;
+               yylval.From := From;
+               yylval.To := To;
+               yylval.Start_Line := Current_Line;
+               yylval.End_Column := Current_Column - 1;
+               yylval.Start_Column := Current_Column - Length;
+         end case;
+
+         if Token = Identifier_Token then
+            Scanners.Enter (Scanner, Scanner_Tables.Allow_Keyword);
+         elsif Token = Apostrophe_Token then
+            Scanners.Enter (Scanner, Scanner_Tables.Default);
+         else
+            Scanners.Enter (Scanner, Scanner_Tables.Allow_Char);
+         end if;
+
+         return Token;
+      end YYLex;
+
+      pragma Inline (YYLex);
+
+      procedure YYError (Text : String) is
+      begin
+         Asis.Gela.Contexts.Report_Error
+           (Context,
+            Kind   => Asis.Extensions.Errors.Syntax_Error,
+            Line   => Current_Line,
+            Column => Current_Column - 1);
+      end YYError;
+
+      procedure Set_Image
+        (Target_Item : Element_Index;
+         Target_Prop : Property_Kinds;
+         Source_Item : YYSTYPE;
+         Source_Prop : Property_Kinds)
+      is
+         Source : constant Element_Index := Source_Item.Index;
+      begin
+         if Source = 0 then
+            Set (C, Target_Item, Target_Prop,
+                 ASIS_Natural (Source_Item.From - Buffer_Start));
+
+            Set (C, Target_Item, Image_End,
+                 ASIS_Natural (Source_Item.To - Buffer_Start));
+         else
+            Set (C, Target_Item, Target_Prop, Get (C, Source, Source_Prop));
+            Set (C, Target_Item, Image_End, Get (C, Source, Image_End));
+         end if;
+      end Set_Image;
+
+      procedure Set_Image
+        (Target_Item   : Element_Index;
+         Target_Prop   : Property_Kinds;
+         Operator_Kind : Operator_Kinds) is
+      begin
+         Set (C, Target_Item, Target_Prop,
+              Compilations.Get_Operator_Image (C, Operator_Kind));
+      end Set_Image;
+
+      procedure Push_Argument
+        (C    : in     Compilations.Compilation;
+         Call : in     Element_Index;
+         Arg  : in     Element_Index) renames Elements.Push_Argument;
+
+
+##
+
+   begin
+      Scanners.Initialize (Scanner, Buffer_Start);
+      Line.From := 0;
+      YYParse;
+      declare
+         From    : Source_Buffers.Cursor;
+         To      : Source_Buffers.Cursor;
+      begin
+         Scanners.Token_Span (Scanner, From, To);
+         Line.To := ASIS_Natural (From - Buffer_Start);
+         Compilations.Line_Vectors.Add (C.Line_List, Line);
+      end;
+      Result := Last_Compilation;
+   end Run;
+

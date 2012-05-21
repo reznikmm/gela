@@ -1,0 +1,11 @@
+with "qt_gui";
+with "hl_moc";
+
+project Main is
+   for Main use ("main.adb");
+   for Source_Dirs use (".", ".amoc", "../../src/asis", "../../src/libgela");
+   for Object_Dir use ".objs";
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat05");
+   end Compiler;
+end Main;

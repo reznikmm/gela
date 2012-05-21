@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="koi8-r"?>
+<root>
+  <node name="Base_Element">
+    <attr name="Next_Element" type="Asis.Element"/>
+    <attr name="Start_Line"   type="Asis.ASIS_Positive"/>
+    <attr name="Start_Column" type="Asis.ASIS_Positive"/>
+    <attr name="End_Line"     type="Asis.ASIS_Natural"/>
+    <attr name="End_Column"   type="Asis.ASIS_Natural"/>
+  </node>
+  <node name="A_Defining_Name">
+      <attr name="Override" type="Asis.Defining_Name"/>
+      <attr name="Place" type="Visibility.Region_Item_Access"/>
+  </node>
+  <node name="A_Declaration" abstract="y">
+    <attr name="Name" type="Asis.Element"/>
+    <attr name="Place" type="Visibility.Region_Item_Access"/>
+  </node>
+  <node name="A_Formal_Type_Declaration">
+    <attr name="Generic_Actual" type="Asis.Expression"/>
+  </node>
+  <node name="Base_Callable_Declaration" abstract="y" helper="y">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="Base_Body_Declaration" abstract="y" helper="y">
+    <attr name="Handled_Statements" type="Asis.Element"/>
+    <attr name="Compound_Name" type="Asis.Element"/>
+  </node>
+  <node name="A_Procedure_Body_Declaration">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="An_Entry_Body_Declaration">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="A_Generic_Package_Renaming_Declaration">
+    <attr name="Empty_Generic_Part"
+          type="Primary_Declaration_Lists.List"/>
+  </node>
+  <node name="A_Generic_Procedure_Renaming_Declaration">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="An_Integer_Number_Declaration">
+    <attr name="Declaration_Kind" type="Asis.Declaration_Kinds"
+          default="An_Integer_Number_Declaration"/>
+  </node>
+  <node name="A_Formal_Object_Declaration">
+    <attr name="Generic_Actual" type="Asis.Expression"/>
+  </node>
+  <node name="A_Package_Declaration">
+    <attr name="Package_Specification" type="Asis.Element"/>
+  </node>
+  <node name="A_Protected_Body_Declaration">
+    <attr name="Identifier" type="Asis.Element"/>
+  </node>
+  <node name="A_Generic_Package_Declaration">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="A_Formal_Package_Declaration_With_Box">
+    <attr name="Generic_Actual" type="Asis.Expression"/>
+  </node>
+  <node name="A_Procedure_Instantiation">
+    <attr name="Specification" type="Asis.Element"/>
+  </node>
+  <node name="A_Formal_Procedure_Declaration">
+    <attr name="Specification" type="Asis.Element"/>
+    <attr name="Generic_Actual" type="Asis.Expression"/>
+  </node>
+  <node name="A_Variant_Part">
+    <attr name="End_Pragmas" type="Primary_Pragma_Lists.List"/>
+  </node>
+  <node name="A_Protected_Definition">
+    <attr name="Identifier" type="Asis.Element"/>
+  </node>
+  <node name="A_Formal_Unconstrained_Array_Definition">
+    <attr name="Array_Definition" type="Asis.Element"/>
+  </node>
+  <node name="A_Formal_Constrained_Array_Definition">
+    <attr name="Array_Definition" type="Asis.Element"/>
+  </node>
+  <node name="A_Formal_Access_Type">
+    <attr name="Access_Definition" type="Asis.Element"/>
+  </node>
+  <node name="An_Expression" abstract="y">
+    <attr name="Is_Static_Expression" type="Asis.Gela.Fuzzy_Boolean" 
+          default="Unknown"/>
+  </node>
+  <node name="Base_Identifier">
+    <attr name="Image_End" type="Natural">
+      <!-- If Name_Image in Source buffer Image_End points to end of image
+           in buffer, else Name_Image_End=0 and Name_Image points to position
+           in Text_Buffer -->
+    </attr>
+  </node>
+  <node name="Base_Literal">
+    <attr name="Image_End" type="Natural">
+      <!-- If Value_Image in Source buffer Image_End points to end of image
+           in buffer, else Image_End=0 and Value_Image points to position
+           in Text_Buffer -->
+    </attr>
+  </node>
+  <node name="A_Pragma">
+    <attr name="Image_End" type="Natural">
+      <!-- If Pragma_Name_Image in Source buffer Image_End points to end of
+           image in buffer, else Image_End=0 and Pragma_Name_Image points to
+           position in Text_Buffer -->
+    </attr>
+  </node>
+  <node name="A_Defining_Name" abstract="y">
+    <attr name="Image_End" type="Natural">
+      <!-- If Defining_Name_Image in Source buffer Image_End points to end of
+           image in buffer, else Image_End=0 and Defining_Name_Image points to
+           position in Text_Buffer -->
+    </attr>
+  </node>
+
+  <node name="A_Function_Call">
+    <attr name="Record_Aggregate" type="Asis.Element"/>
+  </node>
+  <node name="A_Statement" abstract="y">
+    <attr name="Place" type="Visibility.Region_Item_Access"/>
+  </node>
+  <node name="A_Loop_Statement">
+    <attr name="Back_Identifier" type="Asis.Identifier"/>
+  </node>
+  <node name="A_Block_Statement">
+    <attr name="Back_Identifier" type="Asis.Identifier"/>
+    <attr name="Handled_Statements" type="Asis.Element"/>
+  </node>
+  <node name="An_Extended_Return_Statement">
+    <attr name="Handled_Statements" type="Asis.Element"/>
+  </node>
+  <node name="An_Accept_Statement">
+    <attr name="Handled_Statements" type="Asis.Element"/>
+  </node>
+  <node name="A_Clause" abstract="y">
+    <attr name="Place" type="Visibility.Region_Item_Access"/>
+  </node>
+  <node name="An_Exception_Handler">
+    <attr name="Place" type="Visibility.Region_Item_Access"/>
+  </node>
+</root>
