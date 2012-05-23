@@ -1,0 +1,13 @@
+project Gela_Uaflex is
+
+   for Source_Dirs use ("../tools/uaflex");
+   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+
+   for Main use ("uaflex.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-gnat95", "-g");
+   end Compiler;
+
+end Gela_Uaflex;

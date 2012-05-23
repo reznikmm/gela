@@ -1,0 +1,17 @@
+project Gela_Lib is
+
+   for Source_Dirs use ("../source/libgela");
+   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+
+   for Excluded_Source_Files use
+     ("gela-source_buffers-windows.ads",
+      "gela-source_buffers-windows.adb",
+      "gela-source_buffers-unix.ads",
+      "gela-source_buffers-unix.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-gnat95", "-g");
+   end Compiler;
+
+end Gela_Lib;

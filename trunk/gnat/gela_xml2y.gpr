@@ -1,0 +1,15 @@
+with "gela_lib";
+
+project Gela_XML2Y is
+
+   for Source_Dirs use ("../tools/xml2ayacc/**");
+   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+
+   for Main use ("xml_to_y.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-gnat95", "-g");
+   end Compiler;
+
+end Gela_XML2Y;
