@@ -15,7 +15,7 @@
     <node name="DefiningName" abstract="y">
       <attr name="definingNameImage" type="ProgramText"/>
       <attr name="correspondingConstantDeclaration" type="Element"/>
-      <attr name="references" type="SecondaryReferenceLists.List"/>
+      <attr name="references" type="Expression.List"/>
       <attr name="correspondingGenericElement" type="DefiningName"/>
       <node name="DefiningIdentifier"/>
       <node name="DefiningEnumerationLiteral">
@@ -34,8 +34,8 @@
     <node name="Declaration" abstract="y">
       <attr name="declarationOrigin" type="DeclarationOrigins" default="ExplicitDeclaration"/>
       <attr name="names" type="DefiningName.List" child="2"/>
-      <attr name="correspondingRepresentationClauses" type="SecondaryClauseLists.List"/>
-      <attr name="correspondingPragmas" type="SecondaryPragmaLists.List"/>
+      <attr name="correspondingRepresentationClauses" type="RepresentationClause.List"/>
+      <attr name="correspondingPragmas" type="Pragma.List"/>
       <node name="AbstractTypeDeclaration" abstract="y" helper="y">
         <attr name="discriminantPart" type="Definition" child="3"/>
         <attr name="typeDeclarationView" type="Definition" child="5"/>
@@ -118,9 +118,8 @@
             <attr name="resultSubtype" type="Definition" child="4"/>
           </node>
         </node>
-        <node name="PackageBodyDeclaration">
-          <node name="TaskBodyDeclaration"/>
-        </node>
+        <node name="PackageBodyDeclaration"/>
+        <node name="TaskBodyDeclaration"/>
         <node name="EntryBodyDeclaration">
           <attr name="parameterProfile" type="ParameterSpecification.List" child="4"/>
           <attr name="entryIndexSpecification" type="Declaration" child="3"/>
@@ -135,13 +134,10 @@
           <attr name="hasNullExclusion" type="Boolean"/>
         </node>
         <node name="ExceptionRenamingDeclaration"/>
-        <node name="PackageRenamingDeclaration">
-          <node name="GenericPackageRenamingDeclaration">
-            <node name="GenericProcedureRenamingDeclaration">
-              <node name="GenericFunctionRenamingDeclaration"/>
-            </node>
-          </node>
-        </node>
+        <node name="PackageRenamingDeclaration"/>
+        <node name="GenericPackageRenamingDeclaration"/>
+        <node name="GenericProcedureRenamingDeclaration"/>
+        <node name="GenericFunctionRenamingDeclaration"/>
       </node>
       <node name="IncompleteTypeDeclaration">
         <attr name="discriminantPart" type="Definition" child="3"/>
@@ -157,11 +153,13 @@
       <node name="ComponentDeclaration">
         <attr name="objectDeclarationSubtype" type="Definition" child="3"/>
         <attr name="initializationExpression" type="Expression" child="4"/>
-        <node name="VariableDeclaration">
-          <attr name="traitKind" type="TraitKinds"/>
-          <node name="ConstantDeclaration"/>
-          <node name="ReturnObjectSpecification"/>
-        </node>
+      </node>
+      <node name="VariableDeclaration">
+        <attr name="objectDeclarationSubtype" type="Definition" child="3"/>
+        <attr name="initializationExpression" type="Expression" child="4"/>
+        <attr name="traitKind" type="TraitKinds"/>
+        <node name="ConstantDeclaration"/>
+        <node name="ReturnObjectSpecification"/>
       </node>
       <node name="DeferredConstantDeclaration">
         <attr name="objectDeclarationSubtype" type="Definition" child="3"/>
@@ -187,15 +185,17 @@
       </node>
       <node name="EntryIndexSpecification">
         <attr name="specificationSubtypeDefinition" type="DiscreteSubtypeDefinition" child="3"/>
-        <node name="LoopParameterSpecification">
-          <attr name="traitKind" type="TraitKinds"/>
-        </node>
       </node>
-      <node name="FormalObjectDeclaration">
+      <node name="LoopParameterSpecification">
+        <attr name="specificationSubtypeDefinition" type="DiscreteSubtypeDefinition" child="3"/>
+        <attr name="traitKind" type="TraitKinds"/>
+      </node>
+      <node name="AbstractParameterDeclaration" abstract="y">
         <attr name="modeKind" type="ModeKinds"/>
         <attr name="objectDeclarationSubtype" type="Definition" child="3"/>
         <attr name="initializationExpression" type="Expression" child="4"/>
         <attr name="hasNullExclusion" type="Boolean"/>
+        <node name="FormalObjectDeclaration"/>
         <node name="ParameterSpecification">
           <attr name="traitKind" type="TraitKinds"/>
         </node>
@@ -216,9 +216,10 @@
         <attr name="protectedOperationItems" type="Element.List" child="3"/>
         <attr name="correspondingBodyStub" type="Declaration"/>
       </node>
-      <node name="PackageBodyStub">
+      <node name="AbstractBodyStub" abstract="y">
         <attr name="correspondingSubunit" type="Declaration"/>
         <attr name="correspondingDeclaration" type="Declaration"/>
+        <node name="PackageBodyStub"/>
         <node name="TaskBodyStub"/>
         <node name="ProtectedBodyStub"/>
       </node>
@@ -237,10 +238,11 @@
         <attr name="correspondingDeclaration" type="Declaration"/>
         <attr name="correspondingBody" type="Declaration"/>
         <attr name="genericUnitName" type="Expression" child="3"/>
-        <attr name="normalizedGenericActualPart" type="SecondaryAssociationLists.List"/>
+        <attr name="normalizedGenericActualPart" type="GenericAssociation.List"/>
 
-        <node name="PackageInstantiation">
+        <node name="AbstractInstantiation" abstract="y">
           <attr name="genericActualPart" type="GenericAssociation.List" child="4"/>
+          <node name="PackageInstantiation"/>
           <node name="ProcedureInstantiation">
             <attr name="overridingIndicatorKind" type="OverridingIndicatorKinds"/>
             <node name="FunctionInstantiation"/>
@@ -260,74 +262,132 @@
       </node>
     </node>
     <node name="Definition" abstract="y">
-      <node name="TypeDefinition" abstract="y">
-        <attr name="correspondingTypeOperators" type="SecondaryDeclarationLists.List"/>
-        <node name="DerivedTypeDefinition">
-          <attr name="correspondingParentSubtype" type="Declaration"/>
-          <attr name="correspondingRootType" type="Declaration"/>
-          <attr name="implicitInheritedDeclarations" type="SecondaryDeclarationLists.List"/>
-          <attr name="implicitInheritedSubprograms" type="SecondaryDeclarationLists.List"/>
-          <attr name="correspondingTypeStructure" type="Declaration"/>
-          <attr name="traitKind" type="TraitKinds"/>
-          <attr name="parentSubtypeIndication" type="SubtypeIndication" child="1"/>
-          <attr name="hasLimited" type="Boolean"/>
-          <attr name="hasAbstract" type="Boolean"/>
-          <node name="DerivedRecordExtensionDefinition">
-            <attr name="progenitorList" type="Expression.List" child="2"/>
-            <attr name="recordDefinition" type="Definition" child="3"/>
-          </node>
-        </node>
-        <node name="EnumerationTypeDefinition">
-          <attr name="enumerationLiteralDeclarations"
-                type="EnumerationLiteralSpecification.List" child="1"/>
-        </node>
-        <node name="SignedIntegerTypeDefinition">
-          <attr name="integerConstraint" type="RangeConstraint" child="1"/>
-        </node>
-        <node name="ModularTypeDefinition">
-          <attr name="modStaticExpression" type="Expression" child="1"/>
-        </node>
-        <node name="RootTypeDefinition">
-          <attr name="rootTypeKind" type="RootTypeKinds"/>
-        </node>
-        <node name="FloatingPointDefinition">
-          <attr name="digitsExpression" type="Expression" child="1"/>
-          <attr name="realRangeConstraint" type="RangeConstraint" child="2"/>
-        </node>
-        <node name="OrdinaryFixedPointDefinition">
-          <attr name="deltaExpression" type="Expression" child="1"/>
-          <attr name="realRangeConstraint" type="RangeConstraint" child="3"/>
-          <node name="DecimalFixedPointDefinition">
-            <attr name="digitsExpression" type="Expression" child="2"/>
-          </node>
-        </node>
-        <node name="UnconstrainedArrayDefinition">
-          <attr name="indexSubtypeDefinitions" type="Expression.List" child="1"/>
-          <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
-        </node>
-        <node name="ConstrainedArrayDefinition">
-          <attr name="discreteSubtypeDefinitions" type="DiscreteRange.List" child="1"/>
-          <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
-        </node>
-        <node name="RecordTypeDefinition">
-          <attr name="traitKind" type="TraitKinds"/>
-          <attr name="recordDefinition" type="Definition" child="1"/>
-          <attr name="hasLimited" type="Boolean"/>
-          <node name="TaggedRecordTypeDefinition">
+
+
+      <node name="AbstractTypeDefinition" abstract="y">
+        <attr name="correspondingTypeOperators" type="Declaration.List"/>
+        <node name="TypeDefinition" abstract="y">
+          <node name="DerivedTypeDefinition">
+            <attr name="correspondingParentSubtype" type="Declaration"/>
+            <attr name="correspondingRootType" type="Declaration"/>
+            <attr name="implicitInheritedDeclarations" type="Declaration.List"/>
+            <attr name="implicitInheritedSubprograms" type="ProcedureDeclaration.List"/>
+            <attr name="correspondingTypeStructure" type="Declaration"/>
+            <attr name="traitKind" type="TraitKinds"/>
+            <attr name="parentSubtypeIndication" type="SubtypeIndication" child="1"/>
+            <attr name="hasLimited" type="Boolean"/>
             <attr name="hasAbstract" type="Boolean"/>
-            <attr name="hasTagged" type="Boolean"/>
+            <node name="DerivedRecordExtensionDefinition">
+              <attr name="progenitorList" type="Expression.List" child="2"/>
+              <attr name="recordDefinition" type="Definition" child="3"/>
+            </node>
+          </node>
+          <node name="EnumerationTypeDefinition">
+            <attr name="enumerationLiteralDeclarations"
+                  type="EnumerationLiteralSpecification.List" child="1"/>
+          </node>
+          <node name="SignedIntegerTypeDefinition">
+            <attr name="integerConstraint" type="RangeConstraint" child="1"/>
+          </node>
+          <node name="ModularTypeDefinition">
+            <attr name="modStaticExpression" type="Expression" child="1"/>
+          </node>
+          <node name="RootTypeDefinition">
+            <attr name="rootTypeKind" type="RootTypeKinds"/>
+          </node>
+          <node name="FloatingPointDefinition">
+            <attr name="digitsExpression" type="Expression" child="1"/>
+            <attr name="realRangeConstraint" type="RangeConstraint" child="2"/>
+          </node>
+          <node name="OrdinaryFixedPointDefinition">
+            <attr name="deltaExpression" type="Expression" child="1"/>
+            <attr name="realRangeConstraint" type="RangeConstraint" child="3"/>
+            <node name="DecimalFixedPointDefinition">
+              <attr name="digitsExpression" type="Expression" child="2"/>
+            </node>
+          </node>
+          <node name="UnconstrainedArrayDefinition">
+            <attr name="indexSubtypeDefinitions" type="Expression.List" child="1"/>
+            <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
+          </node>
+          <node name="ConstrainedArrayDefinition">
+            <attr name="discreteSubtypeDefinitions" type="DiscreteRange.List" child="1"/>
+            <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
+          </node>
+          <node name="RecordTypeDefinition">
+            <attr name="traitKind" type="TraitKinds"/>
+            <attr name="recordDefinition" type="Definition" child="1"/>
+            <attr name="hasLimited" type="Boolean"/>
+            <node name="TaggedRecordTypeDefinition">
+              <attr name="hasAbstract" type="Boolean"/>
+              <attr name="hasTagged" type="Boolean"/>
+            </node>
+          </node>
+          <node name="InterfaceTypeDefinition">
+            <attr name="interfaceKind" type="InterfaceKinds"/>
+            <attr name="hasLimited" type="Boolean"/>
+            <attr name="hasSynchronized" type="Boolean"/>
+            <attr name="hasProtected" type="Boolean"/>
+            <attr name="hasTask" type="Boolean"/>
+            <attr name="progenitorList" type="Expression.List" child="1"/>
+            <attr name="implicitInheritedSubprograms" type="ProcedureDeclaration.List"/>
           </node>
         </node>
-        <node name="InterfaceTypeDefinition">
-          <attr name="interfaceKind" type="InterfaceKinds"/>
-          <attr name="hasLimited" type="Boolean"/>
-          <attr name="hasSynchronized" type="Boolean"/>
-          <attr name="hasProtected" type="Boolean"/>
-          <attr name="hasTask" type="Boolean"/>
-          <attr name="progenitorList" type="Expression.List" child="1"/>
-          <attr name="implicitInheritedSubprograms" type="SecondaryDeclarationLists.List"/>
+
+        <node name="FormalTypeDefinition" abstract="y">
+          <attr name="correspondingTypeOperators" type="Declaration.List"/>
+          <node name="FormalPrivateTypeDefinition">
+            <attr name="traitKind" type="TraitKinds"/>
+            <attr name="hasLimited" type="Boolean"/>
+            <attr name="hasPrivate" type="Boolean"/>
+            <node name="FormalTaggedPrivateTypeDefinition">
+              <attr name="hasAbstract" type="Boolean"/>
+              <attr name="hasTagged" type="Boolean"/>
+            </node>
+          </node>
+          <node name="FormalDerivedTypeDefinition">
+            <attr name="implicitInheritedDeclarations" type="Declaration.List"/>
+            <attr name="implicitInheritedSubprograms" type="ProcedureDeclaration.List"/>
+            <attr name="subtypeMark" type="Expression" child="1"/>
+            <attr name="traitKind" type="TraitKinds"/>
+            <attr name="progenitorList" type="Expression.List" child="2"/>
+            <attr name="hasAbstract" type="Boolean"/>
+            <attr name="hasPrivate" type="Boolean"/>
+            <attr name="hasLimited" type="Boolean"/>
+            <attr name="hasSynchronized" type="Boolean"/>
+          </node>
+          <node name="FormalDiscreteTypeDefinition"/>
+          <node name="FormalSignedIntegerTypeDefinition"/>
+          <node name="FormalModularTypeDefinition"/>
+          <node name="FormalFloatingPointDefinition"/>
+          <node name="FormalOrdinaryFixedPointDefinition"/>
+          <node name="FormalDecimalFixedPointDefinition"/>
+          <node name="FormalUnconstrainedArrayDefinition">
+            <attr name="indexSubtypeDefinitions" type="Expression.List" child="1"/>
+            <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
+          </node>
+          <node name="FormalConstrainedArrayDefinition">
+            <attr name="discreteSubtypeDefinitions" type="DiscreteRange.List" child="1"/>
+            <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
+          </node>
+          <node name="FormalAccessTypeDefinition" abstract="y">
+          </node>
+
+          <node name="FormalInterfaceTypeDefinition">
+            <attr name="interfaceKind" type="InterfaceKinds"/>
+            <attr name="progenitorList" type="Expression.List" child="1"/>
+            <attr name="implicitInheritedSubprograms" type="ProcedureDeclaration.List"/>
+          </node>
         </node>
+
         <node name="AccessTypeDefinition" abstract="y">
+          <!--  TypeDefinition or FormalTypeDefinition  -->
+          <attr name="definitionKind" type="DefinitionKinds"/>
+          <!--  typeKind only in TypeDefinition  -->
+          <attr name="typeKind" type="TypeKinds"/>
+          <!--  formalTypeKind only in FormalTypeDefinition  -->
+          <attr name="formalTypeKind" type="FormalTypeKinds"/>
+          <!--  hasNullExclusion only in TypeDefinition  -->
           <attr name="hasNullExclusion" type="Boolean"/>
           <node name="AccessToVariable">
             <attr name="accessToObjectDefinition" type="SubtypeIndication" child="1"/>
@@ -344,6 +404,7 @@
           </node>
         </node>
       </node>
+
       <node name="SubtypeIndication">
         <attr name="subtypeMark" type="Expression" child="1"/>
         <attr name="subtypeConstraint" type="Constraint" child="2"/>
@@ -372,7 +433,7 @@
         </node>
         <node name="DiscriminantConstraint">
           <attr name="discriminantAssociations" type="DiscriminantAssociation.List" child="1"/>
-          <attr name="normalizedDiscriminantAssociations" type="SecondaryAssociationLists.List"/>
+          <attr name="normalizedDiscriminantAssociations" type="DiscriminantAssociation.List"/>
         </node>
       </node>
       <node name="ComponentDefinition">
@@ -402,7 +463,7 @@
       </node>
       <node name="RecordDefinition">
         <attr name="recordComponents" type="Element.List" child="1"/>
-        <attr name="implicitComponents" type="SecondaryDeclarationLists.List"/>
+        <attr name="implicitComponents" type="ComponentDeclaration.List"/>
       </node>
       <node name="NullRecordDefinition"/>
       <node name="NullComponent">
@@ -415,7 +476,7 @@
       </node>
       <node name="Variant">
         <attr name="recordComponents" type="Element.List" child="2"/>
-        <attr name="implicitComponents" type="SecondaryDeclarationLists.List"/>
+        <attr name="implicitComponents" type="ComponentDeclaration.List"/>
         <attr name="variantChoices" type="Element.List" child="1"/>
       </node>
       <node name="OthersChoice"/>
@@ -444,7 +505,7 @@
 
       <node name="PrivateTypeDefinition">
         <attr name="traitKind" type="TraitKinds"/>
-        <attr name="correspondingTypeOperators" type="SecondaryDeclarationLists.List" my="y"/>
+        <attr name="correspondingTypeOperators" type="Declaration.List" my="y"/>
         <attr name="hasLimited" type="Boolean"/>
         <attr name="hasPrivate" type="Boolean"/>
         <node name="TaggedPrivateTypeDefinition">
@@ -453,8 +514,8 @@
         </node>
         <node name="PrivateExtensionDefinition">
           <attr name="ancestorSubtypeIndication" type="SubtypeIndication" child="1"/>
-          <attr name="implicitInheritedDeclarations" type="SecondaryDeclarationLists.List"/>
-          <attr name="implicitInheritedSubprograms" type="SecondaryDeclarationLists.List"/>
+          <attr name="implicitInheritedDeclarations" type="Declaration.List"/>
+          <attr name="implicitInheritedSubprograms" type="ProcedureDeclaration.List"/>
           <attr name="hasSynchronized" type="Boolean"/>
           <attr name="hasAbstract" type="Boolean"/>
         </node>
@@ -463,66 +524,9 @@
         <attr name="isPrivatePresent" type="Boolean"/>
         <attr name="visiblePartItems" type="Element.List" child="1"/>
         <attr name="privatePartItems" type="Element.List" child="2"/>
-        <attr name="correspondingTypeOperators" type="SecondaryDeclarationLists.List" my="y"/>
+        <attr name="correspondingTypeOperators" type="Declaration.List" my="y"/>
         <node name="TaskDefinition">
           <attr name="isTaskDefinitionPresent" type="Boolean"/>
-        </node>
-      </node>
-      <node name="FormalTypeDefinition" abstract="y">
-        <attr name="correspondingTypeOperators" type="SecondaryDeclarationLists.List"/>
-        <node name="FormalPrivateTypeDefinition">
-          <attr name="traitKind" type="TraitKinds"/>
-          <attr name="hasLimited" type="Boolean"/>
-          <attr name="hasPrivate" type="Boolean"/>
-          <node name="FormalTaggedPrivateTypeDefinition">
-            <attr name="hasAbstract" type="Boolean"/>
-            <attr name="hasTagged" type="Boolean"/>
-          </node>
-        </node>
-        <node name="FormalDerivedTypeDefinition">
-          <attr name="implicitInheritedDeclarations" type="SecondaryDeclarationLists.List"/>
-          <attr name="implicitInheritedSubprograms" type="SecondaryDeclarationLists.List"/>
-          <attr name="subtypeMark" type="Expression" child="1"/>
-          <attr name="traitKind" type="TraitKinds"/>
-          <attr name="progenitorList" type="Expression.List" child="2"/>
-          <attr name="hasAbstract" type="Boolean"/>
-          <attr name="hasPrivate" type="Boolean"/>
-          <attr name="hasLimited" type="Boolean"/>
-          <attr name="hasSynchronized" type="Boolean"/>
-        </node>
-        <node name="FormalDiscreteTypeDefinition"/>
-        <node name="FormalSignedIntegerTypeDefinition"/>
-        <node name="FormalModularTypeDefinition"/>
-        <node name="FormalFloatingPointDefinition"/>
-        <node name="FormalOrdinaryFixedPointDefinition"/>
-        <node name="FormalDecimalFixedPointDefinition"/>
-        <node name="FormalUnconstrainedArrayDefinition">
-          <attr name="indexSubtypeDefinitions" type="Expression.List" child="1"/>
-          <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
-        </node>
-        <node name="FormalConstrainedArrayDefinition">
-          <attr name="discreteSubtypeDefinitions" type="DiscreteRange.List" child="1"/>
-          <attr name="arrayComponentDefinition" type="ComponentDefinition" child="2"/>
-        </node>
-        <node name="FormalAccessTypeDefinition" abstract="y">
-          <node name="FAccessToVariable">
-            <attr name="accessToObjectDefinition" type="SubtypeIndication" child="1"/>
-            <node name="FAccessToConstant"/>
-            <node name="FPoolSpecificAccessToVariable"/>
-          </node>
-          <node name="FAccessToProcedure">
-            <attr name="accessToSubprogramParameterProfile" type="ParameterSpecification.List" child="1"/>
-            <node name="FAccessToProtectedProcedure"/>
-            <node name="FAccessToFunction">
-              <attr name="accessToFunctionResultSubtype" type="Definition" child="2"/>
-              <node name="FAccessToProtectedFunction"/>
-            </node>
-          </node>
-        </node>
-        <node name="FormalInterfaceTypeDefinition">
-          <attr name="interfaceKind" type="InterfaceKinds"/>
-          <attr name="progenitorList" type="Expression.List" child="1"/>
-          <attr name="implicitInheritedSubprograms" type="SecondaryDeclarationLists.List"/>
         </node>
       </node>
     </node>
@@ -538,7 +542,7 @@
       <node name="AbstractIdentifier" abstract="y" helper="y">
         <attr name="nameImage" type="ProgramText"/>
         <attr name="correspondingNameDeclaration" type="Declaration"/>
-        <attr name="correspondingNameDefinitionList" type="SecondaryDefinitionLists.List"/>
+        <attr name="correspondingNameDefinitionList" type="DefiningName.List"/>
         <attr name="correspondingGenericElement" type="DefiningName"/>
         <node name="Identifier"/>
         <node name="OperatorSymbol">
@@ -556,7 +560,7 @@
         <attr name="isDispatchingCall" type="Boolean"/>
         <attr name="correspondingCalledFunction" type="Declaration"/>
         <attr name="functionCallParameters" type="ParameterAssociation.List" child="2"/>
-        <attr name="normalizedFunctionCallParameters" type="SecondaryAssociationLists.List"/>
+        <attr name="normalizedFunctionCallParameters" type="ParameterAssociation.List"/>
         <attr name="isCallOnDispatchingOperation" type="Boolean"/>
       </node>
       <node name="IndexedComponent">
@@ -654,7 +658,7 @@
     </node>
     <node name="Statement" abstract="y">
       <attr name="labelNames" type="DefiningIdentifier.List" child="1"/>
-      <attr name="correspondingPragmas" type="SecondaryPragmaLists.List"/>
+      <attr name="correspondingPragmas" type="Pragma.List"/>
       <node name="AbstractPathStatement" abstract="y" helper="y">
         <attr name="statementPaths" type="Element.List" child="3"/>
         <node name="IfStatement"/>
@@ -703,7 +707,7 @@
         <attr name="calledName" type="Expression" child="2"/>
         <attr name="correspondingCalledEntity" type="Declaration"/>
         <attr name="callStatementParameters" type="ParameterAssociation.List" child="3"/>
-        <attr name="normalizedCallStatementParameters" type="SecondaryAssociationLists.List"/>
+        <attr name="normalizedCallStatementParameters" type="ParameterAssociation.List"/>
         <node name="ProcedureCallStatement">
           <attr name="isCallOnDispatchingOperation" type="Boolean"/>
           <attr name="isDispatchingCall" type="Boolean"/>
@@ -766,7 +770,7 @@
       <node name="ThenAbortPath"/>
     </node>
     <node name="Clause" abstract="y">
-      <node name="NamedClause" abstract="y" helper="y">
+      <node name="AbstractNamedClause" abstract="y" helper="y">
         <attr name="clauseNames" type="Expression.List" child="1"/>
         <node name="UsePackageClause"/>
         <node name="UseTypeClause"/>
@@ -781,8 +785,9 @@
           <attr name="modClauseExpression" type="Expression" child="2"/>
           <attr name="componentClauses" type="ComponentClause.List" child="3"/>
         </node>
-        <node name="AtClause">
+        <node name="AbstractExpressionClause">
           <attr name="representationClauseExpression" type="Expression" child="2"/>
+          <node name="AtClause"/>
           <node name="AttributeDefinitionClause"/>
           <node name="EnumerationRepresentationClause"/>
         </node>
@@ -804,9 +809,8 @@
     <attr name="unitKind" type="UnitKinds"/>
     <attr name="unitClass" type="UnitClasses"/>
     <attr name="unitOrigin" type="UnitOrigins"/>
-    <attr name="nextElement" type="Element"/>
     <attr name="correspondingParentDeclaration" type="CompilationUnit"/>
-    <attr name="correspondingChildren" type="SecondaryUnitLists.List"/>
+    <attr name="correspondingChildren" type="CompilationUnit.List"/>
     <attr name="correspondingDeclaration" type="CompilationUnit"/>
     <attr name="correspondingBody" type="CompilationUnit"/>
     <attr name="unitFullName" type="ProgramText"/>
@@ -819,11 +823,9 @@
     <attr name="objectForm" type="ProgramText"/>
     <attr name="compilationCommandLineOptions" type="ProgramText"/>
     <attr name="correspondingSubunitParentBody" type="CompilationUnit"/>
-    <attr name="subunits" type="SecondaryUnitLists.List"/>
+    <attr name="subunits" type="CompilationUnit.List"/>
     <attr name="unitDeclaration" type="Element"/>
     <attr name="contextClauseElements" type="Element.List"/>
-    <attr name="compilationPragmas" type="SecondaryPragmaLists.List"/>
-    <attr name="separateName" type="Element" defer="y"/>
-    <attr name="separateNameImage" type="ProgramText"/>
+    <attr name="compilationPragmas" type="Pragma.List"/>
   </node>
 </root>
