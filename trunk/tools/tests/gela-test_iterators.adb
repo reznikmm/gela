@@ -13,6 +13,49 @@ with Gela.Ada_Test_Cases;
 
 package body Gela.Test_Iterators is
 
+   procedure Add_Each_Input
+     (Result : in out Iterator;
+      Dir    : String;
+      Build  : League.Strings.Universal_String;
+      Found  : out Boolean);
+
+   --------------------
+   -- Add_Each_Input --
+   --------------------
+
+   procedure Add_Each_Input
+     (Result : in out Iterator;
+      Dir    : String;
+      Build  : League.Strings.Universal_String;
+      Found  : out Boolean)
+   is
+      use Ada.Directories;
+
+      Each  : Search_Type;
+      Item  : Directory_Entry_Type;
+      Test  : Gela.Test_Cases.Test_Case_Access;
+      Input : League.Strings.Universal_String;
+   begin
+      Start_Search
+        (Each, Dir, "*.in", (Ordinary_File => True, others => False));
+
+      Found := False;
+
+      while More_Entries (Each) loop
+         Get_Next_Entry (Each, Item);
+
+         Input := Conv.To_Universal_String (Simple_Name (Item));
+
+         Test := new Gela.Test_Cases.Test_Case'Class'
+           (Gela.Ada_Test_Cases.Create (Item, Build, Input));
+
+         Result.Map.Insert
+           (Conv.To_Universal_String (Simple_Name (Item)), Test);
+
+         Found := True;
+      end loop;
+   end Add_Each_Input;
+
    ------------
    -- Create --
    ------------
@@ -29,17 +72,22 @@ package body Gela.Test_Iterators is
       Test : Gela.Test_Cases.Test_Case_Access;
 
       Result : Iterator;
+      Found  : Boolean;
    begin
       Start_Search (Each, Root, "ts_*", (Directory => True, others => False));
 
       while More_Entries (Each) loop
          Get_Next_Entry (Each, Item);
 
-         Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Ada_Test_Cases.Create (Item, Build));
+         Add_Each_Input (Result, Full_Name (Item), Build, Found);
 
-         Result.Map.Insert
-           (Conv.To_Universal_String (Simple_Name (Item)), Test);
+         if not Found then
+            Test := new Gela.Test_Cases.Test_Case'Class'
+              (Gela.Ada_Test_Cases.Create (Item, Build));
+
+            Result.Map.Insert
+              (Conv.To_Universal_String (Simple_Name (Item)), Test);
+         end if;
       end loop;
 
       return Result;

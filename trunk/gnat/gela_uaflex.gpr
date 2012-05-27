@@ -1,7 +1,8 @@
 project Gela_Uaflex is
 
+   Build := external ("GELA_BUILD", "/tmp/gela");
    for Source_Dirs use ("../tools/uaflex");
-   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+   for Object_Dir use Build & "/tools";
 
    for Main use ("uaflex-driver.adb");
 

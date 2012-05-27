@@ -18,14 +18,17 @@ package Gela.Ada_Test_Cases is
 
    procedure Run (Self : in out Test_Case);
    --  Compile source into executable:
-   --         gprbuild -p -aP ../source/ -aP <TEST>/.. \
+   --         gprbuild -p -aP ../../../gnat/ -aP <TEST>/.. \
    --             -XGELA_LIB_DIR=$(BUILD)/gela \
    --             -XSOURCE_DIR=<TEST> \
    --             -XOBJECT_DIR=$(BUILD)/<TEST> \
    --             -P simple.gpr main.adb
    --  Run executable:
+   --   (if no Input)
    --         cd <TEST>; $(TEST_HOME)/$</main > $(TEST_HOME)/$@
-   --  Compare output with <TEST>.out or "OK" if no such file
+   --   (if has Input)
+   --         cd <TEST>; $(TEST_HOME)/$</main Input > $(TEST_HOME)/Input
+   --  Compare output with <TEST>.out, <Input>.out or "OK" if no such file
 
    function Status (Self : Test_Case) return Test_Cases.Status_Kind;
 
@@ -44,10 +47,13 @@ package Gela.Ada_Test_Cases is
 
    function Create
      (Directory : Ada.Directories.Directory_Entry_Type;
-      Build     : League.Strings.Universal_String)
+      Build     : League.Strings.Universal_String;
+      Input     : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String)
      return Test_Cases.Test_Case'Class;
    --  Directory point where test locates.
    --  Build point to directory where tests will be build.
+   --  Input - first argument of test
 
 private
 
@@ -57,6 +63,7 @@ private
       Build     : League.Strings.Universal_String;
       Full_Path : League.Strings.Universal_String;
       Name      : League.Strings.Universal_String;
+      Input     : League.Strings.Universal_String;
       Status    : Test_Cases.Status_Kind;
       Duration  : League.Calendars.Time;
       Fixture   : League.Strings.Universal_String;

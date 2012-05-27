@@ -24,7 +24,9 @@ package body Gela.Ada_Test_Cases is
 
    function Create
      (Directory : Ada.Directories.Directory_Entry_Type;
-      Build     : League.Strings.Universal_String)
+      Build     : League.Strings.Universal_String;
+      Input     : League.Strings.Universal_String :=
+        League.Strings.Empty_Universal_String)
      return Test_Cases.Test_Case'Class
    is
       use Ada.Directories;
@@ -36,6 +38,7 @@ package body Gela.Ada_Test_Cases is
         (Build => Build,
          Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
          Name      => Name,
+         Input     => Input,
          Status    => Test_Cases.Error,
          Fixture   => League.Strings.To_Universal_String ("Ada_Test_Cases"),
          File      => (+"tests/") & Name,
@@ -80,7 +83,11 @@ package body Gela.Ada_Test_Cases is
 
    function Name (Self : Test_Case) return League.Strings.Universal_String is
    begin
-      return Self.Name;
+      if Self.Input.Is_Empty then
+         return Self.Name;
+      else
+         return Self.Name & " " & Self.Input;
+      end if;
    end Name;
 
    ----------------
@@ -119,11 +126,15 @@ package body Gela.Ada_Test_Cases is
       function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind;
 
       procedure Check_Output is
+         Per_Input  : constant League.Strings.Universal_String :=
+           Self.Full_Path & "/" & Self.Input & ".out";
          Out_File   : constant League.Strings.Universal_String :=
            Self.Full_Path & "/" & Self.Name & ".out";
          Expect : League.Strings.Universal_String;
       begin
-         if Ada.Directories.Exists (Conv.To_String (Out_File)) then
+         if Ada.Directories.Exists (Conv.To_String (Per_Input)) then
+            Expect := Conv.Read_File (Per_Input);
+         elsif Ada.Directories.Exists (Conv.To_String (Out_File)) then
             Expect := Conv.Read_File (Out_File);
          else
             Expect := +"OK";
@@ -172,10 +183,16 @@ package body Gela.Ada_Test_Cases is
       end Run_Gprbuild;
 
       procedure Run_Test is
-         Code   : Integer;
+         Code      : Integer;
+         Arguments : League.String_Vectors.Universal_String_Vector;
       begin
+         if not Self.Input.Is_Empty then
+            Arguments.Append (Self.Input);
+         end if;
+
          Host.Execute
            (Command     => Self.Object_Dir & "/main",
+            Arguments   => Arguments,
             Exit_Code   => Code,
             Output      => Self.Output,
             Output_File => Self.Output_File,
@@ -211,7 +228,8 @@ package body Gela.Ada_Test_Cases is
       Tests : constant String := Ada.Directories.Containing_Directory
         (Conv.To_String (Self.Full_Path));
       Parent : constant String := Ada.Directories.Containing_Directory (Tests);
-      Source : constant String := Ada.Directories.Compose (Parent, "source");
+      Trunk : constant String := Ada.Directories.Containing_Directory (Parent);
+      Source : constant String := Ada.Directories.Compose (Trunk, "gnat");
    begin
       return Conv.To_Universal_String (Source);
    end Source;
@@ -273,6 +291,11 @@ package body Gela.Ada_Test_Cases is
    function Output_File (Self : Test_Case) return Universal_String is
       Result : Universal_String := Self.Name;
    begin
+      if not Self.Input.Is_Empty then
+         Result.Append ('-');
+         Result.Append (Self.Input);
+      end if;
+
       Result.Append (".log");
 
       return Result;

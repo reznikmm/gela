@@ -7,8 +7,10 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with Ada.Characters.Conversions;
 with Ada.Command_Line;
 with Ada.Wide_Wide_Text_IO;
+with Ada.Exceptions;
 
 with Gela.Bitten_Report;
 with Gela.Build;
@@ -24,7 +26,7 @@ procedure Gela.Test_Driver is
    use type League.Strings.Universal_String;
 
    Source   : constant League.Strings.Universal_String :=
-     Gela.Host.Source_Root & "/tests";
+     Gela.Host.Source_Root & "/tests/asis";
    --  Path to directory containing tests' sources (trunk/tests/)
 
    Build    : constant League.Strings.Universal_String :=
@@ -81,4 +83,11 @@ begin
       Ada.Wide_Wide_Text_IO.Put_Line ("Some tests failed");
       Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
    end if;
+exception
+   when E : others =>
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (Ada.Characters.Conversions.To_Wide_Wide_String
+           (Ada.Exceptions.Exception_Information (E)));
+
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
 end Gela.Test_Driver;

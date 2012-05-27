@@ -2,8 +2,9 @@ with "gela_lib";
 
 project Gela_XML2Y is
 
+   Build := external ("GELA_BUILD", "/tmp/gela");
    for Source_Dirs use ("../tools/xml2ayacc/**");
-   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+   for Object_Dir use Build & "/tools";
 
    for Main use ("xml_to_y-driver.adb");
 
