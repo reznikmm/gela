@@ -4,8 +4,8 @@
 
 <xsl:output method="xml" indent='yes'/>
 
-<xsl:variable name="tokens" select="document('tokens.xml')"/>
-<xsl:variable name="fix"    select="document('fix.xml')"/>
+<xsl:variable name="tokens" select="document('../model/tokens.xml')"/>
+<xsl:variable name="fix"    select="document('../model/fix.xml')"/>
 
 <xsl:template match="/|*|@*">
   <xsl:copy>

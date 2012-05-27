@@ -8,6 +8,8 @@ with Ada.Strings.Unbounded;
 
 package body Generate is
 
+   Output : Ada.Text_IO.File_Type;
+
    procedure Print_Token (Name : in String);
    procedure Print_Rule (Item : in Rule);
    procedure Print_Token_Rule (Name : in String);
@@ -99,9 +101,18 @@ package body Generate is
      (Positions : Positions_List;
       Position  : Item_Position) return Iteration;
 
-   procedure Put_Line (Text : String) renames Ada.Text_IO.Put_Line;
+   procedure Put_Line (Text : String) is
+   begin
+      Ada.Text_IO.Put_Line (Output, Text);
+   end Put_Line;
+
    procedure New_Line;
-   procedure Put (Text : String) renames Ada.Text_IO.Put;
+
+   procedure Put (Text : String) is
+   begin
+      Ada.Text_IO.Put (Output, Text);
+   end Put;
+
    procedure Options_And_Lists_In_Sequence (Item : Sequence);
    procedure Print_List (Item : in List);
    procedure Print_Option (Item : in Option);
@@ -459,7 +470,7 @@ package body Generate is
 
    procedure New_Line is
    begin
-      Ada.Text_IO.New_Line;
+      Ada.Text_IO.New_Line (Output);
    end New_Line;
 
    procedure Options_And_Lists is
@@ -1798,12 +1809,22 @@ package body Generate is
       return True;
    end Is_Last;
 
+   procedure Close_File is
+   begin
+      Ada.Text_IO.Close (Output);
+   end Close_File;
+
+   procedure Open_File (Name : String) is
+   begin
+      Ada.Text_IO.Open (Output, Ada.Text_IO.Out_File, Name);
+   end Open_File;
+
 end Generate;
 
 
 
 ------------------------------------------------------------------------------
---  Copyright (c) 2006, Maxim Reznik
+--  Copyright (c) 2006-2012, Maxim Reznik
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without

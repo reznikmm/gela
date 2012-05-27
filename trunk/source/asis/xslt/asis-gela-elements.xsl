@@ -5,12 +5,11 @@
 <xsl:include href  = "common.xsl"/>
 <xsl:output method="text"/>
 
+<xsl:variable name="lo" select="'abcdefghijklmnopqrstuvwxyz-'" />
+<xsl:variable name="UP" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ.'" />
 
 
 <xsl:template match="/">
-
-with Asis.Gela.Lists;                  use Asis.Gela.Lists;
-with Asis.Gela.Visibility;
 
   <xsl:apply-templates select="//node [@abstract and not(@helper)]"
                        mode="package"/>
@@ -32,7 +31,12 @@ with Asis.Gela.Visibility;
       <xsl:with-param name="text" select="@name"/>
     </xsl:call-template>
   </xsl:variable>
-
+  <xsl:text>#</xsl:text>
+  <xsl:value-of select="translate($pkg,$UP,$lo)"/>.ads#
+  <xsl:if test="@name='Element_Node'">
+with Asis.Gela.Lists;                  use Asis.Gela.Lists;
+with Asis.Gela.Visibility;
+</xsl:if>
   <xsl:if
     test="@name='Fake_Element_Node' or @name='Any_Compilation_Unit_Node'">
 with Asis.Gela.Lists;                  use Asis.Gela.Lists;
@@ -261,7 +265,7 @@ end </xsl:text>
     </xsl:call-template>
   </xsl:variable>
 
-  <xsl:text>
+#<xsl:value-of select="translate($pkg,$UP,$lo)"/><xsl:text>.adb#
 package body </xsl:text>
 
   <xsl:value-of select="$pkg"/>
@@ -283,7 +287,8 @@ end </xsl:text>
 
   <xsl:value-of select="$pkg"/>
 
-  <xsl:text>;</xsl:text>
+  <xsl:text>;
+</xsl:text>
 
 </xsl:template>
 

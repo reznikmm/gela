@@ -209,6 +209,8 @@ procedure Finalize ;    --| Raises: unrecognized parameters
 --| unrecognized parameters is raised.
 --| N/A: modifies, errors
 
+procedure Push_Arguments (Text : String);
+
 end command_line_interface;
 
 ----------------------------------------------------------------

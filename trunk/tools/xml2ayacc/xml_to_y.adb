@@ -4,25 +4,34 @@ with Gramar_Items;
 with Nodes.Read;
 with Nodes.Database;
 with Gramar_Items.Code;
-with Ada.Command_Line;
 with Ada.Text_IO;
 
-procedure Xml_To_Y is
-   package C renames Ada.Command_Line;
-begin
-   if C.Argument_Count /= 4 then
-      Ada.Text_IO.Put_Line
-        ("Usage : xml_to_y xml_hier.xml tokens.xml fixed.xml code.xml");
-   else
-      Nodes.Read.Read_File (C.Argument (1));
-      Tokens.Read_File (C.Argument (2));
-      Gramar_Items.Read_File (C.Argument (3));
-      Gramar_Items.Code.Read_Code_File (C.Argument (4));
+package body Xml_To_Y is
+   procedure Run
+     (ASIS_File   : String;
+      Tokens_File : String;
+      Syntax_File : String;
+      Code_File   : String;
+      Output      : String := "") is
+   begin
+      Nodes.Read.Read_File (ASIS_File);
+      Tokens.Read_File (Tokens_File);
+      Gramar_Items.Read_File (Syntax_File);
+      Gramar_Items.Code.Read_Code_File (Code_File);
+
+      if Output /= "" then
+         Generate.Open_File (Output);
+      end if;
+
       Generate.All_Tokens;
       Generate.Start_Rule;
       Generate.Token_Rules;
       Generate.All_Rules;
       Generate.Options_And_Lists;
+
+      if Output /= "" then
+         Generate.Close_File;
+      end if;
 
       declare
          use Ada.Text_IO;
@@ -34,11 +43,12 @@ begin
             Put_Line (Output, Node_Name (I) & ":");
             for J in 1 .. Last_Attribute (I) loop
                Put_Line (Output, "   " & Attribute_Name (I, J) &
-                                 " : " & Attribute_Type (I, J) & ";");
+                           " : " & Attribute_Type (I, J) & ";");
             end loop;
          end loop;
+         Close (Output);
       end;
-   end if;
+   end Run;
 end Xml_To_Y;
 
 

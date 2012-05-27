@@ -22,6 +22,9 @@ package body Gela.Conv is
      (File_Name : League.Strings.Universal_String)
      return League.Strings.Universal_String
    is
+      type Stream_Element_Array_Access is access
+        Ada.Streams.Stream_Element_Array;
+
       UTF_8   : constant League.Strings.Universal_String :=
         League.Strings.To_Universal_String ("utf-8");
       Decoder : constant League.Text_Codecs.Text_Codec :=
@@ -35,13 +38,14 @@ package body Gela.Conv is
       Length : constant Ada.Streams.Stream_Element_Offset :=
         Ada.Streams.Stream_Element_Count (Size);
 
+      Data   : constant Stream_Element_Array_Access :=
+        new Ada.Streams.Stream_Element_Array (1 .. Length);
       File   : Ada.Streams.Stream_IO.File_Type;
-      Data   : Ada.Streams.Stream_Element_Array (1 .. Length);
       Last   : Ada.Streams.Stream_Element_Offset;
    begin
       Ada.Streams.Stream_IO.Open
         (File, Ada.Streams.Stream_IO.In_File, Name);
-      Ada.Streams.Stream_IO.Read (File, Data, Last);
+      Ada.Streams.Stream_IO.Read (File, Data.all, Last);
       Ada.Streams.Stream_IO.Close (File);
 
       return Decoder.Decode (Data (1 .. Last));

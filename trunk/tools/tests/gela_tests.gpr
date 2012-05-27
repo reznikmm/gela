@@ -1,4 +1,7 @@
 with "league";
+with "gela_uaflex";
+with "gela_xml2y";
+with "contrib_ayacc";
 
 project Gela_Tests is
 
@@ -12,7 +15,14 @@ project Gela_Tests is
         ("-gnatwae", "-gnatW8", "-gnatiw", "-gnaty",
          "-gnatVa", "-gnat05", "-g");
    end Compiler;
+
    package Binder is
       for Default_Switches ("ada") use ("-E");
    end Binder;
+
+   package Naming is
+      for Implementation ("Gela.XSLT")
+         use "gela-xslt-litxslt.adb";
+   end Naming;
+
 end Gela_Tests;

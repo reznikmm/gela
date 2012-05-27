@@ -29,4 +29,10 @@ package Gela.Host is
    --  If Output_File is empty, use unique file name.
    --  If Output_File is simple file name, when place it in temp directory.
 
+   function Build_Root return League.Strings.Universal_String;
+   --  Build root is a directory where gela-test_driver was built
+
+   function Source_Root return League.Strings.Universal_String;
+   --  Source root is a directory where tools/tests/gela-host.adb locates
+
 end Gela.Host;

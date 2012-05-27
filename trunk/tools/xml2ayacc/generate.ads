@@ -1,5 +1,8 @@
 package Generate is
-
+   
+   procedure Open_File (Name : String);
+   procedure Close_File;
+   
    procedure All_Tokens;
    procedure Start_Rule;
    procedure Token_Rules;

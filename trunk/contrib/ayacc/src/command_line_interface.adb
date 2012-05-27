@@ -27,6 +27,7 @@
 
 with Text_IO; use Text_IO;
 with String_scanner;
+
 ----------------------------------------------------------------
 
 Package body command_line_interface is
@@ -59,6 +60,7 @@ use Token_type_IO;
   subtype Command_Line_Type is String (1 .. Maximum_Command_Length);
 
   Arg_string : Command_Line_Type;   --| String obtained from operating system
+  Arg_Pushed : Boolean := False;
                                   
   N_arg_count: Argument_count;      --| Count of named args 
   P_arg_count: Argument_count;      --| Count of positional args 
@@ -240,9 +242,11 @@ begin
 
      N_arg_count := 0;
      P_arg_count := 0;
-
-     -- Get the command line from the operating system
-     Read_Command_Line (Arg_String);
+     
+     if not Arg_Pushed then
+        -- Get the command line from the operating system
+        Read_Command_Line (Arg_String);
+     end if;
 
      -- Remove trailing blanks and final semicolon  
      for i in reverse Arg_string'range loop
@@ -581,5 +585,12 @@ begin
 end Finalize;
 
 -------------------------------------------------------------------
+
+procedure Push_Arguments (Text : String) is
+begin
+   Arg_string (1 .. Text'Last) := Text;
+   Arg_string (Text'Last + 1 .. Arg_string'Last) := (others => ' ');
+   Arg_Pushed := True;
+end Push_Arguments;
 
 end command_line_interface;

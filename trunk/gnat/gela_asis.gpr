@@ -1,0 +1,14 @@
+with "gela_lib";
+
+project Gela_ASIS is
+
+   X := external ("GELA_LIB_DIR", "/tmp/gela/gela");
+   for Source_Dirs use (X & "ada", "../source/asis", "../source/asis/xasis");
+   for Object_Dir use external ("GELA_LIB_DIR", "/tmp/gela/gela");
+
+   package Compiler is
+      for Default_Switches ("ada") use
+        ("-gnat95", "-g");
+   end Compiler;
+
+end Gela_ASIS;
