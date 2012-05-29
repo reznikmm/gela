@@ -168,6 +168,7 @@ package body Gela.Ada_Test_Cases is
 
          Code   : Integer;
       begin
+         Arguments.Append (+"-j0");
          Arguments.Append (+"-p");
          Arguments.Append (+"-aP");
          Arguments.Append (Self.Source);
@@ -264,10 +265,8 @@ package body Gela.Ada_Test_Cases is
    -------------------
 
    function XGELA_BUILD (Self : Test_Case) return Universal_String is
-      Gela : constant String := Ada.Directories.Compose
-        (Conv.To_String (Self.Build), "gela");
    begin
-      return "-XGELA_BUILD=" & Conv.To_Universal_String (Gela);
+      return "-XGELA_BUILD=" & Self.Build;
    end XGELA_BUILD;
 
    -----------------
