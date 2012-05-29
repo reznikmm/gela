@@ -12,7 +12,7 @@ package body Ayacc_File_Names is
 
   Rcs_ID : constant String := "$Header: /cf/ua/arcadia/alex-ayacc/ayacc/src/RCS/file_names.a,v 1.2 88/11/28 13:38:59 arcadia Exp $";
 
-    Max_Name_Length : constant := 50;
+    Max_Name_Length : constant := 250;
 
     Source_File_Name       : STR(Max_Name_Length);
     Out_File_Name          : STR(Max_Name_Length);
