@@ -15,7 +15,7 @@ package body Gela.Test_Iterators is
 
    procedure Add_Each_Input
      (Result : in out Iterator;
-      Dir    : String;
+      Dir    : Ada.Directories.Directory_Entry_Type;
       Build  : League.Strings.Universal_String;
       Found  : out Boolean);
 
@@ -25,7 +25,7 @@ package body Gela.Test_Iterators is
 
    procedure Add_Each_Input
      (Result : in out Iterator;
-      Dir    : String;
+      Dir    : Ada.Directories.Directory_Entry_Type;
       Build  : League.Strings.Universal_String;
       Found  : out Boolean)
    is
@@ -37,7 +37,10 @@ package body Gela.Test_Iterators is
       Input : League.Strings.Universal_String;
    begin
       Start_Search
-        (Each, Dir, "*.in", (Ordinary_File => True, others => False));
+        (Each,
+         Full_Name (Dir),
+         "*.in",
+         (Ordinary_File => True, others => False));
 
       Found := False;
 
@@ -47,7 +50,7 @@ package body Gela.Test_Iterators is
          Input := Conv.To_Universal_String (Simple_Name (Item));
 
          Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Ada_Test_Cases.Create (Item, Build, Input));
+           (Gela.Ada_Test_Cases.Create (Dir, Build, Input));
 
          Result.Map.Insert
            (Conv.To_Universal_String (Simple_Name (Item)), Test);
@@ -79,7 +82,7 @@ package body Gela.Test_Iterators is
       while More_Entries (Each) loop
          Get_Next_Entry (Each, Item);
 
-         Add_Each_Input (Result, Full_Name (Item), Build, Found);
+         Add_Each_Input (Result, Item, Build, Found);
 
          if not Found then
             Test := new Gela.Test_Cases.Test_Case'Class'

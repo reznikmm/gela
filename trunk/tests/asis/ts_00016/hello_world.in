@@ -1,0 +1,3 @@
+Associate -I../../../source/asis/spec hello_world/example.adb
+Action
+Process_Context Example

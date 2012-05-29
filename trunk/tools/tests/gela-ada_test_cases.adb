@@ -10,7 +10,7 @@
 with Gela.Conv;
 with Gela.Host;
 with League.String_Vectors;
-
+with Ada.Text_IO;
 package body Gela.Ada_Test_Cases is
 
    function "+"
@@ -126,12 +126,16 @@ package body Gela.Ada_Test_Cases is
       function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind;
 
       procedure Check_Output is
-         Per_Input  : constant League.Strings.Universal_String :=
-           Self.Full_Path & "/" & Self.Input & ".out";
+         Per_Input  : League.Strings.Universal_String;
          Out_File   : constant League.Strings.Universal_String :=
            Self.Full_Path & "/" & Self.Name & ".out";
          Expect : League.Strings.Universal_String;
       begin
+         if not Self.Input.Is_Empty then
+            Per_Input := Self.Full_Path & "/" & Self.Input;
+            Per_Input.Replace (Per_Input.Length - 2, Per_Input.Length, ".out");
+         end if;
+
          if Ada.Directories.Exists (Conv.To_String (Per_Input)) then
             Expect := Conv.Read_File (Per_Input);
          elsif Ada.Directories.Exists (Conv.To_String (Out_File)) then
@@ -225,10 +229,10 @@ package body Gela.Ada_Test_Cases is
    ------------
 
    function Source (Self : Test_Case) return Universal_String is
-      Tests : constant String := Ada.Directories.Containing_Directory
-        (Conv.To_String (Self.Full_Path));
-      Parent : constant String := Ada.Directories.Containing_Directory (Tests);
-      Trunk : constant String := Ada.Directories.Containing_Directory (Parent);
+      Test : constant String := Conv.To_String (Self.Full_Path);
+      Parent : constant String := Ada.Directories.Containing_Directory (Test);
+      Tests : constant String := Ada.Directories.Containing_Directory (Parent);
+      Trunk : constant String := Ada.Directories.Containing_Directory (Tests);
       Source : constant String := Ada.Directories.Compose (Trunk, "gnat");
    begin
       return Conv.To_Universal_String (Source);
@@ -305,6 +309,8 @@ package body Gela.Ada_Test_Cases is
       Tests : constant String := Ada.Directories.Containing_Directory
         (Conv.To_String (Self.Full_Path));
    begin
+      Ada.Text_IO.Put_Line ("Full=" & Conv.To_String (Self.Full_Path));
+      Ada.Text_IO.Put_Line ("Tests=" & Tests);
       return Conv.To_Universal_String (Tests);
    end Parent;
 

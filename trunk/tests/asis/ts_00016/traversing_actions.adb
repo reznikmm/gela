@@ -24,7 +24,7 @@ package body Traversing_Actions is
       for J in 1 .. State.Last loop
          State.Items (J).Filter.Match (Element, Ok);
          if Ok then
-            State.Items (J).Action.Execute (Element);
+            State.Items (J).Action.Leave (Element);
          end if;
       end loop;
    end Post_Action;
@@ -45,7 +45,7 @@ package body Traversing_Actions is
          State.Items (J).Filter.Match (Element, Ok);
 
          if Ok then
-            State.Items (J).Action.Leave (Element);
+            State.Items (J).Action.Execute (Element);
          end if;
       end loop;
    end Pre_Action;
@@ -55,7 +55,7 @@ end Traversing_Actions;
 
 
 ------------------------------------------------------------------------------
---  Copyright (c) 2006, Maxim Reznik
+--  Copyright (c) 2006-2012, Maxim Reznik
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
