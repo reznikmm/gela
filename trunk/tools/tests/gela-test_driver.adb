@@ -34,8 +34,8 @@ procedure Gela.Test_Driver is
    --  Directory where build tests (/tmp/build/)
 
    Output   : constant League.Strings.Universal_String :=
-     Build & "/output.xml";
-   --  Where to store report file (/tmp/build/output.xml)
+     Build & "/report.xml";
+   --  Where to store report file (/tmp/build/report.xml)
 
    Iterator : Gela.Test_Iterators.Iterator;
 

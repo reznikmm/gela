@@ -19,7 +19,7 @@ package Gela.Ada_Test_Cases is
    procedure Run (Self : in out Test_Case);
    --  Compile source into executable:
    --         gprbuild -p -aP ../../../gnat/ -aP <TEST>/.. \
-   --             -XGELA_LIB_DIR=$(BUILD)/gela \
+   --             -XGELA_BUILD=$(BUILD)/gela \
    --             -XSOURCE_DIR=<TEST> \
    --             -XOBJECT_DIR=$(BUILD)/<TEST> \
    --             -P simple.gpr main.adb

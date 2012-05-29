@@ -173,7 +173,7 @@ package body Gela.Ada_Test_Cases is
          Arguments.Append (Self.Source);
          Arguments.Append (+"-aP");
          Arguments.Append (Self.Parent);
-         Arguments.Append (Self.XGELA_LIB_DIR);
+         Arguments.Append (Self.XGELA_BUILD);
          Arguments.Append (Self.XSOURCE_DIR);
          Arguments.Append (Self.XOBJECT_DIR);
          Arguments.Append (+"-P");
@@ -260,15 +260,15 @@ package body Gela.Ada_Test_Cases is
    end Traceback;
 
    -------------------
-   -- XGELA_LIB_DIR --
+   -- XGELA_BUILD --
    -------------------
 
-   function XGELA_LIB_DIR (Self : Test_Case) return Universal_String is
+   function XGELA_BUILD (Self : Test_Case) return Universal_String is
       Gela : constant String := Ada.Directories.Compose
         (Conv.To_String (Self.Build), "gela");
    begin
-      return "-XGELA_LIB_DIR=" & Conv.To_Universal_String (Gela);
-   end XGELA_LIB_DIR;
+      return "-XGELA_BUILD=" & Conv.To_Universal_String (Gela);
+   end XGELA_BUILD;
 
    -----------------
    -- XSOURCE_DIR --
