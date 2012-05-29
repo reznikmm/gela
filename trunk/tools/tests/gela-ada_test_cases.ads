@@ -84,7 +84,7 @@ private
    function Output_File (Self : Test_Case) return Universal_String;
    --  Where to save test's output (<TEST>.log)
 
-   function XGELA_LIB_DIR (Self : Test_Case) return Universal_String;
+   function XGELA_BUILD (Self : Test_Case) return Universal_String;
    function XSOURCE_DIR (Self : Test_Case) return Universal_String;
    function XOBJECT_DIR (Self : Test_Case) return Universal_String;
 
