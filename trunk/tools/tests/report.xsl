@@ -24,7 +24,6 @@
     <td><xsl:value-of select="@name"/></td>
     <td><xsl:value-of select="@status"/></td>
     <td><xsl:value-of select="@duration"/> s.</td>
-    <td><xsl:value-of select="@duration"/> s.</td>
     <td><xsl:value-of select="@fixture"/></td>
     <td><xsl:value-of select="@file"/></td>
     <td><pre><xsl:apply-templates select="stdout/text()"/></pre></td>

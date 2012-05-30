@@ -10,7 +10,7 @@
 with Gela.Conv;
 with Gela.Host;
 with League.String_Vectors;
-with Ada.Text_IO;
+
 package body Gela.Ada_Test_Cases is
 
    function "+"
@@ -34,8 +34,8 @@ package body Gela.Ada_Test_Cases is
       Name : constant League.Strings.Universal_String :=
         Conv.To_Universal_String (Simple_Name (Directory));
 
-      Result : constant Test_Case :=
-        (Build => Build,
+      Result : Test_Case :=
+        (Build     => Build,
          Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
          Name      => Name,
          Input     => Input,
@@ -43,7 +43,19 @@ package body Gela.Ada_Test_Cases is
          Fixture   => League.Strings.To_Universal_String ("Ada_Test_Cases"),
          File      => (+"tests/") & Name,
          others    => <>);
+
+      Options : League.String_Vectors.Universal_String_Vector;
    begin
+      Options.Append (+"main.adb");
+      Options.Append ("-XSOURCE_DIR=" & Name);
+      Options.Append ("-XOBJECT_DIR=" & Result.Object_Dir);
+
+      Result.Gprbuild := new Gela.Build_Test_Cases.Test_Case'
+        (Gela.Build_Test_Cases.Create
+           (Source  => Result.Source,
+            Build   => Build,
+            Project => Result.Parent & "/simple.gpr",
+            Options => Options));
       return Result;
    end Create;
 
@@ -125,6 +137,15 @@ package body Gela.Ada_Test_Cases is
       procedure Check_Output;
       function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind;
 
+      function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind is
+      begin
+         if Code = 0 then
+            return Test_Cases.Success;
+         else
+            return Test_Cases.Failure;
+         end if;
+      end Code_To_Status;
+
       procedure Check_Output is
          Per_Input  : League.Strings.Universal_String;
          Out_File   : constant League.Strings.Universal_String :=
@@ -150,41 +171,12 @@ package body Gela.Ada_Test_Cases is
          end if;
       end Check_Output;
 
-      function Code_To_Status (Code : Integer) return Test_Cases.Status_Kind is
-      begin
-         if Code = 0 then
-            return Test_Cases.Success;
-         else
-            return Test_Cases.Failure;
-         end if;
-      end Code_To_Status;
-
       procedure Run_Gprbuild is
-
-         Gprbuild  : constant League.Strings.Universal_String :=
-           +"gprbuild";
-
-         Arguments : League.String_Vectors.Universal_String_Vector;
-
-         Code   : Integer;
       begin
-         Arguments.Append (+"-j0");
-         Arguments.Append (+"-p");
-         Arguments.Append (+"-aP");
-         Arguments.Append (Self.Source);
-         Arguments.Append (+"-aP");
-         Arguments.Append (Self.Parent);
-         Arguments.Append (Self.XGELA_BUILD);
-         Arguments.Append (Self.XSOURCE_DIR);
-         Arguments.Append (Self.XOBJECT_DIR);
-         Arguments.Append (+"-P");
-         Arguments.Append (+"simple.gpr");
-         Arguments.Append (+"main.adb");
-
-         Host.Execute
-           (Gprbuild, Arguments, Code, Self.Output, Self.Output_File);
-
-         Self.Status := Code_To_Status (Code);
+         Self.Gprbuild.Run;
+         Self.Status := Self.Gprbuild.Status;
+         Self.Duration := Self.Gprbuild.Duration;
+         Self.Output := Self.Gprbuild.Output;
       end Run_Gprbuild;
 
       procedure Run_Test is
@@ -234,9 +226,8 @@ package body Gela.Ada_Test_Cases is
       Parent : constant String := Ada.Directories.Containing_Directory (Test);
       Tests : constant String := Ada.Directories.Containing_Directory (Parent);
       Trunk : constant String := Ada.Directories.Containing_Directory (Tests);
-      Source : constant String := Ada.Directories.Compose (Trunk, "gnat");
    begin
-      return Conv.To_Universal_String (Source);
+      return Conv.To_Universal_String (Trunk);
    end Source;
 
    ------------
@@ -260,33 +251,6 @@ package body Gela.Ada_Test_Cases is
       return Self.Traceback;
    end Traceback;
 
-   -------------------
-   -- XGELA_BUILD --
-   -------------------
-
-   function XGELA_BUILD (Self : Test_Case) return Universal_String is
-   begin
-      return "-XGELA_BUILD=" & Self.Build;
-   end XGELA_BUILD;
-
-   -----------------
-   -- XSOURCE_DIR --
-   -----------------
-
-   function XSOURCE_DIR (Self : Test_Case) return Universal_String is
-   begin
-      return "-XSOURCE_DIR=" & Self.Full_Path;
-   end XSOURCE_DIR;
-
-   -----------------
-   -- XOBJECT_DIR --
-   -----------------
-
-   function XOBJECT_DIR (Self : Test_Case) return Universal_String is
-   begin
-      return "-XOBJECT_DIR=" & Self.Object_Dir;
-   end XOBJECT_DIR;
-
    -----------------
    -- Output_File --
    -----------------
@@ -308,8 +272,6 @@ package body Gela.Ada_Test_Cases is
       Tests : constant String := Ada.Directories.Containing_Directory
         (Conv.To_String (Self.Full_Path));
    begin
-      Ada.Text_IO.Put_Line ("Full=" & Conv.To_String (Self.Full_Path));
-      Ada.Text_IO.Put_Line ("Tests=" & Tests);
       return Conv.To_Universal_String (Tests);
    end Parent;
 

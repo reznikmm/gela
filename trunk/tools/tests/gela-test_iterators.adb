@@ -10,6 +10,7 @@
 with Ada.Directories;
 with Gela.Conv;
 with Gela.Ada_Test_Cases;
+with Gela.Build_Test_Cases;
 
 package body Gela.Test_Iterators is
 
@@ -18,6 +19,34 @@ package body Gela.Test_Iterators is
       Dir    : Ada.Directories.Directory_Entry_Type;
       Build  : League.Strings.Universal_String;
       Found  : out Boolean);
+
+   procedure Add_Build_ASIS
+     (Result : in out Iterator;
+      Source : League.Strings.Universal_String;
+      Build  : League.Strings.Universal_String);
+
+   --------------------
+   -- Add_Build_ASIS --
+   --------------------
+
+   procedure Add_Build_ASIS
+     (Result : in out Iterator;
+      Source : League.Strings.Universal_String;
+      Build  : League.Strings.Universal_String)
+   is
+      use type League.Strings.Universal_String;
+      use Gela.Build_Test_Cases;
+
+      function "+"
+        (Text : Wide_Wide_String)
+      return League.Strings.Universal_String
+        renames League.Strings.To_Universal_String;
+
+      Test : constant Gela.Test_Cases.Test_Case_Access := new Test_Case'
+        (Create (Source & "/../..", Build, +"gela_asis.gpr"));
+   begin
+      Result.Map.Insert (Test.Name, Test);
+   end Add_Build_ASIS;
 
    --------------------
    -- Add_Each_Input --
@@ -77,6 +106,8 @@ package body Gela.Test_Iterators is
       Result : Iterator;
       Found  : Boolean;
    begin
+      Add_Build_ASIS (Result, Source, Build);
+
       Start_Search (Each, Root, "ts_*", (Directory => True, others => False));
 
       while More_Entries (Each) loop

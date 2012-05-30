@@ -7,84 +7,93 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Ada.Directories;
-with Gela.Test_Cases;
 with League.Calendars;
 with League.Strings;
+with League.String_Vectors;
+with Gela.Test_Cases;
 
-private with Gela.Build_Test_Cases;
-
-package Gela.Ada_Test_Cases is
+package Gela.Build_Test_Cases is
 
    type Test_Case is new Test_Cases.Test_Case with private;
+   type Test_Case_Access is access all Test_Case'Class;
 
+   overriding
    procedure Run (Self : in out Test_Case);
-   --  Compile source into executable:
-   --         gprbuild -p -aP ../../../gnat/ -aP <TEST>/.. \
-   --             -XGELA_BUILD=$(BUILD)/gela \
-   --             -XSOURCE_DIR=<TEST> \
-   --             -XOBJECT_DIR=$(BUILD)/<TEST> \
-   --             -P simple.gpr main.adb
-   --  Run executable:
-   --   (if no Input)
-   --         cd <TEST>; $(TEST_HOME)/$</main > $(TEST_HOME)/$@
-   --   (if has Input)
-   --         cd <TEST>; $(TEST_HOME)/$</main Input > $(TEST_HOME)/Input
-   --  Compare output with <TEST>.out, <Input>.out or "OK" if no such file
+   --  Compile source using gprbuild:
+   --         gprbuild -j0 -p -aP <SOURCE>/gnat/ \
+   --             -aP <SEARCH_PATH> \
+   --             -XGELA_BUILD=<BUILD> \
+   --             -P <PROJECT> <OPTIONS>
 
+   overriding
    function Status (Self : Test_Case) return Test_Cases.Status_Kind;
 
+   overriding
    function Duration (Self : Test_Case) return League.Calendars.Time;
 
+   overriding
    function Name (Self : Test_Case) return League.Strings.Universal_String;
+   --  Return Project if Name not set
 
+   overriding
    function Fixture (Self : Test_Case) return League.Strings.Universal_String;
 
+   overriding
    function File (Self : Test_Case) return League.Strings.Universal_String;
+   --  Return Project
 
+   overriding
    function Output (Self : Test_Case) return League.Strings.Universal_String;
 
+   overriding
    function Traceback
      (Self : Test_Case) return League.Strings.Universal_String;
 
    function Create
-     (Directory : Ada.Directories.Directory_Entry_Type;
+     (Source    : League.Strings.Universal_String;
       Build     : League.Strings.Universal_String;
-      Input     : League.Strings.Universal_String :=
+      Project   : League.Strings.Universal_String;
+      Search    : League.String_Vectors.Universal_String_Vector :=
+        League.String_Vectors.Empty_Universal_String_Vector;
+      Options   : League.String_Vectors.Universal_String_Vector :=
+        League.String_Vectors.Empty_Universal_String_Vector;
+      Name      : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String)
-     return Test_Cases.Test_Case'Class;
-   --  Directory point where test locates.
-   --  Build point to directory where tests will be build.
-   --  Input - first argument of test
+     return Test_Case;
+
+   function Search
+     (Self : Test_Case) return League.String_Vectors.Universal_String_Vector;
+
+   procedure Set_Search
+     (Self  : in out Test_Case;
+      Value : League.String_Vectors.Universal_String_Vector);
+
+   function Options
+     (Self : Test_Case) return League.String_Vectors.Universal_String_Vector;
+
+   procedure Set_Options
+     (Self  : in out Test_Case;
+      Value : League.String_Vectors.Universal_String_Vector);
 
 private
 
    use League.Strings;
 
    type Test_Case is new Test_Cases.Test_Case with record
-      Gprbuild  : Gela.Build_Test_Cases.Test_Case_Access;
+      Source    : League.Strings.Universal_String;
       Build     : League.Strings.Universal_String;
-      Full_Path : League.Strings.Universal_String;
+      Project   : League.Strings.Universal_String;
+      Search    : League.String_Vectors.Universal_String_Vector;
+      Options   : League.String_Vectors.Universal_String_Vector;
       Name      : League.Strings.Universal_String;
-      Input     : League.Strings.Universal_String;
       Status    : Test_Cases.Status_Kind;
       Duration  : League.Calendars.Time;
       Fixture   : League.Strings.Universal_String;
-      File      : League.Strings.Universal_String;
       Output    : League.Strings.Universal_String;
       Traceback : League.Strings.Universal_String;
    end record;
 
-   function Source (Self : Test_Case) return Universal_String;
-   --  Path to Gela sources (trunk/source/)
-
-   function Object_Dir (Self : Test_Case) return Universal_String;
-   --  Path to test's object directory ($(BUILD)/<TEST>/)
-
-   function Parent (Self : Test_Case) return Universal_String;
-   --  Path to directory containing tests (truck/tests/)
-
    function Output_File (Self : Test_Case) return Universal_String;
    --  Where to save test's output (<TEST>.log)
 
-end Gela.Ada_Test_Cases;
+end Gela.Build_Test_Cases;

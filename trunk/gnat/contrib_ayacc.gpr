@@ -1,4 +1,4 @@
-project Gela is
+project Contrib_AYACC is
 
    Build := external ("GELA_BUILD", "/tmp/gela");
    for Source_Dirs use ("../contrib/ayacc/src/");
@@ -11,4 +11,4 @@ project Gela is
         ("-gnat95", "-g");
    end Compiler;
 
-end Gela;
+end Contrib_AYACC;
