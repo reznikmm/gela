@@ -11,6 +11,7 @@ with Ada.Directories;
 with Gela.Conv;
 with Gela.Run_Test_Cases;
 with Gela.Build_Test_Cases;
+with Gela.Input_Test_Cases;
 
 package body Gela.Test_Iterators is
 
@@ -62,8 +63,10 @@ package body Gela.Test_Iterators is
 
       Each  : Search_Type;
       Item  : Directory_Entry_Type;
+      Run   : Gela.Run_Test_Cases.Test_Case_Access;
       Test  : Gela.Test_Cases.Test_Case_Access;
       Input : League.Strings.Universal_String;
+
    begin
       Start_Search
         (Each,
@@ -78,8 +81,11 @@ package body Gela.Test_Iterators is
 
          Input := Conv.To_Universal_String (Simple_Name (Item));
 
+         Run := new Gela.Run_Test_Cases.Test_Case'Class'
+           (Gela.Run_Test_Cases.Create (Dir, Build));
+
          Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Run_Test_Cases.Create (Dir, Build, Input));
+           (Gela.Input_Test_Cases.Create (Run, Input));
 
          Result.Map.Insert
            (Conv.To_Universal_String (Simple_Name (Item)), Test);
@@ -116,7 +122,7 @@ package body Gela.Test_Iterators is
          Add_Each_Input (Result, Item, Build, Found);
 
          if not Found then
-            Test := new Gela.Test_Cases.Test_Case'Class'
+            Test := new Gela.Run_Test_Cases.Test_Case'Class'
               (Gela.Run_Test_Cases.Create (Item, Build));
 
             Result.Map.Insert

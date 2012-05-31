@@ -25,30 +25,6 @@ package Gela.Build_Test_Cases is
    --             -XGELA_BUILD=<BUILD> \
    --             -P <PROJECT> <OPTIONS>
 
-   overriding
-   function Status (Self : Test_Case) return Test_Cases.Status_Kind;
-
-   overriding
-   function Duration (Self : Test_Case) return League.Calendars.Time;
-
-   overriding
-   function Name (Self : Test_Case) return League.Strings.Universal_String;
-   --  Return Project if Name not set
-
-   overriding
-   function Fixture (Self : Test_Case) return League.Strings.Universal_String;
-
-   overriding
-   function File (Self : Test_Case) return League.Strings.Universal_String;
-   --  Return Project
-
-   overriding
-   function Output (Self : Test_Case) return League.Strings.Universal_String;
-
-   overriding
-   function Traceback
-     (Self : Test_Case) return League.Strings.Universal_String;
-
    function Create
      (Source    : League.Strings.Universal_String;
       Build     : League.Strings.Universal_String;
@@ -94,6 +70,30 @@ private
       Output    : League.Strings.Universal_String;
       Traceback : League.Strings.Universal_String;
    end record;
+
+   overriding
+   function Status (Self : Test_Case) return Test_Cases.Status_Kind;
+
+   overriding
+   function Duration (Self : Test_Case) return League.Calendars.Time;
+
+   overriding
+   function Name (Self : Test_Case) return League.Strings.Universal_String;
+   --  Return Project if Name not set
+
+   overriding
+   function Fixture (Self : Test_Case) return League.Strings.Universal_String;
+
+   overriding
+   function File (Self : Test_Case) return League.Strings.Universal_String;
+   --  Return Project
+
+   overriding
+   function Output (Self : Test_Case) return League.Strings.Universal_String;
+
+   overriding
+   function Traceback
+     (Self : Test_Case) return League.Strings.Universal_String;
 
    function Output_File (Self : Test_Case) return Universal_String;
    --  Where to save test's output (<TEST>.log)
