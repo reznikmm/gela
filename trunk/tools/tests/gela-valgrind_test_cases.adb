@@ -26,7 +26,7 @@ package body Gela.Valgrind_Test_Cases is
         (Run_Test  => Run_Test);
    begin
       Prefix.Append (To_Universal_String ("--xml=yes"));
-      Prefix.Append ("--xml-file=" & Run_Test.Path & Result.Valgrind_Report);
+      Prefix.Append ("--xml-file=" & Result.Valgrind_Report);
       Prefix.Append (Run_Test.Command);
       Arguments.Prepend (Prefix);
       Run_Test.Set_Command
