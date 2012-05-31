@@ -9,14 +9,34 @@
 
 with Gela.Conv;
 with Gela.Host;
-with League.String_Vectors;
 
-package body Gela.Ada_Test_Cases is
+package body Gela.Run_Test_Cases is
 
    function "+"
      (Text : Wide_Wide_String)
      return League.Strings.Universal_String
      renames League.Strings.To_Universal_String;
+
+   ---------------
+   -- Arguments --
+   ---------------
+
+   function Arguments
+     (Self : Test_Case) return League.String_Vectors.Universal_String_Vector is
+   begin
+      return Self.Arguments;
+   end Arguments;
+
+   -------------
+   -- Command --
+   -------------
+
+   function Command
+     (Self : Test_Case)
+      return League.Strings.Universal_String is
+   begin
+      return Self.Command;
+   end Command;
 
    ------------
    -- Create --
@@ -56,6 +76,18 @@ package body Gela.Ada_Test_Cases is
             Build   => Build,
             Project => Result.Parent & "/simple.gpr",
             Options => Options));
+
+      Result.Command := Result.Object_Dir & "/main";
+
+      if not Input.Is_Empty then
+         Result.Arguments.Append (Input);
+         Result.Out_Name := Result.Full_Path & "/" & Result.Input;
+         Result.Out_Name.Replace
+           (Result.Out_Name.Length - 2, Result.Out_Name.Length, ".out");
+      else
+         Result.Out_Name := Result.Full_Path & "/" & Result.Name & ".out";
+      end if;
+
       return Result;
    end Create;
 
@@ -88,6 +120,17 @@ package body Gela.Ada_Test_Cases is
    begin
       return Self.Fixture;
    end Fixture;
+
+   ---------------
+   -- GPR_Build --
+   ---------------
+
+   function GPR_Build
+     (Self : Test_Case)
+      return Gela.Build_Test_Cases.Test_Case_Access is
+   begin
+      return Self.Gprbuild;
+   end GPR_Build;
 
    ----------
    -- Name --
@@ -147,20 +190,10 @@ package body Gela.Ada_Test_Cases is
       end Code_To_Status;
 
       procedure Check_Output is
-         Per_Input  : League.Strings.Universal_String;
-         Out_File   : constant League.Strings.Universal_String :=
-           Self.Full_Path & "/" & Self.Name & ".out";
          Expect : League.Strings.Universal_String;
       begin
-         if not Self.Input.Is_Empty then
-            Per_Input := Self.Full_Path & "/" & Self.Input;
-            Per_Input.Replace (Per_Input.Length - 2, Per_Input.Length, ".out");
-         end if;
-
-         if Ada.Directories.Exists (Conv.To_String (Per_Input)) then
-            Expect := Conv.Read_File (Per_Input);
-         elsif Ada.Directories.Exists (Conv.To_String (Out_File)) then
-            Expect := Conv.Read_File (Out_File);
+         if Ada.Directories.Exists (Conv.To_String (Self.Out_Name)) then
+            Expect := Conv.Read_File (Self.Out_Name);
          else
             Expect := +"OK";
             Expect.Append (Wide_Wide_Character'Val (10));
@@ -180,16 +213,11 @@ package body Gela.Ada_Test_Cases is
       end Run_Gprbuild;
 
       procedure Run_Test is
-         Code      : Integer;
-         Arguments : League.String_Vectors.Universal_String_Vector;
+         Code : Integer;
       begin
-         if not Self.Input.Is_Empty then
-            Arguments.Append (Self.Input);
-         end if;
-
          Host.Execute
-           (Command     => Self.Object_Dir & "/main",
-            Arguments   => Arguments,
+           (Command     => Self.Command,
+            Arguments   => Self.Arguments,
             Exit_Code   => Code,
             Output      => Self.Output,
             Output_File => Self.Output_File,
@@ -216,6 +244,30 @@ package body Gela.Ada_Test_Cases is
 
       Self.Duration := League.Calendars.Clock - Started;
    end Run;
+
+   -----------------
+   -- Set_Command --
+   -----------------
+
+   procedure Set_Command
+     (Self      : in out Test_Case;
+      Command   : League.Strings.Universal_String;
+      Arguments : League.String_Vectors.Universal_String_Vector) is
+   begin
+      Self.Command := Command;
+      Self.Arguments := Arguments;
+   end Set_Command;
+
+   ---------------------
+   -- Set_Output_Name --
+   ---------------------
+
+   procedure Set_Output_Name
+     (Self  : in out Test_Case;
+      Value : League.Strings.Universal_String) is
+   begin
+      Self.Out_Name := Value;
+   end Set_Output_Name;
 
    ------------
    -- Source --
@@ -275,4 +327,4 @@ package body Gela.Ada_Test_Cases is
       return Conv.To_Universal_String (Tests);
    end Parent;
 
-end Gela.Ada_Test_Cases;
+end Gela.Run_Test_Cases;

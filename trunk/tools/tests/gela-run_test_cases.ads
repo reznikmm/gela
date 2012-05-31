@@ -11,10 +11,11 @@ with Ada.Directories;
 with Gela.Test_Cases;
 with League.Calendars;
 with League.Strings;
+with League.String_Vectors;
 
-private with Gela.Build_Test_Cases;
+with Gela.Build_Test_Cases;
 
-package Gela.Ada_Test_Cases is
+package Gela.Run_Test_Cases is
 
    type Test_Case is new Test_Cases.Test_Case with private;
 
@@ -57,12 +58,39 @@ package Gela.Ada_Test_Cases is
    --  Build point to directory where tests will be build.
    --  Input - first argument of test
 
+   --  Customisation interface
+
+   function GPR_Build
+     (Self : Test_Case)
+      return Gela.Build_Test_Cases.Test_Case_Access;
+
+   function Command
+     (Self : Test_Case)
+      return League.Strings.Universal_String;
+   --  Command to run test
+
+   function Arguments
+     (Self : Test_Case) return League.String_Vectors.Universal_String_Vector;
+   --  Arguments for command to run test
+
+   procedure Set_Command
+     (Self      : in out Test_Case;
+      Command   : League.Strings.Universal_String;
+      Arguments : League.String_Vectors.Universal_String_Vector);
+
+   procedure Set_Output_Name
+     (Self  : in out Test_Case;
+      Value : League.Strings.Universal_String);
+
 private
 
    use League.Strings;
 
    type Test_Case is new Test_Cases.Test_Case with record
       Gprbuild  : Gela.Build_Test_Cases.Test_Case_Access;
+      Command   : League.Strings.Universal_String;
+      Arguments : League.String_Vectors.Universal_String_Vector;
+      Out_Name  : League.Strings.Universal_String;
       Build     : League.Strings.Universal_String;
       Full_Path : League.Strings.Universal_String;
       Name      : League.Strings.Universal_String;
@@ -87,4 +115,4 @@ private
    function Output_File (Self : Test_Case) return Universal_String;
    --  Where to save test's output (<TEST>.log)
 
-end Gela.Ada_Test_Cases;
+end Gela.Run_Test_Cases;

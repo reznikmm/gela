@@ -1,7 +1,7 @@
 with "league";
-with "gela_uaflex";
-with "gela_xml2y";
-with "contrib_ayacc";
+with "../../gnat/gela_uaflex";
+with "../../gnat/gela_xml2y";
+with "../../gnat/contrib_ayacc";
 
 project Gela_Tests is
 

@@ -61,6 +61,8 @@ package Gela.Build_Test_Cases is
         League.Strings.Empty_Universal_String)
      return Test_Case;
 
+   --  Customisation interface
+
    function Search
      (Self : Test_Case) return League.String_Vectors.Universal_String_Vector;
 

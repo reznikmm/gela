@@ -9,7 +9,7 @@
 
 with Ada.Directories;
 with Gela.Conv;
-with Gela.Ada_Test_Cases;
+with Gela.Run_Test_Cases;
 with Gela.Build_Test_Cases;
 
 package body Gela.Test_Iterators is
@@ -79,7 +79,7 @@ package body Gela.Test_Iterators is
          Input := Conv.To_Universal_String (Simple_Name (Item));
 
          Test := new Gela.Test_Cases.Test_Case'Class'
-           (Gela.Ada_Test_Cases.Create (Dir, Build, Input));
+           (Gela.Run_Test_Cases.Create (Dir, Build, Input));
 
          Result.Map.Insert
            (Conv.To_Universal_String (Simple_Name (Item)), Test);
@@ -117,7 +117,7 @@ package body Gela.Test_Iterators is
 
          if not Found then
             Test := new Gela.Test_Cases.Test_Case'Class'
-              (Gela.Ada_Test_Cases.Create (Item, Build));
+              (Gela.Run_Test_Cases.Create (Item, Build));
 
             Result.Map.Insert
               (Conv.To_Universal_String (Simple_Name (Item)), Test);
