@@ -12,6 +12,7 @@ with Gela.Conv;
 with Gela.Run_Test_Cases;
 with Gela.Build_Test_Cases;
 with Gela.Input_Test_Cases;
+with Gela.Valgrind_Test_Cases;
 
 package body Gela.Test_Iterators is
 
@@ -46,7 +47,7 @@ package body Gela.Test_Iterators is
       Test : constant Gela.Test_Cases.Test_Case_Access := new Test_Case'
         (Create (Source & "/../..", Build, +"gela_asis.gpr"));
    begin
-      Result.Map.Insert (Test.Name, Test);
+      Result.List.Append (Test);
    end Add_Build_ASIS;
 
    --------------------
@@ -84,11 +85,21 @@ package body Gela.Test_Iterators is
          Run := new Gela.Run_Test_Cases.Test_Case'Class'
            (Gela.Run_Test_Cases.Create (Dir, Build));
 
-         Test := new Gela.Test_Cases.Test_Case'Class'
+         Test := new Gela.Run_Test_Cases.Test_Case'Class'
            (Gela.Input_Test_Cases.Create (Run, Input));
 
-         Result.Map.Insert
-           (Conv.To_Universal_String (Simple_Name (Item)), Test);
+         Result.List.Append (Test);
+
+         Run := new Gela.Run_Test_Cases.Test_Case'Class'
+           (Gela.Run_Test_Cases.Create (Dir, Build));
+
+         Run := new Gela.Run_Test_Cases.Test_Case'Class'
+           (Gela.Input_Test_Cases.Create (Run, Input));
+
+         Test := new Gela.Valgrind_Test_Cases.Test_Case'
+           (Gela.Valgrind_Test_Cases.Create (Run));
+
+         Result.List.Append (Test);
 
          Found := True;
       end loop;
@@ -108,6 +119,7 @@ package body Gela.Test_Iterators is
       Each : Search_Type;
       Item : Directory_Entry_Type;
       Test : Gela.Test_Cases.Test_Case_Access;
+      Run  : Gela.Run_Test_Cases.Test_Case_Access;
 
       Result : Iterator;
       Found  : Boolean;
@@ -125,8 +137,15 @@ package body Gela.Test_Iterators is
             Test := new Gela.Run_Test_Cases.Test_Case'Class'
               (Gela.Run_Test_Cases.Create (Item, Build));
 
-            Result.Map.Insert
-              (Conv.To_Universal_String (Simple_Name (Item)), Test);
+            Result.List.Append (Test);
+
+            Run := new Gela.Run_Test_Cases.Test_Case'Class'
+              (Gela.Run_Test_Cases.Create (Item, Build));
+
+            Test := new Gela.Valgrind_Test_Cases.Test_Case'
+              (Gela.Valgrind_Test_Cases.Create (Run));
+
+            Result.List.Append (Test);
          end if;
       end loop;
 
@@ -139,7 +158,7 @@ package body Gela.Test_Iterators is
 
    function Has_More_Tests (Self : Iterator) return Boolean is
    begin
-      return Maps.Has_Element (Self.Next);
+      return Lists.Has_Element (Self.Next);
    end Has_More_Tests;
 
    ----------
@@ -150,8 +169,8 @@ package body Gela.Test_Iterators is
      (Self : in out Iterator;
       Test : out Gela.Test_Cases.Test_Case_Access) is
    begin
-      Test := Maps.Element (Self.Next);
-      Maps.Next (Self.Next);
+      Test := Lists.Element (Self.Next);
+      Lists.Next (Self.Next);
    end Next;
 
    -----------
@@ -160,7 +179,7 @@ package body Gela.Test_Iterators is
 
    procedure Start (Self : in out Iterator) is
    begin
-      Self.Next := Self.Map.First;
+      Self.Next := Self.List.First;
    end Start;
 
 end Gela.Test_Iterators;

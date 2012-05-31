@@ -10,7 +10,7 @@
 with Gela.Test_Cases;
 with League.Strings;
 
-private with Ada.Containers.Ordered_Maps;
+private with Ada.Containers.Doubly_Linked_Lists;
 
 package Gela.Test_Iterators is
 
@@ -31,15 +31,13 @@ package Gela.Test_Iterators is
 
 private
 
-   package Maps is new Ada.Containers.Ordered_Maps
-     (League.Strings.Universal_String,
-      Gela.Test_Cases.Test_Case_Access,
-      League.Strings."<",
+   package Lists is new Ada.Containers.Doubly_Linked_Lists
+     (Gela.Test_Cases.Test_Case_Access,
       Gela.Test_Cases."=");
 
    type Iterator is tagged record
-      Map : Maps.Map;
-      Next : Maps.Cursor;
+      List : Lists.List;
+      Next : Lists.Cursor;
    end record;
 
 end Gela.Test_Iterators;

@@ -27,7 +27,7 @@ package Gela.Input_Test_Cases is
    function Create
      (Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
       Input     : League.Strings.Universal_String)
-     return Test_Cases.Test_Case'Class;
+     return Run_Test_Cases.Test_Case'Class;
    --  Run_Test - base test.
    --  Input - first argument of test
 
