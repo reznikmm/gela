@@ -149,6 +149,7 @@ package body Gela.Valgrind_Test_Cases is
    begin
       Prefix.Append (To_Universal_String ("--xml=yes"));
       Prefix.Append ("--xml-file=" & Result.Valgrind_Report);
+      Prefix.Append (To_Universal_String ("--suppressions=../valgrind.supp"));
       Prefix.Append (Run_Test.Command);
       Arguments.Prepend (Prefix);
       Run_Test.Set_Command
@@ -291,10 +292,8 @@ package body Gela.Valgrind_Test_Cases is
 
    not overriding
    function Valgrind_Report
-     (Self : Test_Case) return League.Strings.Universal_String
-   is
-      pragma Unreferenced (Self);
+     (Self : Test_Case) return League.Strings.Universal_String is
    begin
-      return To_Universal_String ("/tmp/valgrind.xml");
+      return Self.Run_Test.Build & "/valgrind.xml";
    end Valgrind_Report;
 end Gela.Valgrind_Test_Cases;

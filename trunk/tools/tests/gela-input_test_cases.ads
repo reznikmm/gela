@@ -67,6 +67,9 @@ private
       return Gela.Build_Test_Cases.Test_Case_Access;
 
    overriding
+   function Build (Self : Test_Case) return League.Strings.Universal_String;
+
+   overriding
    function Path (Self : Test_Case) return Universal_String;
 
    overriding

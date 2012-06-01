@@ -45,6 +45,11 @@ package Gela.Run_Test_Cases is
      (Self : Test_Case)
       return Gela.Build_Test_Cases.Test_Case_Access is abstract;
 
+   function Build
+     (Self : Test_Case)
+      return League.Strings.Universal_String is abstract;
+   --  Build point to directory where tests will be build
+
    function Path
      (Self : Test_Case)
       return League.Strings.Universal_String is abstract;

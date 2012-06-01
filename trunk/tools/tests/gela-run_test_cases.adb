@@ -70,6 +70,8 @@ package body Gela.Run_Test_Cases is
         (Self : Test_Case)
       return Gela.Build_Test_Cases.Test_Case_Access;
 
+      function Build (Self : Test_Case) return Universal_String;
+
       function Path (Self : Test_Case) return League.Strings.Universal_String;
       --  Directory where test is located
 
@@ -111,6 +113,15 @@ package body Gela.Run_Test_Cases is
       begin
          return Self.Arguments;
       end Arguments;
+
+      -----------
+      -- Build --
+      -----------
+
+      function Build (Self : Test_Case) return Universal_String is
+      begin
+         return Self.Build;
+      end Build;
 
       -------------
       -- Command --

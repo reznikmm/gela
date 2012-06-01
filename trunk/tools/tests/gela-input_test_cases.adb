@@ -20,6 +20,15 @@ package body Gela.Input_Test_Cases is
       return Self.Run_Test.Arguments;
    end Arguments;
 
+   -----------
+   -- Build --
+   -----------
+
+   function Build (Self : Test_Case) return League.Strings.Universal_String is
+   begin
+      return Self.Run_Test.Build;
+   end Build;
+
    -------------
    -- Command --
    -------------
