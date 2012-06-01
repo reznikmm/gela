@@ -122,6 +122,13 @@ package body Gela.Bitten_Report is
       N_Image : Wide_Wide_String (1 .. 8);
    begin
       IO.Put (N_Image, N);
+
+      for J in N_Image'Range loop
+         if N_Image (J) = ' ' then
+            N_Image (J) := '0';
+         end if;
+      end loop;
+
       return +(S_Image (2 .. S_Image'Last) & "."
                  & N_Image (2 .. N_Image'Last));
    end Time_Image;
