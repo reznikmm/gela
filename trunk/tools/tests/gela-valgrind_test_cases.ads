@@ -31,6 +31,8 @@ private
    use League.Strings;
 
    type Test_Case is new Test_Cases.Test_Case with record
+      Output    : League.Strings.Universal_String;
+      Errors    : Boolean;
       Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
    end record;
 
@@ -61,5 +63,7 @@ private
    not overriding
    function Valgrind_Report
      (Self : Test_Case) return League.Strings.Universal_String;
+
+   not overriding procedure Read_Valgrind_Report (Self : in out Test_Case);
 
 end Gela.Valgrind_Test_Cases;

@@ -1,4 +1,5 @@
 with "league";
+with "xml";
 with "../../gnat/gela_uaflex";
 with "../../gnat/gela_xml2y";
 with "../../gnat/contrib_ayacc";
