@@ -3,7 +3,7 @@ with Traversing_Actions;
 
 procedure Process_Context
   (The_Context : Asis.Context;
-   Unit_Type   : String;
+   Unit_Spec   : Boolean;
    Unit_Name   : Wide_String;
    State       : in out Traversing_Actions.Traversal_State);
 

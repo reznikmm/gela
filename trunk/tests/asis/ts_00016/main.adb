@@ -19,11 +19,15 @@ procedure Main is
          Process_Context,
          Action);
       
+      type Unit_Kinds is (Compilation_Unit_Body, Library_Unit_Declaration);
    end Enum;
    
    package Command_IO is
      new Ada.Wide_Text_IO.Enumeration_IO (Enum.Command_Kinds);
    
+   package Unit_Kind_IO is
+     new Ada.Wide_Text_IO.Enumeration_IO (Enum.Unit_Kinds);
+
    Context : Asis.Context;
    State   : Traversing_Actions.Traversal_State;
    Input   : Ada.Wide_Text_IO.File_Type;
@@ -64,11 +68,17 @@ begin
    
          when Enum.Process_Context =>
             declare
+               use type Enum.Unit_Kinds;
+               Kind : Enum.Unit_Kinds;
                Line : Wide_String (1 .. 80);
                Last : Natural;
             begin
+               Unit_Kind_IO.Get (Input, Kind);
                Ada.Wide_Text_IO.Get_Line (Input, Line, Last);
-               Process_Context (Context, "body", Line (1 .. Last), State);
+               Process_Context
+                 (Context,
+                  Kind = Enum.Library_Unit_Declaration,
+                  Line (1 .. Last), State);
             end;
             
          when Enum.Action =>

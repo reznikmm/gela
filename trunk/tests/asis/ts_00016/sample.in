@@ -1,14 +1,7 @@
-Associate -I../../../source/asis/spec -Isample sample/procedure_body.adb
+Associate -I../../../source/asis/spec -Isample sample/procedure_body-function_body_stub.adb
 Action
-Process_Context procedure_body
-'''Process_Context spec package_declaration
-'''Process_Context spec package_declaration.child
-'''Process_Context body package_declaration.private_child
-'''Process_Context spec package_declaration.private_child
-'''Process_Context spec package_declaration.types
-'''Process_Context body procedure_body
-'''Process_Context body procedure_body.function_body_stub
-'''Process_Context body procedure_body.package_body_stub
-'''Process_Context body procedure_body.procedure_body_stub
-'''Process_Context body procedure_body.protected_body_stub
-'''Process_Context body procedure_body.task_body_stub
+Process_Context Library_Unit_Declaration package_declaration
+Process_Context Library_Unit_Declaration package_declaration.child
+Process_Context Library_Unit_Declaration package_declaration.types
+Process_Context Compilation_Unit_Body    procedure_body
+Process_Context Compilation_Unit_Body    procedure_body.function_body_stub

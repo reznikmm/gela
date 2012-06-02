@@ -4,7 +4,7 @@ with Process_Unit;
 
 procedure Process_Context
   (The_Context : Asis.Context;
-   Unit_Type   : String;
+   Unit_Spec   : Boolean;
    Unit_Name   : Wide_String;
    State       : in out Traversing_Actions.Traversal_State)
 is
@@ -12,10 +12,10 @@ is
    Next_Unit        : Asis.Compilation_Unit;
 begin
 
-   if Unit_Type = "body" then
-      Next_Unit := Compilation_Unit_Body (Unit_Name, The_Context);
-   else
+   if Unit_Spec then
       Next_Unit := Library_Unit_Declaration (Unit_Name, The_Context);
+   else
+      Next_Unit := Compilation_Unit_Body (Unit_Name, The_Context);
    end if;
 
    Process_Unit (Next_Unit, State);

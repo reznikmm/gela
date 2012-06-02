@@ -3,6 +3,8 @@ pragma Page;
 with Package_Declaration.Child;
 use Package_Declaration.Child;
 
+with Package_Declaration.Types;
+
 procedure Procedure_Body is
 
    use type Package_Declaration.Child.Ptr;

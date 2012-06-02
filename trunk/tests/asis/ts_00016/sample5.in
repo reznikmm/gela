@@ -1,0 +1,3 @@
+Associate -I../../../source/asis/spec -Isample sample/procedure_body-procedure_body_stub.adb
+Action
+Process_Context Compilation_Unit_Body    procedure_body.procedure_body_stub

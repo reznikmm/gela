@@ -1,0 +1,5 @@
+Declaration_Kind:A_PACKAGE_BODY_DECLARATION Package_Body_Stub at procedure_body-package_body_stub.adb [2:1..9:22]
+  Defining_Name_Kind:A_DEFINING_IDENTIFIER Package_Body_Stub at procedure_body-package_body_stub.adb [2:14..2:30]
+  Declaration_Kind:A_PROCEDURE_BODY_DECLARATION X at procedure_body-package_body_stub.adb [4:4..7:7]
+    Defining_Name_Kind:A_DEFINING_IDENTIFIER X at procedure_body-package_body_stub.adb [4:14..4:14]
+    Statement_Kind:A_NULL_STATEMENT  at procedure_body-package_body_stub.adb [6:7..6:11]
