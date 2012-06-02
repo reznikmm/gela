@@ -141,7 +141,7 @@ package body Gela.Bitten_Coverage is
       Name    : out League.Strings.Universal_String;
       File    : out League.Strings.Universal_String;
       Percent : out Natural;
-      Covered : out Natural;
+      Total   : out Natural;
       Hits    : out League.Strings.Universal_String);
 
    procedure Parse_Gcov_File
@@ -149,17 +149,17 @@ package body Gela.Bitten_Coverage is
       Name    : out League.Strings.Universal_String;
       File    : out League.Strings.Universal_String;
       Percent : out Natural;
-      Covered : out Natural;
+      Total   : out Natural;
       Hits    : out League.Strings.Universal_String)
    is
       Line   : constant League.String_Vectors.Universal_String_Vector :=
         Gela.Conv.Read_File (Input).Split (LF, League.Strings.Skip_Empty);
 
-      Total  : Natural := 0;
-      Length : Natural := 0;
+      Covered : Natural := 0;
+      Length  : Natural := 0;
    begin
       Hits.Clear;
-      Covered := 0;
+      Total := 0;
 
       for J in 1 .. Line.Length loop
          declare
@@ -249,8 +249,8 @@ package body Gela.Bitten_Coverage is
             Attrs   : XML.SAX.Attributes.SAX_Attributes;
             Name    : League.Strings.Universal_String;
             File    : League.Strings.Universal_String;
+            Total   : Natural;
             Percent : Natural;
-            Covered : Natural;
             Hits    : League.Strings.Universal_String;
          begin
             Ada.Wide_Wide_Text_IO.Put_Line
@@ -261,7 +261,7 @@ package body Gela.Bitten_Coverage is
                Name    => Name,
                File    => File,
                Percent => Percent,
-               Covered => Covered,
+               Total   => Total,
                Hits    => Hits);
 
             if File.Starts_With (Source) then
@@ -284,7 +284,7 @@ package body Gela.Bitten_Coverage is
             Attrs.Set_Value (C.Name, Name);
             Attrs.Set_Value (C.File, File);
             Attrs.Set_Value (C.Percentage, Image (Percent));
-            Attrs.Set_Value (C.Lines, Image (Covered));
+            Attrs.Set_Value (C.Lines, Image (Total));
 
             Writer.Start_Element
               (Qualified_Name => C.Coverage,

@@ -155,6 +155,7 @@ package body Gela.Build_Test_Cases is
    begin
       Arguments.Append (+"-j0");
       Arguments.Append (+"-p");
+      Arguments.Append (+"-m");
       Arguments.Append (+"-aP");
       Arguments.Append (Self.Source & "/gnat");
 
