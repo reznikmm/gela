@@ -12,6 +12,7 @@ with Ada.Command_Line;
 with Ada.Wide_Wide_Text_IO;
 with Ada.Exceptions;
 
+with Gela.Bitten_Coverage;
 with Gela.Bitten_Report;
 with Gela.Build;
 with Gela.Conv;
@@ -36,6 +37,10 @@ procedure Gela.Test_Driver is
    Output   : constant League.Strings.Universal_String :=
      Build & "/report.xml";
    --  Where to store report file (/tmp/build/report.xml)
+
+   Coverage : constant League.Strings.Universal_String :=
+     Build & "/coverage.xml";
+   --  Where to store coverage report file (/tmp/build/coverage.xml)
 
    Iterator : Gela.Test_Iterators.Iterator;
 
@@ -75,6 +80,17 @@ begin
    begin
       Ada.Wide_Wide_Text_IO.Create
         (File, Name => Conv.To_String (Output));
+      Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
+      Ada.Wide_Wide_Text_IO.Close (File);
+   end;
+
+   Gela.Bitten_Coverage.Generate (Build, Report);
+
+   declare
+      File : Ada.Wide_Wide_Text_IO.File_Type;
+   begin
+      Ada.Wide_Wide_Text_IO.Create
+        (File, Name => Conv.To_String (Coverage));
       Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Close (File);
    end;

@@ -13,8 +13,16 @@ with Gela.Run_Test_Cases;
 with Gela.Build_Test_Cases;
 with Gela.Input_Test_Cases;
 with Gela.Valgrind_Test_Cases;
+with League.String_Vectors;
 
 package body Gela.Test_Iterators is
+
+   use type League.Strings.Universal_String;
+
+   function "+"
+     (Text : Wide_Wide_String)
+         return League.Strings.Universal_String
+         renames League.Strings.To_Universal_String;
 
    procedure Add_Each_Input
      (Result : in out Iterator;
@@ -25,7 +33,11 @@ package body Gela.Test_Iterators is
    procedure Add_Build_ASIS
      (Result : in out Iterator;
       Source : League.Strings.Universal_String;
-      Build  : League.Strings.Universal_String);
+      Build  : League.Strings.Universal_String;
+      Gcov   : Boolean := False);
+
+   procedure Apply_Gcov_Options
+     (Test : Gela.Build_Test_Cases.Test_Case_Access);
 
    --------------------
    -- Add_Build_ASIS --
@@ -34,20 +46,19 @@ package body Gela.Test_Iterators is
    procedure Add_Build_ASIS
      (Result : in out Iterator;
       Source : League.Strings.Universal_String;
-      Build  : League.Strings.Universal_String)
+      Build  : League.Strings.Universal_String;
+      Gcov   : Boolean := False)
    is
-      use type League.Strings.Universal_String;
       use Gela.Build_Test_Cases;
 
-      function "+"
-        (Text : Wide_Wide_String)
-      return League.Strings.Universal_String
-        renames League.Strings.To_Universal_String;
-
-      Test : constant Gela.Test_Cases.Test_Case_Access := new Test_Case'
+      Test : constant Test_Case_Access := new Test_Case'
         (Create (Source & "/../..", Build, +"gela_asis.gpr"));
    begin
-      Result.List.Append (Test);
+      if Gcov then
+         Apply_Gcov_Options (Test);
+      end if;
+
+      Result.List.Append (Gela.Test_Cases.Test_Case_Access (Test));
    end Add_Build_ASIS;
 
    --------------------
@@ -90,6 +101,7 @@ package body Gela.Test_Iterators is
 
          Result.List.Append (Test);
 
+         --  run with Valgrind
          Run := new Gela.Run_Test_Cases.Test_Case'Class'
            (Gela.Run_Test_Cases.Create (Dir, Build));
 
@@ -101,9 +113,40 @@ package body Gela.Test_Iterators is
 
          Result.List.Append (Test);
 
+         --  run with Gcov
+         Input := Conv.To_Universal_String (Simple_Name (Item));
+
+         Run := new Gela.Run_Test_Cases.Test_Case'Class'
+           (Gela.Run_Test_Cases.Create (Dir, Build & "/gcov"));
+
+         Apply_Gcov_Options (Run.GPR_Build);
+
+         Test := new Gela.Run_Test_Cases.Test_Case'Class'
+           (Gela.Input_Test_Cases.Create (Run, Input));
+
+         Result.List.Append (Test);
+
          Found := True;
       end loop;
    end Add_Each_Input;
+
+   ------------------------
+   -- Apply_Gcov_Options --
+   ------------------------
+
+   procedure Apply_Gcov_Options
+     (Test : Gela.Build_Test_Cases.Test_Case_Access)
+   is
+      Options : League.String_Vectors.Universal_String_Vector := Test.Options;
+   begin
+      Options.Append (+"-XGELA_SOURCE=/../ada");
+      Options.Append (+"-cargs");
+      Options.Append (+"-fprofile-arcs");
+      Options.Append (+"-ftest-coverage");
+      Options.Append (+"-largs");
+      Options.Append (+"-fprofile-arcs");
+      Test.Set_Options (Options);
+   end Apply_Gcov_Options;
 
    ------------
    -- Create --
@@ -125,6 +168,7 @@ package body Gela.Test_Iterators is
       Found  : Boolean;
    begin
       Add_Build_ASIS (Result, Source, Build);
+      Add_Build_ASIS (Result, Source, Build & "/gcov", Gcov => True);
 
       Start_Search (Each, Root, "ts_*", (Directory => True, others => False));
 
