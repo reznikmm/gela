@@ -121,10 +121,12 @@ package body Gela.Test_Iterators is
 
          Apply_Gcov_Options (Run.GPR_Build);
 
-         Test := new Gela.Run_Test_Cases.Test_Case'Class'
+         Run := new Gela.Run_Test_Cases.Test_Case'Class'
            (Gela.Input_Test_Cases.Create (Run, Input));
 
-         Result.List.Append (Test);
+         Run.Set_Name ("gcov " & Run.Name);
+
+         Result.List.Append (Gela.Test_Cases.Test_Case_Access (Run));
 
          Found := True;
       end loop;

@@ -159,6 +159,13 @@ package body Gela.Input_Test_Cases is
       Self.Run_Test.Set_Command (Command, Arguments);
    end Set_Command;
 
+   procedure Set_Name
+     (Self  : in out Test_Case;
+      Value : League.Strings.Universal_String) is
+   begin
+      Self.Run_Test.Set_Name (Value);
+   end Set_Name;
+
    ---------------------
    -- Set_Output_Name --
    ---------------------

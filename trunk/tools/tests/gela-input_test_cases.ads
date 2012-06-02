@@ -92,4 +92,9 @@ private
      (Self  : in out Test_Case;
       Value : League.Strings.Universal_String);
 
+   overriding
+   procedure Set_Name
+     (Self  : in out Test_Case;
+      Value : League.Strings.Universal_String);
+
 end Gela.Input_Test_Cases;

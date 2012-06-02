@@ -94,6 +94,10 @@ package body Gela.Run_Test_Cases is
         (Self  : in out Test_Case;
          Value : League.Strings.Universal_String);
 
+      procedure Set_Name
+        (Self  : in out Test_Case;
+         Value : League.Strings.Universal_String);
+
    end Concrete;
 
    function "+"
@@ -330,6 +334,17 @@ package body Gela.Run_Test_Cases is
          Self.Command := Command;
          Self.Arguments := Arguments;
       end Set_Command;
+
+      --------------
+      -- Set_Name --
+      --------------
+
+      procedure Set_Name
+        (Self  : in out Test_Case;
+         Value : League.Strings.Universal_String) is
+      begin
+         Self.Name := Value;
+      end Set_Name;
 
       ---------------------
       -- Set_Output_Name --

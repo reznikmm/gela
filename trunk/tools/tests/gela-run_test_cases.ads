@@ -73,5 +73,11 @@ package Gela.Run_Test_Cases is
    procedure Set_Output_Name
      (Self  : in out Test_Case;
       Value : League.Strings.Universal_String) is abstract;
+   --  Change file name where expected output locates
+
+   procedure Set_Name
+     (Self  : in out Test_Case;
+      Value : League.Strings.Universal_String) is abstract;
+   --  Change test's name
 
 end Gela.Run_Test_Cases;
