@@ -219,6 +219,8 @@ package body Gela.Bitten_Coverage is
      (Build    : League.Strings.Universal_String;
       Result   : out League.Strings.Universal_String)
    is
+      Source    : constant League.Strings.Universal_String :=
+        Gela.Host.Source_Root;
       Gcov_Root : constant League.Strings.Universal_String := Build & "/gcov";
       GCNO_List : constant League.Strings.Universal_String := Gcov_Root & "/x";
       List   : League.String_Vectors.Universal_String_Vector;
@@ -261,6 +263,23 @@ package body Gela.Bitten_Coverage is
                Percent => Percent,
                Covered => Covered,
                Hits    => Hits);
+
+            if File.Starts_With (Source) then
+               File.Slice (Source.Length + 1, File.Length);
+            elsif File.Starts_With (Build) then
+               File.Slice (Build.Length + 1, File.Length);
+            end if;
+
+            if File.Starts_With ("/") then
+               File.Slice (2, File.Length);
+            end if;
+
+            declare
+               Parts : constant League.String_Vectors.Universal_String_Vector
+                 := Name.Split ('/');
+            begin
+               Name := Parts.Element (Parts.Length);
+            end;
 
             Attrs.Set_Value (C.Name, Name);
             Attrs.Set_Value (C.File, File);
