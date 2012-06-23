@@ -302,7 +302,7 @@ package body XASIS.Static.Fixed is
             end;
 
          when A_Small_Attribute =>
-            return Get_Digits (Object.Info);
+            return Get_Small (Object.Info);
 
          when others =>
             null;
