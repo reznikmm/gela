@@ -20,6 +20,8 @@ package body Actions.Representation_Image is
       end case;
 
       Print_Element (Element);
+      
+      Ada.Wide_Text_IO.Put (" = ");
 
       Ada.Wide_Text_IO.Put_Line
         (Asis.Declarations.Representation_Value_Image (Element));

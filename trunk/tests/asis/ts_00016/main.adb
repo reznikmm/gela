@@ -1,5 +1,6 @@
-with Ada.Wide_Text_IO;
 with Ada.Command_Line;
+with Ada.Strings.Wide_Fixed;
+with Ada.Wide_Text_IO;
 
 with Asis;
 with Asis.Implementation;
@@ -70,15 +71,15 @@ begin
             declare
                use type Enum.Unit_Kinds;
                Kind : Enum.Unit_Kinds;
-               Line : Wide_String (1 .. 80);
-               Last : Natural;
             begin
                Unit_Kind_IO.Get (Input, Kind);
-               Ada.Wide_Text_IO.Get_Line (Input, Line, Last);
                Process_Context
                  (Context,
                   Kind = Enum.Library_Unit_Declaration,
-                  Line (1 .. Last), State);
+                  Ada.Strings.Wide_Fixed.Trim
+                    (Ada.Wide_Text_IO.Get_Line (Input),
+                     Ada.Strings.Both),
+                  State);
             end;
             
          when Enum.Action =>

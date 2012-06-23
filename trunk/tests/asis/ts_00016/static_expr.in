@@ -1,0 +1,3 @@
+Associate -I../../../source/asis/spec static_expr/example.ads
+Action Print_Representation_Image Any
+Process_Context Library_Unit_Declaration Example
