@@ -7,17 +7,18 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with Ada.Directories;
+
 with Gela.Test_Cases;
 with League.Calendars;
 with League.Strings;
 
-with Gela.Run_Test_Cases;
-with Gela.Build_Test_Cases;
+with Gela.Test_Cases.Execute;
 with League.String_Vectors;
 
-package Gela.Input_Test_Cases is
+package Gela.Test_Cases.Input is
 
-   type Test_Case is new Run_Test_Cases.Test_Case with private;
+   type Test_Case is new Test_Cases.Execute.Test_Case with private;
 
    procedure Run (Self : in out Test_Case);
    --  Run executable with Input argument:
@@ -25,9 +26,11 @@ package Gela.Input_Test_Cases is
    --  Compare output with <Input>.out or "OK" if no such file
 
    function Create
-     (Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
-      Input     : League.Strings.Universal_String)
-     return Run_Test_Cases.Test_Case'Class;
+     (Directory : Ada.Directories.Directory_Entry_Type;
+      Build     : League.Strings.Universal_String;
+      Input     : League.Strings.Universal_String;
+      Expect    : League.Strings.Universal_String := Ok)
+      return Test_Cases.Execute.Test_Case_Access;
    --  Run_Test - base test.
    --  Input - first argument of test
 
@@ -35,8 +38,8 @@ private
 
    use League.Strings;
 
-   type Test_Case is new Run_Test_Cases.Test_Case with record
-      Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
+   type Test_Case is new Test_Cases.Execute.Test_Case with record
+      Run_Test  : Gela.Test_Cases.Execute.Test_Case_Access;
       Input     : League.Strings.Universal_String;
    end record;
 
@@ -62,11 +65,6 @@ private
    function Traceback (Self : Test_Case) return Universal_String;
 
    overriding
-   function GPR_Build
-     (Self : Test_Case)
-      return Gela.Build_Test_Cases.Test_Case_Access;
-
-   overriding
    function Build (Self : Test_Case) return League.Strings.Universal_String;
 
    overriding
@@ -88,13 +86,8 @@ private
       Arguments : League.String_Vectors.Universal_String_Vector);
 
    overriding
-   procedure Set_Output_Name
-     (Self  : in out Test_Case;
-      Value : League.Strings.Universal_String);
-
-   overriding
    procedure Set_Name
      (Self  : in out Test_Case;
       Value : League.Strings.Universal_String);
 
-end Gela.Input_Test_Cases;
+end Gela.Test_Cases.Input;

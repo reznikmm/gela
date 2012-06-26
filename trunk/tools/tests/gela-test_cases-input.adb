@@ -7,7 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package body Gela.Input_Test_Cases is
+package body Gela.Test_Cases.Input is
 
    ---------------
    -- Arguments --
@@ -38,44 +38,34 @@ package body Gela.Input_Test_Cases is
       return Self.Run_Test.Command;
    end Command;
 
-   ---------------
-   -- GPR_Build --
-   ---------------
-
-   function GPR_Build
-     (Self : Test_Case)
-      return Gela.Build_Test_Cases.Test_Case_Access is
-   begin
-      return Self.Run_Test.GPR_Build;
-   end GPR_Build;
-
    ------------
    -- Create --
    ------------
 
    function Create
-     (Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
-      Input     : League.Strings.Universal_String)
-      return Run_Test_Cases.Test_Case'Class
+     (Directory : Ada.Directories.Directory_Entry_Type;
+      Build     : League.Strings.Universal_String;
+      Input     : League.Strings.Universal_String;
+      Expect    : League.Strings.Universal_String := Ok)
+      return Test_Cases.Execute.Test_Case_Access
    is
-      Arguments : League.String_Vectors.Universal_String_Vector :=
-        Run_Test.Arguments;
-      Output    : League.Strings.Universal_String;
       Result    : constant Test_Case :=
-        (Run_Test_Cases.Test_Case with
-         Run_Test  => Run_Test,
+        (Test_Cases.Execute.Test_Case with
+           Run_Test  => Gela.Test_Cases.Execute.Create
+             (Directory, Build, Expect),
          Input     => Input);
+      Arguments : League.String_Vectors.Universal_String_Vector :=
+        Result.Run_Test.Arguments;
+      Output    : League.Strings.Universal_String;
    begin
       Arguments.Append (Input);
-      Output := Run_Test.Path & "/" & Input;
+      Output := Result.Run_Test.Path & "/" & Input;
       Output.Replace (Output.Length - 2, Output.Length, ".out");
 
-      Run_Test.Set_Output_Name (Output);
-
-      Run_Test.Set_Command
-        (Command  => Run_Test.Command,
+      Result.Run_Test.Set_Command
+        (Command   => Result.Run_Test.Command,
          Arguments => Arguments);
-      return Result;
+      return new Test_Case'(Result);
    end Create;
 
    --------------
@@ -166,17 +156,6 @@ package body Gela.Input_Test_Cases is
       Self.Run_Test.Set_Name (Value);
    end Set_Name;
 
-   ---------------------
-   -- Set_Output_Name --
-   ---------------------
-
-   procedure Set_Output_Name
-     (Self  : in out Test_Case;
-      Value : League.Strings.Universal_String) is
-   begin
-      Self.Run_Test.Set_Output_Name (Value);
-   end Set_Output_Name;
-
    ------------
    -- Status --
    ------------
@@ -198,4 +177,4 @@ package body Gela.Input_Test_Cases is
       return Self.Run_Test.Traceback;
    end Traceback;
 
-end Gela.Input_Test_Cases;
+end Gela.Test_Cases.Input;

@@ -13,7 +13,7 @@ with League.Strings;
 package Gela.Bitten_Report is
 
    procedure Generate
-     (Iterator : in out Test_Iterators.Iterator;
+     (Iterator : in out Test_Iterators.Iterator'Class;
       Result   : out League.Strings.Universal_String);
    --  Fill bitten report file with execution's result.
 

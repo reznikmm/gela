@@ -11,7 +11,7 @@ with Gela.Conv;
 with Gela.Host;
 with Ada.Directories;
 
-package body Gela.Build_Test_Cases is
+package body Gela.Test_Cases.Build is
 
    function "+"
      (Text : Wide_Wide_String)
@@ -230,4 +230,4 @@ package body Gela.Build_Test_Cases is
       return Self.Traceback;
    end Traceback;
 
-end Gela.Build_Test_Cases;
+end Gela.Test_Cases.Build;

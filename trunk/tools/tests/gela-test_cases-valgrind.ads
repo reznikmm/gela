@@ -10,12 +10,12 @@
 with League.Calendars;
 with League.Strings;
 with Gela.Test_Cases;
-with Gela.Run_Test_Cases;
+with Gela.Test_Cases.Execute;
 
-package Gela.Valgrind_Test_Cases is
+package Gela.Test_Cases.Valgrind is
 
    type Test_Case is new Test_Cases.Test_Case with private;
-   type Test_Case_Access is access all Test_Case'Class;
+--   type Test_Case_Access is access all Test_Case'Class;
 
    overriding
    procedure Run (Self : in out Test_Case);
@@ -23,8 +23,8 @@ package Gela.Valgrind_Test_Cases is
    --     valgrind cmd args
 
    function Create
-     (Run_Test  : Gela.Run_Test_Cases.Test_Case_Access)
-     return Test_Case;
+     (Run_Test  : Gela.Test_Cases.Execute.Test_Case_Access)
+     return Test_Cases.Test_Case_Access;
 
 private
 
@@ -33,7 +33,7 @@ private
    type Test_Case is new Test_Cases.Test_Case with record
       Output    : League.Strings.Universal_String;
       Errors    : Boolean;
-      Run_Test  : Gela.Run_Test_Cases.Test_Case_Access;
+      Run_Test  : Gela.Test_Cases.Execute.Test_Case_Access;
    end record;
 
    overriding
@@ -66,4 +66,4 @@ private
 
    not overriding procedure Read_Valgrind_Report (Self : in out Test_Case);
 
-end Gela.Valgrind_Test_Cases;
+end Gela.Test_Cases.Valgrind;

@@ -46,7 +46,7 @@ package body Gela.Bitten_Report is
    --------------
 
    procedure Generate
-     (Iterator : in out Test_Iterators.Iterator;
+     (Iterator : in out Test_Iterators.Iterator'Class;
       Result   : out League.Strings.Universal_String)
    is
       Test   : Gela.Test_Cases.Test_Case_Access;

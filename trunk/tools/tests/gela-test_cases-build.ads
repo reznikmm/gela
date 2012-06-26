@@ -12,7 +12,7 @@ with League.Strings;
 with League.String_Vectors;
 with Gela.Test_Cases;
 
-package Gela.Build_Test_Cases is
+package Gela.Test_Cases.Build is
 
    type Test_Case is new Test_Cases.Test_Case with private;
    type Test_Case_Access is access all Test_Case'Class;
@@ -98,4 +98,4 @@ private
    function Output_File (Self : Test_Case) return Universal_String;
    --  Where to save test's output (<TEST>.log)
 
-end Gela.Build_Test_Cases;
+end Gela.Test_Cases.Build;

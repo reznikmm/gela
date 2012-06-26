@@ -9,13 +9,14 @@
 
 with Ada.Directories;
 with Gela.Conv;
-with Gela.Run_Test_Cases;
-with Gela.Build_Test_Cases;
-with Gela.Input_Test_Cases;
-with Gela.Valgrind_Test_Cases;
+with Gela.Test_Cases.Append;
+with Gela.Test_Cases.Build;
+with Gela.Test_Cases.Input;
+with Gela.Test_Cases.Execute;
+with Gela.Test_Cases.Valgrind;
 with League.String_Vectors;
 
-package body Gela.Test_Iterators is
+package body Gela.Test_Iterators.Dir is
 
    use type League.Strings.Universal_String;
 
@@ -37,7 +38,12 @@ package body Gela.Test_Iterators is
       Gcov   : Boolean := False);
 
    procedure Apply_Gcov_Options
-     (Test : Gela.Build_Test_Cases.Test_Case_Access);
+     (Test : Gela.Test_Cases.Build.Test_Case_Access);
+
+   function Create_GPR_Build
+     (Dir    : Ada.Directories.Directory_Entry_Type;
+      Build  : League.Strings.Universal_String)
+      return Test_Cases.Build.Test_Case_Access;
 
    --------------------
    -- Add_Build_ASIS --
@@ -49,7 +55,7 @@ package body Gela.Test_Iterators is
       Build  : League.Strings.Universal_String;
       Gcov   : Boolean := False)
    is
-      use Gela.Build_Test_Cases;
+      use Gela.Test_Cases.Build;
 
       Test : constant Test_Case_Access := new Test_Case'
         (Create (Source & "/../..", Build, +"gela_asis.gpr"));
@@ -72,13 +78,14 @@ package body Gela.Test_Iterators is
       Found  : out Boolean)
    is
       use Ada.Directories;
+      use Gela.Test_Cases.Append;
 
       Each  : Search_Type;
       Item  : Directory_Entry_Type;
-      Run   : Gela.Run_Test_Cases.Test_Case_Access;
+      Run   : Gela.Test_Cases.Execute.Test_Case_Access;
       Test  : Gela.Test_Cases.Test_Case_Access;
       Input : League.Strings.Universal_String;
-
+      Expect : League.Strings.Universal_String;
    begin
       Start_Search
         (Each,
@@ -93,40 +100,49 @@ package body Gela.Test_Iterators is
 
          Input := Conv.To_Universal_String (Simple_Name (Item));
 
-         Run := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Run_Test_Cases.Create (Dir, Build));
+         declare
+            Full_Path : constant String := Full_Name (Item);
+            Out_Path  : constant String := Full_Path
+              (Full_Path'First .. Full_Path'Last - 2) & "out";
+         begin
+            if Ada.Directories.Exists (Out_Path) then
+               Expect := Conv.Read_File (Conv.To_Universal_String (Out_Path));
+            else
+               Expect := Gela.Test_Cases.Ok;
+            end if;
+         end;
 
-         Test := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Input_Test_Cases.Create (Run, Input));
+         Run := Gela.Test_Cases.Input.Create
+           (Dir, Build, Input, Expect);
 
-         Result.List.Append (Test);
+         Result.List.Append (Create_GPR_Build (Dir, Build) + Run);
 
          --  run with Valgrind
-         Run := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Run_Test_Cases.Create (Dir, Build));
 
-         Run := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Input_Test_Cases.Create (Run, Input));
+         Run := Gela.Test_Cases.Input.Create
+           (Dir, Build, Input, Expect);
 
-         Test := new Gela.Valgrind_Test_Cases.Test_Case'
-           (Gela.Valgrind_Test_Cases.Create (Run));
+         Test := Gela.Test_Cases.Valgrind.Create
+           (Create_GPR_Build (Dir, Build) + Run);
 
          Result.List.Append (Test);
 
          --  run with Gcov
-         Input := Conv.To_Universal_String (Simple_Name (Item));
+         declare
+            GPR_Build : constant Gela.Test_Cases.Build.Test_Case_Access :=
+              Create_GPR_Build (Dir, Build & "/gcov");
+         begin
+            Apply_Gcov_Options (GPR_Build);
 
-         Run := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Run_Test_Cases.Create (Dir, Build & "/gcov"));
+            Run := Gela.Test_Cases.Input.Create
+              (Dir, Build & "/gcov", Input, Expect);
 
-         Apply_Gcov_Options (Run.GPR_Build);
+            Run := GPR_Build + Run;
 
-         Run := new Gela.Run_Test_Cases.Test_Case'Class'
-           (Gela.Input_Test_Cases.Create (Run, Input));
+            Run.Set_Name ("gcov " & Run.Name);
 
-         Run.Set_Name ("gcov " & Run.Name);
-
-         Result.List.Append (Gela.Test_Cases.Test_Case_Access (Run));
+            Result.List.Append (Gela.Test_Cases.Test_Case_Access (Run));
+         end;
 
          Found := True;
       end loop;
@@ -137,7 +153,7 @@ package body Gela.Test_Iterators is
    ------------------------
 
    procedure Apply_Gcov_Options
-     (Test : Gela.Build_Test_Cases.Test_Case_Access)
+     (Test : Gela.Test_Cases.Build.Test_Case_Access)
    is
       Options : League.String_Vectors.Universal_String_Vector := Test.Options;
    begin
@@ -159,12 +175,13 @@ package body Gela.Test_Iterators is
      return Iterator
    is
       use Ada.Directories;
+      use Gela.Test_Cases.Append;
 
       Root : constant String := Conv.To_String (Source);
       Each : Search_Type;
       Item : Directory_Entry_Type;
       Test : Gela.Test_Cases.Test_Case_Access;
-      Run  : Gela.Run_Test_Cases.Test_Case_Access;
+      Run  : Gela.Test_Cases.Execute.Test_Case_Access;
 
       Result : Iterator;
       Found  : Boolean;
@@ -180,23 +197,66 @@ package body Gela.Test_Iterators is
          Add_Each_Input (Result, Item, Build, Found);
 
          if not Found then
-            Test := new Gela.Run_Test_Cases.Test_Case'Class'
-              (Gela.Run_Test_Cases.Create (Item, Build));
+            declare
+               Expect    : League.Strings.Universal_String;
+               Full_Path : constant String := Full_Name (Item);
+               Out_Path  : constant String :=
+                 Full_Path & "/" & Simple_Name (Item) & ".out";
+            begin
+               if Ada.Directories.Exists (Out_Path) then
+                  Expect := Conv.Read_File
+                    (Conv.To_Universal_String (Out_Path));
+               else
+                  Expect := Gela.Test_Cases.Ok;
+               end if;
 
-            Result.List.Append (Test);
+               Test := Gela.Test_Cases.Test_Case_Access
+                 (Gela.Test_Cases.Execute.Create (Item, Build, Expect));
 
-            Run := new Gela.Run_Test_Cases.Test_Case'Class'
-              (Gela.Run_Test_Cases.Create (Item, Build));
+               Result.List.Append (Create_GPR_Build (Item, Build) + Test);
 
-            Test := new Gela.Valgrind_Test_Cases.Test_Case'
-              (Gela.Valgrind_Test_Cases.Create (Run));
+               Run := Create_GPR_Build (Item, Build) +
+                 Gela.Test_Cases.Execute.Create (Item, Build, Expect);
 
-            Result.List.Append (Test);
+               Test := Gela.Test_Cases.Valgrind.Create (Run);
+
+               Result.List.Append (Test);
+            end;
          end if;
       end loop;
 
       return Result;
    end Create;
+
+   ----------------------
+   -- Create_GPR_Build --
+   ----------------------
+
+   function Create_GPR_Build
+     (Dir    : Ada.Directories.Directory_Entry_Type;
+      Build  : League.Strings.Universal_String)
+         return Test_Cases.Build.Test_Case_Access
+   is
+      Dir_Name  : constant League.Strings.Universal_String :=
+        Conv.To_Universal_String (Ada.Directories.Simple_Name (Dir));
+      Full_Path : constant League.Strings.Universal_String :=
+        Conv.To_Universal_String (Ada.Directories.Full_Name (Dir));
+      GPR_Build : Gela.Test_Cases.Build.Test_Case_Access;
+      Options   : League.String_Vectors.Universal_String_Vector;
+   begin
+      Options.Append (+"main.adb");
+      Options.Append ("-XSOURCE_DIR=" & Dir_Name);
+      Options.Append ("-XOBJECT_DIR=" & Build & "/" & Dir_Name);
+
+      GPR_Build := new Gela.Test_Cases.Build.Test_Case'
+        (Gela.Test_Cases.Build.Create
+           (Source  => Full_Path & "/../../..",
+            Build   => Build,
+            Project => Full_Path & "/../simple.gpr",
+            Options => Options));
+
+      return GPR_Build;
+   end Create_GPR_Build;
 
    --------------------
    -- Has_More_Tests --
@@ -228,4 +288,4 @@ package body Gela.Test_Iterators is
       Self.Next := Self.List.First;
    end Start;
 
-end Gela.Test_Iterators;
+end Gela.Test_Iterators.Dir;

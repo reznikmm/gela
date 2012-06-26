@@ -108,7 +108,7 @@ package body Gela.Host is
 
       if not Directory.Is_Empty then
          Ada.Directories.Set_Directory (Conv.To_String (Directory));
-         Text.Append ("[ in ");
+         Text.Append (" [ in ");
          Text.Append (Directory);
          Text.Append ("]");
       end if;
@@ -125,6 +125,7 @@ package body Gela.Host is
          Ada.Directories.Set_Directory (Dir);
       end if;
 
+      GNAT.OS_Lib.Close (Log);
       Output := Conv.Read_File (Name);
    end Execute;
 

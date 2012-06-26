@@ -11,16 +11,15 @@ with Gela.Conv;
 with Gela.Host;
 with League.Calendars;
 
-package body Gela.Run_Test_Cases is
+package body Gela.Test_Cases.Execute is
 
    package Concrete is
       use League.Strings;
 
-      type Test_Case is new Run_Test_Cases.Test_Case with record
-         Gprbuild  : Gela.Build_Test_Cases.Test_Case_Access;
+      type Test_Case is new Test_Cases.Execute.Test_Case with record
          Command   : League.Strings.Universal_String;
          Arguments : League.String_Vectors.Universal_String_Vector;
-         Out_Name  : League.Strings.Universal_String;
+         Expect    : League.Strings.Universal_String;
          Build     : League.Strings.Universal_String;
          Full_Path : League.Strings.Universal_String;
          Name      : League.Strings.Universal_String;
@@ -45,12 +44,6 @@ package body Gela.Run_Test_Cases is
       --  Where to save test's output (<TEST>.log)
 
       procedure Run (Self : in out Test_Case);
-      --  Compile source into executable:
-      --         gprbuild -p -aP ../../../gnat/ -aP <TEST>/.. \
-      --             -XGELA_BUILD=$(BUILD)/gela \
-      --             -XSOURCE_DIR=<TEST> \
-      --             -XOBJECT_DIR=$(BUILD)/<TEST> \
-      --             -P simple.gpr main.adb
       --  Run executable:
       --   (if no Input)
       --         cd <TEST>; $(TEST_HOME)/$</main > $(TEST_HOME)/$@
@@ -65,10 +58,6 @@ package body Gela.Run_Test_Cases is
       function File      (Self : Test_Case) return Universal_String;
       function Output    (Self : Test_Case) return Universal_String;
       function Traceback (Self : Test_Case) return Universal_String;
-
-      function GPR_Build
-        (Self : Test_Case)
-      return Gela.Build_Test_Cases.Test_Case_Access;
 
       function Build (Self : Test_Case) return Universal_String;
 
@@ -90,20 +79,11 @@ package body Gela.Run_Test_Cases is
          Command   : League.Strings.Universal_String;
          Arguments : League.String_Vectors.Universal_String_Vector);
 
-      procedure Set_Output_Name
-        (Self  : in out Test_Case;
-         Value : League.Strings.Universal_String);
-
       procedure Set_Name
         (Self  : in out Test_Case;
          Value : League.Strings.Universal_String);
 
    end Concrete;
-
-   function "+"
-     (Text : Wide_Wide_String)
-     return League.Strings.Universal_String
-     renames League.Strings.To_Universal_String;
 
    package body Concrete is
 
@@ -167,17 +147,6 @@ package body Gela.Run_Test_Cases is
       begin
          return Self.Fixture;
       end Fixture;
-
-      ---------------
-      -- GPR_Build --
-      ---------------
-
-      function GPR_Build
-        (Self : Test_Case)
-      return Gela.Build_Test_Cases.Test_Case_Access is
-      begin
-         return Self.Gprbuild;
-      end GPR_Build;
 
       ----------
       -- Name --
@@ -247,7 +216,6 @@ package body Gela.Run_Test_Cases is
       ---------
 
       procedure Run (Self : in out Test_Case) is
-         procedure Run_Gprbuild;
          procedure Run_Test;
          procedure Check_Output;
 
@@ -267,27 +235,11 @@ package body Gela.Run_Test_Cases is
          end Code_To_Status;
 
          procedure Check_Output is
-            Expect : League.Strings.Universal_String;
          begin
-            if Ada.Directories.Exists (Conv.To_String (Self.Out_Name)) then
-               Expect := Conv.Read_File (Self.Out_Name);
-            else
-               Expect := +"OK";
-               Expect.Append (Wide_Wide_Character'Val (10));
-            end if;
-
-            if Expect /= Self.Output then
+            if Self.Expect /= Self.Output then
                Self.Status := Test_Cases.Failure;
             end if;
          end Check_Output;
-
-         procedure Run_Gprbuild is
-         begin
-            Self.Gprbuild.Run;
-            Self.Status := Self.Gprbuild.Status;
-            Self.Duration := Self.Gprbuild.Duration;
-            Self.Output := Self.Gprbuild.Output;
-         end Run_Gprbuild;
 
          procedure Run_Test is
             Code : Integer;
@@ -309,11 +261,7 @@ package body Gela.Run_Test_Cases is
          Started : constant League.Calendars.Date_Time :=
            League.Calendars.Clock;
       begin
-         Run_Gprbuild;
-
-         if Self.Status = Test_Cases.Success then
-            Run_Test;
-         end if;
+         Run_Test;
 
          if Self.Status = Test_Cases.Success then
             Check_Output;
@@ -345,17 +293,6 @@ package body Gela.Run_Test_Cases is
       begin
          Self.Name := Value;
       end Set_Name;
-
-      ---------------------
-      -- Set_Output_Name --
-      ---------------------
-
-      procedure Set_Output_Name
-        (Self  : in out Test_Case;
-         Value : League.Strings.Universal_String) is
-      begin
-         Self.Out_Name := Value;
-      end Set_Output_Name;
 
       ------------
       -- Source --
@@ -400,8 +337,9 @@ package body Gela.Run_Test_Cases is
 
    function Create
      (Directory : Ada.Directories.Directory_Entry_Type;
-      Build     : League.Strings.Universal_String)
-     return Test_Case'Class
+      Build     : League.Strings.Universal_String;
+      Expect    : League.Strings.Universal_String := Ok)
+      return Test_Case_Access
    is
       use Ada.Directories;
       use type League.Strings.Universal_String;
@@ -411,6 +349,7 @@ package body Gela.Run_Test_Cases is
 
       Result : Concrete.Test_Case :=
         (Build     => Build,
+         Expect    => Expect,
          Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
          Name      => Name,
          Status    => Test_Cases.Error,
@@ -418,24 +357,10 @@ package body Gela.Run_Test_Cases is
          File      => "tests/" & Name,
          others    => <>);
 
-      Options : League.String_Vectors.Universal_String_Vector;
    begin
-      Options.Append (+"main.adb");
-      Options.Append ("-XSOURCE_DIR=" & Name);
-      Options.Append ("-XOBJECT_DIR=" & Result.Object_Dir);
-
-      Result.Gprbuild := new Gela.Build_Test_Cases.Test_Case'
-        (Gela.Build_Test_Cases.Create
-           (Source  => Result.Source,
-            Build   => Build,
-            Project => Result.Parent & "/simple.gpr",
-            Options => Options));
-
       Result.Command := Result.Object_Dir & "/main";
 
-      Result.Out_Name := Result.Full_Path & "/" & Result.Name & ".out";
-
-      return Result;
+      return new Concrete.Test_Case'(Result);
    end Create;
 
-end Gela.Run_Test_Cases;
+end Gela.Test_Cases.Execute;

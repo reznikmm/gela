@@ -18,10 +18,13 @@ with Gela.Build;
 with Gela.Conv;
 with Gela.Host;
 with Gela.Test_Cases;
-with Gela.Test_Iterators;
+with Gela.Test_Iterators.ACATS;
+with Gela.Test_Iterators.Append;
+with Gela.Test_Iterators.Dir;
 
 --  with League.Application;
 with League.Strings;
+with GNAT.OS_Lib;
 
 procedure Gela.Test_Driver is
    use type League.Strings.Universal_String;
@@ -42,8 +45,6 @@ procedure Gela.Test_Driver is
      Build & "/coverage.xml";
    --  Where to store coverage report file (/tmp/build/coverage.xml)
 
-   Iterator : Gela.Test_Iterators.Iterator;
-
    Test     : Gela.Test_Cases.Test_Case_Access;
    Report   : League.Strings.Universal_String;
    Failed   : Boolean := False;
@@ -54,26 +55,38 @@ begin
    Ada.Wide_Wide_Text_IO.Put_Line
      ("Source root = " & Gela.Host.Source_Root.To_Wide_Wide_String);
 
+   --  ACATS test (ts_00018) require this env to correctly distinguish
+   --  predefined compilation units.
+   GNAT.OS_Lib.Setenv ("GELA_INCLUDE_PATH", "../../../source/asis/spec");
+
    Gela.Build;
 
-   Iterator := Gela.Test_Iterators.Create (Source, Build);
-   Iterator.Start;
+   declare
+      use type Gela.Test_Iterators.Append.Iterator;
+      Dirs  : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.Dir.Create (Source, Build);
+      ACATS : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.ACATS.Create (Source, Build);
+      Iterator : Gela.Test_Iterators.Append.Iterator := Dirs + ACATS;
+   begin
+      Iterator.Start;
 
-   while Iterator.Has_More_Tests loop
-      Iterator.Next (Test);
-      Test.Run;
+      while Iterator.Has_More_Tests loop
+         Iterator.Next (Test);
+         Test.Run;
 
-      case Test.Status is
+         case Test.Status is
          when Gela.Test_Cases.Failure
-           | Gela.Test_Cases.Error =>
+            | Gela.Test_Cases.Error =>
 
             Failed := True;
          when others =>
             null;
-      end case;
-   end loop;
+         end case;
+      end loop;
 
-   Gela.Bitten_Report.Generate (Iterator, Report);
+      Gela.Bitten_Report.Generate (Iterator, Report);
+   end;
 
    declare
       File : Ada.Wide_Wide_Text_IO.File_Type;

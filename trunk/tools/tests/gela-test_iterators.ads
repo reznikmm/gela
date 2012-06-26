@@ -8,36 +8,17 @@
 ------------------------------------------------------------------------------
 
 with Gela.Test_Cases;
-with League.Strings;
-
-private with Ada.Containers.Doubly_Linked_Lists;
 
 package Gela.Test_Iterators is
 
-   type Iterator is tagged private;
+   type Iterator is abstract tagged null record;
 
-   function Create
-     (Source, Build : League.Strings.Universal_String) return Iterator;
-   --  Create iterator for enumerating tests containing in Source directory.
-   --  Build point to directory where tests will be build.
+   procedure Start (Self : in out Iterator) is abstract;
 
-   procedure Start (Self : in out Iterator);
-
-   function Has_More_Tests (Self : Iterator) return Boolean;
+   function Has_More_Tests (Self : Iterator) return Boolean is abstract;
 
    procedure Next
      (Self : in out Iterator;
-      Test : out Gela.Test_Cases.Test_Case_Access);
-
-private
-
-   package Lists is new Ada.Containers.Doubly_Linked_Lists
-     (Gela.Test_Cases.Test_Case_Access,
-      Gela.Test_Cases."=");
-
-   type Iterator is tagged record
-      List : Lists.List;
-      Next : Lists.Cursor;
-   end record;
+      Test : out Gela.Test_Cases.Test_Case_Access) is abstract;
 
 end Gela.Test_Iterators;

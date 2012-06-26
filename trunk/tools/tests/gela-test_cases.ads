@@ -49,4 +49,7 @@ package Gela.Test_Cases is
       is abstract;
    --  The traceback from any error or failure
 
+   Ok : constant League.Strings.Universal_String :=
+     League.Strings.To_Universal_String ("OK");
+
 end Gela.Test_Cases;

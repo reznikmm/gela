@@ -14,7 +14,7 @@ with XML.SAX.Content_Handlers;
 with XML.SAX.Input_Sources.Streams.Files;
 with XML.SAX.Simple_Readers;
 
-package body Gela.Valgrind_Test_Cases is
+package body Gela.Test_Cases.Valgrind is
 
    package Report_Readers is
 
@@ -136,8 +136,8 @@ package body Gela.Valgrind_Test_Cases is
    ------------
 
    function Create
-     (Run_Test  : Gela.Run_Test_Cases.Test_Case_Access)
-      return Test_Case
+     (Run_Test  : Gela.Test_Cases.Execute.Test_Case_Access)
+      return Test_Cases.Test_Case_Access
    is
       Prefix    : League.String_Vectors.Universal_String_Vector;
       Arguments : League.String_Vectors.Universal_String_Vector :=
@@ -155,7 +155,7 @@ package body Gela.Valgrind_Test_Cases is
       Run_Test.Set_Command
         (Command   => To_Universal_String ("valgrind"),
          Arguments => Arguments);
-      return Result;
+      return new Test_Case'(Result);
    end Create;
 
    --------------
@@ -296,4 +296,4 @@ package body Gela.Valgrind_Test_Cases is
    begin
       return Self.Run_Test.Build & "/valgrind.xml";
    end Valgrind_Report;
-end Gela.Valgrind_Test_Cases;
+end Gela.Test_Cases.Valgrind;
