@@ -311,16 +311,18 @@ package body XASIS.Integers is
       if Left_Text (1) /= '+' or Right_Text (1) /= '+' then
          raise XASIS_Error;
       end if;
-      for I in 2 .. Length loop
-         if I in Right_Text'Range then
-            Temp := X (Right_Text (I));
+      for J in 2 .. Length loop
+         if J in Right_Text'Range then
+            Temp := X (Right_Text (J));
          else
             Temp := 0;
          end if;
-         if I in Left_Text'Range then
-            Temp := Op (X (Left_Text (I)), Temp);
+         if J in Left_Text'Range then
+            Temp := Op (X (Left_Text (J)), Temp);
+         else
+            Temp := Op (0, Temp);
          end if;
-         Result_Text (I) := X (Temp);
+         Result_Text (J) := X (Temp);
       end loop;
       Result_Last := Get_Last (Result_Text);
       return To_Value (Result_Text (1 .. Result_Last));

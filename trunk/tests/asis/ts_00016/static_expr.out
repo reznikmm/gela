@@ -3,7 +3,7 @@ Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P01 at example.ads [16:12..16:
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P02 at example.ads [16:17..16:19] = 2
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P03 at example.ads [16:22..16:24] = 3
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P04 at example.ads [16:27..16:29] = 4
-Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P05 at example.ads [16:32..16:34] = 6
+Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P05 at example.ads [16:32..16:34] = 5
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P06 at example.ads [16:37..16:39] = 6
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P07 at example.ads [16:42..16:44] = 7
 Defining_Name_Kind:A_DEFINING_ENUMERATION_LITERAL P08 at example.ads [16:47..16:49] = 8
