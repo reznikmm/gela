@@ -16,7 +16,7 @@ project Gela_Tests is
    package Compiler is
       for Default_Switches ("ada") use
         ("-gnatwae", "-gnatW8", "-gnatiw", "-gnaty",
-         "-gnatVa", "-gnat05", "-g");
+         "-gnatVa", "-gnat12", "-g");
    end Compiler;
 
    package Binder is
