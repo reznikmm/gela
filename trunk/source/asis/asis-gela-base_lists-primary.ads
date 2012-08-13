@@ -23,6 +23,8 @@ package Asis.Gela.Base_Lists.Primary is
    type List is access all List_Node;
    for List'Storage_Pool use Pool;
 
+   function New_List (The_Context : ASIS.Context) return List;
+   
    procedure Add
      (Container : in out List_Node;
       Item      : in     Element);

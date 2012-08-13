@@ -38,7 +38,7 @@ package Asis.Gela.Base_Lists is
    type Primary_Base_List_Node is abstract new Element_Node with private;
 
    type Primary_Base_List is access all Primary_Base_List_Node'Class;
-
+   
    procedure Add
      (Container : in out Primary_Base_List_Node;
       Item      : in     Element);

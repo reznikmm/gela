@@ -101,7 +101,12 @@ end </xsl:text>
    type <xsl:call-template name="ptr-type-name"/> is
       access all <xsl:value-of select="@name"/>;
    for <xsl:call-template name="ptr-type-name"/>'Storage_Pool use Lists.Pool;
-<xsl:apply-templates select="attr"/>
+<xsl:if test="not(@abstract)">
+   function New_<xsl:value-of select="@name"/>
+     (The_Context : ASIS.Context)
+      return <xsl:call-template name="ptr-type-name"/>;
+</xsl:if>
+  <xsl:apply-templates select="attr"/>
 
   <xsl:variable name="parent"
      select="ancestor::node[@abstract and not(@helper)][1]"/>
@@ -297,6 +302,22 @@ end </xsl:text>
 <xsl:template match="node" mode="body">
 
   <xsl:apply-templates select="attr" mode="body"/>
+
+  <xsl:if test="not(@abstract)">
+   function New_<xsl:value-of select="@name"/>
+     (The_Context : ASIS.Context)
+      return <xsl:call-template name="ptr-type-name"/>
+   is
+      Result : <xsl:call-template name="ptr-type-name"/> :=
+       new <xsl:value-of select="@name"/>;
+   begin
+<xsl:if test="not(@helper) and @name!='Any_Compilation_Unit_Node'">
+      Set_Enclosing_Compilation_Unit
+        (Result.all, Current_Unit (The_Context.all));
+</xsl:if>
+      return Result;
+   end New_<xsl:value-of select="@name"/>;
+  </xsl:if>
 
   <xsl:if test="not(@helper) and @name!='Any_Compilation_Unit_Node' and not(attr[@name='Declaration_Kind'])">
     <xsl:variable name="parent"

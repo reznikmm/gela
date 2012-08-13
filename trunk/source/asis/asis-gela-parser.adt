@@ -2,7 +2,7 @@ pragma_r :
     error semicolon
 {
    declare
-      New_Node : constant Pragma_Ptr := new Pragma_Node;
+      New_Node : constant Pragma_Ptr := New_Pragma_Node (The_Context);
    begin
       $$ := YYSTYPE (New_Node);
       Set_Start_Position

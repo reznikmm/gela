@@ -820,6 +820,9 @@ package body Asis.Gela.Element_Utils is
       use XASIS.Utils;
       use Asis.Elements;
 
+      The_Context : constant ASIS.Context :=
+        Enclosing_Context (Enclosing_Compilation_Unit (Call).all);
+
       procedure Add (Name   : Asis.Defining_Name;
                      Expr   : Asis.Expression;
                      Is_Def : Boolean := False)
@@ -829,7 +832,7 @@ package body Asis.Gela.Element_Utils is
          use Asis.Gela.Elements.Assoc;
 
          Result : constant Parameter_Association_Ptr :=
-           new Parameter_Association_Node;
+           New_Parameter_Association_Node (The_Context);
       begin
          Set_Enclosing_Element    (Result.all, Call);
          Set_Is_Part_Of_Implicit  (Result.all, True);
@@ -997,6 +1000,7 @@ package body Asis.Gela.Element_Utils is
       Identifiers : List;
       Unit_Name   : Asis.Element;
       Current     : Asis.Element;
+      The_Context : ASIS.Context;
    begin
 --      if Compount_Name.all not in List_Node then
       if not Is_List (Compount_Name.all) then
@@ -1005,11 +1009,13 @@ package body Asis.Gela.Element_Utils is
 
       Identifiers := List (Compount_Name);
       Current     := Get_Item (Identifiers, 1);
+      The_Context := Enclosing_Context
+        (Enclosing_Compilation_Unit (Current.all).all);
 
       for I in 2 .. Length (Identifiers.all) loop
          declare
             Comp : constant Selected_Component_Ptr :=
-              new Selected_Component_Node;
+              New_Selected_Component_Node (The_Context);
             Next : constant Asis.Element := Get_Item (Identifiers, I);
          begin
             Set_Prefix (Comp.all, Current);

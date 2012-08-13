@@ -1216,17 +1216,17 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Call_Node1 : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_Node2  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Call_Node2 : constant Function_Call_Ptr :=");
          Put_Line (Indent & "     Function_Call_Ptr ($4);");
          Put_Line (Indent & "   Sym_Node   : constant Operator_Symbol_Ptr :=");
-         Put_Line (Indent & "     new Operator_Symbol_Node;");
+         Put_Line (Indent & "     New_Operator_Symbol_Node (The_Context);");
          Put_Line (Indent & "begin");
          Step_Indent (+1);
          Put_Line (Indent & "Set_Actual_Parameter (Arg_Node1.all, $1);");
@@ -1255,15 +1255,15 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Call_Node1 : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_Node2  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Sym_Node   : constant Operator_Symbol_Ptr :=");
-         Put_Line (Indent & "     new Operator_Symbol_Node;");
+         Put_Line (Indent & "     New_Operator_Symbol_Node (The_Context);");
          Put_Line (Indent & "begin");
          Step_Indent (+1);
          Put_Line (Indent & "Set_Actual_Parameter (Arg_Node1.all, $1);");
@@ -1303,11 +1303,11 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Call_Node1 : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Call_Node2 : constant Function_Call_Ptr :=");
          Put_Line (Indent & "     Function_Call_Ptr ($3);");
          Put_Line (Indent & "begin");
@@ -1329,11 +1329,11 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Call_Node : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Arg_List  : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Arg_Node  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "begin");
          Put_Line (Indent & "   Set_Actual_Parameter (Arg_Node.all, $2);");
          Put_Line (Indent & "   Set_Start_Position (Arg_Node.all, Start_Position ($2.all));");
@@ -1364,16 +1364,16 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Call_Node  : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Arg_Node   : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Sym_Node   : constant Operator_Symbol_Ptr :=");
-         Put_Line (Indent & "     new Operator_Symbol_Node;");
+         Put_Line (Indent & "     New_Operator_Symbol_Node (The_Context);");
          if Name = "and" or Name = "or" or Name = "xor" or Name = "double_star" then
             Put_Line (Indent & "   Arg_2_Node : constant Parameter_Association_Ptr :=");
-            Put_Line (Indent & "     new Parameter_Association_Node;");
+            Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
             Put_Line (Indent & "begin");
             Step_Indent (+1);
             -- make placeholder for first argument
@@ -1404,15 +1404,15 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_Node2  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Call_Node : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "   Sym_Node   : constant Operator_Symbol_Ptr :=");
-         Put_Line (Indent & "     new Operator_Symbol_Node;");
+         Put_Line (Indent & "     New_Operator_Symbol_Node (The_Context);");
          Put_Line (Indent & "begin");
          Step_Indent (+1);
          Put_Line (Indent & "Set_Actual_Parameter (Arg_Node1.all, $1);");
@@ -1551,13 +1551,13 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_Node2  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Call_Node : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "begin");
          Put_Line (Indent & "   Set_Actual_Parameter (Arg_Node1.all, $1);");
          Put_Line (Indent & "   Set_Start_Position (Arg_Node1.all, Start_Position ($1.all));");
@@ -1579,13 +1579,13 @@ package body Generate is
          Put_Line ("{");
          Put_Line (Indent & "declare");
          Put_Line (Indent & "   Arg_Node1  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_Node2  : constant Parameter_Association_Ptr :=");
-         Put_Line (Indent & "     new Parameter_Association_Node;");
+         Put_Line (Indent & "     New_Parameter_Association_Node (The_Context);");
          Put_Line (Indent & "   Arg_List   : constant Primary_Association_Lists.List :=");
-         Put_Line (Indent & "     new Primary_Association_Lists.List_Node;");
+         Put_Line (Indent & "     Primary_Association_Lists.New_List (The_Context);");
          Put_Line (Indent & "   Call_Node : constant Function_Call_Ptr :=");
-         Put_Line (Indent & "     new Function_Call_Node;");
+         Put_Line (Indent & "     New_Function_Call_Node (The_Context);");
          Put_Line (Indent & "begin");
          Put_Line (Indent & "   Set_Actual_Parameter (Arg_Node2.all, $2);");
          Put_Line (Indent & "   Set_Start_Position (Arg_Node2.all, Start_Position ($2.all));");
@@ -1710,8 +1710,11 @@ package body Generate is
       if Type_Name = "Any_Compilation_Unit_Node" then
          return
            "Any_Compilation_Unit_Ptr (New_Compilation_Unit (The_Context))";
+      elsif Is_List_Type (Type_Name) then
+         return Type_Name (Type_Name'First .. Type_Name'Last - 9)
+           & "New_List (The_Context)";
       else
-         return "new " & Type_Name;
+         return "New_" & Type_Name & " (The_Context)";
       end if;
    end New_Node;
 

@@ -65,7 +65,17 @@ package body Asis.Gela.Base_Lists.Primary is
 
       return Asis.Element (Result);
    end Deep_Copy;
-
+   
+   --------------
+   -- New_List --
+   --------------
+   
+   function New_List (The_Context : ASIS.Context) return List is
+      Result : constant List := new List_Node;
+   begin
+      return Result;
+   end New_List;
+      
    ---------------------
    -- To_Element_List --
    ---------------------
