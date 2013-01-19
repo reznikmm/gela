@@ -11,7 +11,7 @@ project Gela_Tests is
    for Source_Dirs use (".");
    for Object_Dir use Build & "/tools";
    for Exec_Dir use Build;
-   for Main use ("gela-test_driver.adb");
+   for Main use ("gela-test_driver.adb", "gela-test_driver2.adb");
 
    package Compiler is
       for Default_Switches ("ada") use
