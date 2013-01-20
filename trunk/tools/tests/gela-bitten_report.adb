@@ -68,6 +68,7 @@ package body Gela.Bitten_Report is
 
       while Iterator.Has_More_Tests loop
          declare
+            use type Gela.Test_Cases.Status_Kind;
             Attrs : XML.SAX.Attributes.SAX_Attributes;
          begin
             Iterator.Next (Test);
@@ -83,16 +84,23 @@ package body Gela.Bitten_Report is
               (Qualified_Name => Bitten_Report.Test,
                Attributes     => Attrs);
 
+            --  Bitten web interface shows only traceback, so write output and
+            --  traceback here
+            if Test.Status /= Gela.Test_Cases.Success then
+               Writer.Start_Element (Qualified_Name => Traceback);
+               Writer.Characters (Test.Traceback);
+               Writer.Characters (Test.Output);
+               Writer.End_Element (Qualified_Name => Traceback);
+            elsif not Test.Traceback.Is_Empty then
+               Writer.Start_Element (Qualified_Name => Traceback);
+               Writer.Characters (Test.Traceback);
+               Writer.End_Element (Qualified_Name => Traceback);
+            end if;
+
             if not Test.Output.Is_Empty then
                Writer.Start_Element (Qualified_Name => Stdout);
                Writer.Characters (Test.Output);
                Writer.End_Element (Qualified_Name => Stdout);
-            end if;
-
-            if not Test.Traceback.Is_Empty then
-               Writer.Start_Element (Qualified_Name => Traceback);
-               Writer.Characters (Test.Traceback);
-               Writer.End_Element (Qualified_Name => Traceback);
             end if;
 
             Writer.End_Element (Qualified_Name => Bitten_Report.Test);
