@@ -13,7 +13,6 @@ with Ada.Wide_Wide_Text_IO;
 with Ada.Exceptions;
 
 with Gela.Bitten_Report;
-with Gela.Conv;
 with Gela.Host;
 with Gela.Test_Cases;
 with Gela.Test_Iterators.Dir2;
@@ -35,6 +34,22 @@ procedure Gela.Test_Driver2 is
    Output   : constant League.Strings.Universal_String :=
      Build & "/report.xml";
    --  Where to store report file (/tmp/build/report.xml)
+
+--     procedure Generate is
+--        Grammars_Directory : constant League.Strings.Universal_String :=
+--          Gela.Host.Source_Root & "/source/grammars";
+--        Generated_Directory : constant League.Strings.Universal_String :=
+--          Grammars_Directory & "/generated";
+--        AG_Y : constant League.Strings.Universal_String :=
+--          Generated_Directory & "/ag.y";
+--     begin
+--        Gela.Test_Tools.Write_File
+--          (AG_Y, Gela.Test_Tools.Read_File (Grammars_Directory & "/ag.y"));
+--        command_line_interface.Push_Arguments (AG_Y.To_UTF_8_String);
+--        Ayacc;
+--
+--        --  FIXME run uaflex2 here
+--     end Generate;
 
    Test     : Gela.Test_Cases.Test_Case_Access;
    Report   : League.Strings.Universal_String;
@@ -73,7 +88,7 @@ begin
       File : Ada.Wide_Wide_Text_IO.File_Type;
    begin
       Ada.Wide_Wide_Text_IO.Create
-        (File, Name => Conv.To_String (Output));
+        (File, Name => Output.To_UTF_8_String);
       Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Close (File);
    end;

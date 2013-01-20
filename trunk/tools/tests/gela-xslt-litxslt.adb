@@ -1,5 +1,4 @@
 with Interfaces.C;
-with Gela.Conv;
 --  with League.Strings.Internals;
 --  with Matreshka.Internals.Utf16;
 
@@ -68,8 +67,8 @@ package body Gela.XSLT is
    is
       use type C.int;
 
-      XML_Name : constant C.char_array := C.To_C (Gela.Conv.To_String (XML));
-      XSL_Name : constant C.char_array := C.To_C (Gela.Conv.To_String (XSL));
+      XML_Name : constant C.char_array := C.To_C (XML.To_UTF_8_String);
+      XSL_Name : constant C.char_array := C.To_C (XSL.To_UTF_8_String);
       XML_Doc : xmlDocPtr;
       Result  : xmlDocPtr;
       Style   : xsltStylesheetPtr;
@@ -95,7 +94,7 @@ package body Gela.XSLT is
       xsltFreeStylesheet (Style);
 
       return Result : constant League.Strings.Universal_String
-        := Gela.Conv.To_Universal_String
+        := League.Strings.From_UTF_8_String
         (C.To_Ada (Buffer (1 .. C.size_t (Size)), False))
       do
          free (Buffer);

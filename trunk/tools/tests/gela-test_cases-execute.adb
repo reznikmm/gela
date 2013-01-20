@@ -7,7 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Conv;
 with Gela.Host;
 with League.Calendars;
 
@@ -162,12 +161,12 @@ package body Gela.Test_Cases.Execute is
       ----------------
 
       function Object_Dir (Self : Test_Case) return Universal_String is
-         File : constant String := Conv.To_String (Self.Full_Path);
+         File : constant String := Self.Full_Path.To_UTF_8_String;
          Name : constant String := Ada.Directories.Simple_Name (File);
          Obj  : constant String := Ada.Directories.Compose
-           (Conv.To_String (Self.Build), Name);
+           (Self.Build.To_UTF_8_String, Name);
       begin
-         return Conv.To_Universal_String (Obj);
+         return League.Strings.From_UTF_8_String (Obj);
       end Object_Dir;
 
       ------------
@@ -197,9 +196,9 @@ package body Gela.Test_Cases.Execute is
 
       function Parent (Self : Test_Case) return Universal_String is
          Tests : constant String := Ada.Directories.Containing_Directory
-           (Conv.To_String (Self.Full_Path));
+           (Self.Full_Path.To_UTF_8_String);
       begin
-         return Conv.To_Universal_String (Tests);
+         return League.Strings.From_UTF_8_String (Tests);
       end Parent;
 
       ----------
@@ -265,6 +264,8 @@ package body Gela.Test_Cases.Execute is
 
          if Self.Status = Test_Cases.Success then
             Check_Output;
+         else
+            Self.Traceback := Self.Output;
          end if;
 
          Self.Duration := League.Calendars.Clock - Started;
@@ -300,12 +301,12 @@ package body Gela.Test_Cases.Execute is
 
       function Source (Self : Test_Case) return Universal_String is
          use Ada.Directories;
-         Test   : constant String := Conv.To_String (Self.Full_Path);
+         Test   : constant String := Self.Full_Path.To_UTF_8_String;
          Parent : constant String := Containing_Directory (Test);
          Tests  : constant String := Containing_Directory (Parent);
          Trunk  : constant String := Containing_Directory (Tests);
       begin
-         return Conv.To_Universal_String (Trunk);
+         return League.Strings.From_UTF_8_String (Trunk);
       end Source;
 
       ------------
@@ -345,12 +346,12 @@ package body Gela.Test_Cases.Execute is
       use type League.Strings.Universal_String;
 
       Name : constant League.Strings.Universal_String :=
-        Conv.To_Universal_String (Simple_Name (Directory));
+        League.Strings.From_UTF_8_String (Simple_Name (Directory));
 
       Result : Concrete.Test_Case :=
         (Build     => Build,
          Expect    => Expect,
-         Full_Path => Conv.To_Universal_String (Full_Name (Directory)),
+         Full_Path => League.Strings.From_UTF_8_String (Full_Name (Directory)),
          Name      => Name,
          Status    => Test_Cases.Error,
          Fixture   => League.Strings.To_Universal_String ("Ada_Test_Cases"),

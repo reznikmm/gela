@@ -1,6 +1,6 @@
 with Ada.Directories;
 with Ada.Wide_Wide_Text_IO;
-with Gela.Conv;
+with Gela.Test_Tools;
 with Gela.Host;
 with Gela.XSLT;
 with League.Strings;
@@ -28,8 +28,6 @@ procedure Gela.Build is
    procedure Make_Directory (Dir  : Universal_String);
    procedure Make_Buffer;
 
-   procedure Write (File : Universal_String; Text : Universal_String);
-
    LF : constant Wide_Wide_Character := Wide_Wide_Character'Val (10);
 
    package Directory is
@@ -44,7 +42,7 @@ procedure Gela.Build is
 
    procedure Add_Gela_Prefix (Name : Wide_Wide_String) is
       Source : constant Universal_String := Directory.Build_Ada & "/" & Name;
-      Text   : constant Universal_String := Gela.Conv.Read_File (Source);
+      Text   : constant Universal_String := Gela.Test_Tools.Read_File (Source);
       Line   : Universal_String;
       Lines  : League.String_Vectors.Universal_String_Vector :=
         Text.Split (LF);
@@ -67,28 +65,32 @@ procedure Gela.Build is
          Lines.Replace (J, Line);
       end loop;
 
-      Write (Directory.Build_Ada & "/asis-gela-" & Name, Lines.Join (LF));
-      Ada.Directories.Delete_File (Gela.Conv.To_String (Source));
+      Gela.Test_Tools.Write_File
+        (Directory.Build_Ada & "/asis-gela-" & Name, Lines.Join (LF));
+
+      Ada.Directories.Delete_File (Source.To_UTF_8_String);
    end Add_Gela_Prefix;
 
    procedure Make_ASIS_ADB is
       Head : constant Universal_String :=
-        Gela.Conv.Read_File (Directory.Source_ASIS & "/asis.body");
+        Gela.Test_Tools.Read_File (Directory.Source_ASIS & "/asis.body");
       Text : constant Universal_String := Gela.XSLT.Transform
         (XML => Directory.Source_Model & "/asis_hier.xml",
          XSL => Directory.Source_XSLT & "/asis-adb.xsl");
    begin
-      Write (Directory.Build_Ada & "/asis.adb", Head & Text);
+      Gela.Test_Tools.Write_File
+        (Directory.Build_Ada & "/asis.adb", Head & Text);
    end Make_ASIS_ADB;
 
    procedure Make_ASIS_ADS is
       Head : constant Universal_String :=
-        Gela.Conv.Read_File (Directory.Source_ASIS & "/asis.spec");
+        Gela.Test_Tools.Read_File (Directory.Source_ASIS & "/asis.spec");
       Text : constant Universal_String := Gela.XSLT.Transform
         (XML => Directory.Source_Model & "/asis_hier.xml",
          XSL => Directory.Source_XSLT & "/asis-ads.xsl");
    begin
-      Write (Directory.Build_Ada & "/asis.ads", Head & Text);
+      Gela.Test_Tools.Write_File
+        (Directory.Build_Ada & "/asis.ads", Head & Text);
    end Make_ASIS_ADS;
 
    procedure Make_ASIS_Elements is
@@ -99,7 +101,7 @@ procedure Gela.Build is
         Text.Split ('#', Skip_Empty);
    begin
       for J in 1 .. List.Length / 2 loop
-         Write
+         Gela.Test_Tools.Write_File
            (Directory.Build_Ada & "/" & List.Element (J * 2 - 1),
             List.Element (J * 2));
       end loop;
@@ -118,11 +120,12 @@ procedure Gela.Build is
       Text.Append ("with Gela.Source_Buffers.Portable;" & LF);
       Text.Append ("package Gela.Source_Buffers.Current renames " &
                      "Gela.Source_Buffers.Portable;" & LF);
-      Write (Directory.Build_Ada & "/gela-source_buffers-current.ads", Text);
+      Gela.Test_Tools.Write_File
+        (Directory.Build_Ada & "/gela-source_buffers-current.ads", Text);
    end Make_Buffer;
 
    procedure Make_Directory (Dir  : Universal_String) is
-      Name : constant String := Gela.Conv.To_String (Dir);
+      Name : constant String := Dir.To_UTF_8_String;
    begin
       if Ada.Directories.Exists (Name) then
          return;
@@ -142,12 +145,10 @@ procedure Gela.Build is
         (XML => Directory.Source_Model & "/syntax.xml",
          XSL => Directory.Source_XSLT & "/fixed.xsl");
    begin
-      Write (Directory.Build & "/fixed.xml", Code);
+      Gela.Test_Tools.Write_File (Directory.Build & "/fixed.xml", Code);
    end Make_Fixed_Syntax;
 
    procedure Make_Parser is
-      use Gela.Conv;
-
       Parser_Y : constant Universal_String :=
         Directory.Build_Ada & "/parser.y";
 
@@ -161,22 +162,24 @@ procedure Gela.Build is
       Prefix.Append ("%token Comment_Token");
       Prefix.Append (LF);
 
-      Write (Parser_Y, Text);
+      Gela.Test_Tools.Write_File (Parser_Y, Text);
 
       Xml_To_Y.Run
-        (ASIS_File   => To_String (Directory.Source_Model & "/asis_hier.xml"),
-         Tokens_File => To_String (Directory.Source_Model & "/tokens.xml"),
-         Syntax_File => To_String (Directory.Build & "/fixed.xml"),
-         Code_File   => To_String (Directory.Source_Model & "/code.xml"),
-         Output      => To_String (Parser_Y));
+        (ASIS_File   =>
+           Directory.Source_Model.To_UTF_8_String & "/asis_hier.xml",
+         Tokens_File => Directory.Source_Model.To_UTF_8_String & "/tokens.xml",
+         Syntax_File => Directory.Build.To_UTF_8_String & "/fixed.xml",
+         Code_File   => Directory.Source_Model.To_UTF_8_String & "/code.xml",
+         Output      => Parser_Y.To_UTF_8_String);
 
-      Text := Read_File (Parser_Y);
+      Text := Gela.Test_Tools.Read_File (Parser_Y);
       Prefix.Append (Text);
-      Text := Read_File (Directory.Source_ASIS & "/asis-gela-parser.adt");
+      Text := Gela.Test_Tools.Read_File
+        (Directory.Source_ASIS & "/asis-gela-parser.adt");
       Prefix.Append (Text);
-      Write (Parser_Y, Prefix);
+      Gela.Test_Tools.Write_File (Parser_Y, Prefix);
 
-      command_line_interface.Push_Arguments (To_String (Parser_Y));
+      command_line_interface.Push_Arguments (Parser_Y.To_UTF_8_String);
       Ayacc;
       Add_Gela_Prefix ("parser.ads");
       Add_Gela_Prefix ("parser.adb");
@@ -185,23 +188,13 @@ procedure Gela.Build is
       Add_Gela_Prefix ("parser-goto_table.ads");
    end Make_Parser;
 
-   procedure Write (File : Universal_String; Text : Universal_String) is
-      Output : Ada.Wide_Wide_Text_IO.File_Type;
-      Name : constant String := Gela.Conv.To_String (File);
-   begin
-      Ada.Wide_Wide_Text_IO.Put_Line ("Writing " & File.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Create (Output, Name => Name);
-      Ada.Wide_Wide_Text_IO.Put_Line (Output, Text.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Close (Output);
-   end Write;
-
 begin
    Make_Dirs;
    Make_ASIS_Sources;
    UAFlex.Run
-     (Input_File => Conv.To_String (Directory.Source_ASIS & "/ada.uaflex"),
+     (Input_File => Directory.Source_ASIS.To_UTF_8_String & "/ada.uaflex",
       Pkg_Name   => "Asis.Gela.Scanner_Tables",
-      Output_Dir => Conv.To_String (Directory.Build_Ada));
+      Output_Dir => Directory.Build_Ada.To_UTF_8_String);
    Make_Fixed_Syntax;
    Make_Parser;
    Make_Buffer;

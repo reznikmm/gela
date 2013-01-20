@@ -8,7 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Directories;
-with Gela.Conv;
+with Gela.Test_Tools;
 with Gela.Test_Cases.Append;
 with Gela.Test_Cases.Build;
 with Gela.Test_Cases.Input;
@@ -67,7 +67,7 @@ package body Gela.Test_Iterators.Dir2 is
       while More_Entries (Each) loop
          Get_Next_Entry (Each, Item);
 
-         Input := Conv.To_Universal_String (Simple_Name (Item));
+         Input := League.Strings.From_UTF_8_String (Simple_Name (Item));
 
          declare
             Full_Path : constant String := Full_Name (Item);
@@ -75,7 +75,7 @@ package body Gela.Test_Iterators.Dir2 is
               (Full_Path'First .. Full_Path'Last - 2) & "out";
          begin
             if Ada.Directories.Exists (Out_Path) then
-               Expect := Conv.Read_File (Conv.To_Universal_String (Out_Path));
+               Expect := Gela.Test_Tools.Read_File (Out_Path);
             else
                Expect := Gela.Test_Cases.Ok;
             end if;
@@ -111,7 +111,7 @@ package body Gela.Test_Iterators.Dir2 is
       use Ada.Directories;
       use Gela.Test_Cases.Append;
 
-      Root : constant String := Conv.To_String (Source);
+      Root : constant String := Source.To_UTF_8_String;
       Each : Search_Type;
       Item : Directory_Entry_Type;
       Test : Gela.Test_Cases.Test_Case_Access;
@@ -136,8 +136,7 @@ package body Gela.Test_Iterators.Dir2 is
                  Full_Path & "/" & Simple_Name (Item) & ".out";
             begin
                if Ada.Directories.Exists (Out_Path) then
-                  Expect := Conv.Read_File
-                    (Conv.To_Universal_String (Out_Path));
+                  Expect := Gela.Test_Tools.Read_File (Out_Path);
                else
                   Expect := Gela.Test_Cases.Ok;
                end if;
@@ -170,9 +169,9 @@ package body Gela.Test_Iterators.Dir2 is
          return Test_Cases.Build.Test_Case_Access
    is
       Dir_Name  : constant League.Strings.Universal_String :=
-        Conv.To_Universal_String (Ada.Directories.Simple_Name (Dir));
+        League.Strings.From_UTF_8_String (Ada.Directories.Simple_Name (Dir));
       Full_Path : constant League.Strings.Universal_String :=
-        Conv.To_Universal_String (Ada.Directories.Full_Name (Dir));
+        League.Strings.From_UTF_8_String (Ada.Directories.Full_Name (Dir));
       GPR_Build : Gela.Test_Cases.Build.Test_Case_Access;
       Options   : League.String_Vectors.Universal_String_Vector;
    begin

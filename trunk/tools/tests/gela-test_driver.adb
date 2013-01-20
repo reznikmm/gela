@@ -15,12 +15,12 @@ with Ada.Exceptions;
 with Gela.Bitten_Coverage;
 with Gela.Bitten_Report;
 with Gela.Build;
-with Gela.Conv;
 with Gela.Host;
 with Gela.Test_Cases;
 with Gela.Test_Iterators.ACATS;
 with Gela.Test_Iterators.Append;
 with Gela.Test_Iterators.Dir;
+with Gela.Test_Tools;
 
 --  with League.Application;
 with League.Strings;
@@ -92,21 +92,14 @@ begin
       File : Ada.Wide_Wide_Text_IO.File_Type;
    begin
       Ada.Wide_Wide_Text_IO.Create
-        (File, Name => Conv.To_String (Output));
+        (File, Name => Output.To_UTF_8_String);
       Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Close (File);
    end;
 
    Gela.Bitten_Coverage.Generate (Build, Report);
 
-   declare
-      File : Ada.Wide_Wide_Text_IO.File_Type;
-   begin
-      Ada.Wide_Wide_Text_IO.Create
-        (File, Name => Conv.To_String (Coverage));
-      Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Close (File);
-   end;
+   Gela.Test_Tools.Write_File (Coverage, Report);
 
    if Failed then
       Ada.Wide_Wide_Text_IO.Put_Line ("Some tests failed");

@@ -7,7 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Conv;
 with Gela.Host;
 with Ada.Directories;
 
@@ -120,9 +119,10 @@ package body Gela.Test_Cases.Build is
    -----------------
 
    function Output_File (Self : Test_Case) return Universal_String is
-      Log : constant String := Conv.To_String (Name (Self)) & ".log";
+      Log : constant String := Name (Self).To_UTF_8_String & ".log";
    begin
-      return Conv.To_Universal_String (Ada.Directories.Simple_Name (Log));
+      return League.Strings.From_UTF_8_String
+        (Ada.Directories.Simple_Name (Log));
    end Output_File;
 
    ---------
@@ -173,6 +173,11 @@ package body Gela.Test_Cases.Build is
         (Gprbuild, Arguments, Code, Self.Output, Self.Output_File);
 
       Self.Status := Code_To_Status (Code);
+
+      if Self.Status = Test_Cases.Failure then
+         Self.Traceback := Self.Output;
+         Self.Output.Clear;
+      end if;
 
       Self.Duration := League.Calendars.Clock - Started;
    end Run;

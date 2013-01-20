@@ -10,7 +10,7 @@
 with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Wide_Wide_Text_IO;
-with Gela.Conv;
+with Gela.Test_Tools;
 with GNAT.Source_Info;
 with GNAT.OS_Lib;
 with League.Application;
@@ -64,7 +64,7 @@ package body Gela.Host is
       end if;
 
       Result := GNAT.OS_Lib.Create_Output_Text_File
-        (Conv.To_String (Output_File));
+        (Output_File.To_UTF_8_String);
    end Create_Output;
 
    -------------
@@ -93,21 +93,21 @@ package body Gela.Host is
       Create_Output (Name, Log);
 
       if not Is_Absolute_Path (Exe) and not Is_Windows then
-         Exec := GNAT.OS_Lib.Locate_Exec_On_Path (Conv.To_String (Exe));
+         Exec := GNAT.OS_Lib.Locate_Exec_On_Path (Exe.To_UTF_8_String);
       else
-         Exec := new String'(Conv.To_String (Exe));
+         Exec := new String'(Exe.To_UTF_8_String);
       end if;
 
       for J in Args'Range loop
-         Args (J) := new String'(Conv.To_String (Arguments.Element (J)));
+         Args (J) := new String'(Arguments.Element (J).To_UTF_8_String);
       end loop;
 
-      Text := Conv.To_Universal_String (Exec.all);
+      Text := League.Strings.From_UTF_8_String (Exec.all);
       Text.Append (' ');
       Text.Append (Arguments.Join (' '));
 
       if not Directory.Is_Empty then
-         Ada.Directories.Set_Directory (Conv.To_String (Directory));
+         Ada.Directories.Set_Directory (Directory.To_UTF_8_String);
          Text.Append (" [ in ");
          Text.Append (Directory);
          Text.Append ("]");
@@ -126,7 +126,7 @@ package body Gela.Host is
       end if;
 
       GNAT.OS_Lib.Close (Log);
-      Output := Conv.Read_File (Name);
+      Output := Gela.Test_Tools.Read_File (Name);
    end Execute;
 
    ----------------------
@@ -138,7 +138,7 @@ package body Gela.Host is
      return Boolean
    is
       use Ada.Directories;
-      Name : constant String := Conv.To_String (File);
+      Name : constant String := File.To_UTF_8_String;
    begin
       return Name /= Simple_Name (Name);
    end Is_Absolute_Path;
@@ -159,7 +159,7 @@ package body Gela.Host is
    function Build_Root return League.Strings.Universal_String is
    begin
       if Build_Root_Value.Is_Empty then
-         Build_Root_Value := Gela.Conv.To_Universal_String
+         Build_Root_Value := League.Strings.From_UTF_8_String
            (Ada.Directories.Containing_Directory
               (Ada.Command_Line.Command_Name));
       end if;
@@ -180,7 +180,7 @@ package body Gela.Host is
       Pos       : Positive := 1;
    begin
       if Source_Root_Value.Is_Empty then
-         Exe_File := Gela.Conv.To_Universal_String
+         Exe_File := League.Strings.From_UTF_8_String
            (Ada.Command_Line.Command_Name);
 
          Arguments.Append (+"--dwarf=info");
@@ -201,7 +201,7 @@ package body Gela.Host is
             declare
                use League.String_Vectors;
                File_Name  : constant Universal_String :=
-                 Gela.Conv.To_Universal_String (GNAT.Source_Info.File);
+                 League.Strings.From_UTF_8_String (GNAT.Source_Info.File);
                Line       : Universal_String;
                Block_Size : constant := 1024;
                Lines : constant Universal_String_Vector :=
@@ -234,8 +234,8 @@ package body Gela.Host is
             function Up (X : String) return String renames
               Ada.Directories.Containing_Directory;
          begin
-            Source_Root_Value := Gela.Conv.To_Universal_String
-              (Up (Up (Up ((Gela.Conv.To_String (Found))))));
+            Source_Root_Value := League.Strings.From_UTF_8_String
+              (Up (Up (Up (Found.To_UTF_8_String))));
          end;
       end if;
 

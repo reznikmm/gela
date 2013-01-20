@@ -9,7 +9,7 @@
 
 with Ada.Directories;
 with Ada.Wide_Wide_Text_IO;
-with Gela.Conv;
+with Gela.Test_Tools;
 with Gela.Host;
 with XML.SAX.Attributes;
 with XML.SAX.Pretty_Writers;
@@ -57,7 +57,7 @@ package body Gela.Bitten_Coverage is
    -----------
 
    procedure Mkdir (Gcov_Root : League.Strings.Universal_String) is
-      Path : constant String := Gela.Conv.To_String (Gcov_Root);
+      Path : constant String := Gcov_Root.To_UTF_8_String;
    begin
       if not Ada.Directories.Exists (Path) then
          Ada.Directories.Create_Directory (Path);
@@ -153,7 +153,8 @@ package body Gela.Bitten_Coverage is
       Hits    : out League.Strings.Universal_String)
    is
       Line   : constant League.String_Vectors.Universal_String_Vector :=
-        Gela.Conv.Read_File (Input).Split (LF, League.Strings.Skip_Empty);
+        Gela.Test_Tools.Read_File (Input)
+          .Split (LF, League.Strings.Skip_Empty);
 
       Covered : Natural := 0;
       Length  : Natural := 0;

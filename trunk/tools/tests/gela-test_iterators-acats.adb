@@ -7,7 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Conv;
+with Gela.Test_Tools;
 with Gela.Test_Cases.Input;
 
 with League.String_Vectors;
@@ -42,7 +42,7 @@ package body Gela.Test_Iterators.ACATS is
       begin
          Ada.Directories.Start_Search
            (Search,
-            Conv.To_String (Source),
+            Source.To_UTF_8_String,
             "ts_00018");
 
          if Ada.Directories.More_Entries (Search) then
@@ -52,7 +52,7 @@ package body Gela.Test_Iterators.ACATS is
          end if;
       end;
 
-      List_Text := Conv.Read_File (List_File);
+      List_Text := Gela.Test_Tools.Read_File (List_File);
 
       List := List_Text.Split (New_Line, League.Strings.Skip_Empty);
 

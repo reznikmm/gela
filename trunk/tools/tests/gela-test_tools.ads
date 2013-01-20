@@ -9,17 +9,18 @@
 
 with League.Strings;
 
-package Gela.Conv is
+package Gela.Test_Tools is
 
    function Read_File
      (File_Name : League.Strings.Universal_String)
      return League.Strings.Universal_String;
 
-   function To_Universal_String
-     (Text : String) return League.Strings.Universal_String;
+   function Read_File
+     (File_Name : String) return League.Strings.Universal_String;
 
-   function To_String
-     (Text : League.Strings.Universal_String) return String;
+   procedure Write_File
+     (File : League.Strings.Universal_String;
+      Text : League.Strings.Universal_String);
 
-end Gela.Conv;
+end Gela.Test_Tools;
 
