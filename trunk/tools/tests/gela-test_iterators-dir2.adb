@@ -20,10 +20,10 @@ package body Gela.Test_Iterators.Dir2 is
 
    use type League.Strings.Universal_String;
 
-   function "+"
-     (Text : Wide_Wide_String)
-         return League.Strings.Universal_String
-         renames League.Strings.To_Universal_String;
+--     function "+"
+--       (Text : Wide_Wide_String)
+--           return League.Strings.Universal_String
+--           renames League.Strings.To_Universal_String;
 
    procedure Add_Each_Input
      (Result : in out Iterator;
@@ -175,7 +175,7 @@ package body Gela.Test_Iterators.Dir2 is
       GPR_Build : Gela.Test_Cases.Build.Test_Case_Access;
       Options   : League.String_Vectors.Universal_String_Vector;
    begin
-      Options.Append (+"main.adb");
+      Options.Append (Dir_Name & ".adb");
       Options.Append ("-XSOURCE_DIR=" & Dir_Name);
       Options.Append ("-XOBJECT_DIR=" & Build & "/" & Dir_Name);
 

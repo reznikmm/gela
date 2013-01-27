@@ -359,7 +359,7 @@ package body Gela.Test_Cases.Execute is
          others    => <>);
 
    begin
-      Result.Command := Result.Object_Dir & "/main";
+      Result.Command := Result.Object_Dir & "/" & Name;
 
       return new Concrete.Test_Case'(Result);
    end Create;

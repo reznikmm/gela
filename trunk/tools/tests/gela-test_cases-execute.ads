@@ -19,7 +19,7 @@ package Gela.Test_Cases.Execute is
 
    procedure Run (Self : in out Test_Case) is abstract;
    --  1. Run executable:
-   --         cd <TEST>; $(TEST_HOME)/$</main > $(TEST_HOME)/$@
+   --         cd <TEST>; $(TEST_HOME)/$</TEST > $(TEST_HOME)/$@
    --
    --  2. Compare output with <TEST>.out or "OK" if no such file
 

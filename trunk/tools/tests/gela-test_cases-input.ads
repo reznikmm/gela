@@ -22,7 +22,7 @@ package Gela.Test_Cases.Input is
 
    procedure Run (Self : in out Test_Case);
    --  Run executable with Input argument:
-   --     cd <TEST>; $(TEST_HOME)/$</main Input > $(TEST_HOME)/Input
+   --     cd <TEST>; $(TEST_HOME)/$</TEST Input > $(TEST_HOME)/Input
    --  Compare output with <Input>.out or "OK" if no such file
 
    function Create
