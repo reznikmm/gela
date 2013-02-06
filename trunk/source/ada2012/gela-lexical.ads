@@ -7,7 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-
 package Gela.Lexical is
    pragma Pure;
 end Gela.Lexical;

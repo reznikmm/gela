@@ -126,6 +126,104 @@ package body Gela.Lexical.Handler is
    Word_List : array (Hash_Value range 22 .. 114)
      of League.Strings.Universal_String;
 
+   -----------------------
+   -- Character_Literal --
+   -----------------------
+
+   overriding procedure Character_Literal
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean)
+   is
+      pragma Unreferenced (Rule);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+   begin
+      Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
+      Token := Gela.Lexical.Tokens.Character_Literal_Token;
+      Skip := False;
+
+      Self.Fabric.New_Token
+        (Token     => Token,
+         Line      => Self.Line,
+         First     => Self.Last,
+         Last      => Self.Last + Token_Length - 1,
+         Separator => Self.Separator,
+         Folded    => League.Strings.Empty_Universal_String);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Separator := Self.Last;
+   end Character_Literal;
+
+   -------------
+   -- Comment --
+   -------------
+
+   overriding procedure Comment
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean)
+   is
+      pragma Unreferenced (Rule);
+      pragma Unreferenced (Token);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+   begin
+      Skip := True;
+      Self.Comment := Self.Last;
+      Self.Last := Self.Last + Token_Length;
+   end Comment;
+
+   ---------------
+   -- Delimiter --
+   ---------------
+
+   overriding procedure Delimiter
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean)
+   is
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+   begin
+      Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
+      Token := Map (Rule);
+      Skip := False;
+
+      Self.Fabric.New_Token
+        (Token     => Token,
+         Line      => Self.Line,
+         First     => Self.Last,
+         Last      => Self.Last + Token_Length - 1,
+         Separator => Self.Separator,
+         Folded    => League.Strings.Empty_Universal_String);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Separator := Self.Last;
+   end Delimiter;
+
+   -----------
+   -- Error --
+   -----------
+
+   overriding procedure Error
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean)
+   is
+      pragma Unreferenced (Rule);
+      pragma Unreferenced (Token);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+   begin
+      Skip := True;
+      Self.Last := Self.Last + Token_Length;
+   end Error;
+
    ----------
    -- Hash --
    ----------
@@ -160,29 +258,43 @@ package body Gela.Lexical.Handler is
       return Result;
    end Hash;
 
-   --------------
-   -- To_Token --
-   --------------
+   ----------------
+   -- Identifier --
+   ----------------
 
-   function To_Token
-     (X : League.Strings.Universal_String)
-      return Gela.Lexical.Tokens.Token
+   overriding procedure Identifier
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean)
    is
-      use type League.Strings.Universal_String;
-      H : Hash_Value;
-   begin
-      if X.Length in 2 .. 12 then
-         H := Hash (X);
+      pragma Unreferenced (Rule);
 
-         if H in Word_List'Range and then Word_List (H) = X then
-            return Word_Map (H);
-         else
-            return Gela.Lexical.Tokens.Identifier_Token;
-         end if;
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Text : constant League.Strings.Universal_String :=
+        Scanner.Get_Text.To_Lowercase;
+   begin
+      Token := To_Token (Text);
+      Skip := False;
+
+      if Token = Id then
+         Scanner.Set_Start_Condition (Gela.Lexical.Types.INITIAL);
       else
-         return Gela.Lexical.Tokens.Identifier_Token;
+         Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
       end if;
-   end To_Token;
+
+      Self.Fabric.New_Token
+        (Token     => Token,
+         Line      => Self.Line,
+         First     => Self.Last,
+         Last      => Self.Last + Token_Length - 1,
+         Separator => Self.Separator,
+         Folded    => Text);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Separator := Self.Last;
+   end Identifier;
 
    ----------------
    -- Initialize --
@@ -282,182 +394,153 @@ package body Gela.Lexical.Handler is
          +"rem");
    end Initialize;
 
-   ----------------
-   -- Identifier --
-   ----------------
+   --------------
+   -- New_Line --
+   --------------
 
-   procedure Identifier
+   overriding procedure New_Line
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean)
    is
-      pragma Unreferenced (Self);
       pragma Unreferenced (Rule);
-      Text : constant League.Strings.Universal_String :=
-        Scanner.Get_Text.To_Lowercase;
-   begin
-      Token := To_Token (Text);
-      Skip := False;
+      pragma Unreferenced (Token);
 
-      if Token = Id then
-         Scanner.Set_Start_Condition (Gela.Lexical.Types.INITIAL);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Comment      : Text_Index;
+   begin
+      Skip := True;
+
+      if Self.Comment > Self.Line_First then
+         Comment := Self.Comment;
       else
-         Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
+         Comment := Self.Last + 1;
       end if;
-   end Identifier;
+
+      Self.Fabric.New_Line
+        (First   => Self.Line_First,
+         Last    => Self.Last,
+         Comment => Comment);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Line := Self.Line + 1;
+      Self.Line_First := Self.Last;
+   end New_Line;
 
    ---------------------
    -- Numeric_Literal --
    ---------------------
 
-   procedure Numeric_Literal
+   overriding procedure Numeric_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean)
    is
-      pragma Unreferenced (Self);
       pragma Unreferenced (Rule);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
    begin
       Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
       Token := Gela.Lexical.Tokens.Numeric_Literal_Token;
       Skip := False;
+
+      Self.Fabric.New_Token
+        (Token     => Token,
+         Line      => Self.Line,
+         First     => Self.Last,
+         Last      => Self.Last + Token_Length - 1,
+         Separator => Self.Separator,
+         Folded    => League.Strings.Empty_Universal_String);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Separator := Self.Last;
    end Numeric_Literal;
 
-   -----------------------
-   -- Character_Literal --
-   -----------------------
+   ----------------
+   -- Set_Fabric --
+   ----------------
 
-   procedure Character_Literal
-     (Self    : not null access Handler;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean)
-   is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Rule);
+   procedure Set_Fabric
+     (Self   : in out Handler;
+      Fabric : not null Gela.Lexical.Fabrics.Fabric_Access) is
    begin
-      Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
-      Token := Gela.Lexical.Tokens.Character_Literal_Token;
-      Skip := False;
-   end Character_Literal;
-
-   --------------------
-   -- String_Literal --
-   --------------------
-
-   procedure String_Literal
-     (Self    : not null access Handler;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean)
-   is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Rule);
-   begin
-      Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
-      Token := Gela.Lexical.Tokens.String_Literal_Token;
-      Skip := False;
-   end String_Literal;
-
-   -------------
-   -- Comment --
-   -------------
-
-   procedure Comment
-     (Self    : not null access Handler;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean)
-   is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Scanner);
-      pragma Unreferenced (Rule);
-      pragma Unreferenced (Token);
-   begin
-      Skip := True;
-   end Comment;
+      Self.Fabric := Fabric;
+   end Set_Fabric;
 
    -----------
    -- Space --
    -----------
 
-   procedure Space
+   overriding procedure Space
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean)
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Scanner);
       pragma Unreferenced (Rule);
       pragma Unreferenced (Token);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
    begin
       Skip := True;
+      Self.Last := Self.Last + Token_Length;
    end Space;
 
-   --------------
-   -- New_Line --
-   --------------
+   --------------------
+   -- String_Literal --
+   --------------------
 
-   procedure New_Line
+   overriding procedure String_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean)
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Scanner);
       pragma Unreferenced (Rule);
-      pragma Unreferenced (Token);
-   begin
-      Skip := True;
-   end New_Line;
-
-   -----------
-   -- Error --
-   -----------
-
-   procedure Error
-     (Self    : not null access Handler;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean)
-   is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Scanner);
-      pragma Unreferenced (Rule);
-      pragma Unreferenced (Token);
-   begin
-      Skip := True;
-   end Error;
-
-   ---------------
-   -- Delimiter --
-   ---------------
-
-   procedure Delimiter
-     (Self    : not null access Handler;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean)
-   is
-      pragma Unreferenced (Self);
+      Token_Length : constant Positive := Scanner.Get_Token_Length;
    begin
       Scanner.Set_Start_Condition (Gela.Lexical.Types.Allow_Char);
-      Token := Map (Rule);
-
+      Token := Gela.Lexical.Tokens.String_Literal_Token;
       Skip := False;
-   end Delimiter;
+
+      Self.Fabric.New_Token
+        (Token     => Token,
+         Line      => Self.Line,
+         First     => Self.Last,
+         Last      => Self.Last + Token_Length - 1,
+         Separator => Self.Separator,
+         Folded    => League.Strings.Empty_Universal_String);
+
+      Self.Last := Self.Last + Token_Length;
+      Self.Separator := Self.Last;
+   end String_Literal;
+
+   --------------
+   -- To_Token --
+   --------------
+
+   function To_Token
+     (X : League.Strings.Universal_String)
+      return Gela.Lexical.Tokens.Token
+   is
+      use type League.Strings.Universal_String;
+      H : Hash_Value;
+   begin
+      if X.Length in 2 .. 12 then
+         H := Hash (X);
+
+         if H in Word_List'Range and then Word_List (H) = X then
+            return Word_Map (H);
+         else
+            return Gela.Lexical.Tokens.Identifier_Token;
+         end if;
+      else
+         return Gela.Lexical.Tokens.Identifier_Token;
+      end if;
+   end To_Token;
 
 end Gela.Lexical.Handler;

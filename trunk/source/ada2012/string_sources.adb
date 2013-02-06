@@ -1,5 +1,17 @@
 package body String_Sources is
 
+   ------------
+   -- Create --
+   ------------
+
+   procedure Create
+     (Self : out String_Source;
+      Text : League.Strings.Universal_String) is
+   begin
+      Self.Text := Text;
+      Self.Cursor.First (Self.Text);
+   end Create;
+
    --------------
    -- Get_Next --
    --------------
@@ -19,17 +31,5 @@ package body String_Sources is
          return Abstract_Sources.End_Of_Input;
       end if;
    end Get_Next;
-
-   ------------
-   -- Create --
-   ------------
-
-   procedure Create
-     (Self : out String_Source;
-      Text : League.Strings.Universal_String) is
-   begin
-      Self.Text := Text;
-      Self.Cursor.First (Self.Text);
-   end Create;
 
 end String_Sources;

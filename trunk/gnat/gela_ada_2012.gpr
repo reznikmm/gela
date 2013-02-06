@@ -10,11 +10,11 @@ project Gela_Ada_2012 is
    for Object_Dir use Build & "/ada2012";
 
    Default_Ada_Switches :=
-     ("-gnat12", "-gnatW8", "-g");
+     ("-gnat12", "-gnatW8", "-g", "-gnatyaAbcdefhiIkmnoOprsStux");
 
    package Compiler is
       for Default_Switches ("ada") use
-        Default_Ada_Switches & ("-gnatwea", "-gnaty");
+        Default_Ada_Switches & ("-gnatwea");
    end Compiler;
 
 end Gela_Ada_2012;

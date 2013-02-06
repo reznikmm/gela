@@ -11,74 +11,92 @@ with Gela.Lexical.Handlers;
 with Gela.Lexical.Scanners;
 with Gela.Lexical.Tokens;
 with Gela.Lexical.Types;
+with Gela.Lexical.Fabrics;
 
 package Gela.Lexical.Handler is
 
    procedure Initialize;
 
-   type Handler is new Gela.Lexical.Handlers.Handler with null record;
+   type Handler is new Gela.Lexical.Handlers.Handler with private;
 
-   procedure Identifier
+   procedure Set_Fabric
+     (Self   : in out Handler;
+      Fabric : not null Gela.Lexical.Fabrics.Fabric_Access);
+
+   overriding procedure Identifier
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Numeric_Literal
+   overriding procedure Numeric_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Character_Literal
+   overriding procedure Character_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure String_Literal
+   overriding procedure String_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Comment
+   overriding procedure Comment
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Space
+   overriding procedure Space
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure New_Line
+   overriding procedure New_Line
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Error
+   overriding procedure Error
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure Delimiter
+   overriding procedure Delimiter
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
+
+private
+
+   subtype Text_Index is Gela.Lexical.Fabrics.Text_Index;
+
+   type Handler is new Gela.Lexical.Handlers.Handler with record
+      Last       : Text_Index := 1;  --  Position of last character
+      Line       : Positive := 1;    --  Last line number
+      Line_First : Text_Index := 1;  --  Position of first character of line
+      Comment    : Text_Index := 0;  --  Position of first character of comment
+      Separator  : Text_Index := 1;  --  Position of first character of separ
+      Fabric     : Gela.Lexical.Fabrics.Fabric_Access;
+   end record;
 
 end Gela.Lexical.Handler;

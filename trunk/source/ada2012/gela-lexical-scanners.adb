@@ -24,13 +24,6 @@ package body Gela.Lexical.Scanners is
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   procedure On_Accept
-     (Self    : not null access Gela.Lexical.Handlers.Handler'Class;
-      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
-      Rule    : Gela.Lexical.Types.Rule_Index;
-      Token   : out Gela.Lexical.Tokens.Token;
-      Skip    : in out Boolean) is separate;
-
    End_Of_Buffer : constant Wide_Wide_Character :=
      Wide_Wide_Character'Val (Abstract_Sources.End_Of_Buffer);
 
@@ -167,6 +160,13 @@ package body Gela.Lexical.Scanners is
    begin
       return Self.Offset (Half) + Self.From;
    end Get_Token_Position;
+
+   procedure On_Accept
+     (Self    : not null access Gela.Lexical.Handlers.Handler'Class;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean) is separate;
 
    -----------------
    -- Read_Buffer --
