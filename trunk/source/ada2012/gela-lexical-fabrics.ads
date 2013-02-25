@@ -13,7 +13,7 @@ with Gela.Lexical.Tokens;
 
 package Gela.Lexical.Fabrics is
 
-   type Fabric is abstract tagged null record;
+   type Fabric is limited interface;
 
    type Fabric_Access is access all Fabric'Class;
 

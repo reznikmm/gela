@@ -1,45 +1,27 @@
-with League.Character_Sets;
-with League.Characters.Latin;
+------------------------------------------------------------------------------
+--                           G E L A   A S I S                              --
+--       ASIS implementation for Gela project, a portable Ada compiler      --
+--                        a portable Ada compiler                           --
+--                        http://gela.ada-ru.org/                           --
+--                     - - - - - - - - - - - - - - -                        --
+--              Read copyright and license in gela.ads file                 --
+------------------------------------------------------------------------------
+
+with Ada.Unchecked_Deallocation;
+
+with Gela.Compilations.Mutables.Tokens;
 
 package body Gela.Compilations.Mutables is
 
-   function Count_Lines
-     (Source : League.Strings.Universal_String)
-      return Line_Count;
+   procedure Free is new
+     Ada.Unchecked_Deallocation (Line_Offset_Array, Line_Offset_Array_Access);
 
-   Set : League.Character_Sets.Universal_Character_Set;
+   procedure Free is new Ada.Unchecked_Deallocation
+     (Gela.Elements.Payload_Array, Payload_Array_Access);
 
-   -----------------
-   -- Count_Lines --
-   -----------------
-
-   function Count_Lines
-     (Source : League.Strings.Universal_String)
-      return Line_Count
-   is
-      use type League.Characters.Universal_Character;
-
-      Result  : Line_Count := 1;
-      Element : League.Characters.Universal_Character;
-      Last_CR : Boolean := False;
-   begin
-      for J in 1 .. Source.Length loop
-         Element := Source.Element (J);
-
-         if Element = League.Characters.Latin.Carriage_Return then
-            Result := Result + 1;
-            Last_CR := True;
-         elsif Element = League.Characters.Latin.Line_Feed then
-            Result := Result + Boolean'Pos (not Last_CR);
-            Last_CR := False;
-         elsif Set.Has (Element) then
-            Result := Result + 1;
-            Last_CR := False;
-         end if;
-      end loop;
-
-      return Result;
-   end Count_Lines;
+   type Internal_Data is record
+      Token : Gela.Compilations.Mutables.Tokens.Token;
+   end record;
 
    ------------
    -- Create --
@@ -47,16 +29,21 @@ package body Gela.Compilations.Mutables is
 
    not overriding function Create
      (Source : League.Strings.Universal_String)
-      return Mutable_Compilation
+      return Mutable_Compilation_Access
    is
       NFKC  : constant League.Strings.Universal_String := Source.To_NFKC;
-      Total_Lines : constant Line_Count := Count_Lines (NFKC);
    begin
-      return Result : constant Mutable_Compilation :=
-        (Text  => NFKC,
-         Lines => new Line_Offset_Array (1 .. Total_Lines))
+      return Result : constant Mutable_Compilation_Access :=
+        new Mutable_Compilation'
+        (Text       => NFKC,
+         Lines      => new Line_Offset_Array (1 .. 64),
+         Last_Line  => 0,
+         Store      => <>,
+         Internal   => new Internal_Data,
+         Tokens     => new Gela.Elements.Payload_Array (1 .. 16),
+         Last_Token => 0)
       do
-         null;
+         Result.Internal.Token.Compilation := Result;
       end return;
    end Create;
 
@@ -65,10 +52,9 @@ package body Gela.Compilations.Mutables is
    ---------------
 
    overriding function Last_Line
-     (Self : access Mutable_Compilation)
-      return Line_Count is
+     (Self : access Mutable_Compilation) return Gela.Lexical.Line_Count is
    begin
-      return Self.Lines'Last;
+      return Self.Last_Line;
    end Last_Line;
 
    ----------
@@ -77,11 +63,74 @@ package body Gela.Compilations.Mutables is
 
    overriding function Line
      (Self  : access Mutable_Compilation;
-      Index : Line_Index)
-      return Line_Offset is
+      Index : Gela.Lexical.Line_Index) return Line_Offset is
    begin
       return Self.Lines (Index);
    end Line;
+
+   --------------
+   -- New_Line --
+   --------------
+
+   overriding procedure New_Line
+     (Self    : access Mutable_Compilation;
+      First   : Text_Index;
+      Last    : Text_Index;
+      Comment : Text_Index)
+   is
+      use type Gela.Lexical.Line_Count;
+   begin
+      Self.Last_Line := Self.Last_Line + 1;
+
+      if Self.Last_Line not in Self.Lines'Range then
+         declare
+            Saved : Line_Offset_Array_Access := Self.Lines;
+         begin
+            Self.Lines := new Line_Offset_Array (1 .. 2 * Saved'Last);
+            Self.Lines (Saved'Range) := Saved.all;
+            Free (Saved);
+         end;
+      end if;
+
+      Self.Lines (Self.Last_Line) :=
+        (First => First, Last => Last, Comment => Comment);
+   end New_Line;
+
+   ---------------
+   -- New_Token --
+   ---------------
+
+   overriding procedure New_Token
+     (Self      : access Mutable_Compilation;
+      Token     : Gela.Lexical.Tokens.Token;
+      Line      : Positive;
+      First     : Text_Index;
+      Last      : Text_Index;
+      Separator : Text_Index;
+      Folded    : League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Folded);
+   begin
+      if Self.Last_Token = Self.Tokens'Last then
+         declare
+            Saved : Payload_Array_Access := Self.Tokens;
+         begin
+            Self.Tokens :=
+              new Gela.Elements.Payload_Array (1 .. 2 * Saved'Last);
+            Self.Tokens (Saved'Range) := Saved.all;
+            Free (Saved);
+         end;
+      end if;
+
+      Self.Last_Token := Self.Last_Token + 1;
+      Self.Internal.Token.Create
+        (Self.Tokens (Self.Last_Token),
+         Token,
+         Gela.Lexical.Line_Index (Line),
+         First,
+         Last,
+         Separator);
+   end New_Token;
 
    ----------
    -- Text --
@@ -94,7 +143,4 @@ package body Gela.Compilations.Mutables is
       return Self.Text;
    end Text;
 
-begin
-   null;
-   --  Set := League.Character_Sets.Internals.To_Set
 end Gela.Compilations.Mutables;

@@ -7,14 +7,20 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Lexical is
-   pragma Pure;
+package Gela.Elements is
 
-   subtype Text_Index is Natural;
-   --  Index inside Text string
+   pragma Preelaborate;
 
-   type Line_Count is new Natural;
-   --  Type for indexing lines
-   subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
+   type Fly_Weight_Object is tagged limited null record;
+   type Fly_Weight_Object_Access is access all Fly_Weight_Object'Class;
 
-end Gela.Lexical;
+   type Payload is mod 2 ** 32;
+
+   type Element is record
+      Object  : Fly_Weight_Object_Access;
+      Payload : Gela.Elements.Payload;
+   end record;
+
+   type Payload_Array is array (Positive range <>) of Payload;
+
+end Gela.Elements;

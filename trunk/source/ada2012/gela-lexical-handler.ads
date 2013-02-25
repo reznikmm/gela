@@ -7,6 +7,8 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with League.Strings;
+
 with Gela.Lexical.Handlers;
 with Gela.Lexical.Scanners;
 with Gela.Lexical.Tokens;
@@ -85,6 +87,11 @@ package Gela.Lexical.Handler is
       Rule    : Gela.Lexical.Types.Rule_Index;
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
+
+   function To_Token
+     (X : League.Strings.Universal_String)
+      return Gela.Lexical.Tokens.Token;
+   --  Convert text to keywoard. Text should be folded before call this.
 
 private
 

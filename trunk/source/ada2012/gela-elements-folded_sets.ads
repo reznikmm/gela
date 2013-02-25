@@ -7,14 +7,22 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Lexical is
-   pragma Pure;
+with League.Strings;
+with Gela.Elements.Symbol_Tables;
 
-   subtype Text_Index is Natural;
-   --  Index inside Text string
+package Gela.Elements.Folded_Sets is
 
-   type Line_Count is new Natural;
-   --  Type for indexing lines
-   subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
+   subtype Symbol is Gela.Elements.Symbol_Tables.Symbol;
 
-end Gela.Lexical;
+   type Folded_Set is abstract tagged limited null record;
+
+   not overriding procedure Append
+     (Self   : in out Folded_Set;
+      Value  : League.Strings.Universal_String;
+      Result : out Symbol) is abstract;
+
+--   not overriding function Value
+--     (Self   : in out Folded_Set;
+--      Name   : Symbol) return League.Strings.Universal_String is abstract;
+
+end Gela.Elements.Folded_Sets;

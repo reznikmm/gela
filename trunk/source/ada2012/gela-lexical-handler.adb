@@ -18,10 +18,6 @@ package body Gela.Lexical.Handler is
 
    function Hash (W : League.Strings.Universal_String) return Hash_Value;
 
-   function To_Token
-     (X : League.Strings.Universal_String)
-      return Gela.Lexical.Tokens.Token;
-
    Map : constant array (Gela.Lexical.Types.Rule_Index range 1 .. 26) of
      Gela.Lexical.Tokens.Token :=
        (1 => Arrow_Token, 2 => Double_Dot_Token, 3 => Double_Star_Token,

@@ -7,14 +7,23 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Lexical is
-   pragma Pure;
+with Gela.Relocatable_Arrays;
 
-   subtype Text_Index is Natural;
-   --  Index inside Text string
+package Gela.Properties is
 
-   type Line_Count is new Natural;
-   --  Type for indexing lines
-   subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
+   type Global_Kind is (Line, Token);
 
-end Gela.Lexical;
+   type Property_Kind is (Value, Line, First, Last, Separator, Comment);
+
+   function Property_Index
+     (Element  : Global_Kind;
+      Property : Property_Kind)
+      return Gela.Relocatable_Arrays.Index
+      with Inline;
+
+   function Size
+     (Element  : Global_Kind)
+      return Gela.Relocatable_Arrays.Index
+      with Inline;
+
+end Gela.Properties;
