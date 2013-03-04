@@ -27,6 +27,10 @@ package body Gela.Compilations.Mutables.Tokens is
      Gela.Properties.Property_Index
        (Gela.Properties.Token, Gela.Properties.Separator);
 
+   Symbol_Offset : constant Gela.Relocatable_Arrays.Index :=
+     Gela.Properties.Property_Index
+       (Gela.Properties.Token, Gela.Properties.Symbol);
+
    Value_Offset : constant Gela.Relocatable_Arrays.Index :=
      Gela.Properties.Property_Index
        (Gela.Properties.Token, Gela.Properties.Value);
@@ -42,37 +46,42 @@ package body Gela.Compilations.Mutables.Tokens is
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
-      Separator : Gela.Lexical.Text_Index)
+      Separator : Gela.Lexical.Text_Index;
+      Symbol    : Gela.Elements.Symbol_Tables.Symbol)
    is
       use type Gela.Relocatable_Arrays.Index;
-
       Index : constant Gela.Relocatable_Arrays.Index :=
         Gela.Relocatable_Arrays.Last (Self.Compilation.Store) + 1;
    begin
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Value_Offset,
+         Index + Value_Offset,
          Gela.Lexical.Tokens.Token'Pos (Value));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Line_Offset,
+         Index + Line_Offset,
          Gela.Relocatable_Arrays.Element (Line));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         First_Offset,
+         Index + First_Offset,
          Gela.Relocatable_Arrays.Element (First));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Last_Offset,
+         Index + Last_Offset,
          Gela.Relocatable_Arrays.Element (Last));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Separator_Offset,
+         Index + Separator_Offset,
          Gela.Relocatable_Arrays.Element (Separator));
+
+      Gela.Relocatable_Arrays.Set
+        (Self.Compilation.Store,
+         Index + Symbol_Offset,
+         Gela.Elements.Symbol_Tables.Symbol'Pos (Symbol));
 
       Result := Gela.Elements.Payload (Index);
    end Create;

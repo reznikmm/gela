@@ -7,22 +7,28 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+private with League.Calendars;
+
 with Gela.Lexical.Fabrics;
 with Gela.Lexical.Tokens;
 with Gela.Relocatable_Arrays;
-with Gela.Elements;
+with Gela.Errors;
 
 package Gela.Compilations.Mutables is
 
-   type Mutable_Compilation is
-     new Compilation and Gela.Lexical.Fabrics.Fabric
+   type Mutable_Compilation is limited
+     new Abstract_Compilation and Gela.Lexical.Fabrics.Fabric
      with private;
 
    type Mutable_Compilation_Access is access all Mutable_Compilation;
 
    not overriding function Create
-     (Source : League.Strings.Universal_String)
+     (Name   : League.Strings.Universal_String;
+      Source : League.Strings.Universal_String)
       return Mutable_Compilation_Access;
+
+   not overriding procedure Start
+     (Self : not null access Mutable_Compilation);
 
 private
 
@@ -33,19 +39,41 @@ private
    type Internal_Data;
    type Internal_Access is access all Internal_Data;
 
-   type Payload_Array_Access is access all Gela.Elements.Payload_Array;
+   type Payload_Array_Access is access all Gela.Types.Payload_Array;
 
-   type Mutable_Compilation is
-     new Compilation and Gela.Lexical.Fabrics.Fabric
+   type Mutable_Compilation is limited
+     new Abstract_Compilation and Gela.Lexical.Fabrics.Fabric
      with record
+        Name       : League.Strings.Universal_String;
         Text       : League.Strings.Universal_String;
         Tokens     : Payload_Array_Access;
         Last_Token : Natural := 0;
         Store      : Gela.Relocatable_Arrays.Relocatable_Array;
         Lines      : Line_Offset_Array_Access;
         Last_Line  : Gela.Lexical.Line_Count;
+        Errors     : access Gela.Errors.Error_Handler'Class;
         Internal   : Internal_Access;
    end record;
+
+   overriding function Text_Name
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String;
+
+   overriding function Object_Name
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String;
+
+   overriding function Compilation_Command_Line_Options
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String;
+
+   overriding function Time_Of_Last_Update
+     (Self : access Mutable_Compilation)
+      return League.Calendars.Date_Time;
+
+   overriding function Compilation_CPU_Duration
+     (Self : access Mutable_Compilation)
+      return Duration;
 
    overriding function Text
      (Self : access Mutable_Compilation)
@@ -57,6 +85,14 @@ private
    overriding function Line
      (Self  : access Mutable_Compilation;
       Index : Gela.Lexical.Line_Index) return Line_Offset;
+
+   overriding function First_Token
+     (Self  : access Mutable_Compilation)
+      return Gela.Types.Token;
+
+   overriding function Folded_Set
+     (Self  : access Mutable_Compilation)
+      return Gela.Types.Folded_Set_Access;
 
    overriding procedure New_Line
      (Self    : access Mutable_Compilation;

@@ -8,8 +8,16 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+with Ada.Wide_Wide_Text_IO;
 
+with Gela.Compilations.Mutables.Folded_Sets;
 with Gela.Compilations.Mutables.Tokens;
+with Gela.Elements.Symbol_Tables;
+with Gela.Errors.Put_Lines;
+with Gela.Lexical.Scanners;
+with Gela.Lexical.Handler;
+
+with String_Sources;
 
 package body Gela.Compilations.Mutables is
 
@@ -20,7 +28,8 @@ package body Gela.Compilations.Mutables is
      (Gela.Elements.Payload_Array, Payload_Array_Access);
 
    type Internal_Data is record
-      Token : Gela.Compilations.Mutables.Tokens.Token;
+      Token   : Gela.Compilations.Mutables.Tokens.Token;
+      Symbols : Gela.Compilations.Mutables.Folded_Sets.Folded_Set;
    end record;
 
    ------------
@@ -28,22 +37,32 @@ package body Gela.Compilations.Mutables is
    ------------
 
    not overriding function Create
-     (Source : League.Strings.Universal_String)
+     (Name   : League.Strings.Universal_String;
+      Source : League.Strings.Universal_String)
       return Mutable_Compilation_Access
    is
+      use type League.Strings.Universal_String;
+
       NFKC  : constant League.Strings.Universal_String := Source.To_NFKC;
    begin
       return Result : constant Mutable_Compilation_Access :=
         new Mutable_Compilation'
-        (Text       => NFKC,
+        (Name       => Name,
+         Text       => NFKC,
          Lines      => new Line_Offset_Array (1 .. 64),
          Last_Line  => 0,
          Store      => <>,
          Internal   => new Internal_Data,
          Tokens     => new Gela.Elements.Payload_Array (1 .. 16),
+         Errors     => new Gela.Errors.Put_Lines.Handler,
          Last_Token => 0)
       do
          Result.Internal.Token.Compilation := Result;
+         Result.Internal.Symbols.Compilation := Result;
+
+         if Source /= NFKC then
+            Result.Errors.Not_In_NFKC_Warning (Result);
+         end if;
       end return;
    end Create;
 
@@ -109,8 +128,15 @@ package body Gela.Compilations.Mutables is
       Separator : Text_Index;
       Folded    : League.Strings.Universal_String)
    is
-      pragma Unreferenced (Folded);
+      use Gela.Lexical.Tokens;
+      Symbol : Gela.Elements.Symbol_Tables.Symbol;
    begin
+      if Token in
+        Identifier_Token | Character_Literal_Token | String_Literal_Token
+      then
+         Self.Internal.Symbols.Append (Folded, Symbol);
+      end if;
+
       if Self.Last_Token = Self.Tokens'Last then
          declare
             Saved : Payload_Array_Access := Self.Tokens;
@@ -129,8 +155,45 @@ package body Gela.Compilations.Mutables is
          Gela.Lexical.Line_Index (Line),
          First,
          Last,
-         Separator);
+         Separator,
+         Symbol);
    end New_Token;
+
+   -----------
+   -- Start --
+   -----------
+
+   not overriding procedure Start
+     (Self : not null access Mutable_Compilation)
+   is
+      Scanner : aliased Gela.Lexical.Scanners.Scanner;
+      Source  : aliased String_Sources.String_Source;
+      Handler : aliased Gela.Lexical.Handler.Handler;
+   begin
+      Scanner.Set_Source (Source'Unchecked_Access);
+      Scanner.Set_Handler (Handler'Unchecked_Access);
+      Handler.Set_Fabric (Gela.Lexical.Fabrics.Fabric_Access (Self));
+      Source.Create (Self.Text);
+
+      loop
+         declare
+            Token : Gela.Lexical.Tokens.Token;
+         begin
+            Scanner.Get_Token (Token);
+
+            Ada.Wide_Wide_Text_IO.Put
+              (Gela.Lexical.Tokens.Token'Wide_Wide_Image (Token));
+
+            exit when Token in Gela.Lexical.Tokens.End_Of_Input
+              | Gela.Lexical.Tokens.Error;
+
+            Ada.Wide_Wide_Text_IO.Put (": ");
+
+            Ada.Wide_Wide_Text_IO.Put_Line
+              (Scanner.Get_Text.To_Wide_Wide_String);
+         end;
+      end loop;
+   end Start;
 
    ----------
    -- Text --
@@ -142,5 +205,16 @@ package body Gela.Compilations.Mutables is
    begin
       return Self.Text;
    end Text;
+
+   ---------------
+   -- Text_Name --
+   ---------------
+
+   overriding function Text_Name
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String is
+   begin
+      return Self.Name;
+   end Text_Name;
 
 end Gela.Compilations.Mutables;

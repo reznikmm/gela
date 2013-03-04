@@ -7,8 +7,28 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Elements is
+with League.Strings;
 
-   pragma Preelaborate;
+with Gela.Types;
 
-end Gela.Elements;
+package Gela.Contexts is
+
+   type Context is interface;
+
+   function Length (Self : access Context) return Natural is abstract;
+
+   function Container
+     (Self  : access Context;
+      Index : Positive)
+      return Gela.Types.Container_Access is abstract;
+
+   function Create_Container
+     (Self  : access Context;
+      Name  : League.Strings.Universal_String)
+      return Gela.Types.Container_Access is abstract;
+
+   function Unit_Fabric
+     (Self : access Context)
+     return Gela.Types.Unit_Fabric_Access is abstract;
+
+end Gela.Contexts;

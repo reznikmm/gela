@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Gela.Elements.Tokens;
+with Gela.Elements.Symbol_Tables;
 
 package Gela.Compilations.Mutables.Tokens is
 
@@ -47,6 +48,7 @@ package Gela.Compilations.Mutables.Tokens is
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
-      Separator : Gela.Lexical.Text_Index);
+      Separator : Gela.Lexical.Text_Index;
+      Symbol    : Gela.Elements.Symbol_Tables.Symbol);
 
 end Gela.Compilations.Mutables.Tokens;

@@ -7,7 +7,7 @@ package body Gela.Properties is
                   Separator => 4, others => 0));
 
    Last_Property : constant array (Global_Kind) of Property_Kind :=
-     (Line => Comment, Token => Separator);
+     (Line => Comment, Token => Symbol);
 
    --------------------
    -- Property_Index --

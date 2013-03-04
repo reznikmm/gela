@@ -5,14 +5,10 @@ with Ada.Wide_Wide_Text_IO;
 with League.Strings;
 with League.Text_Codecs;
 
-with Gela.Lexical.Handler;
-with Gela.Lexical.Scanners;
-with Gela.Lexical.Tokens;
-
-with String_Sources;
-
+with Gela.Compilations.Mutables;
 with Gela.Compilations.Mutables.Symbol_Tables;
-with Gela.Elements;
+with Gela.Lexical.Handler;
+with Gela.Types;
 
 procedure Lexer_Test is
 
@@ -58,7 +54,7 @@ procedure Lexer_Test is
    procedure Test_RB_Tree is
       use Gela.Compilations.Mutables.Symbol_Tables;
       T : Symbol_Table;
-      D : Gela.Elements.Payload := 0;
+      D : Gela.Types.Payload := 0;
    begin
       T.Append (D, 10, (null, 10));
       T.Append (D, 20, (null, 20));
@@ -80,36 +76,17 @@ procedure Lexer_Test is
       end;
    end Test_RB_Tree;
 
+   Name    : constant League.Strings.Universal_String :=
+     League.Strings.To_Universal_String ("aaa");
    Text    : constant League.Strings.Universal_String := Read_File ("aaa");
-   Scanner : aliased Gela.Lexical.Scanners.Scanner;
-   Source  : aliased String_Sources.String_Source;
-   Handler : aliased Gela.Lexical.Handler.Handler;
+   Comp    : constant Gela.Compilations.Mutables.Mutable_Compilation_Access :=
+     Gela.Compilations.Mutables.Create (Name, Text);
 begin
    Test_RB_Tree;
-
    Gela.Lexical.Handler.Initialize;
-   Scanner.Set_Source (Source'Unchecked_Access);
-   Scanner.Set_Handler (Handler'Unchecked_Access);
-   Source.Create (Text);
-
-   loop
-      declare
-         Token : Gela.Lexical.Tokens.Token;
-      begin
-         Scanner.Get_Token (Token);
-
-         Ada.Wide_Wide_Text_IO.Put
-           (Gela.Lexical.Tokens.Token'Wide_Wide_Image (Token));
-
-         exit when Token in Gela.Lexical.Tokens.End_Of_Input
-           | Gela.Lexical.Tokens.Error;
-
-         Ada.Wide_Wide_Text_IO.Put (": ");
-
-         Ada.Wide_Wide_Text_IO.Put_Line
-           (Scanner.Get_Text.To_Wide_Wide_String);
-      end;
-   end loop;
+   Comp.Start;
 
    Ada.Wide_Wide_Text_IO.New_Line;
+   Ada.Wide_Wide_Text_IO.Put_Line
+     (Gela.Lexical.Line_Count'Wide_Wide_Image (Comp.Last_Line));
 end Lexer_Test;

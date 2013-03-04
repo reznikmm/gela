@@ -7,22 +7,21 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with League.Strings;
-with Gela.Elements.Symbol_Tables;
+with Gela.Types;
 
-package Gela.Elements.Folded_Sets is
+package Gela.Compilation_Unit_Lists is
 
-   subtype Symbol is Gela.Elements.Symbol_Tables.Symbol;
+   type Abstract_Compilation_Unit_List is interface;
 
-   type Folded_Set is abstract tagged limited null record;
+   function Length
+     (Self    : Abstract_Compilation_Unit_List;
+      Payload : Gela.Types.Payload)
+      return Natural is abstract;
 
-   not overriding procedure Append
-     (Self   : in out Folded_Set;
-      Value  : League.Strings.Universal_String;
-      Result : out Symbol) is abstract;
+   function Element
+     (Self    : Abstract_Compilation_Unit_List;
+      Payload : Gela.Types.Payload;
+      Index   : Positive)
+      return Gela.Types.Compilation_Unit is abstract;
 
---   not overriding function Value
---     (Self   : in out Folded_Set;
---      Name   : Symbol) return League.Strings.Universal_String is abstract;
-
-end Gela.Elements.Folded_Sets;
+end Gela.Compilation_Unit_Lists;

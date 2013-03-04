@@ -7,11 +7,11 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Elements.Symbol_Tables;
+with Gela.Symbol_Tables;
 
 package Gela.Compilations.Mutables.Symbol_Tables is
 
-   type Symbol_Table is new Gela.Elements.Symbol_Tables.Symbol_Table
+   type Symbol_Table is new Gela.Symbol_Tables.Symbol_Table
      with private;
 
    overriding procedure Copy

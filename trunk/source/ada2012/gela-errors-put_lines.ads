@@ -7,8 +7,13 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Elements is
+package Gela.Errors.Put_Lines is
 
-   pragma Preelaborate;
+   type Handler is new Error_Handler with null record;
 
-end Gela.Elements;
+   overriding procedure Not_In_NFKC_Warning
+     (Self        : access Handler;
+      Compilation : access Gela.Compilations.Compilation'Class);
+   --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
+
+end Gela.Errors.Put_Lines;

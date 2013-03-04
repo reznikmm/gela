@@ -7,8 +7,15 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Elements is
+with Gela.Types;
 
-   pragma Preelaborate;
+package Gela.Errors is
 
-end Gela.Elements;
+   type Error_Handler is limited interface;
+
+   procedure Not_In_NFKC_Warning
+     (Self        : access Error_Handler;
+      Compilation : Gela.Types.Compilation_Access) is abstract;
+   --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
+
+end Gela.Errors;

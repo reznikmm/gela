@@ -8,34 +8,40 @@
 ------------------------------------------------------------------------------
 
 with Gela.Lexical.Tokens;
+with Gela.Types;
 
-package Gela.Elements.Tokens is
+package Gela.Tokens is
 
-   type Token is abstract new Fly_Weight_Object with null record;
+   type Token is interface;
 
    not overriding function Value
      (Self    : Token;
-      Payload : Gela.Elements.Payload)
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Tokens.Token is abstract;
 
    not overriding function Line
      (Self    : Token;
-      Payload : Gela.Elements.Payload)
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Line_Index is abstract;
 
    not overriding function First
      (Self    : Token;
-      Payload : Gela.Elements.Payload)
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
    not overriding function Last
      (Self    : Token;
-      Payload : Gela.Elements.Payload)
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
    not overriding function Separator
      (Self    : Token;
-      Payload : Gela.Elements.Payload)
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
-end Gela.Elements.Tokens;
+   not overriding function Next_Token
+     (Self    : Token;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Token is abstract;
+
+end Gela.Tokens;

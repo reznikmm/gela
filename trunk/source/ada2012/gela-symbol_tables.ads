@@ -7,29 +7,29 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Elements.Symbol_Tables is
+with Gela.Types;
 
-   type Symbol is mod 2 ** 31;
-   --  Reserve one bit for red/black flag
+package Gela.Symbol_Tables is
 
-   type Symbol_Table is abstract new Fly_Weight_Object with null record;
+   type Abstract_Symbol_Table is interface;
 
    not overriding procedure Copy
-     (Self     : in out Symbol_Table;
-      Payload  : Gela.Elements.Payload;
-      Target   : out Gela.Elements.Element) is abstract;
+     (Self     : in out Abstract_Symbol_Table;
+      Payload  : Gela.Types.Payload;
+      Target   : out Gela.Types.Symbol_Table) is abstract;
    --  Create copy on write of Self into Target. After this any modification
    --  of Self or Target will actually create new copy
 
    not overriding procedure Append
-     (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Symbol;
-      Value   : Gela.Elements.Element) is abstract;
+     (Self    : in out Abstract_Symbol_Table;
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol;
+      Value   : Gela.Types.Defining_Name) is abstract;
 
    not overriding function Find
-     (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Symbol) return Gela.Elements.Element is abstract;
+     (Self    : in out Abstract_Symbol_Table;
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol)
+      return Gela.Types.Defining_Name is abstract;
 
-end Gela.Elements.Symbol_Tables;
+end Gela.Symbol_Tables;

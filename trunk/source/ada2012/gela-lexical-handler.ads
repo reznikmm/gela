@@ -88,10 +88,10 @@ package Gela.Lexical.Handler is
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
-   function To_Token
+   function Unfolded_To_Token
      (X : League.Strings.Universal_String)
       return Gela.Lexical.Tokens.Token;
-   --  Convert text to keywoard. Text should be folded before call this.
+   --  Convert text to keywoard. Text could be unfolded before call this.
 
 private
 

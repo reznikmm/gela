@@ -7,12 +7,16 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with League.Strings;
-
-with Gela.Lexical.Tokens; use Gela.Lexical.Tokens;
 with League.Characters;
 
+with Gela.Lexical.Tokens; use Gela.Lexical.Tokens;
+
 package body Gela.Lexical.Handler is
+
+   function To_Token
+     (X : League.Strings.Universal_String)
+      return Gela.Lexical.Tokens.Token;
+   --  Convert folded text to token
 
    subtype Hash_Value is Positive range 2 + 2 * 6 .. 12 + 3 * 115;
 
@@ -146,7 +150,7 @@ package body Gela.Lexical.Handler is
          First     => Self.Last,
          Last      => Self.Last + Token_Length - 1,
          Separator => Self.Separator,
-         Folded    => League.Strings.Empty_Universal_String);
+         Folded    => Scanner.Get_Text);
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
@@ -509,7 +513,7 @@ package body Gela.Lexical.Handler is
          First     => Self.Last,
          Last      => Self.Last + Token_Length - 1,
          Separator => Self.Separator,
-         Folded    => League.Strings.Empty_Universal_String);
+         Folded    => Scanner.Get_Text);
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
@@ -538,5 +542,18 @@ package body Gela.Lexical.Handler is
          return Gela.Lexical.Tokens.Identifier_Token;
       end if;
    end To_Token;
+
+   -----------------------
+   -- Unfolded_To_Token --
+   -----------------------
+
+   function Unfolded_To_Token
+     (X : League.Strings.Universal_String)
+      return Gela.Lexical.Tokens.Token
+   is
+      Text : constant League.Strings.Universal_String := X.To_Lowercase;
+   begin
+      return To_Token (Text);
+   end Unfolded_To_Token;
 
 end Gela.Lexical.Handler;
