@@ -44,15 +44,19 @@ private
    type Mutable_Compilation is limited
      new Abstract_Compilation and Gela.Lexical.Fabrics.Fabric
      with record
-        Name       : League.Strings.Universal_String;
-        Text       : League.Strings.Universal_String;
-        Tokens     : Payload_Array_Access;
-        Last_Token : Natural := 0;
-        Store      : Gela.Relocatable_Arrays.Relocatable_Array;
-        Lines      : Line_Offset_Array_Access;
-        Last_Line  : Gela.Lexical.Line_Count;
-        Errors     : access Gela.Errors.Error_Handler'Class;
-        Internal   : Internal_Access;
+        Name        : League.Strings.Universal_String;
+        Object_Name : League.Strings.Universal_String;
+        Options     : League.Strings.Universal_String;
+        Text        : League.Strings.Universal_String;
+        Tokens      : Payload_Array_Access;
+        Last_Token  : Natural := 0;
+        Store       : Gela.Relocatable_Arrays.Relocatable_Array;
+        Lines       : Line_Offset_Array_Access;
+        Last_Line   : Gela.Lexical.Line_Count;
+        Errors      : access Gela.Errors.Error_Handler'Class;
+        Internal    : Internal_Access;
+        Updated     : League.Calendars.Date_Time;
+        CPU_Spent   : Duration;
    end record;
 
    overriding function Text_Name

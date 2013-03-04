@@ -21,12 +21,12 @@ package body Gela.Errors.Put_Lines is
 
    overriding procedure Not_In_NFKC_Warning
      (Self        : access Handler;
-      Compilation : access Gela.Compilations.Compilation'Class)
+      Compilation : Gela.Types.Compilation_Access)
    is
       pragma Unreferenced (Self);
    begin
       Ada.Wide_Wide_Text_IO.Put_Line
-        (Compilation.Text_Name.To_Wide_Wide_String &
+        (Gela.Compilations.Text_Name (Compilation).To_Wide_Wide_String &
          ": " & W &
          "Text of compilation is not in Normalization Form KC. ARM 4.1/3");
    end Not_In_NFKC_Warning;

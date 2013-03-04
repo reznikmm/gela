@@ -22,8 +22,8 @@ package body Gela.Compilations.Mutables.Symbol_Tables is
    end record;
 
    type Node is record
-      Name    : Gela.Elements.Symbol_Tables.Symbol;
-      Value   : Gela.Elements.Element;
+      Name    : Gela.Types.Symbol;
+      Value   : Gela.Types.Defining_Name;
       Left    : Node_Access;
       Right   : Node_Access;
       Version : Natural := 0;
@@ -44,13 +44,13 @@ package body Gela.Compilations.Mutables.Symbol_Tables is
 
    overriding procedure Append
      (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Gela.Elements.Symbol_Tables.Symbol;
-      Value   : Gela.Elements.Element)
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol;
+      Value   : Gela.Types.Defining_Name)
    is
       pragma Unreferenced (Payload);
 
-      use type Gela.Elements.Symbol_Tables.Symbol;
+      use type Gela.Types.Symbol;
 
       procedure Rotate_Left (P : not null Node_Access);
       procedure Rotate_Right (P : not null Node_Access);
@@ -224,8 +224,8 @@ package body Gela.Compilations.Mutables.Symbol_Tables is
 
    overriding procedure Copy
      (Self     : in out Symbol_Table;
-      Payload  : Gela.Elements.Payload;
-      Target   : out Gela.Elements.Element) is
+      Payload  : Gela.Types.Payload;
+      Target   : out Gela.Types.Symbol_Table) is
    begin
       Target.Payload := Payload;
       Symbol_Table (Target.Object.all).Tree := Self.Tree;
@@ -247,13 +247,13 @@ package body Gela.Compilations.Mutables.Symbol_Tables is
 
    overriding function Find
      (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Gela.Elements.Symbol_Tables.Symbol)
-      return Gela.Elements.Element
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol)
+      return Gela.Types.Defining_Name
    is
       pragma Unreferenced (Payload);
 
-      use type Gela.Elements.Symbol_Tables.Symbol;
+      use type Gela.Types.Symbol;
 
       Item : Node_Access := Self.Tree.Root;
    begin

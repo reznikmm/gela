@@ -13,7 +13,7 @@ with Gela.Lexical.Tokens;
 
 package body Gela.Compilations.Mutables.Folded_Sets is
 
-   subtype Symbol is Gela.Elements.Symbol_Tables.Symbol;
+   subtype Symbol is Gela.Types.Symbol;
    use type Symbol;
 
    use Gela.Lexical.Tokens;
@@ -58,7 +58,7 @@ package body Gela.Compilations.Mutables.Folded_Sets is
    overriding procedure Append
      (Self   : in out Folded_Set;
       Value  : League.Strings.Universal_String;
-      Result : out Gela.Elements.Symbol_Tables.Symbol)
+      Result : out Gela.Types.Symbol)
    is
       use type League.Characters.Universal_Character;
       use type League.Strings.Universal_String;

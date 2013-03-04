@@ -12,7 +12,6 @@ with Ada.Wide_Wide_Text_IO;
 
 with Gela.Compilations.Mutables.Folded_Sets;
 with Gela.Compilations.Mutables.Tokens;
-with Gela.Elements.Symbol_Tables;
 with Gela.Errors.Put_Lines;
 with Gela.Lexical.Scanners;
 with Gela.Lexical.Handler;
@@ -25,12 +24,34 @@ package body Gela.Compilations.Mutables is
      Ada.Unchecked_Deallocation (Line_Offset_Array, Line_Offset_Array_Access);
 
    procedure Free is new Ada.Unchecked_Deallocation
-     (Gela.Elements.Payload_Array, Payload_Array_Access);
+     (Gela.Types.Payload_Array, Payload_Array_Access);
 
    type Internal_Data is record
-      Token   : Gela.Compilations.Mutables.Tokens.Token;
-      Symbols : Gela.Compilations.Mutables.Folded_Sets.Folded_Set;
+      Token   : aliased Gela.Compilations.Mutables.Tokens.Token;
+      Symbols : aliased Gela.Compilations.Mutables.Folded_Sets.Folded_Set;
    end record;
+
+   --------------------------------------
+   -- Compilation_Command_Line_Options --
+   --------------------------------------
+
+   overriding function Compilation_Command_Line_Options
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String is
+   begin
+      return Self.Options;
+   end Compilation_Command_Line_Options;
+
+   ------------------------------
+   -- Compilation_CPU_Duration --
+   ------------------------------
+
+   overriding function Compilation_CPU_Duration
+     (Self : access Mutable_Compilation)
+      return Duration is
+   begin
+      return Self.CPU_Spent;
+   end Compilation_CPU_Duration;
 
    ------------
    -- Create --
@@ -47,24 +68,52 @@ package body Gela.Compilations.Mutables is
    begin
       return Result : constant Mutable_Compilation_Access :=
         new Mutable_Compilation'
-        (Name       => Name,
-         Text       => NFKC,
-         Lines      => new Line_Offset_Array (1 .. 64),
-         Last_Line  => 0,
-         Store      => <>,
-         Internal   => new Internal_Data,
-         Tokens     => new Gela.Elements.Payload_Array (1 .. 16),
-         Errors     => new Gela.Errors.Put_Lines.Handler,
-         Last_Token => 0)
+        (Name        => Name,
+         Object_Name => Name & ".o",
+         Options     => League.Strings.Empty_Universal_String,
+         Text        => NFKC,
+         Lines       => new Line_Offset_Array (1 .. 64),
+         Last_Line   => 0,
+         Store       => <>,
+         Internal    => new Internal_Data,
+         Tokens      => new Gela.Types.Payload_Array (1 .. 16),
+         Errors      => new Gela.Errors.Put_Lines.Handler,
+         Last_Token  => 0,
+         Updated     => League.Calendars.Clock,
+         CPU_Spent   => 0.0)
       do
          Result.Internal.Token.Compilation := Result;
          Result.Internal.Symbols.Compilation := Result;
 
          if Source /= NFKC then
-            Result.Errors.Not_In_NFKC_Warning (Result);
+            Result.Errors.Not_In_NFKC_Warning
+              (Gela.Types.Compilation_Access (Result));
          end if;
       end return;
    end Create;
+
+   -----------------
+   -- First_Token --
+   -----------------
+
+   overriding function First_Token
+     (Self  : access Mutable_Compilation)
+      return Gela.Types.Token is
+   begin
+      return (Self.Internal.Token'Access,
+              Self.Tokens (Self.Tokens'First));
+   end First_Token;
+
+   ----------------
+   -- Folded_Set --
+   ----------------
+
+   overriding function Folded_Set
+     (Self  : access Mutable_Compilation)
+      return Gela.Types.Folded_Set_Access is
+   begin
+      return Self.Internal.Symbols'Access;
+   end Folded_Set;
 
    ---------------
    -- Last_Line --
@@ -129,7 +178,7 @@ package body Gela.Compilations.Mutables is
       Folded    : League.Strings.Universal_String)
    is
       use Gela.Lexical.Tokens;
-      Symbol : Gela.Elements.Symbol_Tables.Symbol;
+      Symbol : Gela.Types.Symbol;
    begin
       if Token in
         Identifier_Token | Character_Literal_Token | String_Literal_Token
@@ -142,7 +191,7 @@ package body Gela.Compilations.Mutables is
             Saved : Payload_Array_Access := Self.Tokens;
          begin
             Self.Tokens :=
-              new Gela.Elements.Payload_Array (1 .. 2 * Saved'Last);
+              new Gela.Types.Payload_Array (1 .. 2 * Saved'Last);
             Self.Tokens (Saved'Range) := Saved.all;
             Free (Saved);
          end;
@@ -158,6 +207,17 @@ package body Gela.Compilations.Mutables is
          Separator,
          Symbol);
    end New_Token;
+
+   -----------------
+   -- Object_Name --
+   -----------------
+
+   overriding function Object_Name
+     (Self : access Mutable_Compilation)
+      return League.Strings.Universal_String is
+   begin
+      return Self.Object_Name;
+   end Object_Name;
 
    -----------
    -- Start --
@@ -216,5 +276,16 @@ package body Gela.Compilations.Mutables is
    begin
       return Self.Name;
    end Text_Name;
+
+   -------------------------
+   -- Time_Of_Last_Update --
+   -------------------------
+
+   overriding function Time_Of_Last_Update
+     (Self : access Mutable_Compilation)
+      return League.Calendars.Date_Time is
+   begin
+      return Self.Updated;
+   end Time_Of_Last_Update;
 
 end Gela.Compilations.Mutables;

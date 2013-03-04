@@ -14,7 +14,7 @@ package Gela.Properties is
    type Global_Kind is (Line, Token);
 
    type Property_Kind is
-     (Value, Line, First, Last, Separator, Symbol, Comment);
+     (Value, Line, First, Last, Next, Separator, Symbol, Comment);
 
    function Property_Index
      (Element  : Global_Kind;

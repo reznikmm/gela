@@ -61,7 +61,7 @@ procedure Lexer_Test is
       T.Append (D, 5, (null, 5));
 
       declare
-         X  : Gela.Elements.Element;
+         X  : Gela.Types.Symbol_Table;
          T2 : aliased Symbol_Table;
       begin
          X := (T2'Unchecked_Access, 0);
@@ -71,7 +71,7 @@ procedure Lexer_Test is
          D := X.Payload;
 
          Ada.Wide_Wide_Text_IO.Put_Line
-           (Gela.Elements.Payload'Wide_Wide_Image
+           (Gela.Types.Payload'Wide_Wide_Image
               (T2.Find (D, 15).Payload));
       end;
    end Test_RB_Tree;

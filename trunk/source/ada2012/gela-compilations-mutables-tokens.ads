@@ -7,48 +7,53 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Elements.Tokens;
-with Gela.Elements.Symbol_Tables;
+with Gela.Tokens;
 
 package Gela.Compilations.Mutables.Tokens is
 
-   type Token is new Gela.Elements.Tokens.Token with record
+   type Token is new Gela.Tokens.Token with record
       Compilation : Mutable_Compilation_Access;
    end record;
 
    overriding function Value
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Tokens.Token;
 
    overriding function Line
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Line_Index;
 
    overriding function First
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index;
 
    overriding function Last
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index;
 
    overriding function Separator
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index;
 
+   overriding function Next_Token
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Token;
+
    not overriding procedure Create
-     (Self      : Token;
-      Result    : out Gela.Elements.Payload;
+     (Self      : access Token;
+      Result    : out Gela.Types.Payload;
       Value     : Gela.Lexical.Tokens.Token;
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
       Separator : Gela.Lexical.Text_Index;
-      Symbol    : Gela.Elements.Symbol_Tables.Symbol);
+      Symbol    : Gela.Types.Symbol);
+   --  FIXME Pass prev token to initialize list of tokens
 
 end Gela.Compilations.Mutables.Tokens;

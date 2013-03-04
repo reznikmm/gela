@@ -23,6 +23,10 @@ package body Gela.Compilations.Mutables.Tokens is
      Gela.Properties.Property_Index
        (Gela.Properties.Token, Gela.Properties.Line);
 
+   Next_Offset : constant Gela.Relocatable_Arrays.Index :=
+     Gela.Properties.Property_Index
+       (Gela.Properties.Token, Gela.Properties.Next);
+
    Separator_Offset : constant Gela.Relocatable_Arrays.Index :=
      Gela.Properties.Property_Index
        (Gela.Properties.Token, Gela.Properties.Separator);
@@ -40,14 +44,14 @@ package body Gela.Compilations.Mutables.Tokens is
    ------------
 
    not overriding procedure Create
-     (Self      : Token;
-      Result    : out Gela.Elements.Payload;
+     (Self      : access Token;
+      Result    : out Gela.Types.Payload;
       Value     : Gela.Lexical.Tokens.Token;
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
       Separator : Gela.Lexical.Text_Index;
-      Symbol    : Gela.Elements.Symbol_Tables.Symbol)
+      Symbol    : Gela.Types.Symbol)
    is
       use type Gela.Relocatable_Arrays.Index;
       Index : constant Gela.Relocatable_Arrays.Index :=
@@ -81,9 +85,9 @@ package body Gela.Compilations.Mutables.Tokens is
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
          Index + Symbol_Offset,
-         Gela.Elements.Symbol_Tables.Symbol'Pos (Symbol));
+         Gela.Types.Symbol'Pos (Symbol));
 
-      Result := Gela.Elements.Payload (Index);
+      Result := Gela.Types.Payload (Index);
    end Create;
 
    -----------
@@ -91,8 +95,8 @@ package body Gela.Compilations.Mutables.Tokens is
    -----------
 
    overriding function First
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index
    is
       use type Gela.Relocatable_Arrays.Index;
@@ -111,8 +115,8 @@ package body Gela.Compilations.Mutables.Tokens is
    ----------
 
    overriding function Last
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index
    is
       use type Gela.Relocatable_Arrays.Index;
@@ -131,8 +135,8 @@ package body Gela.Compilations.Mutables.Tokens is
    ----------
 
    overriding function Line
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Line_Index
    is
       use type Gela.Relocatable_Arrays.Index;
@@ -146,13 +150,34 @@ package body Gela.Compilations.Mutables.Tokens is
       return Gela.Lexical.Line_Index'Val (Value);
    end Line;
 
+   ----------------
+   -- Next_Token --
+   ----------------
+
+   overriding function Next_Token
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Token
+   is
+      use type Gela.Relocatable_Arrays.Index;
+
+      Index : constant Gela.Relocatable_Arrays.Index :=
+        Gela.Relocatable_Arrays.Index (Payload);
+      Value : constant Gela.Relocatable_Arrays.Element :=
+        Gela.Relocatable_Arrays.Get
+          (Self.Compilation.Store, Index + Next_Offset);
+   begin
+      return (Object  => Gela.Types.Token_Access (Self),
+              Payload => Gela.Types.Payload'Val (Value));
+   end Next_Token;
+
    ---------------
    -- Separator --
    ---------------
 
    overriding function Separator
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index
    is
       use type Gela.Relocatable_Arrays.Index;
@@ -171,8 +196,8 @@ package body Gela.Compilations.Mutables.Tokens is
    -----------
 
    overriding function Value
-     (Self    : Token;
-      Payload : Gela.Elements.Payload)
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
       return Gela.Lexical.Tokens.Token
    is
       use type Gela.Relocatable_Arrays.Index;

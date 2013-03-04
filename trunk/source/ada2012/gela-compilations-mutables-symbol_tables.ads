@@ -11,25 +11,25 @@ with Gela.Symbol_Tables;
 
 package Gela.Compilations.Mutables.Symbol_Tables is
 
-   type Symbol_Table is new Gela.Symbol_Tables.Symbol_Table
+   type Symbol_Table is new Gela.Symbol_Tables.Abstract_Symbol_Table
      with private;
 
    overriding procedure Copy
      (Self     : in out Symbol_Table;
-      Payload  : Gela.Elements.Payload;
-      Target   : out Gela.Elements.Element);
+      Payload  : Gela.Types.Payload;
+      Target   : out Gela.Types.Symbol_Table);
 
    overriding procedure Append
      (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Gela.Elements.Symbol_Tables.Symbol;
-      Value   : Gela.Elements.Element);
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol;
+      Value   : Gela.Types.Defining_Name);
 
    overriding function Find
      (Self    : in out Symbol_Table;
-      Payload : in out Gela.Elements.Payload;
-      Name    : Gela.Elements.Symbol_Tables.Symbol)
-      return Gela.Elements.Element;
+      Payload : in out Gela.Types.Payload;
+      Name    : Gela.Types.Symbol)
+      return Gela.Types.Defining_Name;
 
 private
 
@@ -38,7 +38,7 @@ private
 
    function Empty_Tree return Tree_Access;
 
-   type Symbol_Table is new Gela.Elements.Symbol_Tables.Symbol_Table
+   type Symbol_Table is new Gela.Symbol_Tables.Abstract_Symbol_Table
    with record
       Tree : Tree_Access := Empty_Tree;
    end record;

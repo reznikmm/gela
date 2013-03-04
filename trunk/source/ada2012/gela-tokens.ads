@@ -15,32 +15,32 @@ package Gela.Tokens is
    type Token is interface;
 
    not overriding function Value
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Tokens.Token is abstract;
 
    not overriding function Line
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Line_Index is abstract;
 
    not overriding function First
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
    not overriding function Last
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
    not overriding function Separator
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
    not overriding function Next_Token
-     (Self    : Token;
+     (Self    : access Token;
       Payload : Gela.Types.Payload)
       return Gela.Types.Token is abstract;
 

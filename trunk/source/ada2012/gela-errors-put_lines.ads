@@ -13,7 +13,7 @@ package Gela.Errors.Put_Lines is
 
    overriding procedure Not_In_NFKC_Warning
      (Self        : access Handler;
-      Compilation : access Gela.Compilations.Compilation'Class);
+      Compilation : Gela.Types.Compilation_Access);
    --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
 
 end Gela.Errors.Put_Lines;
