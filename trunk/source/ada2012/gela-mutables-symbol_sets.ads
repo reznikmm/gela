@@ -9,10 +9,12 @@
 
 with Ada.Containers.Ordered_Maps;
 
-with Gela.Folded_Sets;
+with League.Strings;
+
+with Gela.Symbol_Sets;
 with Gela.Types;
 
-package Gela.Compilations.Mutables.Folded_Sets is
+package Gela.Mutables.Symbol_Sets is
 
    package Symbol_Maps is new Ada.Containers.Ordered_Maps
      (League.Strings.Universal_String,
@@ -26,15 +28,15 @@ package Gela.Compilations.Mutables.Folded_Sets is
      (Wide_Wide_Character range 'a' .. Non_ASCII) of
      Gela.Types.Symbol;
 
-   type Folded_Set is new Gela.Folded_Sets.Folded_Set with record
+   type Symbol_Set is new Gela.Symbol_Sets.Symbol_Set with record
       Compilation : Mutable_Compilation_Access;
       Symbols     : Symbol_Maps.Map;
       Last        : Char_to_Symbol_Map := (others => 0);
    end record;
 
    overriding procedure Append
-     (Self   : in out Folded_Set;
+     (Self   : in out Symbol_Set;
       Value  : League.Strings.Universal_String;
       Result : out Gela.Types.Symbol);
 
-end Gela.Compilations.Mutables.Folded_Sets;
+end Gela.Mutables.Symbol_Sets;

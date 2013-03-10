@@ -8,8 +8,9 @@
 ------------------------------------------------------------------------------
 
 with Gela.Symbol_Tables;
+with Gela.Types;
 
-package Gela.Compilations.Mutables.Symbol_Tables is
+package Gela.Mutables.Symbol_Tables is
 
    type Symbol_Table is new Gela.Symbol_Tables.Abstract_Symbol_Table
      with private;
@@ -43,4 +44,4 @@ private
       Tree : Tree_Access := Empty_Tree;
    end record;
 
-end Gela.Compilations.Mutables.Symbol_Tables;
+end Gela.Mutables.Symbol_Tables;

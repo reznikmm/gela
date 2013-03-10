@@ -39,9 +39,4 @@ package Gela.Tokens is
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
-   not overriding function Next_Token
-     (Self    : access Token;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Token is abstract;
-
 end Gela.Tokens;

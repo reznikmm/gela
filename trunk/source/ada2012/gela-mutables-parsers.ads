@@ -6,24 +6,26 @@
 --                     - - - - - - - - - - - - - - -                        --
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
---  Folded_Set contains map form identifier, character literal and operation
---  literal to unique (numeric) symbol. Symbols used to save space and speed up
---  symbol tables.
 
-with League.Strings;
+with Gela.Mutables.Elements;
+with Gela.Mutables.Productions;
 with Gela.Types;
 
-package Gela.Folded_Sets is
+package Gela.Mutables.Parsers is
 
-   type Folded_Set is interface;
+   type Parser (Compilation : Mutable_Compilation_Access) is tagged private;
 
-   not overriding procedure Append
-     (Self   : in out Folded_Set;
-      Value  : League.Strings.Universal_String;
-      Result : out Gela.Types.Symbol) is abstract;
+   procedure Parse (Self : access Parser);
 
---   not overriding function Value
---     (Self   : in out Folded_Set;
---      Name   : Symbol) return League.Strings.Universal_String is abstract;
+private
 
-end Gela.Folded_Sets;
+   type Parser (Compilation : Mutable_Compilation_Access) is tagged record
+      Production : aliased Gela.Mutables.Productions.Production (Compilation);
+   end record;
+
+   function Get_Element
+     (Self : access Parser;
+      Object : Gela.Types.Payload)
+      return access Gela.Mutables.Elements.Element'Class;
+
+end Gela.Mutables.Parsers;

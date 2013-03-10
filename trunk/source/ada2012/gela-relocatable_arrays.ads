@@ -23,7 +23,9 @@ package Gela.Relocatable_Arrays is
       Value    : Element)
      with Inline;
 
-   function Last (Buffer : Relocatable_Array) return Index;
+   function Allocate
+     (Buffer : in out Relocatable_Array;
+      Size   : Index) return Index;
 
 private
 
@@ -31,7 +33,7 @@ private
    type Element_Array_Access is access all Element_Array;
 
    type Relocatable_Array is limited record
-      Last : Index := 0;
+      Last : Index := 1;
       Data : Element_Array_Access;
    end record;
 

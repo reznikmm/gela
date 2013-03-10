@@ -7,7 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package body Gela.Compilations.Mutables.Symbol_Tables is
+package body Gela.Mutables.Symbol_Tables is
 
    type Colors is (Red, Black);
 
@@ -270,4 +270,4 @@ package body Gela.Compilations.Mutables.Symbol_Tables is
       return (null, 0);
    end Find;
 
-end Gela.Compilations.Mutables.Symbol_Tables;
+end Gela.Mutables.Symbol_Tables;

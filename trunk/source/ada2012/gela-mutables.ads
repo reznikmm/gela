@@ -7,8 +7,11 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-package Gela.Elements is
+limited with Gela.Mutables.Compilations;
 
-   pragma Preelaborate;
+package Gela.Mutables is
 
-end Gela.Elements;
+   type Mutable_Compilation_Access is
+     access all Gela.Mutables.Compilations.Compilation'Class;
+
+end Gela.Mutables;

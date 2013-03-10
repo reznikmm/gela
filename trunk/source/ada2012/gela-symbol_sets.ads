@@ -6,21 +6,24 @@
 --                     - - - - - - - - - - - - - - -                        --
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
+--  Symbol_Set contains map form identifier, character literal and operation
+--  literal to unique (numeric) symbol. Symbols used to save space and speed up
+--  symbol tables.
 
-package Gela.Lexical is
-   pragma Pure;
+with League.Strings;
+with Gela.Types;
 
-   subtype Text_Index is Natural;
-   --  Index inside Text string
+package Gela.Symbol_Sets is
 
-   type Line_Count is new Natural;
-   --  Type for indexing lines
-   subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
+   type Symbol_Set is interface;
 
-   type Line_Offset is record
-      First   : Text_Index;  --  Position of first character of line
-      Last    : Text_Index;  --  Position of last character of line
-      Comment : Text_Index;  --  Position of first character of comment in line
-   end record;
+   not overriding procedure Append
+     (Self   : in out Symbol_Set;
+      Value  : League.Strings.Universal_String;
+      Result : out Gela.Types.Symbol) is abstract;
 
-end Gela.Lexical;
+--   not overriding function Value
+--     (Self   : in out Symbol_Set;
+--      Name   : Symbol) return League.Strings.Universal_String is abstract;
+
+end Gela.Symbol_Sets;

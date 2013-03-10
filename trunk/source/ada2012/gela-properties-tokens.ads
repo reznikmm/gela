@@ -7,24 +7,19 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Relocatable_Arrays;
+package Gela.Properties.Tokens is
 
-package Gela.Properties is
+   use type X;
 
-   type Global_Kind is (Line, Token);
+   Tag       : constant X := 0;
+   Count     : constant X := Tag + 1;
+   Value     : constant X := Count + 1;
+   Line      : constant X := Value + 1;
+   First     : constant X := Line + 1;
+   Last      : constant X := First + 1;
+   Separator : constant X := Last + 1;
+   Symbol    : constant X := Separator + 1;
 
-   type Property_Kind is
-     (Value, Line, First, Last, Next, Separator, Symbol, Comment);
+   Size      : constant X := Symbol + 1;
 
-   function Property_Index
-     (Element  : Global_Kind;
-      Property : Property_Kind)
-      return Gela.Relocatable_Arrays.Index
-      with Inline;
-
-   function Size
-     (Element  : Global_Kind)
-      return Gela.Relocatable_Arrays.Index
-      with Inline;
-
-end Gela.Properties;
+end Gela.Properties.Tokens;

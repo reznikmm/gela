@@ -95,7 +95,7 @@ package Gela.Lexical.Handler is
 
 private
 
-   subtype Text_Index is Gela.Lexical.Fabrics.Text_Index;
+   subtype Text_Index is Gela.Lexical.Text_Index;
 
    type Handler is new Gela.Lexical.Handlers.Handler with record
       Last       : Text_Index := 1;  --  Position of last character

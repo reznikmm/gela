@@ -12,7 +12,7 @@ limited with Gela.Compilation_Unit_Lists;
 limited with Gela.Compilation_Units;
 limited with Gela.Compilations;
 limited with Gela.Contexts;
-limited with Gela.Folded_Sets;
+limited with Gela.Symbol_Sets;
 limited with Gela.Symbol_Tables;
 limited with Gela.Tokens;
 limited with Gela.Unit_Containers;
@@ -87,6 +87,6 @@ package Gela.Types is
       Payload : Gela.Types.Payload;
    end record;
 
-   type Folded_Set_Access is access all Gela.Folded_Sets.Folded_Set'Class;
+   type Symbol_Set_Access is access all Gela.Symbol_Sets.Symbol_Set'Class;
 
 end Gela.Types;

@@ -17,9 +17,6 @@ package Gela.Lexical.Fabrics is
 
    type Fabric_Access is access all Fabric'Class;
 
-   subtype Text_Index is Natural;
-   --  Index inside Text string
-
    procedure New_Line
      (Self    : access Fabric;
       First   : Text_Index;  --  Position of first character of line

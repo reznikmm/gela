@@ -15,7 +15,7 @@ identifier         {identifier_start}([:Pc:]?({identifier_start}|{identifier_ext
 
 digit              [0-9]
 numeral            ({digit}(_?{digit})*)
-exponent           ([Ee]\+?{numeral}|[Ee]–{numeral})
+exponent           ([Ee]\+?{numeral}|[Ee]-{numeral})
 decimal_literal    ({numeral}(\.{numeral})?{exponent}?)
 extended_digit     [0-9a-fA-F]
 base               {numeral}
@@ -52,7 +52,7 @@ separator          [[:Zs:][:Cf:]]+
 "*"     {Delimiter}
 "+"     {Delimiter}
 ","     {Delimiter}
-"–"     {Delimiter}
+"-"     {Delimiter}
 "."     {Delimiter}
 "/"     {Delimiter}
 ":"     {Delimiter}

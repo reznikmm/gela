@@ -1,0 +1,29 @@
+with "league.gpr";
+
+project Gela_UAFLEX2 is
+   Build := external ("GELA_BUILD", "/tmp/gela");
+
+   for Main use ("uaflex-driver.adb");
+   for Source_Dirs use
+     ("../tools/uaflex2",
+      "../tools/uaflex2/lib",
+      "../tools/uaflex2/generated");
+
+   for Object_Dir use Build & "/tools";
+
+   Default_Ada_Switches :=
+     ("-gnat12", "-gnatW8", "-g");
+
+   package Compiler is
+      for Default_Switches ("Ada") use
+        Default_Ada_Switches & ("-gnatwea", "-gnaty");
+      for Switches ("parser.adb") use Default_Ada_Switches;
+      for Switches ("parser-goto_table.ads") use Default_Ada_Switches;
+      for Switches ("parser-shift_reduce.ads") use Default_Ada_Switches;
+      for Switches ("parser_tokens.ads") use Default_Ada_Switches;
+    end Compiler;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-E");
+   end Binder;
+end Gela_UAFLEX2;

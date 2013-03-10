@@ -7,37 +7,15 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Properties;
+with Gela.Properties.Tokens;
+with Gela.Relocatable_Arrays;
+with Gela.Mutables.Compilations;
 
-package body Gela.Compilations.Mutables.Tokens is
+package body Gela.Mutables.Tokens is
 
-   First_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.First);
+   package Offset renames Gela.Properties.Tokens;
 
-   Last_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Last);
-
-   Line_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Line);
-
-   Next_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Next);
-
-   Separator_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Separator);
-
-   Symbol_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Symbol);
-
-   Value_Offset : constant Gela.Relocatable_Arrays.Index :=
-     Gela.Properties.Property_Index
-       (Gela.Properties.Token, Gela.Properties.Value);
+   Token_Size : constant Gela.Relocatable_Arrays.Index := Offset.Size;
 
    ------------
    -- Create --
@@ -55,36 +33,41 @@ package body Gela.Compilations.Mutables.Tokens is
    is
       use type Gela.Relocatable_Arrays.Index;
       Index : constant Gela.Relocatable_Arrays.Index :=
-        Gela.Relocatable_Arrays.Last (Self.Compilation.Store) + 1;
+        Gela.Relocatable_Arrays.Allocate (Self.Compilation.Store, Token_Size);
+
+      Ignore : constant Boolean := Gela.Mutables.Compilations.Dummy_Reference;
+      pragma Unreferenced (Ignore);
+      --  This is for suppress unreference warging for
+      --  Gela.Mutables.Compilations package
    begin
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + Value_Offset,
+         Index + Offset.Value,
          Gela.Lexical.Tokens.Token'Pos (Value));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + Line_Offset,
+         Index + Offset.Line,
          Gela.Relocatable_Arrays.Element (Line));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + First_Offset,
+         Index + Offset.First,
          Gela.Relocatable_Arrays.Element (First));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + Last_Offset,
+         Index + Offset.Last,
          Gela.Relocatable_Arrays.Element (Last));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + Separator_Offset,
+         Index + Offset.Separator,
          Gela.Relocatable_Arrays.Element (Separator));
 
       Gela.Relocatable_Arrays.Set
         (Self.Compilation.Store,
-         Index + Symbol_Offset,
+         Index + Offset.Symbol,
          Gela.Types.Symbol'Pos (Symbol));
 
       Result := Gela.Types.Payload (Index);
@@ -105,7 +88,7 @@ package body Gela.Compilations.Mutables.Tokens is
         Gela.Relocatable_Arrays.Index (Payload);
       Value : constant Gela.Relocatable_Arrays.Element :=
         Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + First_Offset);
+          (Self.Compilation.Store, Index + Offset.First);
    begin
       return Gela.Lexical.Text_Index'Val (Value);
    end First;
@@ -125,7 +108,7 @@ package body Gela.Compilations.Mutables.Tokens is
         Gela.Relocatable_Arrays.Index (Payload);
       Value : constant Gela.Relocatable_Arrays.Element :=
         Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + Last_Offset);
+          (Self.Compilation.Store, Index + Offset.Last);
    begin
       return Gela.Lexical.Text_Index'Val (Value);
    end Last;
@@ -145,31 +128,10 @@ package body Gela.Compilations.Mutables.Tokens is
         Gela.Relocatable_Arrays.Index (Payload);
       Value : constant Gela.Relocatable_Arrays.Element :=
         Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + Line_Offset);
+          (Self.Compilation.Store, Index + Offset.Line);
    begin
       return Gela.Lexical.Line_Index'Val (Value);
    end Line;
-
-   ----------------
-   -- Next_Token --
-   ----------------
-
-   overriding function Next_Token
-     (Self    : access Token;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Token
-   is
-      use type Gela.Relocatable_Arrays.Index;
-
-      Index : constant Gela.Relocatable_Arrays.Index :=
-        Gela.Relocatable_Arrays.Index (Payload);
-      Value : constant Gela.Relocatable_Arrays.Element :=
-        Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + Next_Offset);
-   begin
-      return (Object  => Gela.Types.Token_Access (Self),
-              Payload => Gela.Types.Payload'Val (Value));
-   end Next_Token;
 
    ---------------
    -- Separator --
@@ -186,7 +148,7 @@ package body Gela.Compilations.Mutables.Tokens is
         Gela.Relocatable_Arrays.Index (Payload);
       Value : constant Gela.Relocatable_Arrays.Element :=
         Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + Separator_Offset);
+          (Self.Compilation.Store, Index + Offset.Separator);
    begin
       return Gela.Lexical.Text_Index'Val (Value);
    end Separator;
@@ -206,9 +168,9 @@ package body Gela.Compilations.Mutables.Tokens is
         Gela.Relocatable_Arrays.Index (Payload);
       Value : constant Gela.Relocatable_Arrays.Element :=
         Gela.Relocatable_Arrays.Get
-          (Self.Compilation.Store, Index + Value_Offset);
+          (Self.Compilation.Store, Index + Offset.Value);
    begin
       return Gela.Lexical.Tokens.Token'Val (Value);
    end Value;
 
-end Gela.Compilations.Mutables.Tokens;
+end Gela.Mutables.Tokens;

@@ -8,12 +8,15 @@
 ------------------------------------------------------------------------------
 
 with Gela.Tokens;
+with Gela.Types;
+with Gela.Lexical.Tokens;
+with Gela.Mutables.Elements;
 
-package Gela.Compilations.Mutables.Tokens is
+package Gela.Mutables.Tokens is
 
-   type Token is new Gela.Tokens.Token with record
-      Compilation : Mutable_Compilation_Access;
-   end record;
+   type Token is
+     new Gela.Mutables.Elements.Element and Gela.Tokens.Token
+     with null record;
 
    overriding function Value
      (Self    : access Token;
@@ -40,10 +43,20 @@ package Gela.Compilations.Mutables.Tokens is
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index;
 
-   overriding function Next_Token
+   overriding function Last_Child
      (Self    : access Token;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Token;
+      Payload : Gela.Types.Payload) return Natural is (0);
+
+   overriding function Child
+     (Self    : access Token;
+      Payload : Gela.Types.Payload;
+      Index   : Positive) return Gela.Types.Payload is (0);
+
+   overriding procedure Set_Child
+     (Self    : access Token;
+      Payload : Gela.Types.Payload;
+      Index   : Positive;
+      Value   : Gela.Types.Payload) is null;
 
    not overriding procedure Create
      (Self      : access Token;
@@ -54,6 +67,5 @@ package Gela.Compilations.Mutables.Tokens is
       Last      : Gela.Lexical.Text_Index;
       Separator : Gela.Lexical.Text_Index;
       Symbol    : Gela.Types.Symbol);
-   --  FIXME Pass prev token to initialize list of tokens
 
-end Gela.Compilations.Mutables.Tokens;
+end Gela.Mutables.Tokens;

@@ -14,6 +14,19 @@ package body Gela.Relocatable_Arrays is
    procedure Free is new
      Ada.Unchecked_Deallocation (Element_Array, Element_Array_Access);
 
+   --------------
+   -- Allocate --
+   --------------
+
+   function Allocate
+     (Buffer : in out Relocatable_Array;
+      Size   : Index) return Index is
+   begin
+      return Result : constant Index := Buffer.Last do
+         Buffer.Last := Buffer.Last + Size;
+      end return;
+   end Allocate;
+
    ---------
    -- Get --
    ---------
@@ -24,15 +37,6 @@ package body Gela.Relocatable_Arrays is
    begin
       return Buffer.Data (Position);
    end Get;
-
-   ----------
-   -- Last --
-   ----------
-
-   function Last (Buffer : Relocatable_Array) return Index is
-   begin
-      return Buffer.Last;
-   end Last;
 
    ---------
    -- Set --

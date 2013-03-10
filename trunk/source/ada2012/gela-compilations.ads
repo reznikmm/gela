@@ -47,12 +47,6 @@ package Gela.Compilations is
    subtype Text_Index is Gela.Lexical.Text_Index;
    --  Index inside Text string
 
-   type Line_Offset is record
-      First   : Text_Index;  --  Position of first character of line
-      Last    : Text_Index;  --  Position of last character of line
-      Comment : Text_Index;  --  Position of first character of comment in line
-   end record;
-
    function Last_Line
      (Self    : access Abstract_Compilation) return Gela.Lexical.Line_Count
      is abstract;
@@ -60,15 +54,17 @@ package Gela.Compilations is
 
    function Line
      (Self    : access Abstract_Compilation;
-      Index   : Gela.Lexical.Line_Index) return Line_Offset is abstract;
+      Index   : Gela.Lexical.Line_Index)
+      return Gela.Lexical.Line_Offset is abstract;
    --  Return offsets for line with given Index
 
-   function First_Token
-     (Self    : access Abstract_Compilation)
+   function Get_Token
+     (Self    : access Abstract_Compilation;
+      Index   : Positive)
       return Gela.Types.Token is abstract;
 
-   function Folded_Set
+   function Symbols
      (Self    : access Abstract_Compilation)
-      return Gela.Types.Folded_Set_Access is abstract;
+      return Gela.Types.Symbol_Set_Access is abstract;
 
 end Gela.Compilations;

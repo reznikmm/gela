@@ -1,14 +1,13 @@
-with "gela_lib";
-with "gela_grammars";
 with "league";
+with "gela_grammars";
 
-project Gela_Ada_2012 is
+project Gela_AG is
+   for Source_Dirs use ("../tools/ag");
 
-   for Main use ("lexer_test");
+   for Main use ("ag_driver");
 
    Build := external ("GELA_BUILD", "/tmp/gela");
-   for Source_Dirs use ("../source/ada2012", "../source/ada2012/generated");
-   for Object_Dir use Build & "/ada2012";
+   for Object_Dir use Build & "/ag";
 
    Default_Ada_Switches :=
      ("-gnat12", "-gnatW8", "-g", "-gnatyaAbcdefhiIkmnoOprsStux");
@@ -18,4 +17,4 @@ project Gela_Ada_2012 is
         Default_Ada_Switches & ("-gnatwea");
    end Compiler;
 
-end Gela_Ada_2012;
+end Gela_AG;
