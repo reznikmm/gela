@@ -21,10 +21,11 @@ private
 
    type Parser (Compilation : Mutable_Compilation_Access) is tagged record
       Production : aliased Gela.Mutables.Productions.Production (Compilation);
+      Free_Lists : Gela.Types.Payload_Array (3 .. 8);
    end record;
 
    function Get_Element
-     (Self : access Parser;
+     (Self   : access Parser;
       Object : Gela.Types.Payload)
       return access Gela.Mutables.Elements.Element'Class;
 

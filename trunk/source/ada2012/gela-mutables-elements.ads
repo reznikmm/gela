@@ -14,6 +14,10 @@ package Gela.Mutables.Elements is
    type Element (Compilation : Mutable_Compilation_Access) is
      abstract tagged null record;
 
+   function Size
+     (Self    : access Element;
+      Payload : Gela.Types.Payload) return Natural is abstract;
+
    function Tag
      (Self    : access Element;
       Payload : Gela.Types.Payload) return Natural;
@@ -31,6 +35,15 @@ package Gela.Mutables.Elements is
      (Self    : access Element;
       Payload : Gela.Types.Payload;
       Value   : Natural);
+
+   function Free_List_Link
+     (Self    : access Element;
+      Payload : Gela.Types.Payload) return Gela.Types.Payload;
+
+   procedure Set_Free_List_Link
+     (Self    : access Element;
+      Payload : Gela.Types.Payload;
+      Value   : Gela.Types.Payload);
 
    function Last_Child
      (Self    : access Element;

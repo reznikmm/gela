@@ -58,6 +58,10 @@ package Gela.Mutables.Tokens is
       Index   : Positive;
       Value   : Gela.Types.Payload) is null;
 
+   overriding function Size
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Natural;
+
    not overriding procedure Create
      (Self      : access Token;
       Result    : out Gela.Types.Payload;

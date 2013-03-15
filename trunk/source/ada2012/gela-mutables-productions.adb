@@ -65,8 +65,7 @@ package body Gela.Mutables.Productions is
 
    not overriding function Production_Index
      (Self    : access Production;
-      Payload : Gela.Types.Payload) return Gela.Grammars.Production_Index
-   is
+      Payload : Gela.Types.Payload) return Gela.Grammars.Production_Index is
    begin
       return Gela.Grammars.Production_Index (Self.Tag (Payload));
    end Production_Index;
@@ -97,5 +96,19 @@ package body Gela.Mutables.Productions is
            Gela.Relocatable_Arrays.Index (Index),
          Gela.Relocatable_Arrays.Element (Value));
    end Set_Child;
+
+   ----------
+   -- Size --
+   ----------
+
+   overriding function Size
+     (Self    : access Production;
+      Payload : Gela.Types.Payload) return Natural
+   is
+      Value : constant Gela.Relocatable_Arrays.Index :=
+        Gela.Properties.Size (Self.Production_Index (Payload));
+   begin
+      return Natural (Value);
+   end Size;
 
 end Gela.Mutables.Productions;

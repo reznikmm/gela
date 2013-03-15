@@ -153,6 +153,20 @@ package body Gela.Mutables.Tokens is
       return Gela.Lexical.Text_Index'Val (Value);
    end Separator;
 
+   ----------
+   -- Size --
+   ----------
+
+   overriding function Size
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Natural
+   is
+      pragma Unreferenced (Self);
+      pragma Unreferenced (Payload);
+   begin
+      return Natural (Token_Size);
+   end Size;
+
    -----------
    -- Value --
    -----------

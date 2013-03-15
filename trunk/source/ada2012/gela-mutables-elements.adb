@@ -24,6 +24,17 @@ package body Gela.Mutables.Elements is
       return Natural (Value);
    end Count;
 
+   --------------------
+   -- Free_List_Link --
+   --------------------
+
+   function Free_List_Link
+     (Self    : access Element;
+      Payload : Gela.Types.Payload) return Gela.Types.Payload is
+   begin
+      return Gela.Types.Payload (Self.Tag (Payload));
+   end Free_List_Link;
+
    ---------------
    -- Set_Count --
    ---------------
@@ -43,6 +54,22 @@ package body Gela.Mutables.Elements is
          Index + 1,
          Gela.Relocatable_Arrays.Element (Value));
    end Set_Count;
+
+   ------------------------
+   -- Set_Free_List_Link --
+   ------------------------
+
+   procedure Set_Free_List_Link
+     (Self    : access Element;
+      Payload : Gela.Types.Payload;
+      Value   : Gela.Types.Payload) is
+   begin
+      Self.Set_Tag (Payload, Natural (Value));
+   end Set_Free_List_Link;
+
+   -------------
+   -- Set_Tag --
+   -------------
 
    procedure Set_Tag
      (Self    : access Element;

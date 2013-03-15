@@ -35,4 +35,8 @@ package Gela.Mutables.Productions is
       Index   : Positive;
       Value   : Gela.Types.Payload);
 
+   overriding function Size
+     (Self    : access Production;
+      Payload : Gela.Types.Payload) return Natural;
+
 end Gela.Mutables.Productions;

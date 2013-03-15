@@ -92,17 +92,24 @@ package body Gela.Mutables.Parsers is
      (Self       : access Parser;
       Production : Gela.Grammars.Production_Index) return Gela.Types.Payload
    is
+      use type Gela.Types.Payload;
       use type Gela.Relocatable_Arrays.Index;
 
       Size  : constant Gela.Relocatable_Arrays.Index :=
         Gela.Properties.Size (Production);
 
-      Index : constant Gela.Relocatable_Arrays.Index :=
-        Gela.Relocatable_Arrays.Allocate (Self.Compilation.Store, Size);
-
-      Result : constant Gela.Types.Payload :=
-        Gela.Types.Payload (Index);
+      Result : Gela.Types.Payload;
    begin
+      Result := Self.Free_Lists (Positive (Size));
+
+      if Result = 0 then
+         Result := Gela.Types.Payload
+           (Gela.Relocatable_Arrays.Allocate (Self.Compilation.Store, Size));
+      else
+         Self.Free_Lists (Positive (Size)) :=
+           Self.Production.Free_List_Link (Result);
+      end if;
+
       Self.Production.Set_Tag (Result, Natural (Production));
       Self.Production.Set_Count (Result, 1);
 
@@ -139,6 +146,8 @@ package body Gela.Mutables.Parsers is
          end;
       end if;
 
+      Self.Free_Lists := (others => 0);
+
       RNGLR.Parse
         (G.all, T.all, Self, L => Self.Compilation.Lexer, Tree => Root);
    end Parse;
@@ -171,6 +180,11 @@ package body Gela.Mutables.Parsers is
                   Reference (Self, Child, -1);
                end if;
             end loop;
+
+            Element.Set_Free_List_Link
+              (Object, Self.Free_Lists (Element.Size (Object)));
+
+            Self.Free_Lists (Element.Size (Object)) := Object;
          end;
       else
          Self.Production.Set_Count (Object, Count + Step);
