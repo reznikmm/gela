@@ -7,25 +7,17 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
---  with Gela.Mutables.Productions;
+with Gela.Grammars;
+with Gela.Stores.Nodes;
 with Gela.Types;
 
-package Gela.Mutables.Parsers is
+package Gela.Stores.Productions is
 
-   type Parser (Compilation : Mutable_Compilation_Access) is tagged private;
+   type Production is
+     abstract new Gela.Stores.Nodes.Node with null record;
 
-   procedure Parse (Self : access Parser);
+   not overriding function Production_Index
+     (Self    : access Production;
+      Payload : Gela.Types.Payload) return Gela.Grammars.Production_Index;
 
-private
-
-   type Parser (Compilation : Mutable_Compilation_Access) is tagged record
---    Production : aliased Gela.Mutables.Productions.Production (Compilation);
-      Free_Lists : Gela.Types.Payload_Array (3 .. 8);
-   end record;
-
---     function Get_Element
---       (Self   : access Parser;
---        Object : Gela.Types.Payload)
---        return access Gela.Mutables.Elements.Element'Class;
-
-end Gela.Mutables.Parsers;
+end Gela.Stores.Productions;

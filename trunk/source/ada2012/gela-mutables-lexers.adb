@@ -28,7 +28,7 @@ package body Gela.Mutables.Lexers is
       Index : Positive)
       return Gela.Types.Token is
    begin
-      return (Self.Compilation.Token'Access, Self.Tokens (Index));
+      return (Self.Compilation.Fabric.Token'Access, Self.Tokens (Index));
    end Get_Token;
 
    ----------------
@@ -147,14 +147,15 @@ package body Gela.Mutables.Lexers is
       end if;
 
       Self.Last_Token := Self.Last_Token + 1;
-      Self.Compilation.Token.Create
+      Self.Tokens (Self.Last_Token) := Self.Compilation.Fabric.Create_Token;
+
+      Self.Compilation.Fabric.Token.Initialize
         (Self.Tokens (Self.Last_Token),
          Token,
          Gela.Lexical.Line_Index (Line),
          First,
          Last,
-         Separator,
-         Symbol);
+         Separator);
    end New_Token;
 
    use Gela.Lexical.Tokens;

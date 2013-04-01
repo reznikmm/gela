@@ -53,8 +53,8 @@ package body Gela.Mutables.Compilations is
          Updated     => League.Calendars.Clock,
          CPU_Spent   => 0.0,
          Store       => <>,
+         Fabric      => <>,
          Errors      => <>,
-         Token       => <>,
          Lexer       => <>,
          Parser      => <>,
          Symbols     => <>)

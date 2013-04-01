@@ -13,8 +13,6 @@ with Gela.Grammars.LR_Tables;
 with Gela.Grammars.RNGLR;
 with Gela.Grammars.Reader;
 with Gela.Grammars_Convertors;
-with Gela.Properties;
-with Gela.Relocatable_Arrays;
 
 with Gela.Mutables.Compilations;
 pragma Unreferenced (Gela.Mutables.Compilations);
@@ -39,8 +37,11 @@ package body Gela.Mutables.Parsers is
 
    procedure Reference
      (Self   : access Parser;
-      Object : Gela.Types.Payload;
-      Step   : Integer := 1);
+      Object : Gela.Types.Payload);
+
+   procedure Dereference
+     (Self   : access Parser;
+      Object : in out Gela.Types.Payload);
 
    package RNGLR is new Gela.Grammars.RNGLR
      (Node_Access => Gela.Types.Payload,
@@ -54,22 +55,15 @@ package body Gela.Mutables.Parsers is
    T : Table_Access;
 
    -----------------
-   -- Get_Element --
+   -- Dereference --
    -----------------
 
-   function Get_Element
+   procedure Dereference
      (Self   : access Parser;
-      Object : Gela.Types.Payload)
-      return access Gela.Mutables.Elements.Element'Class
-   is
-      Tag : constant Natural := Self.Production.Tag (Object);
+      Object : in out Gela.Types.Payload) is
    begin
-      if Tag in 1 .. Natural (G.Last_Production) then
-         return Self.Production'Access;
-      else
-         return Self.Compilation.Token'Access;
-      end if;
-   end Get_Element;
+      Self.Compilation.Fabric.Token.Dereference (Object);
+   end Dereference;
 
    ---------------------
    -- New_Alternative --
@@ -90,30 +84,9 @@ package body Gela.Mutables.Parsers is
 
    function New_Node
      (Self       : access Parser;
-      Production : Gela.Grammars.Production_Index) return Gela.Types.Payload
-   is
-      use type Gela.Types.Payload;
-      use type Gela.Relocatable_Arrays.Index;
-
-      Size  : constant Gela.Relocatable_Arrays.Index :=
-        Gela.Properties.Size (Production);
-
-      Result : Gela.Types.Payload;
+      Production : Gela.Grammars.Production_Index) return Gela.Types.Payload is
    begin
-      Result := Self.Free_Lists (Positive (Size));
-
-      if Result = 0 then
-         Result := Gela.Types.Payload
-           (Gela.Relocatable_Arrays.Allocate (Self.Compilation.Store, Size));
-      else
-         Self.Free_Lists (Positive (Size)) :=
-           Self.Production.Free_List_Link (Result);
-      end if;
-
-      Self.Production.Set_Tag (Result, Natural (Production));
-      Self.Production.Set_Count (Result, 1);
-
-      return Result;
+      return Self.Compilation.Fabric.Create_Production (Production);
    end New_Node;
 
    ---------------
@@ -158,37 +131,9 @@ package body Gela.Mutables.Parsers is
 
    procedure Reference
      (Self   : access Parser;
-      Object : Gela.Types.Payload;
-      Step   : Integer := 1)
-   is
-      use type Gela.Relocatable_Arrays.Index;
-      use type Gela.Relocatable_Arrays.Element;
-
-      Count : constant Natural := Self.Production.Count (Object);
+      Object : Gela.Types.Payload) is
    begin
-      if Count = 1 and Step = -1 then
-         declare
-            use type Gela.Types.Payload;
-            Element : constant access Gela.Mutables.Elements.Element'Class :=
-              Self.Get_Element (Object);
-            Child   : Gela.Types.Payload;
-         begin
-            for J in 1 .. Element.Last_Child (Object) loop
-               Child := Element.Child (Object, J);
-
-               if Child /= 0 then
-                  Reference (Self, Child, -1);
-               end if;
-            end loop;
-
-            Element.Set_Free_List_Link
-              (Object, Self.Free_Lists (Element.Size (Object)));
-
-            Self.Free_Lists (Element.Size (Object)) := Object;
-         end;
-      else
-         Self.Production.Set_Count (Object, Count + Step);
-      end if;
+      Self.Compilation.Fabric.Token.Reference (Object);
    end Reference;
 
    ---------------
@@ -199,14 +144,9 @@ package body Gela.Mutables.Parsers is
      (Self   : access Parser;
       Object : Gela.Types.Payload;
       Index  : Positive;
-      Value  : Gela.Types.Payload)
-   is
-      Element : constant access Gela.Mutables.Elements.Element'Class :=
-        Self.Get_Element (Object);
+      Value  : Gela.Types.Payload) is
    begin
-      Element.Set_Child (Object, Index, Value);
-
-      Reference (Self, Value);
+      Self.Compilation.Fabric.Token.Set_Child (Object, Index, Value);
    end Set_Child;
 
 end Gela.Mutables.Parsers;
