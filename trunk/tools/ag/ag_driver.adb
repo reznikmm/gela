@@ -70,6 +70,24 @@ procedure AG_Driver is
 
    function Image (X : Integer) return Wide_Wide_String;
 
+   function Count_Ambiguous (G : Gela.Grammars.Grammar) return Natural;
+
+   ---------------------
+   -- Count_Ambiguous --
+   ---------------------
+
+   function Count_Ambiguous (G : Gela.Grammars.Grammar) return Natural is
+      Result : Natural := 0;
+   begin
+      for NT of G.Non_Terminal loop
+         if Is_Ambiguous (NT) then
+            Result := Result + 1;
+         end if;
+      end loop;
+
+      return Result;
+   end Count_Ambiguous;
+
    -----------
    -- Image --
    -----------
@@ -156,7 +174,7 @@ procedure AG_Driver is
    function Is_Ambiguous (NT : Gela.Grammars.Non_Terminal) return Boolean is
       pragma Unreferenced (NT);
    begin
-      return True;
+      return False;  --  True;
    end Is_Ambiguous;
 
    ------------
@@ -206,6 +224,9 @@ procedure AG_Driver is
    Return_Type : League.Strings.Universal_String;
    Offset      : Natural;
 
+   Ambiguous_Count : constant Natural := Count_Ambiguous (Plain);
+   Amb_Index   : Natural := Natural (Plain.Last_Production);
+
    With_Clause : Writer;
    Types       : Writer;
    Stores_NT   : Writer;
@@ -213,12 +234,13 @@ procedure AG_Driver is
    Store_Body  : Writer;
    Nodes_NT    : Writer;
    Fab_With    : Writer;
+   Fab_Body    : Writer;
    Fabrics     : Writer;
 
    use type Gela.Grammars.Part_Count;
 begin
    With_Clause.P ("with Gela.Types;");
-   With_Clause.P ("limited with Gela.Tokens;");
+   With_Clause.P ("limited with Gela.Nodes.Tokens;");
 
    Types.P ("package Gela.Nodes is");
    Types.P ("");
@@ -226,14 +248,25 @@ begin
    Types.P ("   type Node_Access is access all Node'Class;");
 
    Fabrics.P ("with Gela.Mutables;");
+   Fabrics.P ("with Gela.Nodes;");
    Fabrics.P ("with Gela.Stores.Tokens;");
    Fabrics.P;
    Fabrics.P ("package Gela.Stores.Base_Fabrics is");
+   Fabrics.P;
+   Fabrics.P ("   type Node_Array is array (Natural range <>) of" &
+                " Gela.Nodes.Node_Access;");
    Fabrics.P;
    Fabrics.P ("   type Base_Fabric (Compilation : " &
                 "Gela.Mutables.Mutable_Compilation_Access) is");
    Fabrics.P ("   tagged limited record");
    Fabrics.P ("      Token : aliased Tokens.Token (Compilation);");
+
+   Fab_Body.P ("package body Gela.Stores.Base_Fabrics is");
+   Fab_Body.P;
+   Fab_Body.P ("   procedure Initialize (Self : access Base_Fabric) is");
+   Fab_Body.P ("   begin");
+   Fab_Body.P ("      Self.Map :=");
+   Fab_Body.N ("        (0 => Self.Token'Access");
 
    for NT of Plain.Non_Terminal loop
       With_Clause.N ("limited with Gela.Nodes.");
@@ -300,6 +333,12 @@ begin
          Store_Body.N (Plural (NT.Name));
          Store_Body.P (" is");
          Store_Body.P;
+         Store_Body.P ("   Reference : constant Boolean := " &
+                         "Gela.Mutables.Compilations.Dummy_Reference;");
+         Store_Body.P ("   pragma Unreferenced (Reference);");
+         Store_Body.P ("   pragma Style_Checks (""-o"");");
+         Store_Body.P ("   pragma Warnings (""F"");");
+         Store_Body.P;
          Store_Body.P ("   Size_Offset : constant := 2;");
          Store_Body.P;
 
@@ -316,9 +355,9 @@ begin
       Stores_NT.N (Plural (NT.Name));
       Stores_NT.P (";");
       Stores_NT.P ("with Gela.Stores.Productions;");
-      Stores_NT.P ("with Gela.Types;");
 
       if Is_Ambiguous (NT) then
+         Stores_NT.P ("with Gela.Types;");
          Stores_NT.P ("with Gela.Stores.Nodes;");
       end if;
 
@@ -442,6 +481,16 @@ begin
          Fabrics.N (Plural (NT.Name));
          Fabrics.P (".Switch (Compilation);");
 
+         Amb_Index := Amb_Index + 1;
+
+         Fab_Body.P (",");
+         Fab_Body.N ("         ");
+
+         Fab_Body.N (Image (Amb_Index));
+         Fab_Body.N (" => Self.S");
+         Fab_Body.N (Image (Positive (NT.Index)));
+         Fab_Body.N ("'Access");
+
          Store_Body.N ("end Gela.Stores.");
          Store_Body.N (Plural (NT.Name));
          Store_Body.P (";");
@@ -467,6 +516,14 @@ begin
          Fabrics.N (".");
          Fabrics.N (Plural (Prod.Name));
          Fabrics.P (".Object (Compilation);");
+
+         Fab_Body.P (",");
+         Fab_Body.N ("         ");
+
+         Fab_Body.N (Image (Positive (Prod.Index)));
+         Fab_Body.N (" => Self.P");
+         Fab_Body.N (Image (Positive (Prod.Index)));
+         Fab_Body.N ("'Access");
 
          Nodes_NT.N ("package Gela.Nodes.");
          Nodes_NT.N (Plural (NT.Name));
@@ -497,6 +554,13 @@ begin
          Store_Each.N (Plural (Prod.Name), Store_Body);
          Store_Each.P (" is", Store_Body);
          Store_Each.P ("", Store_Body);
+
+         Store_Body.P ("   Reference : constant Boolean := " &
+                         "Gela.Mutables.Compilations.Dummy_Reference;");
+         Store_Body.P ("   pragma Unreferenced (Reference);");
+         Store_Body.P ("   pragma Style_Checks (""-o"");");
+         Store_Body.P ("   pragma Warnings (""F"");");
+         Store_Body.P;
 
          Store_Each.N ("   type Object is new Gela.Stores.");
          Store_Each.N (Plural (NT.Name));
@@ -599,12 +663,34 @@ begin
       end loop;
    end loop;
 
+   Fabrics.N ("      Map : Node_Array (0 .. ");
+   Fabrics.N (Image (Positive (Plain.Last_Production) +
+                     Positive (Plain.Last_Non_Terminal)));
+   Fabrics.P (");");
    Fabrics.P ("   end record;");
+   Fabrics.P;
+
+   Fabrics.N ("   Last_Production : constant := ");
+   Fabrics.N (Image (Positive (Plain.Last_Production)));
+   Fabrics.P (";");
+   Fabrics.P;
+
+   Fabrics.P ("   procedure Initialize (Self : access Base_Fabric);");
    Fabrics.P;
    Fabrics.N ("end Gela.Stores.Base_Fabrics;");
 
+   if Ambiguous_Count /= Positive (Plain.Last_Non_Terminal) then
+      Fab_Body.P (",");
+      Fab_Body.N ("         others => null");
+   end if;
+
+   Fab_Body.P (");");
+   Fab_Body.P ("   end Initialize;");
+   Fab_Body.P;
+   Fab_Body.N ("end Gela.Stores.Base_Fabrics;");
+
    Types.P ("   type Token_Access is access all" &
-                           " Gela.Tokens.Token'Class;");
+                           " Gela.Nodes.Tokens.Object'Class;");
    Types.P ("   type Token is record");
    Types.P ("      Object  : Token_Access;");
    Types.P ("      Payload : Gela.Types.Payload;");
@@ -612,13 +698,14 @@ begin
    Types.P ("");
    Types.N ("end Gela.Nodes;");
 
-   Ada.Text_IO.Put (Stores_NT.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Nodes_NT.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Stores_NT.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Nodes_NT.Text.To_UTF_8_String);
 --   Ada.Text_IO.New_Line;
    Ada.Text_IO.Put_Line (With_Clause.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Types.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Store_Each.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Store_Body.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Fab_With.Text.To_UTF_8_String);
-   Ada.Text_IO.Put (Fabrics.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Types.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Store_Each.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Store_Body.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Fab_With.Text.To_UTF_8_String);
+   Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+   Ada.Text_IO.Put (Fab_Body.Text.To_UTF_8_String);
 end AG_Driver;

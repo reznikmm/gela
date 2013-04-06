@@ -7,7 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Tokens;
+with Gela.Nodes.Tokens;
 with Gela.Types;
 with Gela.Lexical.Tokens;
 with Gela.Stores.Nodes;
@@ -15,7 +15,7 @@ with Gela.Stores.Nodes;
 package Gela.Stores.Tokens is
 
    type Token is
-     new Gela.Stores.Nodes.Node and Gela.Tokens.Token
+     new Gela.Stores.Nodes.Node and Gela.Nodes.Tokens.Object
      with null record;
 
    overriding function Value

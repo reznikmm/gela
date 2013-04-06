@@ -20,8 +20,6 @@ package Gela.Stores.Fabrics is
 
    type Fabric is new Gela.Stores.Base_Fabrics.Base_Fabric with null record;
 
-   procedure Initialize (Self : access Fabric);
-
    function To_Element
      (Self    : access Fabric;
       Payload : Gela.Types.Payload) return Gela.Stores.Elements.Element_Access;
@@ -35,6 +33,11 @@ package Gela.Stores.Fabrics is
    function Create_Production
      (Self       : access Fabric;
       Production : Gela.Grammars.Production_Index)
+      return Gela.Types.Payload;
+
+   function Create_Switch
+     (Self : access Fabric;
+      NT   : Gela.Grammars.Non_Terminal_Index)
       return Gela.Types.Payload;
 
 end Gela.Stores.Fabrics;

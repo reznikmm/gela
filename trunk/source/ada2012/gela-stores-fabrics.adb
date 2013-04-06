@@ -26,21 +26,42 @@ package body Gela.Stores.Fabrics is
       return Gela.Types.Payload
    is
       Item : Index;
-      Size : Positive;
+      Size : constant Positive := Elements.Element_Access
+        (Self.Map (Positive (Production))).Size (0);
    begin
-      case Production is
-         when 1 =>
-            Size := Self.P1.Size (0);
-         when others =>
-            raise Constraint_Error;
-      end case;
-
       Item := Self.Compilation.Store.Allocate (Size);
       Self.Compilation.Store.Set (Item, Element (Production));  --  Tag
       Self.Compilation.Store.Set (Item + 1, 1);      --  Count
 
       return Gela.Types.Payload (Item);
    end Create_Production;
+
+   -------------------
+   -- Create_Switch --
+   -------------------
+
+   function Create_Switch
+     (Self : access Fabric;
+      NT   : Gela.Grammars.Non_Terminal_Index)
+      return Gela.Types.Payload
+   is
+      use type Gela.Nodes.Node_Access;
+
+      Item : Index;
+      Size : constant := 5;
+   begin
+      if Self.Map (Positive (NT) + Base_Fabrics.Last_Production) = null then
+         raise Constraint_Error;
+      end if;
+
+      Item := Self.Compilation.Store.Allocate (Size);
+      Self.Compilation.Store.Set
+        (Item, Element (NT) + Base_Fabrics.Last_Production);  --  Tag
+      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
+      Self.Compilation.Store.Set (Item + 2, Size);   --  Size
+
+      return Gela.Types.Payload (Item);
+   end Create_Switch;
 
    ------------------
    -- Create_Token --
@@ -54,15 +75,6 @@ package body Gela.Stores.Fabrics is
       Self.Compilation.Store.Set (Item + 1, 1);      --  Count
       return Gela.Types.Payload (Item);
    end Create_Token;
-
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize (Self : access Fabric) is
-   begin
-      Self.Map (1) := Self.P1'Access;
-   end Initialize;
 
    ----------------
    -- To_Element --

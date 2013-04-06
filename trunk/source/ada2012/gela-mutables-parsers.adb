@@ -74,8 +74,7 @@ package body Gela.Mutables.Parsers is
       NT   : Gela.Grammars.Non_Terminal_Index) return Gela.Types.Payload
    is
    begin
-      raise Program_Error with "Unimplemented function New_Alternative";
-      return New_Alternative (Self, NT);
+      return Self.Compilation.Fabric.Create_Switch (NT);
    end New_Alternative;
 
    --------------
