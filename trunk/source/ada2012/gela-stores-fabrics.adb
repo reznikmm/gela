@@ -83,18 +83,9 @@ package body Gela.Stores.Fabrics is
    function To_Element
      (Self    : access Fabric;
       Payload : Gela.Types.Payload)
-      return Gela.Stores.Elements.Element_Access
-   is
-      Item : constant Index := Index (Payload);
+      return Gela.Stores.Elements.Element_Access is
    begin
-      case Self.Compilation.Store.Get (Item) is
-         when Token_Tag =>
-            return Self.Token'Access;
-         when 1 =>
-            return Self.P1'Access;
-         when others =>
-            raise Constraint_Error;
-      end case;
+      return Gela.Stores.Elements.Element_Access (Self.To_Node (Payload));
    end To_Element;
 
    -------------
@@ -103,9 +94,11 @@ package body Gela.Stores.Fabrics is
 
    function To_Node
      (Self    : access Fabric;
-      Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access is
+      Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access
+   is
+      Item : constant Element := Self.Compilation.Store.Get (Index (Payload));
    begin
-      return Gela.Nodes.Node_Access (Self.To_Element (Payload));
+      return Self.Map (Natural (Item));
    end To_Node;
 
 end Gela.Stores.Fabrics;
