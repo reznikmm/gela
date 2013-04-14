@@ -52,6 +52,7 @@ package body Gela.Mutables.Compilations is
          Text        => NFKC,
          Updated     => League.Calendars.Clock,
          CPU_Spent   => 0.0,
+         Root        => <>,
          Store       => <>,
          Fabric      => <>,
          Errors      => <>,
@@ -64,6 +65,7 @@ package body Gela.Mutables.Compilations is
               (Gela.Types.Compilation_Access (Result));
          end if;
 
+         Result.Fabric.Initialize;
          Result.Lexer.Initialize (Source);
       end return;
    end Create;

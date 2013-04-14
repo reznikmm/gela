@@ -51,6 +51,8 @@ package body Gela.Mutables.Lexers is
       Self.Scanner.Set_Handler (Self.Handler'Unchecked_Access);
       Self.Handler.Set_Fabric (Gela.Lexical.Fabrics.Fabric_Access (Self));
       Self.Source.Create (Text);
+
+      Self.Last_Line := 0;
    end Initialize;
 
    ---------------

@@ -16,9 +16,10 @@ with Gela.Lexical;
 with Gela.Types;
 
 with Gela.Mutables.Lexers;
-with Gela.Mutables.Parsers;
---  with Gela.Mutables.Tokens;
+--  with Gela.Mutables.Parsers;
+with Gela.Mutables.LALR_Parsers;
 with Gela.Mutables.Symbol_Sets;
+with Gela.Nodes;
 
 with Gela.Stores;
 with Gela.Stores.Fabrics;
@@ -36,10 +37,12 @@ package Gela.Mutables.Compilations is
       CPU_Spent   : Duration;
       --  Components
       Store   : Gela.Stores.Store;
+      Root    : Gela.Nodes.Element;
       Fabric  : aliased Stores.Fabrics.Fabric (Compilation'Unchecked_Access);
       Errors  : aliased Gela.Errors.Put_Lines.Handler;
       Lexer   : aliased Mutables.Lexers.Lexer (Compilation'Unchecked_Access);
-      Parser  : aliased Mutables.Parsers.Parser (Compilation'Unchecked_Access);
+      Parser  : aliased Mutables.LALR_Parsers.Parser
+                          (Compilation'Unchecked_Access);
       Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
      end record;
 

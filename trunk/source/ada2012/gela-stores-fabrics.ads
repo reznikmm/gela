@@ -30,7 +30,7 @@ package Gela.Stores.Fabrics is
 
    function Create_Token (Self : access Fabric) return Gela.Types.Payload;
 
-   function Create_Production
+   overriding function Create_Production
      (Self       : access Fabric;
       Production : Gela.Grammars.Production_Index)
       return Gela.Types.Payload;

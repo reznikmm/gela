@@ -1,0 +1,52 @@
+Token token;
+
+Compilation ::= name;
+
+association ::=
+  discrete_choice   <Array_Component_Choices>
+  token             <arrow_token>
+  expression_or_box <Component_Expression>;
+
+attribute_reference ::=
+  prefix token <apostrophe_token> identifier <Attribute_Designator_Identifier>;
+
+box ::= token <box_token>;
+
+direct_name ::=
+  identifier |
+  operator_symbol;
+
+discrete_choice ::= expression | discrete_range | others_choice;
+
+discrete_range ::= token <blah>;
+
+enumeration_literal ::= token <enumeration_literal>;
+
+explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
+
+expression ::= name;
+
+expression_or_box ::= expression | box;
+
+function_call ::= prefix association <Function_Call_Parameters>;
+
+identifier ::= token <identifier>;
+
+name ::= direct_name | explicit_dereference;
+
+operator_symbol ::= token <operator_symbol>;
+
+others_choice ::= token <others_token>;
+
+prefix ::= name;
+
+record_aggregate ::=
+  association <Record_Component_Associations>;
+
+selected_component ::= prefix token <dot_token> selector_name <Selector>;
+
+selector_name ::=
+  identifier |
+  enumeration_literal |
+  operator_symbol;
+

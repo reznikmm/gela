@@ -7,12 +7,90 @@ with League.Text_Codecs;
 
 with Gela.Mutables.Compilations;
 with Gela.Lexical.Handler;
+with Gela.Types;
+with Gela.Stores.Elements;
+with Gela.Stores.Nodes;
+with Gela.Stores.Tokens;
+with Gela.Lexical.Tokens;
+with Gela.Stores.Productions;
+
+with Gela.Grammars.Reader;
+with Gela.Grammars_Convertors;
 
 procedure Lexer_Test is
 
    function Read_File
      (File_Name : String)
      return League.Strings.Universal_String;
+
+   procedure Print
+     (Comp    : Gela.Mutables.Mutable_Compilation_Access;
+      Item    : Gela.Stores.Elements.Element_Access;
+      Payload : Gela.Types.Payload);
+
+   G     : constant Gela.Grammars.Grammar :=
+     Gela.Grammars.Reader.Read ("ada-ast.ag");
+   Plain : constant Gela.Grammars.Grammar :=
+     Gela.Grammars_Convertors.Convert_With_Empty (G);
+
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print
+     (Comp    : Gela.Mutables.Mutable_Compilation_Access;
+      Item    : Gela.Stores.Elements.Element_Access;
+      Payload : Gela.Types.Payload)
+   is
+      use type Gela.Types.Payload;
+   begin
+      if Payload = 0 then
+         Ada.Wide_Wide_Text_IO.Put ("null");
+      elsif Item.all in Gela.Stores.Tokens.Token then
+         declare
+            Token : Gela.Stores.Tokens.Token renames
+              Gela.Stores.Tokens.Token (Item.all);
+         begin
+            Ada.Wide_Wide_Text_IO.Put ("Token:");
+            Ada.Wide_Wide_Text_IO.Put
+              (Gela.Lexical.Tokens.Token'Wide_Wide_Image
+                 (Token.Value (Payload)));
+         end;
+      elsif Item.all in Gela.Stores.Nodes.Node'Class then
+         declare
+            Node : Gela.Stores.Nodes.Node'Class renames
+              Gela.Stores.Nodes.Node'Class (Item.all);
+         begin
+            if Item.all in Gela.Stores.Productions.Production'Class then
+               declare
+                  Prod : Gela.Stores.Productions.Production'Class renames
+                    Gela.Stores.Productions.Production'Class (Item.all);
+               begin
+                  Ada.Wide_Wide_Text_IO.Put
+                    (Plain.Non_Terminal
+                       (Plain.Production
+                          (Prod.Production_Index (Payload))
+                         .Parent).Name.To_Wide_Wide_String);
+                  Ada.Wide_Wide_Text_IO.Put (".");
+                  Ada.Wide_Wide_Text_IO.Put
+                    (Plain.Production
+                       (Prod.Production_Index (Payload))
+                         .Name.To_Wide_Wide_String);
+               end;
+            end if;
+
+            Ada.Wide_Wide_Text_IO.Put ("(");
+            for K in 1 .. Node.Last_Child (Payload) loop
+               Print (Comp,
+                      Comp.Fabric.To_Element (Node.Child (Payload, K)),
+                      Node.Child (Payload, K));
+            end loop;
+            Ada.Wide_Wide_Text_IO.Put (")");
+         end;
+      else
+         Ada.Wide_Wide_Text_IO.Put ("???");
+      end if;
+   end Print;
 
    ---------------
    -- Read_File --
@@ -48,6 +126,8 @@ procedure Lexer_Test is
    Text    : constant League.Strings.Universal_String := Read_File ("aaa");
    Comp    : constant Gela.Mutables.Mutable_Compilation_Access :=
      Gela.Mutables.Compilations.Create (Name, Text);
+
+   use type Gela.Types.Payload;
 begin
    Gela.Lexical.Handler.Initialize;
    Comp.Start;
@@ -55,4 +135,11 @@ begin
    Ada.Wide_Wide_Text_IO.New_Line;
    Ada.Wide_Wide_Text_IO.Put_Line
      (Gela.Lexical.Line_Count'Wide_Wide_Image (Comp.Last_Line));
+
+   if Comp.Root.Payload /= 0 then
+      Print
+        (Comp,
+         Comp.Fabric.To_Element (Comp.Root.Payload),
+         Comp.Root.Payload);
+   end if;
 end Lexer_Test;

@@ -139,7 +139,7 @@ package body Gela.Stores.Tokens is
    is
       Item  : constant Index := Index (Payload);
       Value : constant Element :=
-        Self.Compilation.Store.Get (Item + Offset.Last);
+        Self.Compilation.Store.Get (Item + Offset.Value);
    begin
       return Gela.Lexical.Tokens.Token'Val (Value);
    end Value;

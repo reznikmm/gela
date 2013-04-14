@@ -1,3 +1,11 @@
+------------------------------------------------------------------------------
+--                        G E L A   G R A M M A R S                         --
+--          Library for dealing with grammars for Gela project,             --
+--                        a portable Ada compiler                           --
+--                        http://gela.ada-ru.org/                           --
+--                     - - - - - - - - - - - - - - -                        --
+--              Read copyright and license in gela.ads file                 --
+------------------------------------------------------------------------------
 
 with Ada.Command_Line;
 with Ada.Text_IO;
@@ -9,56 +17,15 @@ with Gela.Grammars;
 with Gela.Grammars.Reader;
 with Gela.Grammars_Convertors;
 
+with AG_Tools.Writers; use AG_Tools.Writers;
+--  with Gela.Grammars_Debug;
+
 procedure AG_Driver is
 
    use type Gela.Grammars.Production_Index;
    use type Gela.Grammars.Part_Count;
    use type Gela.Grammars.Non_Terminal_Count;
    use type League.Strings.Universal_String;
-
-   package Writers is
-
-      type Writer is tagged record
-         Text : League.Strings.Universal_String;
-      end record;
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : Wide_Wide_String := "");
-
-      procedure N
-        (Self : in out Writer;
-         Text : Wide_Wide_String);
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : League.Strings.Universal_String);
-
-      procedure N
-        (Self : in out Writer;
-         Text : League.Strings.Universal_String);
-
-      procedure P
-        (Self : in out Writer;
-         Text : Wide_Wide_String := "";
-         Copy : in out Writer'Class);
-
-      procedure N
-        (Self : in out Writer;
-         Text : Wide_Wide_String;
-         Copy : in out Writer'Class);
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : League.Strings.Universal_String;
-         Copy : in out Writer'Class);
-
-      procedure N
-        (Self : in out Writer;
-         Text : League.Strings.Universal_String;
-         Copy : in out Writer'Class);
-
-   end Writers;
 
    function To_Ada
      (Text : League.Strings.Universal_String)
@@ -69,8 +36,6 @@ procedure AG_Driver is
       return League.Strings.Universal_String;
 
    function Is_Ambiguous (NT : Gela.Grammars.Non_Terminal) return Boolean;
-
-   function Image (X : Integer) return Wide_Wide_String;
 
    function Count_Ambiguous (G : Gela.Grammars.Grammar) return Natural;
 
@@ -84,11 +49,11 @@ procedure AG_Driver is
 
    procedure Write_Parts
      (Prod     : Gela.Grammars.Production;
-      Nodes_NT : in out Writers.Writer);
+      Nodes_NT : in out Writer);
 
    procedure Write_Nodes_NT
      (NT       : Gela.Grammars.Non_Terminal;
-      Nodes_NT : in out Writers.Writer);
+      Nodes_NT : in out Writer);
    --  Write Gela.Nodes.<Non_Terminal>s package specification
 
    function Macro_Reference
@@ -97,6 +62,7 @@ procedure AG_Driver is
 
    procedure Generate_Nodes;
    procedure Generate_Fabric;
+   procedure Generate_Conv;
    procedure Generate_Nodes_NT (NT : Gela.Grammars.Non_Terminal);
    procedure Generate_Stores_Prod
      (NT   : Gela.Grammars.Non_Terminal;
@@ -119,77 +85,6 @@ procedure AG_Driver is
       return Result;
    end Count_Ambiguous;
 
-   package body Writers is
-
-      New_Line : constant Wide_Wide_Character := Wide_Wide_Character'Val (10);
-
-      procedure N (Self : in out Writer; Text : Wide_Wide_String) is
-      begin
-         Self.Text.Append (Text);
-      end N;
-
-      procedure N
-        (Self : in out Writer;
-         Text : League.Strings.Universal_String) is
-      begin
-         Self.N (Text.To_Wide_Wide_String);
-      end N;
-
-      procedure N
-        (Self : in out Writer;
-         Text : Wide_Wide_String;
-         Copy : in out Writer'Class) is
-      begin
-         Self.N (Text);
-         Copy.N (Text);
-      end N;
-
-      procedure N
-        (Self : in out Writer;
-         Text : League.Strings.Universal_String;
-         Copy : in out Writer'Class) is
-      begin
-         Self.N (Text);
-         Copy.N (Text);
-      end N;
-
-      procedure P
-        (Self : in out Writer;
-         Text : Wide_Wide_String := "";
-         Copy : in out Writer'Class) is
-      begin
-         Self.P (Text);
-         Copy.P (Text);
-      end P;
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : League.Strings.Universal_String;
-         Copy : in out Writer'Class) is
-      begin
-         Self.P (Text);
-         Copy.P (Text);
-      end P;
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : League.Strings.Universal_String) is
-      begin
-         Self.P (Text.To_Wide_Wide_String);
-      end P;
-
-      procedure P
-        (Self   : in out Writer;
-         Text   : Wide_Wide_String := "") is
-      begin
-         Self.Text.Append (Text);
-         Self.Text.Append (New_Line);
-      end P;
-
-   end Writers;
-
-   use Writers;
-
    Name  : constant String := Ada.Command_Line.Argument (1);
    G     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (Name);
    Plain : constant Gela.Grammars.Grammar :=
@@ -203,6 +98,57 @@ procedure AG_Driver is
 
    Offset      : Natural;
 
+   -------------------
+   -- Generate_Conv --
+   -------------------
+
+   procedure Generate_Conv is
+      Conv_With    : Writer;
+      Conv_Spec    : Writer;
+   begin
+      Conv_With.P ("with Gela.Nodes.Tokens;");
+      Conv_With.P ("pragma Unreferenced (Gela.Nodes.Tokens);");
+      Conv_Spec.P ("package Gela.Nodes.Convertions is");
+      Conv_Spec.P;
+
+      for NT of Plain.Non_Terminal loop
+         Conv_With.N ("with Gela.Nodes.");
+         Conv_With.N (Plural (NT.Name));
+         Conv_With.P (";");
+         Conv_With.N ("pragma Unreferenced (Gela.Nodes.");
+         Conv_With.N (Plural (NT.Name));
+         Conv_With.P (");");
+
+         Conv_Spec.P ("   function ""+""");
+         Conv_Spec.N ("     (X : Gela.Nodes.");
+         Conv_Spec.N (To_Ada (NT.Name));
+         Conv_Spec.P (")");
+         Conv_Spec.P ("      return Gela.Nodes.Element is" &
+                        " (X.Object, X.Payload);");
+         Conv_Spec.P;
+         Conv_Spec.P ("   function ""-""");
+         Conv_Spec.P ("     (X : Gela.Nodes.Element)");
+         Conv_Spec.N ("      return Gela.Nodes.");
+         Conv_Spec.N (To_Ada (NT.Name));
+         Conv_Spec.P (" is (X.Object, X.Payload);");
+         Conv_Spec.P;
+      end loop;
+
+      Conv_Spec.P ("   function ""+""");
+      Conv_Spec.P ("     (X : Gela.Nodes.Token)");
+      Conv_Spec.P ("      return Gela.Nodes.Element is" &
+                     " (X.Object, X.Payload);");
+      Conv_Spec.P;
+      Conv_Spec.P ("   function ""-""");
+      Conv_Spec.P ("     (X : Gela.Nodes.Element)");
+      Conv_Spec.N ("      return Gela.Nodes.Token");
+      Conv_Spec.P (" is (X.Object, X.Payload);");
+      Conv_Spec.P;
+      Conv_Spec.P ("end Gela.Nodes.Convertions;");
+      Ada.Text_IO.Put_Line (Conv_With.Text.To_UTF_8_String);
+      Ada.Text_IO.Put (Conv_Spec.Text.To_UTF_8_String);
+   end Generate_Conv;
+
    ---------------------
    -- Generate_Fabric --
    ---------------------
@@ -213,11 +159,14 @@ procedure AG_Driver is
 
       Fab_With    : Writer;
       Fab_Body    : Writer;
+      Fab_Init    : Writer;
       Fabrics     : Writer;
    begin
       Fabrics.P ("with Gela.Mutables;");
       Fabrics.P ("with Gela.Nodes;");
       Fabrics.P ("with Gela.Stores.Tokens;");
+      Fabrics.P ("with Gela.Grammars;");
+      Fabrics.P ("with Gela.Types;");
       Fabrics.P;
       Fabrics.P ("package Gela.Stores.Base_Fabrics is");
       Fabrics.P;
@@ -226,33 +175,34 @@ procedure AG_Driver is
       Fabrics.P;
       Fabrics.P ("   type Base_Fabric (Compilation : " &
                    "Gela.Mutables.Mutable_Compilation_Access) is");
-      Fabrics.P ("   tagged limited record");
+      Fabrics.P ("   abstract tagged limited record");
       Fabrics.P ("      Token : aliased Tokens.Token (Compilation);");
 
       Fab_Body.P ("package body Gela.Stores.Base_Fabrics is");
+      Fab_Body.P ("   pragma Style_Checks (""-o"");");
       Fab_Body.P;
-      Fab_Body.P ("   procedure Initialize (Self : access Base_Fabric) is");
-      Fab_Body.P ("   begin");
-      Fab_Body.P ("      Self.Map :=");
-      Fab_Body.N ("        (0 => Self.Token'Access");
+      Fab_Init.P ("   procedure Initialize (Self : access Base_Fabric) is");
+      Fab_Init.P ("   begin");
+      Fab_Init.P ("      Self.Map :=");
+      Fab_Init.N ("        (0 => Self.Token'Access");
 
       for NT of Plain.Non_Terminal loop
          if Is_Ambiguous (NT) then
             Fabrics.N ("      S");
-            Fabrics.N (Image (Positive (NT.Index)));
+            Fabrics.N (Positive (NT.Index));
             Fabrics.N (" : aliased ");
             Fabrics.N (Plural (NT.Name));
             Fabrics.P (".Switch (Compilation);");
 
             Amb_Index := Amb_Index + 1;
 
-            Fab_Body.P (",");
-            Fab_Body.N ("         ");
+            Fab_Init.P (",");
+            Fab_Init.N ("         ");
 
-            Fab_Body.N (Image (Amb_Index));
-            Fab_Body.N (" => Self.S");
-            Fab_Body.N (Image (Positive (NT.Index)));
-            Fab_Body.N ("'Access");
+            Fab_Init.N (Amb_Index);
+            Fab_Init.N (" => Self.S");
+            Fab_Init.N (Positive (NT.Index));
+            Fab_Init.N ("'Access");
 
          end if;
 
@@ -261,17 +211,19 @@ procedure AG_Driver is
                M : constant Gela.Grammars.Non_Terminal_Count :=
                  Macro_Reference (Prod);
             begin
-               if Is_Macro (NT.Index) then
+               if M /= 0 then
+                  null;
+               elsif Is_Macro (NT.Index) then
                   Fab_With.N ("with Gela.Stores.");
                   Fab_With.N (Plural (NT.Name));
                   Fab_With.P (";");
 
                   Fabrics.N ("      P");
-                  Fabrics.N (Image (Positive (Prod.Index)));
-                  Fabrics.N (" : aliased Gela.Stores.");
+                  Fabrics.N (Positive (Prod.Index));
+                  Fabrics.N (" : aliased ");
                   Fabrics.N (Plural (NT.Name));
                   Fabrics.P (".Object (Compilation);");
-               elsif M = 0 then
+               else  --   M = 0
                   Fab_With.N ("with Gela.Stores.");
                   Fab_With.N (To_Ada (NT.Name));
                   Fab_With.N ("_");
@@ -279,7 +231,7 @@ procedure AG_Driver is
                   Fab_With.P (";");
 
                   Fabrics.N ("      P");
-                  Fabrics.N (Image (Positive (Prod.Index)));
+                  Fabrics.N (Positive (Prod.Index));
                   Fabrics.N (" : aliased ");
                   Fabrics.N (To_Ada (NT.Name));
                   Fabrics.N ("_");
@@ -287,37 +239,107 @@ procedure AG_Driver is
                   Fabrics.P (".Object (Compilation);");
                end if;
 
-               Fab_Body.P (",");
-               Fab_Body.N ("         ");
+               Fab_Init.P (",");
+               Fab_Init.N ("         ");
 
-               Fab_Body.N (Image (Positive (Prod.Index)));
-               Fab_Body.N (" => Self.P");
+               Fab_Init.N (Positive (Prod.Index));
 
                if M = 0 then
-                  Fab_Body.N (Image (Positive (Prod.Index)));
+                  Fab_Init.N (" => Self.P");
+                  Fab_Init.N (Positive (Prod.Index));
+                  Fab_Init.N ("'Access");
                else
-                  declare
-                     NT : Gela.Grammars.Non_Terminal renames
-                       Plain.Non_Terminal (M);
-                  begin
-                     Fab_Body.N (Image (Positive (NT.First)));
-                  end;
+                  Fab_Init.N (" => null");
                end if;
-
-               Fab_Body.N ("'Access");
             end;
          end loop;
       end loop;
 
       Fabrics.N ("      Map : Node_Array (0 .. ");
-      Fabrics.N (Image (Positive (Plain.Last_Production) +
-                   Positive (Plain.Last_Non_Terminal)));
+      Fabrics.N (Positive (Plain.Last_Production) +
+                   Positive (Plain.Last_Non_Terminal));
       Fabrics.P (");");
       Fabrics.P ("   end record;");
       Fabrics.P;
+      Fabrics.P ("   function Create_Production");
+      Fabrics.P ("     (Self       : access Base_Fabric;");
+      Fabrics.P ("      Production : Gela.Grammars.Production_Index)");
+      Fabrics.P ("      return Gela.Types.Payload is abstract;");
+      Fabrics.P;
+
+      for NT of Plain.Non_Terminal loop
+         for Prod of Plain.Production (NT.First .. NT.Last) loop
+            declare
+               Name : League.Strings.Universal_String;
+               M : constant Gela.Grammars.Non_Terminal_Count :=
+                 Macro_Reference (Prod);
+            begin
+               if M = 0 then
+                  Fabrics.N ("   function ", Fab_Body);
+                  if Is_Macro (NT.Index) then
+                     Name := To_Ada (NT.Name);
+                  else
+                     Name := To_Ada (Prod.Name);
+                  end if;
+
+                  Fabrics.P (Name, Fab_Body);
+                  Fabrics.N
+                    ("     (Self : access Base_Fabric'Class", Fab_Body);
+
+                  for Part of Plain.Part (Prod.First .. Prod.Last) loop
+                     Fabrics.P (";", Fab_Body);
+                     Fabrics.N ("      ", Fab_Body);
+                     Fabrics.N (To_Ada (Part.Name), Fab_Body);
+                     Fabrics.N (" : Gela.Nodes.", Fab_Body);
+                     Fabrics.N (Return_Type (Part), Fab_Body);
+                  end loop;
+
+                  Fabrics.P (")", Fab_Body);
+                  Fabrics.N ("      return Gela.Nodes.", Fab_Body);
+                  Fabrics.N (To_Ada (NT.Name), Fab_Body);
+                  Fabrics.P (";");
+                  Fabrics.P ("", Fab_Body);
+
+                  Fab_Body.P ("   is");
+                  Fab_Body.N ("      Result : constant Gela.Nodes.");
+                  Fab_Body.N (To_Ada (NT.Name));
+                  Fab_Body.P (" :=");
+                  Fab_Body.N ("        (Payload => Self.Create_Production (");
+                  Fab_Body.N (Natural (Prod.Index));
+                  Fab_Body.P ("),");
+                  Fab_Body.N ("         Object  => Gela.Nodes.");
+                  Fab_Body.N (To_Ada (NT.Name));
+                  Fab_Body.P ("_Access'");
+                  Fab_Body.N ("           (Self.P");
+                  Fab_Body.N (Natural (Prod.Index));
+                  Fab_Body.P ("'Access));");
+                  Fab_Body.P ("   begin");
+
+                  Offset := Positive (Prod.First) - 1;
+
+                  for Part of Plain.Part (Prod.First .. Prod.Last) loop
+                     Fab_Body.N ("      Self.P");
+                     Fab_Body.N (Natural (Prod.Index));
+                     Fab_Body.P (".Set_Child");
+                     Fab_Body.N ("        (Result.Payload, ");
+                     Fab_Body.N (Positive (Part.Index) - Offset);
+                     Fab_Body.N (", ");
+                     Fab_Body.N (To_Ada (Part.Name));
+                     Fab_Body.P (".Payload);");
+                  end loop;
+
+                  Fab_Body.P ("      return Result;");
+                  Fab_Body.N ("   end ");
+                  Fab_Body.N (Name);
+                  Fab_Body.P (";");
+                  Fab_Body.P;
+               end if;
+            end;
+         end loop;
+      end loop;
 
       Fabrics.N ("   Last_Production : constant := ");
-      Fabrics.N (Image (Positive (Plain.Last_Production)));
+      Fabrics.N (Positive (Plain.Last_Production));
       Fabrics.P (";");
       Fabrics.P;
 
@@ -326,12 +348,13 @@ procedure AG_Driver is
       Fabrics.N ("end Gela.Stores.Base_Fabrics;");
 
       if Ambiguous_Count /= Positive (Plain.Last_Non_Terminal) then
-         Fab_Body.P (",");
-         Fab_Body.N ("         others => null");
+         Fab_Init.P (",");
+         Fab_Init.N ("         others => null");
       end if;
 
-      Fab_Body.P (");");
-      Fab_Body.P ("   end Initialize;");
+      Fab_Init.P (");");
+      Fab_Init.P ("   end Initialize;");
+      Fab_Body.N (Fab_Init.Text);
       Fab_Body.P;
       Fab_Body.N ("end Gela.Stores.Base_Fabrics;");
 
@@ -355,6 +378,11 @@ procedure AG_Driver is
       Nodes.P;
       Nodes.P ("   type Node is interface;");
       Nodes.P ("   type Node_Access is access all Node'Class;");
+      Nodes.P;
+      Nodes.P ("   type Element is record");
+      Nodes.P ("      Object  : access Node'Class;");
+      Nodes.P ("      Payload : Gela.Types.Payload;");
+      Nodes.P ("   end record;");
 
       for NT of Plain.Non_Terminal loop
          Nodes_With.N ("limited with Gela.Nodes.");
@@ -365,14 +393,14 @@ procedure AG_Driver is
          Nodes.N (To_Ada (NT.Name));
          Nodes.N ("_Access is");
 
-         if NT.Name.Length > 15 then
+         if NT.Name.Length > 11 then
             Nodes.P;
             Nodes.N ("    ");
          end if;
 
          Nodes.N (" access all Gela.Nodes.");
          Nodes.N (Plural (NT.Name));
-         Nodes.P (".Object;");
+         Nodes.P (".Object'Class;");
          Nodes.N ("   type ");
          Nodes.N (To_Ada (NT.Name));
          Nodes.P (" is record");
@@ -389,7 +417,7 @@ procedure AG_Driver is
             Nodes.N (To_Ada (NT.Name));
             Nodes.N ("_Switch_Access is access all Gela.Nodes.");
             Nodes.N (Plural (NT.Name));
-            Nodes.P (".Switch;");
+            Nodes.P (".Switch'Class;");
             Nodes.N ("   type ");
             Nodes.N (To_Ada (NT.Name));
             Nodes.P ("_Switch is record");
@@ -558,7 +586,7 @@ procedure AG_Driver is
       Switch_Body.P (" is");
       Switch_Body.P ("   begin");
       Switch_Body.N ("      return Size (Self, Payload) - ");
-      Switch_Body.N (Image (Reserved));
+      Switch_Body.N (Reserved);
       Switch_Body.P (";");
       Switch_Body.P ("   end Last_Child;");
 
@@ -673,7 +701,7 @@ procedure AG_Driver is
       Store_Body.P ("   begin");
       Store_Body.N ("      return ");
       Store_Body.N
-        (Image (Reserved + Natural (Prod.Last - Prod.First) + 1));
+        (Reserved + Natural (Prod.Last - Prod.First) + 1);
       Store_Body.P (";");
       Store_Body.N ("   end Size");
       Store_Each.P (";", Store_Body);
@@ -686,7 +714,7 @@ procedure AG_Driver is
       Store_Body.P (" is");
       Store_Body.P ("   begin");
       Store_Body.N ("      return ");
-      Store_Body.N (Image (Natural (Prod.Last - Prod.First) + 1));
+      Store_Body.N (Natural (Prod.Last - Prod.First) + 1);
       Store_Body.P (";");
       Store_Body.N ("   end Last_Child");
       Store_Each.P (";", Store_Body);
@@ -704,7 +732,7 @@ procedure AG_Driver is
          Store_Body.P ("   is");
          Store_Body.N ("      Id   : constant Gela.Types.Payload " &
                          ":= Self.Child (Payload, ");
-         Store_Body.N (Image (Positive (Part.Index) - Offset));
+         Store_Body.N (Positive (Part.Index) - Offset);
          Store_Body.P (");");
          Store_Body.P ("      Node : constant Gela.Nodes.Node_Access :=");
          Store_Body.P ("        Self.Compilation.Fabric.To_Node (Id);");
@@ -726,16 +754,6 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Store_Each.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Store_Body.Text.To_UTF_8_String);
    end Generate_Stores_Prod;
-
-   -----------
-   -- Image --
-   -----------
-
-   function Image (X : Integer) return Wide_Wide_String is
-      Img : constant Wide_Wide_String := Integer'Wide_Wide_Image (X);
-   begin
-      return Img (2 .. Img'Last);
-   end Image;
 
    ------------------
    -- Is_Ambiguous --
@@ -858,18 +876,14 @@ procedure AG_Driver is
    is
       Impl_Count : Natural := 0;
    begin
-      if Is_Macro (NT.Index) then
-         for J in Implement'Range (2) loop
-            if Implement (NT.Index, J) then
-               Nodes_NT.N ("with Gela.Nodes.");
-               Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
-               Nodes_NT.P (";");
-               Impl_Count := Impl_Count + 1;
-            end if;
-         end loop;
-
-         Nodes_NT.P;
-      end if;
+      for J in Implement'Range (2) loop
+         if Implement (NT.Index, J) then
+            Nodes_NT.N ("with Gela.Nodes.");
+            Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
+            Nodes_NT.P (";");
+            Impl_Count := Impl_Count + 1;
+         end if;
+      end loop;
 
       Nodes_NT.N ("package Gela.Nodes.");
       Nodes_NT.N (Plural (NT.Name));
@@ -948,9 +962,13 @@ procedure AG_Driver is
 --  --       Plain.Last_Production + 1;
 
 begin
+--   Gela.Grammars_Debug.Print_Conflicts (Plain);
+
    for NT of Plain.Non_Terminal loop
       if NT.First = NT.Last then
-         Is_Macro (NT.Index) := True;
+         if Macro_Reference (Plain.Production (NT.First)) = 0 then
+            Is_Macro (NT.Index) := True;
+         end if;
       end if;
    end loop;
 
@@ -968,7 +986,6 @@ begin
    end loop;
 
    Generate_Nodes;
-   Generate_Fabric;
 
    for NT of Plain.Non_Terminal loop
       Generate_Nodes_NT (NT);
@@ -982,4 +999,7 @@ begin
          Generate_Stores_Prod (NT, Prod);
       end loop;
    end loop;
+
+   Generate_Conv;
+   Generate_Fabric;
 end AG_Driver;

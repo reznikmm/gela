@@ -20,7 +20,7 @@ package body Gela.Stores.Fabrics is
    -- Create_Production --
    -----------------------
 
-   function Create_Production
+   overriding function Create_Production
      (Self       : access Fabric;
       Production : Gela.Grammars.Production_Index)
       return Gela.Types.Payload
@@ -96,9 +96,18 @@ package body Gela.Stores.Fabrics is
      (Self    : access Fabric;
       Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access
    is
-      Item : constant Element := Self.Compilation.Store.Get (Index (Payload));
+      use type Gela.Types.Payload;
    begin
-      return Self.Map (Natural (Item));
+      if Payload = 0 then
+         return null;
+      else
+         declare
+            Item : constant Element :=
+              Self.Compilation.Store.Get (Index (Payload));
+         begin
+            return Self.Map (Natural (Item));
+         end;
+      end if;
    end To_Node;
 
 end Gela.Stores.Fabrics;

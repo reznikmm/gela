@@ -1,0 +1,332 @@
+Token less_token;
+Token equal_token;
+Token greater_token;
+Token hyphen_token;
+Token slash_token;
+Token star_token;
+Token ampersand_token;
+Token plus_token;
+Token less_or_equal_token;
+Token greater_or_equal_token;
+Token inequality_token;
+Token double_star_token;
+Token and_token;
+Token or_token;
+Token xor_token;
+Token mod_token;
+Token rem_token;
+Token abs_token;
+Token not_token;
+Token right_label_token;
+Token box_token;
+Token left_label_token;
+Token assignment_token;
+Token arrow_token;
+Token double_dot_token;
+Token apostrophe_token;
+Token left_parenthesis_token;
+Token right_parenthesis_token;
+Token comma_token;
+Token dot_token;
+Token colon_token;
+Token semicolon_token;
+Token vertical_line_token;
+
+Token abort_token;
+Token abstract_token;
+Token accept_token;
+Token access_token;
+Token aliased_token;
+Token all_token;
+Token array_token;
+Token at_token;
+Token begin_token;
+Token body_token;
+Token case_token;
+Token constant_token;
+Token declare_token;
+Token delay_token;
+Token delta_token;
+Token digits_token;
+Token do_token;
+Token else_token;
+Token elsif_token;
+Token end_token;
+Token entry_token;
+Token exception_token;
+Token exit_token;
+Token ffor_token;
+Token function_token;
+Token generic_token;
+Token goto_token;
+Token if_token;
+Token in_token;
+Token interface_token;
+Token is_token;
+Token limited_token;
+Token loop_token;
+Token new_token;
+Token null_token;
+Token of_token;
+Token others_token;
+Token out_token;
+Token overriding_token;
+Token package_token;
+Token pragma_token;
+Token private_token;
+Token procedure_token;
+Token protected_token;
+Token raise_token;
+Token range_token;
+Token record_token;
+Token renames_token;
+Token requeue_token;
+Token return_token;
+Token reverse_token;
+Token select_token;
+Token separate_token;
+Token some_token;
+Token subtype_token;
+Token synchronized_token;
+Token tagged_token;
+Token task_token;
+Token terminate_token;
+Token then_token;
+Token type_token;
+Token until_token;
+Token use_token;
+Token when_token;
+Token while_token;
+Token with_token;
+
+Token comment_token;
+Token identifier_token;
+Token numeric_literal_token;
+Token character_literal_token;
+Token string_literal_token;
+
+_compilation ::= name;
+
+record_aggregate ::=
+  left_parenthesis_token record_component_association right_parenthesis_token;
+
+record_component_association ::=
+(expression)
+  [discrete_choice_list arrow_token] expression |
+(box)
+  discrete_choice_list arrow_token box_token
+;
+
+discrete_choice_list ::= identifier;
+
+name ::=
+  direct_name |
+  explicit_dereference |
+  selected_component |
+  attribute_reference |
+  function_call;
+
+direct_name ::= identifier | operator_symbol;
+
+identifier ::= identifier_token;
+
+explicit_dereference ::= prefix dot_token all_token;
+
+expression ::= name;
+
+selected_component ::= prefix dot_token selector_name;
+
+prefix ::= name;
+
+selector_name ::=
+  identifier |
+  character_literal_token |
+  operator_symbol;
+
+attribute_reference ::=
+  prefix apostrophe_token identifier;
+
+function_call ::= prefix record_aggregate;
+
+operator_symbol ::= string_literal_token;
+
+Synthesized attributes
+  _compilation,
+  attribute_reference,
+  direct_name,
+  discrete_choice_list,
+  identifier,
+  explicit_dereference,
+  expression,
+  function_call,
+  name,
+  operator_symbol,
+  prefix,
+  record_aggregate,
+  record_component_association,
+  selected_component,
+  selector_name
+ : Integer : ast;
+
+Synthesized attributes
+  abort_token,
+  abs_token,
+  abstract_token,
+  accept_token,
+  access_token,
+  aliased_token,
+  all_token,
+  ampersand_token,
+  and_token,
+  apostrophe_token,
+  array_token,
+  arrow_token,
+  assignment_token,
+  at_token,
+  begin_token,
+  body_token,
+  box_token,
+  case_token,
+  character_literal_token,
+  colon_token,
+  comma_token,
+  comment_token,
+  constant_token,
+  declare_token,
+  delay_token,
+  delta_token,
+  digits_token,
+  do_token,
+  dot_token,
+  double_dot_token,
+  double_star_token,
+  else_token,
+  elsif_token,
+  end_token,
+  entry_token,
+  equal_token,
+  exception_token,
+  exit_token,
+  ffor_token,
+  function_token,
+  generic_token,
+  goto_token,
+  greater_or_equal_token,
+  greater_token,
+  hyphen_token,
+  identifier_token,
+  if_token,
+  in_token,
+  inequality_token,
+  interface_token,
+  is_token,
+  left_label_token,
+  left_parenthesis_token,
+  less_or_equal_token,
+  less_token,
+  limited_token,
+  loop_token,
+  mod_token,
+  new_token,
+  not_token,
+  null_token,
+  numeric_literal_token,
+  of_token,
+  or_token,
+  others_token,
+  out_token,
+  overriding_token,
+  package_token,
+  plus_token,
+  pragma_token,
+  private_token,
+  procedure_token,
+  protected_token,
+  raise_token,
+  range_token,
+  record_token,
+  rem_token,
+  renames_token,
+  requeue_token,
+  return_token,
+  reverse_token,
+  right_label_token,
+  right_parenthesis_token,
+  select_token,
+  semicolon_token,
+  separate_token,
+  slash_token,
+  some_token,
+  star_token,
+  string_literal_token,
+  subtype_token,
+  synchronized_token,
+  tagged_token,
+  task_token,
+  terminate_token,
+  then_token,
+  type_token,
+  until_token,
+  use_token,
+  vertical_line_token,
+  when_token,
+  while_token,
+  with_token,
+  xor_token
+ : Integer : ast;
+
+Rules for identifier.identifier_token :
+(.         ${identifier.ast} := +Self.Compilation.Fabric.Identifier
+           (-${identifier_token.ast});
+.)
+
+Rules for operator_symbol.string_literal_token :
+(.         ${operator_symbol.ast} := +Self.Compilation.Fabric.Operator_Symbol
+           (-${string_literal_token.ast});
+.)
+
+Rules for explicit_dereference. :
+(.         ${explicit_dereference.ast} := +Self.Compilation.Fabric.Explicit_Dereference
+           (-${prefix.ast}, -${dot_token.ast}, -${all_token.ast});
+.)
+
+Rules for selector_name.character_literal_token :
+(.         ${selector_name.ast} := +Self.Compilation.Fabric.Enumeration_Literal
+           (-${character_literal_token.ast});
+.)
+
+Rules for selected_component. :
+(.         ${selected_component.ast} := +Self.Compilation.Fabric.Selected_Component
+           (-${prefix.ast}, -${dot_token.ast}, -${selector_name.ast});
+.)
+
+Rules for attribute_reference. :
+(.         ${attribute_reference.ast} := +Self.Compilation.Fabric.Attribute_Reference
+           (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast});
+.)
+
+Rules for function_call. :
+(.         ${function_call.ast} := +Self.Compilation.Fabric.Function_Call
+           (-${prefix.ast}, -${record_aggregate.ast});
+.)
+
+Rules for record_component_association.box :
+(.
+         declare
+              Box : constant Gela.Nodes.Element :=
+                +Self.Compilation.Fabric.Box (-${box_token.ast});
+         begin
+           ${record_component_association.ast} := +Self.Compilation.Fabric.Association
+             (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
+         end;
+.)
+
+Rules for record_component_association.expression :
+(.          ${record_component_association.ast} := +Self.Compilation.Fabric.Association
+             (-${discrete_choice_list.ast:(null, 0)}, -${arrow_token.ast:(null, 0)}, -${expression.ast});
+.)
+
+Rules for record_aggregate. :
+(.           ${record_aggregate.ast} := ${record_component_association.ast};
+.)
+
