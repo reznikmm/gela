@@ -40,4 +40,7 @@ package Gela.Stores.Fabrics is
       NT   : Gela.Grammars.Non_Terminal_Index)
       return Gela.Types.Payload;
 
+   not overriding function Create_List
+     (Self : access Fabric) return Gela.Nodes.List;
+
 end Gela.Stores.Fabrics;

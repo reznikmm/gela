@@ -28,12 +28,12 @@ package Gela.Stores.Nodes is
       Payload : Gela.Types.Payload) return Natural is abstract;
 
    function Child
-     (Self    : access Node'Class;
+     (Self    : access Node;
       Payload : Gela.Types.Payload;
       Index   : Positive) return Gela.Types.Payload;
 
    procedure Set_Child
-     (Self    : access Node'Class;
+     (Self    : access Node;
       Payload : Gela.Types.Payload;
       Index   : Positive;
       Value   : Gela.Types.Payload);

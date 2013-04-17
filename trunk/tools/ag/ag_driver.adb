@@ -108,6 +108,8 @@ procedure AG_Driver is
    begin
       Conv_With.P ("with Gela.Nodes.Tokens;");
       Conv_With.P ("pragma Unreferenced (Gela.Nodes.Tokens);");
+      Conv_With.P ("with Gela.Nodes.Lists;");
+      Conv_With.P ("pragma Unreferenced (Gela.Nodes.Lists);");
       Conv_Spec.P ("package Gela.Nodes.Convertions is");
       Conv_Spec.P;
 
@@ -144,6 +146,16 @@ procedure AG_Driver is
       Conv_Spec.N ("      return Gela.Nodes.Token");
       Conv_Spec.P (" is (X.Object, X.Payload);");
       Conv_Spec.P;
+      Conv_Spec.P ("   function ""+""");
+      Conv_Spec.P ("     (X : Gela.Nodes.List)");
+      Conv_Spec.P ("      return Gela.Nodes.Element is" &
+                     " (X.Object, X.Payload);");
+      Conv_Spec.P;
+      Conv_Spec.P ("   function ""-""");
+      Conv_Spec.P ("     (X : Gela.Nodes.Element)");
+      Conv_Spec.N ("      return Gela.Nodes.List");
+      Conv_Spec.P (" is (X.Object, X.Payload);");
+      Conv_Spec.P;
       Conv_Spec.P ("end Gela.Nodes.Convertions;");
       Ada.Text_IO.Put_Line (Conv_With.Text.To_UTF_8_String);
       Ada.Text_IO.Put (Conv_Spec.Text.To_UTF_8_String);
@@ -165,6 +177,7 @@ procedure AG_Driver is
       Fabrics.P ("with Gela.Mutables;");
       Fabrics.P ("with Gela.Nodes;");
       Fabrics.P ("with Gela.Stores.Tokens;");
+      Fabrics.P ("with Gela.Stores.Lists;");
       Fabrics.P ("with Gela.Grammars;");
       Fabrics.P ("with Gela.Types;");
       Fabrics.P;
@@ -177,6 +190,7 @@ procedure AG_Driver is
                    "Gela.Mutables.Mutable_Compilation_Access) is");
       Fabrics.P ("   abstract tagged limited record");
       Fabrics.P ("      Token : aliased Tokens.Token (Compilation);");
+      Fabrics.P ("      List  : aliased Lists.List (Compilation);");
 
       Fab_Body.P ("package body Gela.Stores.Base_Fabrics is");
       Fab_Body.P ("   pragma Style_Checks (""-o"");");
@@ -184,7 +198,8 @@ procedure AG_Driver is
       Fab_Init.P ("   procedure Initialize (Self : access Base_Fabric) is");
       Fab_Init.P ("   begin");
       Fab_Init.P ("      Self.Map :=");
-      Fab_Init.N ("        (0 => Self.Token'Access");
+      Fab_Init.P ("        (0 => Self.Token'Access,");
+      Fab_Init.N ("         List_Tag => Self.List'Access");
 
       for NT of Plain.Non_Terminal loop
          if Is_Ambiguous (NT) then
@@ -257,7 +272,7 @@ procedure AG_Driver is
 
       Fabrics.N ("      Map : Node_Array (0 .. ");
       Fabrics.N (Positive (Plain.Last_Production) +
-                   Positive (Plain.Last_Non_Terminal));
+                   Positive (Plain.Last_Non_Terminal) + 1);
       Fabrics.P (");");
       Fabrics.P ("   end record;");
       Fabrics.P;
@@ -342,6 +357,11 @@ procedure AG_Driver is
       Fabrics.N (Positive (Plain.Last_Production));
       Fabrics.P (";");
       Fabrics.P;
+      Fabrics.N ("   List_Tag : constant := ");
+      Fabrics.N (Positive (Plain.Last_Production) +
+                   Positive (Plain.Last_Non_Terminal) + 1);
+      Fabrics.P (";");
+      Fabrics.P;
 
       Fabrics.P ("   procedure Initialize (Self : access Base_Fabric);");
       Fabrics.P;
@@ -372,6 +392,7 @@ procedure AG_Driver is
       Nodes       : Writer;
    begin
       Nodes_With.P ("with Gela.Types;");
+      Nodes_With.P ("limited with Gela.Nodes.Lists;");
       Nodes_With.P ("limited with Gela.Nodes.Tokens;");
 
       Nodes.P ("package Gela.Nodes is");
@@ -436,6 +457,13 @@ procedure AG_Driver is
                  " Gela.Nodes.Tokens.Object'Class;");
       Nodes.P ("   type Token is record");
       Nodes.P ("      Object  : Token_Access;");
+      Nodes.P ("      Payload : Gela.Types.Payload;");
+      Nodes.P ("   end record;");
+      Nodes.P;
+      Nodes.P ("   type List_Access is access all" &
+                 " Gela.Nodes.Lists.Object'Class;");
+      Nodes.P ("   type List is record");
+      Nodes.P ("      Object  : List_Access;");
       Nodes.P ("      Payload : Gela.Types.Payload;");
       Nodes.P ("   end record;");
       Nodes.P;

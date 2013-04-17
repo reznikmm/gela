@@ -125,7 +125,7 @@ package body Gela.Stores.Tokens is
       pragma Unreferenced (Self);
       pragma Unreferenced (Payload);
    begin
-      return 10;
+      return Offset.Separator + 1;
    end Size;
 
    -----------

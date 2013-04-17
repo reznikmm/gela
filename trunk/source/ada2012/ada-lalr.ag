@@ -108,7 +108,10 @@ Token string_literal_token;
 _compilation ::= name;
 
 record_aggregate ::=
-  left_parenthesis_token record_component_association right_parenthesis_token;
+  left_parenthesis_token
+  record_component_association
+  record_component_association <x>
+  right_parenthesis_token;
 
 record_component_association ::=
 (expression)
@@ -327,6 +330,12 @@ Rules for record_component_association.expression :
 .)
 
 Rules for record_aggregate. :
-(.           ${record_aggregate.ast} := ${record_component_association.ast};
+(.           declare
+              List : Gela.Nodes.List := Self.Compilation.Fabric.Create_List;
+           begin
+              List.Object.Append (List.Payload, ${record_component_association.ast});
+              List.Object.Append (List.Payload, ${x.ast});
+              ${record_aggregate.ast} := +List;
+           end;
 .)
 

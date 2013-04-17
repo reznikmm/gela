@@ -45,21 +45,21 @@ package body Gela.Mutables.Compilations is
       NFKC  : constant League.Strings.Universal_String := Source.To_NFKC;
    begin
       return Result : constant Mutable_Compilation_Access :=
-        new Compilation'
-        (Name        => Name,
-         Object_Name => Name & ".o",
-         Options     => League.Strings.Empty_Universal_String,
-         Text        => NFKC,
-         Updated     => League.Calendars.Clock,
-         CPU_Spent   => 0.0,
-         Root        => <>,
-         Store       => <>,
-         Fabric      => <>,
-         Errors      => <>,
-         Lexer       => <>,
-         Parser      => <>,
-         Symbols     => <>)
+        new Compilation
       do
+         Result.Name := Name;
+         Result.Object_Name := Name & ".o";
+         Result.Text := NFKC;
+         Result.Updated := League.Calendars.Clock;
+         Result.CPU_Spent := 0.0;
+--           Options     => League.Strings.Empty_Universal_String,
+--           Root        => <>,
+--           Store       => <>,
+--           Fabric      => <>,
+--           Errors      => <>,
+--           Lexer       => <>,
+--           Parser      => <>,
+--           Symbols     => <>)
          if Source /= NFKC then
             Result.Errors.Not_In_NFKC_Warning
               (Gela.Types.Compilation_Access (Result));

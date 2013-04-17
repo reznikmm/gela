@@ -16,6 +16,24 @@ package body Gela.Stores.Fabrics is
 
    Token_Tag : constant := 0;
 
+   -----------------
+   -- Create_List --
+   -----------------
+
+   not overriding function Create_List
+     (Self : access Fabric) return Gela.Nodes.List
+   is
+      Item : Index;
+      Size : constant Positive := Self.List.Size (0);
+   begin
+      Item := Self.Compilation.Store.Allocate (Size);
+      Self.Compilation.Store.Set (Item, Base_Fabrics.List_Tag);  --  Tag
+      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
+
+      return (Object  => Self.List'Access,
+              Payload => Gela.Types.Payload (Item));
+   end Create_List;
+
    -----------------------
    -- Create_Production --
    -----------------------

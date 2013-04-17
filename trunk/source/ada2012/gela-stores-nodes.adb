@@ -14,19 +14,22 @@ package body Gela.Stores.Nodes is
    Ref : constant Boolean := Gela.Mutables.Compilations.Dummy_Reference;
    pragma Unreferenced (Ref);
 
+   --  Tag_Offset := 0;
    Count_Offset : constant := 1;
+   Next_Offset : constant := 2;
+   --  First_child_Offset := 3;
 
    -----------
    -- Child --
    -----------
 
    function Child
-     (Self    : access Node'Class;
+     (Self    : access Node;
       Payload : Gela.Types.Payload;
       Index   : Positive) return Gela.Types.Payload
    is
       Child_Index : constant Stores.Index :=
-        Stores.Index (Payload) + Count_Offset + Stores.Index (Index);
+        Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
       Child : constant Element := Self.Compilation.Store.Get (Child_Index);
    begin
       return Gela.Types.Payload (Child);
@@ -85,13 +88,13 @@ package body Gela.Stores.Nodes is
    ---------------
 
    procedure Set_Child
-     (Self    : access Node'Class;
+     (Self    : access Node;
       Payload : Gela.Types.Payload;
       Index   : Positive;
       Value   : Gela.Types.Payload)
    is
       Child_Index : constant Stores.Index :=
-        Stores.Index (Payload) + Count_Offset + Stores.Index (Index);
+        Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
       Child : Element := Self.Compilation.Store.Get (Child_Index);
    begin
       if Child /= 0 then
