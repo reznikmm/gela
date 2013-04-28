@@ -28,7 +28,7 @@ expression ::= name;
 
 expression_or_box ::= expression | box;
 
-function_call ::= prefix association <Function_Call_Parameters>;
+function_call ::= prefix record_aggregate <Function_Call_Parameters>;
 
 identifier ::= token <identifier>;
 
@@ -41,7 +41,7 @@ others_choice ::= token <others_token>;
 prefix ::= name;
 
 record_aggregate ::=
-  association <Record_Component_Associations>;
+ {association} <Record_Component_Associations>;
 
 selected_component ::= prefix token <dot_token> selector_name <Selector>;
 

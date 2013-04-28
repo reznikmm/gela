@@ -13,6 +13,7 @@ with Gela.Lexical.Tokens;
 with Gela.Stores.Nodes;
 
 package Gela.Stores.Tokens is
+   pragma Preelaborate;
 
    type Token is
      new Gela.Stores.Nodes.Node and Gela.Nodes.Tokens.Object

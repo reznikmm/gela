@@ -11,6 +11,7 @@ with Gela.Lexical.Tokens;
 with Gela.Types;
 
 package Gela.Tokens is
+   pragma Preelaborate;
 
    type Token is interface;
 

@@ -12,6 +12,7 @@ with League.Strings;
 with Gela.Lexical.Tokens;
 
 package Gela.Lexical.Fabrics is
+   pragma Preelaborate;
 
    type Fabric is limited interface;
 

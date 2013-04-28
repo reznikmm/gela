@@ -10,8 +10,11 @@
 with Gela.Types;
 
 package Gela.Errors is
+   pragma Preelaborate;
 
    type Error_Handler is limited interface;
+
+   type Error_Handler_Access is access all Error_Handler'Class;
 
    procedure Not_In_NFKC_Warning
      (Self        : access Error_Handler;

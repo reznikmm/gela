@@ -279,37 +279,37 @@ Synthesized attributes
  : Integer : ast;
 
 Rules for identifier.identifier_token :
-(.         ${identifier.ast} := +Self.Compilation.Fabric.Identifier
+(.         ${identifier.ast} := +Self.Compilation.Store.Fabric.Identifier
            (-${identifier_token.ast});
 .)
 
 Rules for operator_symbol.string_literal_token :
-(.         ${operator_symbol.ast} := +Self.Compilation.Fabric.Operator_Symbol
+(.         ${operator_symbol.ast} := +Self.Compilation.Store.Fabric.Operator_Symbol
            (-${string_literal_token.ast});
 .)
 
 Rules for explicit_dereference. :
-(.         ${explicit_dereference.ast} := +Self.Compilation.Fabric.Explicit_Dereference
+(.         ${explicit_dereference.ast} := +Self.Compilation.Store.Fabric.Explicit_Dereference
            (-${prefix.ast}, -${dot_token.ast}, -${all_token.ast});
 .)
 
 Rules for selector_name.character_literal_token :
-(.         ${selector_name.ast} := +Self.Compilation.Fabric.Enumeration_Literal
+(.         ${selector_name.ast} := +Self.Compilation.Store.Fabric.Enumeration_Literal
            (-${character_literal_token.ast});
 .)
 
 Rules for selected_component. :
-(.         ${selected_component.ast} := +Self.Compilation.Fabric.Selected_Component
+(.         ${selected_component.ast} := +Self.Compilation.Store.Fabric.Selected_Component
            (-${prefix.ast}, -${dot_token.ast}, -${selector_name.ast});
 .)
 
 Rules for attribute_reference. :
-(.         ${attribute_reference.ast} := +Self.Compilation.Fabric.Attribute_Reference
+(.         ${attribute_reference.ast} := +Self.Compilation.Store.Fabric.Attribute_Reference
            (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast});
 .)
 
 Rules for function_call. :
-(.         ${function_call.ast} := +Self.Compilation.Fabric.Function_Call
+(.         ${function_call.ast} := +Self.Compilation.Store.Fabric.Function_Call
            (-${prefix.ast}, -${record_aggregate.ast});
 .)
 
@@ -317,25 +317,29 @@ Rules for record_component_association.box :
 (.
          declare
               Box : constant Gela.Nodes.Element :=
-                +Self.Compilation.Fabric.Box (-${box_token.ast});
+                +Self.Compilation.Store.Fabric.Box (-${box_token.ast});
          begin
-           ${record_component_association.ast} := +Self.Compilation.Fabric.Association
+           ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
              (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
          end;
 .)
 
 Rules for record_component_association.expression :
-(.          ${record_component_association.ast} := +Self.Compilation.Fabric.Association
+(.          ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
              (-${discrete_choice_list.ast:(null, 0)}, -${arrow_token.ast:(null, 0)}, -${expression.ast});
 .)
 
 Rules for record_aggregate. :
-(.           declare
-              List : Gela.Nodes.List := Self.Compilation.Fabric.Create_List;
+(.
+           declare
+              List : constant Gela.Nodes.Association_List :=
+                Self.Compilation.Store.Fabric.Association_List;
            begin
-              List.Object.Append (List.Payload, ${record_component_association.ast});
+              List.Object.Append
+                (List.Payload, ${record_component_association.ast});
               List.Object.Append (List.Payload, ${x.ast});
-              ${record_aggregate.ast} := +List;
+              ${record_aggregate.ast} :=
+                +Self.Compilation.Store.Fabric.Record_Aggregate (List);
            end;
 .)
 

@@ -8,11 +8,9 @@
 ------------------------------------------------------------------------------
 
 with Gela.Mutables.Compilations;
+pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Stores.Nodes is
-
-   Ref : constant Boolean := Gela.Mutables.Compilations.Dummy_Reference;
-   pragma Unreferenced (Ref);
 
    --  Tag_Offset := 0;
    Count_Offset : constant := 1;
@@ -30,7 +28,7 @@ package body Gela.Stores.Nodes is
    is
       Child_Index : constant Stores.Index :=
         Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
-      Child : constant Element := Self.Compilation.Store.Get (Child_Index);
+      Child : constant Element := Self.Get (Child_Index);
    begin
       return Gela.Types.Payload (Child);
    end Child;
@@ -48,7 +46,7 @@ package body Gela.Stores.Nodes is
       Child : Gela.Types.Payload;
       Item  : constant Index := Index (Payload);
       Count : constant Element :=
-        Self.Compilation.Store.Get (Item + Count_Offset);
+        Self.Get (Item + Count_Offset);
    begin
       if Payload = 0 then
          return;
@@ -60,7 +58,7 @@ package body Gela.Stores.Nodes is
 
          Self.Free (Payload);
       else
-         Self.Compilation.Store.Set (Item + Count_Offset, Count - 1);
+         Self.Set (Item + Count_Offset, Count - 1);
       end if;
    end Dereference;
 
@@ -76,10 +74,10 @@ package body Gela.Stores.Nodes is
 
       Item  : constant Index := Index (Payload);
       Count : constant Element :=
-        Self.Compilation.Store.Get (Item + Count_Offset);
+        Self.Get (Item + Count_Offset);
    begin
       if Payload /= 0 then
-         Self.Compilation.Store.Set (Item + Count_Offset, Count + 1);
+         Self.Set (Item + Count_Offset, Count + 1);
       end if;
    end Reference;
 
@@ -95,13 +93,13 @@ package body Gela.Stores.Nodes is
    is
       Child_Index : constant Stores.Index :=
         Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
-      Child : Element := Self.Compilation.Store.Get (Child_Index);
+      Child : Element := Self.Get (Child_Index);
    begin
       if Child /= 0 then
          Self.Dereference (Gela.Types.Payload (Child));
       end if;
 
-      Self.Compilation.Store.Set (Child_Index, Element (Value));
+      Self.Set (Child_Index, Element (Value));
       Self.Reference (Value);
    end Set_Child;
 

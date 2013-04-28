@@ -8,6 +8,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
+with Gela.Mutables.Compilations;
+pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Stores is
 
@@ -76,6 +78,20 @@ package body Gela.Stores is
       Self.Free_List (Length) := Gela.Stores.Element (Element);
    end Free;
 
+   ----------
+   -- Free --
+   ----------
+
+   procedure Free
+     (Self    : access Abstract_Element'Class;
+      Payload : in out Gela.Types.Payload)
+   is
+      Size : constant Positive := Self.Size (Payload);
+   begin
+      Self.Store.Free (Index (Payload), Size);
+      Payload := 0;
+   end Free;
+
    ---------
    -- Get --
    ---------
@@ -85,6 +101,17 @@ package body Gela.Stores is
       Position : Index) return Element is
    begin
       return Self.Data (Position);
+   end Get;
+
+   ---------
+   -- Get --
+   ---------
+
+   function Get
+     (Self     : Abstract_Element'Class;
+      Position : Index) return Gela.Stores.Element is
+   begin
+      return Self.Store.Get (Position);
    end Get;
 
    ---------
@@ -112,4 +139,22 @@ package body Gela.Stores is
       Self.Data (Position) := Value;
    end Set;
 
+   ---------
+   -- Set --
+   ---------
+
+   procedure Set
+     (Self     : Abstract_Element'Class;
+      Position : Index;
+      Value    : Gela.Stores.Element) is
+   begin
+      Self.Store.Set (Position, Value);
+   end Set;
+
+   function To_Node
+     (Self    : access Abstract_Element'Class;
+      Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access is
+   begin
+      return Self.Store.Compilation.Store.Fabric.To_Node (Payload);
+   end To_Node;
 end Gela.Stores;

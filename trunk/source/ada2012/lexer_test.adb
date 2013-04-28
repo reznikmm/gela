@@ -5,10 +5,10 @@ with Ada.Wide_Wide_Text_IO;
 with League.Strings;
 with League.Text_Codecs;
 
+with Gela.Errors.Put_Lines;
 with Gela.Mutables.Compilations;
 with Gela.Lexical.Handler;
 with Gela.Types;
-with Gela.Stores.Elements;
 with Gela.Stores.Nodes;
 with Gela.Stores.Tokens;
 with Gela.Lexical.Tokens;
@@ -16,6 +16,9 @@ with Gela.Stores.Productions;
 
 with Gela.Grammars.Reader;
 with Gela.Grammars_Convertors;
+with Gela.Grammars.Constructors;
+with Gela.Grammars.LR_Tables;
+with Gela.Grammars.LR.LALR;
 
 procedure Lexer_Test is
 
@@ -25,13 +28,12 @@ procedure Lexer_Test is
 
    procedure Print
      (Comp    : Gela.Mutables.Mutable_Compilation_Access;
-      Item    : Gela.Stores.Elements.Element_Access;
+      Item    : Gela.Stores.Element_Access;
       Payload : Gela.Types.Payload);
 
    G     : constant Gela.Grammars.Grammar :=
      Gela.Grammars.Reader.Read ("ada-ast.ag");
-   Plain : constant Gela.Grammars.Grammar :=
-     Gela.Grammars_Convertors.Convert_With_Empty (G);
+   Plain : constant Gela.Grammars.Grammar := G;
 
    -----------
    -- Print --
@@ -39,7 +41,7 @@ procedure Lexer_Test is
 
    procedure Print
      (Comp    : Gela.Mutables.Mutable_Compilation_Access;
-      Item    : Gela.Stores.Elements.Element_Access;
+      Item    : Gela.Stores.Element_Access;
       Payload : Gela.Types.Payload)
    is
       use type Gela.Types.Payload;
@@ -82,7 +84,7 @@ procedure Lexer_Test is
             Ada.Wide_Wide_Text_IO.Put ("(");
             for K in 1 .. Node.Last_Child (Payload) loop
                Print (Comp,
-                      Comp.Fabric.To_Element (Node.Child (Payload, K)),
+                      Comp.Store.Fabric.To_Element (Node.Child (Payload, K)),
                       Node.Child (Payload, K));
             end loop;
             Ada.Wide_Wide_Text_IO.Put (")");
@@ -124,8 +126,21 @@ procedure Lexer_Test is
    Name    : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("aaa");
    Text    : constant League.Strings.Universal_String := Read_File ("aaa");
+
+   Ada_AG : constant Gela.Grammars.Grammar :=
+     Gela.Grammars.Reader.Read ("ada.ag");
+   Ada_Plain : constant Gela.Grammars.Grammar_Access :=
+     new Gela.Grammars.Grammar'
+       (Gela.Grammars_Convertors.Convert (Ada_AG, Left => False));
+   Table : constant Gela.Grammars.LR_Tables.Table_Access :=
+     new Gela.Grammars.LR_Tables.Table'
+       (Gela.Grammars.LR.LALR.Build
+            (Gela.Grammars.Constructors.To_Augmented (Ada_Plain.all),
+             Right_Nulled => False));
+
    Comp    : constant Gela.Mutables.Mutable_Compilation_Access :=
-     Gela.Mutables.Compilations.Create (Name, Text);
+     Gela.Mutables.Compilations.Create
+       (Name, Text, new Gela.Errors.Put_Lines.Handler, Ada_Plain, Table);
 
    use type Gela.Types.Payload;
 begin
@@ -139,7 +154,7 @@ begin
    if Comp.Root.Payload /= 0 then
       Print
         (Comp,
-         Comp.Fabric.To_Element (Comp.Root.Payload),
+         Comp.Store.Fabric.To_Element (Comp.Root.Payload),
          Comp.Root.Payload);
    end if;
 end Lexer_Test;

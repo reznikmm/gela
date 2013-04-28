@@ -10,6 +10,7 @@
 with Gela.Tokens;
 
 package Gela.Nodes.Tokens is
+   pragma Preelaborate;
 
    type Object is interface and Node and Gela.Tokens.Token;
 

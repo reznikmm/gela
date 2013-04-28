@@ -8,13 +8,13 @@
 ------------------------------------------------------------------------------
 
 with Gela.Grammars;
-with Gela.Stores.Elements;
 with Gela.Types;
 with Gela.Nodes;
 
 with Gela.Stores.Base_Fabrics;
 
 package Gela.Stores.Fabrics is
+   pragma Preelaborate;
 
    type X is array (Positive range <>) of Gela.Nodes.Node_Access;
 
@@ -22,7 +22,7 @@ package Gela.Stores.Fabrics is
 
    function To_Element
      (Self    : access Fabric;
-      Payload : Gela.Types.Payload) return Gela.Stores.Elements.Element_Access;
+      Payload : Gela.Types.Payload) return Gela.Stores.Element_Access;
 
    function To_Node
      (Self    : access Fabric;
@@ -35,12 +35,14 @@ package Gela.Stores.Fabrics is
       Production : Gela.Grammars.Production_Index)
       return Gela.Types.Payload;
 
+   overriding function Create_List
+     (Self : access Fabric;
+      Tag  : Positive)
+      return Gela.Types.Payload;
+
    function Create_Switch
      (Self : access Fabric;
       NT   : Gela.Grammars.Non_Terminal_Index)
       return Gela.Types.Payload;
-
-   not overriding function Create_List
-     (Self : access Fabric) return Gela.Nodes.List;
 
 end Gela.Stores.Fabrics;

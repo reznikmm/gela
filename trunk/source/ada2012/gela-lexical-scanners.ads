@@ -15,6 +15,7 @@ with Gela.Lexical.Tokens;
 with Gela.Lexical.Types; use Gela.Lexical.Types;
 
 package Gela.Lexical.Scanners is
+   pragma Preelaborate;
 
    subtype Token is Gela.Lexical.Tokens.Token;
    type Scanner is tagged limited private;

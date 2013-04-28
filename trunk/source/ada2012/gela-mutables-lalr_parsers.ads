@@ -12,14 +12,18 @@ with Gela.Grammars.LR;
 with Gela.Grammars.LR_Tables;
 
 package Gela.Mutables.LALR_Parsers is
+   pragma Preelaborate;
 
    type Parser (Compilation : Mutable_Compilation_Access) is tagged private;
 
+   procedure Initialize
+     (Self    : access Parser;
+      Grammar : Gela.Grammars.Grammar_Access;
+      Table   : Gela.Grammars.LR_Tables.Table_Access);
+
    procedure Parse (Self : access Parser);
 
-   type Grammar_Access is access all Gela.Grammars.Grammar;
-
-   function Grammar (Self : access Parser) return Grammar_Access;
+   function Grammar (Self : access Parser) return Gela.Grammars.Grammar_Access;
 
 private
 
@@ -41,12 +45,10 @@ private
       State : Gela.Grammars.LR.State_Index;
       Node  : Gela.Nodes.Element);
 
-   type Table_Access is access all Gela.Grammars.LR_Tables.Table;
-
    type Parser (Compilation : Mutable_Compilation_Access) is tagged record
-      Grammar : Grammar_Access;
+      Grammar : Gela.Grammars.Grammar_Access;
       Top     : Gela.Grammars.LR.State_Index;
-      Table   : Table_Access;
+      Table   : Gela.Grammars.LR_Tables.Table_Access;
       Stack   : Stack_Access;
    end record;
 

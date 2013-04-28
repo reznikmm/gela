@@ -15,6 +15,7 @@ with Gela.Symbol_Sets;
 with Gela.Types;
 
 package Gela.Mutables.Symbol_Sets is
+   pragma Preelaborate;
 
    package Symbol_Maps is new Ada.Containers.Ordered_Maps
      (League.Strings.Universal_String,

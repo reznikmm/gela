@@ -11,9 +11,10 @@ with League.Strings;
 with League.Calendars;
 
 with Gela.Compilations;
-with Gela.Errors.Put_Lines;
+with Gela.Errors;
 with Gela.Lexical;
 with Gela.Types;
+with Gela.Grammars.LR_Tables;
 
 with Gela.Mutables.Lexers;
 --  with Gela.Mutables.Parsers;
@@ -25,6 +26,11 @@ with Gela.Stores;
 with Gela.Stores.Fabrics;
 
 package Gela.Mutables.Compilations is
+   pragma Preelaborate;
+
+   type Store is new Gela.Stores.Store with record
+      Fabric : aliased Stores.Fabrics.Fabric (Store'Unchecked_Access);
+   end record;
 
    type Compilation is limited new Gela.Compilations.Abstract_Compilation
    with record
@@ -36,10 +42,9 @@ package Gela.Mutables.Compilations is
       Updated     : League.Calendars.Date_Time;
       CPU_Spent   : Duration;
       --  Components
-      Store   : Gela.Stores.Store;
+      Store   : Mutables.Compilations.Store (Compilation'Unchecked_Access);
       Root    : Gela.Nodes.Element;
-      Fabric  : aliased Stores.Fabrics.Fabric (Compilation'Unchecked_Access);
-      Errors  : aliased Gela.Errors.Put_Lines.Handler;
+      Errors  : Gela.Errors.Error_Handler_Access;
       Lexer   : aliased Mutables.Lexers.Lexer (Compilation'Unchecked_Access);
       Parser  : aliased Mutables.LALR_Parsers.Parser
                           (Compilation'Unchecked_Access);
@@ -47,14 +52,15 @@ package Gela.Mutables.Compilations is
      end record;
 
    function Create
-     (Name   : League.Strings.Universal_String;
-      Source : League.Strings.Universal_String)
+     (Name    : League.Strings.Universal_String;
+      Source  : League.Strings.Universal_String;
+      Errors  : Gela.Errors.Error_Handler_Access;
+      Grammar : Gela.Grammars.Grammar_Access;
+      Table   : Gela.Grammars.LR_Tables.Table_Access)
       return Mutable_Compilation_Access;
 
    not overriding procedure Start
      (Self : not null access Compilation);
-
-   Dummy_Reference : constant Boolean := False;
 
 private
 

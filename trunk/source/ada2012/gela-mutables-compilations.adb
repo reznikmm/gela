@@ -36,8 +36,11 @@ package body Gela.Mutables.Compilations is
    ------------
 
    function Create
-     (Name   : League.Strings.Universal_String;
-      Source : League.Strings.Universal_String)
+     (Name    : League.Strings.Universal_String;
+      Source  : League.Strings.Universal_String;
+      Errors  : Gela.Errors.Error_Handler_Access;
+      Grammar : Gela.Grammars.Grammar_Access;
+      Table   : Gela.Grammars.LR_Tables.Table_Access)
       return Mutable_Compilation_Access
    is
       use type League.Strings.Universal_String;
@@ -52,6 +55,7 @@ package body Gela.Mutables.Compilations is
          Result.Text := NFKC;
          Result.Updated := League.Calendars.Clock;
          Result.CPU_Spent := 0.0;
+         Result.Errors := Errors;
 --           Options     => League.Strings.Empty_Universal_String,
 --           Root        => <>,
 --           Store       => <>,
@@ -65,8 +69,9 @@ package body Gela.Mutables.Compilations is
               (Gela.Types.Compilation_Access (Result));
          end if;
 
-         Result.Fabric.Initialize;
+         Result.Store.Fabric.Initialize;
          Result.Lexer.Initialize (Source);
+         Result.Parser.Initialize (Grammar, Table);
       end return;
    end Create;
 

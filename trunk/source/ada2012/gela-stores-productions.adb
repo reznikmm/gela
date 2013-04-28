@@ -8,11 +8,9 @@
 ------------------------------------------------------------------------------
 
 with Gela.Mutables.Compilations;
+pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Stores.Productions is
-
-   Reference : constant Boolean := Gela.Mutables.Compilations.Dummy_Reference;
-   pragma Unreferenced (Reference);
 
    ----------------------
    -- Production_Index --
@@ -24,7 +22,7 @@ package body Gela.Stores.Productions is
       return Gela.Grammars.Production_Index
    is
       Item  : constant Index := Index (Payload);
-      Value : constant Element := Self.Compilation.Store.Get (Item);
+      Value : constant Element := Self.Get (Item);
    begin
       return Gela.Grammars.Production_Index (Value);
    end Production_Index;

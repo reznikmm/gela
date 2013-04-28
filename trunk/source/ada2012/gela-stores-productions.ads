@@ -12,6 +12,7 @@ with Gela.Stores.Nodes;
 with Gela.Types;
 
 package Gela.Stores.Productions is
+   pragma Preelaborate;
 
    type Production is
      abstract new Gela.Stores.Nodes.Node with null record;

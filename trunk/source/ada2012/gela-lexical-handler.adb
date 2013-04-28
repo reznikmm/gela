@@ -123,8 +123,11 @@ package body Gela.Lexical.Handler is
         Id, Id, Id, Id, Id, Id, Id, Id,
         Gela.Lexical.Tokens.Rem_Token);
 
-   Word_List : array (Hash_Value range 22 .. 114)
+   type Universal_String_Array is array (Hash_Value range 22 .. 114)
      of League.Strings.Universal_String;
+   type Universal_String_Array_Access is access all Universal_String_Array;
+
+   Word_List : Universal_String_Array_Access;
 
    -----------------------
    -- Character_Literal --
@@ -310,7 +313,7 @@ package body Gela.Lexical.Handler is
         League.Strings.Empty_Universal_String;
 
    begin
-      Word_List :=
+      Word_List := new Universal_String_Array'
         (+"else",
          +"at",
          +"task",

@@ -7,11 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Mutables.Compilations;
-pragma Unreferenced (Gela.Mutables.Compilations);
-
---  with Gela.Stores.Base_Fabrics;
-
 package body Gela.Stores.Lists is
 
    use type Gela.Types.Payload;
@@ -47,13 +42,17 @@ package body Gela.Stores.Lists is
    -- Append --
    ------------
 
-   overriding procedure Append
+   procedure Append
      (Self     : access List;
       Payload  : Gela.Types.Payload;
       Item     : Gela.Nodes.Element)
    is
       Tail : constant Gela.Types.Payload := Get_Tail (Self, Payload);
    begin
+      if Item.Object.all not in Lists.Item'Class then
+         raise Constraint_Error;
+      end if;
+
       if Tail = 0 then
          Set_Tail (Self, Payload, Item.Payload);
          Set_Next (Self, Item.Payload, Item.Payload);
@@ -63,9 +62,9 @@ package body Gela.Stores.Lists is
          Set_Tail (Self, Payload, Item.Payload);
       end if;
 
-      Self.Compilation.Store.Set
+      Self.Set
         (Index (Payload) + Offset.Length,
-         Self.Compilation.Store.Get (Index (Payload) + Offset.Length) + 1);
+         Self.Get (Index (Payload) + Offset.Length) + 1);
    end Append;
 
    -----------
@@ -87,7 +86,7 @@ package body Gela.Stores.Lists is
       elsif Self.Last_List /= Payload or Self.Last_Index > Index then
          Self.Last_List  := Payload;
          Self.Last_Index := 1;
-         Self.Last_Item  := Self.Head (Payload).Internal_Item.Payload;
+         Self.Last_Item  := Get_Payload (Self.Head (Payload));
       end if;
 
       while Self.Last_Index /= Index loop
@@ -106,8 +105,7 @@ package body Gela.Stores.Lists is
      (Self : access List'Class;
       Item : Gela.Types.Payload) return Gela.Types.Payload
    is
-      Value : constant Element := Self.Compilation.Store.Get
-        (Index (Item) + Next_Offset);
+      Value : constant Element := Self.Get (Index (Item) + Next_Offset);
    begin
       return Gela.Types.Payload (Value);
    end Get_Next;
@@ -120,8 +118,7 @@ package body Gela.Stores.Lists is
      (Self : access List'Class;
       List : Gela.Types.Payload) return Gela.Types.Payload
    is
-      Value : constant Element :=
-        Self.Compilation.Store.Get (Index (List) + Offset.Tail);
+      Value : constant Element := Self.Get (Index (List) + Offset.Tail);
    begin
       return Gela.Types.Payload (Value);
    end Get_Tail;
@@ -130,21 +127,22 @@ package body Gela.Stores.Lists is
    -- Head --
    ----------
 
-   overriding function Head
+   function Head
      (Self    : access List;
       Payload : Gela.Types.Payload)
-      return Gela.Nodes.Lists.Cursor
+      return Item_Record
    is
       Tail : constant Gela.Types.Payload := Get_Tail (Self, Payload);
    begin
       if Tail = 0 then
-         return (Internal_Item => (null, 0));
+         return Null_Item;
       else
          declare
             Next : constant Gela.Types.Payload := Get_Next (Self, Tail);
          begin
-            return (Internal_Item =>
-                      (Self.Compilation.Fabric.To_Node (Next), Next));
+            return From_Element
+              ((Object =>  Self.To_Node (Next),
+                Payload => Next));
          end;
       end if;
    end Head;
@@ -158,8 +156,7 @@ package body Gela.Stores.Lists is
       Payload : Gela.Types.Payload)
       return Natural
    is
-      Length : constant Element := Self.Compilation.Store.Get
-        (Index (Payload) + Offset.Length);
+      Length : constant Element := Self.Get (Index (Payload) + Offset.Length);
    begin
       return Natural (Length);
    end Last_Child;
@@ -168,24 +165,24 @@ package body Gela.Stores.Lists is
    -- Next --
    ----------
 
-   overriding procedure Next
+   procedure Next
      (Self     : access List;
       Payload  : Gela.Types.Payload;
-      Position : in out Gela.Nodes.Lists.Cursor)
+      Position : in out Item_Record)
    is
       Tail : constant Gela.Types.Payload := Get_Tail (Self, Payload);
    begin
-      if Position.Internal_Item.Payload = Tail then
-         Position := (Internal_Item => (null, 0));
+      if Get_Payload (Position) = Tail then
+         Position := Null_Item;
       else
          declare
-            Item  : constant Index := Index (Position.Internal_Item.Payload);
-            Value : constant Element :=
-              Self.Compilation.Store.Get (Item + Next_Offset);
+            Item  : constant Index := Index (Get_Payload (Position));
+            Value : constant Element := Self.Get (Item + Next_Offset);
             Next : constant Gela.Types.Payload := Gela.Types.Payload (Value);
          begin
-            Position := (Internal_Item =>
-                      (Self.Compilation.Fabric.To_Node (Next), Next));
+            Position := From_Element
+              ((Object =>  Self.To_Node (Next),
+                Payload => Next));
          end;
       end if;
    end Next;
@@ -194,7 +191,7 @@ package body Gela.Stores.Lists is
    -- Prepend --
    -------------
 
-   overriding procedure Prepend
+   procedure Prepend
      (Self     : access List;
       Payload  : Gela.Types.Payload;
       Item     : Gela.Nodes.Element)
@@ -213,9 +210,9 @@ package body Gela.Stores.Lists is
          Set_Next (Self, Tail, Item.Payload);
       end;
 
-      Self.Compilation.Store.Set
+      Self.Set
         (Index (Payload) + Offset.Length,
-         Self.Compilation.Store.Get (Index (Payload) + Offset.Length) + 1);
+         Self.Get (Index (Payload) + Offset.Length) + 1);
    end Prepend;
 
    ---------------
@@ -244,8 +241,7 @@ package body Gela.Stores.Lists is
       Item  : Gela.Types.Payload;
       Value : Gela.Types.Payload) is
    begin
-      Self.Compilation.Store.Set
-        (Index (Item) + Next_Offset, Element (Value));
+      Self.Set (Index (Item) + Next_Offset, Element (Value));
    end Set_Next;
 
    --------------
@@ -257,8 +253,7 @@ package body Gela.Stores.Lists is
       List  : Gela.Types.Payload;
       Value : Gela.Types.Payload) is
    begin
-      Self.Compilation.Store.Set
-        (Index (List) + Offset.Tail, Element (Value));
+      Self.Set (Index (List) + Offset.Tail, Element (Value));
    end Set_Tail;
 
    ----------

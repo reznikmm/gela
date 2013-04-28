@@ -15,7 +15,7 @@ with League.String_Vectors;
 
 with Gela.Grammars;
 with Gela.Grammars.Reader;
-with Gela.Grammars_Convertors;
+--  with Gela.Grammars_Convertors;
 
 with AG_Tools.Writers; use AG_Tools.Writers;
 --  with Gela.Grammars_Debug;
@@ -60,6 +60,12 @@ procedure AG_Driver is
      (Prod : Gela.Grammars.Production)
       return Gela.Grammars.Non_Terminal_Count;
 
+   function List_Reference
+     (Part : Gela.Grammars.Part)
+      return Gela.Grammars.Non_Terminal_Count;
+
+   procedure Look_For_List (Prod : Gela.Grammars.Production);
+
    procedure Generate_Nodes;
    procedure Generate_Fabric;
    procedure Generate_Conv;
@@ -68,6 +74,7 @@ procedure AG_Driver is
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production);
    procedure Generate_Stores_NT_Switch (NT : Gela.Grammars.Non_Terminal);
+   procedure Generate_Stores_List (NT : Gela.Grammars.Non_Terminal);
 
      ---------------------
    -- Count_Ambiguous --
@@ -87,10 +94,10 @@ procedure AG_Driver is
 
    Name  : constant String := Ada.Command_Line.Argument (1);
    G     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (Name);
-   Plain : constant Gela.Grammars.Grammar :=
-     Gela.Grammars_Convertors.Convert_With_Empty (G);
+   Plain : constant Gela.Grammars.Grammar := G;
 
    Is_Macro : array (Plain.Non_Terminal'Range) of Boolean := (others => False);
+   Has_List : array (Plain.Non_Terminal'Range) of Boolean := (others => False);
    Implement : array (Plain.Non_Terminal'Range, Plain.Non_Terminal'Range)
      of Boolean := (others => (others => False));
 
@@ -108,32 +115,49 @@ procedure AG_Driver is
    begin
       Conv_With.P ("with Gela.Nodes.Tokens;");
       Conv_With.P ("pragma Unreferenced (Gela.Nodes.Tokens);");
-      Conv_With.P ("with Gela.Nodes.Lists;");
-      Conv_With.P ("pragma Unreferenced (Gela.Nodes.Lists);");
       Conv_Spec.P ("package Gela.Nodes.Convertions is");
+      Conv_Spec.P ("   pragma Preelaborate;");
       Conv_Spec.P;
 
       for NT of Plain.Non_Terminal loop
-         Conv_With.N ("with Gela.Nodes.");
-         Conv_With.N (Plural (NT.Name));
-         Conv_With.P (";");
-         Conv_With.N ("pragma Unreferenced (Gela.Nodes.");
-         Conv_With.N (Plural (NT.Name));
-         Conv_With.P (");");
+         if not NT.Is_List then
+            Conv_With.N ("with Gela.Nodes.");
+            Conv_With.N (Plural (NT.Name));
+            Conv_With.P (";");
+            Conv_With.N ("pragma Unreferenced (Gela.Nodes.");
+            Conv_With.N (Plural (NT.Name));
+            Conv_With.P (");");
 
-         Conv_Spec.P ("   function ""+""");
-         Conv_Spec.N ("     (X : Gela.Nodes.");
-         Conv_Spec.N (To_Ada (NT.Name));
-         Conv_Spec.P (")");
-         Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                        " (X.Object, X.Payload);");
-         Conv_Spec.P;
-         Conv_Spec.P ("   function ""-""");
-         Conv_Spec.P ("     (X : Gela.Nodes.Element)");
-         Conv_Spec.N ("      return Gela.Nodes.");
-         Conv_Spec.N (To_Ada (NT.Name));
-         Conv_Spec.P (" is (X.Object, X.Payload);");
-         Conv_Spec.P;
+            Conv_Spec.P ("   function ""+""");
+            Conv_Spec.N ("     (X : Gela.Nodes.");
+            Conv_Spec.N (To_Ada (NT.Name));
+            Conv_Spec.P (")");
+            Conv_Spec.P ("      return Gela.Nodes.Element is" &
+                           " (X.Object, X.Payload);");
+            Conv_Spec.P;
+            Conv_Spec.P ("   function ""-""");
+            Conv_Spec.P ("     (X : Gela.Nodes.Element)");
+            Conv_Spec.N ("      return Gela.Nodes.");
+            Conv_Spec.N (To_Ada (NT.Name));
+            Conv_Spec.P (" is (X.Object, X.Payload);");
+            Conv_Spec.P;
+
+            if Has_List (NT.Index) then
+               Conv_Spec.P ("   function ""+""");
+               Conv_Spec.N ("     (X : Gela.Nodes.");
+               Conv_Spec.N (To_Ada (NT.Name));
+               Conv_Spec.P ("_List)");
+               Conv_Spec.P ("      return Gela.Nodes.Element is" &
+                              " (X.Object, X.Payload);");
+               Conv_Spec.P;
+               Conv_Spec.P ("   function ""-""");
+               Conv_Spec.P ("     (X : Gela.Nodes.Element)");
+               Conv_Spec.N ("      return Gela.Nodes.");
+               Conv_Spec.N (To_Ada (NT.Name));
+               Conv_Spec.P ("_List is (X.Object, X.Payload);");
+               Conv_Spec.P;
+            end if;
+         end if;
       end loop;
 
       Conv_Spec.P ("   function ""+""");
@@ -144,16 +168,6 @@ procedure AG_Driver is
       Conv_Spec.P ("   function ""-""");
       Conv_Spec.P ("     (X : Gela.Nodes.Element)");
       Conv_Spec.N ("      return Gela.Nodes.Token");
-      Conv_Spec.P (" is (X.Object, X.Payload);");
-      Conv_Spec.P;
-      Conv_Spec.P ("   function ""+""");
-      Conv_Spec.P ("     (X : Gela.Nodes.List)");
-      Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                     " (X.Object, X.Payload);");
-      Conv_Spec.P;
-      Conv_Spec.P ("   function ""-""");
-      Conv_Spec.P ("     (X : Gela.Nodes.Element)");
-      Conv_Spec.N ("      return Gela.Nodes.List");
       Conv_Spec.P (" is (X.Object, X.Payload);");
       Conv_Spec.P;
       Conv_Spec.P ("end Gela.Nodes.Convertions;");
@@ -170,27 +184,26 @@ procedure AG_Driver is
       Amb_Index       : Natural := Natural (Plain.Last_Production);
 
       Fab_With    : Writer;
+      Body_With   : Writer;
       Fab_Body    : Writer;
       Fab_Init    : Writer;
       Fabrics     : Writer;
+      Lists       : Natural := 0;
+--      List_Attrs  : Writer;
    begin
-      Fabrics.P ("with Gela.Mutables;");
+--      Fabrics.P ("with Gela.Mutables;");
       Fabrics.P ("with Gela.Nodes;");
       Fabrics.P ("with Gela.Stores.Tokens;");
-      Fabrics.P ("with Gela.Stores.Lists;");
-      Fabrics.P ("with Gela.Grammars;");
-      Fabrics.P ("with Gela.Types;");
       Fabrics.P;
       Fabrics.P ("package Gela.Stores.Base_Fabrics is");
+      Fabrics.P ("   pragma Preelaborate;");
       Fabrics.P;
       Fabrics.P ("   type Node_Array is array (Natural range <>) of" &
                    " Gela.Nodes.Node_Access;");
       Fabrics.P;
-      Fabrics.P ("   type Base_Fabric (Compilation : " &
-                   "Gela.Mutables.Mutable_Compilation_Access) is");
-      Fabrics.P ("   abstract tagged limited record");
-      Fabrics.P ("      Token : aliased Tokens.Token (Compilation);");
-      Fabrics.P ("      List  : aliased Lists.List (Compilation);");
+      Fabrics.P ("   type Base_Fabric (Store : not null Store_Access) is");
+      Fabrics.P ("   abstract new Abstract_Fabric with record");
+      Fabrics.P ("      Token : aliased Tokens.Token (Store);");
 
       Fab_Body.P ("package body Gela.Stores.Base_Fabrics is");
       Fab_Body.P ("   pragma Style_Checks (""-o"");");
@@ -198,98 +211,157 @@ procedure AG_Driver is
       Fab_Init.P ("   procedure Initialize (Self : access Base_Fabric) is");
       Fab_Init.P ("   begin");
       Fab_Init.P ("      Self.Map :=");
-      Fab_Init.P ("        (0 => Self.Token'Access,");
-      Fab_Init.N ("         List_Tag => Self.List'Access");
+      Fab_Init.N ("        (0 => Self.Token'Access");
 
       for NT of Plain.Non_Terminal loop
-         if Is_Ambiguous (NT) then
-            Fabrics.N ("      S");
-            Fabrics.N (Positive (NT.Index));
-            Fabrics.N (" : aliased ");
-            Fabrics.N (Plural (NT.Name));
-            Fabrics.P (".Switch (Compilation);");
+         if not NT.Is_List then
+            if Is_Ambiguous (NT) then
+               Fabrics.N ("      S");
+               Fabrics.N (Positive (NT.Index));
+               Fabrics.N (" : aliased ");
+               Fabrics.N (Plural (NT.Name));
+               Fabrics.P (".Switch (Store);");
 
-            Amb_Index := Amb_Index + 1;
-
-            Fab_Init.P (",");
-            Fab_Init.N ("         ");
-
-            Fab_Init.N (Amb_Index);
-            Fab_Init.N (" => Self.S");
-            Fab_Init.N (Positive (NT.Index));
-            Fab_Init.N ("'Access");
-
-         end if;
-
-         for Prod of Plain.Production (NT.First .. NT.Last) loop
-            declare
-               M : constant Gela.Grammars.Non_Terminal_Count :=
-                 Macro_Reference (Prod);
-            begin
-               if M /= 0 then
-                  null;
-               elsif Is_Macro (NT.Index) then
-                  Fab_With.N ("with Gela.Stores.");
-                  Fab_With.N (Plural (NT.Name));
-                  Fab_With.P (";");
-
-                  Fabrics.N ("      P");
-                  Fabrics.N (Positive (Prod.Index));
-                  Fabrics.N (" : aliased ");
-                  Fabrics.N (Plural (NT.Name));
-                  Fabrics.P (".Object (Compilation);");
-               else  --   M = 0
-                  Fab_With.N ("with Gela.Stores.");
-                  Fab_With.N (To_Ada (NT.Name));
-                  Fab_With.N ("_");
-                  Fab_With.N (Plural (Prod.Name));
-                  Fab_With.P (";");
-
-                  Fabrics.N ("      P");
-                  Fabrics.N (Positive (Prod.Index));
-                  Fabrics.N (" : aliased ");
-                  Fabrics.N (To_Ada (NT.Name));
-                  Fabrics.N ("_");
-                  Fabrics.N (Plural (Prod.Name));
-                  Fabrics.P (".Object (Compilation);");
-               end if;
+               Amb_Index := Amb_Index + 1;
 
                Fab_Init.P (",");
                Fab_Init.N ("         ");
 
-               Fab_Init.N (Positive (Prod.Index));
+               Fab_Init.N (Amb_Index);
+               Fab_Init.N (" => Self.S");
+               Fab_Init.N (Positive (NT.Index));
+               Fab_Init.N ("'Access");
 
-               if M = 0 then
-                  Fab_Init.N (" => Self.P");
+            end if;
+
+            if Has_List (NT.Index) then
+               Fab_With.N ("with Gela.Stores.");
+               Fab_With.N (To_Ada (NT.Name));
+               Fab_With.P ("_Lists;");
+
+               Fabrics.N ("      L");
+               Fabrics.N (Positive (NT.Index));
+               Fabrics.N (" : aliased Gela.Stores.");
+               Fabrics.N (To_Ada (NT.Name));
+               Fabrics.P ("_Lists.List (Store);");
+
+               Lists := Lists + 1;
+               Fab_Init.P (",");
+               Fab_Init.N ("         Last_Production + ");
+               Fab_Init.N (Lists);
+               Fab_Init.N (" => Self.L");
+               Fab_Init.N (Positive (NT.Index));
+               Fab_Init.N ("'Access");
+            end if;
+
+            for Prod of Plain.Production (NT.First .. NT.Last) loop
+               declare
+                  M : constant Gela.Grammars.Non_Terminal_Count :=
+                    Macro_Reference (Prod);
+               begin
+                  if M /= 0 then
+                     null;
+                  elsif Is_Macro (NT.Index) then
+                     Fab_With.N ("with Gela.Stores.");
+                     Fab_With.N (Plural (NT.Name));
+                     Fab_With.P (";");
+
+                     Fabrics.N ("      P");
+                     Fabrics.N (Positive (Prod.Index));
+                     Fabrics.N (" : aliased ");
+                     Fabrics.N (Plural (NT.Name));
+                     Fabrics.P (".Object (Store);");
+                  else  --   M = 0
+                     Fab_With.N ("with Gela.Stores.");
+                     Fab_With.N (To_Ada (NT.Name));
+                     Fab_With.N ("_");
+                     Fab_With.N (Plural (Prod.Name));
+                     Fab_With.P (";");
+
+                     Fabrics.N ("      P");
+                     Fabrics.N (Positive (Prod.Index));
+                     Fabrics.N (" : aliased ");
+                     Fabrics.N (To_Ada (NT.Name));
+                     Fabrics.N ("_");
+                     Fabrics.N (Plural (Prod.Name));
+                     Fabrics.P (".Object (Store);");
+                  end if;
+
+                  Fab_Init.P (",");
+                  Fab_Init.N ("         ");
+
                   Fab_Init.N (Positive (Prod.Index));
-                  Fab_Init.N ("'Access");
-               else
-                  Fab_Init.N (" => null");
-               end if;
-            end;
-         end loop;
+
+                  if M = 0 then
+                     Fab_Init.N (" => Self.P");
+                     Fab_Init.N (Positive (Prod.Index));
+                     Fab_Init.N ("'Access");
+                  else
+                     Fab_Init.N (" => null");
+                  end if;
+               end;
+            end loop;
+         end if;
       end loop;
 
       Fabrics.N ("      Map : Node_Array (0 .. ");
-      Fabrics.N (Positive (Plain.Last_Production) +
-                   Positive (Plain.Last_Non_Terminal) + 1);
+      Fabrics.N (Positive (Plain.Last_Production) + Lists);
       Fabrics.P (");");
       Fabrics.P ("   end record;");
       Fabrics.P;
-      Fabrics.P ("   function Create_Production");
-      Fabrics.P ("     (Self       : access Base_Fabric;");
-      Fabrics.P ("      Production : Gela.Grammars.Production_Index)");
-      Fabrics.P ("      return Gela.Types.Payload is abstract;");
-      Fabrics.P;
+
+      Lists := 0;
 
       for NT of Plain.Non_Terminal loop
+         if Has_List (NT.Index) then
+            Lists := Lists + 1;
+
+            Fabrics.N ("   function ", Fab_Body);
+            Fabrics.N (To_Ada (NT.Name), Fab_Body);
+            Fabrics.P ("_List", Fab_Body);
+            Fabrics.P ("     (Self : access Base_Fabric'Class)", Fab_Body);
+            Fabrics.N ("      return Gela.Nodes.", Fab_Body);
+            Fabrics.N (To_Ada (NT.Name), Fab_Body);
+            Fabrics.N ("_List", Fab_Body);
+            Fabrics.P (";");
+            Fab_Body.P;
+            Fab_Body.P ("   is");
+            Fab_Body.N ("      Object : constant ");
+            Fab_Body.N (To_Ada (NT.Name));
+            Fab_Body.N ("_Lists.List_Access := Self.L");
+            Fab_Body.N (Positive (NT.Index));
+            Fab_Body.P ("'Access;");
+            Fab_Body.N ("      Int    : constant Gela.Nodes.");
+            Fab_Body.N (Plural (NT.Name));
+            Fab_Body.P (".List_Access :=");
+            Fab_Body.N ("        Gela.Nodes.");
+            Fab_Body.N (Plural (NT.Name));
+            Fab_Body.P (".List_Access (Object);");
+            Fab_Body.N ("      Result : constant Gela.Nodes.");
+            Fab_Body.N (To_Ada (NT.Name));
+            Fab_Body.P ("_List :=");
+            Fab_Body.N
+              ("        (Payload => Self.Create_List (Last_Production + ");
+            Fab_Body.N (Lists);
+            Fab_Body.P ("),");
+            Fab_Body.N ("         Object  => Gela.Nodes.");
+            Fab_Body.N (To_Ada (NT.Name));
+            Fab_Body.P ("_List_Access (Int));");
+            Fab_Body.P ("   begin");
+            Fab_Body.P ("      return Result;");
+            Fab_Body.N ("   end ");
+            Fab_Body.N (To_Ada (NT.Name));
+            Fab_Body.P ("_List;");
+            Fabrics.P ("", Fab_Body);
+         end if;
+
          for Prod of Plain.Production (NT.First .. NT.Last) loop
             declare
                Name : League.Strings.Universal_String;
                M : constant Gela.Grammars.Non_Terminal_Count :=
                  Macro_Reference (Prod);
             begin
-               if M = 0 then
+               if M = 0 and not NT.Is_List then
                   Fabrics.N ("   function ", Fab_Body);
                   if Is_Macro (NT.Index) then
                      Name := To_Ada (NT.Name);
@@ -315,7 +387,22 @@ procedure AG_Driver is
                   Fabrics.P (";");
                   Fabrics.P ("", Fab_Body);
 
+                  Body_With.N ("with Gela.Nodes.");
+                  Body_With.N (Plural (NT.Name));
+                  Body_With.P (";");
+
                   Fab_Body.P ("   is");
+                  Fab_Body.N ("      Object : constant ");
+                  Fab_Body.N (Plural (NT.Name));
+                  Fab_Body.N (".Object_Access := Self.P");
+                  Fab_Body.N (Natural (Prod.Index));
+                  Fab_Body.P ("'Access;");
+                  Fab_Body.N ("      Int    : constant Gela.Nodes.");
+                  Fab_Body.N (Plural (NT.Name));
+                  Fab_Body.P (".Object_Access :=");
+                  Fab_Body.N ("        Gela.Nodes.");
+                  Fab_Body.N (Plural (NT.Name));
+                  Fab_Body.P (".Object_Access (Object);");
                   Fab_Body.N ("      Result : constant Gela.Nodes.");
                   Fab_Body.N (To_Ada (NT.Name));
                   Fab_Body.P (" :=");
@@ -324,10 +411,7 @@ procedure AG_Driver is
                   Fab_Body.P ("),");
                   Fab_Body.N ("         Object  => Gela.Nodes.");
                   Fab_Body.N (To_Ada (NT.Name));
-                  Fab_Body.P ("_Access'");
-                  Fab_Body.N ("           (Self.P");
-                  Fab_Body.N (Natural (Prod.Index));
-                  Fab_Body.P ("'Access));");
+                  Fab_Body.P ("_Access (Int));");
                   Fab_Body.P ("   begin");
 
                   Offset := Positive (Prod.First) - 1;
@@ -357,11 +441,6 @@ procedure AG_Driver is
       Fabrics.N (Positive (Plain.Last_Production));
       Fabrics.P (";");
       Fabrics.P;
-      Fabrics.N ("   List_Tag : constant := ");
-      Fabrics.N (Positive (Plain.Last_Production) +
-                   Positive (Plain.Last_Non_Terminal) + 1);
-      Fabrics.P (";");
-      Fabrics.P;
 
       Fabrics.P ("   procedure Initialize (Self : access Base_Fabric);");
       Fabrics.P;
@@ -380,6 +459,7 @@ procedure AG_Driver is
 
       Ada.Text_IO.Put_Line (Fab_With.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Body_With.Text.To_UTF_8_String);
       Ada.Text_IO.Put (Fab_Body.Text.To_UTF_8_String);
    end Generate_Fabric;
 
@@ -392,10 +472,10 @@ procedure AG_Driver is
       Nodes       : Writer;
    begin
       Nodes_With.P ("with Gela.Types;");
-      Nodes_With.P ("limited with Gela.Nodes.Lists;");
       Nodes_With.P ("limited with Gela.Nodes.Tokens;");
 
       Nodes.P ("package Gela.Nodes is");
+      Nodes.P ("   pragma Preelaborate;");
       Nodes.P;
       Nodes.P ("   type Node is interface;");
       Nodes.P ("   type Node_Access is access all Node'Class;");
@@ -406,49 +486,69 @@ procedure AG_Driver is
       Nodes.P ("   end record;");
 
       for NT of Plain.Non_Terminal loop
-         Nodes_With.N ("limited with Gela.Nodes.");
-         Nodes_With.N (Plural (NT.Name));
-         Nodes_With.P (";");
-         Nodes.P;
-         Nodes.N ("   type ");
-         Nodes.N (To_Ada (NT.Name));
-         Nodes.N ("_Access is");
-
-         if NT.Name.Length > 11 then
-            Nodes.P;
-            Nodes.N ("    ");
-         end if;
-
-         Nodes.N (" access all Gela.Nodes.");
-         Nodes.N (Plural (NT.Name));
-         Nodes.P (".Object'Class;");
-         Nodes.N ("   type ");
-         Nodes.N (To_Ada (NT.Name));
-         Nodes.P (" is record");
-         Nodes.N ("      Object  : ");
-         Nodes.N (To_Ada (NT.Name));
-         Nodes.P ("_Access;");
-         Nodes.N ("      Payload : Gela.Types.Payload;");
-         Nodes.P;
-         Nodes.P ("   end record;");
-
-         if Is_Ambiguous (NT) then
+         if not NT.Is_List then
+            Nodes_With.N ("limited with Gela.Nodes.");
+            Nodes_With.N (Plural (NT.Name));
+            Nodes_With.P (";");
             Nodes.P;
             Nodes.N ("   type ");
             Nodes.N (To_Ada (NT.Name));
-            Nodes.N ("_Switch_Access is access all Gela.Nodes.");
+            Nodes.N ("_Access is");
+
+            if NT.Name.Length > 11 then
+               Nodes.P;
+               Nodes.N ("    ");
+            end if;
+
+            Nodes.N (" access all Gela.Nodes.");
             Nodes.N (Plural (NT.Name));
-            Nodes.P (".Switch'Class;");
+            Nodes.P (".Object'Class;");
             Nodes.N ("   type ");
             Nodes.N (To_Ada (NT.Name));
-            Nodes.P ("_Switch is record");
+            Nodes.P (" is record");
             Nodes.N ("      Object  : ");
             Nodes.N (To_Ada (NT.Name));
-            Nodes.P ("_Switch_Access;");
-            Nodes.N ("      Payload : Gela.Nodes.Payload;");
+            Nodes.P ("_Access;");
+            Nodes.N ("      Payload : Gela.Types.Payload;");
             Nodes.P;
             Nodes.P ("   end record;");
-            Nodes.P;
+
+            if Has_List (NT.Index) then
+               Nodes.N ("   type ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.P ("_List_Access is");
+               Nodes.N ("     access all Gela.Nodes.");
+               Nodes.N (Plural (NT.Name));
+               Nodes.P (".List'Class;");
+               Nodes.N ("   type ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.P ("_List is record");
+               Nodes.N ("      Object  : ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.P ("_List_Access;");
+               Nodes.N ("      Payload : Gela.Types.Payload;");
+               Nodes.P;
+               Nodes.P ("   end record;");
+            end if;
+
+            if Is_Ambiguous (NT) then
+               Nodes.P;
+               Nodes.N ("   type ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.N ("_Switch_Access is access all Gela.Nodes.");
+               Nodes.N (Plural (NT.Name));
+               Nodes.P (".Switch'Class;");
+               Nodes.N ("   type ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.P ("_Switch is record");
+               Nodes.N ("      Object  : ");
+               Nodes.N (To_Ada (NT.Name));
+               Nodes.P ("_Switch_Access;");
+               Nodes.N ("      Payload : Gela.Nodes.Payload;");
+               Nodes.P;
+               Nodes.P ("   end record;");
+               Nodes.P;
+            end if;
          end if;
       end loop;
 
@@ -457,13 +557,6 @@ procedure AG_Driver is
                  " Gela.Nodes.Tokens.Object'Class;");
       Nodes.P ("   type Token is record");
       Nodes.P ("      Object  : Token_Access;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("   end record;");
-      Nodes.P;
-      Nodes.P ("   type List_Access is access all" &
-                 " Gela.Nodes.Lists.Object'Class;");
-      Nodes.P ("   type List is record");
-      Nodes.P ("      Object  : List_Access;");
       Nodes.P ("      Payload : Gela.Types.Payload;");
       Nodes.P ("   end record;");
       Nodes.P;
@@ -489,10 +582,13 @@ procedure AG_Driver is
             Nodes_NT.N (".");
             Nodes_NT.N (Plural (Prod.Name));
             Nodes_NT.P (" is");
+            Nodes_NT.P ("   pragma Preelaborate;");
             Nodes_NT.P;
             Nodes_NT.N ("   type Object is interface and Gela.Nodes.");
             Nodes_NT.N (Plural (NT.Name));
             Nodes_NT.P (".Object;");
+            Nodes_NT.P;
+            Nodes_NT.P ("   type Object_Access is access all Object'Class;");
             Nodes_NT.P;
 
             Write_Parts (Prod, Nodes_NT);
@@ -507,6 +603,49 @@ procedure AG_Driver is
 
       Ada.Text_IO.Put_Line (Nodes_NT.Text.To_UTF_8_String);
    end Generate_Nodes_NT;
+
+   --------------------------
+   -- Generate_Stores_List --
+   --------------------------
+
+   procedure Generate_Stores_List (NT : Gela.Grammars.Non_Terminal) is
+      Output : Writer;
+   begin
+      Output.N ("with Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (";");
+      Output.P ("with Gela.Nodes;");
+      Output.P ("with Gela.Stores.Lists;");
+      Output.P ("with Gela.Nodes.Convertions;");
+      Output.P;
+      Output.N ("package Gela.Stores.");
+      Output.N (To_Ada (NT.Name));
+      Output.P ("_Lists is new Gela.Stores.Lists");
+      Output.N ("  (Node_List    => Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (".List,");
+      Output.N ("   Item         => Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (".Object,");
+      Output.N ("   Item_Record  => Gela.Nodes.");
+      Output.N (To_Ada (NT.Name));
+      Output.P (",");
+      Output.P ("   Null_Item    => (null, 0),");
+      Output.P ("   From_Element => Gela.Nodes.Convertions.""-"",");
+      Output.N ("   Get_Payload  => Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (".Get_Payload,");
+      Output.N ("   Head         => Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (".Head,");
+      Output.N ("   Append       => Gela.Nodes.");
+      Output.N (Plural (NT.Name));
+      Output.P (".Append);");
+      Output.N ("pragma Preelaborate (Gela.Stores.");
+      Output.N (To_Ada (NT.Name));
+      Output.P ("_Lists);");
+      Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
+   end Generate_Stores_List;
 
    -------------------------------
    -- Generate_Stores_NT_Switch --
@@ -525,6 +664,8 @@ procedure AG_Driver is
       Switch_NT.P;
 
       Switch_Body.P ("with Gela.Mutables.Compilations;");
+      Switch_Body.P ("pragma Unreferenced (Gela.Mutables.Compilations);");
+
       Switch_Body.P;
       Switch_Body.N ("package body ");
 
@@ -536,9 +677,6 @@ procedure AG_Driver is
       Switch_Body.P (" is", Switch_NT);
       Switch_Body.P ("", Switch_NT);
 
-      Switch_Body.P ("   Reference : constant Boolean := " &
-                       "Gela.Mutables.Compilations.Dummy_Reference;");
-      Switch_Body.P ("   pragma Unreferenced (Reference);");
       Switch_Body.P ("   pragma Style_Checks (""-o"");");
       Switch_Body.P ("   pragma Warnings (""F"");");
       Switch_Body.P;
@@ -643,8 +781,8 @@ procedure AG_Driver is
       Switch_Body.P ("   is");
       Switch_Body.P ("      Id   : constant Gela.Types.Payload :=" &
                        " Self.Child (Payload, Index);");
-      Switch_Body.P ("      Node : constant Gela.Nodes.Node_Access :=");
-      Switch_Body.P ("        Self.Compilation.Fabric.To_Node (Id);");
+      Switch_Body.P ("      Node : constant Gela.Nodes.Node_Access := " &
+                       "Self.To_Node (Id);");
       Switch_Body.P ("   begin");
       Switch_Body.N ("      return (Gela.Nodes.");
       Switch_Body.N (To_Ada (NT.Name));
@@ -700,16 +838,15 @@ procedure AG_Driver is
       Store_Each.N ("package ");
 
       Store_Body.P ("with Gela.Mutables.Compilations;");
+      Store_Body.P ("pragma Unreferenced (Gela.Mutables.Compilations);");
       Store_Body.P;
 
       Store_Body.N ("package body ");
       Store_Each.N (Store_Each_Name, Store_Body);
       Store_Each.P (" is", Store_Body);
       Store_Each.P ("", Store_Body);
+      Store_Each.P ("   pragma Preelaborate;");
 
-      Store_Body.P ("   Reference : constant Boolean := " &
-                      "Gela.Mutables.Compilations.Dummy_Reference;");
-      Store_Body.P ("   pragma Unreferenced (Reference);");
       Store_Body.P ("   pragma Style_Checks (""-o"");");
       Store_Body.P ("   pragma Warnings (""F"");");
       Store_Body.P;
@@ -719,6 +856,9 @@ procedure AG_Driver is
       Store_Each.N ("     and ");
       Store_Each.N (Production_Unit (Prod));
       Store_Each.P (".Object with null record;");
+      Store_Each.P;
+      Store_Each.P
+        ("   type Object_Access is access all Object;");
       Store_Each.P;
       Store_Each.P ("   overriding function Size", Store_Body);
       Store_Each.P ("     (Self    : access Object;", Store_Body);
@@ -762,8 +902,8 @@ procedure AG_Driver is
                          ":= Self.Child (Payload, ");
          Store_Body.N (Positive (Part.Index) - Offset);
          Store_Body.P (");");
-         Store_Body.P ("      Node : constant Gela.Nodes.Node_Access :=");
-         Store_Body.P ("        Self.Compilation.Fabric.To_Node (Id);");
+         Store_Body.P ("      Node : constant Gela.Nodes.Node_Access := " &
+                         "Self.To_Node (Id);");
          Store_Body.P ("   begin");
          Store_Body.N ("      return (Gela.Nodes.");
          Store_Body.N (Return_Type (Part));
@@ -792,6 +932,55 @@ procedure AG_Driver is
    begin
       return False;  --  True;
    end Is_Ambiguous;
+
+   -------------
+   -- Is_List --
+   -------------
+
+   function List_Reference
+     (Part : Gela.Grammars.Part)
+      return Gela.Grammars.Non_Terminal_Count is
+   begin
+      if Part.Is_Option then
+         if Part.First = Part.Last then
+            declare
+               Prod : Gela.Grammars.Production renames
+                 Plain.Production (Part.First);
+               Part : Gela.Grammars.Part renames Plain.Part (Prod.First);
+            begin
+               if Prod.First = Prod.Last and then
+                 Part.Is_List_Reference
+               then
+                  declare
+                     NT    : Gela.Grammars.Non_Terminal renames
+                       Plain.Non_Terminal (Part.Denote);
+                     Inner : Gela.Grammars.Production renames
+                       Plain.Production (NT.First);
+                  begin
+                     return Plain.Part (Inner.First).Denote;
+                  end;
+               end if;
+            end;
+         end if;
+      end if;
+
+      return 0;
+   end List_Reference;
+
+   -------------------
+   -- Look_For_List --
+   -------------------
+
+   procedure Look_For_List (Prod : Gela.Grammars.Production) is
+      List : Gela.Grammars.Non_Terminal_Count;
+   begin
+      for Part of Plain.Part (Prod.First .. Prod.Last) loop
+         List := List_Reference (Part);
+         if List /= 0 then
+            Has_List (List) := True;
+         end if;
+      end loop;
+   end Look_For_List;
 
    ---------------------
    -- Macro_Reference --
@@ -861,7 +1050,34 @@ procedure AG_Driver is
    is
       Result : League.Strings.Universal_String;
    begin
-      if Part.Is_Terminal_Reference then
+      if Part.Is_Option then
+         if Part.First /= Part.Last then
+            raise Constraint_Error;
+         end if;
+
+         declare
+            Prod : Gela.Grammars.Production renames
+              Plain.Production (Part.First);
+         begin
+            if Prod.First /= Prod.Last then
+               raise Constraint_Error;
+            end if;
+
+            return Return_Type (Plain.Part (Prod.First));
+         end;
+
+      elsif Part.Is_List_Reference then
+         declare
+            NT : Gela.Grammars.Non_Terminal renames
+              Plain.Non_Terminal (Part.Denote);
+            Prod : Gela.Grammars.Production renames
+              Plain.Production (NT.First);
+         begin
+            Result := Return_Type (Plain.Part (Prod.First));
+            Result.Append ("_List");
+            return Result;
+         end;
+      elsif Part.Is_Terminal_Reference then
          Result.Append ("Token");
       elsif Is_Ambiguous (Plain.Non_Terminal (Part.Denote)) then
          Result := To_Ada (Plain.Non_Terminal (Part.Denote).Name);
@@ -917,6 +1133,7 @@ procedure AG_Driver is
       Nodes_NT.N (Plural (NT.Name));
       Nodes_NT.P (" is");
       Nodes_NT.P;
+      Nodes_NT.P ("   pragma Preelaborate;");
 
       if Is_Ambiguous (NT) then
          Nodes_NT.P ("   type Switch is interface and Node;");
@@ -953,9 +1170,34 @@ procedure AG_Driver is
       end if;
 
       Nodes_NT.P;
+      Nodes_NT.P ("   type Object_Access is access all Object'Class;");
+      Nodes_NT.P;
 
       if Is_Macro (NT.Index) then
          Write_Parts (Plain.Production (NT.First), Nodes_NT);
+      end if;
+
+      if Has_List (NT.Index) then
+         Nodes_NT.P ("   type List is interface and Node;");
+         Nodes_NT.P ("   type List_Access is access all List'Class;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding function Head");
+         Nodes_NT.P ("     (Self    : access List;");
+         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
+         Nodes_NT.N ("      return Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (" is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding procedure Append");
+         Nodes_NT.P ("     (Self     : access List;");
+         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
+         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   function Get_Payload");
+         Nodes_NT.N ("     (Object  : Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (") return Gela.Types.Payload is");
+         Nodes_NT.P ("       (Object.Payload);");
       end if;
 
       Nodes_NT.N ("end Gela.Nodes.");
@@ -1001,31 +1243,40 @@ begin
    end loop;
 
    for NT of Plain.Non_Terminal loop
-      for Prod of Plain.Production (NT.First .. NT.Last) loop
-         declare
-            Ref : constant Gela.Grammars.Non_Terminal_Count :=
-              Macro_Reference (Prod);
-         begin
-            if Ref /= 0 then
-               Implement (Ref, NT.Index) := True;
-            end if;
-         end;
-      end loop;
+      if not NT.Is_List then
+         for Prod of Plain.Production (NT.First .. NT.Last) loop
+            declare
+               Ref : constant Gela.Grammars.Non_Terminal_Count :=
+                 Macro_Reference (Prod);
+            begin
+               if Ref /= 0 then
+                  Implement (Ref, NT.Index) := True;
+               end if;
+               Look_For_List (Prod);
+            end;
+         end loop;
+      end if;
    end loop;
 
    Generate_Nodes;
 
    for NT of Plain.Non_Terminal loop
-      Generate_Nodes_NT (NT);
-
-      if Is_Ambiguous (NT) then
-         Generate_Stores_NT_Switch (NT);
+      if Has_List (NT.Index) then
+         Generate_Stores_List (NT);
       end if;
 
-      for Prod of Plain.Production (NT.First .. NT.Last) loop
-         Offset := Positive (Prod.First) - 1;
-         Generate_Stores_Prod (NT, Prod);
-      end loop;
+      if not NT.Is_List then
+         Generate_Nodes_NT (NT);
+
+         if Is_Ambiguous (NT) then
+            Generate_Stores_NT_Switch (NT);
+         end if;
+
+         for Prod of Plain.Production (NT.First .. NT.Last) loop
+            Offset := Positive (Prod.First) - 1;
+            Generate_Stores_Prod (NT, Prod);
+         end loop;
+      end if;
    end loop;
 
    Generate_Conv;

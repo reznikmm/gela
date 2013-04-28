@@ -18,6 +18,7 @@ with Gela.Lexical.Scanners;
 with Gela.Types;
 
 package Gela.Mutables.Lexers is
+   pragma Preelaborate;
 
    type Lexer (Compilation : Mutable_Compilation_Access)
      is limited new Gela.Lexical.Fabrics.Fabric

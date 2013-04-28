@@ -16,6 +16,7 @@ with Gela.Lexical.Types;
 with Gela.Lexical.Fabrics;
 
 package Gela.Lexical.Handler is
+   pragma Preelaborate;
 
    procedure Initialize;
 

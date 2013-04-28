@@ -8,6 +8,8 @@
 ------------------------------------------------------------------------------
 
 package Gela.Lexical.Tokens is
+   pragma Preelaborate;
+
 --        A_Less_Than_Operator,              --  <
 --  12    An_Equal_Operator,                 --  =
 --        A_Greater_Than_Operator,           --  >

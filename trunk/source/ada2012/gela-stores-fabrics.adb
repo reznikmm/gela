@@ -7,12 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Mutables.Compilations;
-
 package body Gela.Stores.Fabrics is
-
-   Reference : constant Boolean := Gela.Mutables.Compilations.Dummy_Reference;
-   pragma Unreferenced (Reference);
 
    Token_Tag : constant := 0;
 
@@ -20,18 +15,19 @@ package body Gela.Stores.Fabrics is
    -- Create_List --
    -----------------
 
-   not overriding function Create_List
-     (Self : access Fabric) return Gela.Nodes.List
+   overriding function Create_List
+     (Self : access Fabric;
+      Tag  : Positive)
+      return Gela.Types.Payload
    is
       Item : Index;
-      Size : constant Positive := Self.List.Size (0);
+      Size : constant Positive := 4;
    begin
-      Item := Self.Compilation.Store.Allocate (Size);
-      Self.Compilation.Store.Set (Item, Base_Fabrics.List_Tag);  --  Tag
-      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
+      Item := Self.Store.Allocate (Size);
+      Self.Store.Set (Item, Element (Tag));  --  Tag
+      Self.Store.Set (Item + 1, 1);      --  Count
 
-      return (Object  => Self.List'Access,
-              Payload => Gela.Types.Payload (Item));
+      return Gela.Types.Payload (Item);
    end Create_List;
 
    -----------------------
@@ -44,12 +40,12 @@ package body Gela.Stores.Fabrics is
       return Gela.Types.Payload
    is
       Item : Index;
-      Size : constant Positive := Elements.Element_Access
+      Size : constant Positive := Element_Access
         (Self.Map (Positive (Production))).Size (0);
    begin
-      Item := Self.Compilation.Store.Allocate (Size);
-      Self.Compilation.Store.Set (Item, Element (Production));  --  Tag
-      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
+      Item := Self.Store.Allocate (Size);
+      Self.Store.Set (Item, Element (Production));  --  Tag
+      Self.Store.Set (Item + 1, 1);      --  Count
 
       return Gela.Types.Payload (Item);
    end Create_Production;
@@ -72,11 +68,11 @@ package body Gela.Stores.Fabrics is
          raise Constraint_Error;
       end if;
 
-      Item := Self.Compilation.Store.Allocate (Size);
-      Self.Compilation.Store.Set
+      Item := Self.Store.Allocate (Size);
+      Self.Store.Set
         (Item, Element (NT) + Base_Fabrics.Last_Production);  --  Tag
-      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
-      Self.Compilation.Store.Set (Item + 2, Size);   --  Size
+      Self.Store.Set (Item + 1, 1);      --  Count
+      Self.Store.Set (Item + 2, Size);   --  Size
 
       return Gela.Types.Payload (Item);
    end Create_Switch;
@@ -88,9 +84,9 @@ package body Gela.Stores.Fabrics is
    function Create_Token (Self : access Fabric) return Gela.Types.Payload is
       Item : Index;
    begin
-      Item := Self.Compilation.Store.Allocate (Self.Token.Size (0));
-      Self.Compilation.Store.Set (Item, Token_Tag);  --  Tag
-      Self.Compilation.Store.Set (Item + 1, 1);      --  Count
+      Item := Self.Store.Allocate (Self.Token.Size (0));
+      Self.Store.Set (Item, Token_Tag);  --  Tag
+      Self.Store.Set (Item + 1, 1);      --  Count
       return Gela.Types.Payload (Item);
    end Create_Token;
 
@@ -101,9 +97,9 @@ package body Gela.Stores.Fabrics is
    function To_Element
      (Self    : access Fabric;
       Payload : Gela.Types.Payload)
-      return Gela.Stores.Elements.Element_Access is
+      return Gela.Stores.Element_Access is
    begin
-      return Gela.Stores.Elements.Element_Access (Self.To_Node (Payload));
+      return Gela.Stores.Element_Access (Self.To_Node (Payload));
    end To_Element;
 
    -------------
@@ -120,8 +116,7 @@ package body Gela.Stores.Fabrics is
          return null;
       else
          declare
-            Item : constant Element :=
-              Self.Compilation.Store.Get (Index (Payload));
+            Item : constant Element := Self.Store.Get (Index (Payload));
          begin
             return Self.Map (Natural (Item));
          end;

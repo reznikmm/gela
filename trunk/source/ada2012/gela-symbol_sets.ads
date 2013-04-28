@@ -14,6 +14,7 @@ with League.Strings;
 with Gela.Types;
 
 package Gela.Symbol_Sets is
+   pragma Preelaborate;
 
    type Symbol_Set is interface;
 

@@ -10,6 +10,7 @@
 limited with Gela.Mutables.Compilations;
 
 package Gela.Mutables is
+   pragma Preelaborate;
 
    type Mutable_Compilation_Access is
      access all Gela.Mutables.Compilations.Compilation'Class;

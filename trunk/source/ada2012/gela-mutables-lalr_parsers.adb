@@ -7,10 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
-with Gela.Grammars.Reader;
-with Gela.Grammars_Convertors;
-with Gela.Grammars.Constructors;
-with Gela.Grammars.LR.LALR;
 with Gela.Mutables.Compilations;
 pragma Unreferenced (Gela.Mutables.Compilations);
 
@@ -22,10 +18,28 @@ package body Gela.Mutables.LALR_Parsers is
    -- Grammar --
    -------------
 
-   function Grammar (Self : access Parser) return Grammar_Access is
+   function Grammar
+     (Self : access Parser) return Gela.Grammars.Grammar_Access is
    begin
       return Self.Grammar;
    end Grammar;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize
+     (Self    : access Parser;
+      Grammar : Gela.Grammars.Grammar_Access;
+      Table   : Gela.Grammars.LR_Tables.Table_Access) is
+   begin
+      Self.Grammar := Grammar;
+      Self.Table := Table;
+      Self.Stack := new Stack'(Length => 64,
+                               Top    => 0,
+                               State  => <>,
+                               Node   => <>);
+   end Initialize;
 
    procedure On_Reduce
      (Self  : access Parser;
@@ -45,25 +59,6 @@ package body Gela.Mutables.LALR_Parsers is
       Shift  : Gela.Grammars.LR.State_Count;
       Reduce : Gela.Grammars.LR_Tables.Reduce_Iterator;
    begin
-      if Self.Grammar = null then
-         declare
-            Ada_AG : constant Gela.Grammars.Grammar :=
-              Gela.Grammars.Reader.Read ("ada.ag");
-            Plain : constant Gela.Grammars.Grammar :=
-              Gela.Grammars_Convertors.Convert (Ada_AG, Left => False);
-         begin
-            Self.Grammar := new Gela.Grammars.Grammar'
-              (Gela.Grammars.Constructors.To_Augmented (Plain));
-            Self.Table := new Gela.Grammars.LR_Tables.Table'
-              (Gela.Grammars.LR.LALR.Build (Self.Grammar.all,
-                                            Right_Nulled => False));
-            Self.Stack := new Stack'(Length => 64,
-                                     Top    => 0,
-                                     State  => <>,
-                                     Node   => <>);
-         end;
-      end if;
-
       Self.Top := 1;       --  Starting state
       Self.Stack.Top := 0; --  Clear stack
 
@@ -76,7 +71,7 @@ package body Gela.Mutables.LALR_Parsers is
             Push
               (Self.Stack,
                Self.Top,
-               (Object  => Self.Compilation.Fabric.Token'Access,
+               (Object  => Self.Compilation.Store.Fabric.Token'Access,
                 Payload => Self.Compilation.Lexer.Last_Token));
 
             Self.Top := Shift;

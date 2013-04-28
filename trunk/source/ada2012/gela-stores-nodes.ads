@@ -9,11 +9,11 @@
 --  Root type for AST nodes
 
 with Gela.Types;
-with Gela.Stores.Elements;
 
 package Gela.Stores.Nodes is
+   pragma Preelaborate;
 
-   type Node is abstract new Gela.Stores.Elements.Element with null record;
+   type Node is abstract new Gela.Stores.Abstract_Element with null record;
 
    procedure Reference
      (Self    : access Node'Class;

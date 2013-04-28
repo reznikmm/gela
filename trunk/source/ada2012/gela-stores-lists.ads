@@ -7,31 +7,65 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Nodes.Lists;
+with Gela.Nodes;
 with Gela.Types;
 with Gela.Stores.Nodes;
 
+generic
+   type Node_List is interface and Gela.Nodes.Node;
+   type Item is interface and Gela.Nodes.Node;
+   type Item_Record is private;
+
+   Null_Item : Item_Record;
+
+   with function From_Element (X : Gela.Nodes.Element) return Item_Record;
+
+   with function Get_Payload (Object  : Item_Record) return Gela.Types.Payload;
+
+   with function Head
+     (Self    : access Node_List;
+      Payload : Gela.Types.Payload)
+      return Item_Record is abstract;
+
+--     with procedure Next
+--       (Self     : access Node_List;
+--        Payload  : Gela.Types.Payload;
+--        Position : in out Item_Record) is abstract;
+--
+   with procedure Append
+     (Self     : access Node_List;
+      Payload  : Gela.Types.Payload;
+      Item     : Gela.Nodes.Element) is abstract;
+
+--     with procedure Prepend
+--       (Self     : access Node_List;
+--        Payload  : Gela.Types.Payload;
+--        Item     : Gela.Nodes.Element) is abstract;
 package Gela.Stores.Lists is
+   pragma Preelaborate;
+   pragma Elaborate_Body;
 
    type List is
-     new Gela.Stores.Nodes.Node and Gela.Nodes.Lists.Object with private;
+     new Gela.Stores.Nodes.Node and Node_List with private;
 
-   overriding function Head
+   type List_Access is access all List;
+
+   function Head
      (Self    : access List;
       Payload : Gela.Types.Payload)
-      return Gela.Nodes.Lists.Cursor;
+      return Item_Record;
 
-   overriding procedure Next
+   procedure Next
      (Self     : access List;
       Payload  : Gela.Types.Payload;
-      Position : in out Gela.Nodes.Lists.Cursor);
+      Position : in out Item_Record);
 
-   overriding procedure Append
+   procedure Append
      (Self    : access List;
       Payload  : Gela.Types.Payload;
       Item     : Gela.Nodes.Element);
 
-   overriding procedure Prepend
+   procedure Prepend
      (Self    : access List;
       Payload  : Gela.Types.Payload;
       Item     : Gela.Nodes.Element);
@@ -57,8 +91,7 @@ package Gela.Stores.Lists is
 
 private
 
-   type List is new Gela.Stores.Nodes.Node and Gela.Nodes.Lists.Object with
-   record
+   type List is new Gela.Stores.Nodes.Node and Node_List with record
       Last_List  : Gela.Types.Payload := 0;
       Last_Index : Positive;
       Last_Item  : Gela.Types.Payload;

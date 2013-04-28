@@ -13,6 +13,7 @@ with Gela.Lexical;
 with Gela.Types;
 
 package Gela.Compilations is
+   pragma Preelaborate;
 
    type Abstract_Compilation is limited interface;
 

@@ -46,9 +46,6 @@ package body Gela.Mutables.Symbol_Sets is
 
    Power_Value : constant Operator_Symbol := Token'Pos (Double_Star_Token);
 
-   Power_Image : constant League.Strings.Universal_String :=
-     League.Strings.To_Universal_String ("""**""");
-
    function To_Operator_Symbol
      (Text : League.Strings.Universal_String) return Operator_Symbol;
 
@@ -107,7 +104,7 @@ package body Gela.Mutables.Symbol_Sets is
          if Value.Element (3) = '=' then
             Char := Value.Element (2).To_Wide_Wide_Character;
             Result := Map_2 (Char);
-         elsif Value = Power_Image then
+         elsif Value.Element (2) = '*' and Value.Element (3) = '*' then
             Result := Power_Value;
          else  --  This could be "or"
             Result := To_Operator_Symbol (Value);
