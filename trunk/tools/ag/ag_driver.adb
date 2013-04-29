@@ -146,7 +146,7 @@ procedure AG_Driver is
                Conv_Spec.P ("   function ""+""");
                Conv_Spec.N ("     (X : Gela.Nodes.");
                Conv_Spec.N (To_Ada (NT.Name));
-               Conv_Spec.P ("_List)");
+               Conv_Spec.P ("_Sequence)");
                Conv_Spec.P ("      return Gela.Nodes.Element is" &
                               " (X.Object, X.Payload);");
                Conv_Spec.P;
@@ -154,7 +154,7 @@ procedure AG_Driver is
                Conv_Spec.P ("     (X : Gela.Nodes.Element)");
                Conv_Spec.N ("      return Gela.Nodes.");
                Conv_Spec.N (To_Ada (NT.Name));
-               Conv_Spec.P ("_List is (X.Object, X.Payload);");
+               Conv_Spec.P ("_Sequence is (X.Object, X.Payload);");
                Conv_Spec.P;
             end if;
          end if;
@@ -237,13 +237,13 @@ procedure AG_Driver is
             if Has_List (NT.Index) then
                Fab_With.N ("with Gela.Stores.");
                Fab_With.N (To_Ada (NT.Name));
-               Fab_With.P ("_Lists;");
+               Fab_With.P ("_Sequences;");
 
                Fabrics.N ("      L");
                Fabrics.N (Positive (NT.Index));
                Fabrics.N (" : aliased Gela.Stores.");
                Fabrics.N (To_Ada (NT.Name));
-               Fabrics.P ("_Lists.List (Store);");
+               Fabrics.P ("_Sequences.List (Store);");
 
                Lists := Lists + 1;
                Fab_Init.P (",");
@@ -313,22 +313,29 @@ procedure AG_Driver is
       Lists := 0;
 
       for NT of Plain.Non_Terminal loop
+         if not NT.Is_List then
+            Body_With.N ("with Gela.Nodes.");
+            Body_With.N (Plural (NT.Name));
+            Body_With.P (";");
+         end if;
+
          if Has_List (NT.Index) then
             Lists := Lists + 1;
 
             Fabrics.N ("   function ", Fab_Body);
             Fabrics.N (To_Ada (NT.Name), Fab_Body);
-            Fabrics.P ("_List", Fab_Body);
+            Fabrics.P ("_Sequence", Fab_Body);
             Fabrics.P ("     (Self : access Base_Fabric'Class)", Fab_Body);
             Fabrics.N ("      return Gela.Nodes.", Fab_Body);
             Fabrics.N (To_Ada (NT.Name), Fab_Body);
-            Fabrics.N ("_List", Fab_Body);
+            Fabrics.N ("_Sequence", Fab_Body);
             Fabrics.P (";");
             Fab_Body.P;
             Fab_Body.P ("   is");
             Fab_Body.N ("      Object : constant ");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.N ("_Lists.List_Access := Self.L");
+            Fab_Body.P ("_Sequences.List_Access :=");
+            Fab_Body.N ("        Self.L");
             Fab_Body.N (Positive (NT.Index));
             Fab_Body.P ("'Access;");
             Fab_Body.N ("      Int    : constant Gela.Nodes.");
@@ -339,19 +346,19 @@ procedure AG_Driver is
             Fab_Body.P (".List_Access (Object);");
             Fab_Body.N ("      Result : constant Gela.Nodes.");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.P ("_List :=");
+            Fab_Body.P ("_Sequence :=");
             Fab_Body.N
-              ("        (Payload => Self.Create_List (Last_Production + ");
+              ("        (Payload => Self.Create_Sequence (Last_Production + ");
             Fab_Body.N (Lists);
             Fab_Body.P ("),");
             Fab_Body.N ("         Object  => Gela.Nodes.");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.P ("_List_Access (Int));");
+            Fab_Body.P ("_Sequence_Access (Int));");
             Fab_Body.P ("   begin");
             Fab_Body.P ("      return Result;");
             Fab_Body.N ("   end ");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.P ("_List;");
+            Fab_Body.P ("_Sequence;");
             Fabrics.P ("", Fab_Body);
          end if;
 
@@ -386,10 +393,6 @@ procedure AG_Driver is
                   Fabrics.N (To_Ada (NT.Name), Fab_Body);
                   Fabrics.P (";");
                   Fabrics.P ("", Fab_Body);
-
-                  Body_With.N ("with Gela.Nodes.");
-                  Body_With.N (Plural (NT.Name));
-                  Body_With.P (";");
 
                   Fab_Body.P ("   is");
                   Fab_Body.N ("      Object : constant ");
@@ -514,18 +517,19 @@ procedure AG_Driver is
             Nodes.P ("   end record;");
 
             if Has_List (NT.Index) then
+               Nodes.P;
                Nodes.N ("   type ");
                Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_List_Access is");
+               Nodes.P ("_Sequence_Access is");
                Nodes.N ("     access all Gela.Nodes.");
                Nodes.N (Plural (NT.Name));
                Nodes.P (".List'Class;");
                Nodes.N ("   type ");
                Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_List is record");
+               Nodes.P ("_Sequence is record");
                Nodes.N ("      Object  : ");
                Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_List_Access;");
+               Nodes.P ("_Sequence_Access;");
                Nodes.N ("      Payload : Gela.Types.Payload;");
                Nodes.P;
                Nodes.P ("   end record;");
@@ -620,7 +624,7 @@ procedure AG_Driver is
       Output.P;
       Output.N ("package Gela.Stores.");
       Output.N (To_Ada (NT.Name));
-      Output.P ("_Lists is new Gela.Stores.Lists");
+      Output.P ("_Sequences is new Gela.Stores.Lists");
       Output.N ("  (Node_List    => Gela.Nodes.");
       Output.N (Plural (NT.Name));
       Output.P (".List,");
@@ -643,7 +647,7 @@ procedure AG_Driver is
       Output.P (".Append);");
       Output.N ("pragma Preelaborate (Gela.Stores.");
       Output.N (To_Ada (NT.Name));
-      Output.P ("_Lists);");
+      Output.P ("_Sequences);");
       Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
    end Generate_Stores_List;
 
@@ -1074,7 +1078,7 @@ procedure AG_Driver is
               Plain.Production (NT.First);
          begin
             Result := Return_Type (Plain.Part (Prod.First));
-            Result.Append ("_List");
+            Result.Append ("_Sequence");
             return Result;
          end;
       elsif Part.Is_Terminal_Reference then
@@ -1132,8 +1136,8 @@ procedure AG_Driver is
       Nodes_NT.N ("package Gela.Nodes.");
       Nodes_NT.N (Plural (NT.Name));
       Nodes_NT.P (" is");
-      Nodes_NT.P;
       Nodes_NT.P ("   pragma Preelaborate;");
+      Nodes_NT.P;
 
       if Is_Ambiguous (NT) then
          Nodes_NT.P ("   type Switch is interface and Node;");

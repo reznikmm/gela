@@ -35,7 +35,7 @@ package Gela.Stores is
       Production : Gela.Grammars.Production_Index)
       return Gela.Types.Payload is abstract;
 
-   function Create_List
+   function Create_Sequence
      (Self : access Abstract_Fabric;
       Tag  : Positive)
       return Gela.Types.Payload is abstract;

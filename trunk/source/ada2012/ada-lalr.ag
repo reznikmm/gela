@@ -120,7 +120,22 @@ record_component_association ::=
   discrete_choice_list arrow_token box_token
 ;
 
-discrete_choice_list ::= identifier;
+discrete_choice_list ::= discrete_choice;
+
+Rules for discrete_choice_list.discrete_choice :
+(.
+           declare
+              List : constant Gela.Nodes.Discrete_Choice_Sequence :=
+                Self.Compilation.Store.Fabric.Discrete_Choice_Sequence;
+           begin
+              List.Object.Append (List.Payload, ${discrete_choice.ast});
+              ${discrete_choice_list.ast} := +List;
+           end;
+.)
+
+discrete_choice ::=
+  identifier
+;
 
 name ::=
   direct_name |
@@ -157,6 +172,7 @@ Synthesized attributes
   _compilation,
   attribute_reference,
   direct_name,
+  discrete_choice,
   discrete_choice_list,
   identifier,
   explicit_dereference,
@@ -316,8 +332,8 @@ Rules for function_call. :
 Rules for record_component_association.box :
 (.
          declare
-              Box : constant Gela.Nodes.Element :=
-                +Self.Compilation.Store.Fabric.Box (-${box_token.ast});
+            Box : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Box (-${box_token.ast});
          begin
            ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
              (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
@@ -332,8 +348,8 @@ Rules for record_component_association.expression :
 Rules for record_aggregate. :
 (.
            declare
-              List : constant Gela.Nodes.Association_List :=
-                Self.Compilation.Store.Fabric.Association_List;
+              List : constant Gela.Nodes.Association_Sequence :=
+                Self.Compilation.Store.Fabric.Association_Sequence;
            begin
               List.Object.Append
                 (List.Payload, ${record_component_association.ast});

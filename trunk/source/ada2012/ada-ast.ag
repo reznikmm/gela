@@ -3,7 +3,7 @@ Token token;
 Compilation ::= name;
 
 association ::=
-  discrete_choice   <Array_Component_Choices>
+  {discrete_choice} <Array_Component_Choices>
   token             <arrow_token>
   expression_or_box <Component_Expression>;
 

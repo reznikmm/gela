@@ -35,7 +35,7 @@ package Gela.Stores.Fabrics is
       Production : Gela.Grammars.Production_Index)
       return Gela.Types.Payload;
 
-   overriding function Create_List
+   overriding function Create_Sequence
      (Self : access Fabric;
       Tag  : Positive)
       return Gela.Types.Payload;
