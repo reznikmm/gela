@@ -2,6 +2,11 @@ Token token;
 
 Compilation ::= name;
 
+allocator ::=
+  token <new_token> name <Subtype_Or_Expression> name <Subpool_Name>;
+
+aggregate ::= record_aggregate;
+
 association ::=
   {discrete_choice} <Array_Component_Choices>
   token             <arrow_token>
@@ -20,11 +25,23 @@ discrete_choice ::= expression | discrete_range | others_choice;
 
 discrete_range ::= token <blah>;
 
+else_expression_path ::=
+    token <else_token>
+    expression <Dependent_Expression>
+;
+
+elsif_expression_path ::=
+    token <elsif_token>
+    expression <Condition_Expression>
+    token <then_token>
+    expression <Dependent_Expression>
+;
+
 enumeration_literal ::= token <enumeration_literal>;
 
 explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
 
-expression ::= name;
+expression ::= simple_expression;
 
 expression_or_box ::= expression | box;
 
@@ -32,7 +49,91 @@ function_call ::= prefix record_aggregate <Function_Call_Parameters>;
 
 identifier ::= token <identifier>;
 
-name ::= direct_name | explicit_dereference;
+if_expression_path ::=
+    token <if_token>
+    expression <Condition_Expression>
+    token <then_token>
+    expression <Dependent_Expression>
+;
+
+if_else_expression_path ::=
+  if_expression_path | elsif_expression_path | else_expression_path;
+
+if_expression ::= {if_else_expression_path} <Expression_Paths>;
+
+case_expression ::=
+  token <case_token>
+  expression <Case_Expression>
+  token <is_token>
+  {case_expression_path} <Case_Expression_Paths>;
+
+case_expression_path ::= 
+    token <when_token>
+    {discrete_choice} <Case_Path_Alternative_Choices>
+    token <arrow_token>
+    expression <Dependent_Expression>
+;
+
+defining_identifier ::= token <identifier>;
+
+quantified_expression ::=
+  token <for_token>
+  token <quantifier_token>
+  iterator_specification
+  token <arrow_token>
+  expression <predicate>
+;
+
+iterator_specification ::=
+  generalized_iterator_specification |
+  element_iterator_specification
+;
+
+generalized_iterator_specification ::=
+   defining_identifier <Names>
+   token <in_token>
+   token <reverse_token>
+   name <Iteration_Scheme_Name>;
+
+element_iterator_specification ::=
+   defining_identifier <Names>
+   token <colon_token>
+   token <of_token>
+   token <reverse_token>
+   name <Iteration_Scheme_Name>;
+
+character_literal ::= token <character_literal>;
+
+membership_test ::=
+  simple_expression <Membership_Test_Expression>
+  token <not_token>
+  token <in_token>
+  {membership_choice} <Membership_Test_Choices>
+;
+
+membership_choice ::= simple_expression | range_constraint;
+
+range_constraint ::= range_attribute_reference | simple_expression_range;
+
+range_attribute_reference ::=
+  attribute_reference <Range_Attribute>;
+
+simple_expression_range ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+name ::= direct_name |
+  explicit_dereference |
+  selected_component |
+  attribute_reference |
+  function_call |
+  character_literal;
+
+null_literal ::= token <null_literal>;
+
+numeric_literal ::= token <numeric_literal>;
 
 operator_symbol ::= token <operator_symbol>;
 
@@ -40,13 +141,37 @@ others_choice ::= token <others_token>;
 
 prefix ::= name;
 
+program_unit_name ::= identifier | selected_identifier;
+
+qualified_expression ::=
+  subtype_mark <Converted_Or_Qualified_Subtype_Mark>
+  token <apostrophe_token>
+  expression <Converted_Or_Qualified_Expression>;
+
 record_aggregate ::=
  {association} <Record_Component_Associations>;
 
 selected_component ::= prefix token <dot_token> selector_name <Selector>;
 
+selected_identifier ::=
+  program_unit_name <Prefix> token <dot_token> identifier <Selector>;
+
 selector_name ::=
   identifier |
   enumeration_literal |
   operator_symbol;
+
+simple_expression ::=
+    numeric_literal |
+    null_literal |
+    aggregate |
+    name |
+    qualified_expression | 
+    allocator |
+    if_expression |
+    case_expression |
+    quantified_expression;
+
+subtype_mark ::= identifier |
+ selected_identifier;
 

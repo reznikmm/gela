@@ -1,22 +1,22 @@
 Token less_token;
 Token equal_token;
 Token greater_token;
-Token hyphen_token;
-Token slash_token;
-Token star_token;
-Token ampersand_token;
-Token plus_token;
+Token hyphen_token             Priority 16 left;
+Token slash_token              Priority 18 left;
+Token star_token               Priority 18 left;
+Token ampersand_token          Priority 16 left;
+Token plus_token               Priority 16 left;
 Token less_or_equal_token;
 Token greater_or_equal_token;
 Token inequality_token;
-Token double_star_token;
+Token double_star_token        Priority 20 none;
 Token and_token;
 Token or_token;
 Token xor_token;
-Token mod_token;
-Token rem_token;
-Token abs_token;
-Token not_token;
+Token mod_token                Priority 18 left;
+Token rem_token                Priority 18 left;
+Token abs_token                Priority 20 none;
+Token not_token                Priority 20 none;
 Token right_label_token;
 Token box_token;
 Token left_label_token;
@@ -30,7 +30,7 @@ Token comma_token;
 Token dot_token;
 Token colon_token;
 Token semicolon_token;
-Token vertical_line_token;
+Token vertical_line_token      Priority 12 left;
 
 Token abort_token;
 Token abstract_token;
@@ -105,13 +105,186 @@ Token numeric_literal_token;
 Token character_literal_token;
 Token string_literal_token;
 
-_compilation ::= name;
+_compilation ::= expression;
+
+simple_expression ::=
+  numeric_literal_token |
+  null_token |
+  aggregate |
+  name |
+  allocator |
+(conditional)
+  left_parenthesis_token conditional_expression right_parenthesis_token |
+(quantified)
+  left_parenthesis_token quantified_expression right_parenthesis_token |
+(abs) abs_token simple_expression <left> |
+(not) not_token simple_expression <left> |
+(power) simple_expression <left> double_star_token simple_expression <right> |
+(star)  simple_expression <left> star_token  simple_expression <right> |
+(slash) simple_expression <left> slash_token simple_expression <right> |
+(mod)   simple_expression <left> mod_token   simple_expression <right> |
+(rem)   simple_expression <left> rem_token   simple_expression <right> |
+(neg)   hyphen_token simple_expression <left> |
+(nop)   plus_token simple_expression <left> |
+(plus)  simple_expression <left> plus_token simple_expression <right> |
+(minus) simple_expression <left> hyphen_token simple_expression <right> |
+(amp)   simple_expression <left> ampersand_token simple_expression <right>
+;
+
+Priority simple_expression.abs   20 none;
+Priority simple_expression.not   20 none;
+Priority simple_expression.power 20 none;
+Priority simple_expression.star  18 left;
+Priority simple_expression.slash 18 left;
+Priority simple_expression.mod   18 left;
+Priority simple_expression.rem   18 left;
+Priority simple_expression.neg   16 left;
+Priority simple_expression.nop   16 left;
+Priority simple_expression.plus  16 left;
+Priority simple_expression.minus 16 left;
+Priority simple_expression.amp   16 left;
+
+Rules for simple_expression.plus :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${plus_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.minus :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${hyphen_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.amp :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${ampersand_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.neg :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${hyphen_token.ast}, -${left.ast});
+.)
+
+Rules for simple_expression.nop :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${plus_token.ast}, -${left.ast});
+.)
+
+Rules for simple_expression.star :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${star_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.slash :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${slash_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.mod :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${mod_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.rem :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${rem_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.power :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${double_star_token.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for simple_expression.abs :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${abs_token.ast}, -${left.ast});
+.)
+
+Rules for simple_expression.not :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${not_token.ast}, -${left.ast});
+.)
+
+Rules for simple_expression.numeric_literal_token :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Numeric_Literal
+           (-${numeric_literal_token.ast});
+.)
+
+Rules for simple_expression.null_token :
+(.         ${simple_expression.ast} := +Self.Compilation.Store.Fabric.Null_Literal
+           (-${null_token.ast});
+.)
+
+Rules for simple_expression.conditional :
+(.         ${simple_expression.ast} := ${conditional_expression.ast};
+.)
+
+Rules for simple_expression.quantified :
+(.         ${simple_expression.ast} := ${quantified_expression.ast};
+.)
+
+
+
+aggregate ::=
+  record_aggregate
+;
 
 record_aggregate ::=
   left_parenthesis_token
-  record_component_association
-  record_component_association <x>
+  record_component_association_list
   right_parenthesis_token;
+
+Rules for record_aggregate. :
+(.
+         ${record_aggregate.ast} :=
+           +Self.Compilation.Store.Fabric.Record_Aggregate (-${record_component_association_list.ast});
+.)
+
+
+
+record_component_association_list ::=
+(association)
+  record_component_association
+  {comma_token record_component_association} <component_association_list>  |
+(null)
+  null_token record_token
+;
+
+Rules for record_component_association_list.association :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+                ${component_association_list.ast:+Self.Compilation.Store.Fabric.Association_Sequence};
+            List : constant Gela.Nodes.Association_Sequence := -Conv;
+         begin
+            List.Object.Prepend
+              (List.Payload, ${record_component_association.ast});
+            ${record_component_association_list.ast} := Conv;
+         end;
+.)
+
+Rules for component_association_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+                ${head.ast:+Self.Compilation.Store.Fabric.Association_Sequence};
+            List : constant Gela.Nodes.Association_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${record_component_association.ast});
+            ${component_association_list.ast} := Conv;
+         end;
+.)
+
+Rules for record_component_association_list.null :
+(.
+         declare
+            List : constant Gela.Nodes.Association_Sequence :=
+              Self.Compilation.Store.Fabric.Association_Sequence;
+         begin
+            ${record_component_association_list.ast} := +List;
+         end;
+.)
+
+
 
 record_component_association ::=
 (expression)
@@ -120,39 +293,113 @@ record_component_association ::=
   discrete_choice_list arrow_token box_token
 ;
 
-discrete_choice_list ::= discrete_choice;
-
-Rules for discrete_choice_list.discrete_choice :
-(.
-           declare
-              List : constant Gela.Nodes.Discrete_Choice_Sequence :=
-                Self.Compilation.Store.Fabric.Discrete_Choice_Sequence;
-           begin
-              List.Object.Append (List.Payload, ${discrete_choice.ast});
-              ${discrete_choice_list.ast} := +List;
-           end;
+Rules for record_component_association.expression :
+(.          ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
+           (-${discrete_choice_list.ast:(null, 0)}, -${arrow_token.ast:(null, 0)}, -${expression.ast});
 .)
+
+Rules for record_component_association.box :
+(.
+         declare
+            Box : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Box (-${box_token.ast});
+         begin
+           ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
+             (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
+         end;
+.)
+
+
+
+discrete_choice_list ::=
+   discrete_choice {vertical_line_token discrete_choice} <choice_list>
+;
+
+Rules for discrete_choice_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${choice_list.ast:+Self.Compilation.Store.Fabric.Discrete_Choice_Sequence};
+            List : constant Gela.Nodes.Discrete_Choice_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${discrete_choice.ast});
+            ${discrete_choice_list.ast} := Conv;
+         end;
+.)
+
+Rules for choice_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Discrete_Choice_Sequence};
+            List : constant Gela.Nodes.Discrete_Choice_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${discrete_choice.ast});
+            ${choice_list.ast} := Conv;
+         end;
+.)
+
+
 
 discrete_choice ::=
   identifier
+  | others_token
 ;
+
+Rules for discrete_choice.others_token :
+(.         ${discrete_choice.ast} := +Self.Compilation.Store.Fabric.Others_Choice
+         (-${others_token.ast});
+.)
+
+
 
 name ::=
   direct_name |
   explicit_dereference |
   selected_component |
   attribute_reference |
-  function_call;
+  function_call |
+  character_literal_token |
+  qualified_expression;
+
+Rules for name.character_literal_token :
+(.         ${name.ast} := +Self.Compilation.Store.Fabric.Character_Literal
+         (-${character_literal_token.ast});
+.)
+
+
+
 
 direct_name ::= identifier | operator_symbol;
 
 identifier ::= identifier_token;
 
+Rules for identifier.identifier_token :
+(.         ${identifier.ast} := +Self.Compilation.Store.Fabric.Identifier
+           (-${identifier_token.ast});
+.)
+
+
+
 explicit_dereference ::= prefix dot_token all_token;
 
-expression ::= name;
+Rules for explicit_dereference. :
+(.         ${explicit_dereference.ast} := +Self.Compilation.Store.Fabric.Explicit_Dereference
+         (-${prefix.ast}, -${dot_token.ast}, -${all_token.ast});
+.)
+
+
+
+expression ::= simple_expression;
 
 selected_component ::= prefix dot_token selector_name;
+
+Rules for selected_component. :
+(.         ${selected_component.ast} := +Self.Compilation.Store.Fabric.Selected_Component
+         (-${prefix.ast}, -${dot_token.ast}, -${selector_name.ast});
+.)
+
+
 
 prefix ::= name;
 
@@ -161,30 +408,265 @@ selector_name ::=
   character_literal_token |
   operator_symbol;
 
+Rules for selector_name.character_literal_token :
+(.         ${selector_name.ast} := +Self.Compilation.Store.Fabric.Character_Literal
+         (-${character_literal_token.ast});
+.)
+
+
+
 attribute_reference ::=
   prefix apostrophe_token identifier;
 
+Rules for attribute_reference. :
+(.         ${attribute_reference.ast} := +Self.Compilation.Store.Fabric.Attribute_Reference
+         (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast});
+.)
+
+
+
 function_call ::= prefix record_aggregate;
+
+Rules for function_call. :
+(.         ${function_call.ast} := +Self.Compilation.Store.Fabric.Function_Call
+         (-${prefix.ast}, -${record_aggregate.ast});
+.)
+
+
+
+qualified_expression ::= prefix apostrophe_token aggregate;
+
+Rules for qualified_expression. :
+(.         ${qualified_expression.ast} := +Self.Compilation.Store.Fabric.Qualified_Expression
+         (-${prefix.ast}, -${apostrophe_token.ast}, -${aggregate.ast});
+.)
+
+
+
+allocator ::= new_token [subpool_specification] name;
+
+Rules for allocator. :
+(.         ${allocator.ast} := +Self.Compilation.Store.Fabric.Allocator
+         (-${new_token.ast}, -${subpool_specification.ast:(null, 0)}, -${name.ast});
+.)
+
+
+
+subpool_specification ::=
+  left_parenthesis_token name right_parenthesis_token;
+
+Rules for subpool_specification. :
+(.         ${subpool_specification.ast} := ${name.ast};
+.)
+
+
+
+conditional_expression ::= if_expression | case_expression;
+
+if_expression ::=
+  if_token expression <condition> then_token expression <then>
+  {elsif_token expression <condition> then_token expression} <elsif_exp_list>
+  [(else) else_token expression <else>];
+
+Rules for if_expression. :
+(.
+         declare
+            Path : constant Gela.Nodes.If_Expression_Path :=
+              Self.Compilation.Store.Fabric.If_Expression_Path
+                (-${if_token.ast},
+                 -${condition.ast},
+                 -${then_token.ast},
+                 -${then.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${elsif_exp_list.ast:+Self.Compilation.Store.Fabric.If_Else_Expression_Path_Sequence};
+            List : constant Gela.Nodes.If_Else_Expression_Path_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, +Path);
+            ${if_expression.ast} := +Self.Compilation.Store.Fabric.If_Expression (List);
+         end;
+.)
+
+Rules for if_expression. :
+(.
+         declare
+            Path : constant Gela.Nodes.If_Expression_Path :=
+              Self.Compilation.Store.Fabric.If_Expression_Path
+                (-${if_token.ast},
+                 -${condition.ast},
+                 -${then_token.ast},
+                 -${then.ast});
+            Tail : constant Gela.Nodes.Else_Expression_Path :=
+              Self.Compilation.Store.Fabric.Else_Expression_Path
+                (-${else_token.ast},
+                 -${else.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${elsif_exp_list.ast:+Self.Compilation.Store.Fabric.If_Else_Expression_Path_Sequence};
+            List : constant Gela.Nodes.If_Else_Expression_Path_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, +Path);
+            List.Object.Append (List.Payload, +Tail);
+            ${if_expression.ast} := +Self.Compilation.Store.Fabric.If_Expression (List);
+         end;
+.)
+
+Rules for elsif_exp_list. :
+(.
+         declare
+            Path : constant Gela.Nodes.Elsif_Expression_Path :=
+              Self.Compilation.Store.Fabric.Elsif_Expression_Path
+                (-${elsif_token.ast},
+                 -${condition.ast},
+                 -${then_token.ast},
+                 -${expression.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.If_Else_Expression_Path_Sequence};
+            List : constant Gela.Nodes.If_Else_Expression_Path_Sequence :=
+              -Conv;
+         begin
+            List.Object.Append (List.Payload, +Path);
+            ${elsif_exp_list.ast} := Conv;
+         end;
+.)
+
+
+
+case_expression ::=
+  case_token expression is_token
+  case_expression_alternative
+  {comma_token case_expression_alternative} <case_exp_alternative_list>;
+
+Rules for case_expression. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${case_exp_alternative_list.ast:+Self.Compilation.Store.Fabric.Case_Expression_Path_Sequence};
+            List : constant Gela.Nodes.Case_Expression_Path_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${case_expression_alternative.ast});
+            ${case_expression.ast} := +Self.Compilation.Store.Fabric.Case_Expression
+              (-${case_token.ast},
+               -${expression.ast},
+               -${is_token.ast},
+               List);
+         end;
+.)
+
+Rules for case_exp_alternative_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Case_Expression_Path_Sequence};
+            List : constant Gela.Nodes.Case_Expression_Path_Sequence :=
+              -Conv;
+         begin
+            List.Object.Append (List.Payload, ${case_expression_alternative.ast});
+            ${case_exp_alternative_list.ast} := Conv;
+         end;
+.)
+
+case_expression_alternative ::= 
+  when_token discrete_choice_list arrow_token expression;
+
+Rules for case_expression_alternative. :
+(.         ${case_expression_alternative.ast} := +Self.Compilation.Store.Fabric.Case_Expression_Path
+         (-${when_token.ast},
+          -${discrete_choice_list.ast},
+          -${arrow_token.ast},
+          -${expression.ast});
+.)
+
+quantified_expression ::=
+(iterator)
+  ffor_token quantifier iterator_specification arrow_token expression;
+
+Rules for quantified_expression.iterator :
+(.
+         ${quantified_expression.ast} := +Self.Compilation.Store.Fabric.Quantified_Expression
+             (-${ffor_token.ast},
+              -${quantifier.ast},
+              -${iterator_specification.ast},
+              -${arrow_token.ast},
+              -${expression.ast});
+.)
+
+
+
+quantifier ::= all_token | some_token;
+
+iterator_specification ::=
+  defining_identifier
+  [colon_token ] of_token [reverse_token] name
+;
+
+Rules for iterator_specification. :
+(.
+         ${iterator_specification.ast} := +Self.Compilation.Store.Fabric.
+           Element_Iterator_Specification
+             (-${defining_identifier.ast},
+              -${colon_token.ast:(null, 0)},
+              -${of_token.ast},
+              -${reverse_token.ast:(null, 0)},
+              -${name.ast});
+.)
+
+
+
+defining_identifier ::= identifier_token;
+
+Rules for defining_identifier.identifier_token :
+(.         ${defining_identifier.ast} := +Self.Compilation.Store.Fabric.Defining_Identifier
+         (-${identifier_token.ast});
+.)
+
+
 
 operator_symbol ::= string_literal_token;
 
+Rules for operator_symbol.string_literal_token :
+(.         ${operator_symbol.ast} := +Self.Compilation.Store.Fabric.Operator_Symbol
+         (-${string_literal_token.ast});
+.)
+
+
+
 Synthesized attributes
   _compilation,
+  aggregate,
+  allocator,
   attribute_reference,
+  case_expression,
+  case_expression_alternative,
+  case_exp_alternative_list,
+  component_association_list,
+  conditional_expression,
+  choice_list,
+  defining_identifier,
   direct_name,
   discrete_choice,
   discrete_choice_list,
   identifier,
+  if_expression,
+  elsif_exp_list,
   explicit_dereference,
   expression,
   function_call,
+  iterator_specification,
   name,
   operator_symbol,
   prefix,
+  qualified_expression,
+  quantified_expression,
+  quantifier,
   record_aggregate,
   record_component_association,
+  record_component_association_list,
   selected_component,
-  selector_name
+  selector_name,
+  simple_expression,
+  subpool_specification
  : Integer : ast;
 
 Synthesized attributes
@@ -293,69 +775,4 @@ Synthesized attributes
   with_token,
   xor_token
  : Integer : ast;
-
-Rules for identifier.identifier_token :
-(.         ${identifier.ast} := +Self.Compilation.Store.Fabric.Identifier
-           (-${identifier_token.ast});
-.)
-
-Rules for operator_symbol.string_literal_token :
-(.         ${operator_symbol.ast} := +Self.Compilation.Store.Fabric.Operator_Symbol
-           (-${string_literal_token.ast});
-.)
-
-Rules for explicit_dereference. :
-(.         ${explicit_dereference.ast} := +Self.Compilation.Store.Fabric.Explicit_Dereference
-           (-${prefix.ast}, -${dot_token.ast}, -${all_token.ast});
-.)
-
-Rules for selector_name.character_literal_token :
-(.         ${selector_name.ast} := +Self.Compilation.Store.Fabric.Enumeration_Literal
-           (-${character_literal_token.ast});
-.)
-
-Rules for selected_component. :
-(.         ${selected_component.ast} := +Self.Compilation.Store.Fabric.Selected_Component
-           (-${prefix.ast}, -${dot_token.ast}, -${selector_name.ast});
-.)
-
-Rules for attribute_reference. :
-(.         ${attribute_reference.ast} := +Self.Compilation.Store.Fabric.Attribute_Reference
-           (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast});
-.)
-
-Rules for function_call. :
-(.         ${function_call.ast} := +Self.Compilation.Store.Fabric.Function_Call
-           (-${prefix.ast}, -${record_aggregate.ast});
-.)
-
-Rules for record_component_association.box :
-(.
-         declare
-            Box : constant Gela.Nodes.Element :=
-              +Self.Compilation.Store.Fabric.Box (-${box_token.ast});
-         begin
-           ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
-             (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
-         end;
-.)
-
-Rules for record_component_association.expression :
-(.          ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
-             (-${discrete_choice_list.ast:(null, 0)}, -${arrow_token.ast:(null, 0)}, -${expression.ast});
-.)
-
-Rules for record_aggregate. :
-(.
-           declare
-              List : constant Gela.Nodes.Association_Sequence :=
-                Self.Compilation.Store.Fabric.Association_Sequence;
-           begin
-              List.Object.Append
-                (List.Payload, ${record_component_association.ast});
-              List.Object.Append (List.Payload, ${x.ast});
-              ${record_aggregate.ast} :=
-                +Self.Compilation.Store.Fabric.Record_Aggregate (List);
-           end;
-.)
 

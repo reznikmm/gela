@@ -15,6 +15,7 @@ with Gela.Lexical.Tokens;
 with Gela.Stores.Productions;
 
 with Gela.Grammars.Reader;
+with Gela.Grammars.Conflicts;
 with Gela.Grammars_Convertors;
 with Gela.Grammars.Constructors;
 with Gela.Grammars.LR_Tables;
@@ -34,6 +35,7 @@ procedure Lexer_Test is
    G     : constant Gela.Grammars.Grammar :=
      Gela.Grammars.Reader.Read ("ada-ast.ag");
    Plain : constant Gela.Grammars.Grammar := G;
+   Resolver : Gela.Grammars.Conflicts.Resolver;
 
    -----------
    -- Print --
@@ -132,11 +134,11 @@ procedure Lexer_Test is
    Ada_Plain : constant Gela.Grammars.Grammar_Access :=
      new Gela.Grammars.Grammar'
        (Gela.Grammars_Convertors.Convert (Ada_AG, Left => False));
+   AG : constant Gela.Grammars.Grammar :=
+     Gela.Grammars.Constructors.To_Augmented (Ada_Plain.all);
    Table : constant Gela.Grammars.LR_Tables.Table_Access :=
      new Gela.Grammars.LR_Tables.Table'
-       (Gela.Grammars.LR.LALR.Build
-            (Gela.Grammars.Constructors.To_Augmented (Ada_Plain.all),
-             Right_Nulled => False));
+       (Gela.Grammars.LR.LALR.Build (AG, Right_Nulled => False));
 
    Comp    : constant Gela.Mutables.Mutable_Compilation_Access :=
      Gela.Mutables.Compilations.Create
@@ -144,6 +146,7 @@ procedure Lexer_Test is
 
    use type Gela.Types.Payload;
 begin
+   Resolver.Resolve (AG, Table.all);
    Gela.Lexical.Handler.Initialize;
    Comp.Start;
 

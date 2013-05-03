@@ -45,4 +45,11 @@ package Gela.Stores.Fabrics is
       NT   : Gela.Grammars.Non_Terminal_Index)
       return Gela.Types.Payload;
 
+   function Infix_Call
+     (Self   : access Fabric;
+      Prefix : Gela.Nodes.Token;
+      Left   : Gela.Nodes.Simple_Expression;
+      Right  : Gela.Nodes.Simple_Expression := (null, 0))
+      return Gela.Nodes.Function_Call;
+
 end Gela.Stores.Fabrics;

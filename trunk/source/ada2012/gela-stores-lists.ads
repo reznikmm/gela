@@ -27,20 +27,20 @@ generic
       Payload : Gela.Types.Payload)
       return Item_Record is abstract;
 
---     with procedure Next
---       (Self     : access Node_List;
---        Payload  : Gela.Types.Payload;
---        Position : in out Item_Record) is abstract;
---
+   with procedure Next
+     (Self     : access Node_List;
+      Payload  : Gela.Types.Payload;
+      Position : in out Item_Record) is abstract;
+
    with procedure Append
      (Self     : access Node_List;
       Payload  : Gela.Types.Payload;
       Item     : Gela.Nodes.Element) is abstract;
 
---     with procedure Prepend
---       (Self     : access Node_List;
---        Payload  : Gela.Types.Payload;
---        Item     : Gela.Nodes.Element) is abstract;
+   with procedure Prepend
+     (Self     : access Node_List;
+      Payload  : Gela.Types.Payload;
+      Item     : Gela.Nodes.Element) is abstract;
 package Gela.Stores.Lists is
    pragma Preelaborate;
    pragma Elaborate_Body;

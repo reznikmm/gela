@@ -6,6 +6,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
+with Gela.Nodes.Convertions;
 
 package body Gela.Stores.Fabrics is
 
@@ -89,6 +90,46 @@ package body Gela.Stores.Fabrics is
       Self.Store.Set (Item + 1, 1);      --  Count
       return Gela.Types.Payload (Item);
    end Create_Token;
+
+   ----------------
+   -- Infix_Call --
+   ----------------
+
+   function Infix_Call
+     (Self   : access Fabric;
+      Prefix : Gela.Nodes.Token;
+      Left   : Gela.Nodes.Simple_Expression;
+      Right  : Gela.Nodes.Simple_Expression := (null, 0))
+      return Gela.Nodes.Function_Call
+   is
+      use Gela.Nodes.Convertions;
+      use type Gela.Nodes.Simple_Expression_Access;
+
+      Conv : Gela.Nodes.Element := +Left;
+      Name : constant Gela.Nodes.Element := +Self.Operator_Symbol (Prefix);
+      Arg  : Gela.Nodes.Association := Self.Association
+        (Array_Component_Choices => Self.Discrete_Choice_Sequence,
+         Arrow_Token             => (null, 0),
+         Component_Expression    => -Conv);
+      Args : Gela.Nodes.Association_Sequence := Self.Association_Sequence;
+   begin
+      Args.Object.Append (Args.Payload, +Arg);
+
+      if Right.Object /= null then
+         Conv := +Right;
+
+         Arg := Self.Association
+           (Array_Component_Choices => Self.Discrete_Choice_Sequence,
+            Arrow_Token             => (null, 0),
+            Component_Expression    => -Conv);
+
+         Args.Object.Append  (Args.Payload, +Arg);
+      end if;
+
+      return Self.Function_Call
+        (Prefix                   => -Name,
+         Function_Call_Parameters => Self.Record_Aggregate (Args));
+   end Infix_Call;
 
    ----------------
    -- To_Element --

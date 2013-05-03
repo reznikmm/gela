@@ -13,8 +13,11 @@ with Gela.Grammars;
 with Gela.Grammars.Reader;
 with Gela.Grammars_Convertors;
 with Gela.Grammars.Rule_Templates;
---  with Gela.Grammars_Debug;
-
+with Gela.Grammars_Debug;
+with Gela.Grammars.LR_Tables;
+with Gela.Grammars.LR.LALR;
+with Gela.Grammars.Constructors;
+with Gela.Grammars.Conflicts;
 with AG_Tools.Writers;                 use AG_Tools.Writers;
 
 with League.String_Vectors;
@@ -34,7 +37,12 @@ procedure YACC_Driver is
    G     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (File);
    Plain : constant Gela.Grammars.Grammar :=
      Gela.Grammars_Convertors.Convert (G, Left => False);
-
+   AG    : constant Gela.Grammars.Grammar :=
+     Gela.Grammars.Constructors.To_Augmented (Plain);
+   Table : Gela.Grammars.LR_Tables.Table := Gela.Grammars.LR.LALR.Build
+     (Input        => AG,
+      Right_Nulled => False);
+   Resolver : Gela.Grammars.Conflicts.Resolver;
    Output : Writer;
 
    -----------
@@ -137,4 +145,11 @@ begin
    Output.N ("end On_Reduce;");
 
    Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
+
+   Resolver.Resolve (AG, Table);
+   Gela.Grammars_Debug.Print_Conflicts (AG, Table);
+
+   if Ada.Command_Line.Argument_Count > 1 then
+      Gela.Grammars_Debug.Print (AG);
+   end if;
 end YACC_Driver;
