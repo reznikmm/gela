@@ -5,17 +5,32 @@ Compilation ::= name;
 allocator ::=
   token <new_token> name <Subtype_Or_Expression> name <Subpool_Name>;
 
-aggregate ::= record_aggregate;
-
 association ::=
   {discrete_choice} <Array_Component_Choices>
   token             <arrow_token>
   expression_or_box <Component_Expression>;
 
 attribute_reference ::=
-  prefix token <apostrophe_token> identifier <Attribute_Designator_Identifier>;
+  prefix
+  token <apostrophe_token>
+  identifier <Attribute_Designator_Identifier>
+  token <designator_token>
+  expression <Attribute_Designator_Expressions>
+;
 
 box ::= token <box_token>;
+
+constraint ::= scalar_constraint;
+
+delta_constraint ::=
+  token            <delta_token>
+  expression       <Delta_Expression>
+  range_constraint <Real_Range_Constraint>;
+
+digits_constraint ::=
+  token            <digits_token>
+  expression       <Digits_Expression>
+  range_constraint <Real_Range_Constraint>;
 
 direct_name ::=
   identifier |
@@ -23,7 +38,46 @@ direct_name ::=
 
 discrete_choice ::= expression | discrete_range | others_choice;
 
-discrete_range ::= token <blah>;
+discrete_range ::= discrete_subtype_indication_dr | range_dr;
+
+discrete_subtype_definition ::=
+   discrete_subtype_indication |
+   discrete_range_attribute_reference |
+   discrete_simple_expression_range;
+
+discrete_subtype_indication ::= 
+    subtype_mark <Subtype_Mark>
+    range_constraint <Subtype_Constraint>;
+
+discrete_range_attribute_reference ::=
+    attribute_reference <Range_Attribute>;
+
+discrete_simple_expression_range ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+
+range_dr ::= range_attribute_reference_dr | simple_expression_range_dr;
+
+discrete_subtype_indication_dr ::= 
+    subtype_mark <Subtype_Mark>
+    range_constraint <Subtype_Constraint>;
+
+range_attribute_reference_dr ::=
+    attribute_reference <Range_Attribute>;
+
+simple_expression_range_dr ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+
+
+
+
 
 else_expression_path ::=
     token <else_token>
@@ -41,9 +95,16 @@ enumeration_literal ::= token <enumeration_literal>;
 
 explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
 
-expression ::= simple_expression;
+expression ::= membership_test | simple_expression;
 
 expression_or_box ::= expression | box;
+
+extension_aggregate ::=
+  token         <left_token>
+  expression    <Extension_Aggregate_Expression>
+  token         <with_token>
+  {association} <Record_Component_Associations>
+  token         <right_token>;
 
 function_call ::= prefix record_aggregate <Function_Call_Parameters>;
 
@@ -86,7 +147,8 @@ quantified_expression ::=
 
 iterator_specification ::=
   generalized_iterator_specification |
-  element_iterator_specification
+  element_iterator_specification |
+  loop_parameter_specification
 ;
 
 generalized_iterator_specification ::=
@@ -98,11 +160,20 @@ generalized_iterator_specification ::=
 element_iterator_specification ::=
    defining_identifier <Names>
    token <colon_token>
+   subtype_indication
    token <of_token>
    token <reverse_token>
    name <Iteration_Scheme_Name>;
 
 character_literal ::= token <character_literal>;
+
+loop_parameter_specification ::=
+  defining_identifier         <Names>
+  token                       <in_token>
+  token                       <reverse_token>
+  discrete_subtype_definition <Specification_Subtype_Definition>
+;
+
 
 membership_test ::=
   simple_expression <Membership_Test_Expression>
@@ -112,17 +183,6 @@ membership_test ::=
 ;
 
 membership_choice ::= simple_expression | range_constraint;
-
-range_constraint ::= range_attribute_reference | simple_expression_range;
-
-range_attribute_reference ::=
-  attribute_reference <Range_Attribute>;
-
-simple_expression_range ::=
-  simple_expression <Lower_Bound>
-  token <double_dot_token>
-  simple_expression <Upper_Bound>
-;
 
 name ::= direct_name |
   explicit_dereference |
@@ -148,8 +208,23 @@ qualified_expression ::=
   token <apostrophe_token>
   expression <Converted_Or_Qualified_Expression>;
 
+range_constraint ::= range_attribute_reference | simple_expression_range;
+
+range_attribute_reference ::=
+  attribute_reference <Range_Attribute>;
+
 record_aggregate ::=
- {association} <Record_Component_Associations>;
+  token         <left_token>
+  {association} <Record_Component_Associations>
+  token         <right_token>;
+
+scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
+
+simple_expression_range ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
 
 selected_component ::= prefix token <dot_token> selector_name <Selector>;
 
@@ -161,16 +236,28 @@ selector_name ::=
   enumeration_literal |
   operator_symbol;
 
+short_circuit ::=
+  expression <Short_Circuit_Operation_Left_Expression>
+  token <and_token>
+  token <then_token>
+  expression <Short_Circuit_Operation_Right_Expression>;
+
 simple_expression ::=
     numeric_literal |
     null_literal |
-    aggregate |
+    record_aggregate |
+    extension_aggregate |
     name |
     qualified_expression | 
     allocator |
     if_expression |
     case_expression |
     quantified_expression;
+
+subtype_indication ::=
+  token <not_token>
+  subtype_mark
+  constraint <Subtype_Constraint>;
 
 subtype_mark ::= identifier |
  selected_identifier;

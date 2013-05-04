@@ -128,7 +128,10 @@ package body Gela.Stores.Fabrics is
 
       return Self.Function_Call
         (Prefix                   => -Name,
-         Function_Call_Parameters => Self.Record_Aggregate (Args));
+         Function_Call_Parameters => Self.Record_Aggregate
+           (Left_Token                    => (null, 0),
+            Record_Component_Associations => Args,
+            Right_Token                   => (null, 0)));
    end Infix_Call;
 
    ----------------

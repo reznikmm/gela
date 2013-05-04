@@ -154,7 +154,7 @@ begin
    Ada.Wide_Wide_Text_IO.Put_Line
      (Gela.Lexical.Line_Count'Wide_Wide_Image (Comp.Last_Line));
 
-   if Comp.Root.Payload /= 0 then
+   if Comp.Root.Object /= null then
       Print
         (Comp,
          Comp.Store.Fabric.To_Element (Comp.Root.Payload),

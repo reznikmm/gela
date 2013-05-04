@@ -107,6 +107,105 @@ Token string_literal_token;
 
 _compilation ::= expression;
 
+expression ::= relation |
+  (and)      expression and_token relation |
+  (and_then) expression and_token then_token relation |
+  (or)       expression or_token  relation |
+  (or_else)  expression or_token  else_token relation |
+  (xor)      expression xor_token relation
+;
+
+Rules for expression.and :
+(.         ${expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${and_token.ast}, -${expression.ast}, -${relation.ast});
+.)
+
+Rules for expression.or :
+(.         ${expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${or_token.ast}, -${expression.ast}, -${relation.ast});
+.)
+
+Rules for expression.xor :
+(.         ${expression.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${xor_token.ast}, -${expression.ast}, -${relation.ast});
+.)
+
+Rules for expression.and_then :
+(.         ${expression.ast} := +Self.Compilation.Store.Fabric.Short_Circuit
+           (-${expression.ast}, -${and_token.ast}, -${then_token.ast}, -${relation.ast});
+.)
+
+Rules for expression.or_else :
+(.         ${expression.ast} := +Self.Compilation.Store.Fabric.Short_Circuit
+           (-${expression.ast}, -${or_token.ast}, -${else_token.ast}, -${relation.ast});
+.)
+
+
+
+relation ::= 
+(relation)
+  simple_expression <left> [relational_operator simple_expression <right>] |
+(membership)
+  simple_expression [not_token] in_token membership_choice_list;
+
+Rules for relation.relation :
+(.         ${relation.ast} := +Self.Compilation.Store.Fabric.Infix_Call
+           (-${relational_operator.ast}, -${left.ast}, -${right.ast});
+.)
+
+Rules for relation.membership :
+(.         ${relation.ast} := +Self.Compilation.Store.Fabric.Membership_Test
+           (-${simple_expression.ast},
+            -${not_token.ast:(null, 0)},
+            -${in_token.ast},
+            -${membership_choice_list.ast});
+.)
+
+
+
+membership_choice_list ::=
+  membership_choice {vertical_line_token membership_choice} <mchoice_list>;
+
+Priority membership_choice_list. 10 left;
+
+Rules for membership_choice_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${mchoice_list.ast:+Self.Compilation.Store.Fabric.Membership_Choice_Sequence};
+            List : constant Gela.Nodes.Membership_Choice_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${membership_choice.ast});
+            ${membership_choice_list.ast} := Conv;
+         end;
+.)
+
+Rules for mchoice_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Membership_Choice_Sequence};
+            List : constant Gela.Nodes.Membership_Choice_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${membership_choice.ast});
+            ${mchoice_list.ast} := Conv;
+         end;
+.)
+
+
+
+membership_choice ::= simple_expression | range;
+
+relational_operator ::=
+  equal_token |
+  inequality_token |
+  less_token |
+  less_or_equal_token |
+  greater_token |
+  greater_or_equal_token;
+
+
+
 simple_expression ::=
   numeric_literal_token |
   null_token |
@@ -225,7 +324,7 @@ Rules for simple_expression.quantified :
 
 
 aggregate ::=
-  record_aggregate
+  record_aggregate | extension_aggregate
 ;
 
 record_aggregate ::=
@@ -236,7 +335,10 @@ record_aggregate ::=
 Rules for record_aggregate. :
 (.
          ${record_aggregate.ast} :=
-           +Self.Compilation.Store.Fabric.Record_Aggregate (-${record_component_association_list.ast});
+           +Self.Compilation.Store.Fabric.Record_Aggregate
+             (-${left_parenthesis_token.ast},
+              -${record_component_association_list.ast},
+              -${right_parenthesis_token.ast});
 .)
 
 
@@ -342,13 +444,113 @@ Rules for choice_list. :
 
 
 discrete_choice ::=
-  identifier
-  | others_token
+  expression |
+  discrete_range |
+  others_token
 ;
 
 Rules for discrete_choice.others_token :
 (.         ${discrete_choice.ast} := +Self.Compilation.Store.Fabric.Others_Choice
          (-${others_token.ast});
+.)
+
+
+
+discrete_range ::=
+  (subtype_indication) simple_expression range_constraint |
+  range_attribute_reference |
+  (range)  simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for discrete_range.subtype_indication :
+(.         ${discrete_range.ast} :=
+           +Self.Compilation.Store.Fabric.Discrete_Subtype_Indication_Dr
+             (-${simple_expression.ast}, -${range_constraint.ast});
+.)
+
+Rules for discrete_range.range :
+(.         ${discrete_range.ast} :=
+           +Self.Compilation.Store.Fabric.Simple_Expression_Range_Dr
+             (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
+.)
+
+Rules for discrete_range.range_attribute_reference :
+(.         ${discrete_range.ast} :=
+           +Self.Compilation.Store.Fabric.Range_Attribute_Reference_Dr
+             (-${range_attribute_reference.ast});
+.)
+
+
+
+discrete_subtype_definition ::=
+  (subtype_indication) simple_expression [range_constraint] |
+  range_attribute_reference |
+  (range)  simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for discrete_subtype_definition.subtype_indication :
+(.         ${discrete_subtype_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Discrete_Subtype_Indication
+             (-${simple_expression.ast}, -${range_constraint.ast:(null, 0)});
+.)
+
+
+Rules for discrete_subtype_definition.range_attribute_reference :
+(.         ${discrete_subtype_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Discrete_Range_Attribute_Reference
+             (-${range_attribute_reference.ast});
+.)
+
+Rules for discrete_subtype_definition.range :
+(.         ${discrete_subtype_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Discrete_Simple_Expression_Range
+             (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
+.)
+
+
+
+range ::=
+  range_attribute_reference |
+  (range) simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for range.range :
+(.         ${range.ast} :=
+           +Self.Compilation.Store.Fabric.Simple_Expression_Range
+             (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
+.)
+
+Rules for range.range_attribute_reference :
+(.         ${range.ast} :=
+           +Self.Compilation.Store.Fabric.Range_Attribute_Reference
+             (-${range_attribute_reference.ast});
+.)
+
+
+
+range_constraint ::= range_token range;
+
+Rules for range_constraint. :
+(.         ${range_constraint.ast} := ${range.ast};
+.)
+
+
+extension_aggregate ::= 
+  left_parenthesis_token
+  name with_token
+  record_component_association_list
+  right_parenthesis_token
+;
+
+Rules for extension_aggregate. :
+(.
+         ${extension_aggregate.ast} :=
+           +Self.Compilation.Store.Fabric.Extension_Aggregate
+             (-${left_parenthesis_token.ast},
+              -${name.ast},
+              -${with_token.ast},
+              -${record_component_association_list.ast},
+              -${right_parenthesis_token.ast});
 .)
 
 
@@ -389,9 +591,6 @@ Rules for explicit_dereference. :
 .)
 
 
-
-expression ::= simple_expression;
-
 selected_component ::= prefix dot_token selector_name;
 
 Rules for selected_component. :
@@ -420,7 +619,9 @@ attribute_reference ::=
 
 Rules for attribute_reference. :
 (.         ${attribute_reference.ast} := +Self.Compilation.Store.Fabric.Attribute_Reference
-         (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast});
+         (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast},
+          (null, 0),
+          (null, 0));
 .)
 
 
@@ -579,8 +780,20 @@ Rules for case_expression_alternative. :
 .)
 
 quantified_expression ::=
+(loop)
+  ffor_token quantifier loop_parameter_specification arrow_token expression |
 (iterator)
   ffor_token quantifier iterator_specification arrow_token expression;
+
+Rules for quantified_expression.loop :
+(.
+         ${quantified_expression.ast} := +Self.Compilation.Store.Fabric.Quantified_Expression
+             (-${ffor_token.ast},
+              -${quantifier.ast},
+              -${loop_parameter_specification.ast},
+              -${arrow_token.ast},
+              -${expression.ast});
+.)
 
 Rules for quantified_expression.iterator :
 (.
@@ -594,11 +807,39 @@ Rules for quantified_expression.iterator :
 
 
 
+loop_parameter_specification ::=
+  defining_identifier in_token [reverse_token] discrete_subtype_definition;
+
+Rules for loop_parameter_specification. :
+(.         ${loop_parameter_specification.ast} :=
+           +Self.Compilation.Store.Fabric.Loop_Parameter_Specification
+             (-${defining_identifier.ast},
+              -${in_token.ast},
+              -${reverse_token.ast:(null, 0)},
+              -${discrete_subtype_definition.ast});
+.)
+
+
+
+range_attribute_reference ::=
+  prefix apostrophe_token range_token
+  [(exp) left_parenthesis_token expression right_parenthesis_token];
+
+Rules for range_attribute_reference. :
+(.         ${range_attribute_reference.ast} := +Self.Compilation.Store.Fabric.Attribute_Reference
+         (-${prefix.ast},
+          -${apostrophe_token.ast},
+          (null, 0),
+          -${range_token.ast},
+          -${expression.ast:(null, 0)});
+.)
+
+
 quantifier ::= all_token | some_token;
 
 iterator_specification ::=
   defining_identifier
-  [colon_token ] of_token [reverse_token] name
+  [(subtype) colon_token subtype_indication] of_token [reverse_token] name
 ;
 
 Rules for iterator_specification. :
@@ -607,11 +848,43 @@ Rules for iterator_specification. :
            Element_Iterator_Specification
              (-${defining_identifier.ast},
               -${colon_token.ast:(null, 0)},
+              -${subtype_indication.ast:(null, 0)},
               -${of_token.ast},
               -${reverse_token.ast:(null, 0)},
               -${name.ast});
 .)
 
+subtype_indication ::= [null_exclusion] subtype_mark [scalar_constraint];
+
+Rules for subtype_indication. :
+(.
+         ${subtype_indication.ast} := +Self.Compilation.Store.Fabric.Subtype_Indication
+             (-${null_exclusion.ast:(null, 0)},
+              -${subtype_mark.ast},
+              -${scalar_constraint.ast:(null, 0)});
+.)
+
+
+subtype_mark ::= name;
+
+null_exclusion ::= not_token null_token;
+
+scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
+
+digits_constraint ::= digits_token simple_expression [range_constraint];
+
+Rules for digits_constraint. :
+(.         ${digits_constraint.ast} := +Self.Compilation.Store.Fabric.Digits_Constraint
+         (-${digits_token.ast}, -${simple_expression.ast}, -${range_constraint.ast:(null, 0)});
+.)
+
+
+delta_constraint ::= delta_token simple_expression [range_constraint];
+
+Rules for delta_constraint. :
+(.         ${delta_constraint.ast} := +Self.Compilation.Store.Fabric.Delta_Constraint
+         (-${delta_token.ast}, -${simple_expression.ast}, -${range_constraint.ast:(null, 0)});
+.)
 
 
 defining_identifier ::= identifier_token;
@@ -644,28 +917,46 @@ Synthesized attributes
   conditional_expression,
   choice_list,
   defining_identifier,
+  delta_constraint,
+  digits_constraint,
   direct_name,
   discrete_choice,
   discrete_choice_list,
+  discrete_range,
+  discrete_subtype_definition,
   identifier,
   if_expression,
   elsif_exp_list,
   explicit_dereference,
   expression,
+  extension_aggregate,
   function_call,
   iterator_specification,
+  loop_parameter_specification,
+  mchoice_list,
+  membership_choice,
+  membership_choice_list,
   name,
+  null_exclusion,
   operator_symbol,
   prefix,
   qualified_expression,
   quantified_expression,
   quantifier,
+  range,
+  range_attribute_reference,
+  range_constraint,
   record_aggregate,
   record_component_association,
   record_component_association_list,
+  relation,
+  relational_operator,
+  scalar_constraint,
   selected_component,
   selector_name,
   simple_expression,
+  subtype_indication,
+  subtype_mark,
   subpool_specification
  : Integer : ast;
 

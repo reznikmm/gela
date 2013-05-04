@@ -400,6 +400,12 @@ procedure AG_Driver is
                      Fabrics.N ("      ", Fab_Body);
                      Fabrics.N (To_Ada (Part.Name), Fab_Body);
                      Fabrics.N (" : Gela.Nodes.", Fab_Body);
+
+                     if Part.Name.Length > 30 then
+                        Fabrics.P ("", Fab_Body);
+                        Fabrics.N ("        ", Fab_Body);
+                     end if;
+
                      Fabrics.N (Return_Type (Part), Fab_Body);
                   end loop;
 
