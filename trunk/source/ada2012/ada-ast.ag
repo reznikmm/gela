@@ -2,6 +2,63 @@ Token token;
 
 Compilation ::= name;
 
+access_definition ::=
+  anonymous_access_to_object_definition |
+  anonymous_access_to_function_definition |
+  anonymous_access_to_procedure_definition;
+
+anonymous_access_to_object_definition ::=
+  token <not_token>
+  token <access_token>
+  token <constant_token>
+  subtype_mark <Anonymous_Access_To_Object_Subtype_Mark>;
+
+anonymous_access_to_procedure_definition ::=
+  token <not_token>
+  token <access_token>
+  token <protected_token>
+  token <procedure_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>;
+
+anonymous_access_to_function_definition ::=
+  token <not_token>
+  token <access_token>
+  token <protected_token>
+  token <function_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token <return_token>
+  token <return_not_token>
+  subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
+
+access_to_object_definition ::=
+  token <not_token>
+  token <access_token>
+  token <constant_token>
+  subtype_indication <Access_To_Object_Definition>
+;
+
+access_to_procedure_definition ::=
+  token <not_token>
+  token <access_token>
+  token <protected_token>
+  token <procedure_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>;
+
+access_to_function_definition ::=
+  token <not_token>
+  token <access_token>
+  token <protected_token>
+  token <function_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token <return_token>
+  token <return_not_token>
+  subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
+
+access_type_definition ::=
+  access_to_object_definition |
+  access_to_function_definition |
+  access_to_procedure_definition;
+
 allocator ::=
   token <new_token> name <Subtype_Or_Expression> name <Subpool_Name>;
 
@@ -9,6 +66,14 @@ association ::=
   {discrete_choice} <Array_Component_Choices>
   token             <arrow_token>
   expression_or_box <Component_Expression>;
+
+aspect_clause ::= pragma_node;
+
+aspect_specification ::=
+   subtype_mark <Aspect_Mark>
+   token <arrow_token>
+   expression   <Aspect_Definition>
+;
 
 attribute_reference ::=
   prefix
@@ -20,12 +85,54 @@ attribute_reference ::=
 
 box ::= token <box_token>;
 
+component_declaration ::=
+  {defining_identifier} <Names>
+  token <colon_token>
+  component_definition <Object_Declaration_Subtype>
+  token <assignment_token>
+  expression <Initialization_Expression>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+component_item ::=
+  component_declaration |
+  aspect_clause |
+  variant_part |
+  null_component;
+
+constrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {discrete_subtype_definition} <Discrete_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
 constraint ::= scalar_constraint;
 
 delta_constraint ::=
   token            <delta_token>
   expression       <Delta_Expression>
   range_constraint <Real_Range_Constraint>;
+
+derived_type_definition ::=
+  token <abstract_token>
+  token <limited_token>
+  token <new_token>
+  subtype_indication <Parent_Subtype_Indication>
+;
+
+derived_record_definition ::=
+  token <abstract_token>
+  token <limited_token>
+  token <new_token>
+  subtype_indication <Parent_Subtype_Indication>
+  {subtype_mark}     <Progenitor_List>
+  token <with_token>
+  alt_record_definition  <Record_Definition>
+;
 
 digits_constraint ::=
   token            <digits_token>
@@ -65,6 +172,9 @@ discrete_subtype_indication_dr ::=
     subtype_mark <Subtype_Mark>
     range_constraint <Subtype_Constraint>;
 
+discriminant_part ::=
+  unknown_discriminant_part;
+
 range_attribute_reference_dr ::=
     attribute_reference <Range_Attribute>;
 
@@ -73,11 +183,6 @@ simple_expression_range_dr ::=
   token <double_dot_token>
   simple_expression <Upper_Bound>
 ;
-
-
-
-
-
 
 else_expression_path ::=
     token <else_token>
@@ -106,7 +211,24 @@ extension_aggregate ::=
   {association} <Record_Component_Associations>
   token         <right_token>;
 
+floating_point_definition ::=
+  token      <digits_token>
+  expression <Digits_Expression>
+  simple_expression_range <Real_Range_Constraint>
+;
+
 function_call ::= prefix record_aggregate <Function_Call_Parameters>;
+
+full_type_declaration ::=
+  token         <type_token>
+  defining_identifier <Names>
+  discriminant_part <Discriminant_Part>
+  token         <is_token>
+  type_definition <Type_Declaration_View>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
 
 identifier ::= token <identifier>;
 
@@ -122,6 +244,26 @@ if_else_expression_path ::=
 
 if_expression ::= {if_else_expression_path} <Expression_Paths>;
 
+interface_type_definition ::=
+    token <kind_token>
+    token <interface_token>
+    {subtype_mark} <Progenitor_List>
+;
+
+ordinary_fixed_point_definition ::=
+  token                   <delta_token>
+  expression              <Delta_Expression>
+  simple_expression_range <Real_Range_Constraint>
+;
+
+decimal_fixed_point_definition ::=
+  token                   <delta_token>
+  expression              <Delta_Expression>
+  token                   <digits_token>
+  expression              <Digits_Expression>
+  simple_expression_range <Real_Range_Constraint>
+;
+
 case_expression ::=
   token <case_token>
   expression <Case_Expression>
@@ -135,7 +277,27 @@ case_expression_path ::=
     expression <Dependent_Expression>
 ;
 
+component_definition ::=
+  token <aliased_token>
+  subtype_indication_or_access_definition <Component_Subtype_Indication>
+;
+
+defining_character_literal ::= token <character_literal>;
+
+defining_enumeration_literal ::= token <identifier>;
+
+defining_enumeration_name ::=
+  defining_enumeration_literal | defining_character_literal;
+
 defining_identifier ::= token <identifier>;
+
+enumeration_literal_specification ::= defining_enumeration_name <Names>;
+
+enumeration_type_definition ::=
+  token         <left_token>
+  {enumeration_literal_specification} <Enumeration_Literal_Declarations>
+  token         <right_token>
+;
 
 quantified_expression ::=
   token <for_token>
@@ -184,6 +346,10 @@ membership_test ::=
 
 membership_choice ::= simple_expression | range_constraint;
 
+modular_type_definition ::=
+  token <mod_token>
+  expression <Mod_Static_Expression>;
+
 name ::= direct_name |
   explicit_dereference |
   selected_component |
@@ -191,13 +357,43 @@ name ::= direct_name |
   function_call |
   character_literal;
 
+null_component ::= token <null_token> token <semicolon_token>;
+
 null_literal ::= token <null_literal>;
+
+null_record_definition ::=
+  token <null_token>
+  token <record_token>;
 
 numeric_literal ::= token <numeric_literal>;
 
 operator_symbol ::= token <operator_symbol>;
 
 others_choice ::= token <others_token>;
+
+parameter_specification ::=
+  {defining_identifier}             <Names>
+  token <colon_token> token <aliased_token> token <mode_token>
+  token <not_token>
+  subtype_mark_or_access_definition <Object_Declaration_Subtype>
+  token <assignment_token>
+  expression                        <Initialization_Expression>
+;
+
+pragma_node ::=
+  token         <pragma_token>
+  identifier    <Formal_Parameter>
+  token         <left_token>
+  {pragma_argument_association} <Pragma_Argument_Associations>
+  token         <right_token>
+  token <semicolon_token>
+;
+
+pragma_argument_association ::=
+    identifier <Formal_Parameter>
+    token      <arrow_token>
+    expression <Actual_Parameter>
+;
 
 prefix ::= name;
 
@@ -217,6 +413,22 @@ record_aggregate ::=
   token         <left_token>
   {association} <Record_Component_Associations>
   token         <right_token>;
+
+record_definition ::=
+  token <record_token>
+    {component_item} <Record_Components>
+  token <end_token>
+  token <end_record_token>
+;
+
+record_type_definition ::=
+  token <abstract_token>
+  token <tagged_token>
+  token <limited_token>
+  alt_record_definition <Record_Definition>
+;
+
+alt_record_definition ::= record_definition | null_record_definition;
 
 scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
 
@@ -242,6 +454,11 @@ short_circuit ::=
   token <then_token>
   expression <Short_Circuit_Operation_Right_Expression>;
 
+signed_integer_type_definition ::=
+  token <range_token>
+  simple_expression_range <Integer_Constraint>
+;
+
 simple_expression ::=
     numeric_literal |
     null_literal |
@@ -259,6 +476,57 @@ subtype_indication ::=
   subtype_mark
   constraint <Subtype_Constraint>;
 
+subtype_indication_or_access_definition ::=
+  subtype_indication | access_definition;
+
 subtype_mark ::= identifier |
  selected_identifier;
 
+subtype_mark_or_access_definition ::= subtype_mark | access_definition;
+
+type_definition ::= 
+  enumeration_type_definition |
+  signed_integer_type_definition |
+  modular_type_definition |
+  floating_point_definition |
+  ordinary_fixed_point_definition |
+  decimal_fixed_point_definition |
+  unconstrained_array_definition |
+  constrained_array_definition |
+  record_type_definition |
+  access_type_definition |
+  derived_type_definition |
+  derived_record_definition |
+  interface_type_definition;
+
+unconstrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {subtype_mark} <Index_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
+unknown_discriminant_part ::=
+    token <left_token>
+    token <box_token>
+    token <right_token>
+;
+
+variant_part ::=
+  token <case_token>
+  identifier <Discriminant_Direct_Name>
+  token <is_token>
+  {variant} <Variants>
+  token <end_token>
+  token <end_case_token>
+  token <semicolon_token>
+;
+
+variant ::=
+  token <when_token>
+  {discrete_choice} <Variant_Choices>
+  token <arrow_token>
+  {component_item} <Record_Components>
+;

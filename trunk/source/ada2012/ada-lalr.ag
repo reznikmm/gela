@@ -105,7 +105,960 @@ Token numeric_literal_token;
 Token character_literal_token;
 Token string_literal_token;
 
-_compilation ::= expression;
+_compilation ::= full_type_declaration;
+
+derived_type_declaration ::= 
+  type_token defining_identifier
+    [discriminant_part] is_token
+  [abstract_token] [limited_token] new_token subtype_indication
+  [(ext) {and_token subtype_mark} <and_subtype_mark_list>
+         with_token record_definition]
+    [aspect_specification] semicolon_token
+;
+
+Rules for derived_type_declaration. :
+(.
+           declare
+              Type_Definition : constant Gela.Nodes.Element :=
+                +Self.Compilation.Store.Fabric.Derived_Type_Definition
+                  (-${abstract_token.ast:(null, 0)},
+                   -${limited_token.ast:(null, 0)},
+                   -${new_token.ast},
+                   -${subtype_indication.ast});
+           begin
+             ${derived_type_declaration.ast} :=
+             +Self.Compilation.Store.Fabric.Full_Type_Declaration
+               (-${type_token.ast},
+                -${defining_identifier.ast},
+                -${discriminant_part.ast:(null, 0)},
+                -${is_token.ast},
+                -Type_Definition,
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+           end;
+.)
+
+Rules for derived_type_declaration. :
+(.
+           declare
+              Type_Definition : constant Gela.Nodes.Element :=
+                +Self.Compilation.Store.Fabric.Derived_Record_Definition
+                  (-${abstract_token.ast:(null, 0)},
+                   -${limited_token.ast:(null, 0)},
+                   -${new_token.ast},
+                   -${subtype_indication.ast},
+                   -${and_subtype_mark_list.ast:(null, 0)},
+                   -${with_token.ast},
+                   -${record_definition.ast});
+           begin
+              ${derived_type_declaration.ast} :=
+                +Self.Compilation.Store.Fabric.Full_Type_Declaration
+                  (-${type_token.ast},
+                  -${defining_identifier.ast},
+                  -${discriminant_part.ast:(null, 0)},
+                  -${is_token.ast},
+                  -Type_Definition,
+                  -${aspect_specification.ast:(null, 0)},
+                  -${semicolon_token.ast});
+           end;
+.)
+
+
+
+full_type_declaration ::= 
+  (full)  type_token defining_identifier
+    [discriminant_part] is_token type_definition
+    [aspect_specification] semicolon_token |
+  derived_type_declaration
+;
+
+Rules for full_type_declaration.full :
+(.         ${full_type_declaration.ast} :=
+             +Self.Compilation.Store.Fabric.Full_Type_Declaration
+               (-${type_token.ast},
+                -${defining_identifier.ast},
+                -${discriminant_part.ast:(null, 0)},
+                -${is_token.ast},
+                -${type_definition.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+discriminant_part ::=
+  unknown_discriminant_part;
+
+unknown_discriminant_part ::=
+ left_parenthesis_token box_token right_parenthesis_token;
+
+Rules for unknown_discriminant_part. :
+(.         ${unknown_discriminant_part.ast} :=
+             +Self.Compilation.Store.Fabric.Unknown_Discriminant_Part
+               (-${left_parenthesis_token.ast}, -${box_token.ast}, -${right_parenthesis_token.ast});
+.)
+
+
+
+aspect_specification ::=
+   with_token subtype_mark
+      [(aspect_definition) arrow_token expression]
+   { comma_token subtype_mark [ arrow_token expression] } <aspect_list>
+;
+
+Rules for aspect_specification. :
+(.
+         declare
+            Comp : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Aspect_Specification
+                (-${subtype_mark.ast},
+                 -${arrow_token.ast:(null, 0)},
+                 -${expression.ast:(null, 0)});
+            Conv : constant Gela.Nodes.Element := ${aspect_list.ast:+Self.Compilation.Store.
+              Fabric.Aspect_Specification_Sequence};
+            List : constant Gela.Nodes.Aspect_Specification_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, Comp);
+            ${aspect_specification.ast} := Conv;
+         end;
+.)
+
+
+Rules for aspect_list. :
+(.
+         declare
+            Comp : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Aspect_Specification
+                (-${subtype_mark.ast},
+                 -${arrow_token.ast:(null, 0)},
+                 -${expression.ast:(null, 0)});
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Aspect_Specification_Sequence};
+            List : constant Gela.Nodes.Aspect_Specification_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, Comp);
+            ${aspect_list.ast} := Conv;
+         end;
+.)
+
+
+
+type_definition ::=
+  enumeration_type_definition |
+  signed_integer_type_definition |
+  modular_type_definition |
+  floating_point_definition |
+  ordinary_fixed_point_definition |
+  decimal_fixed_point_definition |
+  constrained_array_definition |
+  unconstrained_array_definition |
+  record_type_definition |
+  access_type_definition |
+  interface_type_definition;
+
+interface_kind ::=
+  limited_token | task_token | protected_token | synchronized_token;
+
+interface_type_definition ::= 
+  [interface_kind] interface_token
+  {and_token subtype_mark} <and_subtype_mark_list>;
+
+Rules for interface_type_definition. :
+(.
+         ${interface_type_definition.ast} := +Self.Compilation.Store.Fabric.
+           Interface_Type_Definition
+             (-${interface_kind.ast:(null, 0)},
+              -${interface_token.ast},
+              -${and_subtype_mark_list.ast:(null, 0)});
+.)
+
+
+interface_list ::=
+  subtype_mark {and_token subtype_mark} <and_subtype_mark_list>;
+
+Rules for interface_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${and_subtype_mark_list.ast:+Self.Compilation.Store.Fabric.
+              Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${subtype_mark.ast});
+            ${interface_list.ast} := Conv;
+         end;
+.)
+
+
+Rules for and_subtype_mark_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${subtype_mark.ast});
+            ${and_subtype_mark_list.ast} := Conv;
+         end;
+.)
+
+
+
+general_access_modifier ::= all_token | constant_token;
+
+access_type_definition ::=
+  (object)
+  [null_exclusion] access_token [general_access_modifier] subtype_indication
+  |
+  (procedure)
+  [null_exclusion]
+  access_token [protected_token] procedure_token [formal_part]
+  |
+  (function_subtype)
+  [null_exclusion]
+  access_token [protected_token] function_token
+  [formal_part] return_token
+  [(ret) null_exclusion <return_null_exclusion>]
+  subtype_mark
+  |
+  (function_access)
+  [null_exclusion]
+  access_token [protected_token] function_token
+  [formal_part] return_token access_definition
+;
+
+Rules for access_type_definition.function_access :
+(.
+         ${access_type_definition.ast} := +Self.Compilation.Store.Fabric.
+           Access_To_Function_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${function_token.ast},
+              -${formal_part.ast:(null, 0)},
+              -${return_token.ast},
+              -(null, 0),
+              -${access_definition.ast});
+.)
+
+Rules for access_type_definition.function_subtype :
+(.
+         ${access_type_definition.ast} := +Self.Compilation.Store.Fabric.
+           Access_To_Function_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${function_token.ast},
+              -${formal_part.ast:(null, 0)},
+              -${return_token.ast},
+              -${return_null_exclusion.ast:(null, 0)},
+              -${subtype_mark.ast});
+.)
+
+Rules for access_type_definition.object :
+(.
+         ${access_type_definition.ast} := +Self.Compilation.Store.Fabric.
+           Access_To_Object_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${general_access_modifier.ast:(null, 0)},
+              -${subtype_indication.ast});
+.)
+
+Rules for access_type_definition.procedure :
+(.
+         ${access_type_definition.ast} := +Self.Compilation.Store.Fabric.
+           Access_To_Procedure_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${procedure_token.ast},
+              -${formal_part.ast:(null, 0)});
+.)
+
+
+
+
+record_type_definition ::=
+  [[abstract_token] tagged_token] [limited_token] record_definition;
+
+Rules for record_type_definition. :
+(.
+         ${record_type_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Record_Type_Definition
+            (-${abstract_token.ast:(null, 0)},
+             -${tagged_token.ast:(null, 0)},
+             -${limited_token.ast:(null, 0)},
+             -${record_definition.ast});
+.)
+
+
+
+variant_part ::= 
+  case_token direct_name is_token
+    variant
+    {variant} <variant_list>
+  end_token case_token <end_case>
+  semicolon_token;
+
+Rules for variant_part. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${variant_list.ast:+Self.Compilation.Store.Fabric.Variant_Sequence};
+            List : constant Gela.Nodes.Variant_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${variant.ast});
+            ${variant_part.ast} := +Self.Compilation.Store.Fabric.Variant_Part
+              (-${case_token.ast},
+               -${direct_name.ast},
+               -${is_token.ast},
+               List,
+               -${end_token.ast},
+               -${end_case.ast},
+               -${semicolon_token.ast});
+         end;
+.)
+
+
+variant ::= 
+   when_token discrete_choice_list arrow_token component_list;
+
+Rules for variant. :
+(.
+         ${variant.ast} := +Self.Compilation.Store.Fabric.Variant
+           (-${when_token.ast},
+            -${discrete_choice_list.ast},
+            -${arrow_token.ast},
+            -${component_list.ast});
+.)
+
+
+
+pragma ::= 
+   pragma_token identifier
+   [left_parenthesis_token pragma_argument_association
+    {comma_token pragma_argument_association} <pragma_argument_list>
+   right_parenthesis_token]
+  semicolon_token
+;
+
+Rules for pragma. :
+(.
+         ${pragma.ast} := +Self.Compilation.Store.Fabric.Pragma_Node
+           (-${pragma_token.ast},
+            -${identifier.ast},
+            (null, 0),
+            (null, 0),
+            (null, 0),
+            -${semicolon_token.ast});
+.)
+
+Rules for pragma. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${pragma_argument_list.ast:+Self.Compilation.Store.
+              Fabric.Pragma_Argument_Association_Sequence};
+            List : constant Gela.Nodes.Pragma_Argument_Association_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${pragma_argument_association.ast});
+            ${pragma.ast} := +Self.Compilation.Store.Fabric.Pragma_Node
+              (-${pragma_token.ast},
+               -${identifier.ast},
+               -${left_parenthesis_token.ast},
+               List,
+               -${right_parenthesis_token.ast},
+               -${semicolon_token.ast});
+         end;
+.)
+
+Rules for pragma_argument_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Pragma_Argument_Association_Sequence};
+            List : constant Gela.Nodes.Pragma_Argument_Association_Sequence :=
+             -Conv;
+         begin
+            List.Object.Append (List.Payload, ${pragma_argument_association.ast});
+            ${pragma_argument_list.ast} := Conv;
+         end;
+.)
+
+
+
+pragma_argument_association ::= [identifier arrow_token] expression;
+
+Rules for pragma_argument_association. :
+(.
+         ${pragma_argument_association.ast} := +Self.Compilation.Store.Fabric.
+           Pragma_Argument_Association
+             (-${identifier.ast:(null, 0)},
+              -${arrow_token.ast:(null, 0)},
+              -${expression.ast});
+.)
+
+aspect_clause ::= pragma;
+
+
+component_declaration ::= 
+  defining_identifier_list colon_token component_definition
+  [(def) assignment_token expression]
+  [aspect_specification]
+  semicolon_token;
+
+Rules for component_declaration. :
+(.
+         ${component_declaration.ast} := +Self.Compilation.Store.Fabric.
+           Component_Declaration
+             (-${defining_identifier_list.ast},
+              -${colon_token.ast},
+              -${component_definition.ast},
+              -${assignment_token.ast:(null, 0)},
+              -${expression.ast:(null, 0)},
+              -${aspect_specification.ast:(null, 0)},
+              -${semicolon_token.ast});
+.)
+
+record_definition ::= 
+  (record)
+  record_token
+    component_list
+  end_token record_token <end_record>
+ |
+  (null) null_token record_token
+;
+
+Rules for record_definition.null :
+(.
+         ${record_definition.ast} := +Self.Compilation.Store.Fabric.
+           Null_Record_Definition
+             (-${null_token.ast},
+              -${record_token.ast});
+.)
+
+Rules for record_definition.record :
+(.
+         ${record_definition.ast} := +Self.Compilation.Store.Fabric.
+           Record_Definition
+             (-${record_token.ast},
+              -${component_list.ast},
+              -${end_token.ast},
+              -${end_record.ast});
+.)
+
+
+component_list ::= 
+  (list)
+    component_item
+    {component_item} <component_item_list>
+    [variant_part] |
+  variant_part |
+  (null) null_token semicolon_token
+;
+
+Rules for component_list.variant_part :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Component_Item_Sequence;
+            List : constant Gela.Nodes.Component_Item_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${variant_part.ast});
+            ${component_list.ast} := Conv;
+         end;
+.)
+
+
+Rules for component_list.null :
+(.
+         declare
+            Comp : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Null_Component
+                (-${null_token.ast}, -${semicolon_token.ast});
+            Conv : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Component_Item_Sequence;
+            List : constant Gela.Nodes.Component_Item_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, Comp);
+            ${component_list.ast} := Conv;
+         end;
+.)
+
+
+Rules for component_list.list :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${component_item_list.ast:+Self.Compilation.Store.Fabric.
+              Component_Item_Sequence};
+            List : constant Gela.Nodes.Component_Item_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${component_item.ast});
+            ${component_list.ast} := Conv;
+         end;
+.)
+
+Rules for component_list.list :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${component_item_list.ast:+Self.Compilation.Store.Fabric.
+              Component_Item_Sequence};
+            List : constant Gela.Nodes.Component_Item_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${component_item.ast});
+            List.Object.Append (List.Payload, ${variant_part.ast});
+            ${component_list.ast} := Conv;
+         end;
+.)
+
+Rules for component_item_list.component_item :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Component_Item_Sequence};
+            List : constant Gela.Nodes.Component_Item_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${component_item.ast});
+            ${component_item_list.ast} := Conv;
+         end;
+.)
+
+
+
+component_item ::= component_declaration | aspect_clause;
+
+unconstrained_array_definition ::= 
+  array_token left_parenthesis_token index_subtype_definition
+  {comma_token index_subtype_definition} <index_subtype_definition_list>
+  right_parenthesis_token
+  of_token component_definition;
+
+Rules for unconstrained_array_definition. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${index_subtype_definition_list.ast:+Self.Compilation.Store.Fabric.
+              Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${index_subtype_definition.ast});
+            ${unconstrained_array_definition.ast} := +Self.Compilation.Store.Fabric.
+              Unconstrained_Array_Definition
+                (-${array_token.ast},
+                 -${left_parenthesis_token.ast},
+                 List,
+                 -${right_parenthesis_token.ast},
+                 -${of_token.ast},
+                 -${component_definition.ast});
+         end;
+.)
+
+Rules for index_subtype_definition_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence :=
+             -Conv;
+         begin
+            List.Object.Append (List.Payload, ${index_subtype_definition.ast});
+            ${index_subtype_definition_list.ast} := Conv;
+         end;
+.)
+
+
+
+constrained_array_definition ::= 
+  array_token left_parenthesis_token discrete_subtype_definition
+  {comma_token discrete_subtype_definition} <discrete_subtype_definition_list>
+  right_parenthesis_token of_token component_definition;
+
+Rules for constrained_array_definition. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${discrete_subtype_definition_list.ast:+Self.Compilation.Store.Fabric.
+              Discrete_Subtype_Definition_Sequence};
+            List : constant Gela.Nodes.Discrete_Subtype_Definition_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${discrete_subtype_definition.ast});
+            ${constrained_array_definition.ast} := +Self.Compilation.Store.Fabric.
+              Constrained_Array_Definition
+                (-${array_token.ast},
+                 -${left_parenthesis_token.ast},
+                 List,
+                 -${right_parenthesis_token.ast},
+                 -${of_token.ast},
+                 -${component_definition.ast});
+         end;
+.)
+
+Rules for discrete_subtype_definition_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Discrete_Subtype_Definition_Sequence};
+            List : constant Gela.Nodes.Discrete_Subtype_Definition_Sequence :=
+             -Conv;
+         begin
+            List.Object.Append (List.Payload, ${discrete_subtype_definition.ast});
+            ${discrete_subtype_definition_list.ast} := Conv;
+         end;
+.)
+
+formal_part ::= 
+   left_parenthesis_token parameter_specification
+     {semicolon_token parameter_specification} <parameter_specification_list>
+   right_parenthesis_token
+;
+
+Rules for formal_part. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${parameter_specification_list.ast:+Self.Compilation.Store.Fabric.Parameter_Specification_Sequence};
+            List : constant Gela.Nodes.Parameter_Specification_Sequence :=
+              -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${parameter_specification.ast});
+            ${formal_part.ast} := Conv;
+         end;
+.)
+
+Rules for parameter_specification_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Parameter_Specification_Sequence};
+            List : constant Gela.Nodes.Parameter_Specification_Sequence :=
+              -Conv;
+         begin
+            List.Object.Append (List.Payload, ${parameter_specification.ast});
+            ${parameter_specification_list.ast} := Conv;
+         end;
+.)
+
+
+parameter_specification ::= 
+(subtype)
+  defining_identifier_list colon_token
+  [aliased_token] [mode] [null_exclusion]
+  subtype_mark [assignment_token expression]
+  |
+(access)
+  defining_identifier_list colon_token
+  access_definition [assignment_token expression]
+;
+
+Rules for parameter_specification.subtype :
+(.
+         ${parameter_specification.ast} := +Self.Compilation.Store.Fabric.
+           Parameter_Specification
+             (-${defining_identifier_list.ast},
+              -${colon_token.ast},
+              -${aliased_token.ast:(null, 0)},
+              -${mode.ast:(null, 0)},
+              -${null_exclusion.ast:(null, 0)},
+              -${subtype_mark.ast},
+              -${assignment_token.ast:(null, 0)},
+              -${expression.ast:(null, 0)});
+.)
+
+Rules for parameter_specification.access :
+(.
+         ${parameter_specification.ast} := +Self.Compilation.Store.Fabric.
+           Parameter_Specification
+             (-${defining_identifier_list.ast},
+              -${colon_token.ast},
+              (null, 0),
+              (null, 0),
+              (null, 0),
+              -${access_definition.ast},
+              -${assignment_token.ast:(null, 0)},
+              -${expression.ast:(null, 0)});
+.)
+
+
+
+defining_identifier_list ::= 
+  defining_identifier {comma_token defining_identifier} <defining_id_list>;
+
+Rules for defining_identifier_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${defining_id_list.ast:+Self.Compilation.Store.Fabric.Defining_Identifier_Sequence};
+            List : constant Gela.Nodes.Defining_Identifier_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${defining_identifier.ast});
+            ${defining_identifier_list.ast} := Conv;
+         end;
+.)
+
+Rules for defining_id_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Defining_Identifier_Sequence};
+            List : constant Gela.Nodes.Defining_Identifier_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${defining_identifier.ast});
+            ${defining_id_list.ast} := Conv;
+         end;
+.)
+
+
+
+mode ::=
+           in_token |
+  (in_out) in_token out_token |
+           out_token;
+
+access_definition ::= 
+(subtype_mark)
+  [null_exclusion] access_token [constant_token] subtype_mark
+  |
+(procedure)
+  [null_exclusion] access_token [protected_token]
+  procedure_token [formal_part]
+  |
+(function_subtype)
+  [null_exclusion] access_token [protected_token]
+  function_token
+  [formal_part] return_token
+  [(ret) null_exclusion <return_null_exclusion>]
+  subtype_mark
+  |
+(function_access)
+  [null_exclusion] access_token [protected_token]
+  function_token
+  [formal_part] return_token access_definition
+;
+
+Rules for access_definition.function_access :
+(.
+         ${access_definition.ast} := +Self.Compilation.Store.Fabric.
+           Anonymous_Access_To_Function_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${function_token.ast},
+              -${formal_part.ast:(null, 0)},
+              -${return_token.ast},
+              -(null, 0),
+              -${access_definition.ast});
+.)
+
+Rules for access_definition.function_subtype :
+(.
+         ${access_definition.ast} := +Self.Compilation.Store.Fabric.
+           Anonymous_Access_To_Function_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${function_token.ast},
+              -${formal_part.ast:(null, 0)},
+              -${return_token.ast},
+              -${return_null_exclusion.ast:(null, 0)},
+              -${subtype_mark.ast});
+.)
+
+Rules for access_definition.subtype_mark :
+(.
+         ${access_definition.ast} := +Self.Compilation.Store.Fabric.
+           Anonymous_Access_To_Object_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${constant_token.ast:(null, 0)},
+              -${subtype_mark.ast});
+.)
+
+Rules for access_definition.procedure :
+(.
+         ${access_definition.ast} := +Self.Compilation.Store.Fabric.
+           Anonymous_Access_To_Procedure_Definition
+             (-${null_exclusion.ast:(null, 0)},
+              -${access_token.ast},
+              -${protected_token.ast:(null, 0)},
+              -${procedure_token.ast},
+              -${formal_part.ast:(null, 0)});
+.)
+
+
+
+component_definition ::= 
+  (subtype_indication) [aliased_token] subtype_indication |
+  (access_definition)  [aliased_token] access_definition;
+
+Rules for component_definition.subtype_indication :
+(.
+         ${component_definition.ast} := +Self.Compilation.Store.Fabric.Component_Definition
+             (-${aliased_token.ast:(null, 0)},
+              -${subtype_indication.ast});
+.)
+
+Rules for component_definition.access_definition :
+(.
+         ${component_definition.ast} := +Self.Compilation.Store.Fabric.Component_Definition
+             (-${aliased_token.ast:(null, 0)},
+              -${access_definition.ast});
+.)
+
+
+
+index_subtype_definition ::=
+  subtype_mark range_token box_token;
+
+decimal_fixed_point_definition ::= 
+  delta_token simple_expression <delta>
+  digits_token simple_expression <digits>
+  [real_range_specification];
+
+Rules for decimal_fixed_point_definition. :
+(.         ${decimal_fixed_point_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Decimal_Fixed_Point_Definition
+            (-${delta_token.ast},
+             -${delta.ast},
+             -${digits_token.ast},
+             -${digits.ast},
+             -${real_range_specification.ast:(null, 0)});
+.)
+
+
+
+ordinary_fixed_point_definition ::= 
+   delta_token simple_expression real_range_specification;
+
+Rules for ordinary_fixed_point_definition. :
+(.         ${ordinary_fixed_point_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Ordinary_Fixed_Point_Definition
+            (-${delta_token.ast},
+             -${simple_expression.ast},
+             -${real_range_specification.ast:(null, 0)});
+.)
+
+
+floating_point_definition ::= 
+  digits_token simple_expression [real_range_specification];
+
+Rules for floating_point_definition. :
+(.         ${floating_point_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Floating_Point_Definition
+            (-${digits_token.ast},
+             -${simple_expression.ast},
+             -${real_range_specification.ast:(null, 0)});
+.)
+
+real_range_specification ::= 
+  range_token
+  simple_expression <left> double_dot_token simple_expression <right>;
+
+Rules for real_range_specification. :
+(.         ${real_range_specification.ast} :=
+             +Self.Compilation.Store.Fabric.Simple_Expression_Range
+               (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
+.)
+
+
+modular_type_definition ::= mod_token expression;
+
+Rules for modular_type_definition. :
+(.         ${modular_type_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Modular_Type_Definition
+            (-${mod_token.ast}, -${expression.ast});
+.)
+
+
+
+signed_integer_type_definition ::=
+  range_token
+  simple_expression <left> double_dot_token simple_expression <right>;
+
+Rules for signed_integer_type_definition. :
+(.         ${signed_integer_type_definition.ast} :=
+           +Self.Compilation.Store.Fabric.Signed_Integer_Type_Definition
+            (-${range_token.ast},
+             Self.Compilation.Store.Fabric.Simple_Expression_Range
+               (-${left.ast}, -${double_dot_token.ast}, -${right.ast}));
+.)
+
+
+enumeration_type_definition ::= 
+  left_parenthesis_token enumeration_literal_specification
+  {comma_token enumeration_literal_specification} <enumeration_list>
+  right_parenthesis_token;
+
+Rules for enumeration_type_definition. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${enumeration_list.ast:+Self.Compilation.Store.
+              Fabric.Enumeration_Literal_Specification_Sequence};
+            List : constant Gela.Nodes.
+              Enumeration_Literal_Specification_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${enumeration_literal_specification.ast});
+            ${enumeration_type_definition.ast} := +Self.Compilation.Store.Fabric.
+              Enumeration_Type_Definition
+                (-${left_parenthesis_token.ast},
+                 List,
+                 -${right_parenthesis_token.ast});
+         end;
+.)
+
+Rules for enumeration_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Enumeration_Literal_Specification_Sequence};
+            List : constant Gela.Nodes.
+              Enumeration_Literal_Specification_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${enumeration_literal_specification.ast});
+            ${enumeration_list.ast} := Conv;
+         end;
+.)
+
+
+enumeration_literal_specification ::=
+  defining_enumeration_literal |
+  defining_character_literal;
+
+Rules for enumeration_literal_specification.defining_enumeration_literal :
+(.         ${enumeration_literal_specification.ast} :=
+           +Self.Compilation.Store.Fabric.Enumeration_Literal_Specification
+             (-${defining_enumeration_literal.ast});
+.)
+
+Rules for enumeration_literal_specification.defining_character_literal :
+(.         ${enumeration_literal_specification.ast} :=
+           +Self.Compilation.Store.Fabric.Enumeration_Literal_Specification
+             (-${defining_character_literal.ast});
+.)
+
+
+
+defining_character_literal ::= character_literal_token;
+
+Rules for defining_character_literal.character_literal_token :
+(.         ${defining_character_literal.ast} := +Self.Compilation.Store.Fabric.Defining_Character_Literal
+         (-${character_literal_token.ast});
+.)
+
+
+
+defining_enumeration_literal ::= identifier_token;
+
+Rules for defining_enumeration_literal.identifier_token :
+(.         ${defining_enumeration_literal.ast} :=
+           +Self.Compilation.Store.Fabric.Defining_Enumeration_Literal
+             (-${identifier_token.ast});
+.)
+
+
 
 expression ::= relation |
   (and)      expression and_token relation |
@@ -483,15 +1436,15 @@ Rules for discrete_range.range_attribute_reference :
 
 
 discrete_subtype_definition ::=
-  (subtype_indication) simple_expression [range_constraint] |
+  (subtype_indication) subtype_indication |
   range_attribute_reference |
   (range)  simple_expression <left> double_dot_token simple_expression <right>
 ;
 
 Rules for discrete_subtype_definition.subtype_indication :
-(.         ${discrete_subtype_definition.ast} :=
-           +Self.Compilation.Store.Fabric.Discrete_Subtype_Indication
-             (-${simple_expression.ast}, -${range_constraint.ast:(null, 0)});
+(.           ${discrete_subtype_definition.ast} :=
+                +Self.Compilation.Store.Fabric.To_Discrete_Subtype_Indication
+                  (-${subtype_indication.ast});
 .)
 
 
@@ -907,38 +1860,77 @@ Rules for operator_symbol.string_literal_token :
 
 Synthesized attributes
   _compilation,
+  access_definition,
+  access_type_definition,
   aggregate,
   allocator,
+  and_subtype_mark_list,
+  aspect_list,
+  aspect_specification,
   attribute_reference,
   case_expression,
   case_expression_alternative,
   case_exp_alternative_list,
-  component_association_list,
-  conditional_expression,
   choice_list,
+  component_association_list,
+  component_declaration,
+  component_definition,
+  component_item,
+  component_item_list,
+  component_list,
+  conditional_expression,
+  constrained_array_definition,
+  decimal_fixed_point_definition,
+  defining_character_literal,
+  defining_enumeration_literal,
+  defining_id_list,
   defining_identifier,
+  defining_identifier_list,
   delta_constraint,
+  derived_type_declaration,
   digits_constraint,
   direct_name,
   discrete_choice,
   discrete_choice_list,
   discrete_range,
   discrete_subtype_definition,
-  identifier,
-  if_expression,
+  discrete_subtype_definition_list,
+  discriminant_part,
   elsif_exp_list,
+  enumeration_list,
+  enumeration_literal_specification,
+  enumeration_type_definition,
   explicit_dereference,
   expression,
   extension_aggregate,
+  floating_point_definition,
+  formal_part,
+  full_type_declaration,
   function_call,
+  general_access_modifier,
+  identifier,
+  if_expression,
+  index_subtype_definition,
+  index_subtype_definition_list,
+  interface_kind,
+  interface_list,
+  interface_type_definition,
   iterator_specification,
   loop_parameter_specification,
   mchoice_list,
+  modular_type_definition,
   membership_choice,
   membership_choice_list,
+  mode,
   name,
   null_exclusion,
   operator_symbol,
+  ordinary_fixed_point_definition,
+  parameter_specification,
+  parameter_specification_list,
+  pragma,
+  pragma_argument_list,
+  pragma_argument_association,
   prefix,
   qualified_expression,
   quantified_expression,
@@ -946,18 +1938,28 @@ Synthesized attributes
   range,
   range_attribute_reference,
   range_constraint,
+  real_range_specification,
   record_aggregate,
   record_component_association,
   record_component_association_list,
+  record_definition,
+  record_type_definition,
   relation,
   relational_operator,
   scalar_constraint,
   selected_component,
   selector_name,
+  signed_integer_type_definition,
   simple_expression,
   subtype_indication,
   subtype_mark,
-  subpool_specification
+  subpool_specification,
+  type_definition,
+  unconstrained_array_definition,
+  unknown_discriminant_part,
+  variant,
+  variant_list,
+  variant_part
  : Integer : ast;
 
 Synthesized attributes

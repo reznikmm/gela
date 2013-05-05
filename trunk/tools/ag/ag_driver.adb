@@ -256,7 +256,7 @@ procedure AG_Driver is
 
                Fabrics.N ("      L");
                Fabrics.N (Positive (NT.Index));
-               Fabrics.N (" : aliased Gela.Stores.");
+               Fabrics.N (" : aliased ");
                Fabrics.N (To_Ada (NT.Name));
                Fabrics.P ("_Sequences.List (Store);");
 
@@ -349,8 +349,8 @@ procedure AG_Driver is
             Fab_Body.P ("   is");
             Fab_Body.N ("      Object : constant ");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.P ("_Sequences.List_Access :=");
-            Fab_Body.N ("        Self.L");
+            Fab_Body.P ("_Sequences.List_Access");
+            Fab_Body.N ("        := Self.L");
             Fab_Body.N (Positive (NT.Index));
             Fab_Body.P ("'Access;");
             Fab_Body.N ("      Int    : constant N.");
@@ -401,7 +401,7 @@ procedure AG_Driver is
                      Fabrics.N (To_Ada (Part.Name), Fab_Body);
                      Fabrics.N (" : Gela.Nodes.", Fab_Body);
 
-                     if Part.Name.Length > 30 then
+                     if Part.Name.Length + Return_Type (Part).Length > 58 then
                         Fabrics.P ("", Fab_Body);
                         Fabrics.N ("        ", Fab_Body);
                      end if;
@@ -526,7 +526,12 @@ procedure AG_Driver is
                Nodes.N ("    ");
             end if;
 
-            Nodes.N (" access all Gela.Nodes.");
+            if NT.Name.Length > 35 then
+               Nodes.N (" access all ");
+            else
+               Nodes.N (" access all Gela.Nodes.");
+            end if;
+
             Nodes.N (Plural (NT.Name));
             Nodes.P (".Object'Class;");
             Nodes.N ("   type ");
@@ -647,7 +652,8 @@ procedure AG_Driver is
       Output.P;
       Output.N ("package Gela.Stores.");
       Output.N (To_Ada (NT.Name));
-      Output.P ("_Sequences is new Gela.Stores.Lists");
+      Output.P ("_Sequences is");
+      Output.P ("  new Gela.Stores.Lists");
       Output.N ("  (Node_List    => Gela.Nodes.");
       Output.N (Plural (NT.Name));
       Output.P (".List,");
@@ -941,7 +947,13 @@ procedure AG_Driver is
          Store_Body.P ("   begin");
          Store_Body.N ("      return (Gela.Nodes.");
          Store_Body.N (Return_Type (Part));
-         Store_Body.P ("_Access (Node), Id);");
+         Store_Body.N ("_Access");
+
+         if Return_Type (Part).Length > 35 then
+            Store_Body.P;
+            Store_Body.N ("       ");
+         end if;
+         Store_Body.P (" (Node), Id);");
          Store_Body.N ("   end ");
          Store_Body.N (To_Ada (Part.Name));
          Store_Body.P (";");
@@ -1227,7 +1239,8 @@ procedure AG_Driver is
          Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
          Nodes_NT.N ("      Position : in out Gela.Nodes.");
          Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (") is abstract;");
+         Nodes_NT.P (")");
+         Nodes_NT.P ("     is abstract;");
          Nodes_NT.P;
          Nodes_NT.P ("   not overriding procedure Append");
          Nodes_NT.P ("     (Self     : access List;");

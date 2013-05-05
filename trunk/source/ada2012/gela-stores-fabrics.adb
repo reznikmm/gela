@@ -134,6 +134,25 @@ package body Gela.Stores.Fabrics is
             Right_Token                   => (null, 0)));
    end Infix_Call;
 
+   ------------------------------------
+   -- To_Discrete_Subtype_Indication --
+   ------------------------------------
+
+   function To_Discrete_Subtype_Indication
+     (Self  : access Fabric;
+      Value : Gela.Nodes.Subtype_Indication)
+      return Gela.Nodes.Discrete_Subtype_Indication
+   is
+      use Gela.Nodes.Convertions;
+      Constraint : constant Gela.Nodes.Element :=
+        +Value.Object.Subtype_Constraint (Value.Payload);
+   begin
+      --  FIXME: Check to be range_constraint
+      return Self.Discrete_Subtype_Indication
+        (Value.Object.Subtype_Mark (Value.Payload),
+         -Constraint);
+   end To_Discrete_Subtype_Indication;
+
    ----------------
    -- To_Element --
    ----------------
