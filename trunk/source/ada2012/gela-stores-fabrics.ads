@@ -57,4 +57,9 @@ package Gela.Stores.Fabrics is
       Value : Gela.Nodes.Subtype_Indication)
       return Gela.Nodes.Discrete_Subtype_Indication;
 
+   function To_Defining_Program_Unit_Name
+     (Self  : access Fabric;
+      Value : Gela.Nodes.Selected_Identifier)
+      return Gela.Nodes.Defining_Program_Unit_Name;
+
 end Gela.Stores.Fabrics;

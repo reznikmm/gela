@@ -105,7 +105,176 @@ Token numeric_literal_token;
 Token character_literal_token;
 Token string_literal_token;
 
-_compilation ::= full_type_declaration;
+_compilation ::= package_declaration;
+
+exception_renaming_declaration ::=
+  defining_identifier_list colon_token
+  exception_token renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for exception_renaming_declaration. :
+(.
+         ${exception_renaming_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Exception_Renaming_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                -${exception_token.ast},
+                -${renames_token.ast},
+                -${name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+
+exception_declaration ::=
+  defining_identifier_list colon_token exception_token
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for exception_declaration. :
+(.
+         ${exception_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Exception_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                -${exception_token.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+object_declaration ::= 
+(object_definition)
+  defining_identifier_list colon_token
+  [aliased_token] [constant_token] object_definition
+  [assignment_token expression]
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for object_declaration.object_definition :
+(.
+         ${object_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Object_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                -${aliased_token.ast:(null, 0)},
+                -${constant_token.ast:(null, 0)},
+                -${object_definition.ast},
+                -${assignment_token.ast:(null, 0)},
+                -${expression.ast:(null, 0)},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+
+object_definition ::=
+  subtype_indication |
+  access_definition |
+  unconstrained_array_definition |
+  constrained_array_definition;
+
+
+subtype_declaration ::=
+  subtype_token defining_identifier is_token subtype_indication
+  [aspect_specification]
+  semicolon_token;
+
+Rules for subtype_declaration. :
+(.
+         ${subtype_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Subtype_Declaration
+               (-${subtype_token.ast},
+                -${defining_identifier.ast},
+                -${is_token.ast},
+                -${subtype_indication.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+package_declaration ::= 
+  package_token defining_program_unit_name [aspect_specification] is_token
+    [basic_declarative_item_list <public_item_list>]
+  [(private_part)
+    private_token
+    [basic_declarative_item_list <private_item_list>] ]
+  end_token [program_unit_name] semicolon_token
+;
+
+Rules for package_declaration. :
+(.
+         ${package_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Package_Declaration
+               (-${package_token.ast},
+                -${defining_program_unit_name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${is_token.ast},
+                -${public_item_list.ast:(null, 0)},
+                -${private_token.ast:(null, 0)},
+                -${private_item_list.ast:(null, 0)},
+                -${end_token.ast},
+                -${program_unit_name.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+basic_declarative_item_list ::=
+ [basic_declarative_item_list <head>] basic_declarative_item;
+
+Rules for basic_declarative_item_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Basic_Declarative_Item_Sequence};
+            List : constant Gela.Nodes.Basic_Declarative_Item_Sequence :=
+              -Conv;
+         begin
+            List.Object.Append (List.Payload, ${basic_declarative_item.ast});
+            ${basic_declarative_item_list.ast} := Conv;
+         end;
+.)
+
+
+basic_declarative_item ::= 
+  basic_declaration |
+  aspect_clause;
+
+basic_declaration ::=
+  full_type_declaration |
+  subtype_declaration |
+  object_declaration |
+  package_declaration |
+  exception_renaming_declaration |
+  exception_declaration;
+
+selected_identifier ::=
+  program_unit_name dot_token identifier;
+
+Rules for selected_identifier. :
+(.
+         ${selected_identifier.ast} :=
+            +Self.Compilation.Store.Fabric.Selected_Identifier
+               (-${program_unit_name.ast},
+                -${dot_token.ast},
+                -${identifier.ast});
+.)
+
+program_unit_name ::= identifier | selected_identifier;
+
+defining_program_unit_name ::= defining_identifier | selected_identifier;
+
+Rules for defining_program_unit_name.selected_identifier :
+(.
+         ${defining_program_unit_name.ast} :=
+            +Self.Compilation.Store.Fabric.To_Defining_Program_Unit_Name
+               (-${selected_identifier.ast});
+.)
+
 
 derived_type_declaration ::= 
   type_token defining_identifier
@@ -498,7 +667,24 @@ Rules for pragma_argument_association. :
               -${expression.ast});
 .)
 
-aspect_clause ::= pragma;
+aspect_clause ::=
+  attribute_definition_clause |
+  pragma;
+
+attribute_definition_clause ::= 
+  ffor_token subtype_mark use_token expression semicolon_token;
+
+Rules for attribute_definition_clause. :
+(.
+         ${attribute_definition_clause.ast} := +Self.Compilation.Store.Fabric.
+           Attribute_Definition_Clause
+             (-${ffor_token.ast},
+              -${subtype_mark.ast},
+              -${use_token.ast},
+              -${expression.ast},
+              -${semicolon_token.ast});
+.)
+
 
 
 component_declaration ::= 
@@ -1867,7 +2053,10 @@ Synthesized attributes
   and_subtype_mark_list,
   aspect_list,
   aspect_specification,
+  attribute_definition_clause,
   attribute_reference,
+  basic_declarative_item,
+  basic_declarative_item_list,
   case_expression,
   case_expression_alternative,
   case_exp_alternative_list,
@@ -1886,6 +2075,7 @@ Synthesized attributes
   defining_id_list,
   defining_identifier,
   defining_identifier_list,
+  defining_program_unit_name,
   delta_constraint,
   derived_type_declaration,
   digits_constraint,
@@ -1900,6 +2090,8 @@ Synthesized attributes
   enumeration_list,
   enumeration_literal_specification,
   enumeration_type_definition,
+  exception_declaration,
+  exception_renaming_declaration,
   explicit_dereference,
   expression,
   extension_aggregate,
@@ -1924,14 +2116,18 @@ Synthesized attributes
   mode,
   name,
   null_exclusion,
+  object_declaration,
+  object_definition,
   operator_symbol,
   ordinary_fixed_point_definition,
+  package_declaration,
   parameter_specification,
   parameter_specification_list,
   pragma,
   pragma_argument_list,
   pragma_argument_association,
   prefix,
+  program_unit_name,
   qualified_expression,
   quantified_expression,
   quantifier,
@@ -1948,9 +2144,11 @@ Synthesized attributes
   relational_operator,
   scalar_constraint,
   selected_component,
+  selected_identifier,
   selector_name,
   signed_integer_type_definition,
   simple_expression,
+  subtype_declaration,
   subtype_indication,
   subtype_mark,
   subpool_specification,

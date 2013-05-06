@@ -100,7 +100,11 @@ package body Gela.Stores is
      (Self     : Store;
       Position : Index) return Element is
    begin
-      return Self.Data (Position);
+      if Position > Self.Data'Last then
+         return 0;
+      else
+         return Self.Data (Position);
+      end if;
    end Get;
 
    ---------

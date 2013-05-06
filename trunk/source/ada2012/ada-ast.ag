@@ -67,12 +67,22 @@ association ::=
   token             <arrow_token>
   expression_or_box <Component_Expression>;
 
-aspect_clause ::= pragma_node;
+aspect_clause ::= 
+  attribute_definition_clause |
+  pragma_node;
 
 aspect_specification ::=
    subtype_mark <Aspect_Mark>
    token <arrow_token>
    expression   <Aspect_Definition>
+;
+
+attribute_definition_clause ::=
+  token <for_token>
+  attribute_reference <Representation_Clause_Name>
+  token <use_token>
+  expression <Representation_Clause_Expression>
+  token <semicolon_token>
 ;
 
 attribute_reference ::=
@@ -82,6 +92,18 @@ attribute_reference ::=
   token <designator_token>
   expression <Attribute_Designator_Expressions>
 ;
+
+basic_declarative_item ::= 
+  basic_declaration |
+  aspect_clause;
+
+basic_declaration ::=
+  full_type_declaration |
+  subtype_declaration |
+  object_declaration |
+  package_declaration |
+  exception_renaming_declaration |
+  exception_declaration;
 
 box ::= token <box_token>;
 
@@ -198,6 +220,24 @@ elsif_expression_path ::=
 
 enumeration_literal ::= token <enumeration_literal>;
 
+exception_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  token                  <exception_token>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+exception_renaming_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  token                  <exception_token>
+  token                  <renames_token>
+  name <Renamed_Entity>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
 explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
 
 expression ::= membership_test | simple_expression;
@@ -291,6 +331,15 @@ defining_enumeration_name ::=
 
 defining_identifier ::= token <identifier>;
 
+defining_program_unit_name ::=
+  defining_identifier | defining_expanded_unit_name;
+
+defining_expanded_unit_name ::=
+  program_unit_name <Defining_Prefix>
+  token <dot_token>
+  defining_identifier <Defining_Selector>
+;
+
 enumeration_literal_specification ::= defining_enumeration_name <Names>;
 
 enumeration_type_definition ::=
@@ -367,9 +416,40 @@ null_record_definition ::=
 
 numeric_literal ::= token <numeric_literal>;
 
+object_declaration ::=
+  {defining_identifier} <Names>
+  token <colon_token>
+  token <aliased_token>
+  token <constant_token>
+  object_definition <Object_Declaration_Subtype>
+  token <assignment_token>
+  expression <Initialization_Expression>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+object_definition ::=
+  subtype_indication |
+  access_definition |
+  unconstrained_array_definition |
+  constrained_array_definition;
+
 operator_symbol ::= token <operator_symbol>;
 
 others_choice ::= token <others_token>;
+
+package_declaration ::=
+  token <package_token>
+  defining_program_unit_name <Names>
+  {aspect_specification} <Aspect_Specifications>
+  token <is_token>
+  {basic_declarative_item} <Visible_Part_Declarative_Items>
+  token <private_token>
+  {basic_declarative_item} <Private_Part_Declarative_Items>
+  token <end_token>
+  program_unit_name <end_name>
+  token <semicolon_token>
+;
 
 parameter_specification ::=
   {defining_identifier}             <Names>
@@ -470,6 +550,15 @@ simple_expression ::=
     if_expression |
     case_expression |
     quantified_expression;
+
+subtype_declaration ::=
+  token <subtype_token>
+  defining_identifier <Names>
+  token <is_token>
+  subtype_indication <Type_Declaration_View>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
 
 subtype_indication ::=
   token <not_token>

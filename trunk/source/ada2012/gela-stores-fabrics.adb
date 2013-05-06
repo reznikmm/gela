@@ -7,6 +7,8 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 with Gela.Nodes.Convertions;
+with Gela.Nodes.Identifiers;
+with Gela.Nodes.Selected_Identifiers;
 
 package body Gela.Stores.Fabrics is
 
@@ -133,6 +135,27 @@ package body Gela.Stores.Fabrics is
             Record_Component_Associations => Args,
             Right_Token                   => (null, 0)));
    end Infix_Call;
+
+   -----------------------------------
+   -- To_Defining_Program_Unit_Name --
+   -----------------------------------
+
+   function To_Defining_Program_Unit_Name
+     (Self  : access Fabric;
+      Value : Gela.Nodes.Selected_Identifier)
+      return Gela.Nodes.Defining_Program_Unit_Name
+   is
+      use Gela.Nodes.Convertions;
+      Result : Gela.Nodes.Element;
+      Id  : Gela.Nodes.Identifier := Value.Object.Selector (Value.Payload);
+   begin
+      Result := +Self.Defining_Expanded_Unit_Name
+        (Value.Object.Prefix (Value.Payload),
+         Value.Object.Dot_Token (Value.Payload),
+         Self.Defining_Identifier (Id.Object.Identifier (Id.Payload)));
+
+      return -Result;
+   end To_Defining_Program_Unit_Name;
 
    ------------------------------------
    -- To_Discrete_Subtype_Indication --
