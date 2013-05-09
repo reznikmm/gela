@@ -147,7 +147,7 @@ Rules for exception_declaration. :
 .)
 
 
-object_declaration ::= 
+object_declaration ::=
 (object_definition)
   defining_identifier_list colon_token
   [aliased_token] [constant_token] object_definition
@@ -198,7 +198,7 @@ Rules for subtype_declaration. :
 .)
 
 
-package_declaration ::= 
+package_declaration ::=
   package_token defining_program_unit_name [aspect_specification] is_token
     [basic_declarative_item_list <public_item_list>]
   [(private_part)
@@ -240,7 +240,7 @@ Rules for basic_declarative_item_list. :
 .)
 
 
-basic_declarative_item ::= 
+basic_declarative_item ::=
   basic_declaration |
   aspect_clause;
 
@@ -276,7 +276,7 @@ Rules for defining_program_unit_name.selected_identifier :
 .)
 
 
-derived_type_declaration ::= 
+derived_type_declaration ::=
   type_token defining_identifier
     [discriminant_part] is_token
   [abstract_token] [limited_token] new_token subtype_indication
@@ -334,7 +334,7 @@ Rules for derived_type_declaration. :
 
 
 
-full_type_declaration ::= 
+full_type_declaration ::=
   (full)  type_token defining_identifier
     [discriminant_part] is_token type_definition
     [aspect_specification] semicolon_token |
@@ -427,7 +427,7 @@ type_definition ::=
 interface_kind ::=
   limited_token | task_token | protected_token | synchronized_token;
 
-interface_type_definition ::= 
+interface_type_definition ::=
   [interface_kind] interface_token
   {and_token subtype_mark} <and_subtype_mark_list>;
 
@@ -562,7 +562,7 @@ Rules for record_type_definition. :
 
 
 
-variant_part ::= 
+variant_part ::=
   case_token direct_name is_token
     variant
     {variant} <variant_list>
@@ -589,7 +589,7 @@ Rules for variant_part. :
 .)
 
 
-variant ::= 
+variant ::=
    when_token discrete_choice_list arrow_token component_list;
 
 Rules for variant. :
@@ -603,7 +603,7 @@ Rules for variant. :
 
 
 
-pragma ::= 
+pragma ::=
    pragma_token identifier
    [left_parenthesis_token pragma_argument_association
     {comma_token pragma_argument_association} <pragma_argument_list>
@@ -671,7 +671,7 @@ aspect_clause ::=
   attribute_definition_clause |
   pragma;
 
-attribute_definition_clause ::= 
+attribute_definition_clause ::=
   ffor_token subtype_mark use_token expression semicolon_token;
 
 Rules for attribute_definition_clause. :
@@ -687,7 +687,7 @@ Rules for attribute_definition_clause. :
 
 
 
-component_declaration ::= 
+component_declaration ::=
   defining_identifier_list colon_token component_definition
   [(def) assignment_token expression]
   [aspect_specification]
@@ -706,7 +706,7 @@ Rules for component_declaration. :
               -${semicolon_token.ast});
 .)
 
-record_definition ::= 
+record_definition ::=
   (record)
   record_token
     component_list
@@ -734,7 +734,7 @@ Rules for record_definition.record :
 .)
 
 
-component_list ::= 
+component_list ::=
   (list)
     component_item
     {component_item} <component_item_list>
@@ -815,7 +815,7 @@ Rules for component_item_list.component_item :
 
 component_item ::= component_declaration | aspect_clause;
 
-unconstrained_array_definition ::= 
+unconstrained_array_definition ::=
   array_token left_parenthesis_token index_subtype_definition
   {comma_token index_subtype_definition} <index_subtype_definition_list>
   right_parenthesis_token
@@ -856,7 +856,7 @@ Rules for index_subtype_definition_list. :
 
 
 
-constrained_array_definition ::= 
+constrained_array_definition ::=
   array_token left_parenthesis_token discrete_subtype_definition
   {comma_token discrete_subtype_definition} <discrete_subtype_definition_list>
   right_parenthesis_token of_token component_definition;
@@ -895,7 +895,7 @@ Rules for discrete_subtype_definition_list. :
          end;
 .)
 
-formal_part ::= 
+formal_part ::=
    left_parenthesis_token parameter_specification
      {semicolon_token parameter_specification} <parameter_specification_list>
    right_parenthesis_token
@@ -928,7 +928,7 @@ Rules for parameter_specification_list. :
 .)
 
 
-parameter_specification ::= 
+parameter_specification ::=
 (subtype)
   defining_identifier_list colon_token
   [aliased_token] [mode] [null_exclusion]
@@ -969,7 +969,7 @@ Rules for parameter_specification.access :
 
 
 
-defining_identifier_list ::= 
+defining_identifier_list ::=
   defining_identifier {comma_token defining_identifier} <defining_id_list>;
 
 Rules for defining_identifier_list. :
@@ -1003,7 +1003,7 @@ mode ::=
   (in_out) in_token out_token |
            out_token;
 
-access_definition ::= 
+access_definition ::=
 (subtype_mark)
   [null_exclusion] access_token [constant_token] subtype_mark
   |
@@ -1075,7 +1075,7 @@ Rules for access_definition.procedure :
 
 
 
-component_definition ::= 
+component_definition ::=
   (subtype_indication) [aliased_token] subtype_indication |
   (access_definition)  [aliased_token] access_definition;
 
@@ -1098,7 +1098,7 @@ Rules for component_definition.access_definition :
 index_subtype_definition ::=
   subtype_mark range_token box_token;
 
-decimal_fixed_point_definition ::= 
+decimal_fixed_point_definition ::=
   delta_token simple_expression <delta>
   digits_token simple_expression <digits>
   [real_range_specification];
@@ -1115,7 +1115,7 @@ Rules for decimal_fixed_point_definition. :
 
 
 
-ordinary_fixed_point_definition ::= 
+ordinary_fixed_point_definition ::=
    delta_token simple_expression real_range_specification;
 
 Rules for ordinary_fixed_point_definition. :
@@ -1127,7 +1127,7 @@ Rules for ordinary_fixed_point_definition. :
 .)
 
 
-floating_point_definition ::= 
+floating_point_definition ::=
   digits_token simple_expression [real_range_specification];
 
 Rules for floating_point_definition. :
@@ -1138,7 +1138,7 @@ Rules for floating_point_definition. :
              -${real_range_specification.ast:(null, 0)});
 .)
 
-real_range_specification ::= 
+real_range_specification ::=
   range_token
   simple_expression <left> double_dot_token simple_expression <right>;
 
@@ -1172,7 +1172,7 @@ Rules for signed_integer_type_definition. :
 .)
 
 
-enumeration_type_definition ::= 
+enumeration_type_definition ::=
   left_parenthesis_token enumeration_literal_specification
   {comma_token enumeration_literal_specification} <enumeration_list>
   right_parenthesis_token;
@@ -1281,7 +1281,7 @@ Rules for expression.or_else :
 
 
 
-relation ::= 
+relation ::=
 (relation)
   simple_expression <left> [relational_operator simple_expression <right>] |
 (membership)
@@ -1674,7 +1674,7 @@ Rules for range_constraint. :
 .)
 
 
-extension_aggregate ::= 
+extension_aggregate ::=
   left_parenthesis_token
   name with_token
   record_component_association_list
@@ -1907,7 +1907,7 @@ Rules for case_exp_alternative_list. :
          end;
 .)
 
-case_expression_alternative ::= 
+case_expression_alternative ::=
   when_token discrete_choice_list arrow_token expression;
 
 Rules for case_expression_alternative. :

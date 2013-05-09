@@ -4,14 +4,14 @@ with "league";
 
 project Gela_Ada_2012 is
 
-   for Main use ("lexer_test");
+   for Main use ("lexer_test", "main");
 
    Build := external ("GELA_BUILD", "/tmp/gela");
    for Source_Dirs use ("../source/ada2012", "../source/ada2012/generated");
    for Object_Dir use Build & "/ada2012";
 
    Default_Ada_Switches :=
-     ("-gnat12", "-gnatW8", "-g", "-gnatyaAbcdefhiIkmnoOprsStux");
+     ("-gnat12", "-gnatW8", "-g", "-gnatyaAbcdefhikmnoOprsStux");
 
    package Compiler is
       for Default_Switches ("ada") use

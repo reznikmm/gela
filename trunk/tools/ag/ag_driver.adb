@@ -503,7 +503,7 @@ procedure AG_Driver is
       Nodes.P ("package Gela.Nodes is");
       Nodes.P ("   pragma Preelaborate;");
       Nodes.P;
-      Nodes.P ("   type Node is interface;");
+      Nodes.P ("   type Node is interface and Gela.Types.Abstract_Element;");
       Nodes.P ("   type Node_Access is access all Node'Class;");
       Nodes.P;
       Nodes.P ("   type Element is record");

@@ -67,7 +67,7 @@ association ::=
   token             <arrow_token>
   expression_or_box <Component_Expression>;
 
-aspect_clause ::= 
+aspect_clause ::=
   attribute_definition_clause |
   pragma_node;
 
@@ -93,7 +93,7 @@ attribute_reference ::=
   expression <Attribute_Designator_Expressions>
 ;
 
-basic_declarative_item ::= 
+basic_declarative_item ::=
   basic_declaration |
   aspect_clause;
 
@@ -174,7 +174,7 @@ discrete_subtype_definition ::=
    discrete_range_attribute_reference |
    discrete_simple_expression_range;
 
-discrete_subtype_indication ::= 
+discrete_subtype_indication ::=
     subtype_mark <Subtype_Mark>
     range_constraint <Subtype_Constraint>;
 
@@ -190,7 +190,7 @@ discrete_simple_expression_range ::=
 
 range_dr ::= range_attribute_reference_dr | simple_expression_range_dr;
 
-discrete_subtype_indication_dr ::= 
+discrete_subtype_indication_dr ::=
     subtype_mark <Subtype_Mark>
     range_constraint <Subtype_Constraint>;
 
@@ -310,7 +310,7 @@ case_expression ::=
   token <is_token>
   {case_expression_path} <Case_Expression_Paths>;
 
-case_expression_path ::= 
+case_expression_path ::=
     token <when_token>
     {discrete_choice} <Case_Path_Alternative_Choices>
     token <arrow_token>
@@ -545,7 +545,7 @@ simple_expression ::=
     record_aggregate |
     extension_aggregate |
     name |
-    qualified_expression | 
+    qualified_expression |
     allocator |
     if_expression |
     case_expression |
@@ -573,7 +573,7 @@ subtype_mark ::= identifier |
 
 subtype_mark_or_access_definition ::= subtype_mark | access_definition;
 
-type_definition ::= 
+type_definition ::=
   enumeration_type_definition |
   signed_integer_type_definition |
   modular_type_definition |
