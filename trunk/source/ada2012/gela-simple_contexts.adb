@@ -24,6 +24,7 @@ with Gela.Grammars.Reader;
 with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
 with Gela.Mutables.Compilations;
+with Gela.Mutables.To_XML;
 
 package body Gela.Simple_Contexts is
 
@@ -90,6 +91,19 @@ package body Gela.Simple_Contexts is
    begin
       return null;
    end Container;
+
+   -----------------
+   -- Debug_Image --
+   -----------------
+
+   overriding function Debug_Image
+     (Self : access Context) return League.Strings.Universal_String
+   is
+      G : constant Gela.Grammars.Grammar :=
+        Gela.Grammars.Reader.Read ("ada-ast.ag");
+   begin
+      return Gela.Mutables.To_XML.Compilation (Self.Comp, G);
+   end Debug_Image;
 
    ------------------
    -- Default_Path --
@@ -160,7 +174,6 @@ package body Gela.Simple_Contexts is
       Found : Boolean;
       Name  : League.Strings.Universal_String;
       Text  : League.Strings.Universal_String;
-      Comp  : Gela.Mutables.Mutable_Compilation_Access;
    begin
       Self.Finder := Gela.Source_Finders.Create
         (Self.Path, Self.Schema'Access);
@@ -175,12 +188,12 @@ package body Gela.Simple_Contexts is
          raise Asis.Exceptions.ASIS_Failed;
       end if;
 
-      Comp := Gela.Mutables.Compilations.Create
+      Self.Comp := Gela.Mutables.Compilations.Create
         (Self.File_Name, Text, Self.Errors, Self.Grammar, Self.Table);
 
-      Comp.Start;
+      Self.Comp.Start;
 
-      if Comp.Root.Object = null then
+      if Self.Comp.Root.Object = null then
          Asis.Implementation.Set_Status
            (Asis.Errors.Use_Error,
             "Syntax error :" & Self.File_Name.To_UTF_16_Wide_String);

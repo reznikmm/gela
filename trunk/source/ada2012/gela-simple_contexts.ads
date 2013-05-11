@@ -11,6 +11,7 @@ with League.Strings;
 
 with Gela.Types;
 with Gela.Contexts;
+with Gela.Mutables;
 with Gela.Name_Schemas.GNAT;
 with Gela.Source_Finders;
 with Gela.Errors;
@@ -50,6 +51,9 @@ package Gela.Simple_Contexts is
       Index : Positive)
       return Gela.Types.Container_Access;
 
+   overriding function Debug_Image
+     (Self : access Context) return League.Strings.Universal_String;
+
 private
 
    type Context is new Gela.Contexts.Context with record
@@ -68,6 +72,7 @@ private
       Errors  : Gela.Errors.Error_Handler_Access;
       Grammar : Gela.Grammars.Grammar_Access;
       Table   : Gela.Grammars.LR_Tables.Table_Access;
+      Comp    : Gela.Mutables.Mutable_Compilation_Access;
    end record;
 
    procedure Parse_Parameters (Self : access Context);

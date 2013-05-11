@@ -1,6 +1,6 @@
 Token token;
 
-Compilation ::= name;
+Compilation ::= compilation_library_item;
 
 access_definition ::=
   anonymous_access_to_object_definition |
@@ -95,7 +95,8 @@ attribute_reference ::=
 
 basic_declarative_item ::=
   basic_declaration |
-  aspect_clause;
+  aspect_clause |
+  use_clause;
 
 basic_declaration ::=
   full_type_declaration |
@@ -106,6 +107,16 @@ basic_declaration ::=
   exception_declaration;
 
 box ::= token <box_token>;
+
+compilation_library_item ::=
+  {context_item} <Context_Clause_Elements>
+  library_item   <Unit_Declaration>
+  {pragma_node}  <Compilation_Pragmas>
+;
+
+context_item ::= with_clause | use_clause | pragma_node;
+
+library_item ::= package_declaration;
 
 component_declaration ::=
   {defining_identifier} <Names>
@@ -603,6 +614,22 @@ unknown_discriminant_part ::=
     token <right_token>
 ;
 
+use_clause ::= use_package_clause | use_type_clause;
+
+use_package_clause ::=
+  token <use_token>
+  {program_unit_name} <Clause_Names>
+  token <semicolon_token>
+;
+
+use_type_clause ::=
+  token <use_token>
+  token <all_token>
+  token <type_token>
+  {subtype_mark} <Type_Clause_Names>
+  token <semicolon_token>
+;
+
 variant_part ::=
   token <case_token>
   identifier <Discriminant_Direct_Name>
@@ -618,4 +645,12 @@ variant ::=
   {discrete_choice} <Variant_Choices>
   token <arrow_token>
   {component_item} <Record_Components>
+;
+
+with_clause ::=
+  token <limited_token>
+  token <private_token>
+  token <with_token>
+  {program_unit_name} <Clause_Names>
+  token <semicolon_token>
 ;

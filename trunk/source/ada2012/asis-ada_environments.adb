@@ -99,7 +99,7 @@ package body Asis.Ada_Environments is
       if not Assigned (The_Context) then
          return "[null]";
       else
-         return "[not null]";
+         return The_Context.Debug_Image.To_UTF_16_Wide_String;
       end if;
    end Debug_Image;
 
@@ -126,13 +126,12 @@ package body Asis.Ada_Environments is
    ----------------
 
    procedure Dissociate (The_Context : in out Asis.Context) is
-      procedure Free1 is new Ada.Unchecked_Deallocation
+      procedure Free is new Ada.Unchecked_Deallocation
         (Gela.Simple_Contexts.Context, Gela.Simple_Contexts.Context_Access);
    begin
       if Assigned (The_Context) then
          The_Context.Dissociate;
-         Free1
-           (Gela.Simple_Contexts.Context_Access (The_Context));
+         Free (Gela.Simple_Contexts.Context_Access (The_Context));
          The_Context := null;
       end if;
    end Dissociate;

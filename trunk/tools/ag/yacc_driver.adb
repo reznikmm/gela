@@ -150,6 +150,6 @@ begin
    Gela.Grammars_Debug.Print_Conflicts (AG, Table);
 
    if Ada.Command_Line.Argument_Count > 1 then
-      Gela.Grammars_Debug.Print (AG);
+      Gela.Grammars_Debug.Print (G);
    end if;
 end YACC_Driver;

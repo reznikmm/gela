@@ -27,6 +27,9 @@ begin
 
    Asis.Ada_Environments.Open (Context);
 
+   Ada.Wide_Text_IO.Put_Line
+     (Asis.Ada_Environments.Debug_Image (Context));
+
    Asis.Ada_Environments.Close        (Context);
    Asis.Ada_Environments.Dissociate   (Context);
    Asis.Implementation.Finalize       ("");
@@ -34,7 +37,7 @@ begin
 exception
    when Asis.Exceptions.ASIS_Failed =>
       Ada.Wide_Text_IO.Put_Line
-        ("ASIS_Failed status" &
+        ("ASIS_Failed status: " &
            Asis.Errors.Error_Kinds'Wide_Image
            (Asis.Implementation.Status));
       Ada.Wide_Text_IO.Put_Line (Asis.Implementation.Diagnosis);

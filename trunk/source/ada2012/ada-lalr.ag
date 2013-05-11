@@ -105,7 +105,132 @@ Token numeric_literal_token;
 Token character_literal_token;
 Token string_literal_token;
 
-_compilation ::= package_declaration;
+_compilation ::= compilation_unit;
+
+compilation_unit ::= 
+  (library_item) {context_item} <context_item_list> library_item;
+
+Rules for compilation_unit.library_item :
+(.
+         ${compilation_unit.ast} :=
+            +Self.Compilation.Store.Fabric.Compilation_Library_Item
+               (-${context_item_list.ast:(null, 0)},
+                -${library_item.ast}, -(null, 0));
+.)
+
+Rules for context_item_list.context_item :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Context_Item_Sequence};
+            List : constant Gela.Nodes.Context_Item_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${context_item.ast});
+            ${context_item_list.ast} := Conv;
+         end;
+.)
+
+
+context_item ::= with_clause | use_clause;
+
+library_item ::= package_declaration;
+
+with_clause ::=
+  [limited_token] [private_token] with_token
+    program_unit_name
+    {comma_token program_unit_name} <program_unit_name_list>
+  semicolon_token;
+
+Rules for with_clause. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${program_unit_name_list.ast:+Self.Compilation.Store.
+              Fabric.Program_Unit_Name_Sequence};
+            List : constant Gela.Nodes.Program_Unit_Name_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${program_unit_name.ast});
+            ${with_clause.ast} :=
+              +Self.Compilation.Store.Fabric.With_Clause
+                (-${limited_token.ast:(null, 0)},
+                 -${private_token.ast:(null, 0)},
+                 -${with_token.ast},
+                 List,
+                 -${semicolon_token.ast});
+         end;
+.)
+
+
+use_package_clause ::=
+  use_token program_unit_name
+  {comma_token program_unit_name} <program_unit_name_list>
+  semicolon_token;
+
+Rules for use_package_clause. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${program_unit_name_list.ast:+Self.Compilation.Store.
+              Fabric.Program_Unit_Name_Sequence};
+            List : constant Gela.Nodes.Program_Unit_Name_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${program_unit_name.ast});
+            ${use_package_clause.ast} :=
+              +Self.Compilation.Store.Fabric.Use_Package_Clause
+                (-${use_token.ast},
+                 List,
+                 -${semicolon_token.ast});
+         end;
+.)
+
+
+Rules for program_unit_name_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Program_Unit_Name_Sequence};
+            List : constant Gela.Nodes.Program_Unit_Name_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${program_unit_name.ast});
+            ${program_unit_name_list.ast} := Conv;
+         end;
+.)
+
+
+use_type_clause ::=
+  use_token [all_token] type_token subtype_mark
+  {comma_token subtype_mark} <subtype_mark_list>
+  semicolon_token;
+
+Rules for use_type_clause. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${subtype_mark_list.ast:+Self.Compilation.Store.
+              Fabric.Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${subtype_mark.ast});
+            ${use_type_clause.ast} :=
+              +Self.Compilation.Store.Fabric.Use_Type_Clause
+                (-${use_token.ast},
+                 -${all_token.ast:(null, 0)},
+                 -${type_token.ast},
+                 List,
+                 -${semicolon_token.ast});
+         end;
+.)
+
+Rules for subtype_mark_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Subtype_Mark_Sequence};
+            List : constant Gela.Nodes.Subtype_Mark_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${subtype_mark.ast});
+            ${subtype_mark_list.ast} := Conv;
+         end;
+.)
+
+
 
 exception_renaming_declaration ::=
   defining_identifier_list colon_token
@@ -242,7 +367,10 @@ Rules for basic_declarative_item_list. :
 
 basic_declarative_item ::=
   basic_declaration |
-  aspect_clause;
+  aspect_clause |
+  use_clause;
+
+use_clause ::= use_package_clause | use_type_clause;
 
 basic_declaration ::=
   full_type_declaration |
@@ -2061,6 +2189,9 @@ Synthesized attributes
   case_expression_alternative,
   case_exp_alternative_list,
   choice_list,
+  context_item,
+  context_item_list,
+  compilation_unit,
   component_association_list,
   component_declaration,
   component_definition,
@@ -2108,6 +2239,7 @@ Synthesized attributes
   interface_list,
   interface_type_definition,
   iterator_specification,
+  library_item,
   loop_parameter_specification,
   mchoice_list,
   modular_type_definition,
@@ -2128,6 +2260,7 @@ Synthesized attributes
   pragma_argument_association,
   prefix,
   program_unit_name,
+  program_unit_name_list,
   qualified_expression,
   quantified_expression,
   quantifier,
@@ -2151,13 +2284,17 @@ Synthesized attributes
   subtype_declaration,
   subtype_indication,
   subtype_mark,
+  subtype_mark_list,
   subpool_specification,
   type_definition,
   unconstrained_array_definition,
   unknown_discriminant_part,
+  use_package_clause,
+  use_type_clause,
   variant,
   variant_list,
-  variant_part
+  variant_part,
+  with_clause
  : Integer : ast;
 
 Synthesized attributes

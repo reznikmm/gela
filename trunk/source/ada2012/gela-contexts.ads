@@ -43,4 +43,8 @@ package Gela.Contexts is
       Index : Positive)
       return Gela.Types.Container_Access is abstract;
 
+   function Debug_Image
+     (Self : access Context)
+      return League.Strings.Universal_String is abstract;
+
 end Gela.Contexts;
