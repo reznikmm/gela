@@ -449,6 +449,7 @@ package body Asis.Gela.Contexts is
    is
       use Asis.Gela.Units;
 
+      Result   : constant Asis.Compilation_Unit := The_Context.Current_Unit;
       New_Unit : constant Any_Compilation_Unit_Ptr :=
         new Any_Compilation_Unit_Node;
    begin
@@ -456,7 +457,7 @@ package body Asis.Gela.Contexts is
       Set_Text_Name (New_Unit.all, Current_File (The_Context.all));
       The_Context.Current_Unit := Compilation_Unit (New_Unit);
 
-      return Asis.Compilation_Unit (New_Unit);
+      return Result;
    end New_Compilation_Unit;
 
    ------------------------------

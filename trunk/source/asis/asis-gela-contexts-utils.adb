@@ -370,6 +370,7 @@ package body Asis.Gela.Contexts.Utils is
 
       use Asis.Gela.Compilations;
 
+      Empty_Unit  : Asis.Compilation_Unit;
       File        : constant Wide_String := Current_File (The_Context);
       Encoding    : Encodings.Encoding := The_Context.User_Encoding;
       Buffer      : Text_Utils.Source_Buffer_Access;
@@ -392,6 +393,7 @@ package body Asis.Gela.Contexts.Utils is
       New_Compilation
         (The_Context.Compilation_List, File, Buffer, Decoder, New_Version);
 
+      Empty_Unit := New_Compilation_Unit (The_Context'Access);
       Parser.Run (The_Context.This,
                   Buffer.all,
                   Encoding,
