@@ -51,10 +51,8 @@ procedure AG_Driver is
      (Prod     : Gela.Grammars.Production;
       Nodes_NT : in out Writer);
 
-   procedure Write_Nodes_NT
-     (NT       : Gela.Grammars.Non_Terminal;
-      Nodes_NT : in out Writer);
-   --  Write Gela.Nodes.<Non_Terminal>s package specification
+   procedure Generate_Nodes_NT
+     (NT       : Gela.Grammars.Non_Terminal);
 
    function Macro_Reference
      (Prod : Gela.Grammars.Production)
@@ -69,7 +67,6 @@ procedure AG_Driver is
    procedure Generate_Nodes;
    procedure Generate_Fabric;
    procedure Generate_Conv;
-   procedure Generate_Nodes_NT (NT : Gela.Grammars.Non_Terminal);
    procedure Generate_Stores_Prod
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production);
@@ -602,36 +599,108 @@ procedure AG_Driver is
    -- Generate_Nodes_NT --
    -----------------------
 
-   procedure Generate_Nodes_NT (NT : Gela.Grammars.Non_Terminal) is
-      Nodes_NT    : Writer;
+   procedure Generate_Nodes_NT
+     (NT       : Gela.Grammars.Non_Terminal)
+   is
+      Nodes_NT   : Writer;
+      Impl_Count : Natural := 0;
    begin
-      Write_Nodes_NT (NT, Nodes_NT);
-
-      for Prod of Plain.Production (NT.First .. NT.Last) loop
-         if NT.First /= NT.Last and Macro_Reference (Prod) = 0 then
-            Nodes_NT.N ("package Gela.Nodes.");
-            Nodes_NT.N (Plural (NT.Name));
-            Nodes_NT.N (".");
-            Nodes_NT.N (Plural (Prod.Name));
-            Nodes_NT.P (" is");
-            Nodes_NT.P ("   pragma Preelaborate;");
-            Nodes_NT.P;
-            Nodes_NT.N ("   type Object is interface and Gela.Nodes.");
-            Nodes_NT.N (Plural (NT.Name));
-            Nodes_NT.P (".Object;");
-            Nodes_NT.P;
-            Nodes_NT.P ("   type Object_Access is access all Object'Class;");
-            Nodes_NT.P;
-
-            Write_Parts (Prod, Nodes_NT);
-
-            Nodes_NT.N ("end Gela.Nodes.");
-            Nodes_NT.N (Plural (NT.Name));
-            Nodes_NT.N (".");
-            Nodes_NT.N (Plural (Prod.Name));
+      for J in Implement'Range (2) loop
+         if Implement (NT.Index, J) then
+            Nodes_NT.N ("with Gela.Nodes.");
+            Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
             Nodes_NT.P (";");
+            Impl_Count := Impl_Count + 1;
          end if;
       end loop;
+
+      Nodes_NT.N ("package Gela.Nodes.");
+      Nodes_NT.N (Plural (NT.Name));
+      Nodes_NT.P (" is");
+      Nodes_NT.P ("   pragma Preelaborate;");
+      Nodes_NT.P;
+
+      if Is_Ambiguous (NT) then
+         Nodes_NT.P ("   type Switch is interface and Node;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   function Length");
+         Nodes_NT.P ("     (Self    : access Switch;");
+         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
+         Nodes_NT.P ("      return Natural is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   function Element");
+         Nodes_NT.P ("     (Self    : access Switch;");
+         Nodes_NT.P ("      Payload : Gela.Types.Payload;");
+         Nodes_NT.P ("      Index   : Positive)");
+         Nodes_NT.N ("      return Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (" is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   type Object is interface and Switch;");
+      elsif Impl_Count > 0 then
+         Nodes_NT.N ("   type Object is interface and Node");
+
+         for J in Implement'Range (2) loop
+            if Implement (NT.Index, J) then
+               Nodes_NT.P;
+               Nodes_NT.N ("     and Gela.Nodes.");
+               Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
+               Nodes_NT.N (".Object");
+            end if;
+         end loop;
+
+         Nodes_NT.P (";");
+      else
+         Nodes_NT.P ("   type Object is interface and Node;");
+      end if;
+
+      Nodes_NT.P;
+      Nodes_NT.P ("   type Object_Access is access all Object'Class;");
+      Nodes_NT.P;
+
+      if Is_Macro (NT.Index) then
+         Write_Parts (Plain.Production (NT.First), Nodes_NT);
+      end if;
+
+      if Has_List (NT.Index) then
+         Nodes_NT.P ("   type List is interface and Node;");
+         Nodes_NT.P ("   type List_Access is access all List'Class;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding function Head");
+         Nodes_NT.P ("     (Self    : access List;");
+         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
+         Nodes_NT.N ("      return Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (" is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding procedure Next");
+         Nodes_NT.P ("     (Self     : access List;");
+         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
+         Nodes_NT.N ("      Position : in out Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (")");
+         Nodes_NT.P ("     is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding procedure Append");
+         Nodes_NT.P ("     (Self     : access List;");
+         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
+         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   not overriding procedure Prepend");
+         Nodes_NT.P ("     (Self     : access List;");
+         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
+         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
+         Nodes_NT.P;
+         Nodes_NT.P ("   function Get_Payload");
+         Nodes_NT.N ("     (Object  : Gela.Nodes.");
+         Nodes_NT.N (To_Ada (NT.Name));
+         Nodes_NT.P (")");
+         Nodes_NT.P ("      return Gela.Types.Payload is (Object.Payload);");
+      end if;
+
+      Nodes_NT.N ("end Gela.Nodes.");
+      Nodes_NT.N (Plural (NT.Name));
+      Nodes_NT.P (";");
 
       Ada.Text_IO.Put_Line (Nodes_NT.Text.To_UTF_8_String);
    end Generate_Nodes_NT;
@@ -1155,114 +1224,6 @@ procedure AG_Driver is
 
       return List.Join ('_');
    end To_Ada;
-
-   --------------------
-   -- Write_Nodes_NT --
-   --------------------
-
-   procedure Write_Nodes_NT
-     (NT       : Gela.Grammars.Non_Terminal;
-      Nodes_NT : in out Writer)
-   is
-      Impl_Count : Natural := 0;
-   begin
-      for J in Implement'Range (2) loop
-         if Implement (NT.Index, J) then
-            Nodes_NT.N ("with Gela.Nodes.");
-            Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
-            Nodes_NT.P (";");
-            Impl_Count := Impl_Count + 1;
-         end if;
-      end loop;
-
-      Nodes_NT.N ("package Gela.Nodes.");
-      Nodes_NT.N (Plural (NT.Name));
-      Nodes_NT.P (" is");
-      Nodes_NT.P ("   pragma Preelaborate;");
-      Nodes_NT.P;
-
-      if Is_Ambiguous (NT) then
-         Nodes_NT.P ("   type Switch is interface and Node;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   function Length");
-         Nodes_NT.P ("     (Self    : access Switch;");
-         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
-         Nodes_NT.P ("      return Natural is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   function Element");
-         Nodes_NT.P ("     (Self    : access Switch;");
-         Nodes_NT.P ("      Payload : Gela.Types.Payload;");
-         Nodes_NT.P ("      Index   : Positive)");
-         Nodes_NT.N ("      return Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (" is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   type Object is interface and Switch;");
-      elsif Impl_Count > 0 then
-         Nodes_NT.N ("   type Object is interface and Node");
-
-         for J in Implement'Range (2) loop
-            if Implement (NT.Index, J) then
-               Nodes_NT.P;
-               Nodes_NT.N ("     and Gela.Nodes.");
-               Nodes_NT.N (Plural (Plain.Non_Terminal (J).Name));
-               Nodes_NT.N (".Object");
-            end if;
-         end loop;
-
-         Nodes_NT.P (";");
-      else
-         Nodes_NT.P ("   type Object is interface and Node;");
-      end if;
-
-      Nodes_NT.P;
-      Nodes_NT.P ("   type Object_Access is access all Object'Class;");
-      Nodes_NT.P;
-
-      if Is_Macro (NT.Index) then
-         Write_Parts (Plain.Production (NT.First), Nodes_NT);
-      end if;
-
-      if Has_List (NT.Index) then
-         Nodes_NT.P ("   type List is interface and Node;");
-         Nodes_NT.P ("   type List_Access is access all List'Class;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding function Head");
-         Nodes_NT.P ("     (Self    : access List;");
-         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
-         Nodes_NT.N ("      return Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (" is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Next");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.N ("      Position : in out Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (")");
-         Nodes_NT.P ("     is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Append");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Prepend");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   function Get_Payload");
-         Nodes_NT.N ("     (Object  : Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (")");
-         Nodes_NT.P ("      return Gela.Types.Payload is (Object.Payload);");
-      end if;
-
-      Nodes_NT.N ("end Gela.Nodes.");
-      Nodes_NT.N (Plural (NT.Name));
-      Nodes_NT.P (";");
-   end Write_Nodes_NT;
 
    -----------------
    -- Write_Parts --
