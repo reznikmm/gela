@@ -23,8 +23,8 @@ package Gela.Lexical.Tokens is
 --        A_Not_Equal_Operator,              --  /=
 --        An_Exponentiate_Operator,          --  **
 
---        An_And_Operator,                   --  and
 --        An_Or_Operator,                    --  or
+--        An_And_Operator,                   --  and
 --        An_Xor_Operator,                   --  xor
 --        A_Mod_Operator,                    --  mod
 --        A_Rem_Operator,                    --  rem
@@ -37,7 +37,7 @@ package Gela.Lexical.Tokens is
       Star_Token, Ampersand_Token, Plus_Token,
       Less_Or_Equal_Token, Greater_Or_Equal_Token, Inequality_Token,
       Double_Star_Token,
-      And_Token, Or_Token, Xor_Token, Mod_Token, Rem_Token, Abs_Token,
+      Or_Token, And_Token, Xor_Token, Mod_Token, Rem_Token, Abs_Token,
       Not_Token,
 
       Right_Label_Token,
