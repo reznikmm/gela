@@ -52,6 +52,14 @@ package Gela.Stores.Tokens is
      (Self    : access Token;
       Payload : Gela.Types.Payload) return Natural;
 
+   overriding function Compilation
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Gela.Types.Compilation_Access;
+
+   overriding function Symbol
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Gela.Types.Symbol;
+
    not overriding procedure Initialize
      (Self      : access Token;
       Payload   : Gela.Types.Payload;
@@ -59,6 +67,7 @@ package Gela.Stores.Tokens is
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
-      Separator : Gela.Lexical.Text_Index);
+      Separator : Gela.Lexical.Text_Index;
+      Symbol    : Gela.Types.Symbol);
 
 end Gela.Stores.Tokens;

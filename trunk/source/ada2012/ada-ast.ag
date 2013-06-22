@@ -654,3 +654,56 @@ with_clause ::=
   {program_unit_name} <Clause_Names>
   token <semicolon_token>
 ;
+
+
+Synthesized attributes
+  token  : Gela.Nodes.Token : self;
+
+Synthesized attributes
+  defining_identifier,
+  identifier,
+  program_unit_name,
+  selected_identifier
+  : Ada.Containers.Hash_Type : hash;
+
+Rules for defining_identifier.identifier :
+(.
+      declare
+         Token : constant Gela.Nodes.Token :=
+           ${identifier.self};
+           --  Self.Object.Identifier (Self.Payload);
+         Comp  : constant Gela.Types.Compilation_Access :=
+           Token.Object.Compilation (Token.Payload);
+         Symbol : constant Gela.Types.Symbol :=
+           Token.Object.Symbol (Token.Payload);
+      begin
+         ${defining_identifier.hash} := Ada.Containers.Hash_Type (Comp.Symbols.Value (Symbol).Hash);
+      end;
+.)
+
+Rules for identifier.identifier :
+(.
+      declare
+         Token : constant Gela.Nodes.Token :=
+           ${identifier.self};
+           --  Self.Object.Identifier (Self.Payload);
+         Comp  : constant Gela.Types.Compilation_Access :=
+           Token.Object.Compilation (Token.Payload);
+         Symbol : constant Gela.Types.Symbol :=
+           Token.Object.Symbol (Token.Payload);
+      begin
+         ${identifier.hash} := Ada.Containers.Hash_Type (Comp.Symbols.Value (Symbol).Hash);
+      end;
+.)
+
+Rules for selected_identifier.identifier :
+(.
+      declare
+         Left : constant Ada.Containers.Hash_Type :=
+           ${Prefix.hash};
+         Right : constant Ada.Containers.Hash_Type :=
+           ${Selector.hash};
+      begin
+         ${selected_identifier.hash} := Join_Hash (Left, Right);
+      end;
+.)

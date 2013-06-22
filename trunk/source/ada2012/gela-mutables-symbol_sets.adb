@@ -78,6 +78,7 @@ package body Gela.Mutables.Symbol_Sets is
          if Self.Last (First) = 0 then
             Self.Last (First) := Wide_Wide_Character'Pos (First) * Shift;
             Self.Symbols.Insert (Value, Self.Last (First));
+            Self.Revert.Insert (Self.Last (First), Value);
             Result := Self.Last (First);
          else
             declare
@@ -88,6 +89,7 @@ package body Gela.Mutables.Symbol_Sets is
                else
                   Self.Last (First) := Self.Last (First) + 1;
                   Self.Symbols.Insert (Value, Self.Last (First));
+                  Self.Revert.Insert (Self.Last (First), Value);
                   Result := Self.Last (First);
                end if;
             end;
@@ -116,6 +118,15 @@ package body Gela.Mutables.Symbol_Sets is
       end if;
    end Append;
 
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (X : Gela.Types.Symbol) return Ada.Containers.Hash_Type is
+   begin
+      return Ada.Containers.Hash_Type (X);
+   end Hash;
+
    ------------------------
    -- To_Operator_Symbol --
    ------------------------
@@ -134,5 +145,57 @@ package body Gela.Mutables.Symbol_Sets is
          return 0;
       end if;
    end To_Operator_Symbol;
+
+   -----------
+   -- Value --
+   -----------
+
+   overriding function Value
+     (Self   : in out Symbol_Set;
+      Name   : Symbol) return League.Strings.Universal_String
+   is
+      Result : League.Strings.Universal_String;
+
+      A1 : constant array (Symbol range 1 .. 8) of Wide_Wide_String (1 .. 3) :=
+        ("""<""", """=""", """>""", """-""",
+         """/""", """*""", """&""", """+""");
+      A2 : constant array (Symbol range 9 .. 13) of Wide_Wide_String (1 .. 4)
+        := ("""<=""", """>=""", """/=""", """**""", """or""");
+      A3 : constant array (Symbol range 14 .. 19) of Wide_Wide_String (1 .. 5)
+        := ("""and""", """xor""", """mod""", """rem""", """abs""", """not""");
+
+      Pos : Revert_Maps.Cursor;
+   begin
+      case Name is
+         when Operator_Symbol =>
+            Pos := Self.Revert.Find (Name);
+
+            if Revert_Maps.Has_Element (Pos) then
+               Result := Revert_Maps.Element (Pos);
+               return Result;
+            end if;
+
+            case Name is
+               when A1'Range =>
+                  Result := League.Strings.To_Universal_String (A1 (Name));
+               when A2'Range =>
+                  Result := League.Strings.To_Universal_String (A2 (Name));
+               when A3'Range =>
+                  Result := League.Strings.To_Universal_String (A3 (Name));
+               when others =>
+                  null;
+            end case;
+
+            Self.Revert.Insert (Name, Result);
+         when Character_Symbol =>
+            Result.Append ("'");
+            Result.Append (Wide_Wide_Character'Val (Name));
+            Result.Append ("'");
+         when others =>
+            Result := Self.Revert.Element (Name);
+      end case;
+
+      return Result;
+   end Value;
 
 end Gela.Mutables.Symbol_Sets;

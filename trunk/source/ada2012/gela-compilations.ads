@@ -16,6 +16,7 @@ package Gela.Compilations is
    pragma Preelaborate;
 
    type Abstract_Compilation is limited interface;
+   type Abstract_Compilation_Access is access all Abstract_Compilation'Class;
 
    function Text_Name
      (Self    : access Abstract_Compilation)

@@ -40,4 +40,14 @@ package Gela.Tokens is
       Payload : Gela.Types.Payload)
       return Gela.Lexical.Text_Index is abstract;
 
+   not overriding function Compilation
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Access is abstract;
+
+   not overriding function Symbol
+     (Self    : access Token;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Symbol is abstract;
+
 end Gela.Tokens;

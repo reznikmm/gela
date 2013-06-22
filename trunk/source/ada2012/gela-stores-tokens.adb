@@ -7,6 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with Gela.Compilations;
 with Gela.Mutables.Compilations;
 pragma Unreferenced (Gela.Mutables.Compilations);
 
@@ -20,8 +21,23 @@ package body Gela.Stores.Tokens is
       First     : constant := Line + 1;
       Last      : constant := First + 1;
       Separator : constant := Last + 1;
-      --  Symbol    : constant := Separator + 1;
+      Symbol    : constant := Separator + 1;
    end Offset;
+
+   -----------------
+   -- Compilation --
+   -----------------
+
+   overriding function Compilation
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Gela.Types.Compilation_Access
+   is
+      pragma Unreferenced (Payload);
+      Result : constant Gela.Compilations.Abstract_Compilation_Access :=
+        Gela.Compilations.Abstract_Compilation_Access (Self.Store.Compilation);
+   begin
+      return Gela.Types.Compilation_Access (Result);
+   end Compilation;
 
    -----------
    -- First --
@@ -50,7 +66,8 @@ package body Gela.Stores.Tokens is
       Line      : Gela.Lexical.Line_Index;
       First     : Gela.Lexical.Text_Index;
       Last      : Gela.Lexical.Text_Index;
-      Separator : Gela.Lexical.Text_Index)
+      Separator : Gela.Lexical.Text_Index;
+      Symbol    : Gela.Types.Symbol)
    is
       Item  : constant Index := Index (Payload);
    begin
@@ -59,6 +76,7 @@ package body Gela.Stores.Tokens is
       Self.Set (Item + Offset.First, Element (First));
       Self.Set (Item + Offset.Last, Element (Last));
       Self.Set (Item + Offset.Separator, Element (Separator));
+      Self.Set (Item + Offset.Symbol, Element (Symbol));
    end Initialize;
 
    ----------
@@ -121,8 +139,22 @@ package body Gela.Stores.Tokens is
       pragma Unreferenced (Self);
       pragma Unreferenced (Payload);
    begin
-      return Offset.Separator + 1;
+      return Offset.Symbol + 1;
    end Size;
+
+   ------------
+   -- Symbol --
+   ------------
+
+   overriding function Symbol
+     (Self    : access Token;
+      Payload : Gela.Types.Payload) return Gela.Types.Symbol
+   is
+      Item  : constant Index := Index (Payload);
+      Value : constant Element := Self.Get (Item + Offset.Symbol);
+   begin
+      return Gela.Types.Symbol (Value);
+   end Symbol;
 
    -----------
    -- Value --

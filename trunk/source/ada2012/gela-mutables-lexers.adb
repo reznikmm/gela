@@ -135,6 +135,8 @@ package body Gela.Mutables.Lexers is
       then
          Gela.Mutables.Compilations.Symbols
            (Self.Compilation).Append (Folded, Symbol);
+      else
+         Symbol := 0;
       end if;
 
       if Self.Last_Token = Self.Tokens'Last then
@@ -158,7 +160,8 @@ package body Gela.Mutables.Lexers is
          Gela.Lexical.Line_Index (Line),
          First,
          Last,
-         Separator);
+         Separator,
+         Symbol);
    end New_Token;
 
    use Gela.Lexical.Tokens;

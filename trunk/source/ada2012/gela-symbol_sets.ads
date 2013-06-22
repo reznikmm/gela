@@ -23,8 +23,9 @@ package Gela.Symbol_Sets is
       Value  : League.Strings.Universal_String;
       Result : out Gela.Types.Symbol) is abstract;
 
---   not overriding function Value
---     (Self   : in out Symbol_Set;
---      Name   : Symbol) return League.Strings.Universal_String is abstract;
+   not overriding function Value
+     (Self   : in out Symbol_Set;
+      Name   : Gela.Types.Symbol)
+      return League.Strings.Universal_String is abstract;
 
 end Gela.Symbol_Sets;
