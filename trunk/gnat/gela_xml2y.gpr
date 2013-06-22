@@ -10,7 +10,7 @@ project Gela_XML2Y is
 
    package Compiler is
       for Default_Switches ("ada") use
-        ("-gnat95", "-g");
+        ("-gnat2005", "-g");
    end Compiler;
 
    package Builder is
