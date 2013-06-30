@@ -1,0 +1,16 @@
+with "gela_common";
+with "gela_context";
+with "gela_sourcer";
+
+project Gela_ASIS is
+
+   Build := Gela_Common.Build;
+   for Source_Dirs use ("../src/asis/api");
+   for Object_Dir use Build & "/asis";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+      for Switches ("asis.ads") use Gela_Common.Default_Ada_Switches;
+   end Compiler;
+
+end Gela_ASIS;

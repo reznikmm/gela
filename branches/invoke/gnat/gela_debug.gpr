@@ -1,0 +1,15 @@
+with "gela_common";
+with "gela_asis";
+
+project Gela_Debug is
+
+   for Main use ("main.adb");
+
+   for Source_Dirs use ("../tools/debug");
+   for Object_Dir use Gela_Common.Build & "/tools/debug";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Gela_Debug;
