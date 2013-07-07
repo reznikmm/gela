@@ -160,7 +160,7 @@ procedure AG_Driver is
                Conv_Spec.N (To_Ada (NT.Name));
                Conv_Spec.N ("_Sequence is");
 
-               if NT.Name.Length > 21 then
+               if NT.Name.Length > 20 then
                   Conv_Spec.P;
                   Conv_Spec.N ("        ");
                end if;
@@ -344,10 +344,10 @@ procedure AG_Driver is
             Fabrics.P (";");
             Fab_Body.P;
             Fab_Body.P ("   is");
-            Fab_Body.N ("      Object : constant ");
+            Fab_Body.N ("      Object : constant Stores.");
             Fab_Body.N (To_Ada (NT.Name));
-            Fab_Body.P ("_Sequences.List_Access");
-            Fab_Body.N ("        := Self.L");
+            Fab_Body.P ("_Sequences");
+            Fab_Body.N ("        .List_Access := Self.L");
             Fab_Body.N (Positive (NT.Index));
             Fab_Body.P ("'Access;");
             Fab_Body.N ("      Int    : constant N.");
@@ -413,10 +413,9 @@ procedure AG_Driver is
                   Fabrics.P ("", Fab_Body);
 
                   Fab_Body.P ("   is");
-                  Fab_Body.N ("      Object : constant ");
-                  Fab_Body.N (Plural (NT.Name));
-                  Fab_Body.P (".Object_Access");
-                  Fab_Body.N ("        := Self.P");
+                  Fab_Body.N ("      Object : constant Stores.");
+                  Fab_Body.P (Plural (NT.Name));
+                  Fab_Body.N ("        .Object_Access := Self.P");
                   Fab_Body.N (Natural (Prod.Index));
                   Fab_Body.P ("'Access;");
                   Fab_Body.P ("      Int    : constant");
