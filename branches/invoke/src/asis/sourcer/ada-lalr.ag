@@ -133,7 +133,213 @@ Rules for context_item_list.context_item :
 
 context_item ::= with_clause | use_clause;
 
-library_item ::= package_declaration;
+library_item ::=
+  (spec)     library_unit_declaration |
+  (body)     library_unit_body;
+
+library_unit_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  package_declaration;
+
+procedure_declaration ::= 
+  [overriding_indicator]
+  procedure_token defining_program_unit_name [formal_part]
+  [(is) is_token null_or_abstract |
+   (ren) renames_token name]
+  [aspect_specification] semicolon_token;
+
+null_or_abstract ::= null_token | abstract_token;
+
+Rules for procedure_declaration. :
+(.
+         ${procedure_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Procedure_Declaration
+               (-${overriding_indicator.ast:(null, 0)},
+                -${procedure_token.ast},
+                -${defining_program_unit_name.ast},
+                -${formal_part.ast:(null, 0)},
+                -${is_token.ast:(null, 0)}, (null, 0),
+                -${renames_token.ast:(null, 0)},
+                -${name.ast:(null, 0)},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+procedure_body ::= 
+  [overriding_indicator]
+  procedure_token defining_program_unit_name [formal_part]
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [program_unit_name]
+  semicolon_token;
+
+Rules for procedure_body. :
+(.
+         ${procedure_body.ast} :=
+            +Self.Compilation.Store.Fabric.Procedure_Body
+               (-${overriding_indicator.ast:(null, 0)},
+                -${procedure_token.ast},
+                -${defining_program_unit_name.ast},
+                -${formal_part.ast:(null, 0)},
+                -${aspect_specification.ast:(null, 0)},
+                -${is_token.ast},
+                -${declarative_part.ast:(null, 0)},
+                -${begin_token.ast:(null, 0)},
+                -${sequence_of_statements.ast:(null, 0)},
+                -${exception_token.ast:(null, 0)},
+                -${sequence_of_exception_handlers.ast:(null, 0)},
+                -${end_token.ast},
+                -${program_unit_name.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+function_declaration ::= 
+(function_subtype)
+  [overriding_indicator]
+  function_token defining_designator [formal_part]
+  return_token
+  [null_exclusion] subtype_mark
+  [(abs) is_token abstract_token |
+   (expr) is_token record_aggregate |
+   (ren)  renames_token name]
+  [aspect_specification] semicolon_token
+  |
+(function_access)
+  [overriding_indicator]
+  function_token defining_designator [formal_part]
+  return_token access_definition
+  [(abs) is_token abstract_token |
+   (expr) is_token record_aggregate |
+   (ren)  renames_token name]
+  [aspect_specification] semicolon_token
+;
+
+Rules for function_declaration.function_subtype :
+(.
+         ${function_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Function_Declaration
+               (-${overriding_indicator.ast:(null, 0)},
+                -${function_token.ast},
+                -${defining_designator.ast},
+                -${formal_part.ast:(null, 0)},
+                -${return_token.ast},
+                -${null_exclusion.ast:(null, 0)},
+                -${subtype_mark.ast},
+                -${is_token.ast:(null, 0)},
+                -${abstract_token.ast:(null, 0)},
+                -${record_aggregate.ast:(null, 0)},
+                -${renames_token.ast:(null, 0)},
+                -${name.ast:(null, 0)},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+Rules for function_declaration.function_access :
+(.
+         ${function_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Function_Declaration
+               (-${overriding_indicator.ast:(null, 0)},
+                -${function_token.ast},
+                -${defining_designator.ast},
+                -${formal_part.ast:(null, 0)},
+                -${return_token.ast},
+                (null, 0),
+                -${access_definition.ast},
+                -${is_token.ast:(null, 0)},
+                -${abstract_token.ast:(null, 0)},
+                -${record_aggregate.ast:(null, 0)},
+                -${renames_token.ast:(null, 0)},
+                -${name.ast:(null, 0)},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+function_body ::= 
+(function_subtype)
+  [overriding_indicator]
+  function_token defining_designator [formal_part]
+  return_token
+  [null_exclusion] subtype_mark
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [designator] semicolon_token
+  |
+(function_access)
+  [overriding_indicator]
+  function_token defining_designator [formal_part]
+  return_token access_definition
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [designator] semicolon_token
+;
+
+Rules for function_body.function_subtype :
+(.
+         ${function_body.ast} :=
+            +Self.Compilation.Store.Fabric.Function_Body
+               (-${overriding_indicator.ast:(null, 0)},
+                -${function_token.ast},
+                -${defining_designator.ast},
+                -${formal_part.ast:(null, 0)},
+                -${return_token.ast},
+                -${null_exclusion.ast:(null, 0)},
+                -${subtype_mark.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${is_token.ast},
+                -${declarative_part.ast:(null, 0)},
+                -${begin_token.ast:(null, 0)},
+                -${sequence_of_statements.ast:(null, 0)},
+                -${exception_token.ast:(null, 0)},
+                -${sequence_of_exception_handlers.ast:(null, 0)},
+                -${end_token.ast},
+                -${designator.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+Rules for function_body.function_access :
+(.
+         ${function_body.ast} :=
+            +Self.Compilation.Store.Fabric.Function_Body
+               (-${overriding_indicator.ast:(null, 0)},
+                -${function_token.ast},
+                -${defining_designator.ast},
+                -${formal_part.ast:(null, 0)},
+                -${return_token.ast},
+                (null, 0),
+                -${access_definition.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${is_token.ast},
+                -${declarative_part.ast:(null, 0)},
+                -${begin_token.ast:(null, 0)},
+                -${sequence_of_statements.ast:(null, 0)},
+                -${exception_token.ast:(null, 0)},
+                -${sequence_of_exception_handlers.ast:(null, 0)},
+                -${end_token.ast},
+                -${designator.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+
+designator ::= program_unit_name | operator_symbol;
+
+defining_designator ::=
+  defining_program_unit_name |
+  defining_operator_symbol;
+
+defining_operator_symbol ::= operator_symbol;
+
+overriding_indicator ::= [not_token] overriding_token;
+
+library_unit_body ::= package_body | function_body | procedure_body;
 
 with_clause ::=
   [limited_token] [private_token] with_token
@@ -323,6 +529,630 @@ Rules for subtype_declaration. :
 .)
 
 
+package_body ::= 
+  package_token body_token defining_program_unit_name
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [program_unit_name]
+  semicolon_token
+;
+
+Rules for package_body. :
+(.
+         ${package_body.ast} :=
+            +Self.Compilation.Store.Fabric.Package_Body
+               (-${package_token.ast},
+                -${body_token.ast},
+                -${defining_program_unit_name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${is_token.ast},
+                -${declarative_part.ast:(null, 0)},
+                -${begin_token.ast:(null, 0)},
+                -${sequence_of_statements.ast:(null, 0)},
+                -${exception_token.ast:(null, 0)},
+                -${sequence_of_exception_handlers.ast:(null, 0)},
+                -${end_token.ast},
+                -${program_unit_name.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+exception_handler ::= 
+  when_token
+  [choice_parameter_specification colon_token]
+  exception_choice
+  {vertical_line_token exception_choice} <exception_choice_list>
+  arrow_token
+  sequence_of_statements
+;
+
+Rules for exception_handler. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${exception_choice_list.ast:+Self.Compilation.Store.
+                Fabric.Exception_Choice_Sequence};
+            List : constant Gela.Nodes.Exception_Choice_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${exception_choice.ast});
+            ${exception_handler.ast} :=
+              +Self.Compilation.Store.Fabric.Exception_Handler
+                (-${when_token.ast},
+                 -${choice_parameter_specification.ast:(null, 0)},
+                 -${colon_token.ast:(null, 0)},
+                 List,
+                 -${arrow_token.ast},
+                 -${sequence_of_statements.ast});
+         end;
+.)
+
+
+Rules for exception_choice_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Exception_Choice_Sequence};
+            List : constant Gela.Nodes.Exception_Choice_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${exception_choice.ast});
+            ${exception_choice_list.ast} := Conv;
+         end;
+.)
+
+choice_parameter_specification ::= defining_identifier;
+
+Rules for choice_parameter_specification.defining_identifier :
+(.
+         ${choice_parameter_specification.ast} :=
+            +Self.Compilation.Store.Fabric.Choice_Parameter_Specification
+               (-${defining_identifier.ast});
+.)
+
+
+exception_choice ::= program_unit_name | others_choice;
+
+
+sequence_of_exception_handlers ::=
+  exception_handler {exception_handler} <exception_handler_list>;
+
+Rules for sequence_of_exception_handlers. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${exception_handler_list.ast:+Self.Compilation.Store.Fabric.
+              Exception_Handler_Sequence};
+            List : constant Gela.Nodes.Exception_Handler_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${exception_handler.ast});
+            ${sequence_of_exception_handlers.ast} := Conv;
+         end;
+.)
+
+Rules for exception_handler_list.exception_handler :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Exception_Handler_Sequence};
+            List : constant Gela.Nodes.Exception_Handler_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${exception_handler.ast});
+            ${exception_handler_list.ast} := Conv;
+         end;
+.)
+
+
+sequence_of_statements ::=
+  statement {statement} <statement_list> {label} <label_list>
+;
+
+
+Rules for sequence_of_statements. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${statement_list.ast:+Self.Compilation.Store.Fabric.
+              Statement_Sequence};
+            List : constant Gela.Nodes.Statement_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${statement.ast});
+            ${sequence_of_statements.ast} := Conv;
+         end;
+.)
+
+Rules for sequence_of_statements. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${statement_list.ast:+Self.Compilation.Store.Fabric.
+              Statement_Sequence};
+            List : constant Gela.Nodes.Statement_Sequence := -Conv;
+            Dummy : constant Gela.Nodes.Label_Decorator :=
+              Self.Compilation.Store.Fabric.Label_Decorator
+                (-${label_list.ast}, (null, 0));
+         begin
+            List.Object.Prepend (List.Payload, ${statement.ast});
+            List.Object.Append (List.Payload, +Dummy);
+            ${sequence_of_statements.ast} := Conv;
+         end;
+.)
+
+
+Rules for statement_list.statement :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Statement_Sequence};
+            List : constant Gela.Nodes.Statement_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${statement.ast});
+            ${statement_list.ast} := Conv;
+         end;
+.)
+
+
+statement ::= {label} <label_list> unlabeled_statement;
+
+Rules for statement. :
+(.
+         ${statement.ast} := +Self.Compilation.Store.Fabric.Label_Decorator
+                (-${label_list.ast}, -${unlabeled_statement.ast});
+.)
+
+
+unlabeled_statement ::=
+  null_statement |
+  assignment_statement |
+  exit_statement |
+  goto_statement |
+  simple_return_statement |
+  entry_call_statement |
+  requeue_statement |
+  delay_statement |
+  abort_statement |
+  raise_statement |
+  pragma |
+  if_statement |
+  case_statement |
+  loop_statement |
+  block_statement |
+  extended_return_statement
+;
+
+extended_return_statement ::= 
+  return_token extended_return_object_declaration
+  [do_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token return_token <endreturn>]
+  semicolon_token;
+
+Rules for extended_return_statement. :
+(.
+         ${extended_return_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Extended_Return_Statement
+               (-${return_token.ast},
+                -${extended_return_object_declaration.ast},
+                -${do_token.ast:(null,0)},
+                -${sequence_of_statements.ast:(null,0)},
+                -${exception_token.ast:(null,0)},
+                -${sequence_of_exception_handlers.ast:(null,0)},
+                -${end_token.ast:(null,0)},
+                -${endreturn.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+extended_return_object_declaration ::= 
+  defining_identifier colon_token
+  [aliased_token] [constant_token]
+  subtype_indication
+  [assignment_token expression];
+
+Rules for extended_return_object_declaration. :
+(.
+         ${extended_return_object_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Return_Object_Specification
+               (-${defining_identifier.ast},
+                -${colon_token.ast},
+                -${aliased_token.ast:(null,0)},
+                -${constant_token.ast:(null,0)},
+                -${subtype_indication.ast},
+                -${assignment_token.ast:(null,0)},
+                -${expression.ast:(null,0)});
+.)
+
+
+block_statement ::= 
+  [identifier_token colon_token]
+  [(declare) declare_token [declarative_part]]
+  begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token
+  [identifier_token <endid>] semicolon_token;
+
+Rules for block_statement. :
+(.
+         ${block_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Block_Statement
+               (-${identifier_token.ast:(null,0)},
+                -${colon_token.ast:(null,0)},
+                -${declare_token.ast:(null,0)},
+                -${declarative_part.ast:(null,0)},
+                -${begin_token.ast},
+                -${sequence_of_statements.ast},
+                -${exception_token.ast:(null,0)},
+                -${sequence_of_exception_handlers.ast:(null,0)},
+                -${end_token.ast},
+                -${endid.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+loop_statement ::= 
+  [identifier_token colon_token]
+  [(while) while_token expression |
+   (loop)  ffor_token loop_parameter_specification |
+   (iter)  ffor_token iterator_specification ]
+  loop_token
+  sequence_of_statements
+  end_token loop_token <endloop>
+  [identifier_token <endid>] semicolon_token;
+
+Rules for loop_statement. :
+(.
+         ${loop_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Loop_Statement
+               (-${identifier_token.ast:(null,0)},
+                -${colon_token.ast:(null,0)},
+                -${loop_token.ast},
+                -${sequence_of_statements.ast},
+                -${end_token.ast},
+                -${endloop.ast},
+                -${endid.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+         ${loop_statement.ast} :=
+            +Self.Compilation.Store.Fabric.While_Loop_Statement
+               (-${identifier_token.ast:(null,0)},
+                -${colon_token.ast:(null,0)},
+                -${while_token.ast},
+                -${expression.ast},
+                -${loop_token.ast},
+                -${sequence_of_statements.ast},
+                -${end_token.ast},
+                -${endloop.ast},
+                -${endid.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+         ${loop_statement.ast} :=
+            +Self.Compilation.Store.Fabric.For_Loop_Statement
+               (-${identifier_token.ast:(null,0)},
+                -${colon_token.ast:(null,0)},
+                -${ffor_token.ast},
+                -${loop_parameter_specification.ast},
+                -${loop_token.ast},
+                -${sequence_of_statements.ast},
+                -${end_token.ast},
+                -${endloop.ast},
+                -${endid.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+         ${loop_statement.ast} :=
+            +Self.Compilation.Store.Fabric.For_Loop_Statement
+               (-${identifier_token.ast:(null,0)},
+                -${colon_token.ast:(null,0)},
+                -${ffor_token.ast},
+                -${iterator_specification.ast},
+                -${loop_token.ast},
+                -${sequence_of_statements.ast},
+                -${end_token.ast},
+                -${endloop.ast},
+                -${endid.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+case_statement ::= 
+  case_token expression is_token
+  case_statement_alternative
+  {case_statement_alternative}
+  end_token case_token <endcase> semicolon_token;
+
+Rules for case_statement. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${case_statement_alternative_list.ast:+Self.Compilation.Store.Fabric.Case_Path_Sequence};
+            List : constant Gela.Nodes.Case_Path_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${case_statement_alternative.ast});
+            ${case_statement.ast} := +Self.Compilation.Store.Fabric.Case_Statement
+              (-${case_token.ast},
+               -${expression.ast},
+               -${is_token.ast},
+               List,
+               -${end_token.ast},
+               -${endcase.ast},
+               -${semicolon_token.ast});
+         end;
+.)
+
+Rules for case_statement_alternative_list.case_statement_alternative :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Case_Path_Sequence};
+            List : constant Gela.Nodes.Case_Path_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${case_statement_alternative.ast});
+            ${case_statement_alternative_list.ast} := Conv;
+         end;
+.)
+
+
+case_statement_alternative ::= 
+   when_token discrete_choice_list arrow_token
+   sequence_of_statements;
+
+Rules for case_statement_alternative. :
+(.
+         ${case_statement_alternative.ast} :=
+            +Self.Compilation.Store.Fabric.Case_Path
+               (-${when_token.ast},
+                -${discrete_choice_list.ast},
+                -${arrow_token.ast},
+                -${sequence_of_statements.ast});
+.)
+
+
+if_statement ::= 
+  if_token expression then_token
+  sequence_of_statements <if>
+  {elsif_token expression then_token sequence_of_statements} <elsif_list>
+  [else_token sequence_of_statements <else>]
+  end_token if_token <endif> semicolon_token;
+
+Rules for if_statement. :
+(.
+         declare
+            Item : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.If_Path
+                (-${if_token.ast},
+                 -${expression.ast},
+                 -${then_token.ast},
+                 -${if.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${elsif_list.ast:+Self.Compilation.Store.Fabric.If_Elsif_Else_Path_Sequence};
+            List : constant Gela.Nodes.If_Elsif_Else_Path_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, Item);
+            ${if_statement.ast} := +Self.Compilation.Store.Fabric.If_Statement
+              (List,
+               -${end_token.ast},
+               -${endif.ast},
+               -${semicolon_token.ast});
+         end;
+.)
+
+Rules for if_statement. :
+(.
+         declare
+            If_Item : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.If_Path
+                (-${if_token.ast},
+                 -${expression.ast},
+                 -${then_token.ast},
+                 -${if.ast});
+            Else_Item : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Else_Path
+                (-${else_token.ast}, -${else.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${elsif_list.ast:+Self.Compilation.Store.Fabric.If_Elsif_Else_Path_Sequence};
+            List : constant Gela.Nodes.If_Elsif_Else_Path_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, If_Item);
+            List.Object.Append (List.Payload, Else_Item);
+            ${if_statement.ast} := +Self.Compilation.Store.Fabric.If_Statement
+              (List,
+               -${end_token.ast},
+               -${endif.ast},
+               -${semicolon_token.ast});
+         end;
+.)
+
+Rules for elsif_list. :
+(.
+         declare
+            Item : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Elsif_Path
+                (-${elsif_token.ast},
+                 -${expression.ast},
+                 -${then_token.ast},
+                 -${sequence_of_statements.ast});
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.If_Elsif_Else_Path_Sequence};
+            List : constant Gela.Nodes.If_Elsif_Else_Path_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, Item);
+            ${elsif_list.ast} := Conv;
+         end;
+.)
+
+
+raise_statement ::=
+  raise_token [name [with_token expression]] semicolon_token;
+
+Rules for raise_statement. :
+(.
+         ${raise_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Raise_Statement
+               (-${raise_token.ast},
+                -${name.ast:(null,0)},
+                -${with_token.ast:(null,0)},
+                -${expression.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+abort_statement ::=
+ abort_token name {colon_token name} <name_list> semicolon_token;
+
+Rules for abort_statement. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${name_list.ast:+Self.Compilation.Store.Fabric.Name_Sequence};
+            List : constant Gela.Nodes.Name_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${name.ast});
+            ${abort_statement.ast} :=
+              +Self.Compilation.Store.Fabric.Abort_Statement
+                (-${abort_token.ast}, List, -${semicolon_token.ast});
+         end;
+.)
+
+Rules for name_list. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              ${head.ast:+Self.Compilation.Store.Fabric.Name_Sequence};
+            List : constant Gela.Nodes.Name_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${name.ast});
+            ${name_list.ast} := Conv;
+         end;
+.)
+
+
+delay_statement ::=
+  delay_token [until_token] expression semicolon_token;
+
+Rules for delay_statement. :
+(.
+         ${delay_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Delay_Statement
+               (-${delay_token.ast},
+                -${until_token.ast:(null,0)},
+                -${expression.ast},
+                -${semicolon_token.ast});
+.)
+
+requeue_statement ::=
+ requeue_token name [with_token abort_token] semicolon_token;
+
+Rules for requeue_statement. :
+(.
+         ${requeue_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Requeue_Statement
+               (-${requeue_token.ast},
+                -${name.ast},
+                -${with_token.ast:(null,0)},
+                -${abort_token.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+entry_call_statement ::= name semicolon_token;
+
+Rules for entry_call_statement. :
+(.
+         ${entry_call_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Procedure_Call_Statement
+               (-${name.ast}, (null,0), -${semicolon_token.ast});
+.)
+
+
+simple_return_statement ::= return_token [expression] semicolon_token;
+
+Rules for simple_return_statement. :
+(.
+         ${simple_return_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Simple_Return_Statement
+               (-${return_token.ast},
+                -${expression.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+null_statement ::= null_token semicolon_token;
+
+Rules for null_statement. :
+(.
+         ${null_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Null_Statement
+               (-${null_token.ast}, -${semicolon_token.ast});
+.)
+
+
+assignment_statement ::= 
+  name assignment_token expression semicolon_token
+;
+
+Rules for assignment_statement. :
+(.
+         ${assignment_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Assignment_Statement
+               (-${name.ast},
+                -${assignment_token.ast},
+                -${expression.ast},
+                -${semicolon_token.ast});
+.)
+
+exit_statement  ::=
+   exit_token [name] [when_token expression] semicolon_token
+;
+
+Rules for exit_statement. :
+(.
+         ${exit_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Exit_Statement
+               (-${exit_token.ast},
+                -${name.ast:(null,0)},
+                -${when_token.ast:(null,0)},
+                -${expression.ast:(null,0)},
+                -${semicolon_token.ast});
+.)
+
+
+goto_statement ::= goto_token name semicolon_token;
+
+Rules for goto_statement. :
+(.
+         ${goto_statement.ast} :=
+            +Self.Compilation.Store.Fabric.Goto_Statement
+               (-${goto_token.ast},
+                -${name.ast},
+                -${semicolon_token.ast});
+.)
+
+
+label ::=
+  left_label_token defining_identifier right_label_token;
+
+
+Rules for label. :
+(.
+         ${label.ast} := ${defining_identifier.ast};
+.)
+
+Rules for label_list.label :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Defining_Identifier_Sequence};
+            List : constant Gela.Nodes.Defining_Identifier_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${label.ast});
+            ${label_list.ast} := Conv;
+         end;
+.)
+
+
 package_declaration ::=
   package_token defining_program_unit_name [aspect_specification] is_token
     [basic_declarative_item_list <public_item_list>]
@@ -374,10 +1204,18 @@ use_clause ::= use_package_clause | use_type_clause;
 
 basic_declaration ::=
   full_type_declaration |
+  incomplete_type_declaration |
+  private_type_declaration |
+  private_extension_declaration |
   subtype_declaration |
   object_declaration |
+  number_declaration |
+  procedure_declaration |
+  function_declaration |
   package_declaration |
+  object_renaming_declaration |
   exception_renaming_declaration |
+  package_renaming_declaration |
   exception_declaration;
 
 selected_identifier ::=
@@ -394,7 +1232,13 @@ Rules for selected_identifier. :
 
 program_unit_name ::= identifier | selected_identifier;
 
-defining_program_unit_name ::= defining_identifier | selected_identifier;
+defining_program_unit_name ::= identifier_token | selected_identifier;
+
+Rules for defining_program_unit_name.identifier_token :
+(.         ${defining_program_unit_name.ast} := +Self.Compilation.Store.Fabric.Defining_Identifier
+         (-${identifier_token.ast});
+.)
+
 
 Rules for defining_program_unit_name.selected_identifier :
 (.
@@ -1713,11 +2557,14 @@ Rules for choice_list. :
 discrete_choice ::=
   expression |
   discrete_range |
-  others_token
+  others_choice
 ;
 
-Rules for discrete_choice.others_token :
-(.         ${discrete_choice.ast} := +Self.Compilation.Store.Fabric.Others_Choice
+others_choice ::= others_token;
+
+
+Rules for others_choice.others_token :
+(.         ${others_choice.ast} := +Self.Compilation.Store.Fabric.Others_Choice
          (-${others_token.ast});
 .)
 
@@ -2170,10 +3017,219 @@ Rules for operator_symbol.string_literal_token :
          (-${string_literal_token.ast});
 .)
 
+declarative_item ::= basic_declarative_item | body;
+
+declarative_part ::= declarative_item {declarative_item} <declarative_item_list>;
+
+Rules for declarative_part. :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+             ${declarative_item_list.ast:+Self.Compilation.Store.
+               Fabric.Declarative_Item_Sequence};
+            List : constant Gela.Nodes.Declarative_Item_Sequence := -Conv;
+         begin
+            List.Object.Prepend (List.Payload, ${declarative_item.ast});
+            ${declarative_part.ast} := Conv;
+         end;
+.)
+
+
+Rules for declarative_item_list.declarative_item :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Declarative_Item_Sequence};
+            List : constant Gela.Nodes.Declarative_Item_Sequence := -Conv;
+         begin
+            List.Object.Append (List.Payload, ${declarative_item.ast});
+            ${declarative_item_list.ast} := Conv;
+         end;
+.)
+
+body ::= proper_body;
+
+proper_body ::= 
+  procedure_body |
+  function_body |
+  package_body;
+
+incomplete_type_declaration ::=
+  type_token defining_identifier
+  [discriminant_part]
+  [is_token tagged_token]
+  semicolon_token;
+
+Rules for incomplete_type_declaration. :
+(.
+         declare
+            Def : constant Gela.Nodes.Incomplete_Type_Definition :=
+              Self.Compilation.Store.Fabric.Incomplete_Type_Definition
+                (-${tagged_token.ast:(null,0)});
+         begin
+            ${incomplete_type_declaration.ast} :=
+               +Self.Compilation.Store.Fabric.Incomplete_Type_Declaration
+                 (-${type_token.ast},
+                  -${defining_identifier.ast},
+                  -${discriminant_part.ast:(null, 0)},
+                  -${is_token.ast:(null,0)},
+                  Def,
+                  -${semicolon_token.ast});
+         end;
+.)
+
+
+private_type_declaration ::= 
+  type_token defining_identifier
+  [discriminant_part] is_token
+  [[abstract_token] tagged_token] [limited_token]
+  private_token
+  [aspect_specification]
+  semicolon_token;
+
+Rules for private_type_declaration. :
+(.
+         declare
+            Def : constant Gela.Nodes.Private_Type_Definition :=
+              Self.Compilation.Store.Fabric.Private_Type_Definition
+                (-${abstract_token.ast:(null,0)},
+                 -${tagged_token.ast:(null,0)},
+                 -${limited_token.ast:(null,0)},
+                 -${private_token.ast});
+         begin
+            ${private_type_declaration.ast} :=
+               +Self.Compilation.Store.Fabric.Private_Type_Declaration
+                 (-${type_token.ast},
+                  -${defining_identifier.ast},
+                  -${discriminant_part.ast:(null, 0)},
+                  -${is_token.ast:(null,0)},
+                  Def,
+                  -${aspect_specification.ast:(null,0)},
+                  -${semicolon_token.ast});
+         end;
+.)
+
+
+private_extension_declaration ::= 
+  type_token defining_identifier
+  [discriminant_part] is_token
+  [abstract_token] [limited_token | synchronized_token]
+  new_token subtype_indication
+  {and_token subtype_mark} <and_subtype_mark_list>
+  with_token private_token
+  [aspect_specification]
+  semicolon_token;
+
+Rules for private_extension_declaration. :
+(.
+         declare
+            Def : constant Gela.Nodes.Private_Extension_Definition :=
+              Self.Compilation.Store.Fabric.Private_Extension_Definition
+                (-${abstract_token.ast:(null,0)},
+                 -${limited_token.ast:(null,0)},
+                 -${synchronized_token.ast:(null,0)},
+                 -${new_token.ast},
+                 -${subtype_indication.ast},
+                 -${and_subtype_mark_list.ast:(null,0)},
+                 -${with_token.ast},
+                 -${private_token.ast});
+         begin
+            ${private_extension_declaration.ast} :=
+               +Self.Compilation.Store.Fabric.Private_Extension_Declaration
+                 (-${type_token.ast},
+                  -${defining_identifier.ast},
+                  -${discriminant_part.ast:(null, 0)},
+                  -${is_token.ast:(null,0)},
+                  Def,
+                  -${aspect_specification.ast:(null,0)},
+                  -${semicolon_token.ast});
+         end;
+.)
+
+
+number_declaration ::= 
+  defining_identifier_list colon_token constant_token
+  assignment_token expression
+  semicolon_token
+;
+
+Rules for number_declaration. :
+(.
+         ${number_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Number_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                -${constant_token.ast},
+                -${assignment_token.ast:(null, 0)},
+                -${expression.ast},
+                -${semicolon_token.ast});
+.)
+
+object_renaming_declaration ::= 
+(subtype_mark)
+  defining_identifier_list colon_token
+  [null_exclusion] subtype_mark renames_token name
+  [aspect_specification]
+  semicolon_token
+ |
+(access_definition)
+  defining_identifier_list colon_token
+  access_definition renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for object_renaming_declaration.subtype_mark :
+(.
+         ${object_renaming_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Object_Renaming_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                -${null_exclusion.ast:(null, 0)},
+                -${subtype_mark.ast},
+                -${renames_token.ast},
+                -${name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+Rules for object_renaming_declaration.access_definition :
+(.
+         ${object_renaming_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Object_Renaming_Declaration
+               (-${defining_identifier_list.ast},
+                -${colon_token.ast},
+                (null, 0),
+                -${access_definition.ast},
+                -${renames_token.ast},
+                -${name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
+
+package_renaming_declaration ::=
+  package_token defining_program_unit_name
+  renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for package_renaming_declaration. :
+(.
+         ${package_renaming_declaration.ast} :=
+            +Self.Compilation.Store.Fabric.Package_Renaming_Declaration
+               (-${package_token.ast},
+                -${defining_program_unit_name.ast},
+                -${renames_token.ast},
+                -${name.ast},
+                -${aspect_specification.ast:(null, 0)},
+                -${semicolon_token.ast});
+.)
 
 
 Synthesized attributes
   _compilation,
+  abort_statement,
   access_definition,
   access_type_definition,
   aggregate,
@@ -2181,16 +3237,22 @@ Synthesized attributes
   and_subtype_mark_list,
   aspect_list,
   aspect_specification,
+  assignment_statement,
   attribute_definition_clause,
   attribute_reference,
   basic_declarative_item,
   basic_declarative_item_list,
+  block_statement,
   case_expression,
   case_expression_alternative,
   case_exp_alternative_list,
+  case_statement,
+  case_statement_alternative,
+  case_statement_alternative_list,
   choice_list,
   context_item,
   context_item_list,
+  choice_parameter_specification,
   compilation_unit,
   component_association_list,
   component_declaration,
@@ -2201,14 +3263,20 @@ Synthesized attributes
   conditional_expression,
   constrained_array_definition,
   decimal_fixed_point_definition,
+  declarative_item,
+  declarative_item_list,
+  declarative_part,
   defining_character_literal,
+  defining_designator,
   defining_enumeration_literal,
   defining_id_list,
   defining_identifier,
   defining_identifier_list,
   defining_program_unit_name,
+  delay_statement,
   delta_constraint,
   derived_type_declaration,
+  designator,
   digits_constraint,
   direct_name,
   discrete_choice,
@@ -2218,52 +3286,82 @@ Synthesized attributes
   discrete_subtype_definition_list,
   discriminant_part,
   elsif_exp_list,
+  elsif_list,
+  entry_call_statement,
   enumeration_list,
   enumeration_literal_specification,
   enumeration_type_definition,
+  exception_choice,
+  exception_choice_list,
   exception_declaration,
+  exception_handler,
+  exception_handler_list,
   exception_renaming_declaration,
+  exit_statement,
   explicit_dereference,
   expression,
+  extended_return_object_declaration,
+  extended_return_statement,
   extension_aggregate,
   floating_point_definition,
   formal_part,
   full_type_declaration,
+  function_body,
   function_call,
+  function_declaration,
   general_access_modifier,
+  goto_statement,
+  incomplete_type_declaration,
   identifier,
   if_expression,
+  if_statement,
   index_subtype_definition,
   index_subtype_definition_list,
   interface_kind,
   interface_list,
   interface_type_definition,
   iterator_specification,
+  label,
+  label_list,
   library_item,
   loop_parameter_specification,
+  loop_statement,
   mchoice_list,
   modular_type_definition,
   membership_choice,
   membership_choice_list,
   mode,
   name,
+  name_list,
   null_exclusion,
+  null_statement,
+  number_declaration,
   object_declaration,
   object_definition,
+  object_renaming_declaration,
   operator_symbol,
   ordinary_fixed_point_definition,
+  others_choice,
+  overriding_indicator,
+  package_body,
   package_declaration,
+  package_renaming_declaration,
   parameter_specification,
   parameter_specification_list,
   pragma,
   pragma_argument_list,
   pragma_argument_association,
   prefix,
+  private_extension_declaration,
+  private_type_declaration,
+  procedure_body,
+  procedure_declaration,
   program_unit_name,
   program_unit_name_list,
   qualified_expression,
   quantified_expression,
   quantifier,
+  raise_statement,
   range,
   range_attribute_reference,
   range_constraint,
@@ -2273,14 +3371,21 @@ Synthesized attributes
   record_component_association_list,
   record_definition,
   record_type_definition,
+  requeue_statement,
   relation,
   relational_operator,
   scalar_constraint,
+  sequence_of_exception_handlers,
+  sequence_of_statements,
   selected_component,
   selected_identifier,
   selector_name,
   signed_integer_type_definition,
   simple_expression,
+  simple_return_statement,
+  unlabeled_statement,
+  statement,
+  statement_list,
   subtype_declaration,
   subtype_indication,
   subtype_mark,
