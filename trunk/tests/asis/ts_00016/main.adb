@@ -12,20 +12,20 @@ with Process_Context;
 with Traversing_Actions;
 
 procedure Main is
-   
+
    package Enum is
       type Command_Kinds is
         (''',
          Associate,
          Process_Context,
          Action);
-      
+
       type Unit_Kinds is (Compilation_Unit_Body, Library_Unit_Declaration);
    end Enum;
-   
+
    package Command_IO is
      new Ada.Wide_Text_IO.Enumeration_IO (Enum.Command_Kinds);
-   
+
    package Unit_Kind_IO is
      new Ada.Wide_Text_IO.Enumeration_IO (Enum.Unit_Kinds);
 
@@ -36,12 +36,12 @@ procedure Main is
 begin
    Ada.Wide_Text_IO.Open
      (Input,
-      Ada.Wide_Text_IO.In_File, 
+      Ada.Wide_Text_IO.In_File,
       Ada.Command_Line.Argument (1));
-   
+
    while not Ada.Wide_Text_IO.End_Of_File (Input) loop
       Command_IO.Get (Input, Command);
-      
+
       case Command is
          when Enum.''' =>
             declare
@@ -56,7 +56,7 @@ begin
                Last : Natural;
             begin
                Ada.Wide_Text_IO.Get_Line (Input, Line, Last);
-               
+
                Asis.Implementation.Initialize ("");
 
                Asis.Ada_Environments.Associate
@@ -66,7 +66,7 @@ begin
 
                Asis.Ada_Environments.Open (Context);
             end;
-   
+
          when Enum.Process_Context =>
             declare
                use type Enum.Unit_Kinds;
@@ -81,7 +81,7 @@ begin
                      Ada.Strings.Both),
                   State);
             end;
-            
+
          when Enum.Action =>
             declare
                Action : constant Actions.Action_Access :=
@@ -93,8 +93,8 @@ begin
             end;
       end case;
    end loop;
-   
-   Asis.Ada_Environments.Close        (Context);
-   Asis.Ada_Environments.Dissociate   (Context);
-   Asis.Implementation.Finalize       ("");
+
+--   Asis.Ada_Environments.Close        (Context);
+--   Asis.Ada_Environments.Dissociate   (Context);
+--   Asis.Implementation.Finalize       ("");
 end Main;
