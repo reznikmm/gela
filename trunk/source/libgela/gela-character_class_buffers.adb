@@ -7,13 +7,17 @@ package body Gela.Character_Class_Buffers is
    procedure Put
      (Object : in out Character_Class_Buffer;
       Item   : in     Character_Class;
-      Full   :    out Boolean)
+      Full   : in out Boolean)
    is
    begin
       Object.Data (Object.Free) := Item;
       Object.Free := Object.Free + 1;
-      Full := (Object.Free <= Array_Index'Last / 2) /=
+      Full := Full or
+              (Object.Free <= Array_Index'Last / 2) /=
               (Object.Index <= Array_Index'Last / 2);
+      if Full then
+         Object.Data (Object.Free) := End_Of_Buffer;
+      end if;
    end Put;
 
    ---------
@@ -27,6 +31,9 @@ package body Gela.Character_Class_Buffers is
    begin
       Object.Index := Object.Index + 1;
       Item := Object.Data (Object.Index);
+      if Item = End_Of_Buffer then
+         Object.Index := Object.Index - 1;
+      end if;
    end Get;
 
    ----------

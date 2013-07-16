@@ -25,7 +25,7 @@ package body Gela.Classificators.UTF_8 is
       use Gela.Source_Buffers;
       use Gela.Character_Class_Buffers;
 
-      Full         : Boolean;
+      Full         : Boolean := False;
       Code         : Code_Unit;
       Item         : Code_Point;
       Class        : Character_Class;
@@ -98,7 +98,6 @@ package body Gela.Classificators.UTF_8 is
          end loop;
 
          if Full then
-            Put (Buffer, End_Of_Buffer, Full);
             return;
          end if;
       end loop;

@@ -24,7 +24,7 @@ package Gela.Character_Class_Buffers is
    procedure Put
      (Object : in out Character_Class_Buffer;
       Item   : in     Character_Class;
-      Full   :    out Boolean);
+      Full   : in out Boolean);
 
    procedure Get
      (Object : in out Character_Class_Buffer;
@@ -45,7 +45,7 @@ private
       --  Index points to last read character
       Index : Array_Index := Array_Index'Last;
       --  Free points to where next Put will place an item
-      Free  : Array_Index := 1;
+      Free  : Array_Index := 0;
       Mark  : Array_Index := 0;
       Data  : Character_Class_Array := (Array_Index => End_Of_Buffer);
    end record;
