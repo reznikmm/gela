@@ -110,6 +110,7 @@ with Asis.Gela.Parser_Utils;           use Asis.Gela.Parser_Utils;
       Token_Stack        : array (1 .. 300) of aliased Token_Node;
       Last_Access_Kind   : Asis.Access_Type_Kinds;
       Last_Overriding_Kind : Asis.Overriding_Indicator_Kinds;
+      Last_Token         : Tokens.Token := Tokens.Token'First;
 
       package Modes is
          package yy is
@@ -190,10 +191,13 @@ with Asis.Gela.Parser_Utils;           use Asis.Gela.Parser_Utils;
             Scanners.Enter (Scanner, Scanner_Tables.Allow_Keyword);
          elsif Token = Apostrophe_Token then
             Scanners.Enter (Scanner, Scanner_Tables.Default);
+         elsif Token = Interface_Token and Last_Token = Pragma_Token then
+            Token := Identifier_Token;
          else
             Scanners.Enter (Scanner, Scanner_Tables.Allow_Char);
          end if;
 
+         Last_Token := Token;
          return Token;
       end YYLex;
 

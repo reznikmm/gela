@@ -1,0 +1,3 @@
+Associate -I../../../source/asis/spec ts_00XXX/pragma_interface.ada
+Action Print Any
+Process_Context Library_Unit_Declaration Hello
