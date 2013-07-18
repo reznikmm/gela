@@ -52,11 +52,6 @@ package Gela.Stores.Fabrics is
       Right  : Gela.Nodes.Simple_Expression := (null, 0))
       return Gela.Nodes.Function_Call;
 
-   function To_Discrete_Subtype_Indication
-     (Self  : access Fabric;
-      Value : Gela.Nodes.Subtype_Indication)
-      return Gela.Nodes.Discrete_Subtype_Indication;
-
    function To_Defining_Program_Unit_Name
      (Self  : access Fabric;
       Value : Gela.Nodes.Selected_Identifier)

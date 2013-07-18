@@ -1017,7 +1017,7 @@ procedure AG_Driver is
          Store_Body.N (Return_Type (Part));
          Store_Body.N ("_Access");
 
-         if Return_Type (Part).Length > 35 then
+         if Return_Type (Part).Length > 34 then
             Store_Body.P;
             Store_Body.N ("       ");
          end if;
