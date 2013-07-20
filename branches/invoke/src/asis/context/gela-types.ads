@@ -89,4 +89,12 @@ package Gela.Types is
 
    type Symbol_Set_Access is access all Gela.Symbol_Sets.Symbol_Set'Class;
 
+   type Traverse_Control is
+     (Continue,               --  Continues the normal depth-first traversal.
+      Abandon_Children,       --  Prevents traversal of the current element's
+                              --  children.
+      Abandon_Siblings,       --  Prevents traversal of the current element's
+                              --  children and remaining siblings.
+      Terminate_Immediately); --  Does exactly that.
+
 end Gela.Types;

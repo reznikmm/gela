@@ -115,9 +115,9 @@ package body Gela.Stores.Fabrics is
          Component_Expression    => -Conv);
       Args : Gela.Nodes.Association_Sequence := Self.Association_Sequence;
    begin
-      Args.Object.Append (Args.Payload, +Arg);
+      Args.its.Append (Args.Payload, +Arg);
 
-      if Right.Object /= null then
+      if Right.its /= null then
          Conv := +Right;
 
          Arg := Self.Association
@@ -125,7 +125,7 @@ package body Gela.Stores.Fabrics is
             Arrow_Token             => (null, 0),
             Component_Expression    => -Conv);
 
-         Args.Object.Append  (Args.Payload, +Arg);
+         Args.its.Append  (Args.Payload, +Arg);
       end if;
 
       return Self.Function_Call
@@ -147,12 +147,12 @@ package body Gela.Stores.Fabrics is
    is
       use Gela.Nodes.Convertions;
       Result : Gela.Nodes.Element;
-      Id  : Gela.Nodes.Identifier := Value.Object.Selector (Value.Payload);
+      Id  : Gela.Nodes.Identifier := Value.its.Selector (Value.Payload);
    begin
       Result := +Self.Defining_Expanded_Unit_Name
-        (Value.Object.Prefix (Value.Payload),
-         Value.Object.Dot_Token (Value.Payload),
-         Self.Defining_Identifier (Id.Object.Identifier (Id.Payload)));
+        (Value.its.Prefix (Value.Payload),
+         Value.its.Dot_Token (Value.Payload),
+         Self.Defining_Identifier (Id.its.Identifier (Id.Payload)));
 
       return -Result;
    end To_Defining_Program_Unit_Name;

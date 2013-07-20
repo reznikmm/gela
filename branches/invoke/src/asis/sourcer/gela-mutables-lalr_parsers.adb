@@ -71,7 +71,7 @@ package body Gela.Mutables.LALR_Parsers is
             Push
               (Self.Stack,
                Self.Top,
-               (Object  => Self.Compilation.Store.Fabric.Token'Access,
+               (its     => Self.Compilation.Store.Fabric.Token'Access,
                 Payload => Self.Compilation.Lexer.Last_Token));
 
             Self.Top := Shift;

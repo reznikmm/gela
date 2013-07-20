@@ -194,7 +194,7 @@ package body Gela.Simple_Contexts is
 
       Self.Comp.Start;
 
-      if Self.Comp.Root.Object = null then
+      if Self.Comp.Root.its = null then
          Self.On_Error
            ("Syntax error :" & Self.File_Name.To_UTF_16_Wide_String);
       end if;

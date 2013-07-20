@@ -49,7 +49,7 @@ package body Gela.Stores.Lists is
    is
       Tail : constant Gela.Types.Payload := Get_Tail (Self, Payload);
    begin
-      if Item.Object.all not in Lists.Item'Class then
+      if Item.its.all not in Lists.Item'Class then
          raise Constraint_Error;
       end if;
 
@@ -141,7 +141,7 @@ package body Gela.Stores.Lists is
             Next : constant Gela.Types.Payload := Get_Next (Self, Tail);
          begin
             return From_Element
-              ((Object =>  Self.To_Node (Next),
+              ((its     =>  Self.To_Node (Next),
                 Payload => Next));
          end;
       end if;
@@ -181,7 +181,7 @@ package body Gela.Stores.Lists is
             Next : constant Gela.Types.Payload := Gela.Types.Payload (Value);
          begin
             Position := From_Element
-              ((Object =>  Self.To_Node (Next),
+              ((its     =>  Self.To_Node (Next),
                 Payload => Next));
          end;
       end if;
@@ -270,5 +270,26 @@ package body Gela.Stores.Lists is
    begin
       return Offset.Length + 1;
    end Size;
+
+   ----------------
+   -- Visit_Each --
+   ----------------
+
+   overriding procedure Visit_Each
+     (Self    : access List;
+      Payload : Gela.Types.Payload;
+      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;
+      Control : in out Gela.Types.Traverse_Control)
+   is
+      Length : constant Natural := Self.Last_Child (Payload);
+      Next   : Gela.Types.Payload := Get_Tail (Self, Payload);
+      Item   : Gela.Nodes.Visitable_Node_Access;
+   begin
+      for J in 1 .. Length loop
+         Next := Get_Next (Self, Next);
+         Item := Gela.Nodes.Visitable_Node_Access (Self.To_Node (Next));
+         Item.Visit (Next, Visiter, Control);
+      end loop;
+   end Visit_Each;
 
 end Gela.Stores.Lists;

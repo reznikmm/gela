@@ -53,7 +53,7 @@ package body Gela.Mutables.To_XML is
         (Qualified_Name => Compilation_Image,
          Attributes     => List);
       Print (W, C, AST,
-             Gela.Stores.Element_Access (C.Root.Object), C.Root.Payload);
+             Gela.Stores.Element_Access (C.Root.its), C.Root.Payload);
       W.End_Element (Qualified_Name => Compilation_Image);
       return W.Text;
    end Compilation;

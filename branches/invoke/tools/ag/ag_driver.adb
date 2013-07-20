@@ -72,6 +72,7 @@ procedure AG_Driver is
       Prod : Gela.Grammars.Production);
    procedure Generate_Stores_NT_Switch (NT : Gela.Grammars.Non_Terminal);
    procedure Generate_Stores_List (NT : Gela.Grammars.Non_Terminal);
+   procedure Generate_Visiter;
 
    ---------------------
    -- Count_Ambiguous --
@@ -130,7 +131,7 @@ procedure AG_Driver is
             Conv_Spec.N (To_Ada (NT.Name));
             Conv_Spec.P (")");
             Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                           " (X.Object, X.Payload);");
+                           " (X.its, X.Payload);");
             Conv_Spec.P;
             Conv_Spec.P ("   function ""-""");
             Conv_Spec.P ("     (X : Gela.Nodes.Element)");
@@ -143,7 +144,7 @@ procedure AG_Driver is
                Conv_Spec.N ("        ");
             end if;
 
-            Conv_Spec.P (" (X.Object, X.Payload);");
+            Conv_Spec.P (" (X.its, X.Payload);");
             Conv_Spec.P;
 
             if Has_List (NT.Index) then
@@ -152,7 +153,7 @@ procedure AG_Driver is
                Conv_Spec.N (To_Ada (NT.Name));
                Conv_Spec.P ("_Sequence)");
                Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                              " (X.Object, X.Payload);");
+                              " (X.its, X.Payload);");
                Conv_Spec.P;
                Conv_Spec.P ("   function ""-""");
                Conv_Spec.P ("     (X : Gela.Nodes.Element)");
@@ -165,7 +166,7 @@ procedure AG_Driver is
                   Conv_Spec.N ("        ");
                end if;
 
-               Conv_Spec.P (" (X.Object, X.Payload);");
+               Conv_Spec.P (" (X.its, X.Payload);");
                Conv_Spec.P;
             end if;
          end if;
@@ -174,12 +175,12 @@ procedure AG_Driver is
       Conv_Spec.P ("   function ""+""");
       Conv_Spec.P ("     (X : Gela.Nodes.Token)");
       Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                     " (X.Object, X.Payload);");
+                     " (X.its, X.Payload);");
       Conv_Spec.P;
       Conv_Spec.P ("   function ""-""");
       Conv_Spec.P ("     (X : Gela.Nodes.Element)");
       Conv_Spec.N ("      return Gela.Nodes.Token");
-      Conv_Spec.P (" is (X.Object, X.Payload);");
+      Conv_Spec.P (" is (X.its, X.Payload);");
       Conv_Spec.P;
       Conv_Spec.P ("end Gela.Nodes.Convertions;");
       Ada.Text_IO.Put_Line (Conv_With.Text.To_UTF_8_String);
@@ -363,7 +364,7 @@ procedure AG_Driver is
               ("        (Payload => Self.Create_Sequence (Last_Production + ");
             Fab_Body.N (Lists);
             Fab_Body.P ("),");
-            Fab_Body.N ("         Object  => N.");
+            Fab_Body.N ("         its => N.");
             Fab_Body.N (To_Ada (NT.Name));
             Fab_Body.P ("_Sequence_Access (Int));");
             Fab_Body.P ("   begin");
@@ -431,7 +432,7 @@ procedure AG_Driver is
                   Fab_Body.N ("        (Payload => Self.Create_Production (");
                   Fab_Body.N (Natural (Prod.Index));
                   Fab_Body.P ("),");
-                  Fab_Body.N ("         Object  => N.");
+                  Fab_Body.N ("         its => N.");
                   Fab_Body.N (To_Ada (NT.Name));
                   Fab_Body.P ("_Access (Int));");
                   Fab_Body.P ("   begin");
@@ -494,18 +495,43 @@ procedure AG_Driver is
       Nodes       : Writer;
    begin
       Nodes_With.P ("with Gela.Types;");
+      Nodes_With.P ("limited with Gela.Nodes.Visiters;");
       Nodes_With.P ("limited with Gela.Nodes.Tokens;");
 
       Nodes.P ("package Gela.Nodes is");
       Nodes.P ("   pragma Preelaborate;");
       Nodes.P;
-      Nodes.P ("   type Node is interface and Gela.Types.Abstract_Element;");
-      Nodes.P ("   type Node_Access is access all Node'Class;");
+      Nodes.P ("   type Node is interface;");
       Nodes.P;
       Nodes.P ("   type Element is record");
-      Nodes.P ("      Object  : access Node'Class;");
+      Nodes.P ("      its     : access Node'Class;");
       Nodes.P ("      Payload : Gela.Types.Payload;");
       Nodes.P ("   end record;");
+      Nodes.P ("   type Node_Access is access all Node'Class;");
+      Nodes.P;
+      Nodes.P ("   type Visitable_Node is interface and Node;");
+      Nodes.P ("   type Visitable_Node_Access is " &
+                 "access all Visitable_Node'Class;");
+      Nodes.P ("   type Visitable_Element is record");
+      Nodes.P ("      its     : access Visitable_Node'Class;");
+      Nodes.P ("      Payload : Gela.Types.Payload;");
+      Nodes.P ("   end record;");
+      Nodes.P;
+      Nodes.P ("   not overriding procedure Visit");
+      Nodes.P ("     (Self    : access Visitable_Node;");
+      Nodes.P ("      Payload : Gela.Types.Payload;");
+      Nodes.P ("      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;");
+      Nodes.P ("      Control : in out Gela.Types.Traverse_Control)" &
+                 " is abstract;");
+
+      Nodes.P ("   type List_Node is interface and Node;");
+      Nodes.P;
+      Nodes.P ("   not overriding procedure Visit_Each");
+      Nodes.P ("     (Self    : access List_Node;");
+      Nodes.P ("      Payload : Gela.Types.Payload;");
+      Nodes.P ("      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;");
+      Nodes.P ("      Control : in out Gela.Types.Traverse_Control)" &
+                 " is abstract;");
 
       for NT of Plain.Non_Terminal loop
          if not NT.Is_List then
@@ -533,7 +559,7 @@ procedure AG_Driver is
             Nodes.N ("   type ");
             Nodes.N (To_Ada (NT.Name));
             Nodes.P (" is record");
-            Nodes.N ("      Object  : ");
+            Nodes.N ("      its     : ");
             Nodes.N (To_Ada (NT.Name));
             Nodes.P ("_Access;");
             Nodes.N ("      Payload : Gela.Types.Payload;");
@@ -551,7 +577,7 @@ procedure AG_Driver is
                Nodes.N ("   type ");
                Nodes.N (To_Ada (NT.Name));
                Nodes.P ("_Sequence is record");
-               Nodes.N ("      Object  : ");
+               Nodes.N ("      its     : ");
                Nodes.N (To_Ada (NT.Name));
                Nodes.P ("_Sequence_Access;");
                Nodes.N ("      Payload : Gela.Types.Payload;");
@@ -569,7 +595,7 @@ procedure AG_Driver is
                Nodes.N ("   type ");
                Nodes.N (To_Ada (NT.Name));
                Nodes.P ("_Switch is record");
-               Nodes.N ("      Object  : ");
+               Nodes.N ("      its     : ");
                Nodes.N (To_Ada (NT.Name));
                Nodes.P ("_Switch_Access;");
                Nodes.N ("      Payload : Gela.Nodes.Payload;");
@@ -584,7 +610,7 @@ procedure AG_Driver is
       Nodes.P ("   type Token_Access is access all" &
                  " Gela.Nodes.Tokens.Object'Class;");
       Nodes.P ("   type Token is record");
-      Nodes.P ("      Object  : Token_Access;");
+      Nodes.P ("      its     : Token_Access;");
       Nodes.P ("      Payload : Gela.Types.Payload;");
       Nodes.P ("   end record;");
       Nodes.P;
@@ -637,7 +663,7 @@ procedure AG_Driver is
          Nodes_NT.P;
          Nodes_NT.P ("   type Object is interface and Switch;");
       elsif Impl_Count > 0 then
-         Nodes_NT.N ("   type Object is interface and Node");
+         Nodes_NT.N ("   type Object is interface and Visitable_Node");
 
          for J in Implement'Range (2) loop
             if Implement (NT.Index, J) then
@@ -650,7 +676,7 @@ procedure AG_Driver is
 
          Nodes_NT.P (";");
       else
-         Nodes_NT.P ("   type Object is interface and Node;");
+         Nodes_NT.P ("   type Object is interface and Visitable_Node;");
       end if;
 
       Nodes_NT.P;
@@ -662,7 +688,7 @@ procedure AG_Driver is
       end if;
 
       if Has_List (NT.Index) then
-         Nodes_NT.P ("   type List is interface and Node;");
+         Nodes_NT.P ("   type List is interface and List_Node;");
          Nodes_NT.P ("   type List_Access is access all List'Class;");
          Nodes_NT.P;
          Nodes_NT.P ("   not overriding function Head");
@@ -938,6 +964,7 @@ procedure AG_Driver is
 
       Store_Each.P ("with Gela.Stores.Productions;");
       Store_Each.P ("with Gela.Types;");
+      Store_Each.P ("with Gela.Nodes.Visiters;");
       Store_Each.N ("with ");
       Store_Each.N (Production_Unit (Prod));
       Store_Each.P (";");
@@ -968,6 +995,29 @@ procedure AG_Driver is
       Store_Each.P
         ("   type Object_Access is access all Object;");
       Store_Each.P;
+      Store_Each.P ("   overriding procedure Visit", Store_Body);
+      Store_Each.P ("     (Self    : access Object;", Store_Body);
+      Store_Each.P ("      Payload : Gela.Types.Payload;", Store_Body);
+      Store_Each.P ("      Visiter : in out " &
+                      "Gela.Nodes.Visiters.Visiter'Class;", Store_Body);
+      Store_Each.N ("      Control : in out Gela.Types.Traverse_Control)",
+                    Store_Body);
+      Store_Body.P;
+      Store_Body.P ("   is");
+      Store_Body.N ("      Its : constant Gela.Nodes.");
+      Store_Body.N (To_Ada (NT.Name));
+      Store_Body.P ("_Access");
+      Store_Body.N ("         := Gela.Nodes.");
+      Store_Body.N (To_Ada (NT.Name));
+      Store_Body.P ("_Access (Self);");
+      Store_Body.P ("   begin");
+      Store_Body.N ("      Visiter.");
+      Store_Body.P (To_Ada (NT.Name));
+      Store_Body.P ("        ((Its, Payload), Control);");
+      Store_Body.N ("   end Visit");
+      Store_Each.P (";", Store_Body);
+      Store_Each.P ("", Store_Body);
+
       Store_Each.P ("   overriding function Size", Store_Body);
       Store_Each.P ("     (Self    : access Object;", Store_Body);
       Store_Each.N ("      Payload : Gela.Types.Payload) return Natural",
@@ -1036,6 +1086,45 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Store_Each.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Store_Body.Text.To_UTF_8_String);
    end Generate_Stores_Prod;
+
+   ----------------------
+   -- Generate_Visiter --
+   ----------------------
+
+   procedure Generate_Visiter is
+      Spec : Writer;
+      Name : League.Strings.Universal_String;
+   begin
+      Spec.P ("package Gela.Nodes.Visiters is");
+      Spec.P ("   pragma Preelaborate;");
+      Spec.P;
+      Spec.P ("   type Visiter is limited interface;");
+
+      for NT of Plain.Non_Terminal loop
+         for Prod of Plain.Production (NT.First .. NT.Last) loop
+            if Macro_Reference (Prod) = 0 and not NT.Is_List then
+               if Is_Macro (NT.Index) then
+                  Name := To_Ada (NT.Name);
+               else
+                  Name := To_Ada (Prod.Name);
+               end if;
+               Spec.P;
+               Spec.N ("   not overriding procedure ");
+               Spec.P (To_Ada (Name));
+               Spec.P ("     (Self    : in out Visiter;");
+               Spec.N ("      Node    : Gela.Nodes.");
+               Spec.N (To_Ada (Name));
+               Spec.P (";");
+               Spec.P ("      Control : in out Gela.Types.Traverse_Control)");
+               Spec.P ("        is null;");
+            end if;
+         end loop;
+      end loop;
+
+      Spec.P;
+      Spec.P ("end Gela.Nodes.Visiters;");
+      Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
+   end Generate_Visiter;
 
    ------------------
    -- Is_Ambiguous --
@@ -1300,4 +1389,5 @@ begin
 
    Generate_Conv;
    Generate_Fabric;
+   Generate_Visiter;
 end AG_Driver;

@@ -10,10 +10,11 @@
 with Gela.Nodes;
 with Gela.Types;
 with Gela.Stores.Nodes;
+with Gela.Nodes.Visiters;
 
 generic
-   type Node_List is interface and Gela.Nodes.Node;
-   type Item is interface and Gela.Nodes.Node;
+   type Node_List is interface and Gela.Nodes.List_Node;
+   type Item is interface and Gela.Nodes.Visitable_Node;
    type Item_Record is private;
 
    Null_Item : Item_Record;
@@ -88,6 +89,12 @@ package Gela.Stores.Lists is
       Payload : Gela.Types.Payload;
       Index   : Positive;
       Value   : Gela.Types.Payload);
+
+   overriding procedure Visit_Each
+     (Self    : access List;
+      Payload : Gela.Types.Payload;
+      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;
+      Control : in out Gela.Types.Traverse_Control);
 
 private
 
