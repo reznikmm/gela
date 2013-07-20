@@ -56,7 +56,9 @@ accept_statement ::=
   token                     <left_parenthesis_token>
   expression                <Accept_Entry_Index>
   token                     <right_parenthesis_token>
+  token                     <lp_token>
   {parameter_specification} <Accept_Parameters>
+  token                     <rp_token>
   token                     <do_token>
   {statement}               <Accept_Body_Statements>
   token                     <exception_token>
@@ -72,29 +74,39 @@ access_definition ::=
 
 anonymous_access_to_object_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <constant_token>
   subtype_mark <Anonymous_Access_To_Object_Subtype_Mark>;
 
 anonymous_access_to_procedure_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <protected_token>
   token <procedure_token>
-  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>;
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+;
 
 anonymous_access_to_function_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <protected_token>
   token <function_token>
-  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
   token <return_token>
   token <return_not_token>
+  token <return_null_token>
   subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
 
 access_to_object_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <constant_token>
   subtype_indication <Access_To_Object_Definition>
@@ -102,23 +114,36 @@ access_to_object_definition ::=
 
 access_to_procedure_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <protected_token>
   token <procedure_token>
-  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>;
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+;
 
 access_to_function_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <protected_token>
   token <function_token>
-  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
   token <return_token>
   token <return_not_token>
+  token <return_null_token>
   subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
 
 allocator ::=
-  token <new_token> name <Subtype_Or_Expression> name <Subpool_Name>;
+  token <new_token>
+  name  <Subtype_Or_Expression>
+  token <left_parenthesis_token>
+  name  <Subpool_Name>
+  token <right_parenthesis_token>
+;
 
 association ::=
   {discrete_choice} <Array_Component_Choices>
@@ -187,9 +212,12 @@ basic_declaration ::=
   incomplete_type_declaration |
   private_type_declaration |
   private_extension_declaration |
+  task_type_declaration |
+  protected_type_declaration |
   subtype_declaration |
   object_declaration |
   single_task_declaration |
+  single_protected_declaration |
   number_declaration |
   procedure_declaration |
   function_declaration |
@@ -349,6 +377,7 @@ discriminant_specification ::=
   {defining_identifier}             <Names>
   token                             <colon_token>
   token                             <not_token>
+  token                             <null_token>
   subtype_mark_or_access_definition <Object_Declaration_Subtype>
   token                             <assignment_token>
   expression                        <Initialization_Expression>
@@ -393,7 +422,9 @@ entry_body ::=
   token                      <left_parenthesis_token>
   entry_index_specification  <Entry_Index_Specification>
   token                      <right_parenthesis_token>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <when_token>
   expression                 <Entry_Barrier>
   token                      <is_token>
@@ -408,13 +439,16 @@ entry_body ::=
 ;
 
 entry_declaration ::= 
-  token                       <Overriding_Indicator>
+  token                       <not_token>
+  token                       <overriding_token>
   token                       <entry_token>
   defining_identifier         <Names>
   token                       <left_parenthesis_token>
   discrete_subtype_definition <Entry_Family_Definition>
   token                       <right_parenthesis_token>
+  token                       <lp_token>
   {parameter_specification}   <Parameter_Profile>
+  token                       <rp_token>
   {aspect_specification}      <Aspect_Specifications>
   token                       <semicolon_token>
 ;
@@ -518,26 +552,35 @@ defining_designator ::= defining_program_unit_name | defining_operator_symbol;
 
 formal_access_to_object_definition ::=
   token <not_token>
+  token <null_token>
   token <access_token>
   token <constant_token>
   subtype_indication <Access_To_Object_Definition>
 ;
 
 formal_access_to_procedure_definition ::=
-  token <not_token>
-  token <access_token>
-  token <protected_token>
-  token <procedure_token>
-  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>;
+  token                     <not_token>
+  token                     <null_token>
+  token                     <access_token>
+  token                     <protected_token>
+  token                     <procedure_token>
+  token                     <lp_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token                     <rp_token>
+;
 
 formal_access_to_function_definition ::=
-  token <not_token>
-  token <access_token>
-  token <protected_token>
-  token <function_token>
+  token                     <not_token>
+  token                     <null_token>
+  token                     <access_token>
+  token                     <protected_token>
+  token                     <function_token>
+  token                     <lp_token>
   {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
-  token <return_token>
-  token <return_not_token>
+  token                     <rp_token>
+  token                     <return_token>
+  token                     <return_not_token>
+  token                     <return_null_token>
   subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
 
 formal_constrained_array_definition ::=
@@ -581,9 +624,12 @@ formal_function_declaration ::=
   token                      <with_token>
   token                      <function_token>
   defining_designator        <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <return_token>
   token                      <return_not_token>
+  token                      <return_null_token>
   subtype_mark_or_access_definition <Result_Subtype>
   token                      <is_token>
   token                      <abstract_token>
@@ -618,6 +664,7 @@ formal_object_declaration ::=
   token                             <in_token>
   token                             <out_token>
   token                             <not_token>
+  token                             <null_token>
   subtype_mark_or_access_definition <Object_Declaration_Subtype>
   token                             <assignment_token>
   expression                        <Initialization_Expression>
@@ -653,7 +700,9 @@ formal_procedure_declaration ::=
   token                      <with_token>
   token                      <procedure_token>
   defining_program_unit_name <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <is_token>
   token                      <abstract_token>
   token                      <box_token>
@@ -704,12 +753,16 @@ formal_unconstrained_array_definition ::=
 ;
 
 function_body ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <function_token>
   defining_designator        <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <return_token>
   token                      <return_not_token>
+  token                      <return_null_token>
   subtype_mark_or_access_definition <Result_Subtype>
   {aspect_specification}     <Aspect_Specifications>
   token                      <is_token>
@@ -724,12 +777,16 @@ function_body ::=
 ;
 
 function_declaration ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <function_token>
   defining_designator        <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <return_token>
   token                      <return_not_token>
+  token                      <return_null_token>
   subtype_mark_or_access_definition <Result_Subtype>
   token                      <is_token>
   token                      <abstract_token>
@@ -742,12 +799,16 @@ function_declaration ::=
 ;
 
 function_instantiation ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <function_token>
   defining_designator        <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <return_token>
   token                      <return_not_token>
+  token                      <return_null_token>
   subtype_mark_or_access_definition <Result_Subtype>
   token                      <is_token>
   token                      <new_token>
@@ -794,9 +855,12 @@ generic_function_declaration ::=
   {generic_formal}           <Generic_Formal_Part>
   token                      <function_token>
   defining_designator        <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <return_token>
   token                      <return_not_token>
+  token                      <return_null_token>
   subtype_mark_or_access_definition <Result_Subtype>
   {aspect_specification}     <Aspect_Specifications>
   token                      <semicolon_token>
@@ -855,7 +919,9 @@ generic_procedure_declaration ::=
   {generic_formal}           <Generic_Formal_Part>
   token                      <procedure_token>
   defining_program_unit_name <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   {aspect_specification}     <Aspect_Specifications>
   token                      <semicolon_token>
 ;
@@ -1139,6 +1205,7 @@ object_renaming_declaration ::=
   {defining_identifier} <Names>
   token <colon_token>
   token <not_token>
+  token <null_token>
   subtype_mark_or_access_definition <Object_Declaration_Subtype>
   token <renames_token>
   name <Renamed_Entity>
@@ -1223,6 +1290,7 @@ parameter_specification ::=
   token                             <in_token>
   token                             <out_token>
   token                             <not_token>
+  token                             <null_token>
   subtype_mark_or_access_definition <Object_Declaration_Subtype>
   token                             <assignment_token>
   expression                        <Initialization_Expression>
@@ -1283,10 +1351,13 @@ private_type_definition ::=
   token <private_token>;
 
 procedure_body ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <procedure_token>
   defining_program_unit_name <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   {aspect_specification}     <Aspect_Specifications>
   token                      <is_token>
   {declarative_item}         <Body_Declarative_Items>
@@ -1300,10 +1371,13 @@ procedure_body ::=
 ;
 
 procedure_declaration ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <procedure_token>
   defining_program_unit_name <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <is_token>
   token                      <abstract_token>
   token                      <renames_token>
@@ -1314,10 +1388,13 @@ procedure_declaration ::=
 ;
 
 procedure_instantiation ::=
-  token                      <Overriding_Indicator>
+  token                      <not_token>
+  token                      <overriding_token>
   token                      <procedure_token>
   defining_program_unit_name <Names>
+  token                      <lp_token>
   {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
   token                      <is_token>
   token                      <new_token>
   program_unit_name          <Generic_Unit_Name>
@@ -1359,6 +1436,24 @@ protected_body_stub ::=
   token                      <semicolon_token>
 ;
 
+protected_definition ::=
+  {protected_operation_declaration} <Visible_Protected_Items>
+  token                             <private_token>
+  {protected_element_declaration}   <Private_Protected_Items>
+  token                             <end_token>
+  token                             <identifier_token>
+;
+
+protected_element_declaration ::=
+  protected_operation_declaration |
+  component_declaration;
+
+protected_operation_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  entry_declaration |
+  aspect_clause;
+
 protected_operation_item ::=
   procedure_declaration |
   function_declaration |
@@ -1366,6 +1461,20 @@ protected_operation_item ::=
   function_body |
   entry_body |
   aspect_clause
+;
+
+protected_type_declaration ::= 
+  token                   <protected_token>
+  token                   <type_token>
+  defining_identifier     <Names>
+  known_discriminant_part <Discriminant_Part>
+  {aspect_specification}  <Aspect_Specifications>
+  token                   <is_token>
+  token                   <new_token>
+  {subtype_mark}          <Progenitor_List>
+  token                   <with_token>
+  protected_definition    <Type_Declaration_View>
+  token                   <semicolon_token>
 ;
 
 qualified_expression ::=
@@ -1497,7 +1606,19 @@ simple_return_statement ::=
   token      <semicolon_token>
 ;
 
-single_task_declaration ::= 
+single_protected_declaration ::=
+  token                  <protected_token>
+  defining_identifier    <Names>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <is_token>
+  token                  <new_token>
+  {subtype_mark}         <Progenitor_List>
+  token                  <with_token>
+  protected_definition   <Object_Declaration_Subtype>
+  token                  <semicolon_token>
+;
+
+single_task_declaration ::=
   token                  <task_token>
   defining_identifier    <Names>
   {aspect_specification} <Aspect_Specifications>
@@ -1545,6 +1666,7 @@ subtype_declaration ::=
 
 subtype_indication ::=
   token <not_token>
+  token <null_token>
   subtype_mark
   constraint <Subtype_Constraint>;
 
@@ -1591,6 +1713,20 @@ task_definition ::=
 ;
 
 task_item ::= entry_declaration | aspect_clause;
+
+task_type_declaration ::= 
+  token                   <task_token>
+  token                   <type_token>
+  defining_identifier     <Names>
+  known_discriminant_part <Discriminant_Part>
+  {aspect_specification}  <Aspect_Specifications>
+  token                   <is_token>
+  token                   <new_token>
+  {subtype_mark}          <Progenitor_List>
+  token                   <with_token>
+  task_definition         <Type_Declaration_View>
+  token                   <semicolon_token>
+;
 
 terminate_alternative_statement ::=
   token <terminate_token>

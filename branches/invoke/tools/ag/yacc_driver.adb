@@ -39,9 +39,10 @@ procedure YACC_Driver is
      Gela.Grammars_Convertors.Convert (G, Left => False);
    AG    : constant Gela.Grammars.Grammar :=
      Gela.Grammars.Constructors.To_Augmented (Plain);
-   Table : Gela.Grammars.LR_Tables.Table := Gela.Grammars.LR.LALR.Build
-     (Input        => AG,
-      Right_Nulled => False);
+   Table : constant Gela.Grammars.LR_Tables.Table_Access :=
+     Gela.Grammars.LR.LALR.Build
+       (Input        => AG,
+        Right_Nulled => False);
    Resolver : Gela.Grammars.Conflicts.Resolver;
    Output : Writer;
 
@@ -146,8 +147,8 @@ begin
 
    Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
 
-   Resolver.Resolve (AG, Table);
-   Gela.Grammars_Debug.Print_Conflicts (AG, Table);
+   Resolver.Resolve (AG, Table.all);
+   Gela.Grammars_Debug.Print_Conflicts (AG, Table.all);
 
    if Ada.Command_Line.Argument_Count > 1 then
       Gela.Grammars_Debug.Print (G);

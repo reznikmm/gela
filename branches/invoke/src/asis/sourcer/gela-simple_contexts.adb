@@ -61,8 +61,8 @@ package body Gela.Simple_Contexts is
             Augmented : constant Gela.Grammars.Grammar :=
               Gela.Grammars.Constructors.To_Augmented (Self.Grammar.all);
          begin
-            Self.Table := new Gela.Grammars.LR_Tables.Table'
-              (Gela.Grammars.LR.LALR.Build (Augmented, Right_Nulled => False));
+            Self.Table :=
+              Gela.Grammars.LR.LALR.Build (Augmented, Right_Nulled => False);
             Resolver.Resolve (Augmented, Self.Table.all);
             Gela.Lexical.Handler.Initialize;
          end;
