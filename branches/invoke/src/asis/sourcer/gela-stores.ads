@@ -19,13 +19,13 @@ package Gela.Stores is
      is tagged limited private;
    type Store_Access is access all Store'Class;
 
-   type Abstract_Element (Store : not null Store_Access) is
+   type Storable_Element (Store : not null Store_Access) is
      abstract tagged private;
 
-   type Element_Access is access all Abstract_Element'Class;
+   type Element_Access is access all Storable_Element'Class;
 
    function Size
-     (Self    : access Abstract_Element;
+     (Self    : access Storable_Element;
       Payload : Gela.Types.Payload) return Natural is abstract;
 
    type Abstract_Fabric is abstract tagged limited null record;
@@ -71,24 +71,24 @@ private
       Element : Index;
       Size    : Natural);
 
-   type Abstract_Element (Store : not null Store_Access) is
+   type Storable_Element (Store : not null Store_Access) is
      abstract tagged null record;
 
    function Get
-     (Self     : Abstract_Element'Class;
+     (Self     : Storable_Element'Class;
       Position : Index) return Gela.Stores.Element with Inline;
 
    procedure Set
-     (Self     : Abstract_Element'Class;
+     (Self     : Storable_Element'Class;
       Position : Index;
       Value    : Gela.Stores.Element) with Inline;
 
    procedure Free
-     (Self    : access Abstract_Element'Class;
+     (Self    : access Storable_Element'Class;
       Payload : in out Gela.Types.Payload);
 
    function To_Node
-     (Self    : access Abstract_Element'Class;
+     (Self    : access Storable_Element'Class;
       Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access;
 
 end Gela.Stores;

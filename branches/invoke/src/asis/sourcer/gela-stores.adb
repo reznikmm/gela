@@ -83,7 +83,7 @@ package body Gela.Stores is
    ----------
 
    procedure Free
-     (Self    : access Abstract_Element'Class;
+     (Self    : access Storable_Element'Class;
       Payload : in out Gela.Types.Payload)
    is
       Size : constant Positive := Self.Size (Payload);
@@ -112,7 +112,7 @@ package body Gela.Stores is
    ---------
 
    function Get
-     (Self     : Abstract_Element'Class;
+     (Self     : Storable_Element'Class;
       Position : Index) return Gela.Stores.Element is
    begin
       return Self.Store.Get (Position);
@@ -148,7 +148,7 @@ package body Gela.Stores is
    ---------
 
    procedure Set
-     (Self     : Abstract_Element'Class;
+     (Self     : Storable_Element'Class;
       Position : Index;
       Value    : Gela.Stores.Element) is
    begin
@@ -156,7 +156,7 @@ package body Gela.Stores is
    end Set;
 
    function To_Node
-     (Self    : access Abstract_Element'Class;
+     (Self    : access Storable_Element'Class;
       Payload : Gela.Types.Payload) return Gela.Nodes.Node_Access is
    begin
       return Self.Store.Compilation.Store.Fabric.To_Node (Payload);

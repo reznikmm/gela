@@ -278,8 +278,7 @@ package body Gela.Stores.Lists is
    overriding procedure Visit_Each
      (Self    : access List;
       Payload : Gela.Types.Payload;
-      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;
-      Control : in out Gela.Types.Traverse_Control)
+      Visiter : in out Gela.Nodes.Visiters.Visiter'Class)
    is
       Length : constant Natural := Self.Last_Child (Payload);
       Next   : Gela.Types.Payload := Get_Tail (Self, Payload);
@@ -288,7 +287,7 @@ package body Gela.Stores.Lists is
       for J in 1 .. Length loop
          Next := Get_Next (Self, Next);
          Item := Gela.Nodes.Visitable_Node_Access (Self.To_Node (Next));
-         Item.Visit (Next, Visiter, Control);
+         Item.Visit (Next, Visiter);
       end loop;
    end Visit_Each;
 

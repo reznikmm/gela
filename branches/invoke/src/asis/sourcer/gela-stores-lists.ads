@@ -93,8 +93,7 @@ package Gela.Stores.Lists is
    overriding procedure Visit_Each
      (Self    : access List;
       Payload : Gela.Types.Payload;
-      Visiter : in out Gela.Nodes.Visiters.Visiter'Class;
-      Control : in out Gela.Types.Traverse_Control);
+      Visiter : in out Gela.Nodes.Visiters.Visiter'Class);
 
 private
 

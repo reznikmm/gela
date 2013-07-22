@@ -13,7 +13,7 @@ with Gela.Types;
 package Gela.Stores.Nodes is
    pragma Preelaborate;
 
-   type Node is abstract new Gela.Stores.Abstract_Element with null record;
+   type Node is abstract new Gela.Stores.Storable_Element with null record;
 
    procedure Reference
      (Self    : access Node'Class;
