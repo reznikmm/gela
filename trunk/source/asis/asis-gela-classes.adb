@@ -388,7 +388,7 @@ package body Asis.Gela.Classes is
       Mark   : Asis.Expression;
       Result : Type_Info;
    begin
-      Def  := Get_Type_Def (Tipe);
+      Def  := Get_Type_Def (Top_Parent_Type (Tipe));
 
       if Definition_Kind (Def) = A_Formal_Type_Definition then
          case Formal_Type_Kind (Def) is

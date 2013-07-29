@@ -542,7 +542,7 @@ package body Asis.Gela.Overloads.Walk.Down is
 
    function Array_Dimention (Tipe : Type_Info) return Asis.List_Index is
       use Asis.Definitions;
-      Def  : Asis.Definition := Get_Type_Def (Tipe);
+      Def  : Asis.Definition := Get_Type_Def (Top_Parent_Type (Tipe));
    begin
       if Definition_Kind (Def) = A_Formal_Type_Definition then
          case Formal_Type_Kind (Def) is
