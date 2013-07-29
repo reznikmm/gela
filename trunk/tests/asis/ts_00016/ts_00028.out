@@ -1,0 +1,6 @@
+Declaration_Kind:A_FUNCTION_BODY_DECLARATION V968 at ts_00028.ada [10:1..13:9]
+  Defining_Name_Kind:A_DEFINING_IDENTIFIER V968 at ts_00028.ada [10:10..10:13]
+  Definition_Kind:A_SUBTYPE_INDICATION  at ts_00028.ada [10:22..10:28]
+    Expression_Kind:AN_IDENTIFIER Integer at ts_00028.ada [10:22..10:28]
+  Statement_Kind:A_SIMPLE_RETURN_STATEMENT  at ts_00028.ada [12:4..12:12]
+    Expression_Kind:AN_INTEGER_LITERAL 0 at ts_00028.ada [12:11..12:11]

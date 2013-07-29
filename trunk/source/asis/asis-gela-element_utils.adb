@@ -639,17 +639,27 @@ package body Asis.Gela.Element_Utils is
               (Base_Callable_Declaration_Node'Class (Parent.all),
                Completion);
 
-            if Comp_Kind = A_Procedure_Renaming_Declaration or
-              Comp_Kind = A_Function_Renaming_Declaration
-            then
-               Set_Corresponding_Declaration
-                 (Procedure_Renaming_Declaration_Node'Class (Completion.all),
-                  Parent);
-            else
-               Set_Corresponding_Declaration
-                 (Base_Body_Declaration_Node'Class (Completion.all),
-                  Parent);
-            end if;
+            case Comp_Kind is
+               when A_Procedure_Renaming_Declaration |
+                    A_Function_Renaming_Declaration =>
+
+                  Set_Corresponding_Declaration
+                    (Procedure_Renaming_Declaration_Node'Class
+                       (Completion.all),
+                     Parent);
+
+               when A_Procedure_Body_Stub |
+                    A_Function_Body_Stub =>
+
+                  Set_Corresponding_Declaration
+                    (Procedure_Body_Stub_Node'Class (Completion.all),
+                     Parent);
+
+               when others =>
+                  Set_Corresponding_Declaration
+                    (Base_Body_Declaration_Node'Class (Completion.all),
+                     Parent);
+            end case;
 
          when A_Procedure_Body_Stub |
               A_Function_Body_Stub =>
