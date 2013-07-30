@@ -656,6 +656,7 @@ package body Asis.Gela.Utils is
                   if Definition_Kind (Item) = A_Variant then
                      Walk_Variant (Item, Continue);
                      if not Continue then
+                        Continue := True;
                         return;
                      end if;
                   end if;

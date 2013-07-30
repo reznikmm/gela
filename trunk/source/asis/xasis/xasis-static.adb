@@ -12,6 +12,7 @@ with XASIS.Static.Discrete;
 with XASIS.Static.Unsigned;
 with XASIS.Static.Float;
 with XASIS.Static.Fixed;
+with XASIS.Utils;
 
 pragma Elaborate (XASIS.Static.Iter);
 
@@ -321,11 +322,12 @@ package body XASIS.Static is
                return Float.V (XASIS.Fractions.Value(Text));
             end;
 
-         when An_Enumeration_Literal | A_Character_Literal =>
+         when An_Enumeration_Literal | A_Character_Literal | An_Identifier =>
             declare
+               Decl : constant Asis.Declaration :=
+                 XASIS.Utils.Selected_Name_Declaration (Element, False);
                Name : constant Asis.Defining_Name :=
-                 Corresponding_Name_Definition (Element);
-               Decl : constant Asis.Declaration := Enclosing_Element (Name);
+                 Asis.Declarations.Names (Decl) (1);
                Pos  : constant Wide_String :=
                  Asis.Declarations.Position_Number_Image (Name);
                Text : constant String :=

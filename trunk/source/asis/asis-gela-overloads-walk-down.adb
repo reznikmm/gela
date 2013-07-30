@@ -152,7 +152,7 @@ package body Asis.Gela.Overloads.Walk.Down is
          Info    : Type_Info := Type_Of_Declaration (Decl, Element);
       begin
          D.Push (Resolver.Stack, Up_Expression (Info));
-         Iters.Down_Iterator.Walk_Element (Expr, Control, Resolver);
+         Iters.Down_Iterator.Walk_Element_And_Free (Expr, Control, Resolver);
          Set_Component_Expression
            (Record_Component_Association_Node (Element.all), Expr);
          Gela.Resolver.Polish_Subexpression (Expr);
@@ -323,8 +323,9 @@ package body Asis.Gela.Overloads.Walk.Down is
             Choises     : Asis.Element_List :=
               Asis.Definitions.Variant_Choices (Item);
          begin
+            Continue := False;
+
             if Discr (Index).Found then
-               Continue := False;
                return;
             end if;
 
@@ -344,8 +345,9 @@ package body Asis.Gela.Overloads.Walk.Down is
                      Continue := True;
                   end if;
                end if;
+
+               exit when Continue;
             end loop;
-            Continue := False;
          end Check_Variant;
 
          --------------------

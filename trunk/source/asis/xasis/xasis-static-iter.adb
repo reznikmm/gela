@@ -79,6 +79,12 @@ package body XASIS.Static.Iter is
                        (Object,
                         Asis.Declarations.Initialization_Expression (Decl));
 
+                  when An_Enumeration_Literal_Specification =>
+                     --  Because An_Enumeration_Literal stored as
+                     --  An_Identifier till resolution complete, we keep
+                     --  this call here.
+                     return Literal (Object, Element);
+
                   when others =>
                      return Evaluate_Static_Constant (Object, Decl);
                end case;
