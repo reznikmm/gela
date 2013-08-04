@@ -15,6 +15,21 @@ package body Gela.Errors.Put_Lines is
 
    W : constant Wide_Wide_String := "warning: ";
 
+   --------------------
+   -- File_Not_Found --
+   --------------------
+
+   overriding procedure File_Not_Found
+     (Self      : access Handler;
+      File_Name : League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Self);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line
+        ("Can't lookup file passed in parameters: " &
+           File_Name.To_Wide_Wide_String);
+   end File_Not_Found;
+
    -------------------------
    -- Not_In_NFKC_Warning --
    -------------------------
@@ -30,5 +45,29 @@ package body Gela.Errors.Put_Lines is
          ": " & W &
          "Text of compilation is not in Normalization Form KC. ARM 4.1/3");
    end Not_In_NFKC_Warning;
+
+   -------------------------
+   -- Singe_File_Expected --
+   -------------------------
+
+   overriding procedure Singe_File_Expected (Self : access Handler) is
+      pragma Unreferenced (Self);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line ("Singe file expected");
+   end Singe_File_Expected;
+
+   ------------------
+   -- Syntax_Error --
+   ------------------
+
+   overriding procedure Syntax_Error
+     (Self      : access Handler;
+      File_Name : League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Self);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line
+        ("Syntax error while parsing file: " & File_Name.To_Wide_Wide_String);
+   end Syntax_Error;
 
 end Gela.Errors.Put_Lines;

@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Gela.Context_Fabrics;
+with Gela.Errors;
 with Gela.Types;
 
 package Gela.Simple_Context_Fabrics is
@@ -17,7 +18,7 @@ package Gela.Simple_Context_Fabrics is
 
    procedure Create_Context
      (Self     : in out Simple_Context_Fabric;
-      On_Error : Gela.Context_Fabrics.On_Error_Callback;
+      On_Error : Gela.Errors.Error_Handler_Access;
       Result   : out Gela.Types.Context_Access);
 
 end Gela.Simple_Context_Fabrics;

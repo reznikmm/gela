@@ -13,7 +13,6 @@ with League.Strings;
 
 with Gela.Types;
 with Gela.Contexts;
-with Gela.Context_Fabrics;
 with Gela.Mutables;
 with Gela.Name_Schemas.GNAT;
 with Gela.Source_Finders;
@@ -25,7 +24,7 @@ with Gela.Compilation_Unit_Lists;
 
 package Gela.Simple_Contexts is
 
-   type Context (On_Error : Gela.Context_Fabrics.On_Error_Callback)
+   type Context (On_Error : Gela.Errors.Error_Handler_Access)
      is limited new Gela.Contexts.Context
      and Gela.Unit_Containers.Unit_Container with private;
 
@@ -70,7 +69,7 @@ private
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_Cursor;
 
-   type Context (On_Error : Gela.Context_Fabrics.On_Error_Callback)
+   type Context (On_Error : Gela.Errors.Error_Handler_Access)
      is limited new Gela.Contexts.Context
      and Gela.Unit_Containers.Unit_Container with
    record

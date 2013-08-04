@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Gela.Types;
+with Gela.Errors;
 
 package Gela.Context_Fabrics is
    pragma Preelaborate;
@@ -15,11 +16,9 @@ package Gela.Context_Fabrics is
    type Context_Fabric is interface;
    type Context_Fabric_Access is access all Context_Fabric'Class;
 
-   type On_Error_Callback is access procedure (Text : Wide_String);
-
    procedure Create_Context
      (Self     : in out Context_Fabric;
-      On_Error : On_Error_Callback;
+      On_Error : Gela.Errors.Error_Handler_Access;
       Result   : out Types.Context_Access) is abstract;
 
 end Gela.Context_Fabrics;

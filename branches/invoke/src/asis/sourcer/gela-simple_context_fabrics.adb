@@ -17,7 +17,7 @@ package body Gela.Simple_Context_Fabrics is
 
    procedure Create_Context
      (Self     : in out Simple_Context_Fabric;
-      On_Error : Gela.Context_Fabrics.On_Error_Callback;
+      On_Error : Gela.Errors.Error_Handler_Access;
       Result   : out Gela.Types.Context_Access)
    is
       pragma Unreferenced (Self);

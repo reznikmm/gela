@@ -18,15 +18,40 @@ with Asis.Implementation;
 with League.Strings;
 
 with Gela.Asis_Context_Fabric;
+with Gela.Compilations;
+pragma Unreferenced (Gela.Compilations);
 with Gela.Contexts;
+with Gela.Errors;
 with Gela.Types;
 with Ada.Unchecked_Deallocation;
 
 package body Asis.Ada_Environments is
 
+   package Error_Handler is
+      type Handler is new Gela.Errors.Error_Handler with null record;
+
+      overriding procedure Not_In_NFKC_Warning
+        (Self        : access Handler;
+         Compilation : Gela.Types.Compilation_Access);
+      --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
+
+      overriding procedure File_Not_Found
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String);
+      --  Can't lookup file passed in parameters
+
+      overriding procedure Syntax_Error
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String);
+      --  Syntax error while parsing file
+
+      overriding procedure Singe_File_Expected (Self : access Handler);
+      --  Only one file should be passed in parameters
+   end Error_Handler;
+
    function Assigned (Self : Asis.Context) return Boolean;
 
-   procedure On_Error (Text : Wide_String);
+   On_Error : aliased Error_Handler.Handler;
 
    --------------
    -- Assigned --
@@ -51,8 +76,8 @@ package body Asis.Ada_Environments is
       if not Implementation.Is_Initialized
          or Implementation.Is_Finalized
       then
-         Implementation.Set_Status (
-            Status    => Asis.Errors.Initialization_Error,
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Initialization_Error,
             Diagnosis => "ASIS is not initialized");
 
          raise Exceptions.ASIS_Failed;
@@ -142,6 +167,80 @@ package body Asis.Ada_Environments is
       end if;
    end Dissociate;
 
+   -------------------
+   -- Error_Handler --
+   -------------------
+
+   package body Error_Handler is
+      --------------------
+      -- File_Not_Found --
+      --------------------
+
+      overriding procedure File_Not_Found
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Parameter_Error,
+            Diagnosis => "File not found:" & File_Name.To_UTF_16_Wide_String);
+
+         raise Asis.Exceptions.ASIS_Failed;
+      end File_Not_Found;
+
+      -------------------------
+      -- Not_In_NFKC_Warning --
+      -------------------------
+
+      overriding procedure Not_In_NFKC_Warning
+        (Self        : access Handler;
+         Compilation : Gela.Types.Compilation_Access)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Data_Error,
+            Diagnosis =>
+              "Text of compilation is not in Normalization Form KC." &
+              " ARM 4.1/3: " &
+              Compilation.Text_Name.To_UTF_16_Wide_String);
+      end Not_In_NFKC_Warning;
+
+      -------------------------
+      -- Singe_File_Expected --
+      -------------------------
+
+      overriding procedure Singe_File_Expected (Self : access Handler)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Parameter_Error,
+            Diagnosis => "Singe file name expected in Parameters");
+
+         raise Asis.Exceptions.ASIS_Failed;
+      end Singe_File_Expected;
+
+      ------------------
+      -- Syntax_Error --
+      ------------------
+
+      overriding procedure Syntax_Error
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Use_Error,
+            Diagnosis => "Syntax error:" & File_Name.To_UTF_16_Wide_String);
+
+         raise Asis.Exceptions.ASIS_Failed;
+      end Syntax_Error;
+
+   end Error_Handler;
+
    ------------
    -- Exists --
    ------------
@@ -216,19 +315,6 @@ package body Asis.Ada_Environments is
          return "";
       end if;
    end Name;
-
-   --------------
-   -- On_Error --
-   --------------
-
-   procedure On_Error (Text : Wide_String) is
-   begin
-      Implementation.Set_Status
-        (Status    => Asis.Errors.Parameter_Error,
-         Diagnosis => Text);
-
-      raise Asis.Exceptions.ASIS_Failed;
-   end On_Error;
 
    ----------
    -- Open --

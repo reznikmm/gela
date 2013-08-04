@@ -305,8 +305,7 @@ package body Gela.Simple_Contexts is
       Self.Finder.Lookup_File (Self.File_Name, Found, Name, Text);
 
       if not Found then
-         Self.On_Error
-           ("File not found:" & Self.File_Name.To_UTF_16_Wide_String);
+         Self.On_Error.File_Not_Found (Self.File_Name);
       end if;
 
       Self.Comp := Gela.Mutables.Compilations.Create
@@ -317,8 +316,7 @@ package body Gela.Simple_Contexts is
       Self.Comp.Start;
 
       if Self.Comp.Root.its = null then
-         Self.On_Error
-           ("Syntax error :" & Self.File_Name.To_UTF_16_Wide_String);
+         Self.On_Error.Syntax_Error (Self.File_Name);
       end if;
 
       Self.Is_Open := True;
@@ -375,7 +373,8 @@ package body Gela.Simple_Contexts is
 
       procedure Singe_Unit_Expected is
       begin
-         Self.On_Error ("Singe unit name expected in Parameters");
+         Self.On_Error.Singe_File_Expected;
+         --  ("Singe unit name expected in Parameters");
       end Singe_Unit_Expected;
 
       Next_Is_Path : Boolean := False;
