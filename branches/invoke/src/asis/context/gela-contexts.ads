@@ -12,8 +12,9 @@ with League.Strings;
 with Gela.Types;
 
 package Gela.Contexts is
+   pragma Preelaborate;
 
-   type Context is interface;
+   type Context is limited interface;
 
    procedure Associate
      (Self       : access Context;

@@ -13,7 +13,7 @@ with Gela.Types;
 
 package Gela.Unit_Fabrics is
 
-   type Unit_Fabric is interface;
+   type Unit_Fabric is limited interface;
 
    function Create_Compilation
      (Self : access Unit_Fabric;

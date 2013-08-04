@@ -11,17 +11,28 @@ with Gela.Types;
 
 package Gela.Compilation_Unit_Lists is
 
-   type Abstract_Compilation_Unit_List is interface;
+   type Abstract_Compilation_Unit_List is limited interface;
 
-   function Length
-     (Self    : Abstract_Compilation_Unit_List;
+   function Units_Count
+     (Self    : access Abstract_Compilation_Unit_List;
       Payload : Gela.Types.Payload)
       return Natural is abstract;
 
+   function First
+     (Self    : access Abstract_Compilation_Unit_List;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_Cursor is abstract;
+
+   type Abstract_Compilation_Unit_Cursor is interface;
+
    function Element
-     (Self    : Abstract_Compilation_Unit_List;
-      Payload : Gela.Types.Payload;
-      Index   : Positive)
+     (Self    : access Abstract_Compilation_Unit_Cursor;
+      Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit is abstract;
+
+   function Next
+     (Self    : access Abstract_Compilation_Unit_Cursor;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_Cursor is abstract;
 
 end Gela.Compilation_Unit_Lists;

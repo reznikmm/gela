@@ -42,6 +42,9 @@ package Gela.Types is
    type Compilation_Unit_List_Access is access all
      Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_List'Class;
 
+   type Compilation_Unit_Cursor_Access is access all
+     Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_Cursor'Class;
+
    type Compilation_Unit is record
       Object  : Compilation_Unit_Access;
       Payload : Gela.Types.Payload;
@@ -49,6 +52,11 @@ package Gela.Types is
 
    type Compilation_Unit_List is record
       Object  : Compilation_Unit_List_Access;
+      Payload : Gela.Types.Payload;
+   end record;
+
+   type Compilation_Unit_Cursor is record
+      Object  : Compilation_Unit_Cursor_Access;
       Payload : Gela.Types.Payload;
    end record;
 

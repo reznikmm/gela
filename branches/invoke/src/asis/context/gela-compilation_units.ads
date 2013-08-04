@@ -12,8 +12,11 @@ with League.Strings;
 with Gela.Types;
 
 package Gela.Compilation_Units is
+   pragma Preelaborate;
 
-   type Abstract_Compilation_Unit is interface;
+   type Unit_Index is new Gela.Types.Payload;
+
+   type Abstract_Compilation_Unit is limited interface;
 
    function Unit_Kind
      (Self    : Abstract_Compilation_Unit;

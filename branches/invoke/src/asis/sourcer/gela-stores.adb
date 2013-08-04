@@ -46,6 +46,16 @@ package body Gela.Stores is
       return Result;
    end Allocate;
 
+   -----------------
+   -- Compilation --
+   -----------------
+
+   not overriding function Compilation
+     (Self : Storable_Element) return Gela.Types.Compilation_Access is
+   begin
+      return Gela.Types.Compilation_Access (Self.Store.Compilation);
+   end Compilation;
+
    ----------
    -- Free --
    ----------

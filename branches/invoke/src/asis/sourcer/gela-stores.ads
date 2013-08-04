@@ -22,6 +22,9 @@ package Gela.Stores is
    type Storable_Element (Store : not null Store_Access) is
      abstract tagged private;
 
+   not overriding function Compilation
+     (Self : Storable_Element) return Gela.Types.Compilation_Access;
+
    type Element_Access is access all Storable_Element'Class;
 
    function Size

@@ -70,6 +70,21 @@ procedure AG_Driver is
    --  If any pert of Prod is reference to list of some NT then
    --  mark Has_List (NT) as True
 
+   procedure Write_Attr_With
+     (NT     : Gela.Grammars.Non_Terminal;
+      Output : in out Writer;
+      Done   : in out League.String_Vectors.Universal_String_Vector);
+
+   procedure Write_Attr_Get
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out Writer;
+      Impl   : Boolean);
+
+   procedure Write_Attr_Set
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out Writer;
+      Impl   : Boolean);
+
    procedure Generate_Nodes;
    procedure Generate_Fabric;
    procedure Generate_Conv;
@@ -443,6 +458,10 @@ procedure AG_Driver is
       Nodes.P;
       Nodes.P ("   type Node is interface;");
       Nodes.P;
+      Nodes.P ("   not overriding function Compilation");
+      Nodes.P ("     (Self : Node) return Gela.Types.Compilation_Access" &
+                 " is abstract;");
+      Nodes.P;
       Nodes.P ("   type Element is record");
       Nodes.P ("      its     : access Node'Class;");
       Nodes.P ("      Payload : Gela.Types.Payload;");
@@ -539,6 +558,77 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
    end Generate_Nodes;
 
+   ---------------------
+   -- Write_Attr_With --
+   ---------------------
+
+   procedure Write_Attr_With
+     (NT     : Gela.Grammars.Non_Terminal;
+      Output : in out Writer;
+      Done   : in out League.String_Vectors.Universal_String_Vector)
+   is
+      Type_Comp  : League.String_Vectors.Universal_String_Vector;
+      Pkg_Name   : League.Strings.Universal_String;
+   begin
+      for A in NT.First_Attribute .. NT.Last_Attribute loop
+         Type_Comp := G.Declaration (A).Type_Name.Split ('.');
+         Type_Comp.Replace
+           (Type_Comp.Length, League.Strings.Empty_Universal_String);
+         Pkg_Name := Type_Comp.Join ('.');
+         Pkg_Name.Slice (1, Pkg_Name.Length - 1);
+
+         if Done.Index (Pkg_Name) = 0 then
+            Done.Append (Pkg_Name);
+            Output.N ("with ");
+            Output.N (Pkg_Name);
+            Output.P (";");
+         end if;
+      end loop;
+   end Write_Attr_With;
+
+   --------------------
+   -- Write_Attr_Get --
+   --------------------
+
+   procedure Write_Attr_Get
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out Writer;
+      Impl   : Boolean) is
+   begin
+      Output.N ("   ");
+      if Impl then
+         Output.N ("overriding ");
+      end if;
+      Output.N ("function ");
+      Output.P (To_Ada (Decl.Name));
+      Output.P ("     (Self    : access Object;");
+      Output.P ("      Payload : Gela.Types.Payload)");
+      Output.N ("     return ");
+      Output.N (To_Ada (Decl.Type_Name));
+   end Write_Attr_Get;
+
+   --------------------
+   -- Write_Attr_Set --
+   --------------------
+
+   procedure Write_Attr_Set
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out Writer;
+      Impl   : Boolean) is
+   begin
+      Output.N ("   ");
+      if Impl then
+         Output.N ("overriding ");
+      end if;
+      Output.N ("procedure Set_");
+      Output.P (To_Ada (Decl.Name));
+      Output.P ("     (Self    : access Object;");
+      Output.P ("      Payload : Gela.Types.Payload;");
+      Output.N ("      Value   : ");
+      Output.N (To_Ada (Decl.Type_Name));
+      Output.N (")");
+   end Write_Attr_Set;
+
    -----------------------
    -- Generate_Nodes_NT --
    -----------------------
@@ -548,6 +638,7 @@ procedure AG_Driver is
    is
       Nodes_NT   : Writer;
       Impl_Count : Natural := 0;
+      Type_List  : League.String_Vectors.Universal_String_Vector;
    begin
       for J in Implement'Range (2) loop
          if Implement (NT.Index, J) then
@@ -557,6 +648,8 @@ procedure AG_Driver is
             Impl_Count := Impl_Count + 1;
          end if;
       end loop;
+
+      Write_Attr_With (NT, Nodes_NT, Type_List);
 
       Nodes_NT.N ("package Gela.Nodes.");
       Nodes_NT.N (Plural (NT.Name));
@@ -584,6 +677,17 @@ procedure AG_Driver is
       Nodes_NT.P;
       Nodes_NT.P ("   type Object_Access is access all Object'Class;");
       Nodes_NT.P;
+
+      Type_List.Clear;
+
+      for A in NT.First_Attribute .. NT.Last_Attribute loop
+         Write_Attr_Get (G.Declaration (A), Nodes_NT, Impl => False);
+         Nodes_NT.P (" is abstract;");
+         Nodes_NT.P;
+         Write_Attr_Set (G.Declaration (A), Nodes_NT, Impl => False);
+         Nodes_NT.P (" is abstract;");
+         Nodes_NT.P;
+      end loop;
 
       if Is_Concrete (NT.Index) then
          Write_Parts (G.Production (NT.First), Nodes_NT);
@@ -690,13 +794,68 @@ procedure AG_Driver is
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production)
    is
+      procedure Write_Attr (NT : Gela.Grammars.Non_Terminal);
+
       Store_Each  : Writer;
       Store_Body  : Writer;
+
+      Last : Positive := Natural (Prod.Last - Prod.First) + 1;
+
+      ----------------
+      -- Write_Attr --
+      ----------------
+
+      procedure Write_Attr (NT : Gela.Grammars.Non_Terminal) is
+      begin
+         for A in NT.First_Attribute .. NT.Last_Attribute loop
+            Last := Last + 1;
+            Write_Attr_Get (G.Declaration (A), Store_Each, Impl => True);
+            Write_Attr_Get (G.Declaration (A), Store_Body, Impl => True);
+            Store_Body.P;
+            Store_Body.P ("   is");
+            Store_Body.N ("      Result : constant Gela.Types.Payload :=" &
+                            " Self.Child (Payload, ");
+            Store_Body.N (Last);
+            Store_Body.P (");");
+            Store_Body.P ("   begin");
+            Store_Body.N ("      return ");
+            Store_Body.N (To_Ada (G.Declaration (A).Type_Name));
+            Store_Body.P (" (Result);");
+            Store_Body.N ("   end ");
+            Store_Body.N (To_Ada (G.Declaration (A).Name));
+
+            Store_Each.P (";", Store_Body);
+            Store_Each.P ("", Store_Body);
+
+            Write_Attr_Set (G.Declaration (A), Store_Each, Impl => True);
+            Write_Attr_Set (G.Declaration (A), Store_Body, Impl => True);
+            Store_Body.P;
+            Store_Body.P ("   is");
+            Store_Body.P ("   begin");
+            Store_Body.N ("      Self.Set_Child (Payload, ");
+            Store_Body.N (Last);
+            Store_Body.P (", Gela.Types.Payload (Value));");
+            Store_Body.N ("   end Set_");
+            Store_Body.N (To_Ada (G.Declaration (A).Name));
+            Store_Each.P (";", Store_Body);
+            Store_Each.P ("", Store_Body);
+         end loop;
+      end Write_Attr;
+
       Store_Each_Name : League.Strings.Universal_String;
+      Type_List  : League.String_Vectors.Universal_String_Vector;
    begin
       if Macro_Reference (Prod) /= 0 then
          return;
       end if;
+
+      for J in Implement'Range (2) loop
+         if Implement (NT.Index, J) then
+            Write_Attr_With (G.Non_Terminal (J), Store_Each, Type_List);
+         end if;
+      end loop;
+
+      Write_Attr_With (NT, Store_Each, Type_List);
 
       Store_Each_Name.Clear;
       Store_Each_Name.Append ("Gela.Stores.");
@@ -736,6 +895,15 @@ procedure AG_Driver is
       Store_Each.P
         ("   type Object_Access is access all Object;");
       Store_Each.P;
+
+      Write_Attr (NT);
+
+      for J in Implement'Range (2) loop
+         if Implement (NT.Index, J) then
+            Write_Attr (G.Non_Terminal (J));
+         end if;
+      end loop;
+
       Store_Each.P ("   overriding procedure Visit", Store_Body);
       Store_Each.P ("     (Self    : access Object;", Store_Body);
       Store_Each.P ("      Payload : Gela.Types.Payload;", Store_Body);
@@ -766,8 +934,7 @@ procedure AG_Driver is
       Store_Body.P (" is");
       Store_Body.P ("   begin");
       Store_Body.N ("      return ");
-      Store_Body.N
-        (Reserved + Natural (Prod.Last - Prod.First) + 1);
+      Store_Body.N (Reserved + Last);
       Store_Body.P (";");
       Store_Body.N ("   end Size");
       Store_Each.P (";", Store_Body);

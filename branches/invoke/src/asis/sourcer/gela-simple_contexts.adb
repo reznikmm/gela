@@ -35,7 +35,7 @@ package body Gela.Simple_Contexts is
    is
       use type League.Strings.Universal_String;
       use type Gela.Errors.Error_Handler_Access;
-      LALR : League.Strings.Universal_String;
+      LALR_File : League.Strings.Universal_String;
    begin
       Self.Name := Name;
       Self.Parameters := Parameters;
@@ -48,12 +48,12 @@ package body Gela.Simple_Contexts is
       if Self.Errors = null then
          Self.Errors := new Gela.Errors.Put_Lines.Handler;
 
-         LALR := Self.Default_Path;
-         LALR.Append ("/src/asis/sourcer/ada-lalr.ag");
+         LALR_File := Self.Default_Path;
+         LALR_File.Append ("/src/asis/sourcer/ada-lalr.ag");
 
          Self.Grammar := new Gela.Grammars.Grammar'
            (Gela.Grammars_Convertors.Convert
-              (Gela.Grammars.Reader.Read (LALR.To_UTF_8_String),
+              (Gela.Grammars.Reader.Read (LALR_File.To_UTF_8_String),
                Left => False));
 
          declare
@@ -79,6 +79,36 @@ package body Gela.Simple_Contexts is
       Self.Is_Open := False;
    end Close;
 
+   -----------------------------
+   -- Compilation_Unit_Bodies --
+   -----------------------------
+
+   overriding function Compilation_Unit_Bodies
+     (Self  : access Context)
+      return Gela.Types.Compilation_Unit_List is
+   begin
+      return (Self.Bodies'Access, 0);
+   end Compilation_Unit_Bodies;
+
+   ---------------------------
+   -- Compilation_Unit_Body --
+   ---------------------------
+
+   overriding function Compilation_Unit_Body
+     (Self  : access Context;
+      Name  : League.Strings.Universal_String)
+      return Gela.Types.Compilation_Unit
+   is
+      Pos  : constant Unit_Maps.Cursor :=
+        Self.Bodies.Map.Find (Name.To_Simple_Casefold);
+   begin
+      if Unit_Maps.Has_Element (Pos) then
+         return Unit_Maps.Element (Pos);
+      end if;
+
+      return (null, 0);
+   end Compilation_Unit_Body;
+
    ---------------
    -- Container --
    ---------------
@@ -87,10 +117,12 @@ package body Gela.Simple_Contexts is
      (Self  : access Context;
       Index : Positive) return Gela.Types.Container_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Index);
    begin
-      return null;
+      if Index = 1 then
+         return Gela.Types.Container_Access (Self);
+      else
+         raise Constraint_Error;
+      end if;
    end Container;
 
    -----------------
@@ -141,6 +173,37 @@ package body Gela.Simple_Contexts is
    end Dissociate;
 
    -------------
+   -- Element --
+   -------------
+
+   overriding function Element
+     (Self    : access Unit_List;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit is
+   begin
+      return (Self.Context.Units (Payload), Payload);
+   end Element;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self    : access Unit_List;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_Cursor
+   is
+      pragma Unreferenced (Payload);
+   begin
+      if Self.Map.Is_Empty then
+         return (null, 0);
+      end if;
+
+      return (Gela.Types.Compilation_Unit_Cursor_Access (Self),
+              Self.Map.First_Element.Payload);
+   end First;
+
+   -------------
    -- Is_Open --
    -------------
 
@@ -156,8 +219,38 @@ package body Gela.Simple_Contexts is
    overriding function Length (Self : access Context) return Natural is
       pragma Unreferenced (Self);
    begin
-      return 0;
+      return 1;
    end Length;
+
+   ------------------------------
+   -- Library_Unit_Declaration --
+   ------------------------------
+
+   overriding function Library_Unit_Declaration
+     (Self  : access Context;
+      Name  : League.Strings.Universal_String)
+      return Gela.Types.Compilation_Unit
+   is
+      Pos  : constant Unit_Maps.Cursor :=
+        Self.Specs.Map.Find (Name.To_Simple_Casefold);
+   begin
+      if Unit_Maps.Has_Element (Pos) then
+         return Unit_Maps.Element (Pos);
+      end if;
+
+      return (null, 0);
+   end Library_Unit_Declaration;
+
+   -------------------------------
+   -- Library_Unit_Declarations --
+   -------------------------------
+
+   overriding function Library_Unit_Declarations
+     (Self  : access Context)
+      return Gela.Types.Compilation_Unit_List is
+   begin
+      return (Self.Specs'Access, 0);
+   end Library_Unit_Declarations;
 
    ----------
    -- Name --
@@ -169,6 +262,33 @@ package body Gela.Simple_Contexts is
    begin
       return Self.Name;
    end Name;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self    : access Unit_List;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_Cursor
+   is
+      Unit : constant Gela.Types.Compilation_Unit_Access :=
+        Self.Context.Units (Payload);
+      Pos  : Unit_Maps.Cursor :=
+        Self.Map.Find (Unit.Unit_Full_Name (Payload).To_Simple_Casefold);
+      Next : Gela.Types.Compilation_Unit;
+   begin
+      Unit_Maps.Next (Pos);
+
+      if Unit_Maps.Has_Element (Pos) then
+         Next := Unit_Maps.Element (Pos);
+
+         return (Gela.Types.Compilation_Unit_Cursor_Access (Self),
+                 Next.Payload);
+      end if;
+
+      return (null, 0);
+   end Next;
 
    ----------
    -- Open --
@@ -190,7 +310,9 @@ package body Gela.Simple_Contexts is
       end if;
 
       Self.Comp := Gela.Mutables.Compilations.Create
-        (Self.File_Name, Text, Self.Errors, Self.Grammar, Self.Table);
+        (Self.File_Name,
+         Gela.Types.Context_Access (Self),
+         Text, Self.Errors, Self.Grammar, Self.Table);
 
       Self.Comp.Start;
 
@@ -212,6 +334,17 @@ package body Gela.Simple_Contexts is
    begin
       return Self.Parameters;
    end Parameters;
+
+   ------------
+   -- Parent --
+   ------------
+
+   overriding function Parent
+     (Self : access Context)
+      return Gela.Types.Context_Access is
+   begin
+      return Gela.Types.Context_Access (Self);
+   end Parent;
 
    ----------------------
    -- Parse_Parameters --
@@ -278,5 +411,18 @@ package body Gela.Simple_Contexts is
          Singe_Unit_Expected;
       end if;
    end Parse_Parameters;
+
+   -----------------
+   -- Units_Count --
+   -----------------
+
+   overriding function Units_Count
+     (Self    : access Unit_List;
+      Payload : Gela.Types.Payload) return Natural
+   is
+      pragma Unreferenced (Payload);
+   begin
+      return Natural (Self.Map.Length);
+   end Units_Count;
 
 end Gela.Simple_Contexts;

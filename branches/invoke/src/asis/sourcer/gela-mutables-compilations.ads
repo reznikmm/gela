@@ -42,6 +42,7 @@ package Gela.Mutables.Compilations is
       Updated     : League.Calendars.Date_Time;
       CPU_Spent   : Duration;
       --  Components
+      Context : Gela.Types.Context_Access;
       Store   : Mutables.Compilations.Store (Compilation'Unchecked_Access);
       Root    : Gela.Nodes.Element;
       Errors  : Gela.Errors.Error_Handler_Access;
@@ -51,8 +52,11 @@ package Gela.Mutables.Compilations is
       Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
    end record;
 
+   type Compilation_Access is access all Compilation;
+
    function Create
      (Name    : League.Strings.Universal_String;
+      Context : Gela.Types.Context_Access;
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Grammar : Gela.Grammars.Grammar_Access;

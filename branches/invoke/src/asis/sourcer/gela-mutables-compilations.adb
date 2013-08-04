@@ -37,6 +37,7 @@ package body Gela.Mutables.Compilations is
 
    function Create
      (Name    : League.Strings.Universal_String;
+      Context : Gela.Types.Context_Access;
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Grammar : Gela.Grammars.Grammar_Access;
@@ -56,6 +57,7 @@ package body Gela.Mutables.Compilations is
          Result.Updated := League.Calendars.Clock;
          Result.CPU_Spent := 0.0;
          Result.Errors := Errors;
+         Result.Context := Context;
 --           Options     => League.Strings.Empty_Universal_String,
 --           Root        => <>,
 --           Store       => <>,
@@ -68,7 +70,6 @@ package body Gela.Mutables.Compilations is
             Result.Errors.Not_In_NFKC_Warning
               (Gela.Types.Compilation_Access (Result));
          end if;
-
          Result.Store.Fabric.Initialize;
          Result.Lexer.Initialize (Source);
          Result.Parser.Initialize (Grammar, Table);
