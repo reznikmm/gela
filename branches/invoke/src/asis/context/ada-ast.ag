@@ -1827,7 +1827,7 @@ Synthesized attributes
   selected_identifier
   : Ada.Containers.Hash_Type : hash;
 
-Rules for defining_identifier.identifier :
+Rules for defining_identifier.identifier1 :
 (.
       declare
          Token : constant Gela.Nodes.Token :=
@@ -1842,7 +1842,7 @@ Rules for defining_identifier.identifier :
       end;
 .)
 
-Rules for identifier.identifier :
+Rules for identifier.identifier1 :
 (.
       declare
          Token : constant Gela.Nodes.Token :=
@@ -1857,7 +1857,7 @@ Rules for identifier.identifier :
       end;
 .)
 
-Rules for selected_identifier.identifier :
+Rules for selected_identifier.identifier1 :
 (.
       declare
          Left : constant Ada.Containers.Hash_Type :=

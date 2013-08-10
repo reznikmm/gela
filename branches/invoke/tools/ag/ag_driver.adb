@@ -1036,27 +1036,16 @@ procedure AG_Driver is
      (Part : Gela.Grammars.Part)
       return Gela.Grammars.Non_Terminal_Count is
    begin
-      if Part.Is_Option then
-         if Part.First = Part.Last then
-            declare
-               Prod : Gela.Grammars.Production renames
-                 G.Production (Part.First);
-               Part : Gela.Grammars.Part renames G.Part (Prod.First);
-            begin
-               if Prod.First = Prod.Last and then
-                 Part.Is_List_Reference
-               then
-                  declare
-                     NT    : Gela.Grammars.Non_Terminal renames
-                       G.Non_Terminal (Part.Denote);
-                     Inner : Gela.Grammars.Production renames
-                       G.Production (NT.First);
-                  begin
-                     return G.Part (Inner.First + 1).Denote;
-                  end;
-               end if;
-            end;
-         end if;
+      if Part.Is_List_Reference then
+         declare
+            NT   : Gela.Grammars.Non_Terminal renames
+              G.Non_Terminal (Part.Denote);
+            Prod : Gela.Grammars.Production renames
+              G.Production (NT.First);
+            Part : Gela.Grammars.Part renames G.Part (Prod.Last);
+         begin
+            return Part.Denote;
+         end;
       end if;
 
       return 0;
