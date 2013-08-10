@@ -258,7 +258,9 @@ package body Gela.Test_Cases.Valgrind is
    procedure Run (Self : in out Test_Case) is
    begin
       Self.Run_Test.Run;
-      Self.Read_Valgrind_Report;
+      if Self.Run_Test.Status = Success then
+         Self.Read_Valgrind_Report;
+      end if;
    end Run;
 
    ------------
