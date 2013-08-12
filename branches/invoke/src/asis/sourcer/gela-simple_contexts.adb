@@ -25,6 +25,7 @@ with Gela.Nodes;
 --  with Gela.Nodes.Visiters;
 with Gela.Pass_1;
 with Gela.Compilation_Units;  pragma Unreferenced (Gela.Compilation_Units);
+with Ada.Wide_Wide_Text_IO;
 
 package body Gela.Simple_Contexts is
 
@@ -324,10 +325,30 @@ package body Gela.Simple_Contexts is
       end if;
 
       declare
+         use type Gela.Nodes.Compilation_Unit_Access;
+
          Pass_1 : Gela.Pass_1.Visiter (Self.Comp);
+         Comp   : constant Gela.Nodes.Compilation_Access :=
+           Gela.Nodes.Compilation_Access (Self.Comp.Root.its);
+         Units  : constant Gela.Nodes.Compilation_Unit_Sequence :=
+           Comp.Units (Self.Comp.Root.Payload);
+         Head   : Gela.Nodes.Compilation_Unit :=
+           Units.its.Head (Units.Payload);
+         Symbol : Gela.Types.Symbol;
       begin
+--           Gela.Nodes.Visitable_Node_Access
+--             (Self.Comp.Root.its).Visit (Self.Comp.Root.Payload, Pass_1);
          Gela.Nodes.Visitable_Node_Access
-           (Self.Comp.Root.its).Visit (Self.Comp.Root.Payload, Pass_1);
+           (Head.its).Visit (Head.Payload, Pass_1);
+
+         while Head.its /= null loop
+            Symbol := Head.its.Full_Name (Head.Payload);
+
+            Ada.Wide_Wide_Text_IO.Put_Line
+              (Self.Comp.Symbols.Value (Symbol).To_Wide_Wide_String);
+
+            Units.its.Next (Units.Payload, Head);
+         end loop;
 
          Self.Is_Open := True;
       end;

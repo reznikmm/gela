@@ -127,6 +127,52 @@ package body Gela.Mutables.Symbol_Sets is
       return Ada.Containers.Hash_Type (X);
    end Hash;
 
+   ----------
+   -- Join --
+   ----------
+
+   overriding procedure Join
+     (Self     : in out Symbol_Set;
+      Prefix   : Gela.Types.Symbol;
+      Selector : Gela.Types.Symbol;
+      Result   : out Gela.Types.Symbol)
+   is
+      use type League.Strings.Universal_String;
+      Image : constant League.Strings.Universal_String :=
+        Self.Value (Prefix) & "." & Self.Value (Selector);
+   begin
+      Self.Append (Image, Result);
+   end Join;
+
+   ------------
+   -- Prefix --
+   ------------
+
+   overriding function Prefix
+     (Self   : in out Symbol_Set;
+      Name   : Gela.Types.Symbol) return Gela.Types.Symbol
+   is
+      Image  : constant League.Strings.Universal_String := Self.Value (Name);
+      Text   : constant Wide_Wide_String := Image.To_Wide_Wide_String;
+      Point  : Natural := 0;
+      Result : Gela.Types.Symbol := 0;
+   begin
+      for J in reverse Text'Range loop
+         if Text (J) = '.' then
+            Point := J;
+            exit;
+         end if;
+      end loop;
+
+      if Point /= 0 then
+         Self.Append
+           (League.Strings.To_Universal_String (Text (1 .. Point - 1)),
+            Result);
+      end if;
+
+      return Result;
+   end Prefix;
+
    ------------------------
    -- To_Operator_Symbol --
    ------------------------

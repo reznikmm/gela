@@ -28,4 +28,15 @@ package Gela.Symbol_Sets is
       Name   : Gela.Types.Symbol)
       return League.Strings.Universal_String is abstract;
 
+   not overriding procedure Join
+     (Self     : in out Symbol_Set;
+      Prefix   : Gela.Types.Symbol;
+      Selector : Gela.Types.Symbol;
+      Result   : out Gela.Types.Symbol) is abstract;
+
+   not overriding function Prefix
+     (Self   : in out Symbol_Set;
+      Name   : Gela.Types.Symbol)
+      return Gela.Types.Symbol is abstract;
+
 end Gela.Symbol_Sets;

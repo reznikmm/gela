@@ -295,6 +295,10 @@ package body AG_Tools.Check_Ordered is
         (NT  : Non_Terminal;
          Pos : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
 
+      procedure Generate_List_Proc
+        (NT  : Non_Terminal;
+         Pos : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
+
       procedure Add_With (Name : League.Strings.Universal_String);
       procedure Add_With_Stores (Name : League.Strings.Universal_String);
       procedure Add_With_Nodes (Name : League.Strings.Universal_String);
@@ -343,6 +347,16 @@ package body AG_Tools.Check_Ordered is
 --           Withs.P (");");
       end Add_With_Nodes;
 
+      ------------------------
+      -- Generate_List_Proc --
+      ------------------------
+
+      procedure Generate_List_Proc
+        (NT  : Non_Terminal;
+         Pos : in out Gela.Grammars.Ordered.Order_Maps.Cursor) is
+      begin
+         null;
+      end Generate_List_Proc;
       -------------------
       -- Generate_Proc --
       -------------------
@@ -362,12 +376,17 @@ package body AG_Tools.Check_Ordered is
          Part_Map : array (Prod.First .. Prod.Last) of Boolean :=
            (others => False);
 
+         -------------------
+         -- Generate_Call --
+         -------------------
+
          procedure Generate_Call (Item : Gela.Grammars.Ordered.Action) is
             P : Part renames G.Part (Item.Part);
          begin
             Impl.N ("      ");
             Impl.N (To_Ada (P.Name));
-            Impl.N (".its.Visit (");
+            Impl.P (".its.Visit");
+            Impl.N ("        (");
             Impl.N (To_Ada (P.Name));
             Impl.P (".Payload, Self);");
          end Generate_Call;
@@ -421,6 +440,10 @@ package body AG_Tools.Check_Ordered is
             end if;
          end Generate_Local;
 
+         --------------------
+         -- Generate_Local --
+         --------------------
+
          procedure Generate_Local (X : Attribute) is
             D : Attribute_Declaration renames G.Declaration (X.Declaration);
          begin
@@ -468,6 +491,10 @@ package body AG_Tools.Check_Ordered is
 
             Impl.P (T.Substitute (Values));
          end Generate_Rule;
+
+         ------------------
+         -- Generate_Set --
+         ------------------
 
          procedure Generate_Set (X : Attribute) is
             Origin : League.Strings.Universal_String := This;
@@ -592,6 +619,8 @@ package body AG_Tools.Check_Ordered is
       Found := False;
       Spec.P ("--  Auto generated file. DO NOT EDIT!!!", Withs);
       Withs.P ("pragma Warnings (""FU"");");
+      Add_With (League.Strings.To_Universal_String
+                ("Gela.Mutables.Compilations"));
       Spec.P ("with Gela.Mutables;");
       Spec.P ("with Gela.Nodes.Visiters;");
       Spec.P;
@@ -606,13 +635,17 @@ package body AG_Tools.Check_Ordered is
       Spec.P ("     is new Gela.Nodes.Visiters.Visiter with null record;");
 
       for NT of G.Non_Terminal loop
-         if Is_Concrete (NT.Index) and not Is_List (NT) then
+         if Is_Concrete (NT.Index) or Is_List (NT) then
             declare
                use Gela.Grammars.Ordered.Order_Maps;
                Pos : Cursor := Order.Ceiling ((NT.First, Pass, Step => 1));
             begin
                if Has_Element (Pos) and then Key (Pos).Prod = NT.First then
-                  Generate_Proc (NT, Pos);
+                  if Is_List (NT) then
+                     Generate_Proc (NT, Pos);
+                  else
+                     Generate_List_Proc (NT, Pos);
+                  end if;
                   Found := True;
                end if;
             end;

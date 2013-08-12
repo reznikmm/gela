@@ -116,7 +116,8 @@ Rules for Compilation. :
             List : constant Gela.Nodes.Compilation_Unit_Sequence := -Conv;
          begin
             List.its.Prepend (List.Payload, ${compilation_unit.ast});
-            ${Compilation.ast} := Conv;
+            ${Compilation.ast} := +Self.Compilation.Store.Fabric.Compilation
+               (List, (null, 0));
          end;
 .)
 

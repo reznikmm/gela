@@ -55,4 +55,14 @@ package Gela.Mutables.Symbol_Sets is
      (Self   : in out Symbol_Set;
       Name   : Gela.Types.Symbol) return League.Strings.Universal_String;
 
+   overriding procedure Join
+     (Self     : in out Symbol_Set;
+      Prefix   : Gela.Types.Symbol;
+      Selector : Gela.Types.Symbol;
+      Result   : out Gela.Types.Symbol);
+
+   overriding function Prefix
+     (Self   : in out Symbol_Set;
+      Name   : Gela.Types.Symbol) return Gela.Types.Symbol;
+
 end Gela.Mutables.Symbol_Sets;
