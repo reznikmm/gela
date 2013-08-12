@@ -247,7 +247,7 @@ case_statement ::=
   token       <endcase>
   token       <semicolon_token>;
 
-character_literal ::= token <character_literal>;
+character_literal ::= token <character_literal_token>;
 
 choice_parameter_specification ::= defining_identifier <Names>;
 
@@ -340,9 +340,9 @@ defining_expanded_unit_name ::=
   defining_identifier <Defining_Selector>
 ;
 
-defining_identifier ::= token <identifier>;
+defining_identifier ::= token <identifier_token>;
 
-defining_operator_symbol ::= token <operator_symbol>;
+defining_operator_symbol ::= token <operator_symbol_token>;
 
 defining_program_unit_name ::=
   defining_identifier | defining_expanded_unit_name;
@@ -501,7 +501,7 @@ entry_index_specification ::=
   discrete_subtype_definition <Specification_Subtype_Definition>
 ;
 
-enumeration_literal ::= token <enumeration_literal>;
+enumeration_literal ::= token <enumeration_literal_token>;
 
 enumeration_literal_specification ::= defining_enumeration_name <Names>;
 
@@ -1032,7 +1032,7 @@ goto_statement  ::=
   token                  <semicolon_token>
 ;
 
-identifier ::= token <identifier>;
+identifier ::= token <identifier_token>;
 
 if_expression_path ::=
     token <if_token>
@@ -1165,7 +1165,7 @@ name ::= direct_name |
 
 null_component ::= token <null_token> token <semicolon_token>;
 
-null_literal ::= token <null_literal>;
+null_literal ::= token <null_literal_token>;
 
 null_record_definition ::=
   token <null_token>
@@ -1816,55 +1816,52 @@ with_clause ::=
   token <semicolon_token>
 ;
 
+defining_name ::= defining_identifier |
+  defining_character_literal |
+  defining_operator_symbol |
+  defining_enumeration_literal;
+
+declarative_region ::=
+  basic_declaration |
+  discriminant_specification |
+  component_declaration |
+  iterator_specification |
+  parameter_specification |
+  function_body |
+  procedure_body |
+  return_object_specification |
+  entry_declaration |
+  entry_index_specification |
+  choice_parameter_specification |
+  formal_object_declaration |
+  formal_type_declaration |
+  formal_incomplete_type_declaration |
+  formal_procedure_declaration |
+  formal_function_declaration |
+  formal_package_declaration |
+  block_statement |
+  loop_statement |
+  while_loop_statement |
+  for_loop_statement |
+  quantified_expression |
+  extended_return_statement |
+  accept_statement |
+  exception_handler;
+
+simple_name ::=
+  identifier |
+  operator_symbol |
+  character_literal |
+  enumeration_literal;
 
 Synthesized attributes
-  token  : Gela.Nodes.Token : self;
+  token  : Gela.Types.Symbol : Symbol;
 
 Synthesized attributes
-  defining_identifier,
-  identifier,
-  program_unit_name,
-  selected_identifier
-  : Ada.Containers.Hash_Type : hash;
+  defining_identifier
+  : Gela.Types.Symbol : full_name;
 
-Rules for defining_identifier.identifier1 :
+Rules for defining_identifier.identifier_token :
 (.
-      declare
-         Token : constant Gela.Nodes.Token :=
-           ${identifier.self};
-           --  Self.Object.Identifier (Self.Payload);
-         Comp  : constant Gela.Types.Compilation_Access :=
-           Token.Object.Compilation (Token.Payload);
-         Symbol : constant Gela.Types.Symbol :=
-           Token.Object.Symbol (Token.Payload);
-      begin
-         ${defining_identifier.hash} := Ada.Containers.Hash_Type (Comp.Symbols.Value (Symbol).Hash);
-      end;
-.)
-
-Rules for identifier.identifier1 :
-(.
-      declare
-         Token : constant Gela.Nodes.Token :=
-           ${identifier.self};
-           --  Self.Object.Identifier (Self.Payload);
-         Comp  : constant Gela.Types.Compilation_Access :=
-           Token.Object.Compilation (Token.Payload);
-         Symbol : constant Gela.Types.Symbol :=
-           Token.Object.Symbol (Token.Payload);
-      begin
-         ${identifier.hash} := Ada.Containers.Hash_Type (Comp.Symbols.Value (Symbol).Hash);
-      end;
-.)
-
-Rules for selected_identifier.identifier1 :
-(.
-      declare
-         Left : constant Ada.Containers.Hash_Type :=
-           ${Prefix.hash};
-         Right : constant Ada.Containers.Hash_Type :=
-           ${Selector.hash};
-      begin
-         ${selected_identifier.hash} := Join_Hash (Left, Right);
-      end;
+      ${defining_identifier.full_name} := ${identifier_token.Symbol};
 .)

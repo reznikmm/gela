@@ -8,6 +8,8 @@
 ------------------------------------------------------------------------------
 
 with Gela.Simple_Contexts;
+with Gela.Mutables.Compilations;
+pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Simple_Compilation_Units is
 
@@ -86,7 +88,7 @@ package body Gela.Simple_Compilation_Units is
    ------------
 
    function Create
-     (Compilation : Gela.Mutables.Compilations.Compilation_Access;
+     (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit
    is

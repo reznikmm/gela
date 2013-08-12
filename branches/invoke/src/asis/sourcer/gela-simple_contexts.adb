@@ -21,6 +21,10 @@ with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
 with Gela.Mutables.Compilations;
 with Gela.Mutables.To_XML;
+with Gela.Nodes;
+--  with Gela.Nodes.Visiters;
+with Gela.Pass_1;
+with Gela.Compilation_Units;  pragma Unreferenced (Gela.Compilation_Units);
 
 package body Gela.Simple_Contexts is
 
@@ -319,7 +323,14 @@ package body Gela.Simple_Contexts is
          Self.On_Error.Syntax_Error (Self.File_Name);
       end if;
 
-      Self.Is_Open := True;
+      declare
+         Pass_1 : Gela.Pass_1.Visiter (Self.Comp);
+      begin
+         Gela.Nodes.Visitable_Node_Access
+           (Self.Comp.Root.its).Visit (Self.Comp.Root.Payload, Pass_1);
+
+         Self.Is_Open := True;
+      end;
    end Open;
 
    ----------------

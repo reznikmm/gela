@@ -43,9 +43,10 @@ package Gela.Stores is
       Tag  : Positive)
       return Gela.Types.Payload is abstract;
 
+   type Element is mod 2 ** 32;
+
 private
 
-   type Element is mod 2 ** 32;
    type Index is mod 2 ** 32;
 
    type Element_Array is array (Index range <>) of Element;

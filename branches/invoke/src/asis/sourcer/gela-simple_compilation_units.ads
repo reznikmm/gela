@@ -10,7 +10,7 @@
 with League.Strings;
 
 with Gela.Compilation_Units;
-with Gela.Mutables.Compilations;
+with Gela.Mutables;
 with Gela.Types;
 
 package Gela.Simple_Compilation_Units is
@@ -20,7 +20,7 @@ package Gela.Simple_Compilation_Units is
      new Gela.Compilation_Units.Abstract_Compilation_Unit with private;
 
    function Create
-     (Compilation : Gela.Mutables.Compilations.Compilation_Access;
+     (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload)
      return Gela.Types.Compilation_Unit;
 
@@ -33,7 +33,7 @@ private
      new Gela.Compilation_Units.Abstract_Compilation_Unit with
    record
       Payload     : Gela.Types.Payload;
-      Compilation : Gela.Mutables.Compilations.Compilation_Access;
+      Compilation : Gela.Mutables.Mutable_Compilation_Access;
    end record;
 
    type Simple_Compilation_Unit_Access is access all Simple_Compilation_Unit;

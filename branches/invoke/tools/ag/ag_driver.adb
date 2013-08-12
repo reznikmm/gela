@@ -17,8 +17,10 @@ with Gela.Grammars;
 with Gela.Grammars.Reader;
 --  with Gela.Grammars_Convertors;
 
+with AG_Tools; use AG_Tools;
 with AG_Tools.Writers; use AG_Tools.Writers;
 --  with Gela.Grammars_Debug;
+with AG_Tools.Check_Ordered;
 
 procedure AG_Driver is
 
@@ -26,16 +28,6 @@ procedure AG_Driver is
    use type Gela.Grammars.Part_Count;
    use type Gela.Grammars.Non_Terminal_Count;
    use type League.Strings.Universal_String;
-
-   function To_Ada
-     (Text : League.Strings.Universal_String)
-      return League.Strings.Universal_String;
-   --  Convert Text into an Ada identifier
-
-   function Plural
-     (Text : League.Strings.Universal_String)
-      return League.Strings.Universal_String;
-   --  Get Plural form of noun Text
 
    function Return_Type
      (Part : Gela.Grammars.Part)
@@ -97,15 +89,17 @@ procedure AG_Driver is
    Name  : constant String := Ada.Command_Line.Argument (1);
    G     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (Name);
 
-   Is_Concrete : array (G.Non_Terminal'Range) of Boolean := (others => False);
+   use AG_Tools.Check_Ordered;
+
+   Is_Concrete : NT_List (G.Non_Terminal'Range) := (others => False);
    --  This is in form NT ::= child_1 child_2 ..;
    --  It has single production
 
    Has_List : array (G.Non_Terminal'Range) of Boolean := (others => False);
    --  If there are references to {NT} then Has_List (NT) = True
 
-   Implement : array (G.Non_Terminal'Range, G.Non_Terminal'Range)
-     of Boolean := (others => (others => False));
+   Implement : NT_Map (G.Non_Terminal'Range, G.Non_Terminal'Range) :=
+     (others => (others => False));
    --  If Implement (X, Y) then X implement Y
 
    Reserved : constant := 3;  --  Tag, Count
@@ -558,6 +552,17 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
    end Generate_Nodes;
 
+   -----------------
+   -- Return_Type --
+   -----------------
+
+   function Return_Type
+     (Part : Gela.Grammars.Part)
+      return League.Strings.Universal_String is
+   begin
+      return Return_Type (G, Part);
+   end Return_Type;
+
    ---------------------
    -- Write_Attr_With --
    ---------------------
@@ -567,15 +572,10 @@ procedure AG_Driver is
       Output : in out Writer;
       Done   : in out League.String_Vectors.Universal_String_Vector)
    is
-      Type_Comp  : League.String_Vectors.Universal_String_Vector;
       Pkg_Name   : League.Strings.Universal_String;
    begin
       for A in NT.First_Attribute .. NT.Last_Attribute loop
-         Type_Comp := G.Declaration (A).Type_Name.Split ('.');
-         Type_Comp.Replace
-           (Type_Comp.Length, League.Strings.Empty_Universal_String);
-         Pkg_Name := Type_Comp.Join ('.');
-         Pkg_Name.Slice (1, Pkg_Name.Length - 1);
+         Pkg_Name := Package_Name (G.Declaration (A).Type_Name);
 
          if Done.Index (Pkg_Name) = 0 then
             Done.Append (Pkg_Name);
@@ -794,7 +794,9 @@ procedure AG_Driver is
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production)
    is
-      procedure Write_Attr (NT : Gela.Grammars.Non_Terminal);
+      procedure Write_Attr
+        (NT   : Gela.Grammars.Non_Terminal;
+         Done : in out League.String_Vectors.Universal_String_Vector);
 
       Store_Each  : Writer;
       Store_Body  : Writer;
@@ -805,16 +807,24 @@ procedure AG_Driver is
       -- Write_Attr --
       ----------------
 
-      procedure Write_Attr (NT : Gela.Grammars.Non_Terminal) is
+      procedure Write_Attr
+        (NT   : Gela.Grammars.Non_Terminal;
+         Done : in out League.String_Vectors.Universal_String_Vector) is
       begin
          for A in NT.First_Attribute .. NT.Last_Attribute loop
+            if Done.Index (G.Declaration (A).Name) > 0 then
+               goto Continue;
+            end if;
+
+            Done.Append (G.Declaration (A).Name);
+
             Last := Last + 1;
             Write_Attr_Get (G.Declaration (A), Store_Each, Impl => True);
             Write_Attr_Get (G.Declaration (A), Store_Body, Impl => True);
             Store_Body.P;
             Store_Body.P ("   is");
-            Store_Body.N ("      Result : constant Gela.Types.Payload :=" &
-                            " Self.Child (Payload, ");
+            Store_Body.N ("      Result : constant Gela.Stores.Element :=" &
+                            " Self.Property (Payload, ");
             Store_Body.N (Last);
             Store_Body.P (");");
             Store_Body.P ("   begin");
@@ -832,22 +842,28 @@ procedure AG_Driver is
             Store_Body.P;
             Store_Body.P ("   is");
             Store_Body.P ("   begin");
-            Store_Body.N ("      Self.Set_Child (Payload, ");
+            Store_Body.N ("      Self.Set_Property (Payload, ");
             Store_Body.N (Last);
-            Store_Body.P (", Gela.Types.Payload (Value));");
+            Store_Body.P (", Gela.Stores.Element (Value));");
             Store_Body.N ("   end Set_");
             Store_Body.N (To_Ada (G.Declaration (A).Name));
             Store_Each.P (";", Store_Body);
             Store_Each.P ("", Store_Body);
+
+            <<Continue>>
          end loop;
       end Write_Attr;
 
       Store_Each_Name : League.Strings.Universal_String;
       Type_List  : League.String_Vectors.Universal_String_Vector;
+      Attr_List  : League.String_Vectors.Universal_String_Vector;
    begin
       if Macro_Reference (Prod) /= 0 then
          return;
       end if;
+
+      Type_List.Append
+        (League.Strings.To_Universal_String ("Gela.Types"));
 
       for J in Implement'Range (2) loop
          if Implement (NT.Index, J) then
@@ -896,11 +912,11 @@ procedure AG_Driver is
         ("   type Object_Access is access all Object;");
       Store_Each.P;
 
-      Write_Attr (NT);
+      Write_Attr (NT, Attr_List);
 
       for J in Implement'Range (2) loop
          if Implement (NT.Index, J) then
-            Write_Attr (G.Non_Terminal (J));
+            Write_Attr (G.Non_Terminal (J), Attr_List);
          end if;
       end loop;
 
@@ -1091,40 +1107,6 @@ procedure AG_Driver is
       end;
    end Macro_Reference;
 
-   ------------
-   -- Plural --
-   ------------
-
-   function Plural
-     (Text : League.Strings.Universal_String)
-      return League.Strings.Universal_String
-   is
-      Ada_Text : constant League.Strings.Universal_String := To_Ada (Text);
-   begin
-      if Text.Ends_With ("s") or else
-        Text.Ends_With ("x") or else
-        Text.Ends_With ("sh") or else
-        Text.Ends_With ("ch") or else
-        Text.Ends_With ("o")
-      then
-         return Ada_Text & "es";
-      elsif Text.Ends_With ("y") and then not
-        (Text.Ends_With ("ay") or else
-         Text.Ends_With ("ey") or else
-         Text.Ends_With ("iy") or else
-         Text.Ends_With ("oy") or else
-         Text.Ends_With ("uy"))
-      then
-         return Ada_Text.Slice (1, Ada_Text.Length - 1) & "ies";
-      elsif Text.Ends_With ("f") then
-         return Ada_Text.Slice (1, Ada_Text.Length - 1) & "ves";
-      elsif Text.Ends_With ("fe") then
-         return Ada_Text.Slice (1, Ada_Text.Length - 2) & "ves";
-      else
-         return Ada_Text & "s";
-      end if;
-   end Plural;
-
    ---------------------
    -- Production_Unit --
    ---------------------
@@ -1135,73 +1117,6 @@ procedure AG_Driver is
    begin
       return "Gela.Nodes." & Plural (NT.Name);
    end Non_Terminal_Unit;
-
-   -----------------
-   -- Return_Type --
-   -----------------
-
-   function Return_Type
-     (Part : Gela.Grammars.Part)
-      return League.Strings.Universal_String
-   is
-      Result : League.Strings.Universal_String;
-   begin
-      if Part.Is_Option then
-         if Part.First /= Part.Last then
-            raise Constraint_Error;
-         end if;
-
-         declare
-            Prod : Gela.Grammars.Production renames
-              G.Production (Part.First);
-         begin
-            if Prod.First /= Prod.Last then
-               raise Constraint_Error;
-            end if;
-
-            return Return_Type (G.Part (Prod.First));
-         end;
-
-      elsif Part.Is_List_Reference then
-         declare
-            NT : Gela.Grammars.Non_Terminal renames
-              G.Non_Terminal (Part.Denote);
-            Prod : Gela.Grammars.Production renames
-              G.Production (NT.First);
-         begin
-            Result := Return_Type (G.Part (Prod.First + 1));
-            Result.Append ("_Sequence");
-            return Result;
-         end;
-      elsif Part.Is_Terminal_Reference then
-         Result.Append ("Token");
-      else
-         Result := To_Ada (G.Non_Terminal (Part.Denote).Name);
-      end if;
-
-      return Result;
-   end Return_Type;
-
-   ------------
-   -- To_Ada --
-   ------------
-
-   function To_Ada
-     (Text : League.Strings.Universal_String)
-     return League.Strings.Universal_String
-   is
-      List : League.String_Vectors.Universal_String_Vector;
-      Piece : League.Strings.Universal_String;
-   begin
-      List := Text.Split ('_');
-      for J in 1 .. List.Length loop
-         Piece := List.Element (J);
-         Piece.Replace (1, 1, Piece.Slice (1, 1).To_Uppercase);
-         List.Replace (J, Piece);
-      end loop;
-
-      return List.Join ('_');
-   end To_Ada;
 
    -----------------
    -- Write_Parts --
@@ -1262,6 +1177,8 @@ begin
          end loop;
       end if;
    end loop;
+
+   Check (G, Implement, Is_Concrete);
 
    Generate_Nodes;
 

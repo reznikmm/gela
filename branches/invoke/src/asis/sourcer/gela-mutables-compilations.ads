@@ -52,8 +52,6 @@ package Gela.Mutables.Compilations is
       Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
    end record;
 
-   type Compilation_Access is access all Compilation;
-
    function Create
      (Name    : League.Strings.Universal_String;
       Context : Gela.Types.Context_Access;

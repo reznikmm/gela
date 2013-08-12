@@ -15,6 +15,7 @@ package body Gela.Stores.Nodes is
    --  Tag_Offset := 0;
    Count_Offset : constant := 1;
    Next_Offset : constant := 2;
+   Reserved    : constant := Next_Offset;
    --  First_child_Offset := 3;
 
    -----------
@@ -24,13 +25,9 @@ package body Gela.Stores.Nodes is
    function Child
      (Self    : access Node;
       Payload : Gela.Types.Payload;
-      Index   : Positive) return Gela.Types.Payload
-   is
-      Child_Index : constant Stores.Index :=
-        Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
-      Child : constant Element := Self.Get (Child_Index);
+      Index   : Positive) return Gela.Types.Payload is
    begin
-      return Gela.Types.Payload (Child);
+      return Gela.Types.Payload (Self.Property (Payload, Index));
    end Child;
 
    -----------------
@@ -45,8 +42,7 @@ package body Gela.Stores.Nodes is
 
       Child : Gela.Types.Payload;
       Item  : constant Index := Index (Payload);
-      Count : constant Element :=
-        Self.Get (Item + Count_Offset);
+      Count : constant Element := Self.Get (Item + Count_Offset);
    begin
       if Payload = 0 then
          return;
@@ -62,6 +58,21 @@ package body Gela.Stores.Nodes is
       end if;
    end Dereference;
 
+   --------------
+   -- Property --
+   --------------
+
+   function Property
+     (Self    : access Node;
+      Payload : Gela.Types.Payload;
+      Index   : Positive) return Gela.Stores.Element
+   is
+      Child_Index : constant Stores.Index :=
+        Stores.Index (Payload) + Reserved + Stores.Index (Index);
+   begin
+      return Self.Get (Child_Index);
+   end Property;
+
    ---------------
    -- Reference --
    ---------------
@@ -73,8 +84,7 @@ package body Gela.Stores.Nodes is
       use type Gela.Types.Payload;
 
       Item  : constant Index := Index (Payload);
-      Count : constant Element :=
-        Self.Get (Item + Count_Offset);
+      Count : constant Element := Self.Get (Item + Count_Offset);
    begin
       if Payload /= 0 then
          Self.Set (Item + Count_Offset, Count + 1);
@@ -91,16 +101,30 @@ package body Gela.Stores.Nodes is
       Index   : Positive;
       Value   : Gela.Types.Payload)
    is
-      Child_Index : constant Stores.Index :=
-        Stores.Index (Payload) + Next_Offset + Stores.Index (Index);
-      Child : Element := Self.Get (Child_Index);
+      Child : Element := Self.Property (Payload, Index);
    begin
       if Child /= 0 then
          Self.Dereference (Gela.Types.Payload (Child));
       end if;
 
-      Self.Set (Child_Index, Element (Value));
+      Self.Set_Property (Payload, Index, Element (Value));
       Self.Reference (Value);
    end Set_Child;
+
+   ------------------
+   -- Set_Property --
+   ------------------
+
+   procedure Set_Property
+     (Self    : access Node;
+      Payload : Gela.Types.Payload;
+      Index   : Positive;
+      Value   : Gela.Stores.Element)
+   is
+      Child_Index : constant Stores.Index :=
+        Stores.Index (Payload) + Reserved + Stores.Index (Index);
+   begin
+      Self.Set (Child_Index, Value);
+   end Set_Property;
 
 end Gela.Stores.Nodes;

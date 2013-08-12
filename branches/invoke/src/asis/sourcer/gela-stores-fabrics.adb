@@ -152,7 +152,7 @@ package body Gela.Stores.Fabrics is
       Result := +Self.Defining_Expanded_Unit_Name
         (Value.its.Prefix (Value.Payload),
          Value.its.Dot_Token (Value.Payload),
-         Self.Defining_Identifier (Id.its.Identifier (Id.Payload)));
+         Self.Defining_Identifier (Id.its.Identifier_Token (Id.Payload)));
 
       return -Result;
    end To_Defining_Program_Unit_Name;

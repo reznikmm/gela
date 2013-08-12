@@ -38,4 +38,22 @@ package Gela.Stores.Nodes is
       Index   : Positive;
       Value   : Gela.Types.Payload);
 
+   function Property
+     (Self    : access Node;
+      Payload : Gela.Types.Payload;
+      Index   : Positive) return Gela.Stores.Element;
+
+   procedure Set_Property
+     (Self    : access Node;
+      Payload : Gela.Types.Payload;
+      Index   : Positive;
+      Value   : Gela.Stores.Element);
+
+   pragma Inline (Reference);
+   pragma Inline (Dereference);
+   pragma Inline (Child);
+   pragma Inline (Set_Child);
+   pragma Inline (Property);
+   pragma Inline (Set_Property);
+
 end Gela.Stores.Nodes;
