@@ -14,6 +14,11 @@ package body AG_Tools is
       Pkg_Name : League.Strings.Universal_String;
    begin
       Comp := Name.Split ('.');
+
+      if Comp.Length = 1 then
+         return League.Strings.Empty_Universal_String;
+      end if;
+
       Comp.Replace (Comp.Length, League.Strings.Empty_Universal_String);
       Pkg_Name := Comp.Join ('.');
       return Pkg_Name.Slice (1, Pkg_Name.Length - 1);
