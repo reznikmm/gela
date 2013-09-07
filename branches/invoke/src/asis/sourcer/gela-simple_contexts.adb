@@ -19,13 +19,8 @@ with Gela.Grammars_Convertors;
 with Gela.Grammars.Reader;
 with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
-with Gela.Mutables.Compilations;
-with Gela.Mutables.To_XML;
-with Gela.Nodes;
---  with Gela.Nodes.Visiters;
-with Gela.Pass_1;
 with Gela.Compilation_Units;  pragma Unreferenced (Gela.Compilation_Units);
-with Ada.Wide_Wide_Text_IO;
+with Gela.Simple_Contexts.Loaders;
 
 package body Gela.Simple_Contexts is
 
@@ -71,6 +66,9 @@ package body Gela.Simple_Contexts is
             Resolver.Resolve (Augmented, Self.Table.all);
             Gela.Lexical.Handler.Initialize;
          end;
+
+         Self.Loader := new Gela.Simple_Contexts.Loaders.Loader
+           (Context_Access (Self));
       end if;
    end Associate;
 
@@ -99,19 +97,32 @@ package body Gela.Simple_Contexts is
    -- Compilation_Unit_Body --
    ---------------------------
 
-   overriding function Compilation_Unit_Body
+   not overriding function Compilation_Unit_Body
      (Self  : access Context;
-      Name  : League.Strings.Universal_String)
+      Name  : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit
    is
       Pos  : constant Unit_Maps.Cursor :=
-        Self.Bodies.Map.Find (Name.To_Simple_Casefold);
+        Self.Bodies.Map.Find (Name);
    begin
       if Unit_Maps.Has_Element (Pos) then
          return Unit_Maps.Element (Pos);
       end if;
 
       return (null, 0);
+   end Compilation_Unit_Body;
+
+   ---------------------------
+   -- Compilation_Unit_Body --
+   ---------------------------
+
+   overriding function Compilation_Unit_Body
+     (Self  : access Context;
+      Name  : League.Strings.Universal_String)
+      return Gela.Types.Compilation_Unit is
+   begin
+      return Self.Compilation_Unit_Body
+        (Self.Symbols.Get (Name.To_Simple_Casefold));
    end Compilation_Unit_Body;
 
    ---------------
@@ -137,13 +148,15 @@ package body Gela.Simple_Contexts is
    overriding function Debug_Image
      (Self : access Context) return League.Strings.Universal_String
    is
-      use type League.Strings.Universal_String;
-      AST : constant League.Strings.Universal_String :=
-        Self.Default_Path & "/src/asis/context/ada-ast.ag";
-      G : constant Gela.Grammars.Grammar :=
-        Gela.Grammars.Reader.Read (AST.To_UTF_8_String);
+      pragma Unreferenced (Self);
+--        use type League.Strings.Universal_String;
+--        AST : constant League.Strings.Universal_String :=
+--          Self.Default_Path & "/src/asis/context/ada-ast.ag";
+--        G : constant Gela.Grammars.Grammar :=
+--          Gela.Grammars.Reader.Read (AST.To_UTF_8_String);
    begin
-      return Gela.Mutables.To_XML.Compilation (Self.Comp, G);
+      --        return Gela.Mutables.To_XML.Compilation (Self.Comp, G);
+      return League.Strings.Empty_Universal_String;
    end Debug_Image;
 
    ------------------
@@ -184,9 +197,11 @@ package body Gela.Simple_Contexts is
    overriding function Element
      (Self    : access Unit_List;
       Payload : Gela.Types.Payload)
-      return Gela.Types.Compilation_Unit is
+      return Gela.Types.Compilation_Unit
+   is
+      Symbol : constant Gela.Types.Symbol := Gela.Types.Symbol (Payload);
    begin
-      return (Self.Context.Units (Payload), Payload);
+      return Self.Map.Element (Symbol);
    end Element;
 
    -----------
@@ -205,7 +220,7 @@ package body Gela.Simple_Contexts is
       end if;
 
       return (Gela.Types.Compilation_Unit_Cursor_Access (Self),
-              Self.Map.First_Element.Payload);
+              Gela.Types.Payload (Self.Map.First_Key));
    end First;
 
    -------------
@@ -231,19 +246,31 @@ package body Gela.Simple_Contexts is
    -- Library_Unit_Declaration --
    ------------------------------
 
-   overriding function Library_Unit_Declaration
+   not overriding function Library_Unit_Declaration
      (Self  : access Context;
-      Name  : League.Strings.Universal_String)
+      Name  : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit
    is
-      Pos  : constant Unit_Maps.Cursor :=
-        Self.Specs.Map.Find (Name.To_Simple_Casefold);
+      Pos  : constant Unit_Maps.Cursor := Self.Specs.Map.Find (Name);
    begin
       if Unit_Maps.Has_Element (Pos) then
          return Unit_Maps.Element (Pos);
       end if;
 
       return (null, 0);
+   end Library_Unit_Declaration;
+
+   ------------------------------
+   -- Library_Unit_Declaration --
+   ------------------------------
+
+   overriding function Library_Unit_Declaration
+     (Self  : access Context;
+      Name  : League.Strings.Universal_String)
+      return Gela.Types.Compilation_Unit is
+   begin
+      return Self.Library_Unit_Declaration
+        (Self.Symbols.Get (Name.To_Simple_Casefold));
    end Library_Unit_Declaration;
 
    -------------------------------
@@ -277,19 +304,13 @@ package body Gela.Simple_Contexts is
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_Cursor
    is
-      Unit : constant Gela.Types.Compilation_Unit_Access :=
-        Self.Context.Units (Payload);
-      Pos  : Unit_Maps.Cursor :=
-        Self.Map.Find (Unit.Unit_Full_Name (Payload).To_Simple_Casefold);
-      Next : Gela.Types.Compilation_Unit;
+      use type Gela.Types.Symbol;
+      Symbol : constant Gela.Types.Symbol := Gela.Types.Symbol (Payload);
+      Next   : constant Unit_Maps.Cursor := Self.Map.Ceiling (Symbol + 1);
    begin
-      Unit_Maps.Next (Pos);
-
-      if Unit_Maps.Has_Element (Pos) then
-         Next := Unit_Maps.Element (Pos);
-
+      if Unit_Maps.Has_Element (Next) then
          return (Gela.Types.Compilation_Unit_Cursor_Access (Self),
-                 Next.Payload);
+                 Gela.Types.Payload (Unit_Maps.Key (Next)));
       end if;
 
       return (null, 0);
@@ -300,58 +321,14 @@ package body Gela.Simple_Contexts is
    ----------
 
    overriding procedure Open (Self : access Context) is
-      Found : Boolean;
-      Name  : League.Strings.Universal_String;
-      Text  : League.Strings.Universal_String;
    begin
       Self.Finder := Gela.Source_Finders.Create
         (Self.Path, Self.Schema'Access);
 
-      Self.Finder.Lookup_File (Self.File_Name, Found, Name, Text);
+      Self.Loader.Try_Read_File_And_Supporters
+        (File_Name => Self.File_Name);
 
-      if not Found then
-         Self.On_Error.File_Not_Found (Self.File_Name);
-      end if;
-
-      Self.Comp := Gela.Mutables.Compilations.Create
-        (Self.File_Name,
-         Gela.Types.Context_Access (Self),
-         Text, Self.Errors, Self.Grammar, Self.Table);
-
-      Self.Comp.Start;
-
-      if Self.Comp.Root.its = null then
-         Self.On_Error.Syntax_Error (Self.File_Name);
-      end if;
-
-      declare
-         use type Gela.Nodes.Compilation_Unit_Access;
-
-         Pass_1 : Gela.Pass_1.Visiter (Self.Comp);
-         Comp   : constant Gela.Nodes.Compilation_Access :=
-           Gela.Nodes.Compilation_Access (Self.Comp.Root.its);
-         Units  : constant Gela.Nodes.Compilation_Unit_Sequence :=
-           Comp.Units (Self.Comp.Root.Payload);
-         Head   : Gela.Nodes.Compilation_Unit :=
-           Units.its.Head (Units.Payload);
-         Symbol : Gela.Types.Symbol;
-      begin
---           Gela.Nodes.Visitable_Node_Access
---             (Self.Comp.Root.its).Visit (Self.Comp.Root.Payload, Pass_1);
-         Gela.Nodes.Visitable_Node_Access
-           (Head.its).Visit (Head.Payload, Pass_1);
-
-         while Head.its /= null loop
-            Symbol := Head.its.Full_Name (Head.Payload);
-
-            Ada.Wide_Wide_Text_IO.Put_Line
-              (Self.Comp.Symbols.Value (Symbol).To_Wide_Wide_String);
-
-            Units.its.Next (Units.Payload, Head);
-         end loop;
-
-         Self.Is_Open := True;
-      end;
+      Self.Is_Open := True;
    end Open;
 
    ----------------
@@ -442,6 +419,16 @@ package body Gela.Simple_Contexts is
          Singe_Unit_Expected;
       end if;
    end Parse_Parameters;
+
+   -------------
+   -- Symbols --
+   -------------
+
+   not overriding function Symbols
+     (Self    : access Context) return Gela.Types.Symbol_Set_Access is
+   begin
+      return Self.Symbols'Access;
+   end Symbols;
 
    -----------------
    -- Units_Count --

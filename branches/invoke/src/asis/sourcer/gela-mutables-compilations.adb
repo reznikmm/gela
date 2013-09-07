@@ -40,6 +40,7 @@ package body Gela.Mutables.Compilations is
       Context : Gela.Types.Context_Access;
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
+      Symbols : Gela.Types.Symbol_Set_Access;
       Grammar : Gela.Grammars.Grammar_Access;
       Table   : Gela.Grammars.LR_Tables.Table_Access)
       return Mutable_Compilation_Access
@@ -58,6 +59,7 @@ package body Gela.Mutables.Compilations is
          Result.CPU_Spent := 0.0;
          Result.Errors := Errors;
          Result.Context := Context;
+         Result.Symbols := Symbols;
 --           Options     => League.Strings.Empty_Universal_String,
 --           Root        => <>,
 --           Store       => <>,
@@ -140,7 +142,7 @@ package body Gela.Mutables.Compilations is
      (Self  : access Compilation)
       return Gela.Types.Symbol_Set_Access is
    begin
-      return Self.Symbols'Access;
+      return Self.Symbols;
    end Symbols;
 
    ----------

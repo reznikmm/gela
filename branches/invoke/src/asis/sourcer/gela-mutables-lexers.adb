@@ -10,6 +10,7 @@
 with Ada.Unchecked_Deallocation;
 
 with Gela.Mutables.Compilations;
+with Gela.Symbol_Sets; pragma Unreferenced (Gela.Symbol_Sets);
 
 package body Gela.Mutables.Lexers is
 

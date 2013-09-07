@@ -13,7 +13,6 @@ with League.Strings;
 
 with Gela.Types;
 with Gela.Contexts;
-with Gela.Mutables;
 with Gela.Name_Schemas.GNAT;
 with Gela.Source_Finders;
 with Gela.Errors;
@@ -21,6 +20,8 @@ with Gela.Grammars;
 with Gela.Grammars.LR_Tables;
 with Gela.Unit_Containers;
 with Gela.Compilation_Unit_Lists;
+limited with Gela.Simple_Contexts.Loaders;
+with Gela.Mutables.Symbol_Sets;
 
 package Gela.Simple_Contexts is
 
@@ -30,12 +31,25 @@ package Gela.Simple_Contexts is
 
    type Context_Access is access all Context;
 
+   not overriding function Symbols
+     (Self    : access Context) return Gela.Types.Symbol_Set_Access;
+
+   not overriding function Library_Unit_Declaration
+     (Self  : access Context;
+      Name  : Gela.Types.Symbol)
+      return Gela.Types.Compilation_Unit;
+
+   not overriding function Compilation_Unit_Body
+     (Self  : access Context;
+      Name  : Gela.Types.Symbol)
+      return Gela.Types.Compilation_Unit;
+
 private
 
    package Unit_Maps is new Ada.Containers.Ordered_Maps
-     (League.Strings.Universal_String,
+     (Gela.Types.Symbol,
       Gela.Types.Compilation_Unit,
-      League.Strings."<",
+      Gela.Types."<",
       Gela.Types."=");
 
    package Payload_Maps is new Ada.Containers.Ordered_Maps
@@ -69,6 +83,8 @@ private
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_Cursor;
 
+   type Loader_Access is access all Gela.Simple_Contexts.Loaders.Loader;
+
    type Context (On_Error : Gela.Errors.Error_Handler_Access)
      is limited new Gela.Contexts.Context
      and Gela.Unit_Containers.Unit_Container with
@@ -83,6 +99,7 @@ private
       --  Search path
       Debug : League.Strings.Universal_String;
       --  TODO
+      Loader  : Loader_Access;
       Specs   : aliased Unit_List (Context'Unchecked_Access);
       Bodies  : aliased Unit_List (Context'Unchecked_Access);
       Units   : Payload_Maps.Map;
@@ -91,7 +108,7 @@ private
       Errors  : Gela.Errors.Error_Handler_Access;
       Grammar : Gela.Grammars.Grammar_Access;
       Table   : Gela.Grammars.LR_Tables.Table_Access;
-      Comp    : Gela.Mutables.Mutable_Compilation_Access;
+      Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
    end record;
 
    procedure Parse_Parameters (Self : access Context);
