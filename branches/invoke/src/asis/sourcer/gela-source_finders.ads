@@ -39,6 +39,11 @@ package Gela.Source_Finders is
       File  : out League.Strings.Universal_String;
       Text  : out League.Strings.Universal_String);
 
+   function Is_Predefined
+     (Self  : access Source_Finder;
+      File  : League.Strings.Universal_String) return Boolean;
+
+
    function Create
      (Path   : League.Strings.Universal_String;
       Schema : Gela.Name_Schemas.Name_Schema_Access;

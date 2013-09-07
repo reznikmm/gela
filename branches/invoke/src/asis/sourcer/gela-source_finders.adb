@@ -61,6 +61,13 @@ package body Gela.Source_Finders is
       Free (Self);
    end Destroy;
 
+   function Is_Predefined
+     (Self  : access Source_Finder;
+      File  : League.Strings.Universal_String) return Boolean is
+   begin
+      return File.Starts_With (Self.Directory);
+   end Is_Predefined;
+
    -----------------
    -- Lookup_Body --
    -----------------
