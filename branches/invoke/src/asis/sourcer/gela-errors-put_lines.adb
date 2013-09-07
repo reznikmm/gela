@@ -30,6 +30,36 @@ package body Gela.Errors.Put_Lines is
            File_Name.To_Wide_Wide_String);
    end File_Not_Found;
 
+   ------------------------------
+   -- No_Compilation_Unit_Body --
+   ------------------------------
+
+   overriding procedure No_Compilation_Unit_Body
+     (Self      : access Handler;
+      Unit_Name : League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Self);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line
+        ("Body of a unit not provided and not found: " &
+           Unit_Name.To_Wide_Wide_String);
+   end No_Compilation_Unit_Body;
+
+   -------------------------------------
+   -- No_Compilation_Unit_Declaration --
+   -------------------------------------
+
+   overriding procedure No_Compilation_Unit_Declaration
+     (Self      : access Handler;
+      Unit_Name : League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Self);
+   begin
+      Ada.Wide_Wide_Text_IO.Put_Line
+        ("Declaration of a unit not provided and not found: " &
+           Unit_Name.To_Wide_Wide_String);
+   end No_Compilation_Unit_Declaration;
+
    -------------------------
    -- Not_In_NFKC_Warning --
    -------------------------

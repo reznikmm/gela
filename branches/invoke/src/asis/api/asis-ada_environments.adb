@@ -30,15 +30,25 @@ package body Asis.Ada_Environments is
    package Error_Handler is
       type Handler is new Gela.Errors.Error_Handler with null record;
 
-      overriding procedure Not_In_NFKC_Warning
-        (Self        : access Handler;
-         Compilation : Gela.Types.Compilation_Access);
-      --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
-
       overriding procedure File_Not_Found
         (Self      : access Handler;
          File_Name : League.Strings.Universal_String);
       --  Can't lookup file passed in parameters
+
+      overriding procedure No_Compilation_Unit_Body
+        (Self      : access Handler;
+         Unit_Name : League.Strings.Universal_String);
+      --  Body of a unit not provided and not found.
+
+      overriding procedure No_Compilation_Unit_Declaration
+        (Self      : access Handler;
+         Unit_Name : League.Strings.Universal_String);
+      --  Declaration of a unit not provided and not found.
+
+      overriding procedure Not_In_NFKC_Warning
+        (Self        : access Handler;
+         Compilation : Gela.Types.Compilation_Access);
+      --  Text of compilation is not in Normalization Form KC. ARM 4.1/3
 
       overriding procedure Syntax_Error
         (Self      : access Handler;
@@ -172,6 +182,7 @@ package body Asis.Ada_Environments is
    -------------------
 
    package body Error_Handler is
+
       --------------------
       -- File_Not_Found --
       --------------------
@@ -188,6 +199,42 @@ package body Asis.Ada_Environments is
 
          raise Asis.Exceptions.ASIS_Failed;
       end File_Not_Found;
+
+      ------------------------------
+      -- No_Compilation_Unit_Body --
+      ------------------------------
+
+      overriding procedure No_Compilation_Unit_Body
+        (Self      : access Handler;
+         Unit_Name : League.Strings.Universal_String)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Parameter_Error,
+            Diagnosis => "Body of a unit not provided and not found:" &
+              Unit_Name.To_UTF_16_Wide_String);
+
+         raise Asis.Exceptions.ASIS_Failed;
+      end No_Compilation_Unit_Body;
+
+      -------------------------------------
+      -- No_Compilation_Unit_Declaration --
+      -------------------------------------
+
+      overriding procedure No_Compilation_Unit_Declaration
+        (Self      : access Handler;
+         Unit_Name : League.Strings.Universal_String)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Parameter_Error,
+            Diagnosis => "Declaration of a unit not provided and not found:" &
+              Unit_Name.To_UTF_16_Wide_String);
+
+         raise Asis.Exceptions.ASIS_Failed;
+      end No_Compilation_Unit_Declaration;
 
       -------------------------
       -- Not_In_NFKC_Warning --
