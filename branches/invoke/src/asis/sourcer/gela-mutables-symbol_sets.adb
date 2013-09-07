@@ -62,15 +62,17 @@ package body Gela.Mutables.Symbol_Sets is
       use type League.Strings.Universal_String;
 
       Shift  :  constant := 16#0100_0000#;
-      Length : constant Natural := Value.Length;
-      First  : Wide_Wide_Character :=
-        Value.Element (1).To_Wide_Wide_Character;
-      Char   : Wide_Wide_Character;
+      First  : Wide_Wide_Character;
    begin
-      if First = ''' then  --  Character literal
-         Result := Wide_Wide_Character'Pos
-           (Value.Element (2).To_Wide_Wide_Character);
-      elsif First /= '"' then  --  Identifier
+      Result := Self.Get (Value);
+
+      if Result /= 0 then
+         return;
+      end if;
+
+      First := Value.Element (1).To_Wide_Wide_Character;
+
+      if First /= '"' then  --  Identifier
          if First not in 'a' .. 'z' then
             First := Non_ASCII;
          end if;
@@ -81,26 +83,48 @@ package body Gela.Mutables.Symbol_Sets is
             Self.Revert.Insert (Self.Last (First), Value);
             Result := Self.Last (First);
          else
-            declare
-               Pos : constant Symbol_Maps.Cursor := Self.Symbols.Find (Value);
-            begin
-               if Symbol_Maps.Has_Element (Pos) then
-                  Result := Symbol_Maps.Element (Pos);
-               else
-                  Self.Last (First) := Self.Last (First) + 1;
-                  Self.Symbols.Insert (Value, Self.Last (First));
-                  Self.Revert.Insert (Self.Last (First), Value);
-                  Result := Self.Last (First);
-               end if;
-            end;
+            Self.Last (First) := Self.Last (First) + 1;
+            Self.Symbols.Insert (Value, Self.Last (First));
+            Self.Revert.Insert (Self.Last (First), Value);
+            Result := Self.Last (First);
          end if;
+      end if;
+   end Append;
+
+   ---------
+   -- Get --
+   ---------
+
+   overriding function Get
+     (Self   : in out Symbol_Set;
+      Value  : League.Strings.Universal_String)
+      return Gela.Types.Symbol
+   is
+      use type League.Characters.Universal_Character;
+      use type League.Strings.Universal_String;
+
+      Result : Gela.Types.Symbol := 0;
+      Length : constant Natural := Value.Length;
+      First  : constant Wide_Wide_Character :=
+        Value.Element (1).To_Wide_Wide_Character;
+      Char   : Wide_Wide_Character;
+   begin
+      if First = ''' then  --  Character literal
+         Result := Wide_Wide_Character'Pos
+           (Value.Element (2).To_Wide_Wide_Character);
+      elsif First /= '"' then  --  Identifier
+         declare
+            Pos : constant Symbol_Maps.Cursor := Self.Symbols.Find (Value);
+         begin
+            if Symbol_Maps.Has_Element (Pos) then
+               Result := Symbol_Maps.Element (Pos);
+            end if;
+         end;
       elsif Length = 3 then  --  String literal (one charater) "#"
          Char := Value.Element (2).To_Wide_Wide_Character;
 
          if Char in Map_1'Range then
             Result := Map_1 (Char);
-         else
-            Result := 0;
          end if;
       elsif Length = 4 then  --  String literal (two charaters) "##"
          if Value.Element (3) = '=' then
@@ -113,10 +137,10 @@ package body Gela.Mutables.Symbol_Sets is
          end if;
       elsif Length = 5 then  --  String literal (three charaters) "###"
          Result := To_Operator_Symbol (Value);
-      else
-         Result := 0;
       end if;
-   end Append;
+
+      return Result;
+   end Get;
 
    ----------
    -- Hash --

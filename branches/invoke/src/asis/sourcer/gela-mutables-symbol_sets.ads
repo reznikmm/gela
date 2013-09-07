@@ -51,6 +51,11 @@ package Gela.Mutables.Symbol_Sets is
       Value  : League.Strings.Universal_String;
       Result : out Gela.Types.Symbol);
 
+   overriding function Get
+     (Self   : in out Symbol_Set;
+      Value  : League.Strings.Universal_String)
+      return Gela.Types.Symbol;
+
    overriding function Value
      (Self   : in out Symbol_Set;
       Name   : Gela.Types.Symbol) return League.Strings.Universal_String;
