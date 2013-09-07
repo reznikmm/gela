@@ -19,22 +19,22 @@ package Gela.Compilation_Units is
    type Abstract_Compilation_Unit is limited interface;
 
    function Unit_Kind
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
-      return Natural is abstract;
+      return Gela.Types.Unit_Kinds is abstract;
 
    function Unit_Class
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
-      return Natural is abstract;
+      return Gela.Types.Unit_Classes is abstract;
 
    function Unit_Origin
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
-      return Natural is abstract;
+      return Gela.Types.Unit_Origins is abstract;
 
    function Enclosing_Container
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Container_Access is abstract;
 
@@ -45,47 +45,47 @@ package Gela.Compilation_Units is
 --  This should be calculated and stored in context
 
    function Corresponding_Parent_Declaration
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit is abstract;
 
    function Corresponding_Declaration
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit is abstract;
 
    function Corresponding_Body
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit is abstract;
 
    function Subunits
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_List is abstract;
 
    function Corresponding_Subunit_Parent_Body
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit is abstract;
 
    function With_List
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_List is abstract;
 
    function Limited_With_List
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Unit_List is abstract;
 
    function Unit_Full_Name
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return League.Strings.Universal_String is abstract;
 
    function Unique_Name
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return League.Strings.Universal_String is abstract;
 
@@ -95,12 +95,12 @@ package Gela.Compilation_Units is
    function Body_Required return Unit_Flag is (4) with Inline;
 
    function Flags
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Unit_Flag is abstract;
 
    function Compilation
-     (Self    : Abstract_Compilation_Unit;
+     (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Compilation_Access is abstract;
 
