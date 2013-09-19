@@ -149,6 +149,11 @@ private
    overriding function Debug_Image
      (Self : access Context) return League.Strings.Universal_String;
 
+   overriding function Corresponding_Children
+     (Self   : access Context;
+      Parent : Gela.Types.Compilation_Unit)
+      return Gela.Types.Compilation_Unit_List;
+
    --  Unit_Container functions
    overriding function Parent
      (Self : access Context)

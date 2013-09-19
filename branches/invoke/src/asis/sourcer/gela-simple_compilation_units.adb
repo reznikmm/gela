@@ -124,7 +124,8 @@ package body Gela.Simple_Compilation_Units is
          Corresponding_Body        => <>,
          Corresponding_Subunit_Parent_Body => <>,
          Next_Unit   => (null, 0),
-         Subunits    => <>);
+         Subunits    => <>,
+         Children    => <>);
 
       return (Gela.Types.Compilation_Unit_Access (Result), Payload);
    end Create;
@@ -255,6 +256,17 @@ package body Gela.Simple_Compilation_Units is
 --        return Self.Payload;
 --     end Payload;
 
+   not overriding function Children
+     (Self    : access Simple_Compilation_Unit;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_List
+   is
+      pragma Unreferenced (Payload);
+   begin
+      return
+        (Gela.Types.Compilation_Unit_List_Access'(Self.Children'Access), 0);
+   end Children;
+
    --------------
    -- Subunits --
    --------------
@@ -266,8 +278,8 @@ package body Gela.Simple_Compilation_Units is
    is
       pragma Unreferenced (Payload);
    begin
-      return (Gela.Types.Compilation_Unit_List_Access'(Self.Subunits'Access),
-              0);
+      return
+        (Gela.Types.Compilation_Unit_List_Access'(Self.Subunits'Access), 0);
    end Subunits;
 
    -----------------

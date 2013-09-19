@@ -28,8 +28,14 @@ package Gela.Types is
 
    type Context_Access is access all Gela.Contexts.Context'Class;
 
+   function Assigned (Self : Context_Access) return Boolean is
+     (Self /= null);
+
    type Container_Access is
      access all Gela.Unit_Containers.Unit_Container'Class;
+
+   function Assigned (Self : Container_Access) return Boolean is
+     (Self /= null);
 
    type Unit_Fabric_Access is access all Gela.Unit_Fabrics.Unit_Fabric'Class;
 
@@ -49,6 +55,9 @@ package Gela.Types is
       Object  : Compilation_Unit_Access;
       Payload : Gela.Types.Payload;
    end record;
+
+   function Assigned (Self : Compilation_Unit) return Boolean is
+      (Self.Object /= null);
 
    type Compilation_Unit_List is record
       Object  : Compilation_Unit_List_Access;

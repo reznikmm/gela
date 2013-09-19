@@ -1765,4 +1765,8 @@ private
    Nil_Compilation_Unit_List : constant Compilation_Unit_List :=
      (1 .. 0 => (null, 0));
 
+   function To_List
+     (Self : Gela.Types.Compilation_Unit_List)
+      return Asis.Compilation_Unit_List;
+
 end Asis;

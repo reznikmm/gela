@@ -21,6 +21,7 @@ with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
 with Gela.Compilation_Units;  pragma Unreferenced (Gela.Compilation_Units);
 with Gela.Simple_Contexts.Loaders;
+with Gela.Simple_Compilation_Units;
 
 package body Gela.Simple_Contexts is
 
@@ -102,8 +103,7 @@ package body Gela.Simple_Contexts is
       Name  : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit
    is
-      Pos  : constant Unit_Maps.Cursor :=
-        Self.Bodies.Map.Find (Name);
+      Pos : constant Unit_Maps.Cursor := Self.Bodies.Map.Find (Name);
    begin
       if Unit_Maps.Has_Element (Pos) then
          return Unit_Maps.Element (Pos);
@@ -140,6 +140,23 @@ package body Gela.Simple_Contexts is
          raise Constraint_Error;
       end if;
    end Container;
+
+   ----------------------------
+   -- Corresponding_Children --
+   ----------------------------
+
+   overriding function Corresponding_Children
+     (Self   : access Context;
+      Parent : Gela.Types.Compilation_Unit)
+      return Gela.Types.Compilation_Unit_List
+   is
+      pragma Unreferenced (Self);
+      use Gela.Simple_Compilation_Units;
+      Unit : constant Simple_Compilation_Unit_Access :=
+        Simple_Compilation_Unit_Access (Parent.Object);
+   begin
+      return Unit.Children (Parent.Payload);
+   end Corresponding_Children;
 
    -----------------
    -- Debug_Image --
@@ -251,7 +268,7 @@ package body Gela.Simple_Contexts is
       Name  : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit
    is
-      Pos  : constant Unit_Maps.Cursor := Self.Specs.Map.Find (Name);
+      Pos : constant Unit_Maps.Cursor := Self.Specs.Map.Find (Name);
    begin
       if Unit_Maps.Has_Element (Pos) then
          return Unit_Maps.Element (Pos);

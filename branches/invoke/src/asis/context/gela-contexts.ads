@@ -10,11 +10,13 @@
 with League.Strings;
 
 with Gela.Types;
+with Gela.Unit_Containers;
 
 package Gela.Contexts is
    pragma Preelaborate;
 
-   type Context is limited interface;
+   type Context is limited interface
+     and Gela.Unit_Containers.Unit_Container;
 
    procedure Associate
      (Self       : access Context;
@@ -47,5 +49,10 @@ package Gela.Contexts is
    function Debug_Image
      (Self : access Context)
       return League.Strings.Universal_String is abstract;
+
+   function Corresponding_Children
+     (Self   : access Context;
+      Parent : Gela.Types.Compilation_Unit)
+      return Gela.Types.Compilation_Unit_List is abstract;
 
 end Gela.Contexts;

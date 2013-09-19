@@ -10,6 +10,7 @@
 with Gela.Types;
 
 package Gela.Compilation_Unit_Lists is
+   pragma Preelaborate;
 
    type Abstract_Compilation_Unit_List is limited interface;
 

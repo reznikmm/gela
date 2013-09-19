@@ -14,6 +14,7 @@ with Ada.Characters.Handling;
 with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
+with Asis.Compilation_Units;
 
 with League.Strings;
 
@@ -137,7 +138,7 @@ package body Asis.Ada_Environments is
    function Debug_Image (The_Context : in Asis.Context) return Wide_String is
    begin
       if not Assigned (The_Context) then
-         return "[null]";
+         return "";
       else
          return The_Context.Debug_Image.To_UTF_16_Wide_String;
       end if;
@@ -315,15 +316,30 @@ package body Asis.Ada_Environments is
      (Left  : in Asis.Context;
       Right : in Asis.Context) return Boolean is
    begin
-      if not Assigned (Left) and not Assigned (Right) then
-         return True;
-      elsif Assigned (Left) and then
-        Assigned (Right) and then
-        Is_Identical (Left, Right)
-      then
-         return True;
+      if Is_Open (Left) and Is_Open (Right) then
+         declare
+            Left_Units : constant Asis.Compilation_Unit_List :=
+              Asis.Compilation_Units.Compilation_Units (Left);
+            Right_Units : constant Asis.Compilation_Unit_List :=
+              Asis.Compilation_Units.Compilation_Units (Right);
+         begin
+            if Left_Units'Length /= Right_Units'Length then
+               return False;
+            end if;
+
+            for J in Left_Units'Range loop
+               if not Asis.Compilation_Units.Is_Equal
+                 (Left_Units (J), Right_Units (J))
+               then
+                  return False;
+               end if;
+            end loop;
+
+            return True;
+         end;
       else
-         return False;
+         return Name (Left) = Name (Right) and
+           Parameters (Left) = Parameters (Right);
       end if;
    end Is_Equal;
 
@@ -337,7 +353,7 @@ package body Asis.Ada_Environments is
    is
       use type Gela.Types.Context_Access;
    begin
-      return Is_Open (Left) and Is_Open (Right) and
+      return
         Gela.Types.Context_Access (Left) = Gela.Types.Context_Access (Right);
    end Is_Identical;
 

@@ -10,7 +10,10 @@ project Gela_ASIS is
 
    package Compiler is
       for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
-      for Switches ("asis.ads") use Gela_Common.Default_Ada_Switches;
+      for Switches ("asis.adb") use Gela_Common.Default_Ada_Switches;
    end Compiler;
 
+   package Remote is
+      for Root_Dir use "..";
+   end Remote;
 end Gela_ASIS;

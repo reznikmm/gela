@@ -16,6 +16,10 @@ package Gela.Unit_Containers is
 
    type Unit_Container is limited interface;
 
+   function Name
+     (Self : access Unit_Container)
+      return League.Strings.Universal_String is abstract;
+
    function Parent
      (Self : access Unit_Container)
       return Gela.Types.Context_Access is abstract;

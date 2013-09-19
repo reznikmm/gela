@@ -22,6 +22,9 @@ package Gela.Simple_Compilation_Units is
      and Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_Cursor
        with private;
 
+   type Simple_Compilation_Unit_Access is access all
+     Simple_Compilation_Unit'Class;
+
    function Create
      (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload;
@@ -54,9 +57,12 @@ package Gela.Simple_Compilation_Units is
 --     function Payload
 --       (Self : access Simple_Compilation_Unit) return Gela.Types.Payload;
 
-private
+   not overriding function Children
+     (Self    : access Simple_Compilation_Unit;
+      Payload : Gela.Types.Payload)
+      return Gela.Types.Compilation_Unit_List;
 
-   type Simple_Compilation_Unit_Access is access all Simple_Compilation_Unit;
+private
 
    type Simple_Unit_List is
      new Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_List with
@@ -90,6 +96,7 @@ private
       Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Subunits    : aliased Simple_Unit_List;
+      Children    : aliased Simple_Unit_List;
       Corresponding_Declaration : Gela.Types.Compilation_Unit;
       Corresponding_Body        : Gela.Types.Compilation_Unit;
       Corresponding_Subunit_Parent_Body : Gela.Types.Compilation_Unit;
