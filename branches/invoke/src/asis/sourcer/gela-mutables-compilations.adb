@@ -42,7 +42,8 @@ package body Gela.Mutables.Compilations is
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;
       Grammar : Gela.Grammars.Grammar_Access;
-      Table   : Gela.Grammars.LR_Tables.Table_Access)
+      Table   : Gela.Grammars.LR_Tables.Table_Access;
+      Origin  : Gela.Types.Unit_Origins)
       return Mutable_Compilation_Access
    is
       use type League.Strings.Universal_String;
@@ -57,6 +58,7 @@ package body Gela.Mutables.Compilations is
          Result.Text := NFKC;
          Result.Updated := League.Calendars.Clock;
          Result.CPU_Spent := 0.0;
+         Result.Origin := Origin;
          Result.Errors := Errors;
          Result.Context := Context;
          Result.Symbols := Symbols;
@@ -122,6 +124,16 @@ package body Gela.Mutables.Compilations is
    begin
       return Self.Object_Name;
    end Object_Name;
+
+   ------------
+   -- Origin --
+   ------------
+
+   overriding function Origin
+     (Self  : access Compilation) return Gela.Types.Unit_Origins is
+   begin
+      return Self.Origin;
+   end Origin;
 
    -----------
    -- Start --

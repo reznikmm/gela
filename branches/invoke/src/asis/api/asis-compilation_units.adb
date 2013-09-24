@@ -651,13 +651,15 @@ package body Asis.Compilation_Units is
 
    function Unit_Origin
      (Compilation_Unit : in Asis.Compilation_Unit)
-      return Asis.Unit_Origins is
+      return Asis.Unit_Origins
+   is
+      Compilation : Gela.Types.Compilation_Access;
    begin
       if Assigned (Compilation_Unit) then
+         Compilation :=
+           Compilation_Unit.Object.Compilation (Compilation_Unit.Payload);
          return Asis.Unit_Origins'Val
-           (Gela.Types.Unit_Origins'Pos
-              (Compilation_Unit.Object.Unit_Origin
-                 (Compilation_Unit.Payload)) + 1);
+           (Gela.Types.Unit_Origins'Pos (Compilation.Origin) + 1);
       else
          return Not_An_Origin;
       end if;

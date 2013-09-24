@@ -830,7 +830,7 @@ procedure AG_Driver is
             Store_Body.P ("   begin");
             Store_Body.N ("      return ");
             Store_Body.N (To_Ada (G.Declaration (A).Type_Name));
-            Store_Body.P (" (Result);");
+            Store_Body.P ("'Val (Result);");
             Store_Body.N ("   end ");
             Store_Body.N (To_Ada (G.Declaration (A).Name));
 
@@ -844,7 +844,9 @@ procedure AG_Driver is
             Store_Body.P ("   begin");
             Store_Body.N ("      Self.Set_Property (Payload, ");
             Store_Body.N (Last);
-            Store_Body.P (", Gela.Stores.Element (Value));");
+            Store_Body.N (", ");
+            Store_Body.N (To_Ada (G.Declaration (A).Type_Name));
+            Store_Body.P ("'Pos (Value));");
             Store_Body.N ("   end Set_");
             Store_Body.N (To_Ada (G.Declaration (A).Name));
             Store_Each.P (";", Store_Body);
@@ -1146,6 +1148,7 @@ procedure AG_Driver is
 
 begin
 --   Gela.Grammars_Debug.Print_Conflicts (Plain);
+--   Gela.Grammars_Debug.Print (G);
 
    for NT of G.Non_Terminal loop
       if NT.First = NT.Last then

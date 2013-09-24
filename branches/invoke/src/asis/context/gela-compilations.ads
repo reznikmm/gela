@@ -69,4 +69,8 @@ package Gela.Compilations is
      (Self    : access Abstract_Compilation)
       return Gela.Types.Symbol_Set_Access is abstract;
 
+   function Origin
+     (Self    : access Abstract_Compilation)
+      return Gela.Types.Unit_Origins is abstract;
+
 end Gela.Compilations;

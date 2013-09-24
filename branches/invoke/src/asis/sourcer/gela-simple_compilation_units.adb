@@ -13,9 +13,19 @@ pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Simple_Compilation_Units is
 
+   type Simple_Unit_List_Access is access all Simple_Unit_List;
+
    function Context
      (Self : access Simple_Compilation_Unit'Class)
       return Gela.Simple_Contexts.Context_Access;
+
+   function Create
+     (Compilation : Gela.Mutables.Mutable_Compilation_Access;
+      Payload     : Gela.Types.Payload;
+      Kind        : Gela.Types.Unit_Kinds;
+      Unit_Class  : Gela.Types.Unit_Classes;
+      Full_Name   : Gela.Types.Symbol)
+      return Gela.Types.Compilation_Unit;
 
    -----------------
    -- Compilation --
@@ -107,7 +117,6 @@ package body Gela.Simple_Compilation_Units is
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit
    is
@@ -118,7 +127,6 @@ package body Gela.Simple_Compilation_Units is
          Compilation => Compilation,
          Kind        => Kind,
          Unit_Class  => Unit_Class,
-         Origin      => Origin,
          Full_Name   => Full_Name,
          Corresponding_Declaration => <>,
          Corresponding_Body        => <>,
@@ -139,7 +147,6 @@ package body Gela.Simple_Compilation_Units is
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Declaration : Gela.Types.Compilation_Unit)
       return Gela.Types.Compilation_Unit
@@ -154,7 +161,6 @@ package body Gela.Simple_Compilation_Units is
          Payload     => Payload,
          Kind        => Kind,
          Unit_Class  => Unit_Class,
-         Origin      => Origin,
          Full_Name   => Full_Name);
 
       Unit := Simple_Compilation_Unit_Access (Temp.Object);
@@ -165,8 +171,40 @@ package body Gela.Simple_Compilation_Units is
          Unit.Corresponding_Body := Temp;
       end if;
 
+      Gela.Simple_Contexts.Context_Access
+        (Compilation.Context).Add_Compilation_Unit_Body (Full_Name, Temp);
+
       return Temp;
    end Create_Body;
+
+   ------------------------
+   -- Create_Declaration --
+   ------------------------
+
+   function Create_Declaration
+     (Compilation : Gela.Mutables.Mutable_Compilation_Access;
+      Payload     : Gela.Types.Payload;
+      Kind        : Gela.Types.Unit_Kinds;
+      Unit_Class  : Gela.Types.Unit_Classes;
+      Full_Name   : Gela.Types.Symbol)
+      return Gela.Types.Compilation_Unit
+   is
+      use type Gela.Types.Compilation_Unit_Access;
+
+      Temp : Gela.Types.Compilation_Unit;
+   begin
+      Temp := Create
+        (Compilation => Compilation,
+         Payload     => Payload,
+         Kind        => Kind,
+         Unit_Class  => Unit_Class,
+         Full_Name   => Full_Name);
+
+      Gela.Simple_Contexts.Context_Access
+        (Compilation.Context).Add_Library_Unit_Declaration (Full_Name, Temp);
+
+      return Temp;
+   end Create_Declaration;
 
    --------------------
    -- Create_Subunit --
@@ -177,7 +215,6 @@ package body Gela.Simple_Compilation_Units is
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Inside      : Gela.Types.Compilation_Unit)
      return Gela.Types.Compilation_Unit
@@ -192,7 +229,6 @@ package body Gela.Simple_Compilation_Units is
          Payload     => Payload,
          Kind        => Kind,
          Unit_Class  => Unit_Class,
-         Origin      => Origin,
          Full_Name   => Full_Name);
 
       Unit := Simple_Compilation_Unit_Access (Temp.Object);
@@ -200,6 +236,9 @@ package body Gela.Simple_Compilation_Units is
 
       Unit := Simple_Compilation_Unit_Access (Inside.Object);
       Unit.Subunits.Append (Temp);
+
+      Gela.Simple_Contexts.Context_Access
+        (Compilation.Context).Add_Compilation_Unit_Body (Full_Name, Temp);
 
       return Temp;
    end Create_Subunit;
@@ -262,9 +301,9 @@ package body Gela.Simple_Compilation_Units is
       return Gela.Types.Compilation_Unit_List
    is
       pragma Unreferenced (Payload);
+      List : constant Simple_Unit_List_Access := Self.Children'Access;
    begin
-      return
-        (Gela.Types.Compilation_Unit_List_Access'(Self.Children'Access), 0);
+      return (Gela.Types.Compilation_Unit_List_Access (List), 0);
    end Children;
 
    --------------
@@ -277,9 +316,9 @@ package body Gela.Simple_Compilation_Units is
       return Gela.Types.Compilation_Unit_List
    is
       pragma Unreferenced (Payload);
+      List : constant Simple_Unit_List_Access := Self.Subunits'Access;
    begin
-      return
-        (Gela.Types.Compilation_Unit_List_Access'(Self.Subunits'Access), 0);
+      return (Gela.Types.Compilation_Unit_List_Access (List), 0);
    end Subunits;
 
    -----------------
@@ -337,20 +376,6 @@ package body Gela.Simple_Compilation_Units is
    begin
       return Self.Kind;
    end Unit_Kind;
-
-   -----------------
-   -- Unit_Origin --
-   -----------------
-
-   overriding function Unit_Origin
-     (Self    : access Simple_Compilation_Unit;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Unit_Origins
-   is
-      pragma Unreferenced (Payload);
-   begin
-      return Self.Origin;
-   end Unit_Origin;
 
    ---------------
    -- With_List --

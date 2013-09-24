@@ -15,6 +15,11 @@ package Gela.Tokens is
 
    type Token is interface;
 
+   function Assigned
+     (Self    : access Token'Class;
+      Payload : Gela.Types.Payload)
+      return Boolean is (Self /= null);
+
    not overriding function Value
      (Self    : access Token;
       Payload : Gela.Types.Payload)

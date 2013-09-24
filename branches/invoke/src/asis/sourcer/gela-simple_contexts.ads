@@ -44,6 +44,16 @@ package Gela.Simple_Contexts is
       Name  : Gela.Types.Symbol)
       return Gela.Types.Compilation_Unit;
 
+   not overriding procedure Add_Library_Unit_Declaration
+     (Self      : access Context;
+      Full_Name : Gela.Types.Symbol;
+      Unit      : Gela.Types.Compilation_Unit);
+
+   not overriding procedure Add_Compilation_Unit_Body
+     (Self      : access Context;
+      Full_Name : Gela.Types.Symbol;
+      Unit      : Gela.Types.Compilation_Unit);
+
 private
 
    package Unit_Maps is new Ada.Containers.Ordered_Maps

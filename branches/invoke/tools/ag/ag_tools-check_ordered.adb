@@ -296,6 +296,8 @@ package body AG_Tools.Check_Ordered is
       use type Ordered.Partition_Count;
       use type League.Strings.Universal_String;
 
+      type Unit_Kinds is (Spec_Unit, Body_Unit);
+
       procedure Generate_Proc
         (NT  : Non_Terminal;
          Pos : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
@@ -304,9 +306,12 @@ package body AG_Tools.Check_Ordered is
         (NT  : Non_Terminal;
          Pos : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
 
-      procedure Add_With (Name : League.Strings.Universal_String);
+      procedure Add_With
+        (Name : League.Strings.Universal_String;
+         Kind : Unit_Kinds := Body_Unit);
       procedure Add_With_Stores (Name : League.Strings.Universal_String);
       procedure Add_With_Nodes (Name : League.Strings.Universal_String);
+      procedure Print_Withes (Kind : Unit_Kinds);
       pragma Unreferenced (Add_With_Nodes);
       function Is_List (NT : Non_Terminal) return Boolean;
       --  Detect if NT was a list before converting to plain AG
@@ -332,10 +337,12 @@ package body AG_Tools.Check_Ordered is
       function Return_Type
         (Part : Gela.Grammars.Part) return League.Strings.Universal_String;
 
-      Spec    : Writer;
-      Impl    : Writer;
-      Withs   : Writer;
-      Withed  : League.String_Vectors.Universal_String_Vector;
+      type With_Records is array (Unit_Kinds) of
+        League.String_Vectors.Universal_String_Vector;
+
+      Spec  : Writer;
+      Impl  : Writer;
+      Withs : With_Records;
 
       Part_Map : array (G.Part'Range) of Boolean := (others => False);
 
@@ -343,16 +350,27 @@ package body AG_Tools.Check_Ordered is
       -- Add_With --
       --------------
 
-      procedure Add_With (Name : League.Strings.Universal_String) is
+      procedure Add_With
+        (Name : League.Strings.Universal_String;
+         Kind : Unit_Kinds := Body_Unit)
+      is
       begin
-         if Name.Is_Empty or Withed.Index (Name) > 0 then
+         if Name.Is_Empty or Withs (Kind).Index (Name) > 0 then
+            return;
+         elsif Kind = Spec_Unit then
+            declare
+               Body_Index : constant Natural := Withs (Body_Unit).Index (Name);
+            begin
+               if Body_Index > 0 then
+                  Withs (Body_Unit).Replace
+                    (Body_Index, League.Strings.Empty_Universal_String);
+               end if;
+            end;
+         elsif Withs (Spec_Unit).Index (Name) > 0 then
             return;
          end if;
 
-         Withed.Append (Name);
-         Withs.N ("with ");
-         Withs.N (Name);
-         Withs.P (";");
+         Withs (Kind).Append (Name);
       end Add_With;
 
       ---------------------
@@ -371,9 +389,6 @@ package body AG_Tools.Check_Ordered is
       procedure Add_With_Nodes (Name : League.Strings.Universal_String) is
       begin
          Add_With ("Gela.Nodes." & Name);
---         Withs.N ("pragma Unreferenced (Gela.Nodes.");
---           Withs.N (Name);
---           Withs.P (");");
       end Add_With_Nodes;
 
       -------------------
@@ -551,6 +566,9 @@ package body AG_Tools.Check_Ordered is
                end if;
 
                Spec.N (To_Ada (G.Declaration (J).Type_Name), Impl);
+               Add_With
+                 (Package_Name (To_Ada (G.Declaration (J).Type_Name)),
+                  Spec_Unit);
             end if;
          end loop;
 
@@ -672,7 +690,6 @@ package body AG_Tools.Check_Ordered is
             Impl.N (".");
             Impl.N (To_Ada (P.Name));
             Impl.P (" (Node.Payload);");
---            Add_With_Nodes (Plural (Return_Type (P)));
          end if;
       end Generate_Local;
 
@@ -800,6 +817,27 @@ package body AG_Tools.Check_Ordered is
          return Prod.First > Prod.Last;
       end Is_List;
 
+      ------------------
+      -- Print_Withes --
+      ------------------
+
+      procedure Print_Withes (Kind : Unit_Kinds) is
+      begin
+         Ada.Text_IO.Put_Line ("--  Auto generated file. DO NOT EDIT!!!");
+         for J in 1 .. Withs (Kind).Length loop
+            declare
+               Item : constant League.Strings.Universal_String :=
+                 Withs (Kind).Element (J);
+            begin
+               if not Item.Is_Empty then
+                  Ada.Text_IO.Put ("with ");
+                  Ada.Text_IO.Put (Item.To_UTF_8_String);
+                  Ada.Text_IO.Put_Line (";");
+               end if;
+            end;
+         end loop;
+      end Print_Withes;
+
       -----------------
       -- Return_Type --
       -----------------
@@ -830,12 +868,16 @@ package body AG_Tools.Check_Ordered is
 
    begin
       Found := False;
-      Spec.P ("--  Auto generated file. DO NOT EDIT!!!", Withs);
-      Withs.P ("pragma Warnings (""FUM"");");
-      Withs.P ("pragma Style_Checks (""N"");");
+      Impl.P ("pragma Warnings (""FUM"");");
+      Impl.P ("pragma Style_Checks (""N"");");
 
       Add_With
         (League.Strings.To_Universal_String ("Gela.Mutables.Compilations"));
+      Add_With
+        (League.Strings.To_Universal_String ("Gela.Symbol_Sets"));
+      Add_With
+        (League.Strings.To_Universal_String ("Gela.Pass_Utils"));
+
       Spec.P ("with Gela.Mutables;");
       Spec.P ("with Gela.Nodes.Visiters;");
       Spec.P;
@@ -875,8 +917,9 @@ package body AG_Tools.Check_Ordered is
 
       if Found then
          Pass := Pass + 1;
+         Print_Withes (Spec_Unit);
          Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
-         Ada.Text_IO.Put_Line (Withs.Text.To_UTF_8_String);
+         Print_Withes (Body_Unit);
          Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
       end if;
    end Generate;

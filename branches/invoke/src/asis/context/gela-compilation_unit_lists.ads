@@ -13,6 +13,8 @@ package Gela.Compilation_Unit_Lists is
    pragma Preelaborate;
 
    type Abstract_Compilation_Unit_List is limited interface;
+   type Abstract_Compilation_Unit_List_Access is
+     access all Abstract_Compilation_Unit_List'Class;
 
    function Units_Count
      (Self    : access Abstract_Compilation_Unit_List;
@@ -25,6 +27,8 @@ package Gela.Compilation_Unit_Lists is
       return Gela.Types.Compilation_Unit_Cursor is abstract;
 
    type Abstract_Compilation_Unit_Cursor is interface;
+   type Abstract_Compilation_Unit_Cursor_Access is access all
+     Abstract_Compilation_Unit_Cursor'Class;
 
    function Element
      (Self    : access Abstract_Compilation_Unit_Cursor;

@@ -10,6 +10,7 @@
 package Gela.Simple_Contexts.Loaders is
 
    type Loader (Context : Context_Access) is tagged private;
+   type Loader_Access is access all Gela.Simple_Contexts.Loaders.Loader;
 
    procedure Try_Read_File_And_Supporters
      (Self      : in out Loader;
@@ -17,9 +18,8 @@ package Gela.Simple_Contexts.Loaders is
    --  Procedure reads a unit, its declaration, parent and withed units,
    --  then runs passes and adds resulting Compilation_Unit to Self.Context
 
-private
-
-   type Loader (Context : Context_Access) is tagged null record;
+   function Get_Loader
+     (Context : Gela.Types.Context_Access) return Loader_Access;
 
    procedure Read_File_And_Supporters
      (Self : in out Loader;
@@ -41,5 +41,9 @@ private
       Full_Name : Gela.Types.Symbol;
       Result    : out Gela.Types.Compilation_Unit;
       Found     : out Boolean);
+
+private
+
+   type Loader (Context : Context_Access) is tagged null record;
 
 end Gela.Simple_Contexts.Loaders;

@@ -28,11 +28,6 @@ package Gela.Compilation_Units is
       Payload : Gela.Types.Payload)
       return Gela.Types.Unit_Classes is abstract;
 
-   function Unit_Origin
-     (Self    : access Abstract_Compilation_Unit;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Unit_Origins is abstract;
-
    function Enclosing_Container
      (Self    : access Abstract_Compilation_Unit;
       Payload : Gela.Types.Payload)

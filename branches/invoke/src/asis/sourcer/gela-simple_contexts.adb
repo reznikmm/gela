@@ -19,11 +19,40 @@ with Gela.Grammars_Convertors;
 with Gela.Grammars.Reader;
 with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
-with Gela.Compilation_Units;  pragma Unreferenced (Gela.Compilation_Units);
+with Gela.Compilation_Units; pragma Unreferenced (Gela.Compilation_Units);
 with Gela.Simple_Contexts.Loaders;
 with Gela.Simple_Compilation_Units;
 
 package body Gela.Simple_Contexts is
+
+   type Unit_List_Access is access all Unit_List;
+   type Symbol_Set_Access is access all Mutables.Symbol_Sets.Symbol_Set;
+
+   -------------------------------
+   -- Add_Compilation_Unit_Body --
+   -------------------------------
+
+   not overriding procedure Add_Compilation_Unit_Body
+     (Self      : access Context;
+      Full_Name : Gela.Types.Symbol;
+      Unit      : Gela.Types.Compilation_Unit) is
+   begin
+      Self.Bodies.Map.Insert (Full_Name, Unit);
+      Self.Units.Insert (Unit.Payload, Unit.Object);
+   end Add_Compilation_Unit_Body;
+
+   ----------------------------------
+   -- Add_Library_Unit_Declaration --
+   ----------------------------------
+
+   not overriding procedure Add_Library_Unit_Declaration
+     (Self      : access Context;
+      Full_Name : Gela.Types.Symbol;
+      Unit      : Gela.Types.Compilation_Unit) is
+   begin
+      Self.Bodies.Map.Insert (Full_Name, Unit);
+      Self.Units.Insert (Unit.Payload, Unit.Object);
+   end Add_Library_Unit_Declaration;
 
    ---------------
    -- Associate --
@@ -89,9 +118,11 @@ package body Gela.Simple_Contexts is
 
    overriding function Compilation_Unit_Bodies
      (Self  : access Context)
-      return Gela.Types.Compilation_Unit_List is
+      return Gela.Types.Compilation_Unit_List
+   is
+      List : constant Unit_List_Access := Self.Bodies'Access;
    begin
-      return (Self.Bodies'Access, 0);
+      return (Gela.Types.Compilation_Unit_List_Access (List), 0);
    end Compilation_Unit_Bodies;
 
    ---------------------------
@@ -133,9 +164,10 @@ package body Gela.Simple_Contexts is
      (Self  : access Context;
       Index : Positive) return Gela.Types.Container_Access
    is
+      This : constant Context_Access := Context_Access (Self);
    begin
       if Index = 1 then
-         return Gela.Types.Container_Access (Self);
+         return Gela.Types.Container_Access (This);
       else
          raise Constraint_Error;
       end if;
@@ -231,12 +263,16 @@ package body Gela.Simple_Contexts is
       return Gela.Types.Compilation_Unit_Cursor
    is
       pragma Unreferenced (Payload);
+      This : constant
+        Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_List_Access :=
+          Gela.Compilation_Unit_Lists.Abstract_Compilation_Unit_List_Access
+            (Self);
    begin
       if Self.Map.Is_Empty then
          return (null, 0);
       end if;
 
-      return (Gela.Types.Compilation_Unit_Cursor_Access (Self),
+      return (Gela.Types.Compilation_Unit_Cursor_Access (This),
               Gela.Types.Payload (Self.Map.First_Key));
    end First;
 
@@ -296,9 +332,11 @@ package body Gela.Simple_Contexts is
 
    overriding function Library_Unit_Declarations
      (Self  : access Context)
-      return Gela.Types.Compilation_Unit_List is
+      return Gela.Types.Compilation_Unit_List
+   is
+      List : constant Unit_List_Access := Self.Specs'Access;
    begin
-      return (Self.Specs'Access, 0);
+      return (Gela.Types.Compilation_Unit_List_Access (List), 0);
    end Library_Unit_Declarations;
 
    ----------
@@ -365,9 +403,11 @@ package body Gela.Simple_Contexts is
 
    overriding function Parent
      (Self : access Context)
-      return Gela.Types.Context_Access is
+      return Gela.Types.Context_Access
+   is
+      This : constant Context_Access := Context_Access (Self);
    begin
-      return Gela.Types.Context_Access (Self);
+      return Gela.Types.Context_Access (This);
    end Parent;
 
    ----------------------
@@ -442,9 +482,11 @@ package body Gela.Simple_Contexts is
    -------------
 
    not overriding function Symbols
-     (Self    : access Context) return Gela.Types.Symbol_Set_Access is
+     (Self    : access Context) return Gela.Types.Symbol_Set_Access
+   is
+      Set : constant Symbol_Set_Access := Self.Symbols'Access;
    begin
-      return Self.Symbols'Access;
+      return Gela.Types.Symbol_Set_Access (Set);
    end Symbols;
 
    -----------------

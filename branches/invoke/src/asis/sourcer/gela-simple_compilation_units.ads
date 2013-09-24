@@ -25,34 +25,31 @@ package Gela.Simple_Compilation_Units is
    type Simple_Compilation_Unit_Access is access all
      Simple_Compilation_Unit'Class;
 
-   function Create
+   function Create_Declaration
      (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol)
-     return Gela.Types.Compilation_Unit;
+      return Gela.Types.Compilation_Unit;
 
    function Create_Body
      (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Declaration : Gela.Types.Compilation_Unit)
-     return Gela.Types.Compilation_Unit;
+      return Gela.Types.Compilation_Unit;
 
    function Create_Subunit
      (Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Payload     : Gela.Types.Payload;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Inside      : Gela.Types.Compilation_Unit)
-     return Gela.Types.Compilation_Unit;
+      return Gela.Types.Compilation_Unit;
 
 --     function Payload
 --       (Self : access Simple_Compilation_Unit) return Gela.Types.Payload;
@@ -93,7 +90,6 @@ private
       Compilation : Gela.Mutables.Mutable_Compilation_Access;
       Kind        : Gela.Types.Unit_Kinds;
       Unit_Class  : Gela.Types.Unit_Classes;
-      Origin      : Gela.Types.Unit_Origins;
       Full_Name   : Gela.Types.Symbol;
       Subunits    : aliased Simple_Unit_List;
       Children    : aliased Simple_Unit_List;
@@ -112,11 +108,6 @@ private
      (Self    : access Simple_Compilation_Unit;
       Payload : Gela.Types.Payload)
       return Gela.Types.Unit_Classes;
-
-   overriding function Unit_Origin
-     (Self    : access Simple_Compilation_Unit;
-      Payload : Gela.Types.Payload)
-      return Gela.Types.Unit_Origins;
 
    overriding function Enclosing_Container
      (Self    : access Simple_Compilation_Unit;

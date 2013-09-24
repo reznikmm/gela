@@ -39,6 +39,7 @@ package Gela.Mutables.Compilations is
       Text        : League.Strings.Universal_String;
       Updated     : League.Calendars.Date_Time;
       CPU_Spent   : Duration;
+      Origin      : Gela.Types.Unit_Origins;
       --  Components
       Context : Gela.Types.Context_Access;
       Store   : Mutables.Compilations.Store (Compilation'Unchecked_Access);
@@ -57,7 +58,8 @@ package Gela.Mutables.Compilations is
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;
       Grammar : Gela.Grammars.Grammar_Access;
-      Table   : Gela.Grammars.LR_Tables.Table_Access)
+      Table   : Gela.Grammars.LR_Tables.Table_Access;
+      Origin  : Gela.Types.Unit_Origins)
       return Mutable_Compilation_Access;
 
    not overriding procedure Start
@@ -102,7 +104,10 @@ private
       return Gela.Types.Token;
 
    overriding function Symbols
+     (Self  : access Compilation) return Gela.Types.Symbol_Set_Access;
+
+   overriding function Origin
      (Self  : access Compilation)
-      return Gela.Types.Symbol_Set_Access;
+      return Gela.Types.Unit_Origins;
 
 end Gela.Mutables.Compilations;
