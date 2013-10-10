@@ -11,6 +11,7 @@ with Ada.Unchecked_Deallocation;
 
 with Gela.Mutables.Compilations;
 with Gela.Symbol_Sets; pragma Unreferenced (Gela.Symbol_Sets);
+with Gela.Stores.Tokens;
 
 package body Gela.Mutables.Lexers is
 
@@ -289,5 +290,22 @@ package body Gela.Mutables.Lexers is
       Self.Scanner.Get_Token (Token);
       return Map (Token);
    end Next;
+
+   ----------------
+   -- Next_Token --
+   ----------------
+
+   not overriding procedure Next_Token
+     (Self  : access Lexer;
+      Token : out Gela.Grammars.Terminal_Count;
+      Value : out Gela.Nodes.Element)
+   is
+      Object : Gela.Stores.Tokens.Token_Access;
+   begin
+      Token := Self.Next;
+      Object := Self.Compilation.Store.Fabric.Token'Access;
+      Value := (Object,
+                Self.Tokens (Self.Last_Token));
+   end Next_Token;
 
 end Gela.Mutables.Lexers;

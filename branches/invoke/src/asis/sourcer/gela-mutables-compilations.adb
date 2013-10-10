@@ -7,6 +7,9 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with Gela.Mutables.Parse;
+with Gela.Tokens;
+
 package body Gela.Mutables.Compilations is
 
    --------------------------------------
@@ -41,8 +44,6 @@ package body Gela.Mutables.Compilations is
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;
-      Grammar : Gela.Grammars.Grammar_Access;
-      Table   : Gela.Grammars.LR_Tables.Table_Access;
       Origin  : Gela.Types.Unit_Origins)
       return Mutable_Compilation_Access
    is
@@ -76,7 +77,6 @@ package body Gela.Mutables.Compilations is
          end if;
          Result.Store.Fabric.Initialize;
          Result.Lexer.Initialize (Source);
-         Result.Parser.Initialize (Grammar, Table);
       end return;
    end Create;
 
@@ -142,8 +142,32 @@ package body Gela.Mutables.Compilations is
    not overriding procedure Start
      (Self : not null access Compilation)
    is
+      Ok : Boolean;
    begin
-      Self.Parser.Parse;
+      Gela.Mutables.Parse
+        (Self.Parser'Access, Self.Lexer'Access, Self.Root, Ok);
+
+      if not Ok then
+         declare
+            use type League.Strings.Universal_String;
+            use type Gela.Lexical.Line_Index;
+            Payload : constant Gela.Types.Payload := Self.Lexer.Last_Token;
+            Object  : constant Gela.Nodes.Node_Access :=
+              Self.Store.Fabric.To_Node (Payload);
+            Token   : Gela.Tokens.Token'Class renames
+              Gela.Tokens.Token'Class (Object.all);
+            Line : constant Gela.Lexical.Line_Index := Token.Line (Payload);
+            Offset : constant Gela.Lexical.Line_Offset :=
+              Self.Lexer.Line (Line - 1);  --  Line is not available yet
+            Colon : constant Gela.Lexical.Text_Index :=
+              Token.First (Payload) - Offset.Last;
+         begin
+            Self.Errors.Syntax_Error
+              (Self.Name & ":" &
+                 Gela.Lexical.Line_Index'Wide_Wide_Image (Line) & ":" &
+                 Gela.Lexical.Text_Index'Wide_Wide_Image (Colon));
+         end;
+      end if;
    end Start;
 
    -------------

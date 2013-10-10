@@ -1,4 +1,5 @@
 with Ada.Wide_Text_IO;
+with Ada.Command_Line;
 
 with Asis;
 with Asis.Ada_Environments;
@@ -72,5 +73,5 @@ exception
            Asis.Errors.Error_Kinds'Wide_Image
            (Asis.Implementation.Status));
       Ada.Wide_Text_IO.Put_Line (Asis.Implementation.Diagnosis);
-
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
 end Main;

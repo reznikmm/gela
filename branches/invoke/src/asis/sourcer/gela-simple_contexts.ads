@@ -16,8 +16,6 @@ with Gela.Contexts;
 with Gela.Name_Schemas.GNAT;
 with Gela.Source_Finders;
 with Gela.Errors;
-with Gela.Grammars;
-with Gela.Grammars.LR_Tables;
 with Gela.Unit_Containers;
 with Gela.Compilation_Unit_Lists;
 limited with Gela.Simple_Contexts.Loaders;
@@ -116,8 +114,6 @@ private
       Schema  : aliased Gela.Name_Schemas.GNAT.GNAT_Name_Schema;
       Finder  : Gela.Source_Finders.Source_Finder_Access;
       Errors  : Gela.Errors.Error_Handler_Access;
-      Grammar : Gela.Grammars.Grammar_Access;
-      Table   : Gela.Grammars.LR_Tables.Table_Access;
       Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
    end record;
 

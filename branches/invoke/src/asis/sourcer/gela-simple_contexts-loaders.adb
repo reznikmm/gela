@@ -50,8 +50,6 @@ package body Gela.Simple_Contexts.Loaders is
          Source  => Text,
          Errors  => Self.Context.Errors,
          Symbols => Gela.Types.Symbol_Set_Access (Set),
-         Grammar => Self.Context.Grammar,
-         Table   => Self.Context.Table,
          Origin  => Origin);
 
       Comp.Start;

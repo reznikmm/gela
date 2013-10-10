@@ -19,6 +19,8 @@ package Gela.Stores.Tokens is
      new Gela.Stores.Nodes.Node and Gela.Nodes.Tokens.Object
      with null record;
 
+   type Token_Access is access all Token'Class;
+
    overriding function Value
      (Self    : access Token;
       Payload : Gela.Types.Payload)

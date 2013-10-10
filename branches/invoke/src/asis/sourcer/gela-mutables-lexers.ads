@@ -16,6 +16,7 @@ with Gela.Lexical.Tokens;
 with Gela.Lexical.Handler;
 with Gela.Lexical.Scanners;
 with Gela.Types;
+with Gela.Nodes;
 
 package Gela.Mutables.Lexers is
    pragma Preelaborate;
@@ -32,6 +33,11 @@ package Gela.Mutables.Lexers is
      (Self  : access Lexer;
       Index : Positive)
       return Gela.Types.Token;
+
+   not overriding procedure Next_Token
+     (Self  : access Lexer;
+      Token : out Gela.Grammars.Terminal_Count;
+      Value : out Gela.Nodes.Element);
 
    not overriding function Last_Line
      (Self : access Lexer) return Gela.Lexical.Line_Count;

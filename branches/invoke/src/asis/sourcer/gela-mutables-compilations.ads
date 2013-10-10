@@ -14,10 +14,9 @@ with Gela.Compilations;
 with Gela.Errors;
 with Gela.Lexical;
 with Gela.Types;
-with Gela.Grammars.LR_Tables;
 
 with Gela.Mutables.Lexers;
-with Gela.Mutables.LALR_Parsers;
+with Gela.Mutables.Parsers;
 with Gela.Nodes;
 
 with Gela.Stores;
@@ -46,7 +45,7 @@ package Gela.Mutables.Compilations is
       Root    : Gela.Nodes.Element;
       Errors  : Gela.Errors.Error_Handler_Access;
       Lexer   : aliased Mutables.Lexers.Lexer (Compilation'Unchecked_Access);
-      Parser  : aliased Mutables.LALR_Parsers.Parser
+      Parser  : aliased Mutables.Parsers.Parser
                           (Compilation'Unchecked_Access);
       Symbols : Gela.Types.Symbol_Set_Access;
    end record;
@@ -57,8 +56,6 @@ package Gela.Mutables.Compilations is
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;
-      Grammar : Gela.Grammars.Grammar_Access;
-      Table   : Gela.Grammars.LR_Tables.Table_Access;
       Origin  : Gela.Types.Unit_Origins)
       return Mutable_Compilation_Access;
 

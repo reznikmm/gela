@@ -13,11 +13,6 @@ with League.String_Vectors;
 with League.Application;
 
 with Gela.Errors.Put_Lines;
-with Gela.Grammars.Conflicts;
-with Gela.Grammars.Constructors;
-with Gela.Grammars_Convertors;
-with Gela.Grammars.Reader;
-with Gela.Grammars.LR.LALR;
 with Gela.Lexical.Handler;
 with Gela.Compilation_Units; pragma Unreferenced (Gela.Compilation_Units);
 with Gela.Simple_Contexts.Loaders;
@@ -65,7 +60,6 @@ package body Gela.Simple_Contexts is
    is
       use type League.Strings.Universal_String;
       use type Gela.Errors.Error_Handler_Access;
-      LALR_File : League.Strings.Universal_String;
    begin
       Self.Name := Name;
       Self.Parameters := Parameters;
@@ -78,24 +72,7 @@ package body Gela.Simple_Contexts is
       if Self.Errors = null then
          Self.Errors := new Gela.Errors.Put_Lines.Handler;
 
-         LALR_File := Self.Default_Path;
-         LALR_File.Append ("/src/asis/sourcer/ada-lalr.ag");
-
-         Self.Grammar := new Gela.Grammars.Grammar'
-           (Gela.Grammars_Convertors.Convert
-              (Gela.Grammars.Reader.Read (LALR_File.To_UTF_8_String),
-               Left => False));
-
-         declare
-            Resolver  : Gela.Grammars.Conflicts.Resolver;
-            Augmented : constant Gela.Grammars.Grammar :=
-              Gela.Grammars.Constructors.To_Augmented (Self.Grammar.all);
-         begin
-            Self.Table :=
-              Gela.Grammars.LR.LALR.Build (Augmented, Right_Nulled => False);
-            Resolver.Resolve (Augmented, Self.Table.all);
-            Gela.Lexical.Handler.Initialize;
-         end;
+         Gela.Lexical.Handler.Initialize;
 
          Self.Loader := new Gela.Simple_Contexts.Loaders.Loader
            (Context_Access (Self));
@@ -229,14 +206,8 @@ package body Gela.Simple_Contexts is
    overriding procedure Dissociate (Self : access Context) is
       procedure Free is new Ada.Unchecked_Deallocation
         (Gela.Errors.Error_Handler'Class, Gela.Errors.Error_Handler_Access);
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Gela.Grammars.Grammar, Gela.Grammars.Grammar_Access);
-      procedure Free is new Ada.Unchecked_Deallocation
-        (Gela.Grammars.LR_Tables.Table, Gela.Grammars.LR_Tables.Table_Access);
    begin
       Free (Self.Errors);
-      Free (Self.Grammar);
-      Free (Self.Table);
    end Dissociate;
 
    -------------
