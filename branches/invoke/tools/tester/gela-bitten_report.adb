@@ -76,8 +76,8 @@ package body Gela.Bitten_Report is
             Attrs.Set_Value (Duration, Time_Image (Test.Duration));
             Attrs.Set_Value (Status, Image (Test.Status));
             Attrs.Set_Value (Name, Test.Name);
-            Attrs.Set_Value (Fixture, Test.Name);
-            --  Attrs.Set_Value (Fixture, Test.Fixture);
+            --  Attrs.Set_Value (Fixture, Test.Name);
+            Attrs.Set_Value (Fixture, Test.Fixture);
             Attrs.Set_Value (File, Test.File);
 
             Writer.Start_Element

@@ -32,7 +32,7 @@ string_literal     \"{string_element}*\"
 
 comment            \-\-[^\n\v\f\u0085[:Zl:][:Zp:]]*
 
-separator          [[:Zs:][:Cf:]]+
+separator          [[:Zs:][:Cf:]\t]+
 %%
 
 "=>"	{Delimiter}
