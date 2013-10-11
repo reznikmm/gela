@@ -16,16 +16,21 @@ with Gela.Bitten_Report;
 with Gela.Host;
 with Gela.Test_Cases;
 with Gela.Test_Iterators.Dir2;
+with Gela.Test_Iterators.ACATS;
+with Gela.Test_Iterators.Append;
 
---  with League.Application;
 with League.Strings;
 
 procedure Gela.Test_Driver2 is
    use type League.Strings.Universal_String;
 
-   Source   : constant League.Strings.Universal_String :=
-     Gela.Host.Source_Root & "/tests/grammars";
+   Tests : constant League.Strings.Universal_String :=
+     Gela.Host.Source_Root & "/tests";
    --  Path to directory containing tests' sources (trunk/tests/)
+
+   ACATS_Dir : constant League.Strings.Universal_String :=
+     Gela.Host.Source_Root & "/../acats/";
+   --  Path to directory with ACATS tests (trunk/../acats/)
 
    Build    : constant League.Strings.Universal_String :=
      Gela.Host.Build_Root;
@@ -62,13 +67,20 @@ begin
      ("Source root = " & Gela.Host.Source_Root.To_Wide_Wide_String);
 
    declare
-      Dirs  : Gela.Test_Iterators.Iterator'Class :=
-        Gela.Test_Iterators.Dir2.Create (Source, Build);
+      use type Gela.Test_Iterators.Append.Iterator;
+      Dirs  : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.Dir2.Create (Tests & "/grammars", Build);
+      ACATS : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.ACATS.Create
+          (Command   => Build & "/asis/ts_00018",
+           List_File => Tests & "/asis/ts_00018/single_file_tests",
+           ACATS     => ACATS_Dir);
+      Iterator : Gela.Test_Iterators.Append.Iterator := Dirs + ACATS;
    begin
-      Dirs.Start;
+      Iterator.Start;
 
-      while Dirs.Has_More_Tests loop
-         Dirs.Next (Test);
+      while Iterator.Has_More_Tests loop
+         Iterator.Next (Test);
          Test.Run;
 
          case Test.Status is
@@ -81,7 +93,7 @@ begin
          end case;
       end loop;
 
-      Gela.Bitten_Report.Generate (Dirs, Report);
+      Gela.Bitten_Report.Generate (Iterator, Report);
    end;
 
    declare

@@ -9,9 +9,9 @@ BUILD_CHOP=$(GELA_BUILD)/chop
 BUILD_NODE=$(GELA_BUILD)/node
 LEXER=$(abspath src/asis/sourcer/ada.l)
 LEXER_STAMP=$(GELA_BUILD)/.stamp-ada.l
-PARSER=$(BUILD_CHOP)/gela-mutables-lalr_parsers-on_reduce.adb
+PARSER=$(GELA_BUILD)/.stamp-ada.p
 
-all: asis
+all: asis tests
 	gprbuild -m -j0 -p -P gnat/gela_debug.gpr
 
 asis : $(AST_STAMP) $(LEXER_STAMP) $(PARSER)
@@ -32,9 +32,14 @@ $(LEXER_STAMP): $(UAFLEX) $(LEXER)
 
 $(PARSER): $(YACC_DRIVER) $(SYNTAX)
 	$(YACC_DRIVER) $(SYNTAX) > $(PARSER)
+	gnatchop -w $(PARSER) $(BUILD_CHOP)
 
 $(AG_DRIVER) $(YACC_DRIVER):
 	gprbuild -m -j0 -p -P gnat/gela_ag.gpr
 
 $(UAFLEX):
 	gprbuild -m -j0 -p -P gnat/gela_uaflex2.gpr
+
+tests: asis
+	gprbuild -m -j0 -p -P gnat/gela_tester.gpr
+	gprbuild -m -j0 -p -P gnat/gela_asis_tests.gpr

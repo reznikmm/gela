@@ -1,0 +1,18 @@
+with "gela_common";
+with "gela_asis";
+
+project Gela_Grammars_Tests is
+
+   for Main use
+     ("ts_00018");
+
+   for Source_Dirs use
+     ("../tests/asis/ts_00018");
+
+   for Object_Dir use Gela_Common.Build & "/asis";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Gela_Grammars_Tests;
