@@ -67,10 +67,10 @@ access_to_procedure_definition ::=
 
 allocator ::=
   token <new_token>
-  name  <Subtype_Or_Expression>
   token <left_parenthesis_token>
   name  <Subpool_Name>
   token <right_parenthesis_token>
+  name  <Subtype_Or_Expression>
 ;
 
 alt_record_definition ::= record_definition | null_record_definition;
@@ -1163,7 +1163,8 @@ name ::= direct_name |
   selected_component |
   attribute_reference |
   function_call |
-  character_literal;
+  character_literal |
+  qualified_expression;
 
 null_component ::= token <null_token> token <semicolon_token>;
 
@@ -1601,7 +1602,6 @@ simple_expression ::=
     record_aggregate |
     extension_aggregate |
     name |
-    qualified_expression |
     allocator |
     if_expression |
     case_expression |
@@ -1682,6 +1682,7 @@ subtype_indication_or_access_definition ::=
 
 subtype_mark ::= identifier |
   selected_identifier |
+  selected_component |
   attribute_reference |
   function_call;
 
