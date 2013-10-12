@@ -3574,8 +3574,23 @@ record_component_association ::=
 (expression)
   [discrete_choice_list arrow_token] expression |
 (box)
-  discrete_choice_list arrow_token box_token
+  discrete_choice_list arrow_token box_token |
+(discrete_range)
+  discrete_range
 ;
+
+Rules for record_component_association.discrete_range :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element :=
+              +Self.Compilation.Store.Fabric.Discrete_Choice_Sequence;
+            List : constant Gela.Nodes.Discrete_Choice_Sequence := -Conv;
+         begin
+            List.its.Prepend (List.Payload, ${discrete_range.ast});
+            ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
+              (List, (null, 0), (null, 0));
+         end;
+.)
 
 Rules for record_component_association.expression :
 (.          ${record_component_association.ast} := +Self.Compilation.Store.Fabric.Association
@@ -4093,7 +4108,7 @@ subtype_indication ::= [not_token null_token] subtype_mark [scalar_constraint];
 
 Rules for subtype_indication. :
 (.
-         ${subtype_indication.ast} := +Self.Compilation.Store.Fabric.Subtype_Indication
+         ${subtype_indication.ast} := +Self.Compilation.Store.Fabric.To_Subtype_Indication
              (-${not_token.ast:(null, 0)},
               -${null_token.ast:(null, 0)},
               -${subtype_mark.ast},

@@ -9,6 +9,7 @@
 with Gela.Nodes.Convertions;
 with Gela.Nodes.Identifiers;
 with Gela.Nodes.Selected_Identifiers;
+with Gela.Nodes.Function_Calls;
 
 package body Gela.Stores.Fabrics is
 
@@ -189,5 +190,54 @@ package body Gela.Stores.Fabrics is
          end;
       end if;
    end To_Node;
+
+   ---------------------------
+   -- To_Subtype_Indication --
+   ---------------------------
+
+   function To_Subtype_Indication
+     (Self       : access Fabric;
+      Not_Token  : Gela.Nodes.Token;
+      Null_Token : Gela.Nodes.Token;
+      Mark       : Gela.Nodes.Subtype_Mark;
+      Constraint : Gela.Nodes.Scalar_Constraint)
+      return Gela.Nodes.Subtype_Indication
+   is
+      use Gela.Nodes.Convertions;
+      use type Gela.Nodes.Scalar_Constraint_Access;
+
+      Subtype_Mark       : Gela.Nodes.Subtype_Mark;
+      Subtype_Constraint : Gela.Nodes.Constraint;
+   begin
+      Subtype_Mark := Mark;
+      Subtype_Constraint := -(+Constraint);
+
+      if Constraint.its = null and then
+        Mark.its.all in Gela.Nodes.Function_Calls.Object'Class
+      then
+         declare
+            Call   : constant Gela.Nodes.Function_Call := -(+Mark);
+            Prefix : constant Gela.Nodes.Element :=
+              +Call.its.Prefix (Call.Payload);
+            Args   : constant Gela.Nodes.Record_Aggregate :=
+              Call.its.Function_Call_Parameters (Call.Payload);
+            CC     : constant Gela.Nodes.Composite_Constraint :=
+              Self.Composite_Constraint
+                (Left_Token   => Args.its.Left_Token (Args.Payload),
+                 Associations => Args.its.Record_Component_Associations
+                   (Args.Payload),
+                 Right_Token  => Args.its.Left_Token (Args.Payload));
+         begin
+            Subtype_Mark := -Prefix;
+            Subtype_Constraint := -(+CC);
+         end;
+      end if;
+
+      return Self.Subtype_Indication
+        (Not_Token          => Not_Token,
+         Null_Token         => Null_Token,
+         Subtype_Mark       => Subtype_Mark,
+         Subtype_Constraint => Subtype_Constraint);
+   end To_Subtype_Indication;
 
 end Gela.Stores.Fabrics;

@@ -307,10 +307,12 @@ constrained_array_definition ::=
     component_definition <Array_Component_Definition>
 ;
 
-constraint ::= scalar_constraint | index_constraint;
+constraint ::= scalar_constraint | composite_constraint;
 
-index_constraint ::=
-  {discrete_range} <Discrete_Ranges>
+composite_constraint ::=
+  token         <left_token>
+  {association} <Associations>
+  token         <right_token>
 ;
 
 context_item ::= with_clause | use_clause | pragma_node;
@@ -1679,7 +1681,9 @@ subtype_indication_or_access_definition ::=
   subtype_indication | access_definition;
 
 subtype_mark ::= identifier |
- selected_identifier;
+  selected_identifier |
+  attribute_reference |
+  function_call;
 
 subtype_mark_or_access_definition ::= subtype_mark | access_definition;
 
