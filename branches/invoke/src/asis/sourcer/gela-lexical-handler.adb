@@ -160,6 +160,7 @@ package body Gela.Lexical.Handler is
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
+      Self.Last_Token := Token;
    end Character_Literal;
 
    -------------
@@ -209,6 +210,7 @@ package body Gela.Lexical.Handler is
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
+      Self.Last_Token := Token;
    end Delimiter;
 
    -----------
@@ -291,6 +293,12 @@ package body Gela.Lexical.Handler is
       Token := To_Token (Text);
       Skip := False;
 
+      if Self.Last_Token = Gela.Lexical.Tokens.Apostrophe_Token and
+        Token /= Gela.Lexical.Tokens.Range_Token
+      then
+         Token := Id;
+      end if;
+
       if Token = Id then
          Scanner.Set_Start_Condition (Gela.Lexical.Types.INITIAL);
       else
@@ -307,6 +315,7 @@ package body Gela.Lexical.Handler is
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
+      Self.Last_Token := Token;
    end Identifier;
 
    ----------------
@@ -470,6 +479,7 @@ package body Gela.Lexical.Handler is
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
+      Self.Last_Token := Token;
    end Numeric_Literal;
 
    ---------------------------------
@@ -552,6 +562,7 @@ package body Gela.Lexical.Handler is
 
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
+      Self.Last_Token := Token;
    end String_Literal;
 
    --------------

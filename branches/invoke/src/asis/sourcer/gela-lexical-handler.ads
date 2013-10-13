@@ -116,6 +116,7 @@ private
 
    type Handler (Compilation : Gela.Mutables.Mutable_Compilation_Access)
      is new Gela.Lexical.Handlers.Handler with record
+      Last_Token : Gela.Lexical.Tokens.Token := Tokens.Token'First;
       Last       : Text_Index := 1;  --  Position of last character
       Line       : Positive := 1;    --  Last line number
       Line_First : Text_Index := 1;  --  Position of first character of line
