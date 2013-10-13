@@ -2297,18 +2297,6 @@ generic_instantiation ::=
 (subtype)
   [[not_token] overriding_token]
   function_token defining_designator
-   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
-  return_token
-  [not_token <not_null> null_token] subtype_mark
-  is_token new_token program_unit_name
-  [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
-  [aspect_specification] semicolon_token
-  |
-(access)
-  [[not_token] overriding_token]
-  function_token defining_designator
-   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
-  return_token access_definition
   is_token new_token program_unit_name
   [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
   [aspect_specification] semicolon_token
@@ -2316,7 +2304,6 @@ generic_instantiation ::=
 (proc)
   [[not_token] overriding_token]
   procedure_token defining_program_unit_name
-  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
   is_token new_token program_unit_name
   [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
   [aspect_specification] semicolon_token;
@@ -2345,38 +2332,6 @@ Rules for generic_instantiation.subtype :
                 -${overriding_token.ast:(null, 0)},
                 -${function_token.ast},
                 -${defining_designator.ast},
-                -${lp.ast:(null, 0)},
-                -${formal_part.ast:(null, 0)},
-                -${rp.ast:(null, 0)},
-                -${return_token.ast},
-                -${not_null.ast:(null, 0)},
-                -${null_token.ast:(null, 0)},
-                -${subtype_mark.ast},
-                -${is_token.ast},
-                -${new_token.ast},
-                -${program_unit_name.ast},
-                -${left_parenthesis_token.ast:(null, 0)},
-                -${formal_package_actual_part.ast:(null, 0)},
-                -${right_parenthesis_token.ast:(null, 0)},
-                -${aspect_specification.ast:(null, 0)},
-                -${semicolon_token.ast});
-.)
-
-Rules for generic_instantiation.access :
-(.
-         ${generic_instantiation.ast} :=
-            +Self.Compilation.Store.Fabric.Function_Instantiation
-               (-${not_token.ast:(null, 0)},
-                -${overriding_token.ast:(null, 0)},
-                -${function_token.ast},
-                -${defining_designator.ast},
-                -${lp.ast:(null, 0)},
-                -${formal_part.ast:(null, 0)},
-                -${rp.ast:(null, 0)},
-                -${return_token.ast},
-                (null, 0),
-                (null, 0),
-                -${access_definition.ast},
                 -${is_token.ast},
                 -${new_token.ast},
                 -${program_unit_name.ast},
@@ -2395,9 +2350,6 @@ Rules for generic_instantiation.proc :
                 -${overriding_token.ast:(null, 0)},
                 -${procedure_token.ast},
                 -${defining_program_unit_name.ast},
-                -${lp.ast:(null, 0)},
-                -${formal_part.ast:(null, 0)},
-                -${rp.ast:(null, 0)},
                 -${is_token.ast:(null, 0)},
                 -${new_token.ast},
                 -${program_unit_name.ast},

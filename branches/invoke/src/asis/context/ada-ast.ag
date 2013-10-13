@@ -861,13 +861,6 @@ function_instantiation ::=
   token                      <overriding_token>
   token                      <function_token>
   defining_designator        <Names>
-  token                      <lp_token>
-  {parameter_specification}  <Parameter_Profile>
-  token                      <rp_token>
-  token                      <return_token>
-  token                      <return_not_token>
-  token                      <return_null_token>
-  subtype_mark_or_access_definition <Result_Subtype>
   token                      <is_token>
   token                      <new_token>
   program_unit_name          <Generic_Unit_Name>
@@ -1404,9 +1397,6 @@ procedure_instantiation ::=
   token                      <overriding_token>
   token                      <procedure_token>
   defining_program_unit_name <Names>
-  token                      <lp_token>
-  {parameter_specification}  <Parameter_Profile>
-  token                      <rp_token>
   token                      <is_token>
   token                      <new_token>
   program_unit_name          <Generic_Unit_Name>
