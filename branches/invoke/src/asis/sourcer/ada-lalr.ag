@@ -4393,6 +4393,17 @@ Rules for with_clause. :
 
 
 
+Rules for variant_list.variant :
+(.
+         declare
+            Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
+              Fabric.Variant_Sequence};
+            List : constant Gela.Nodes.Variant_Sequence := -Conv;
+         begin
+            List.its.Append (List.Payload, ${variant.ast});
+            ${variant_list.ast} := Conv;
+         end;
+.)
 
 Rules for compilation_unit_list.compilation_unit :
 (.
