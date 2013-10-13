@@ -150,11 +150,13 @@ at_clause ::=
 
 attribute_definition_clause ::=
   token <for_token>
-  attribute_reference <Representation_Clause_Name>
+  clause_name <Representation_Clause_Name>
   token <use_token>
   expression <Representation_Clause_Expression>
   token <semicolon_token>
 ;
+
+clause_name ::= attribute_reference | identifier;
 
 attribute_reference ::=
   prefix
