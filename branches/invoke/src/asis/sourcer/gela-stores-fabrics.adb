@@ -148,7 +148,9 @@ package body Gela.Stores.Fabrics is
    is
       use Gela.Nodes.Convertions;
       Result : Gela.Nodes.Element;
-      Id  : Gela.Nodes.Identifier := Value.its.Selector (Value.Payload);
+      Selector : constant Gela.Nodes.Selector_Name :=
+        Value.its.Selector (Value.Payload);
+      Id  : Gela.Nodes.Identifier := -(+Selector);
    begin
       Result := +Self.Defining_Expanded_Unit_Name
         (Value.its.Prefix (Value.Payload),

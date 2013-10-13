@@ -427,6 +427,8 @@ discriminant_specification ::=
   expression                        <Initialization_Expression>
 ;
 
+designator ::= program_unit_name | operator_symbol;
+
 element_iterator_specification ::=
    defining_identifier <Names>
    token <colon_token>
@@ -826,7 +828,7 @@ function_body ::=
   token                      <exception_token>
   {exception_handler}        <Body_Exception_Handlers>
   token                      <end_token>
-  program_unit_name          <end_name>
+  designator                 <end_name>
   token                      <semicolon_token>
 ;
 
@@ -1223,7 +1225,7 @@ object_renaming_declaration ::=
   token <semicolon_token>
 ;
 
-operator_symbol ::= token <operator_symbol>;
+operator_symbol ::= token <operator_symbol_token>;
 
 others_choice ::= token <others_token>;
 
@@ -1570,7 +1572,7 @@ select_then_abort_path ::= select_or_path | then_abort_path;
 selected_component ::= prefix token <dot_token> selector_name <Selector>;
 
 selected_identifier ::=
-  program_unit_name <Prefix> token <dot_token> identifier <Selector>;
+  program_unit_name <Prefix> token <dot_token> selector_name <Selector>;
 
 selective_accept ::=
   token                 <select_token>
@@ -1866,6 +1868,7 @@ Synthesized attributes
   token  : Boolean : Assigned;
 
 Synthesized attributes
+  enumeration_literal,
   defining_designator,
   defining_expanded_unit_name,
   defining_identifier,
@@ -1883,6 +1886,7 @@ Synthesized attributes
   identifier,
   library_unit_body,
   library_unit_declaration,
+  operator_symbol,
   package_body,
   package_declaration,
   package_instantiation,
@@ -1894,6 +1898,7 @@ Synthesized attributes
   proper_body,
   protected_body,
   selected_identifier,
+  selector_name,
   task_body
   : Gela.Types.Symbol : full_name;
 
@@ -1910,6 +1915,16 @@ Rules for defining_operator_symbol.operator_symbol_token :
 Rules for identifier.identifier_token :
 (.
       ${identifier.full_name} := ${identifier_token.Symbol};
+.)
+
+Rules for operator_symbol.operator_symbol_token :
+(.
+      ${operator_symbol.full_name} := ${operator_symbol_token.Symbol};
+.)
+
+Rules for enumeration_literal.enumeration_literal_token :
+(.
+      ${enumeration_literal.full_name} := ${enumeration_literal_token.Symbol};
 .)
 
 Rules for selected_identifier. :

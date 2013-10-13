@@ -3762,7 +3762,7 @@ Rules for selected_component. :
 .)
 
 selected_identifier ::=
-  program_unit_name dot_token identifier;
+  program_unit_name dot_token selector_name;
 
 Rules for selected_identifier. :
 (.
@@ -3770,7 +3770,7 @@ Rules for selected_identifier. :
             +Self.Compilation.Store.Fabric.Selected_Identifier
                (-${program_unit_name.ast},
                 -${dot_token.ast},
-                -${identifier.ast});
+                -${selector_name.ast});
 .)
 
 selective_accept ::=
