@@ -16,6 +16,12 @@ package Gela.Errors.Put_Lines is
       File_Name : League.Strings.Universal_String);
    --  Can't lookup file passed in parameters
 
+   overriding procedure Lexer_Error
+     (Self      : access Handler;
+      File_Name : League.Strings.Universal_String;
+      Position  : Gela.Lexical.Position);
+   --  Error while lexic analysis of file
+
    overriding procedure No_Compilation_Unit_Body
      (Self      : access Handler;
       Unit_Name : League.Strings.Universal_String);

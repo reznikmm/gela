@@ -23,6 +23,7 @@ with Gela.Compilations;
 pragma Unreferenced (Gela.Compilations);
 with Gela.Contexts;
 with Gela.Errors;
+with Gela.Lexical;
 with Gela.Types;
 with Ada.Unchecked_Deallocation;
 
@@ -35,6 +36,12 @@ package body Asis.Ada_Environments is
         (Self      : access Handler;
          File_Name : League.Strings.Universal_String);
       --  Can't lookup file passed in parameters
+
+      overriding procedure Lexer_Error
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String;
+         Position  : Gela.Lexical.Position);
+      --  Error while lexic analysis of file
 
       overriding procedure No_Compilation_Unit_Body
         (Self      : access Handler;
@@ -200,6 +207,24 @@ package body Asis.Ada_Environments is
 
          raise Asis.Exceptions.ASIS_Failed;
       end File_Not_Found;
+
+      -----------------
+      -- Lexer_Error --
+      -----------------
+
+      overriding procedure Lexer_Error
+        (Self      : access Handler;
+         File_Name : League.Strings.Universal_String;
+         Position  : Gela.Lexical.Position)
+      is
+         pragma Unreferenced (Self);
+         pragma Unreferenced (Position);
+      begin
+         Implementation.Set_Status
+           (Status    => Asis.Errors.Parameter_Error,
+            Diagnosis => "Error while lexic analysis of file:" &
+              File_Name.To_UTF_16_Wide_String);
+      end Lexer_Error;
 
       ------------------------------
       -- No_Compilation_Unit_Body --

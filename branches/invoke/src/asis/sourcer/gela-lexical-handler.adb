@@ -10,6 +10,8 @@
 with League.Characters;
 
 with Gela.Lexical.Tokens; use Gela.Lexical.Tokens;
+with Gela.Mutables.Compilations;
+pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Lexical.Handler is
 
@@ -22,7 +24,7 @@ package body Gela.Lexical.Handler is
 
    function Hash (W : League.Strings.Universal_String) return Hash_Value;
 
-   Map : constant array (Gela.Lexical.Types.Rule_Index range 1 .. 26) of
+   Map : constant array (Gela.Lexical.Types.Rule_Index range 1 .. 27) of
      Gela.Lexical.Tokens.Token :=
        (1 => Arrow_Token, 2 => Double_Dot_Token, 3 => Double_Star_Token,
         4 => Assignment_Token, 5 => Inequality_Token,
@@ -33,7 +35,8 @@ package body Gela.Lexical.Handler is
         15 => Star_Token, 16 => Plus_Token, 17 => Comma_Token,
         18 => Hyphen_Token, 19 => Dot_Token, 20 => Slash_Token,
         21 => Colon_Token, 22 => Semicolon_Token, 23 => Less_Token,
-        24 => Equal_Token, 25 => Greater_Token, 26 => Vertical_Line_Token);
+        24 => Equal_Token, 25 => Greater_Token, 26 => Vertical_Line_Token,
+        27 => Vertical_Line_Token);
 
    Id : constant Gela.Lexical.Tokens.Token :=
      Gela.Lexical.Tokens.Identifier_Token;
@@ -221,9 +224,16 @@ package body Gela.Lexical.Handler is
    is
       pragma Unreferenced (Rule);
       pragma Unreferenced (Token);
+
       Token_Length : constant Positive := Scanner.Get_Token_Length;
+
+      Position : Gela.Lexical.Position;
    begin
       Skip := True;
+      Position.Line := Gela.Lexical.Line_Count (Self.Line);
+      Position.Colon :=
+        Gela.Lexical.Colon_Count (Self.Last - Self.Line_First + 1);
+      Self.Compilation.Errors.Lexer_Error (Self.Compilation.Name, Position);
       Self.Last := Self.Last + Token_Length;
    end Error;
 
@@ -461,6 +471,28 @@ package body Gela.Lexical.Handler is
       Self.Last := Self.Last + Token_Length;
       Self.Separator := Self.Last;
    end Numeric_Literal;
+
+   ---------------------------------
+   -- Obsolescent_Numeric_Literal --
+   ---------------------------------
+
+   overriding procedure Obsolescent_Numeric_Literal
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean) renames Numeric_Literal;
+
+   --------------------------------
+   -- Obsolescent_String_Literal --
+   --------------------------------
+
+   overriding procedure Obsolescent_String_Literal
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean) renames String_Literal;
 
    ----------------
    -- Set_Fabric --

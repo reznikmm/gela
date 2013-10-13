@@ -14,13 +14,15 @@ with Gela.Lexical.Scanners;
 with Gela.Lexical.Tokens;
 with Gela.Lexical.Types;
 with Gela.Lexical.Fabrics;
+with Gela.Mutables;
 
 package Gela.Lexical.Handler is
    pragma Preelaborate;
 
    procedure Initialize;
 
-   type Handler is new Gela.Lexical.Handlers.Handler with private;
+   type Handler (Compilation : Gela.Mutables.Mutable_Compilation_Access)
+     is new Gela.Lexical.Handlers.Handler with private;
 
    procedure Set_Fabric
      (Self   : in out Handler;
@@ -40,6 +42,13 @@ package Gela.Lexical.Handler is
       Token   : out Gela.Lexical.Tokens.Token;
       Skip    : in out Boolean);
 
+   overriding procedure Obsolescent_Numeric_Literal
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean);
+
    overriding procedure Character_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
@@ -48,6 +57,13 @@ package Gela.Lexical.Handler is
       Skip    : in out Boolean);
 
    overriding procedure String_Literal
+     (Self    : not null access Handler;
+      Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
+      Rule    : Gela.Lexical.Types.Rule_Index;
+      Token   : out Gela.Lexical.Tokens.Token;
+      Skip    : in out Boolean);
+
+   overriding procedure Obsolescent_String_Literal
      (Self    : not null access Handler;
       Scanner : not null access Gela.Lexical.Scanners.Scanner'Class;
       Rule    : Gela.Lexical.Types.Rule_Index;
@@ -98,7 +114,8 @@ private
 
    subtype Text_Index is Gela.Lexical.Text_Index;
 
-   type Handler is new Gela.Lexical.Handlers.Handler with record
+   type Handler (Compilation : Gela.Mutables.Mutable_Compilation_Access)
+     is new Gela.Lexical.Handlers.Handler with record
       Last       : Text_Index := 1;  --  Position of last character
       Line       : Positive := 1;    --  Last line number
       Line_First : Text_Index := 1;  --  Position of first character of line

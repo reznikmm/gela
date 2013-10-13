@@ -10,6 +10,7 @@
 with League.Strings;
 
 with Gela.Types;
+with Gela.Lexical;
 
 package Gela.Errors is
    pragma Preelaborate;
@@ -22,6 +23,12 @@ package Gela.Errors is
      (Self      : access Error_Handler;
       File_Name : League.Strings.Universal_String) is abstract;
    --  Can't lookup file passed in parameters
+
+   not overriding procedure Lexer_Error
+     (Self      : access Error_Handler;
+      File_Name : League.Strings.Universal_String;
+      Position  : Gela.Lexical.Position) is abstract;
+   --  Error while lexic analysis of file
 
    not overriding procedure No_Compilation_Unit_Body
      (Self      : access Error_Handler;

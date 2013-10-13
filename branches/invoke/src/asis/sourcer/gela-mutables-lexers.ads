@@ -69,7 +69,7 @@ private
          --  Components
          Scanner     : aliased Gela.Lexical.Scanners.Scanner;
          Source      : aliased String_Sources.String_Source;
-         Handler     : aliased Gela.Lexical.Handler.Handler;
+         Handler     : aliased Gela.Lexical.Handler.Handler (Compilation);
    end record;
 
    overriding function Next
