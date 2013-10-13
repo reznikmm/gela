@@ -4145,7 +4145,7 @@ Rules for task_definition. :
 (.
          ${task_definition.ast} :=
             +Self.Compilation.Store.Fabric.Task_Definition
-               (-${task_item_list.ast},
+               (-${task_item_list.ast:(null, 0)},
                 -${private_token.ast:(null, 0)},
                 -${private_items.ast:(null, 0)},
                 -${end_token.ast},

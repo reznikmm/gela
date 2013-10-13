@@ -554,7 +554,7 @@ exit_statement  ::=
 
 explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
 
-expression ::= membership_test | simple_expression;
+expression ::= membership_test | simple_expression | short_circuit;
 
 expression_or_box ::= expression | box;
 
