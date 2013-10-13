@@ -4398,10 +4398,10 @@ Rules for compilation_unit_list.compilation_unit :
 (.
          declare
             Conv : constant Gela.Nodes.Element := ${head.ast:+Self.Compilation.Store.
-              Fabric.Context_Item_Sequence};
-            List : constant Gela.Nodes.Context_Item_Sequence := -Conv;
+              Fabric.Compilation_Unit_Sequence};
+            List : constant Gela.Nodes.Compilation_Unit_Sequence := -Conv;
          begin
-            List.its.Prepend (List.Payload, ${compilation_unit.ast});
+            List.its.Append (List.Payload, ${compilation_unit.ast});
             ${compilation_unit_list.ast} := Conv;
          end;
 .)

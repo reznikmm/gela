@@ -355,7 +355,7 @@ package body Gela.Test_Cases.Execute is
          Name      => Name,
          Status    => Test_Cases.Error,
          Fixture   => League.Strings.To_Universal_String ("Ada_Test_Cases"),
-         File      => "tests/" & Name,
+         File      => <>,
          others    => <>);
 
    begin

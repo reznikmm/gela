@@ -45,7 +45,7 @@ package body Gela.Simple_Contexts is
       Full_Name : Gela.Types.Symbol;
       Unit      : Gela.Types.Compilation_Unit) is
    begin
-      Self.Bodies.Map.Insert (Full_Name, Unit);
+      Self.Specs.Map.Insert (Full_Name, Unit);
       Self.Units.Insert (Unit.Payload, Unit.Object);
    end Add_Library_Unit_Declaration;
 
