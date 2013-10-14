@@ -1577,6 +1577,7 @@ selective_accept ::=
 selector_name ::=
   identifier |
   enumeration_literal |
+  character_literal |
   operator_symbol;
 
 short_circuit ::=
@@ -1860,6 +1861,7 @@ Synthesized attributes
   token  : Boolean : Assigned;
 
 Synthesized attributes
+  character_literal,
   enumeration_literal,
   defining_designator,
   defining_expanded_unit_name,
@@ -1917,6 +1919,11 @@ Rules for operator_symbol.operator_symbol_token :
 Rules for enumeration_literal.enumeration_literal_token :
 (.
       ${enumeration_literal.full_name} := ${enumeration_literal_token.Symbol};
+.)
+
+Rules for character_literal.character_literal_token :
+(.
+      ${character_literal.full_name} := ${character_literal_token.Symbol};
 .)
 
 Rules for selected_identifier. :
