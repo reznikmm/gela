@@ -101,12 +101,12 @@ package body Gela.Stores.Fabrics is
    function Infix_Call
      (Self   : access Fabric;
       Prefix : Gela.Nodes.Token;
-      Left   : Gela.Nodes.Simple_Expression;
-      Right  : Gela.Nodes.Simple_Expression := (null, 0))
+      Left   : Gela.Nodes.Expression;
+      Right  : Gela.Nodes.Expression := (null, 0))
       return Gela.Nodes.Function_Call
    is
       use Gela.Nodes.Convertions;
-      use type Gela.Nodes.Simple_Expression_Access;
+      use type Gela.Nodes.Expression_Access;
 
       Conv : Gela.Nodes.Element := +Left;
       Name : constant Gela.Nodes.Element := +Self.Operator_Symbol (Prefix);
