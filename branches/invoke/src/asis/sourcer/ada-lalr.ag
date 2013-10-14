@@ -2474,14 +2474,14 @@ Rules for generic_renaming_declaration.function :
                 -${semicolon_token.ast});
 .)
 
-goto_statement ::= goto_token name semicolon_token;
+goto_statement ::= goto_token program_unit_name semicolon_token;
 
 Rules for goto_statement. :
 (.
          ${goto_statement.ast} :=
             +Self.Compilation.Store.Fabric.Goto_Statement
                (-${goto_token.ast},
-                -${name.ast},
+                -${program_unit_name.ast},
                 -${semicolon_token.ast});
 .)
 
