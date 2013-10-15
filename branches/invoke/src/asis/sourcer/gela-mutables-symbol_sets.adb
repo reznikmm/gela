@@ -129,7 +129,9 @@ package body Gela.Mutables.Symbol_Sets is
       elsif Length = 4 then  --  String literal (two charaters) "##"
          if Value.Element (3) = '=' then
             Char := Value.Element (2).To_Wide_Wide_Character;
-            Result := Map_2 (Char);
+            if Char in Map_2'Range then
+               Result := Map_2 (Char);
+            end if;
          elsif Value.Element (2) = '*' and Value.Element (3) = '*' then
             Result := Power_Value;
          else  --  This could be "or"
