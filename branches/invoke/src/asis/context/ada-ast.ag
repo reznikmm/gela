@@ -189,6 +189,9 @@ basic_declaration ::=
   object_renaming_declaration |
   exception_renaming_declaration |
   package_renaming_declaration |
+  generic_package_renaming |
+  generic_procedure_renaming |
+  generic_function_renaming |
   exception_declaration |
   generic_package_declaration |
   generic_function_declaration |
