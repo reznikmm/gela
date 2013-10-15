@@ -457,10 +457,11 @@ package body Gela.Simple_Compilation_Units is
      (Self    : access Simple_Unit_List;
       Unit    : Gela.Types.Compilation_Unit)
    is
-      Temp : Simple_Compilation_Unit_Access;
+      Temp : constant Simple_Compilation_Unit_Access :=
+        Simple_Compilation_Unit_Access (Unit.Object);
    begin
-      Temp := Simple_Compilation_Unit_Access (Self.Head.Object);
       Temp.Next_Unit := Self.Head;
       Self.Head := Unit;
+      Self.Count := Self.Count + 1;
    end Append;
 end Gela.Simple_Compilation_Units;

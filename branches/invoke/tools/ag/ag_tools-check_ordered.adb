@@ -17,6 +17,7 @@ package body AG_Tools.Check_Ordered is
    procedure Copy
      (G : Gela.Grammars.Grammar;
       V : in out Gela.Grammars.Constructors.Constructor;
+      Is_Option : in out Option_List;
       Is_Concrete : NT_List);
 
    procedure Copy_Attr
@@ -31,12 +32,14 @@ package body AG_Tools.Check_Ordered is
       V : in out Gela.Grammars.Constructors.Constructor;
       From : Gela.Grammars.Production_Index;
       To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List);
+      PL : in out Gela.Grammars.Constructors.Production_List;
+      Is_Option : in out Option_List);
 
    procedure Generate
      (G           : Gela.Grammars.Grammar;
       Implement   : NT_Map;
       Is_Concrete : NT_List;
+      Is_Option   : Option_List;
       Order       : Gela.Grammars.Ordered.Order_Maps.Map;
       Partitions  : Gela.Grammars.Ordered.Partition_Array;
       Pass        : in out Positive;
@@ -50,6 +53,24 @@ package body AG_Tools.Check_Ordered is
    This : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("This");
 
+   ----------------
+   -- Add_Option --
+   ----------------
+
+   procedure Add_Option
+     (Self : in out Option_List;
+      G    : Gela.Grammars.Grammar;
+      Prod : Gela.Grammars.Production;
+      Part : Gela.Grammars.Part)
+   is
+      use type League.Strings.Universal_String;
+      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      Name : constant League.Strings.Universal_String :=
+        NT.Name & " " & Prod.Name & " " & Part.Name;
+   begin
+      Self.Set.Insert (Name);
+   end Add_Option;
+
    -----------
    -- Check --
    -----------
@@ -57,54 +78,38 @@ package body AG_Tools.Check_Ordered is
    procedure Check
      (G           : Gela.Grammars.Grammar;
       Implement   : NT_Map;
-      Is_Concrete : NT_List)
+      Is_Concrete : NT_List;
+      Is_Option : Option_List)
    is
-      V : Gela.Grammars.Constructors.Constructor;
+      Ok     : Boolean;
+      Pass   : Positive := 1;
+      Result : constant Gela.Grammars.Grammar :=
+        Gela.Grammars_Convertors.Convert_With_Empty (G);
+      Order  : Gela.Grammars.Ordered.Order_Maps.Map;
+      Partitions : Gela.Grammars.Ordered.Partition_Array
+        (Result.Declaration'Range);
    begin
-      Copy (G, V, Is_Concrete);
+      --           Gela.Grammars_Debug.Print (G);
+      --           Gela.Grammars_Debug.Print (Result);
 
-      for Parent in Implement'Range (2) loop
-         for Child in Implement'Range (1) loop
-            declare
-               Done : League.String_Vectors.Universal_String_Vector;
-            begin
-               if Implement (Child, Parent) then
-                  Copy_Attr (G, V, Child, Parent, Done);
-               end if;
-            end;
-         end loop;
+      Ok := Gela.Grammars_Checks.Is_Well_Formed (Result, True);
+
+      if not Ok then
+         raise Constraint_Error with "Not well formed";
+      end if;
+
+      Gela.Grammars.Ordered.Find_Order (Result, Ok, Partitions, Order);
+
+      if not Ok then
+         raise Constraint_Error with "Not ordered";
+      end if;
+
+      while Ok loop
+         Generate
+           (Result, Implement,
+            Is_Concrete, Is_Option,
+            Order, Partitions, Pass, Ok);
       end loop;
-
-      declare
-         Ok     : Boolean;
-         Pass   : Positive := 1;
-         Temp   : constant Gela.Grammars.Grammar := V.Complete;
-         Result : constant Gela.Grammars.Grammar :=
-           Gela.Grammars_Convertors.Convert_With_Empty (Temp);
-         Order  : Gela.Grammars.Ordered.Order_Maps.Map;
-         Partitions : Gela.Grammars.Ordered.Partition_Array
-           (Result.Declaration'Range);
-      begin
---           Gela.Grammars_Debug.Print (G);
---           Gela.Grammars_Debug.Print (Result);
-
-         Ok := Gela.Grammars_Checks.Is_Well_Formed (Result, True);
-
-         if not Ok then
-            raise Constraint_Error with "Not well formed";
-         end if;
-
-         Gela.Grammars.Ordered.Find_Order (Result, Ok, Partitions, Order);
-
-         if not Ok then
-            raise Constraint_Error with "Not ordered";
-         end if;
-
-         while Ok loop
-            Generate
-              (Result, Implement, Is_Concrete, Order, Partitions, Pass, Ok);
-         end loop;
-      end;
    end Check;
 
    ----------------------
@@ -116,7 +121,8 @@ package body AG_Tools.Check_Ordered is
       V : in out Gela.Grammars.Constructors.Constructor;
       From : Gela.Grammars.Production_Index;
       To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List)
+      PL : in out Gela.Grammars.Constructors.Production_List;
+      Is_Option : in out Option_List)
    is
    begin
       for K in From .. To loop
@@ -142,12 +148,34 @@ package body AG_Tools.Check_Ordered is
                             (R.Name,
                                G.Non_Terminal (R.Denote).Name));
                   else
+                     --  remove Option from grammar by replacing its
+                     --  nested items
                      declare
-                        Next : Gela.Grammars.Constructors.Production_List :=
-                          V.Create_Production_List;
+                        Nested_Production : Gela.Grammars.Production renames
+                          G.Production (R.First);
+                        Nested_Part : Gela.Grammars.Part renames
+                          G.Part (Nested_Production.First);
                      begin
-                        Copy_Productions (G, V, R.First, R.Last, Next);
-                        P.Add (V.Create_Option (R.Name, Next));
+                        Is_Option.Add_Option
+                          (G, G.Production (R.Parent), Nested_Part);
+
+                        if Nested_Part.Is_Terminal_Reference then
+                           P.Add (V.Create_Terminal_Reference
+                                  (Nested_Part.Name,
+                                     G.Terminal (Nested_Part.Denote).Image));
+                        elsif Nested_Part.Is_List_Reference then
+                           P.Add (V.Create_List_Reference
+                                  (Nested_Part.Name,
+                                     G.Non_Terminal
+                                       (Nested_Part.Denote).Name));
+                        elsif Nested_Part.Is_Non_Terminal_Reference then
+                           P.Add (V.Create_Non_Terminal_Reference
+                                  (Nested_Part.Name,
+                                     G.Non_Terminal
+                                       (Nested_Part.Denote).Name));
+                        else
+                           raise Constraint_Error with "option in option";
+                        end if;
                      end;
                   end if;
                end;
@@ -165,6 +193,7 @@ package body AG_Tools.Check_Ordered is
    procedure Copy
      (G : Gela.Grammars.Grammar;
       V : in out Gela.Grammars.Constructors.Constructor;
+      Is_Option : in out Option_List;
       Is_Concrete : NT_List) is
    begin
       for J in G.Terminal'Range loop
@@ -188,7 +217,7 @@ package body AG_Tools.Check_Ordered is
             PL : Gela.Grammars.Constructors.Production_List :=
               V.Create_Production_List;
          begin
-            Copy_Productions (G, V, N.First, N.Last, PL);
+            Copy_Productions (G, V, N.First, N.Last, PL, Is_Option);
 
             if N.Is_List then
                V.Create_List (N.Name, PL);
@@ -286,6 +315,7 @@ package body AG_Tools.Check_Ordered is
      (G           : Gela.Grammars.Grammar;
       Implement   : NT_Map;
       Is_Concrete : NT_List;
+      Is_Option   : Option_List;
       Order       : Gela.Grammars.Ordered.Order_Maps.Map;
       Partitions  : Gela.Grammars.Ordered.Partition_Array;
       Pass        : in out Positive;
@@ -427,11 +457,24 @@ package body AG_Tools.Check_Ordered is
 
             Code.P (");");
          else
-            Code.N (To_Ada (P.Name));
-            Code.P (".its.Visit");
-            Code.N ("        (");
-            Code.N (To_Ada (P.Name));
-            Code.P (".Payload, Self);");
+            if Is_Option.Is_Option (G, P) then
+               Code.N ("if ");
+               Code.N (To_Ada (P.Name));
+               Code.P (".its /= null then");
+               Code.N ("         ");
+               Code.N (To_Ada (P.Name));
+               Code.P (".its.Visit");
+               Code.N ("           (");
+               Code.N (To_Ada (P.Name));
+               Code.P (".Payload, Self);");
+               Code.P ("      end if;");
+            else
+               Code.N (To_Ada (P.Name));
+               Code.P (".its.Visit");
+               Code.N ("        (");
+               Code.N (To_Ada (P.Name));
+               Code.P (".Payload, Self);");
+            end if;
          end if;
       end Generate_Call;
 
@@ -578,9 +621,9 @@ package body AG_Tools.Check_Ordered is
          Impl.P ("   is");
 
          Add_With_Stores (Unit);
-         Impl.N ("      use type Gela.Nodes.");
-         Impl.N (Item);
-         Impl.P ("_Access;");
+--           Impl.N ("      use type Gela.Nodes.");
+--           Impl.N (Item);
+--           Impl.P ("_Access;");
 
          Impl.N ("      This : constant Gela.Stores.");
          Impl.P (Unit);
@@ -886,6 +929,7 @@ package body AG_Tools.Check_Ordered is
       Spec.N (Natural (Pass));
       Impl.N (Natural (Pass));
       Spec.P (" is", Impl);
+      Impl.P ("   use Gela.Nodes;");
       Spec.P;
       Spec.P ("   type Visiter");
       Spec.P ("     (Compilation : Gela.Mutables.Mutable_Compilation_Access)");
@@ -925,6 +969,24 @@ package body AG_Tools.Check_Ordered is
    end Generate;
 
    ---------------
+   -- Is_Option --
+   ---------------
+
+   function Is_Option
+     (Self : Option_List;
+      G    : Gela.Grammars.Grammar;
+      Part : Gela.Grammars.Part) return Boolean
+   is
+      use type League.Strings.Universal_String;
+      Prod : Gela.Grammars.Production renames G.Production (Part.Parent);
+      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      Name : constant League.Strings.Universal_String :=
+        NT.Name & " " & Prod.Name & " " & Part.Name;
+   begin
+      return Self.Set.Contains (Name);
+   end Is_Option;
+
+   ---------------
    -- List_Item --
    ---------------
 
@@ -938,5 +1000,34 @@ package body AG_Tools.Check_Ordered is
    begin
       return Part.Denote;
    end List_Item;
+
+   -----------------
+   -- Pre_Process --
+   -----------------
+
+   function Pre_Process
+     (G : Gela.Grammars.Grammar;
+      Implement : NT_Map;
+      Is_Concrete : NT_List;
+      Is_Option : in out Option_List) return Gela.Grammars.Grammar_Access
+   is
+      V : Gela.Grammars.Constructors.Constructor;
+   begin
+      Copy (G, V, Is_Option, Is_Concrete);
+
+      for Parent in Implement'Range (2) loop
+         for Child in Implement'Range (1) loop
+            declare
+               Done : League.String_Vectors.Universal_String_Vector;
+            begin
+               if Implement (Child, Parent) then
+                  Copy_Attr (G, V, Child, Parent, Done);
+               end if;
+            end;
+         end loop;
+      end loop;
+
+      return new Gela.Grammars.Grammar'(V.Complete);
+   end Pre_Process;
 
 end AG_Tools.Check_Ordered;

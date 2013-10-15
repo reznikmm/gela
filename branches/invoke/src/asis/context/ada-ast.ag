@@ -830,7 +830,7 @@ function_body ::=
   token                      <exception_token>
   {exception_handler}        <Body_Exception_Handlers>
   token                      <end_token>
-  designator                 <end_name>
+  [designator                <end_name>]
   token                      <semicolon_token>
 ;
 
@@ -976,7 +976,7 @@ generic_package_declaration ::=
   token                      <private_token>
   {basic_declarative_item}   <Private_Part_Declarative_Items>
   token                      <end_token>
-  program_unit_name          <end_name>
+  [program_unit_name         <end_name>]
   token                      <semicolon_token>
 ;
 
@@ -1236,7 +1236,7 @@ package_body ::=
   token                      <exception_token>
   {exception_handler}        <Body_Exception_Handlers>
   token                      <end_token>
-  program_unit_name          <end_name>
+  [program_unit_name         <end_name>]
   token                      <semicolon_token>
 ;
 
@@ -1259,7 +1259,7 @@ package_declaration ::=
   token                      <private_token>
   {basic_declarative_item}   <Private_Part_Declarative_Items>
   token                      <end_token>
-  program_unit_name          <end_name>
+  [program_unit_name         <end_name>]
   token                      <semicolon_token>
 ;
 
@@ -1373,7 +1373,7 @@ procedure_body ::=
   token                      <exception_token>
   {exception_handler}        <Body_Exception_Handlers>
   token                      <end_token>
-  program_unit_name          <end_name>
+  [program_unit_name         <end_name>]
   token                      <semicolon_token>
 ;
 
