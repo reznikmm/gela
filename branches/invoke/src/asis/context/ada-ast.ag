@@ -2,7 +2,7 @@ Token token;
 
 Compilation ::=
   {compilation_unit} <units>
-  {pragma_node}      <Compilation_Pragmas>
+  {context_item}     <Compilation_Pragmas>
 ;
 
 abort_statement ::=

@@ -106,7 +106,7 @@ Token character_literal_token;
 Token string_literal_token;
 
 Compilation ::= compilation_unit 
-  {compilation_unit};
+  {compilation_unit} {context_item};
 
 Rules for Compilation. :
 (.
@@ -117,7 +117,7 @@ Rules for Compilation. :
          begin
             List.its.Prepend (List.Payload, ${compilation_unit.ast});
             ${Compilation.ast} := +Self.Compilation.Store.Fabric.Compilation
-               (List, (null, 0));
+               (List, -${context_item_list.ast:(null, 0)});
          end;
 .)
 
