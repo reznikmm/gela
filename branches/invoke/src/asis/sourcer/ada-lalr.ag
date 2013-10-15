@@ -1770,8 +1770,8 @@ Rules for formal_package_actual_part.box :
             List : constant Gela.Nodes.Generic_Association_Sequence := -Conv;
             Box  : constant Gela.Nodes.Element :=
               +Self.Compilation.Store.Fabric.Generic_Association
-                (-${others_choice.ast},
-                 -${arrow_token.ast},
+                (-${others_choice.ast:(null, 0)},
+                 -${arrow_token.ast:(null, 0)},
                  (null, 0),
                  -${box_token.ast});
          begin
