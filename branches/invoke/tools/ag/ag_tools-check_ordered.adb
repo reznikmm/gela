@@ -929,6 +929,7 @@ package body AG_Tools.Check_Ordered is
       Spec.N (Natural (Pass));
       Impl.N (Natural (Pass));
       Spec.P (" is", Impl);
+      Spec.P ("   pragma Preelaborate;");
       Impl.P ("   use Gela.Nodes;");
       Spec.P;
       Spec.P ("   type Visiter");
