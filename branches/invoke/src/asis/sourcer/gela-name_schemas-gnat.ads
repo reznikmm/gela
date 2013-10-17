@@ -10,6 +10,7 @@
 with League.Strings;
 
 package Gela.Name_Schemas.GNAT is
+   pragma Preelaborate;
 
    type GNAT_Name_Schema is new Name_Schema with null record;
 

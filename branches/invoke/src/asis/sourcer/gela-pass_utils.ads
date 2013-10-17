@@ -11,6 +11,7 @@ with Gela.Types;
 with Gela.Mutables;
 
 package Gela.Pass_Utils is
+   pragma Preelaborate;
 
    function Create_Unit_Declaration
      (Comp       : Gela.Mutables.Mutable_Compilation_Access;

@@ -40,7 +40,7 @@ package body Gela.Mutables.Compilations is
 
    function Create
      (Name    : League.Strings.Universal_String;
-      Context : Gela.Types.Context_Access;
+      Context : Gela.Simple_Contexts.Context_Access;
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;

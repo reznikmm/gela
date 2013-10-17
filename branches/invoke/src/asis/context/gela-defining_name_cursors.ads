@@ -11,6 +11,7 @@ with Gela.Types;
 with Gela.Nodes;
 
 package Gela.Defining_Name_Cursors is
+   pragma Preelaborate;
 
    type Abstract_Defining_Name_Cursor is interface;
 

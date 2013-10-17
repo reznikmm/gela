@@ -10,6 +10,7 @@
 
 with Ada.Exceptions;
 with Ada.Characters.Handling;
+with Ada.Unchecked_Deallocation;
 
 with Asis.Errors;
 with Asis.Exceptions;
@@ -25,12 +26,14 @@ with Gela.Contexts;
 with Gela.Errors;
 with Gela.Lexical;
 with Gela.Types;
-with Ada.Unchecked_Deallocation;
+with Gela.Errors.Put_Lines;
 
 package body Asis.Ada_Environments is
 
    package Error_Handler is
-      type Handler is new Gela.Errors.Error_Handler with null record;
+      type Handler is new Gela.Errors.Error_Handler with record
+         Output : aliased Gela.Errors.Put_Lines.Handler;
+      end record;
 
       overriding procedure File_Not_Found
         (Self      : access Handler;
@@ -199,8 +202,9 @@ package body Asis.Ada_Environments is
         (Self      : access Handler;
          File_Name : League.Strings.Universal_String)
       is
-         pragma Unreferenced (Self);
       begin
+         Self.Output.File_Not_Found (File_Name);
+
          Implementation.Set_Status
            (Status    => Asis.Errors.Parameter_Error,
             Diagnosis => "File not found:" & File_Name.To_UTF_16_Wide_String);
@@ -215,15 +219,9 @@ package body Asis.Ada_Environments is
       overriding procedure Lexer_Error
         (Self      : access Handler;
          File_Name : League.Strings.Universal_String;
-         Position  : Gela.Lexical.Position)
-      is
-         pragma Unreferenced (Self);
-         pragma Unreferenced (Position);
+         Position  : Gela.Lexical.Position) is
       begin
-         Implementation.Set_Status
-           (Status    => Asis.Errors.Parameter_Error,
-            Diagnosis => "Error while lexic analysis of file:" &
-              File_Name.To_UTF_16_Wide_String);
+         Self.Output.Lexer_Error (File_Name, Position);
       end Lexer_Error;
 
       ------------------------------
@@ -232,10 +230,9 @@ package body Asis.Ada_Environments is
 
       overriding procedure No_Compilation_Unit_Body
         (Self      : access Handler;
-         Unit_Name : League.Strings.Universal_String)
-      is
-         pragma Unreferenced (Self);
+         Unit_Name : League.Strings.Universal_String) is
       begin
+         Self.Output.No_Compilation_Unit_Body (Unit_Name);
          Implementation.Set_Status
            (Status    => Asis.Errors.Parameter_Error,
             Diagnosis => "Body of a unit not provided and not found:" &
@@ -250,10 +247,10 @@ package body Asis.Ada_Environments is
 
       overriding procedure No_Compilation_Unit_Declaration
         (Self      : access Handler;
-         Unit_Name : League.Strings.Universal_String)
-      is
-         pragma Unreferenced (Self);
+         Unit_Name : League.Strings.Universal_String) is
       begin
+         Self.Output.No_Compilation_Unit_Declaration (Unit_Name);
+
          Implementation.Set_Status
            (Status    => Asis.Errors.Parameter_Error,
             Diagnosis => "Declaration of a unit not provided and not found:" &
@@ -268,10 +265,10 @@ package body Asis.Ada_Environments is
 
       overriding procedure Not_In_NFKC_Warning
         (Self        : access Handler;
-         Compilation : Gela.Types.Compilation_Access)
-      is
-         pragma Unreferenced (Self);
+         Compilation : Gela.Types.Compilation_Access) is
       begin
+         Self.Output.Not_In_NFKC_Warning (Compilation);
+
          Implementation.Set_Status
            (Status    => Asis.Errors.Data_Error,
             Diagnosis =>
@@ -284,10 +281,9 @@ package body Asis.Ada_Environments is
       -- Singe_File_Expected --
       -------------------------
 
-      overriding procedure Singe_File_Expected (Self : access Handler)
-      is
-         pragma Unreferenced (Self);
+      overriding procedure Singe_File_Expected (Self : access Handler) is
       begin
+         Self.Output.Singe_File_Expected;
          Implementation.Set_Status
            (Status    => Asis.Errors.Parameter_Error,
             Diagnosis => "Singe file name expected in Parameters");
@@ -301,10 +297,10 @@ package body Asis.Ada_Environments is
 
       overriding procedure Syntax_Error
         (Self      : access Handler;
-         File_Name : League.Strings.Universal_String)
-      is
-         pragma Unreferenced (Self);
+         File_Name : League.Strings.Universal_String) is
       begin
+         Self.Output.Syntax_Error (File_Name);
+
          Implementation.Set_Status
            (Status    => Asis.Errors.Use_Error,
             Diagnosis => "Syntax error:" & File_Name.To_UTF_16_Wide_String);

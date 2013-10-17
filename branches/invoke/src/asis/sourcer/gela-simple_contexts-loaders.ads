@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 package Gela.Simple_Contexts.Loaders is
+   pragma Preelaborate;
 
    type Loader (Context : Context_Access) is tagged private;
    type Loader_Access is access all Gela.Simple_Contexts.Loaders.Loader;
@@ -18,8 +19,7 @@ package Gela.Simple_Contexts.Loaders is
    --  Procedure reads a unit, its declaration, parent and withed units,
    --  then runs passes and adds resulting Compilation_Unit to Self.Context
 
-   function Get_Loader
-     (Context : Gela.Types.Context_Access) return Loader_Access;
+   function Get_Loader (Context : Context_Access) return Loader_Access;
 
    procedure Read_File_And_Supporters
      (Self : in out Loader;

@@ -10,9 +10,7 @@
 with Ada.Unchecked_Deallocation;
 
 with League.String_Vectors;
-with League.Application;
 
-with Gela.Errors.Put_Lines;
 with Gela.Lexical.Handler;
 with Gela.Compilation_Units; pragma Unreferenced (Gela.Compilation_Units);
 with Gela.Simple_Contexts.Loaders;
@@ -69,9 +67,7 @@ package body Gela.Simple_Contexts is
       Self.Debug.Clear;
       Self.Parse_Parameters;
 
-      if Self.Errors = null then
-         Self.Errors := new Gela.Errors.Put_Lines.Handler;
-
+      if Self.Loader = null then
          Gela.Lexical.Handler.Initialize;
 
          Self.Loader := new Gela.Simple_Contexts.Loaders.Loader
@@ -185,29 +181,15 @@ package body Gela.Simple_Contexts is
       return League.Strings.Empty_Universal_String;
    end Debug_Image;
 
-   ------------------
-   -- Default_Path --
-   ------------------
-
-   function Default_Path
-     (Self : access Context) return League.Strings.Universal_String
-   is
-      pragma Unreferenced (Self);
-      Gela_Include_Path : constant League.Strings.Universal_String :=
-        League.Strings.To_Universal_String ("GELA_INCLUDE_PATH");
-   begin
-      return League.Application.Environment.Value (Gela_Include_Path);
-   end Default_Path;
-
    ----------------
    -- Dissociate --
    ----------------
 
    overriding procedure Dissociate (Self : access Context) is
       procedure Free is new Ada.Unchecked_Deallocation
-        (Gela.Errors.Error_Handler'Class, Gela.Errors.Error_Handler_Access);
+        (Gela.Simple_Contexts.Loaders.Loader, Loader_Access);
    begin
-      Free (Self.Errors);
+      Free (Self.Loader);
    end Dissociate;
 
    -------------
@@ -246,6 +228,17 @@ package body Gela.Simple_Contexts is
       return (Gela.Types.Compilation_Unit_Cursor_Access (This),
               Gela.Types.Payload (Self.Map.First_Key));
    end First;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize
+     (Self         : access Context;
+      Default_Path : League.Strings.Universal_String) is
+   begin
+      Self.Default_Path := Default_Path;
+   end Initialize;
 
    -------------
    -- Is_Open --
@@ -410,7 +403,7 @@ package body Gela.Simple_Contexts is
 
       procedure Singe_Unit_Expected is
       begin
-         Self.On_Error.Singe_File_Expected;
+         Self.Errors.Singe_File_Expected;
          --  ("Singe unit name expected in Parameters");
       end Singe_Unit_Expected;
 

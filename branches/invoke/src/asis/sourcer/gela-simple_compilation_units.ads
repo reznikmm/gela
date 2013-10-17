@@ -15,7 +15,7 @@ with Gela.Mutables;
 with Gela.Types;
 
 package Gela.Simple_Compilation_Units is
---   pragma Preelaborate;
+   pragma Preelaborate;
 
    type Simple_Compilation_Unit is
      new Gela.Compilation_Units.Abstract_Compilation_Unit

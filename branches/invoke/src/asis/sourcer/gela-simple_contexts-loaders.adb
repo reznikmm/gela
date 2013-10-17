@@ -19,10 +19,9 @@ package body Gela.Simple_Contexts.Loaders is
    -- Get_Loader --
    ----------------
 
-   function Get_Loader
-     (Context : Gela.Types.Context_Access) return Loader_Access is
+   function Get_Loader (Context : Context_Access) return Loader_Access is
    begin
-      return Loader_Access (Context_Access (Context).Loader);
+      return Loader_Access (Context.Loader);
    end Get_Loader;
 
    ------------------------------
@@ -46,7 +45,7 @@ package body Gela.Simple_Contexts.Loaders is
 
       Comp := Gela.Mutables.Compilations.Create
         (Name    => Name,
-         Context => Gela.Types.Context_Access (Self.Context),
+         Context => Self.Context,
          Source  => Text,
          Errors  => Self.Context.Errors,
          Symbols => Gela.Types.Symbol_Set_Access (Set),
@@ -55,7 +54,7 @@ package body Gela.Simple_Contexts.Loaders is
       Comp.Start;
 
       if Comp.Root.its = null then
-         Self.Context.On_Error.Syntax_Error (Name);
+         Self.Context.Errors.Syntax_Error (Name);
       end if;
 
       declare
@@ -150,7 +149,7 @@ package body Gela.Simple_Contexts.Loaders is
       Self.Context.Finder.Lookup_File (File_Name, Found, Name, Text);
 
       if not Found then
-         Self.Context.On_Error.File_Not_Found (File_Name);
+         Self.Context.Errors.File_Not_Found (File_Name);
       else
          Self.Read_File_And_Supporters (Name, Text);
       end if;

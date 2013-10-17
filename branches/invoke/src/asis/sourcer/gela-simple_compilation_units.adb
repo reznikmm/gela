@@ -7,17 +7,12 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Simple_Contexts;
 with Gela.Mutables.Compilations;
 pragma Unreferenced (Gela.Mutables.Compilations);
 
 package body Gela.Simple_Compilation_Units is
 
    type Simple_Unit_List_Access is access all Simple_Unit_List;
-
-   function Context
-     (Self : access Simple_Compilation_Unit'Class)
-      return Gela.Simple_Contexts.Context_Access;
 
    function Create
      (Compilation : Gela.Mutables.Mutable_Compilation_Access;
@@ -40,17 +35,6 @@ package body Gela.Simple_Compilation_Units is
    begin
       return Gela.Types.Compilation_Access (Self.Compilation);
    end Compilation;
-
-   -------------
-   -- Context --
-   -------------
-
-   function Context
-     (Self : access Simple_Compilation_Unit'Class)
-      return Gela.Simple_Contexts.Context_Access is
-   begin
-      return Gela.Simple_Contexts.Context_Access (Self.Compilation.Context);
-   end Context;
 
    ------------------------
    -- Corresponding_Body --
@@ -171,8 +155,7 @@ package body Gela.Simple_Compilation_Units is
          Unit.Corresponding_Body := Temp;
       end if;
 
-      Gela.Simple_Contexts.Context_Access
-        (Compilation.Context).Add_Compilation_Unit_Body (Full_Name, Temp);
+      Compilation.Context.Add_Compilation_Unit_Body (Full_Name, Temp);
 
       return Temp;
    end Create_Body;
@@ -200,8 +183,7 @@ package body Gela.Simple_Compilation_Units is
          Unit_Class  => Unit_Class,
          Full_Name   => Full_Name);
 
-      Gela.Simple_Contexts.Context_Access
-        (Compilation.Context).Add_Library_Unit_Declaration (Full_Name, Temp);
+      Compilation.Context.Add_Library_Unit_Declaration (Full_Name, Temp);
 
       return Temp;
    end Create_Declaration;
@@ -237,8 +219,7 @@ package body Gela.Simple_Compilation_Units is
       Unit := Simple_Compilation_Unit_Access (Inside.Object);
       Unit.Subunits.Append (Temp);
 
-      Gela.Simple_Contexts.Context_Access
-        (Compilation.Context).Add_Compilation_Unit_Body (Full_Name, Temp);
+      Compilation.Context.Add_Compilation_Unit_Body (Full_Name, Temp);
 
       return Temp;
    end Create_Subunit;
@@ -254,7 +235,7 @@ package body Gela.Simple_Compilation_Units is
    is
       pragma Unreferenced (Payload);
    begin
-      return Gela.Types.Container_Access (Context (Self));
+      return Gela.Types.Container_Access (Self.Compilation.Context);
    end Enclosing_Container;
 
    -----------
@@ -360,7 +341,7 @@ package body Gela.Simple_Compilation_Units is
    is
       pragma Unreferenced (Payload);
    begin
-      return Context (Self).Symbols.Value (Self.Full_Name);
+      return Self.Compilation.Context.Symbols.Value (Self.Full_Name);
    end Unit_Full_Name;
 
    ---------------

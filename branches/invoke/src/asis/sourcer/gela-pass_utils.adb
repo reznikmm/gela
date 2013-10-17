@@ -47,7 +47,7 @@ package body Gela.Pass_Utils is
          if Unit_Kind not in
            Gela.Types.A_Procedure_Body .. Gela.Types.A_Function_Body
          then
-            Loader.Context.On_Error.No_Compilation_Unit_Declaration
+            Loader.Context.Errors.No_Compilation_Unit_Declaration
               (Loader.Context.Symbols.Value (Full_Name));
             --  Can't proceed without unit declaration
             return 0;
@@ -92,7 +92,7 @@ package body Gela.Pass_Utils is
 
       Unit       : Gela.Types.Compilation_Unit;
       pragma Unreferenced (Unit);
-      Payload    : constant Gela.Types.Payload :=
+      Payload    : Gela.Types.Payload :=
         Gela.Types.Payload (Full_Name) * 2 + 1;
       Unit_Class : Gela.Types.Unit_Classes;
    begin
@@ -108,6 +108,8 @@ package body Gela.Pass_Utils is
          Kind        => Unit_Kind,
          Unit_Class  => Unit_Class,
          Full_Name   => Full_Name);
+
+      Comp.Env.Create_Empty_Table (Payload);
 
       return Payload;
    end Create_Unit_Declaration;
@@ -137,7 +139,7 @@ package body Gela.Pass_Utils is
       Loader.Read_Unit_Body (Parent, Unit, Ok);
 
       if not Ok then
-         Loader.Context.On_Error.No_Compilation_Unit_Body
+         Loader.Context.Errors.No_Compilation_Unit_Body
            (Loader.Context.Symbols.Value (Parent));
          --  Can't proceed without unit declaration
          return 0;

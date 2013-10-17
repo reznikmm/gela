@@ -8,15 +8,17 @@
 ------------------------------------------------------------------------------
 
 with Ada.Unchecked_Deallocation;
-with Ada.Directories;
 with Ada.Streams.Stream_IO;
 
 with League.String_Vectors;
-with League.Text_Codecs;
+--  with League.Text_Codecs;
 
 package body Gela.Source_Finders is
 
-   function Read_File (Name : String) return League.Strings.Universal_String;
+   procedure Read_File
+     (Name  : String;
+      Text  : out League.Strings.Universal_String;
+      Found : out Boolean);
 
    ------------
    -- Create --
@@ -60,6 +62,10 @@ package body Gela.Source_Finders is
 
       Free (Self);
    end Destroy;
+
+   -------------------
+   -- Is_Predefined --
+   -------------------
 
    function Is_Predefined
      (Self  : access Source_Finder;
@@ -125,10 +131,10 @@ package body Gela.Source_Finders is
          --  Shell we use here Codec_For_Application_Locale?
          Full_Name : constant String := Result.To_UTF_8_String;
       begin
-         if Ada.Directories.Exists (Full_Name) then
+         Read_File (Full_Name, Text, Found);
+
+         if Found then
             File := Result;
-            Text := Read_File (Full_Name);
-            Found := True;
          elsif Self.Next /= null then
             Self.Next.Lookup_File (Name, Found, File, Text);
          else
@@ -141,26 +147,37 @@ package body Gela.Source_Finders is
    -- Read_File --
    ---------------
 
-   function Read_File (Name : String) return League.Strings.Universal_String is
-      Decoder : constant League.Text_Codecs.Text_Codec :=
-        League.Text_Codecs.Codec_For_Application_Locale;
-
-      Size : constant Ada.Directories.File_Size :=
-        Ada.Directories.Size (Name);
-
-      Length : constant Ada.Streams.Stream_Element_Offset :=
-        Ada.Streams.Stream_Element_Count (Size);
-
+   procedure Read_File
+     (Name  : String;
+      Text  : out League.Strings.Universal_String;
+      Found : out Boolean)
+   is
       File   : Ada.Streams.Stream_IO.File_Type;
-      Data   : Ada.Streams.Stream_Element_Array (1 .. Length);
-      Last   : Ada.Streams.Stream_Element_Offset;
    begin
       Ada.Streams.Stream_IO.Open
         (File, Ada.Streams.Stream_IO.In_File, Name);
-      Ada.Streams.Stream_IO.Read (File, Data, Last);
-      Ada.Streams.Stream_IO.Close (File);
 
-      return Decoder.Decode (Data (1 .. Last));
+      declare
+         Size : constant Ada.Streams.Stream_IO.Count :=
+           Ada.Streams.Stream_IO.Size (File);
+
+         Length : constant Ada.Streams.Stream_Element_Offset :=
+           Ada.Streams.Stream_Element_Count (Size);
+
+         Data   : Ada.Streams.Stream_Element_Array (1 .. Length);
+         Aux    : String (1 .. Natural (Length));
+         for Aux'Address use Data'Address;
+         Last   : Ada.Streams.Stream_Element_Offset;
+      begin
+         Ada.Streams.Stream_IO.Read (File, Data, Last);
+         Ada.Streams.Stream_IO.Close (File);
+
+         Text := League.Strings.From_UTF_8_String (Aux (1 .. Natural (Last)));
+         Found := True;
+      end;
+   exception
+      when Ada.Streams.Stream_IO.Name_Error =>
+         Found := False;
    end Read_File;
 
 end Gela.Source_Finders;

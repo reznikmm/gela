@@ -12,6 +12,7 @@ with League.Strings;
 with Gela.Name_Schemas;
 
 package Gela.Source_Finders is
+   pragma Preelaborate;
 
    type Source_Finder is tagged private;
    type Source_Finder_Access is access all Source_Finder'Class;

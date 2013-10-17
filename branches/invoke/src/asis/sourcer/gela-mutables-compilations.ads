@@ -17,10 +17,12 @@ with Gela.Types;
 
 with Gela.Mutables.Lexers;
 with Gela.Mutables.Parsers;
+with Gela.Mutables.Symbol_Tables;
 with Gela.Nodes;
 
 with Gela.Stores;
 with Gela.Stores.Fabrics;
+with Gela.Simple_Contexts;
 
 package Gela.Mutables.Compilations is
    pragma Preelaborate;
@@ -40,7 +42,7 @@ package Gela.Mutables.Compilations is
       CPU_Spent   : Duration;
       Origin      : Gela.Types.Unit_Origins;
       --  Components
-      Context : Gela.Types.Context_Access;
+      Context : Gela.Simple_Contexts.Context_Access;
       Store   : Mutables.Compilations.Store (Compilation'Unchecked_Access);
       Root    : Gela.Nodes.Element;
       Errors  : Gela.Errors.Error_Handler_Access;
@@ -48,11 +50,13 @@ package Gela.Mutables.Compilations is
       Parser  : aliased Mutables.Parsers.Parser
                           (Compilation'Unchecked_Access);
       Symbols : Gela.Types.Symbol_Set_Access;
+      Env     : aliased Mutables.Symbol_Tables.Symbol_Table
+                          (Compilation'Unchecked_Access);
    end record;
 
    function Create
      (Name    : League.Strings.Universal_String;
-      Context : Gela.Types.Context_Access;
+      Context : Gela.Simple_Contexts.Context_Access;
       Source  : League.Strings.Universal_String;
       Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : Gela.Types.Symbol_Set_Access;

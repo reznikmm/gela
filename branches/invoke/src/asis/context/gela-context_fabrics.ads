@@ -18,7 +18,7 @@ package Gela.Context_Fabrics is
 
    procedure Create_Context
      (Self     : in out Context_Fabric;
-      On_Error : Gela.Errors.Error_Handler_Access;
+      On_Error : not null Gela.Errors.Error_Handler_Access;
       Result   : out Types.Context_Access) is abstract;
 
 end Gela.Context_Fabrics;

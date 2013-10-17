@@ -22,12 +22,17 @@ limited with Gela.Simple_Contexts.Loaders;
 with Gela.Mutables.Symbol_Sets;
 
 package Gela.Simple_Contexts is
+   pragma Preelaborate;
 
-   type Context (On_Error : Gela.Errors.Error_Handler_Access)
+   type Context (Errors : Gela.Errors.Error_Handler_Access)
      is limited new Gela.Contexts.Context
      and Gela.Unit_Containers.Unit_Container with private;
 
    type Context_Access is access all Context;
+
+   procedure Initialize
+     (Self         : access Context;
+      Default_Path : League.Strings.Universal_String);
 
    not overriding function Symbols
      (Self    : access Context) return Gela.Types.Symbol_Set_Access;
@@ -93,7 +98,7 @@ private
 
    type Loader_Access is access all Gela.Simple_Contexts.Loaders.Loader;
 
-   type Context (On_Error : Gela.Errors.Error_Handler_Access)
+   type Context (Errors : Gela.Errors.Error_Handler_Access)
      is limited new Gela.Contexts.Context
      and Gela.Unit_Containers.Unit_Container with
    record
@@ -105,6 +110,7 @@ private
       --  File to read
       Path : League.Strings.Universal_String;
       --  Search path
+      Default_Path : League.Strings.Universal_String;
       Debug : League.Strings.Universal_String;
       --  TODO
       Loader  : Loader_Access;
@@ -113,16 +119,12 @@ private
       Units   : Payload_Maps.Map;
       Schema  : aliased Gela.Name_Schemas.GNAT.GNAT_Name_Schema;
       Finder  : Gela.Source_Finders.Source_Finder_Access;
-      Errors  : Gela.Errors.Error_Handler_Access;
       Symbols : aliased Mutables.Symbol_Sets.Symbol_Set;
    end record;
 
    procedure Parse_Parameters (Self : access Context);
    --  Parse Self.Parameters and fill Context fields.
    --  Raise ASIS_Failed if parameters inconsistent
-
-   function Default_Path
-     (Self : access Context) return League.Strings.Universal_String;
 
    overriding procedure Associate
      (Self       : access Context;
