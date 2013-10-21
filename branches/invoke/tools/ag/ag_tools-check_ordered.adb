@@ -1,6 +1,14 @@
+------------------------------------------------------------------------------
+--                        G E L A   G R A M M A R S                         --
+--          Library for dealing with grammars for Gela project,             --
+--                        a portable Ada compiler                           --
+--                        http://gela.ada-ru.org/                           --
+--                     - - - - - - - - - - - - - - -                        --
+--              Read copyright and license in gela.ads file                 --
+------------------------------------------------------------------------------
+
 with Ada.Text_IO;
 
-with Gela.Grammars.Constructors;
 --  with Gela.Grammars_Debug;
 with Gela.Grammars_Checks;
 with Gela.Grammars_Convertors;
@@ -11,35 +19,12 @@ with League.Strings;
 with League.String_Vectors;
 
 with AG_Tools.Writers; use AG_Tools.Writers;
+with AG_Tools.Input;   use AG_Tools.Input;
 
 package body AG_Tools.Check_Ordered is
 
-   procedure Copy
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      Is_Option : in out Option_List;
-      Is_Concrete : NT_List);
-
-   procedure Copy_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Child  : Gela.Grammars.Non_Terminal_Index;
-      Parent : Gela.Grammars.Non_Terminal_Index;
-      Done   : in out League.String_Vectors.Universal_String_Vector);
-
-   procedure Copy_Productions
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      From : Gela.Grammars.Production_Index;
-      To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List;
-      Is_Option : in out Option_List);
-
    procedure Generate
      (G           : Gela.Grammars.Grammar;
-      Implement   : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option   : Option_List;
       Order       : Gela.Grammars.Ordered.Order_Maps.Map;
       Partitions  : Gela.Grammars.Ordered.Partition_Array;
       Pass        : in out Positive;
@@ -53,38 +38,16 @@ package body AG_Tools.Check_Ordered is
    This : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("This");
 
-   ----------------
-   -- Add_Option --
-   ----------------
-
-   procedure Add_Option
-     (Self : in out Option_List;
-      G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production;
-      Part : Gela.Grammars.Part)
-   is
-      use type League.Strings.Universal_String;
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
-      Name : constant League.Strings.Universal_String :=
-        NT.Name & " " & Prod.Name & " " & Part.Name;
-   begin
-      Self.Set.Insert (Name);
-   end Add_Option;
-
    -----------
    -- Check --
    -----------
 
-   procedure Check
-     (G           : Gela.Grammars.Grammar;
-      Implement   : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option : Option_List)
-   is
+   procedure Check is
       Ok     : Boolean;
       Pass   : Positive := 1;
       Result : constant Gela.Grammars.Grammar :=
-        Gela.Grammars_Convertors.Convert_With_Empty (G);
+        Gela.Grammars_Convertors.Convert_With_Empty
+          (AG_Tools.Input.Grammar.all);
       Order  : Gela.Grammars.Ordered.Order_Maps.Map;
       Partitions : Gela.Grammars.Ordered.Partition_Array
         (Result.Declaration'Range);
@@ -106,206 +69,9 @@ package body AG_Tools.Check_Ordered is
 
       while Ok loop
          Generate
-           (Result, Implement,
-            Is_Concrete, Is_Option,
-            Order, Partitions, Pass, Ok);
+           (Result, Order, Partitions, Pass, Ok);
       end loop;
    end Check;
-
-   ----------------------
-   -- Copy_Productions --
-   ----------------------
-
-   procedure Copy_Productions
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      From : Gela.Grammars.Production_Index;
-      To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List;
-      Is_Option : in out Option_List)
-   is
-   begin
-      for K in From .. To loop
-         declare
-            S : Gela.Grammars.Production renames G.Production (K);
-            P : Gela.Grammars.Constructors.Production :=
-              V.Create_Production (S.Name, S.Precedence);
-         begin
-            for X in S.First .. S.Last loop
-               declare
-                  R : Gela.Grammars.Part renames G.Part (X);
-               begin
-                  if R.Is_Terminal_Reference then
-                     P.Add (V.Create_Terminal_Reference
-                            (R.Name,
-                               G.Terminal (R.Denote).Image));
-                  elsif R.Is_List_Reference then
-                     P.Add (V.Create_List_Reference
-                            (R.Name,
-                               G.Non_Terminal (R.Denote).Name));
-                  elsif R.Is_Non_Terminal_Reference then
-                     P.Add (V.Create_Non_Terminal_Reference
-                            (R.Name,
-                               G.Non_Terminal (R.Denote).Name));
-                  else
-                     --  remove Option from grammar by replacing its
-                     --  nested items
-                     declare
-                        Nested_Production : Gela.Grammars.Production renames
-                          G.Production (R.First);
-                        Nested_Part : Gela.Grammars.Part renames
-                          G.Part (Nested_Production.First);
-                     begin
-                        Is_Option.Add_Option
-                          (G, G.Production (R.Parent), Nested_Part);
-
-                        if Nested_Part.Is_Terminal_Reference then
-                           P.Add (V.Create_Terminal_Reference
-                                  (Nested_Part.Name,
-                                     G.Terminal (Nested_Part.Denote).Image));
-                        elsif Nested_Part.Is_List_Reference then
-                           P.Add (V.Create_List_Reference
-                                  (Nested_Part.Name,
-                                     G.Non_Terminal
-                                       (Nested_Part.Denote).Name));
-                        elsif Nested_Part.Is_Non_Terminal_Reference then
-                           P.Add (V.Create_Non_Terminal_Reference
-                                  (Nested_Part.Name,
-                                     G.Non_Terminal
-                                       (Nested_Part.Denote).Name));
-                        else
-                           raise Constraint_Error with "option in option";
-                        end if;
-                     end;
-                  end if;
-               end;
-            end loop;
-
-            PL.Add (P);
-         end;
-      end loop;
-   end Copy_Productions;
-
-   ----------
-   -- Copy --
-   ----------
-
-   procedure Copy
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      Is_Option : in out Option_List;
-      Is_Concrete : NT_List) is
-   begin
-      for J in G.Terminal'Range loop
-         declare
-            T : Gela.Grammars.Terminal renames G.Terminal (J);
-         begin
-            V.Create_Terminal (T.Image, T.Precedence);
-
-            for A in T.First_Attribute .. T.Last_Attribute loop
-               V.Create_Attribute_Declaration
-                 (T.Image,
-                  G.Declaration (A).Name,
-                  G.Declaration (A).Type_Name);
-            end loop;
-         end;
-      end loop;
-
-      for J in G.Non_Terminal'Range loop
-         declare
-            N  : Gela.Grammars.Non_Terminal renames G.Non_Terminal (J);
-            PL : Gela.Grammars.Constructors.Production_List :=
-              V.Create_Production_List;
-         begin
-            Copy_Productions (G, V, N.First, N.Last, PL, Is_Option);
-
-            if N.Is_List then
-               V.Create_List (N.Name, PL);
-            else
-               V.Create_Non_Terminal (N.Name, PL);
-            end if;
-
-            for A in N.First_Attribute .. N.Last_Attribute loop
-               V.Create_Attribute_Declaration
-                 (N.Name,
-                  G.Declaration (A).Name,
-                  G.Declaration (A).Is_Inherited,
-                  G.Declaration (A).Type_Name);
-            end loop;
-
-            for K in N.First .. N.Last loop
-               declare
-                  S : Gela.Grammars.Production renames G.Production (K);
-               begin
-                  for Y in S.First_Rule .. S.Last_Rule loop
-                     declare
-                        R : Gela.Grammars.Rule renames G.Rule (Y);
-                     begin
-                        V.Create_Rule (N.Name, S.Name, R.Text);
-
-                        if not Is_Concrete (N.Index) then
-                           raise Constraint_Error;
-                        end if;
-                     end;
-                  end loop;
-               end;
-            end loop;
-         end;
-      end loop;
-   end Copy;
-
-   ---------------
-   -- Copy_Attr --
-   ---------------
-
-   procedure Copy_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Child  : Gela.Grammars.Non_Terminal_Index;
-      Parent : Gela.Grammars.Non_Terminal_Index;
-      Done   : in out League.String_Vectors.Universal_String_Vector)
-   is
-      X : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Child);
-      Y : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Parent);
-   begin
-      for K in Y.First_Attribute .. Y.Last_Attribute loop
-         declare
-            YA : Gela.Grammars.Attribute_Declaration renames
-              G.Declaration (K);
-         begin
-            if Done.Index (YA.Name) > 0 then
-               goto Continue;
-            else
-               Done.Append (YA.Name);
-            end if;
-
-            for J in X.First_Attribute .. X.Last_Attribute loop
-               declare
-                  use type League.Strings.Universal_String;
-
-                  XA : Gela.Grammars.Attribute_Declaration renames
-                    G.Declaration (J);
-                  Text : League.Strings.Universal_String;
-               begin
-                  if XA.Name = YA.Name then
-                     Text.Append ("${");
-                     Text.Append (X.Name);
-                     Text.Append (".");
-                     Text.Append (XA.Name);
-                     Text.Append ("} = ${");
-                     Text.Append (Y.Name);
-                     Text.Append (".");
-                     Text.Append (YA.Name);
-                     Text.Append ("}");
-                     V.Create_Rule (Y.Name, X.Name, Text);
-                  end if;
-               end;
-            end loop;
-
-            <<Continue>>
-         end;
-      end loop;
-   end Copy_Attr;
 
    --------------
    -- Generate --
@@ -313,15 +79,11 @@ package body AG_Tools.Check_Ordered is
 
    procedure Generate
      (G           : Gela.Grammars.Grammar;
-      Implement   : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option   : Option_List;
       Order       : Gela.Grammars.Ordered.Order_Maps.Map;
       Partitions  : Gela.Grammars.Ordered.Partition_Array;
       Pass        : in out Positive;
       Found       : out Boolean)
    is
-      pragma Unreferenced (Implement);
       use Gela.Grammars;
       use type Ordered.Partition_Count;
       use type League.Strings.Universal_String;
@@ -457,7 +219,7 @@ package body AG_Tools.Check_Ordered is
 
             Code.P (");");
          else
-            if Is_Option.Is_Option (G, P) then
+            if Is_Option (G, P) then
                Code.N ("if ");
                Code.N (To_Ada (P.Name));
                Code.P (".its /= null then");
@@ -970,24 +732,6 @@ package body AG_Tools.Check_Ordered is
    end Generate;
 
    ---------------
-   -- Is_Option --
-   ---------------
-
-   function Is_Option
-     (Self : Option_List;
-      G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part) return Boolean
-   is
-      use type League.Strings.Universal_String;
-      Prod : Gela.Grammars.Production renames G.Production (Part.Parent);
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
-      Name : constant League.Strings.Universal_String :=
-        NT.Name & " " & Prod.Name & " " & Part.Name;
-   begin
-      return Self.Set.Contains (Name);
-   end Is_Option;
-
-   ---------------
    -- List_Item --
    ---------------
 
@@ -1001,34 +745,5 @@ package body AG_Tools.Check_Ordered is
    begin
       return Part.Denote;
    end List_Item;
-
-   -----------------
-   -- Pre_Process --
-   -----------------
-
-   function Pre_Process
-     (G : Gela.Grammars.Grammar;
-      Implement : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option : in out Option_List) return Gela.Grammars.Grammar_Access
-   is
-      V : Gela.Grammars.Constructors.Constructor;
-   begin
-      Copy (G, V, Is_Option, Is_Concrete);
-
-      for Parent in Implement'Range (2) loop
-         for Child in Implement'Range (1) loop
-            declare
-               Done : League.String_Vectors.Universal_String_Vector;
-            begin
-               if Implement (Child, Parent) then
-                  Copy_Attr (G, V, Child, Parent, Done);
-               end if;
-            end;
-         end loop;
-      end loop;
-
-      return new Gela.Grammars.Grammar'(V.Complete);
-   end Pre_Process;
 
 end AG_Tools.Check_Ordered;

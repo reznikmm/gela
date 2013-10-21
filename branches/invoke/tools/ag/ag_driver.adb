@@ -14,15 +14,14 @@ with League.Strings;
 with League.String_Vectors;
 
 with Gela.Grammars;
-with Gela.Grammars.Reader;
---  with Gela.Grammars_Convertors;
 
 with AG_Tools; use AG_Tools;
 with AG_Tools.Writers; use AG_Tools.Writers;
 --  with Gela.Grammars_Debug;
-with AG_Tools.Check_Ordered;
+with AG_Tools.Input;
 
 procedure AG_Driver is
+   use AG_Tools.Input;
 
    use type Gela.Grammars.Production_Index;
    use type Gela.Grammars.Part_Count;
@@ -45,26 +44,6 @@ procedure AG_Driver is
 
    procedure Generate_Nodes_NT
      (NT       : Gela.Grammars.Non_Terminal);
-
-   function Macro_Reference
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count;
-   --  If Prod is  just reference to another NT, return NT.Index.
-   --  Return 0 otherwise.
-
-   function List_Reference
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
-      return Gela.Grammars.Non_Terminal_Count;
-   --  If Part is reference to list, return NT.Index of the list
-   --  Return 0 otherwise
-
-   procedure Look_For_List
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production);
-   --  If any pert of Prod is reference to list of some NT then
-   --  mark Has_List (NT) as True
 
    procedure Write_Attr_With
      (NT     : Gela.Grammars.Non_Terminal;
@@ -91,23 +70,7 @@ procedure AG_Driver is
    procedure Generate_Visiter;
 
    Name  : constant String := Ada.Command_Line.Argument (1);
-   F     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (Name);
    G     : Gela.Grammars.Grammar_Access;
-
-   use AG_Tools.Check_Ordered;
-
-   Is_Concrete : NT_List (F.Non_Terminal'Range) := (others => False);
-   --  This is in form NT ::= child_1 child_2 ..;
-   --  It has single production
-
-   Has_List : array (F.Non_Terminal'Range) of Boolean := (others => False);
-   --  If there are references to {NT} then Has_List (NT) = True
-
-   Implement : NT_Map (F.Non_Terminal'Range, F.Non_Terminal'Range) :=
-     (others => (others => False));
-   --  If Implement (X, Y) then X implement Y
-
-   Is_Option : Option_List;
 
    Reserved : constant := 3;  --  Tag, Count
 
@@ -647,7 +610,7 @@ procedure AG_Driver is
       Impl_Count : Natural := 0;
       Type_List  : League.String_Vectors.Universal_String_Vector;
    begin
-      for J in Implement'Range (2) loop
+      for J in G.Non_Terminal'Range loop
          if Implement (NT.Index, J) then
             Nodes_NT.N ("with Gela.Nodes.");
             Nodes_NT.N (Plural (G.Non_Terminal (J).Name));
@@ -667,7 +630,7 @@ procedure AG_Driver is
       if Impl_Count > 0 then
          Nodes_NT.N ("   type Object is interface and Visitable_Node");
 
-         for J in Implement'Range (2) loop
+         for J in G.Non_Terminal'Range loop
             if Implement (NT.Index, J) then
                Nodes_NT.P;
                Nodes_NT.N ("     and Gela.Nodes.");
@@ -867,14 +830,14 @@ procedure AG_Driver is
       Type_List  : League.String_Vectors.Universal_String_Vector;
       Attr_List  : League.String_Vectors.Universal_String_Vector;
    begin
-      if Macro_Reference (G.all, Prod) /= 0 then
+      if Macro_Reference (Prod) /= 0 then
          return;
       end if;
 
       Type_List.Append
         (League.Strings.To_Universal_String ("Gela.Types"));
 
-      for J in Implement'Range (2) loop
+      for J in G.Non_Terminal'Range loop
          if Implement (NT.Index, J) then
             Write_Attr_With (G.Non_Terminal (J), Store_Each, Type_List);
          end if;
@@ -923,7 +886,7 @@ procedure AG_Driver is
 
       Write_Attr (NT, Attr_List);
 
-      for J in Implement'Range (2) loop
+      for J in G.Non_Terminal'Range loop
          if Implement (NT.Index, J) then
             Write_Attr (G.Non_Terminal (J), Attr_List);
          end if;
@@ -1053,74 +1016,6 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
    end Generate_Visiter;
 
-   -------------
-   -- Is_List --
-   -------------
-
-   function List_Reference
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
-      return Gela.Grammars.Non_Terminal_Count is
-   begin
-      if Part.Is_List_Reference then
-         declare
-            NT   : Gela.Grammars.Non_Terminal renames
-              G.Non_Terminal (Part.Denote);
-            Prod : Gela.Grammars.Production renames
-              G.Production (NT.First);
-            Part : Gela.Grammars.Part renames G.Part (Prod.Last);
-         begin
-            return Part.Denote;
-         end;
-      end if;
-
-      return 0;
-   end List_Reference;
-
-   -------------------
-   -- Look_For_List --
-   -------------------
-
-   procedure Look_For_List
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
-   is
-      List : Gela.Grammars.Non_Terminal_Count;
-   begin
-      for Part of G.Part (Prod.First .. Prod.Last) loop
-         List := List_Reference (G, Part);
-         if List /= 0 then
-            Has_List (List) := True;
-         end if;
-      end loop;
-   end Look_For_List;
-
-   ---------------------
-   -- Macro_Reference --
-   ---------------------
-
-   function Macro_Reference
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count is
-   begin
-      if Prod.First /= Prod.Last then
-         return 0;
-      end if;
-
-      declare
-         Part : Gela.Grammars.Part renames G.Part (Prod.First);
-      begin
-         if not Part.Is_Non_Terminal_Reference then
-            return 0;
-         elsif G.Non_Terminal (Part.Denote).Name /= Part.Name then
-            return 0;
-         else
-            return Part.Denote;
-         end if;
-      end;
-   end Macro_Reference;
-
    ---------------------
    -- Production_Unit --
    ---------------------
@@ -1155,46 +1050,11 @@ procedure AG_Driver is
       end loop;
    end Write_Parts;
 
---  --     Token : constant Gela.Grammars.Production_Index :=
---  --       Plain.Last_Production + 1;
-
 begin
---   Gela.Grammars_Debug.Print_Conflicts (Plain);
+   AG_Tools.Input.Initialize (Name);
+   G := AG_Tools.Input.Grammar;
+
 --     Gela.Grammars_Debug.Print (G);
-
-   for NT of F.Non_Terminal loop
-      if NT.First = NT.Last then
-         if Macro_Reference (F, F.Production (NT.First)) = 0 then
-            Is_Concrete (NT.Index) := True;
-         end if;
-      else
-         for Prod of F.Production (NT.First .. NT.Last) loop
-            if Macro_Reference (F, F.Production (NT.First)) = 0 then
-               Ada.Text_IO.Put_Line (NT.Name.To_UTF_8_String);
-               raise Constraint_Error;
-            end if;
-         end loop;
-      end if;
-   end loop;
-
-   for NT of F.Non_Terminal loop
-      if not NT.Is_List then
-         for Prod of F.Production (NT.First .. NT.Last) loop
-            declare
-               Ref : constant Gela.Grammars.Non_Terminal_Count :=
-                 Macro_Reference (F, Prod);
-            begin
-               if Ref /= 0 then
-                  Implement (Ref, NT.Index) := True;
-               end if;
-               Look_For_List (F, Prod);
-            end;
-         end loop;
-      end if;
-   end loop;
-
-   G := Pre_Process (F, Implement, Is_Concrete, Is_Option);
-   Check (G.all, Implement, Is_Concrete, Is_Option);
 
    Generate_Nodes;
 

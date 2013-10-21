@@ -1,51 +1,15 @@
-with Gela.Grammars;
-with Ada.Containers.Hashed_Sets;
-with League.Strings.Hash;
+------------------------------------------------------------------------------
+--                        G E L A   G R A M M A R S                         --
+--          Library for dealing with grammars for Gela project,             --
+--                        a portable Ada compiler                           --
+--                        http://gela.ada-ru.org/                           --
+--                     - - - - - - - - - - - - - - -                        --
+--              Read copyright and license in gela.ads file                 --
+------------------------------------------------------------------------------
 
 package AG_Tools.Check_Ordered is
 
-   type NT_Map is array
-     (Gela.Grammars.Non_Terminal_Index range <>,
-      Gela.Grammars.Non_Terminal_Index range <>) of Boolean;
-
-   type NT_List is array
-     (Gela.Grammars.Non_Terminal_Index range <>) of Boolean;
-
-   type Option_List is tagged private;
-
-   function Is_Option
-     (Self : Option_List;
-      G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part) return Boolean;
-
-   function Pre_Process
-     (G : Gela.Grammars.Grammar;
-      Implement : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option : in out Option_List) return Gela.Grammars.Grammar_Access;
-
-   procedure Check
-     (G : Gela.Grammars.Grammar;
-      Implement : NT_Map;
-      Is_Concrete : NT_List;
-      Is_Option : Option_List);
-
-private
-
-   package String_Sets is new Ada.Containers.Hashed_Sets
-     (Element_Type        => League.Strings.Universal_String,
-      Hash                => League.Strings.Hash,
-      Equivalent_Elements => League.Strings."=",
-      "="                 => League.Strings."=");
-
-   type Option_List is tagged record
-      Set : String_Sets.Set;
-   end record;
-
-   procedure Add_Option
-     (Self : in out Option_List;
-      G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production;
-      Part : Gela.Grammars.Part);
+   procedure Check;
+   --  Check if grammatic AG_Tools.Input.G ordered then generate code.
 
 end AG_Tools.Check_Ordered;
