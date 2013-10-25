@@ -14,7 +14,7 @@ with Ada.Exceptions;
 
 with Gela.Bitten_Coverage;
 with Gela.Bitten_Report;
-with Gela.Build;
+--  with Gela.Build;
 with Gela.Host;
 with Gela.Test_Cases;
 with Gela.Test_Iterators.ACATS;
@@ -59,7 +59,7 @@ begin
    --  predefined compilation units.
    GNAT.OS_Lib.Setenv ("GELA_INCLUDE_PATH", "../../../source/asis/spec");
 
-   Gela.Build;
+   --  Gela.Build;
 
    declare
       use type Gela.Test_Iterators.Append.Iterator;

@@ -1,0 +1,8 @@
+library project Gela_ASIS is
+   for Languages    use ("Ada");
+   for Source_Dirs  use ("@Source_Dirs@");
+   for Library_Name use "gela-asis";
+   for Library_Dir  use "@Library_Dir@";
+   for Library_Kind use "@Library_Kind@";
+   for Externally_Built use "True";
+end Gela_ASIS;

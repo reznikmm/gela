@@ -1,6 +1,6 @@
 with Gela.Classificators;
 
-package body Gela.Decoders.UTF_8 is
+package body Gela.Decoders.UTF_16 is
 
    ------------
    -- Decode --
@@ -33,7 +33,7 @@ package body Gela.Decoders.UTF_8 is
       Last := Index;
    end Decode;
 
-end Gela.Decoders.UTF_8;
+end Gela.Decoders.UTF_16;
 
 ------------------------------------------------------------------------------
 --  Copyright (c) 2009, Maxim Reznik

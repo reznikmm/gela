@@ -35,12 +35,12 @@ package body Asis.Implementation is
 
    function ASIS_Implementor_Version return Wide_String is
    begin
-      return "0.0.1";
+      return "0.3.1";
    end ASIS_Implementor_Version;
 
    function ASIS_Implementor_Information return Wide_String is
    begin
-      return "Copyright (C) 2006, Maxim Reznik";
+      return "Copyright (C) 2013, Maxim Reznik";
    end ASIS_Implementor_Information;
 
    function Is_Initialized return Boolean is
@@ -104,7 +104,7 @@ end Asis.Implementation;
 
 
 ------------------------------------------------------------------------------
---  Copyright (c) 2006, Maxim Reznik
+--  Copyright (c) 2006-2013, Maxim Reznik
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without

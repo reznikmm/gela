@@ -1,17 +1,28 @@
-with "gela_lib";
-
 project Gela_ASIS is
 
-   Build := external ("GELA_BUILD", "/tmp/gela");
-   Source := external ("GELA_SOURCE", "/ada");
+   type Library_Kind is ("relocatable", "static");
+
+   Library_Type : Library_Kind := external ("LIBRARY_TYPE", "static");
+
+   Build   := external ("GELA_BUILD", "../.build");
+   Flags   := external_as_list ("FLAGS", " ");
+   Version := external ("VERSION", "");
+   Source  := external ("GELA_SOURCE", "/ada");
 
    for Source_Dirs use (Build & Source,
-     "../source/asis", "../source/asis/xasis");
-   for Object_Dir use Build & "/gela_asis";
+     "../source/asis", "../source/asis/xasis", "../source/libgela");
+
+   for Object_Dir use Build & "/obj";
+
+   for Library_Name use "gela-asis";
+   for Library_Version use
+     "lib" & Gela_ASIS'Library_Name & ".so" & Version;
+   for Library_Dir use Build & "/lib";
+   for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("ada") use
-        ("-gnat95", "-g", "-gnata");
+      for Default_Switches ("ada") use Flags;
+      for Switches ("asis-gela-parser.adb") use Flags  & ("-O0");
    end Compiler;
 
 end Gela_ASIS;
