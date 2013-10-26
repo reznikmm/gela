@@ -11,6 +11,21 @@ with League.String_Vectors;
 
 package body AG_Tools is
 
+   -----------------------
+   -- Is_Converted_List --
+   -----------------------
+
+   function Is_Converted_List
+     (G  : Gela.Grammars.Grammar;
+      NT : Gela.Grammars.Non_Terminal) return Boolean
+   is
+      use type Gela.Grammars.Part_Index;
+
+      Prod : Gela.Grammars.Production renames G.Production (NT.Last);
+   begin
+      return Prod.First > Prod.Last;
+   end Is_Converted_List;
+
    ------------------
    -- Package_Name --
    ------------------
@@ -98,21 +113,40 @@ package body AG_Tools is
             return Return_Type (G, G.Part (Prod.First));
          end;
 
-      elsif Part.Is_List_Reference then
-         declare
-            NT : Gela.Grammars.Non_Terminal renames
-              G.Non_Terminal (Part.Denote);
-            Prod : Gela.Grammars.Production renames
-              G.Production (NT.First);
-         begin
-            Result := Return_Type (G, G.Part (Prod.First + 1));
-            Result.Append ("_Sequence");
-            return Result;
-         end;
       elsif Part.Is_Terminal_Reference then
          Result.Append ("Token");
       else
-         Result := To_Ada (G.Non_Terminal (Part.Denote).Name);
+         declare
+            NT : Gela.Grammars.Non_Terminal renames
+              G.Non_Terminal (Part.Denote);
+         begin
+            return Return_Type (G, NT);
+         end;
+
+      end if;
+
+      return Result;
+   end Return_Type;
+
+   -----------------
+   -- Return_Type --
+   -----------------
+
+   function Return_Type
+     (G  : Gela.Grammars.Grammar;
+      NT : Gela.Grammars.Non_Terminal)
+      return League.Strings.Universal_String
+   is
+      use type Gela.Grammars.Part_Count;
+
+      Result : League.Strings.Universal_String;
+      Prod : Gela.Grammars.Production renames G.Production (NT.First);
+   begin
+      if NT.Is_List or Is_Converted_List (G, NT) then
+         Result := Return_Type (G, G.Part (Prod.First + 1));
+         Result.Append ("_Sequence");
+      else
+         Result := To_Ada (NT.Name);
       end if;
 
       return Result;
