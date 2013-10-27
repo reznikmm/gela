@@ -169,6 +169,8 @@ package body AG_Tools.NT_Generators is
       Unit    : constant League.Strings.Universal_String := Plural (NT.Name);
    begin
       Code.Text.Clear;
+      Self.Context.Attr_Map.all := (others => False);
+
       Spec.P ("", Impl);
       Spec.N ("   ", Impl);
       Write_Declaration (Self.Context, NT);
@@ -219,6 +221,7 @@ package body AG_Tools.NT_Generators is
       Spec    : AG_Tools.Writers.Writer renames Self.Context.Spec;
       Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
       Code    : AG_Tools.Writers.Writer renames Self.Context.Code;
+      Piece   : League.Strings.Universal_String;
       Item_NT : Gela.Grammars.Non_Terminal renames G.Non_Terminal
         (List_Item (G, NT));
       Item : constant League.Strings.Universal_String :=
@@ -266,6 +269,9 @@ package body AG_Tools.NT_Generators is
       Impl.P (".List_Access");
       Impl.P ("          (Node.its);");
 
+      Self.Context.Fabric.Get (G.Part (Prod.Last)).
+         Make_Local_Variable (Prod.Last);
+
       Code.N ("      while ");
       Code.N (Item);
       Code.P (".its /= null loop");
@@ -277,9 +283,12 @@ package body AG_Tools.NT_Generators is
       Code.N (Item);
       Code.P (");");
       Code.P ("      end loop;");
-      Impl.P ("   begin");
+      Piece := Code.Text;
+      Code.Text.Clear;
       Write_Rules (Self.Context, NT, NT.Last, Pos);
+      Impl.P ("   begin");
       Impl.N (Code.Text);
+      Impl.N (Piece);
       Impl.N ("   end ");
       Impl.N (To_Ada (NT.Name));
       Impl.P (";");

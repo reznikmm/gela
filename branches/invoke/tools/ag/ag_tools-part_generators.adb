@@ -17,6 +17,11 @@ package body AG_Tools.Part_Generators is
    This : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("This");
 
+   function Origin
+     (G         : Gela.Grammars.Grammar;
+      Attribute : Gela.Grammars.Attribute)
+      return League.Strings.Universal_String;
+
    ------------------
    -- Make_Descent --
    ------------------
@@ -84,11 +89,6 @@ package body AG_Tools.Part_Generators is
       Parts : Gela.Grammars.Ordered.Partition_Array renames
         Self.Context.Partition.all;
    begin
-      if P.Name = Head then
-         --  Dont descent into list's head
-         return;
-      end if;
-
       Self.Make_Local_Variable (Part);
       Code.N ("      ");
       Code.N ("Self.");
@@ -108,6 +108,22 @@ package body AG_Tools.Part_Generators is
       end loop;
 
       Code.P (");");
+   end Make_Descent;
+
+   ------------------
+   -- Make_Descent --
+   ------------------
+
+   overriding procedure Make_Descent
+     (Self : access Head_Generator;
+      Part : Gela.Grammars.Part_Index;
+      Pass : Positive)
+   is
+      pragma Unreferenced (Part);
+      pragma Unreferenced (Pass);
+      Code : AG_Tools.Writers.Writer renames Self.Context.Code;
+   begin
+      Code.P ("   --  Make_Descent HEAD");
    end Make_Descent;
 
    --------------
@@ -142,6 +158,31 @@ package body AG_Tools.Part_Generators is
       Self.Make_Local_Variable (Origin, D);
    end Make_Get;
 
+   --------------
+   -- Make_Get --
+   --------------
+
+   overriding procedure Make_Get
+     (Self      : access Head_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      use type Gela.Grammars.Production_Index;
+
+      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Code : AG_Tools.Writers.Writer renames Self.Context.Code;
+      D    : Gela.Grammars.Attribute_Declaration renames
+        G.Declaration (Attribute.Declaration);
+   begin
+      Code.N ("      ");
+      Code.N ("Head_");
+      Code.N (To_Ada (D.Name));
+      Code.N (" := This_");
+      Code.N (To_Ada (D.Name));
+      Code.P (";");
+
+      Self.Make_Local_Variable (Head, D);
+   end Make_Get;
+
    -------------------------
    -- Make_Local_Variable --
    -------------------------
@@ -153,6 +194,12 @@ package body AG_Tools.Part_Generators is
    is
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
    begin
+      if Self.Context.Attr_Map (Attribute.Index) then
+         return;
+      else
+         Self.Context.Attr_Map (Attribute.Index) := True;
+      end if;
+
       Impl.N ("      ");
       Impl.N (To_Ada (Origin));
       Impl.N ("_");
@@ -230,5 +277,60 @@ package body AG_Tools.Part_Generators is
       Code.N (To_Ada (D.Name));
       Code.P (");");
    end Make_Set;
+
+   --------------
+   -- Make_Set --
+   --------------
+
+   overriding procedure Make_Set
+     (Self      : access Head_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+      D      : Gela.Grammars.Attribute_Declaration renames
+        G.Declaration (Attribute.Declaration);
+   begin
+      Self.Make_Local_Variable (Head, D);
+      Code.P ("         --  Make_Set HEAD");
+   end Make_Set;
+
+   --------------
+   -- Make_Set --
+   --------------
+
+   overriding procedure Make_Set
+     (Self      : access List_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+   begin
+      Code.P ("   --  Make_Set LIST");
+
+      Self.Make_Local_Variable
+        (Origin (G, Attribute),
+         G.Declaration (Attribute.Declaration));
+   end Make_Set;
+
+   ------------
+   -- Origin --
+   ------------
+
+   function Origin
+     (G         : Gela.Grammars.Grammar;
+      Attribute : Gela.Grammars.Attribute)
+      return League.Strings.Universal_String
+   is
+      Rule : Gela.Grammars.Rule renames G.Rule (Attribute.Parent);
+      Prod : Gela.Grammars.Production renames G.Production (Rule.Parent);
+      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+   begin
+      if Attribute.Is_Left_Hand_Side then
+         return NT.Name;
+      else
+         return G.Part (Attribute.Origin).Name;
+      end if;
+   end Origin;
 
 end AG_Tools.Part_Generators;

@@ -42,6 +42,7 @@ private
       Part : aliased AG_Tools.Part_Generators.Generator (Context);
       Seq  : aliased AG_Tools.Part_Generators.List_Generator (Context);
       Opt  : aliased AG_Tools.Part_Generators.Option_Generator (Context);
+      Head : aliased AG_Tools.Part_Generators.Head_Generator (Context);
    end record;
 
 end AG_Tools.Generator_Fabrics;

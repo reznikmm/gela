@@ -22,6 +22,10 @@ package AG_Tools.Contexts is
    type Part_Map is array (Gela.Grammars.Part_Index range <>) of Boolean;
    type Part_Map_Access is access all Part_Map;
 
+   type Attr_Map is
+     array (Gela.Grammars.Attribute_Declaration_Index range <>) of Boolean;
+   type Attr_Map_Access is access all Attr_Map;
+
    type Unit_Kinds is (Spec_Unit, Body_Unit);
    type With_Records is array (Unit_Kinds) of
      League.String_Vectors.Universal_String_Vector;
@@ -31,6 +35,7 @@ package AG_Tools.Contexts is
       Grammar   : Gela.Grammars.Grammar_Access;
       Partition : Partition_Array_Access;
       Part_Map  : Part_Map_Access;
+      Attr_Map  : Attr_Map_Access;
       Withs     : With_Records;
       Spec      : AG_Tools.Writers.Writer;
       Impl      : AG_Tools.Writers.Writer;

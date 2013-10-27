@@ -63,6 +63,11 @@ package body AG_Tools.Input is
       Parent : Gela.Grammars.Non_Terminal_Index;
       Done   : in out League.String_Vectors.Universal_String_Vector);
 
+   procedure Copy_Head_Attr
+     (G      : Gela.Grammars.Grammar;
+      V      : in out Gela.Grammars.Constructors.Constructor;
+      Parent : Gela.Grammars.Non_Terminal_Index);
+
    procedure Copy_Productions
      (G : Gela.Grammars.Grammar;
       V : in out Gela.Grammars.Constructors.Constructor;
@@ -157,11 +162,17 @@ package body AG_Tools.Input is
                begin
                   for Y in S.First_Rule .. S.Last_Rule loop
                      declare
+                        use type Gela.Grammars.Part_Count;
                         R : Gela.Grammars.Rule renames G.Rule (Y);
+                        A : Gela.Grammars.Attribute renames
+                          G.Attribute (R.Result);
                      begin
                         V.Create_Rule (N.Name, S.Name, R.Text);
 
                         if not Is_Concrete (N.Index) then
+                           raise Constraint_Error;
+                        elsif N.Is_List and A.Origin = S.First then
+                           --  Rule for eval head.inherited is not supported
                            raise Constraint_Error;
                         end if;
                      end;
@@ -224,6 +235,41 @@ package body AG_Tools.Input is
          end;
       end loop;
    end Copy_Attr;
+
+   --------------------
+   -- Copy_Head_Attr --
+   --------------------
+
+   procedure Copy_Head_Attr
+     (G      : Gela.Grammars.Grammar;
+      V      : in out Gela.Grammars.Constructors.Constructor;
+      Parent : Gela.Grammars.Non_Terminal_Index)
+   is
+      NT : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Parent);
+   begin
+      for J in NT.First_Attribute .. NT.Last_Attribute loop
+         declare
+            A : Gela.Grammars.Attribute_Declaration renames G.Declaration (J);
+            Text : League.Strings.Universal_String;
+         begin
+            if A.Is_Inherited then
+               Text.Append ("         ${head.");
+               Text.Append (A.Name);
+               Text.Append ("} := ${");
+               Text.Append (NT.Name);
+               Text.Append (".");
+               Text.Append (A.Name);
+               Text.Append ("};");
+               Text.Append (Wide_Wide_Character'Val (10));
+
+               V.Create_Rule
+                 (NT.Name,
+                  G.Production (NT.First).Name,
+                  Text);
+            end if;
+         end;
+      end loop;
+   end Copy_Head_Attr;
 
    ----------------------
    -- Copy_Productions --
@@ -387,6 +433,10 @@ package body AG_Tools.Input is
                   end;
                end if;
             end loop;
+
+            if F.Non_Terminal (Parent).Is_List then
+               Copy_Head_Attr (F, V, Parent);
+            end if;
          end loop;
 
          G := new Gela.Grammars.Grammar'(V.Complete);

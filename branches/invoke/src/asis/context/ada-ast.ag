@@ -2190,3 +2190,16 @@ Rules for units.compilation_unit :
 (.
       ${units.unit_id} := 1;
 .)
+
+Inherited attributes
+  Visible_Part_Declarative_Items
+    : Gela.Types.Payload : env;
+
+Rules for generic_package_declaration. :
+(.
+      ${Visible_Part_Declarative_Items.env} := 111;
+.)
+Rules for package_declaration. :
+(.
+      ${Visible_Part_Declarative_Items.env} := 112;
+.)

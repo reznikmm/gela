@@ -12,6 +12,7 @@ with Ada.Text_IO;
 with Gela.Grammars_Checks;
 with Gela.Grammars_Convertors;
 with Gela.Grammars.Ordered;
+--  with Gela.Grammars_Debug;
 
 with League.Strings;
 
@@ -46,7 +47,7 @@ package body AG_Tools.Check_Ordered is
         (Result.Declaration'Range);
    begin
       --           Gela.Grammars_Debug.Print (G);
-      --           Gela.Grammars_Debug.Print (Result);
+      --           Gela.Grammars_Debug.Print (Result.all);
 
       Ok := Gela.Grammars_Checks.Is_Well_Formed (Result.all, True);
 
@@ -92,6 +93,8 @@ package body AG_Tools.Check_Ordered is
         new Gela.Grammars.Ordered.Partition_Array'(Partitions);
       Context.Part_Map :=
         new AG_Tools.Contexts.Part_Map'(G.Part'Range => False);
+      Context.Attr_Map :=
+        new AG_Tools.Contexts.Attr_Map'(G.Declaration'Range => False);
 
       Found := False;
       Impl.P ("pragma Warnings (""FUM"");");

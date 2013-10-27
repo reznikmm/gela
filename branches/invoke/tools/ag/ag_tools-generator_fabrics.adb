@@ -11,6 +11,9 @@ with AG_Tools.Input;
 
 package body AG_Tools.Generator_Fabrics is
 
+   Head : constant League.Strings.Universal_String :=
+     League.Strings.To_Universal_String ("head");
+
    ---------
    -- Get --
    ---------
@@ -37,9 +40,12 @@ package body AG_Tools.Generator_Fabrics is
       Part : Gela.Grammars.Part)
       return AG_Tools.Visit_Generators.Part_Generator_Access
    is
+      use type League.Strings.Universal_String;
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
    begin
-      if not Part.Is_Terminal_Reference
+      if Part.Name = Head then
+         return Self.Head'Access;
+      elsif not Part.Is_Terminal_Reference
         and then Is_Converted_List (G, G.Non_Terminal (Part.Denote))
       then
          return Self.Seq'Access;
