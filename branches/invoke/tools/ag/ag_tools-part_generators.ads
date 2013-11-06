@@ -45,6 +45,10 @@ package AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive);
 
+   overriding procedure Make_Get
+     (Self      : access List_Generator;
+      Attribute : Gela.Grammars.Attribute);
+
    overriding procedure Make_Set
      (Self      : access List_Generator;
       Attribute : Gela.Grammars.Attribute);
@@ -56,6 +60,14 @@ package AG_Tools.Part_Generators is
      (Self : access Option_Generator;
       Part : Gela.Grammars.Part_Index;
       Pass : Positive);
+
+   overriding procedure Make_Get
+     (Self : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute);
+
+   overriding procedure Make_Set
+     (Self : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute);
 
    type Head_Generator (Context : AG_Tools.Contexts.Context_Access)
      is new Generator (Context) with null record;

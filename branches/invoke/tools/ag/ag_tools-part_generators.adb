@@ -31,11 +31,15 @@ package body AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive)
    is
-      pragma Unreferenced (Pass);
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Self.Make_Local_Variable (Part);
+      if P.Name.Ends_With ("compilation_unit") then
+         Code.N ("   --  Make_Descent PART ");
+         Code.N (Pass);
+         Code.P;
+      end if;
 
       Code.N ("      ");
       Code.N (To_Ada (P.Name));
@@ -54,7 +58,6 @@ package body AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive)
    is
-      pragma Unreferenced (Pass);
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
@@ -63,12 +66,7 @@ package body AG_Tools.Part_Generators is
       Code.N ("      if ");
       Code.N (To_Ada (P.Name));
       Code.P (".its /= null then");
-      Code.N ("         ");
-      Code.N (To_Ada (P.Name));
-      Code.P (".its.Visit");
-      Code.N ("           (");
-      Code.N (To_Ada (P.Name));
-      Code.P (".Payload, Self);");
+      Generator (Self.all).Make_Descent (Part, Pass);
       Code.P ("      end if;");
    end Make_Descent;
 
@@ -90,6 +88,9 @@ package body AG_Tools.Part_Generators is
         Self.Context.Partition.all;
    begin
       Self.Make_Local_Variable (Part);
+      Code.N ("   --  Make_Descent LIST ");
+      Code.N (Pass);
+      Code.P;
       Code.N ("      ");
       Code.N ("Self.");
       Code.N (To_Ada (P.Name));
@@ -120,10 +121,11 @@ package body AG_Tools.Part_Generators is
       Pass : Positive)
    is
       pragma Unreferenced (Part);
-      pragma Unreferenced (Pass);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
-      Code.P ("   --  Make_Descent HEAD");
+      Code.N ("   --  Make_Descent HEAD ");
+      Code.N (Pass);
+      Code.P;
    end Make_Descent;
 
    --------------
@@ -183,6 +185,44 @@ package body AG_Tools.Part_Generators is
       Self.Make_Local_Variable (Head, D);
    end Make_Get;
 
+   --------------
+   -- Make_Get --
+   --------------
+
+   overriding procedure Make_Get
+     (Self      : access List_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+   begin
+      Code.P ("   --  Make_Get LIST");
+
+      Self.Make_Local_Variable
+        (Origin (G, Attribute),
+         G.Declaration (Attribute.Declaration));
+   end Make_Get;
+
+   --------------
+   -- Make_Get --
+   --------------
+
+   overriding procedure Make_Get
+     (Self : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Origin : League.Strings.Universal_String;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+   begin
+      Origin := To_Ada (G.Part (Attribute.Origin).Name);
+      Code.N ("      if ");
+      Code.N (Origin);
+      Code.P (".its /= null then");
+      Generator (Self.all).Make_Get (Attribute);
+      Code.P ("      end if;");
+   end Make_Get;
+
    -------------------------
    -- Make_Local_Variable --
    -------------------------
@@ -193,11 +233,12 @@ package body AG_Tools.Part_Generators is
       Attribute : Gela.Grammars.Attribute_Declaration)
    is
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
+      Attr : constant AG_Tools.Contexts.Attr := (Origin, Attribute.Index);
    begin
-      if Self.Context.Attr_Map (Attribute.Index) then
+      if Self.Context.Attr_Map.Contains (Attr) then
          return;
       else
-         Self.Context.Attr_Map (Attribute.Index) := True;
+         Self.Context.Attr_Map.Insert (Attr);
       end if;
 
       Impl.N ("      ");
@@ -232,8 +273,7 @@ package body AG_Tools.Part_Generators is
          if Is_Converted_List (G, NT) then
             Impl.N (" : Gela.Nodes.");
             Impl.N (Return_Type (G, P));
-            Impl.P (" :=");
-            Impl.P ("        This.Head (Node.Payload);");
+            Impl.P (";");
          else
             Impl.N (" : constant Gela.Nodes.");
             Impl.N (Return_Type (G, P));
@@ -276,6 +316,7 @@ package body AG_Tools.Part_Generators is
       Code.N ("_");
       Code.N (To_Ada (D.Name));
       Code.P (");");
+      Self.Make_Local_Variable (Origin, D);
    end Make_Set;
 
    --------------
@@ -311,6 +352,26 @@ package body AG_Tools.Part_Generators is
       Self.Make_Local_Variable
         (Origin (G, Attribute),
          G.Declaration (Attribute.Declaration));
+   end Make_Set;
+
+   --------------
+   -- Make_Set --
+   --------------
+
+   overriding procedure Make_Set
+     (Self : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute)
+   is
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Origin : League.Strings.Universal_String;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+   begin
+      Origin := To_Ada (G.Part (Attribute.Origin).Name);
+      Code.N ("      if ");
+      Code.N (Origin);
+      Code.P (".its /= null then");
+      Generator (Self.all).Make_Set (Attribute);
+      Code.P ("      end if;");
    end Make_Set;
 
    ------------

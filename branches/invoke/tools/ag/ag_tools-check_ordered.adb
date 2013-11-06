@@ -93,8 +93,6 @@ package body AG_Tools.Check_Ordered is
         new Gela.Grammars.Ordered.Partition_Array'(Partitions);
       Context.Part_Map :=
         new AG_Tools.Contexts.Part_Map'(G.Part'Range => False);
-      Context.Attr_Map :=
-        new AG_Tools.Contexts.Attr_Map'(G.Declaration'Range => False);
 
       Found := False;
       Impl.P ("pragma Warnings (""FUM"");");

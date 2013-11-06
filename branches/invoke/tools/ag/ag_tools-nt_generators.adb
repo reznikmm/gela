@@ -91,10 +91,20 @@ package body AG_Tools.NT_Generators is
      (Self      : access Generator;
       Attribute : Gela.Grammars.Attribute)
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Attribute);
+      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+      D      : Gela.Grammars.Attribute_Declaration renames
+        G.Declaration (Attribute.Declaration);
    begin
-      null;
+      Code.N ("      This_");
+      Code.N (To_Ada (D.Name));
+
+      Code.N (":= This.");
+      Code.P (To_Ada (D.Name));
+      Code.N ("        (Node");
+
+      Code.N (".Payload);");
+      Self.Make_Local_Variable (This, D);
    end Make_Get;
 
    --------------
@@ -121,7 +131,14 @@ package body AG_Tools.NT_Generators is
       Attribute : Gela.Grammars.Attribute_Declaration)
    is
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
+      Attr : constant AG_Tools.Contexts.Attr := (Origin, Attribute.Index);
    begin
+      if Self.Context.Attr_Map.Contains (Attr) then
+         return;
+      else
+         Self.Context.Attr_Map.Insert (Attr);
+      end if;
+
       Impl.N ("      ");
       Impl.N (To_Ada (Origin));
       Impl.N ("_");
@@ -169,7 +186,7 @@ package body AG_Tools.NT_Generators is
       Unit    : constant League.Strings.Universal_String := Plural (NT.Name);
    begin
       Code.Text.Clear;
-      Self.Context.Attr_Map.all := (others => False);
+      Self.Context.Attr_Map.Clear;
 
       Spec.P ("", Impl);
       Spec.N ("   ", Impl);
@@ -230,6 +247,8 @@ package body AG_Tools.NT_Generators is
         Plural (Item & "_Sequence");
    begin
       Code.Text.Clear;
+      Self.Context.Attr_Map.Clear;
+
       Spec.P ("", Impl);
       Spec.N ("   not ", Impl);
       Write_Declaration (Self.Context, NT);
@@ -288,6 +307,14 @@ package body AG_Tools.NT_Generators is
       Write_Rules (Self.Context, NT, NT.Last, Pos);
       Impl.P ("   begin");
       Impl.N (Code.Text);
+
+      Impl.P ("      if Node.its = null then");
+      Impl.P ("         return;");
+      Impl.P ("      end if;");
+      Impl.N ("      ");
+      Impl.N (Item);
+      Impl.P (" := This.Head (Node.Payload);");
+
       Impl.N (Piece);
       Impl.N ("   end ");
       Impl.N (To_Ada (NT.Name));
@@ -366,6 +393,7 @@ package body AG_Tools.NT_Generators is
       G       : Gela.Grammars.Grammar renames Context.Grammar.all;
    begin
       while Has_Element (Each) and then Key (Each).Prod = Prod loop
+
          case Element (Each).Kind is
             when Gela.Grammars.Ordered.Evaluate_Rule =>
                declare

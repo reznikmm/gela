@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;
+with League.Strings.Hash;
 
 package body AG_Tools.Contexts is
 
@@ -51,6 +52,17 @@ package body AG_Tools.Contexts is
 
       Withs (Kind).Append (Name);
    end Add_With;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Self : Attr) return Ada.Containers.Hash_Type is
+      use type Ada.Containers.Hash_Type;
+   begin
+      return League.Strings.Hash (Self.Origin) +
+        Ada.Containers.Hash_Type (Self.Decl);
+   end Hash;
 
    ------------------
    -- Print_Withes --
