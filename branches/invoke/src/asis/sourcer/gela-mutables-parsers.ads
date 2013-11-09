@@ -8,11 +8,12 @@
 ------------------------------------------------------------------------------
 
 with Gela.Nodes;
+with Gela.Mutables.Compilations;
 
 package Gela.Mutables.Parsers is
    pragma Preelaborate;
 
-   type Parser (Compilation : Mutable_Compilation_Access) is null record;
+   subtype Parser is Gela.Mutables.Compilations.Compilation;
 
    type Node_Array is array (Positive range <>) of Gela.Nodes.Element;
 

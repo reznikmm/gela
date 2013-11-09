@@ -16,7 +16,6 @@ with Gela.Lexical;
 with Gela.Types;
 
 with Gela.Mutables.Lexers;
-with Gela.Mutables.Parsers;
 with Gela.Mutables.Symbol_Tables;
 with Gela.Nodes;
 
@@ -47,8 +46,6 @@ package Gela.Mutables.Compilations is
       Root    : Gela.Nodes.Element;
       Errors  : Gela.Errors.Error_Handler_Access;
       Lexer   : aliased Mutables.Lexers.Lexer (Compilation'Unchecked_Access);
-      Parser  : aliased Mutables.Parsers.Parser
-                          (Compilation'Unchecked_Access);
       Symbols : Gela.Types.Symbol_Set_Access;
       Env     : aliased Mutables.Symbol_Tables.Symbol_Table
                           (Compilation'Unchecked_Access);

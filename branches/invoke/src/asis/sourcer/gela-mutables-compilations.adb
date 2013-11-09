@@ -145,7 +145,7 @@ package body Gela.Mutables.Compilations is
       Ok : Boolean;
    begin
       Gela.Mutables.Parse
-        (Self.Parser'Access, Self.Lexer'Access, Self.Root, Ok);
+        (Self, Self.Lexer'Access, Self.Root, Ok);
 
       if not Ok then
          declare
