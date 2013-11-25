@@ -5,7 +5,6 @@ project Gela_ASIS is
    Library_Type : Library_Kind := external ("LIBRARY_TYPE", "static");
 
    Build   := external ("GELA_BUILD", "../.build");
-   Flags   := external_as_list ("FLAGS", " ");
    Version := external ("VERSION", "");
    Source  := external ("GELA_SOURCE", "/ada");
 
@@ -21,8 +20,7 @@ project Gela_ASIS is
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("ada") use Flags;
-      for Switches ("asis-gela-parser.adb") use Flags  & ("-O0");
+      for Switches ("asis-gela-parser.adb") use ("-O0");
    end Compiler;
 
 end Gela_ASIS;

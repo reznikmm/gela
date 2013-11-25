@@ -401,7 +401,7 @@ package body Asis.Gela.Contexts is
    procedure Dissociate (The_Context : in out Concrete_Context_Node) is
    begin
       The_Context.Has_Associations := False;
-      Compilations.Finalize (The_Context.Compilation_List);
+      --  Compilations.Finalize (The_Context.Compilation_List);
    end Dissociate;
 
    ----------------------

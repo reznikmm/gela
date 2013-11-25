@@ -1,15 +1,10 @@
 project Gela_Uaflex is
 
    Build := external ("GELA_BUILD", "/tmp/gela");
-   Flags := external_as_list ("FLAGS", " ");
    for Source_Dirs use ("../tools/uaflex");
    for Object_Dir use Build & "/uaflex";
 
    for Main use ("uaflex-driver.adb");
-
-   package Compiler is
-      for Default_Switches ("ada") use Flags;
-   end Compiler;
 
    package Builder is
       for Executable ("uaflex-driver.adb")

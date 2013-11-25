@@ -18,16 +18,16 @@ VERSION ?= .0.3.1
 # Place to install
 PREFIX           ?= ${HOME}/gela-asis
 # libraries directory
-LIBDIR 		 ?= lib
+LIBDIR 		 ?= ${PREFIX}/lib
 # libraries kind (static or relocatable)
 LIBKIND		 ?= static
 #LIBKIND	 ?= relocatable
 # Place to write files during building:
 BUILD            ?= $(abspath .build)
-# Compilation flags:
-FLAGS            ?= -g -m -O2
+# gnatmake flags:
+FLAGS            ?= -j0 -g -m -O2
 # Where install standard Ada library files
-SPECDIR          ?= include/gela-asis/spec/
+SPECDIR          ?= ${PREFIX}/include/gela-asis/spec/
 # Where install project file
 GPRDIR           ?= ${LIBDIR}/gnat/
 # Project file template
@@ -42,7 +42,7 @@ GPR ?= gela_asis.gpr.in
 # Where install puts source files
 INC ?= ${PREFIX}/include/gela-asis
 # Where install puts library and .ali files
-LIB ?= ${PREFIX}/${LIBDIR}/gela-asis
+LIB ?= ${LIBDIR}/gela-asis
 
 P            := ${BUILD}/parser
 
@@ -83,7 +83,6 @@ UAFLEX := ${XML}/uaflex
 AYACC := ${XML}/ayacc
 ASIS  := source/asis
 SPEC := source/asis/spec
-SPECTO := ${PREFIX}/${SPECDIR}
 
 BIN_INSTALL  ?= install
 BIN_XSLTPROC ?= xsltproc
@@ -98,7 +97,7 @@ BIN_AYACC    ?= ${BUILD}/ayacc/ayacc
 
 EXTRA_BUILD  ?= ${BIN_AYACC}
 
-GNATMAKE := ${BIN_GNATMAKE} -j0 -XGELA_BUILD=${BUILD} -XFLAGS=${FLAGS} \
+GNATMAKE := ${BIN_GNATMAKE} ${FLAGS} -XGELA_BUILD=${BUILD} \
   -XLIBRARY_TYPE=${LIBKIND} -XVERSION=${VERSION}
 
 all: ${LIB_STAMP}
@@ -171,24 +170,24 @@ ${LIB_STAMP}: ${WORK_DIRS}
 install: ${ASIS_STAMP}
 	${BIN_INSTALL} -d ${DESTDIR}/${INC}
 	${BIN_INSTALL} -d ${DESTDIR}/${LIB}
-	${BIN_INSTALL} -d ${DESTDIR}/${SPECTO}
-	${BIN_INSTALL} -d ${DESTDIR}/${PREFIX}/${GPRDIR}
+	${BIN_INSTALL} -d ${DESTDIR}/${SPECDIR}
+	${BIN_INSTALL} -d ${DESTDIR}/${GPRDIR}
 	${BIN_INSTALL} -m 644 ${BUILD}/ada/*.ad[sb]      ${DESTDIR}/${INC}
 	${BIN_INSTALL} -m 644 ${A}/libgela/*.ad[sb]      ${DESTDIR}/${INC}
 	${BIN_INSTALL} -m 644 ${A}/asis/xasis/*.ad[sb]   ${DESTDIR}/${INC}
 	${BIN_INSTALL} -m 644 ${A}/asis/*.ad[sb]         ${DESTDIR}/${INC}
 	${BIN_INSTALL} -m 444 ${BUILD}/lib/*.ali         ${DESTDIR}/${LIB}
 	${BIN_INSTALL} -m 644 ${BUILD}/lib/*gela-asis*   ${DESTDIR}/${LIB}
-	${BIN_INSTALL} -m 644 ${SPEC}/*.ads              ${DESTDIR}/${SPECTO}
-	${BIN_INSTALL} -m 644 ${SPEC}/annex*/*.ads       ${DESTDIR}/${SPECTO}
-	${BIN_INSTALL} -m 644 ${SPEC}/obsolescent*/*.ads ${DESTDIR}/${SPECTO}
+	${BIN_INSTALL} -m 644 ${SPEC}/*.ads              ${DESTDIR}/${SPECDIR}
+	${BIN_INSTALL} -m 644 ${SPEC}/annex*/*.ads       ${DESTDIR}/${SPECDIR}
+	${BIN_INSTALL} -m 644 ${SPEC}/obsolescent*/*.ads ${DESTDIR}/${SPECDIR}
 	${BIN_SED} -e "s#@Library_Kind@#${LIBKIND}#g" \
 		-e "s#@Source_Dirs@#${INC}#g" \
 		-e "s#@Library_Dir@#${LIB}#g" \
-		gnat/${GPR} >  ${DESTDIR}/${PREFIX}/${GPRDIR}/gela_asis.gpr
+		gnat/${GPR} >  ${DESTDIR}/${GPRDIR}/gela_asis.gpr
 
 	@${BIN_ECHO} Please add next variable to your environmet:
-	@${BIN_ECHO} GELA_INCLUDE_PATH=${SPECTO}
+	@${BIN_ECHO} GELA_INCLUDE_PATH=${SPECDIR}
 
 ${BIN_AYACC}: contrib/ayacc/src/*.ad[sb]
 	${GNATMAKE} -P gnat/contrib_ayacc.gpr -o ${BIN_AYACC}
