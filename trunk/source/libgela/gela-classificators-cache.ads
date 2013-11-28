@@ -1,11 +1,11 @@
 ------------------------------------------------------------------------------
 --                           G E L A   A S I S                              --
 --       ASIS implementation for Gela project, a portable Ada compiler      --
---                     http://www.ten15.org/wiki/Ada                        --
+--                          http://gela.ada-ru.org                          --
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $TenDRA: gela-classificators-cache.ads 2677 2009-01-10 10:22:17Z maxr $
+--  $Revision: $ $Date: $
 --  Purpose:
 --  Common Character_Class cache for UTF-8/UTF-16 classificators.
 
@@ -34,10 +34,13 @@ end Gela.Classificators.Cache;
 --  modification, are permitted provided that the following conditions are met:
 --
 --     * Redistributions of source code must retain the above copyright notice,
---     * this list of conditions and the following disclaimer.
+--       this list of conditions and the following disclaimer.
 --     * Redistributions in binary form must reproduce the above copyright
---     * notice, this list of conditions and the following disclaimer in the
---     * documentation and/or other materials provided with the distribution.
+--       notice, this list of conditions and the following disclaimer in the
+--       documentation and/or other materials provided with the distribution.
+--     * Neither the name of the Maxim Reznik, IE nor the names of its
+--       contributors may be used to endorse or promote products derived from
+--       this software without specific prior written permission.
 --
 --  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 --  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE

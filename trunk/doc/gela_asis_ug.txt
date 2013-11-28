@@ -1,7 +1,7 @@
                        = Gela ASIS User Manual =
 {{{
-              Gela ASIS Version 0.3.1 (55 Oct 2013, SVN 2686)
-                         The TenDRA project
+              Gela ASIS Version 0.3.2 (29 Nov 2013, SVN 2686)
+                           The Gela project
 }}}
 == Overview ==
 
@@ -22,7 +22,7 @@ Gela ASIS is distributed under BSD License.
 
 This document (Gela ASIS User Manual) tells how to install and use Gela ASIS.
 
-== What's new in 0.3.1 version ==
+== What's new in 0.3.2 version ==
 New features since 0.3 version are:
  * Bug fixes
  * Support building gela-asis as relocatable library
@@ -115,12 +115,12 @@ you can just compile provided Ada sources.
 
 Unpack Geal ASIS sources archive:
 {{{
-tar xjf gela-asis-0.3.1.tar.bz2
+tar xjf gela-asis-0.3.2.tar.bz2
 }}}
 
 Compile Gela ASIS library (using provided generated sources):
 {{{
-  cd gela-asis-0.3.1/
+  cd gela-asis-0.3.2/
   make
 }}}
 
@@ -207,7 +207,7 @@ populate ASIS Context and "option" one of:
   pointed by GELA_INCLUDE_PATH environment variable.
 
   -A:assertion_expression - turn on debug facilities. More about this is on
-  project site: http://www.ten15.org/wiki/Ada/debug
+  project site:    http://gela.ada-ru.org    /debug
 
   -Eencoding_name - set encoding for sources. Default is UTF-8
 
@@ -246,7 +246,7 @@ To support Ada 2005 Standard we implement follow ASIS 99 issues:
 Even Asis for Ada 2005 described in the ASIS 99 Issues, but it still draft and
 has errors. We make some corrections to it to be able to implement Ada 2005.
 List of these corrections available at
- http://www.ten15.org/wiki/Ada/Asis_2005_Ext
+    http://gela.ada-ru.org    /Asis_2005_Ext
 
 
 == Performance Issues ==

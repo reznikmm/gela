@@ -1,6 +1,6 @@
               Gela ASIS: Portable ASIS Implementation
               ---------------------------------------
-                   Version 0.3.1   25 Oct 2013
+                   Version 0.3.2   29 Nov 2013
                      http://gela.ada-ru.org
 
 Gela ASIS is platform/compiler independent implementation of Ada

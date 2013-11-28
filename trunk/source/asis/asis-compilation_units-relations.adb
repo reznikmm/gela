@@ -1,11 +1,11 @@
 ------------------------------------------------------------------------------
 --                           G E L A   A S I S                              --
 --       ASIS implementation for Gela project, a portable Ada compiler      --
---                     http://www.ten15.org/wiki/Ada                        --
+--                          http://gela.ada-ru.org                          --
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $TenDRA: asis-compilation_units-relations.adb 2678 2009-01-10 11:54:22Z maxr $:
+--  $Revision: $ $Date: $:
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
@@ -4572,17 +4572,20 @@ package body Asis.Compilation_Units.Relations is
 end Asis.Compilation_Units.Relations;
 
 ------------------------------------------------------------------------------
---  Copyright (c) 2006, Maxim Reznik, Andry Ogorodnik
+--  Copyright (c) 2006-2013, Maxim Reznik, Andry Ogorodnik
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
 --  modification, are permitted provided that the following conditions are met:
 --
 --     * Redistributions of source code must retain the above copyright notice,
---     * this list of conditions and the following disclaimer.
+--       this list of conditions and the following disclaimer.
 --     * Redistributions in binary form must reproduce the above copyright
---     * notice, this list of conditions and the following disclaimer in the
---     * documentation and/or other materials provided with the distribution.
+--       notice, this list of conditions and the following disclaimer in the
+--       documentation and/or other materials provided with the distribution.
+--     * Neither the name of the Maxim Reznik, IE nor the names of its
+--       contributors may be used to endorse or promote products derived from
+--       this software without specific prior written permission.
 --
 --  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 --  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE

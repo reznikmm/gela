@@ -1,3 +1,14 @@
+------------------------------------------------------------------------------
+--                           G E L A   A S I S                              --
+--       ASIS implementation for Gela project, a portable Ada compiler      --
+--                          http://gela.ada-ru.org                          --
+--                     - - - - - - - - - - - - - - -                        --
+--            Read copyright and license at the end of this file            --
+------------------------------------------------------------------------------
+--  $Revision: $ $Date: $
+--  Purpose:
+
+
 with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
