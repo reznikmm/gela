@@ -136,7 +136,6 @@ package body Gela.Containers.Vectors is
    end Copy;
 
 end Gela.Containers.Vectors;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

@@ -52,7 +52,6 @@ private
    end record;
 
 end Gela.Containers.Vectors;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

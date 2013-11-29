@@ -290,7 +290,6 @@ end Gela.Hash.CRC.b32;
 --  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 --  POSSIBILITY OF SUCH DAMAGE.
 ------------------------------------------------------------------------------
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

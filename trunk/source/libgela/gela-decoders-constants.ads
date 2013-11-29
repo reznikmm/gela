@@ -2379,7 +2379,6 @@ private package Gela.Decoders.Constants is
    UTF_8 : aliased Gela.Decoders.UTF_8.Decoder;
 
 end Gela.Decoders.Constants;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

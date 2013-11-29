@@ -68,7 +68,6 @@ package body Gela.Classificators.Cache is
    end Initialize;
 
 end Gela.Classificators.Cache;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

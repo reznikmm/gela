@@ -204,7 +204,6 @@ package body Gela.Containers.Lists is
    end Set_Next;
 
 end Gela.Containers.Lists;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

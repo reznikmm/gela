@@ -90,7 +90,6 @@ private
    No_Element : constant Cursor := (null, null);
 
 end Gela.Containers.Lists;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------

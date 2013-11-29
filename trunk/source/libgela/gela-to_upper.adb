@@ -2988,7 +2988,6 @@ package body Gela.To_Upper is
       Last   : out Natural) is separate;
 
 end Gela.To_Upper;
-cat ../../COPYING
 
 
 ------------------------------------------------------------------------------
