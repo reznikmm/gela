@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 --  Purpose:
 --  Implement permanent element Id on unmodified sources.
 --  For Id we use hash of an element concatenated with unit unique name.

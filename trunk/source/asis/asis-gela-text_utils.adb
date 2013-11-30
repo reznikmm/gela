@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $:
+--  $Revision$ $Date$:
 
 with Gela.Source_Buffers;             use Gela;
 with Gela.Source_Buffers.Current;

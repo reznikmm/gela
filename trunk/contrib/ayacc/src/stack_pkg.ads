@@ -6,10 +6,10 @@
 -- SCCS File    : disk21~/rschm/hasee/sccs/common_library/sccs/sxstack_pkg_.ada
 
 -- $Source: /nosc/work/abstractions/stack/RCS/stack.spc,v $
--- $Revision: 1.5 $ -- $Date: 85/02/01 09:57:17 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 -- $Source: /nosc/work/abstractions/stack/RCS/stack.spc,v $
--- $Revision: 1.5 $ -- $Date: 85/02/01 09:57:17 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 with lists;     --| Implementation uses lists.  (private)
 

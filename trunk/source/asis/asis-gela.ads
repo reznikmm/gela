@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 --  Purpose:
 --  Asis.Gela starts package hierarhy where implemented Object-Oriented Asis.
 --  Standard procedural Asis implemented as set of wrappers over dispatching

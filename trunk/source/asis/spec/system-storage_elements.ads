@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --          Read copyright and license at the end of ada.ads file           --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 
 package System.Storage_Elements is
    pragma Pure (System.Storage_Elements);

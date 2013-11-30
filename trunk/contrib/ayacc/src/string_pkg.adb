@@ -6,10 +6,10 @@
 -- SCCS File    : disk21~/rschm/hasee/sccs/common_library/sccs/sxstring_pkg.ada
 
 -- $Source: /nosc/work/abstractions/string/RCS/string.bdy,v $
--- $Revision: 1.3 $ -- $Date: 85/02/01 10:58:51 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 -- $Source: /nosc/work/abstractions/string/RCS/string.bdy,v $
--- $Revision: 1.3 $ -- $Date: 85/02/01 10:58:51 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 with unchecked_deallocation;
 with lists, stack_pkg;

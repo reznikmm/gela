@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $:
+--  $Revision$ $Date$:
 
 with Asis.Gela.Classificators_Ada_UTF_8;
 with Asis.Gela.Classificators_Ada_UTF_16;

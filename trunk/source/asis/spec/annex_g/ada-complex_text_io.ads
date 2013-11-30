@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --          Read copyright and license at the end of ada.ads file           --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 
 with Ada.Numerics.Complex_Types;
 with Ada.Text_IO.Complex_IO;

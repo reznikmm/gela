@@ -6,10 +6,10 @@
 -- SCCS File    : disk21~/rschm/hasee/sccs/common_library/sccs/sxstack_pkg.ada
 
 -- $Source: /nosc/work/abstractions/stack/RCS/stack.bdy,v $
--- $Revision: 1.3 $ -- $Date: 85/02/01 10:19:36 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 -- $Source: /nosc/work/abstractions/stack/RCS/stack.bdy,v $
--- $Revision: 1.3 $ -- $Date: 85/02/01 10:19:36 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 with unchecked_deallocation;
 

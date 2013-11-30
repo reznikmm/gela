@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --          Read copyright and license at the end of ada.ads file           --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 
 with Ada.Numerics.Generic_Real_Arrays;
 

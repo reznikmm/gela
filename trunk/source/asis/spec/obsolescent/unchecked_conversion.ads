@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --          Read copyright and license at the end of ada.ads file           --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 
 with Ada.Unchecked_Conversion;
 generic function Unchecked_Conversion renames Ada.Unchecked_Conversion;

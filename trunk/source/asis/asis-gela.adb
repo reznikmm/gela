@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $:
+--  $Revision$ $Date$:
 
 package body Asis.Gela is
    Current_Hash  : Asis.ASIS_Positive := 1;

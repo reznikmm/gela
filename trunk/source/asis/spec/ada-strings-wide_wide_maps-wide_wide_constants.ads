@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --          Read copyright and license at the end of ada.ads file           --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $
+--  $Revision$ $Date$
 
 package Ada.Strings.Wide_Wide_Maps.Wide_Wide_Constants is
    pragma Preelaborate (Wide_Wide_Constants);

@@ -5,7 +5,7 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $Revision: $ $Date: $:
+--  $Revision$ $Date$:
 
 with Asis.Gela.Elements.Assoc;
 with Asis.Gela.Elements.Helpers;

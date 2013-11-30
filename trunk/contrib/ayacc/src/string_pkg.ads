@@ -6,10 +6,10 @@
 -- SCCS File    : disk21~/rschm/hasee/sccs/common_library/sccs/sxstring_pkg_.ada
 
 -- $Source: /nosc/work/abstractions/string/RCS/string.spc,v $
--- $Revision: 1.1 $ -- $Date: 85/01/10 17:51:46 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 -- $Source: /nosc/work/abstractions/string/RCS/string.spc,v $
--- $Revision: 1.1 $ -- $Date: 85/01/10 17:51:46 $ -- $Author: ron $
+-- $Revision$ -- $Date$ -- $Author: ron $
 
 package string_pkg is
 
