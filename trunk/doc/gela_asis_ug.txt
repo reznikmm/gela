@@ -1,6 +1,6 @@
                        = Gela ASIS User Manual =
 {{{
-              Gela ASIS Version 0.3.2 (29 Nov 2013, SVN 2686)
+              Gela ASIS Version 0.3.2 (01 Dec 2013, SVN 210)
                            The Gela project
 }}}
 == Overview ==

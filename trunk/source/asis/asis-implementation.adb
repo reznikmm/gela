@@ -35,7 +35,7 @@ package body Asis.Implementation is
 
    function ASIS_Implementor_Version return Wide_String is
    begin
-      return "0.3.1";
+      return "0.3.2";
    end ASIS_Implementor_Version;
 
    function ASIS_Implementor_Information return Wide_String is

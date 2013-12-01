@@ -14,7 +14,7 @@
 # rpm specific
 DESTDIR ?= 
 # Library version
-VERSION ?= .0.3.1
+VERSION ?= .0.3.2
 # Place to install
 PREFIX           ?= ${HOME}/gela-asis
 # libraries directory
