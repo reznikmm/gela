@@ -19,6 +19,7 @@ with AG_Tools; use AG_Tools;
 with AG_Tools.Writers; use AG_Tools.Writers;
 --  with Gela.Grammars_Debug;
 with AG_Tools.Input;
+with AG_Tools.Element_Generators;
 
 procedure AG_Driver is
    use AG_Tools.Input;
@@ -1076,4 +1077,6 @@ begin
    Generate_Conv;
    Generate_Fabric;
    Generate_Visiter;
+   AG_Tools.Element_Generators.Generate_Elements (G);
+   AG_Tools.Element_Generators.Generate_Fabric (G);
 end AG_Driver;

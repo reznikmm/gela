@@ -185,7 +185,7 @@ package body AG_Tools.NT_Generators is
       Name    : constant League.Strings.Universal_String := To_Ada (NT.Name);
       Unit    : constant League.Strings.Universal_String := Plural (NT.Name);
    begin
-      Code.Text.Clear;
+      Code.Clear;
       Self.Context.Attr_Map.Clear;
 
       Spec.P ("", Impl);
@@ -246,7 +246,7 @@ package body AG_Tools.NT_Generators is
       Sequences : constant League.Strings.Universal_String :=
         Plural (Item & "_Sequence");
    begin
-      Code.Text.Clear;
+      Code.Clear;
       Self.Context.Attr_Map.Clear;
 
       Spec.P ("", Impl);
@@ -303,7 +303,7 @@ package body AG_Tools.NT_Generators is
       Code.P (");");
       Code.P ("      end loop;");
       Piece := Code.Text;
-      Code.Text.Clear;
+      Code.Clear;
       Write_Rules (Self.Context, NT, NT.Last, Pos);
       Impl.P ("   begin");
       Impl.N (Code.Text);

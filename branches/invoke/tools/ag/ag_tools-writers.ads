@@ -13,9 +13,12 @@ package AG_Tools.Writers is
 
    pragma Preelaborate;
 
-   type Writer is tagged record
-      Text : League.Strings.Universal_String;
-   end record;
+   type Writer is tagged private;
+
+   function Text
+     (Self : Writer) return League.Strings.Universal_String;
+
+   procedure Clear (Self : in out Writer);
 
    procedure P
      (Self   : in out Writer;
@@ -57,4 +60,10 @@ package AG_Tools.Writers is
      (Self  : in out Writer;
       Value : Natural);
 
+private
+
+   type Writer is tagged record
+      Text      : League.Strings.Universal_String;
+      Last_Line : League.Strings.Universal_String;
+   end record;
 end AG_Tools.Writers;

@@ -7,13 +7,26 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with League.String_Vectors;
+with League.Characters;
+
 package body AG_Tools.Writers is
 
    New_Line : constant Wide_Wide_Character := Wide_Wide_Character'Val (10);
 
+   -----------
+   -- Clear --
+   -----------
+
+   procedure Clear (Self : in out Writer) is
+   begin
+      Self.Text.Clear;
+      Self.Last_Line.Clear;
+   end Clear;
+
    procedure N (Self : in out Writer; Text : Wide_Wide_String) is
    begin
-      Self.Text.Append (Text);
+      Self.Last_Line.Append (Text);
    end N;
 
    procedure N
@@ -81,10 +94,76 @@ package body AG_Tools.Writers is
 
    procedure P
      (Self   : in out Writer;
-      Text   : Wide_Wide_String := "") is
+      Text   : Wide_Wide_String := "")
+   is
+      function Get_Prefix
+        (X : League.Strings.Universal_String)
+         return League.Strings.Universal_String;
+
+      ----------------
+      -- Get_Prefix --
+      ----------------
+
+      function Get_Prefix
+        (X : League.Strings.Universal_String)
+         return League.Strings.Universal_String
+      is
+         use type League.Characters.Universal_Character;
+      begin
+         for J in 1 .. X.Length loop
+            if X.Element (J) /= ' ' then
+               return X.Slice (1, J - 1);
+            end if;
+         end loop;
+         raise Constraint_Error;
+      end Get_Prefix;
    begin
-      Self.Text.Append (Text);
+      Self.N (Text);
+
+      if Self.Last_Line.Length > 78 then
+         declare
+            Length : Natural;
+            List   : constant League.String_Vectors.Universal_String_Vector :=
+              Self.Last_Line.Split ('.');
+            Prefix : League.Strings.Universal_String :=
+              Get_Prefix (Self.Last_Line);
+         begin
+            Self.Text.Append (List.Element (1));
+            Length := List.Element (1).Length;
+
+            for J in 2 .. List.Length loop
+               if Length + List.Element (J).Length < 78 then
+                  Self.Text.Append ('.');
+                  Self.Text.Append (List.Element (J));
+                  Length := Length + List.Element (J).Length + 1;
+               else
+                  Self.Text.Append ('.');
+                  Self.Text.Append (New_Line);
+                  Prefix.Append ("  ");
+                  Self.Text.Append (Prefix);
+                  Self.Text.Append (List.Element (J));
+                  Length := Prefix.Length + List.Element (J).Length;
+               end if;
+            end loop;
+         end;
+      else
+         Self.Text.Append (Self.Last_Line);
+      end if;
+
+      Self.Last_Line.Clear;
       Self.Text.Append (New_Line);
    end P;
+
+   ----------
+   -- Text --
+   ----------
+
+   function Text
+     (Self : Writer) return League.Strings.Universal_String
+   is
+      use type League.Strings.Universal_String;
+   begin
+      return Self.Text & Self.Last_Line;
+   end Text;
 
 end AG_Tools.Writers;

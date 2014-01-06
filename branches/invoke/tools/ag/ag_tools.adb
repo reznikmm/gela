@@ -114,7 +114,7 @@ package body AG_Tools is
          end;
 
       elsif Part.Is_Terminal_Reference then
-         Result.Append ("Token");
+         Result.Append ("Gela.Lexical_Types.Token_Index");
       else
          declare
             NT : Gela.Grammars.Non_Terminal renames
@@ -138,6 +138,7 @@ package body AG_Tools is
       return League.Strings.Universal_String
    is
       use type Gela.Grammars.Part_Count;
+      use type League.Strings.Universal_String;
 
       Result : League.Strings.Universal_String;
       Prod : Gela.Grammars.Production renames G.Production (NT.First);
@@ -147,6 +148,7 @@ package body AG_Tools is
          Result.Append ("_Sequence");
       else
          Result := To_Ada (NT.Name);
+         Result := "Gela.Elements." & Plural (Result) & "." & Result;
       end if;
 
       return Result;

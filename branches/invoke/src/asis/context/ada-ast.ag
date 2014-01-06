@@ -51,7 +51,7 @@ access_to_object_definition ::=
   token <null_token>
   token <access_token>
   token <constant_token>
-  subtype_indication <Access_To_Object_Definition>
+  subtype_indication <subtype_indication>
 ;
 
 access_to_procedure_definition ::=
@@ -225,7 +225,7 @@ box ::= token <box_token>;
 
 case_expression ::=
   token <case_token>
-  expression <Case_Expression>
+  expression <expression>
   token <is_token>
   {case_expression_path} <Case_Expression_Paths>;
 
@@ -620,7 +620,7 @@ formal_access_to_object_definition ::=
   token <null_token>
   token <access_token>
   token <constant_token>
-  subtype_indication <Access_To_Object_Definition>
+  subtype_indication <subtype_indication>
 ;
 
 formal_access_to_procedure_definition ::=
@@ -1191,7 +1191,7 @@ number_declaration ::=
   token                 <semicolon_token>
 ;
 
-numeric_literal ::= token <numeric_literal>;
+numeric_literal ::= token <numeric_literal_token>;
 
 object_declaration ::=
   {defining_identifier}  <Names>
@@ -3191,7 +3191,7 @@ Rules for access_to_object_definition. :
 
 Rules for access_to_object_definition. :
 (.
-      ${Access_To_Object_Definition.env_in} := ${access_to_object_definition.env_in};
+      ${subtype_indication.env_in} := ${access_to_object_definition.env_in};
 .)
 
 Rules for access_to_procedure_definition. :
@@ -3346,7 +3346,7 @@ Rules for block_statement. :
 
 Rules for case_expression. :
 (.
-      ${Case_Expression.env_in} := ${case_expression.env_in};
+      ${expression.env_in} := ${case_expression.env_in};
 .)
 
 Rules for case_expression. :
@@ -3916,7 +3916,7 @@ Rules for formal_access_to_object_definition. :
 
 Rules for formal_access_to_object_definition. :
 (.
-      ${Access_To_Object_Definition.env_in} := ${formal_access_to_object_definition.env_in};
+      ${subtype_indication.env_in} := ${formal_access_to_object_definition.env_in};
 .)
 
 Rules for formal_access_to_procedure_definition. :
