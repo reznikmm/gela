@@ -8,8 +8,6 @@ project Gela_Build is
 
    Check_Ada_Switches := Default_Ada_Switches & ("-gnatwea", "-gnaty");
 
-   for Main use ("test");
-
    for Source_Dirs use ("../src/api", "../src/context",
      "../src/lexer",
      Build & "/chop");

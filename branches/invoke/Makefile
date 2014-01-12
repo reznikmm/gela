@@ -18,11 +18,11 @@ asis : $(AST_STAMP) $(LEXER_STAMP) $(PARSER)
 	gprbuild -m -j0 -p -P gnat/gela_build.gpr
 
 $(AST_STAMP): $(AG_DRIVER) $(AST)
-	echo $(AG_DRIVER) $(AST) > $(AST_STAMP)
+	$(AG_DRIVER) $(AST) > $(AST_STAMP)
 	-mkdir $(BUILD_CHOP)
 	-mkdir $(BUILD_NODE)
-	echo gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
-	echo mv $(BUILD_CHOP)/gela-nodes* $(BUILD_NODE)
+	gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
+	rm -f $(BUILD_CHOP)/gela-{nodes,stores,pass}*
 
 $(LEXER_STAMP): $(UAFLEX) $(LEXER)
 	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Scanner_Types \
