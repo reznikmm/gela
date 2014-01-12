@@ -69,13 +69,14 @@ begin
    declare
       use type Gela.Test_Iterators.Append.Iterator;
       Dirs  : constant Gela.Test_Iterators.Iterator'Class :=
-        Gela.Test_Iterators.Dir2.Create (Tests & "/grammars", Build);
-      ACATS : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.Dir2.Create
+          (Tests & "/grammars", Build & "/tests/grammars");
+      Lexer : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
-          (Command   => Build & "/asis/ts_00018",
-           List_File => Tests & "/asis/ts_00018/single_file_tests",
+          (Command   => Build & "/tests/gela/lexer_test",
+           List_File => Tests & "/gela/lexer/list.txt",
            ACATS     => ACATS_Dir);
-      Iterator : Gela.Test_Iterators.Append.Iterator := Dirs + ACATS;
+      Iterator : Gela.Test_Iterators.Append.Iterator := Dirs + Lexer;
    begin
       Iterator.Start;
 

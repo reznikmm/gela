@@ -144,10 +144,9 @@ package body Gela.Test_Iterators.Dir2 is
                Test := Gela.Test_Cases.Test_Case_Access
                  (Gela.Test_Cases.Execute.Create (Item, Build, Expect));
 
-               Result.List.Append (Create_GPR_Build (Item, Build) + Test);
+               Result.List.Append (Test);
 
-               Run := Create_GPR_Build (Item, Build) +
-                 Gela.Test_Cases.Execute.Create (Item, Build, Expect);
+               Run := Gela.Test_Cases.Execute.Create (Item, Build, Expect);
 
                Test := Gela.Test_Cases.Valgrind.Create (Run);
 

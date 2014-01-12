@@ -1,7 +1,7 @@
 with "gela_common";
 with "gela_asis";
 
-project Gela_Grammars_Tests is
+project Gela_ASIS_Tests is
 
    for Main use
      ("ts_00018");
@@ -15,4 +15,4 @@ project Gela_Grammars_Tests is
       for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
    end Compiler;
 
-end Gela_Grammars_Tests;
+end Gela_ASIS_Tests;

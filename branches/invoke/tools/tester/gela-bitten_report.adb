@@ -11,6 +11,7 @@ with Gela.Test_Cases;
 with League.Calendars.ISO_8601;
 with XML.SAX.Attributes;
 with XML.SAX.Pretty_Writers;
+with XML.SAX.Output_Destinations.Strings;
 with Ada.Wide_Wide_Text_IO;
 
 package body Gela.Bitten_Report is
@@ -51,9 +52,12 @@ package body Gela.Bitten_Report is
    is
       Test   : Gela.Test_Cases.Test_Case_Access;
       Writer : XML.SAX.Pretty_Writers.SAX_Pretty_Writer;
+      Output : aliased
+        XML.SAX.Output_Destinations.Strings.SAX_String_Output_Destination;
    begin
       Iterator.Start;
 
+      Writer.Set_Output_Destination (Output'Unchecked_Access);
       Writer.Start_Document;
 
       declare
@@ -109,7 +113,7 @@ package body Gela.Bitten_Report is
 
       Writer.End_Element (Qualified_Name => Report);
 
-      Result := Writer.Text;
+      Result := Output.Get_Text;
    end Generate;
 
    ----------------

@@ -13,7 +13,7 @@ package Gela.Lexers is
 
    not overriding procedure New_Line
      (Self  : in out Lexer_Destination;
-      Token : Gela.Lexical_Types.Line_Span) is abstract;
+      Line  : Gela.Lexical_Types.Line_Span) is abstract;
 
    type Lexer is limited interface;
    type Lexer_Access is access all Lexer'Class;

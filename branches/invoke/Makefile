@@ -12,27 +12,27 @@ LEXER_STAMP=$(GELA_BUILD)/.stamp-ada.l
 PARSER=$(GELA_BUILD)/.stamp-ada.p
 
 all: asis tests
-	gprbuild -m -j0 -p -P gnat/gela_debug.gpr
+	echo gprbuild -m -j0 -p -P gnat/gela_debug.gpr
 
 asis : $(AST_STAMP) $(LEXER_STAMP) $(PARSER)
-	gprbuild -m -j0 -p -P gnat/gela_asis.gpr
+	gprbuild -m -j0 -p -P gnat/gela_build.gpr
 
 $(AST_STAMP): $(AG_DRIVER) $(AST)
-	$(AG_DRIVER) $(AST) > $(AST_STAMP)
+	echo $(AG_DRIVER) $(AST) > $(AST_STAMP)
 	-mkdir $(BUILD_CHOP)
 	-mkdir $(BUILD_NODE)
-	gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
-	mv $(BUILD_CHOP)/gela-nodes* $(BUILD_NODE)
+	echo gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
+	echo mv $(BUILD_CHOP)/gela-nodes* $(BUILD_NODE)
 
 $(LEXER_STAMP): $(UAFLEX) $(LEXER)
-	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Lexical.Types \
-	    --handler Gela.Lexical.Handlers --scanner Gela.Lexical.Scanners \
-	    --tokens Gela.Lexical.Tokens $(LEXER)
+	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Scanner_Types \
+            --handler Gela.Scanner_Handlers --scanner Gela.Scanners \
+            --tokens Gela.Lexical_Types $(LEXER)
 	touch $(LEXER_STAMP)
 
 $(PARSER): $(YACC_DRIVER) $(SYNTAX)
-	$(YACC_DRIVER) $(SYNTAX) > $(PARSER)
-	gnatchop -w $(PARSER) $(BUILD_CHOP)
+	echo $(YACC_DRIVER) $(SYNTAX) > $(PARSER)
+	echo gnatchop -w $(PARSER) $(BUILD_CHOP)
 
 $(AG_DRIVER) $(YACC_DRIVER):
 	gprbuild -m -j0 -p -P gnat/gela_ag.gpr
@@ -42,4 +42,5 @@ $(UAFLEX):
 
 tests: asis
 	gprbuild -m -j0 -p -P gnat/gela_tester.gpr
-	gprbuild -m -j0 -p -P gnat/gela_asis_tests.gpr
+	gprbuild -m -j0 -p -P gnat/gela_grammars_tests.gpr
+	gprbuild -m -j0 -p -P gnat/gela_tests.gpr

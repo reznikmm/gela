@@ -54,6 +54,7 @@ package body Gela.Test_Iterators.ACATS is
          begin
             Args.Append ("-I" & Dir);
             Args.Append (Name);
+            Args.Append (Line.Element (2));
 
             Test := new Gela.Test_Cases.Runner.Test_Case'
               (Gela.Test_Cases.Runner.Create

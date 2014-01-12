@@ -34,7 +34,7 @@ package body Gela.Test_Cases.Execute is
       --  Path to Gela sources (trunk/source/)
 
       function Object_Dir (Self : Test_Case) return Universal_String;
-      --  Path to test's object directory ($(BUILD)/<TEST>/)
+      --  Path to test's object directory ($(BUILD)/)
 
       function Parent (Self : Test_Case) return Universal_String;
       --  Path to directory containing tests (truck/tests/)
@@ -161,12 +161,8 @@ package body Gela.Test_Cases.Execute is
       ----------------
 
       function Object_Dir (Self : Test_Case) return Universal_String is
-         File : constant String := Self.Full_Path.To_UTF_8_String;
-         Name : constant String := Ada.Directories.Simple_Name (File);
-         Obj  : constant String := Ada.Directories.Compose
-           (Self.Build.To_UTF_8_String, Name);
       begin
-         return League.Strings.From_UTF_8_String (Obj);
+         return Self.Build;
       end Object_Dir;
 
       ------------

@@ -13,34 +13,33 @@ package Gela.Contexts is
    for Context_Access'Storage_Size use 0;
 
    not overriding function Symbols
-     (Self : Context)
+     (Self : access Context)
       return Gela.Symbol_Sets.Symbol_Set_Access is abstract;
 
    not overriding function Library_Unit_Declarations
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
         is abstract;
 
    not overriding function Compilation_Unit_Bodies
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
         is abstract;
 
    not overriding function Unit_Containers
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Unit_Containers.Unit_Container_List is abstract;
 
    not overriding function Naming_Schema
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Naming_Schemas.Naming_Schema_Access is abstract;
 
    not overriding function Source_Finder
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Source_Finders.Source_Finder_Access is abstract;
 
    not overriding function Lexer
-     (Self  : Context)
+     (Self  : access Context)
       return Gela.Lexers.Lexer_Access is abstract;
-
 
 end Gela.Contexts;
