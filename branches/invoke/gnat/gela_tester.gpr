@@ -1,4 +1,4 @@
-with "league";
+with "matreshka/league";
 with "xml";
 with "gela_common";
 

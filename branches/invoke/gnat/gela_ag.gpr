@@ -1,4 +1,4 @@
-with "league";
+with "matreshka/league";
 with "gela_common";
 with "gela_grammars";
 

@@ -1,4 +1,4 @@
-with "league.gpr";
+with "matreshka/league.gpr";
 with "gela_common";
 
 project Gela_UAFLEX2 is
