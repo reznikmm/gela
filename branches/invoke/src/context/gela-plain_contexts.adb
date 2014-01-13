@@ -1,4 +1,6 @@
 
+with Gela.Path_Source_Finders;
+
 package body Gela.Plain_Contexts is
 
    -----------------------------
@@ -18,9 +20,14 @@ package body Gela.Plain_Contexts is
    -- Initialize --
    ----------------
 
-   not overriding procedure Initialize (Self : in out Context) is
+   not overriding procedure Initialize
+     (Self : in out Context;
+      Path : League.Strings.Universal_String) is
    begin
       Self.Symbols.Initialize;
+      Self.Finder := Gela.Path_Source_Finders.Create
+        (Path    => Path,
+         Context => Self'Unchecked_Access);
    end Initialize;
 
    -----------
@@ -30,7 +37,7 @@ package body Gela.Plain_Contexts is
    overriding function Lexer
      (Self  : access Context) return Gela.Lexers.Lexer_Access is
    begin
-      return Self.Lexer'Access;
+      return Self.Lexer'Unchecked_Access;
    end Lexer;
 
    -------------------------------
@@ -54,7 +61,7 @@ package body Gela.Plain_Contexts is
      (Self  : access Context)
       return Gela.Naming_Schemas.Naming_Schema_Access is
    begin
-      return Self.Schema'Access;
+      return Self.Schema'Unchecked_Access;
    end Naming_Schema;
 
    -------------------
@@ -76,7 +83,7 @@ package body Gela.Plain_Contexts is
    overriding function Symbols
      (Self : access Context) return Gela.Symbol_Sets.Symbol_Set_Access is
    begin
-      return Self.Symbols'Access;
+      return Self.Symbols'Unchecked_Access;
    end Symbols;
 
    ---------------------

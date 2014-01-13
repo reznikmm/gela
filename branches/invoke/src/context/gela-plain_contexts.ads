@@ -1,3 +1,5 @@
+with League.Strings;
+
 with Gela.Symbol_Sets;
 with Gela.Source_Finders;
 with Gela.Compilation_Unit_Sets;
@@ -15,7 +17,9 @@ package Gela.Plain_Contexts is
 
    type Context is limited new Gela.Contexts.Context with private;
 
-   not overriding procedure Initialize (Self : in out Context);
+   not overriding procedure Initialize
+     (Self : in out Context;
+      Path : League.Strings.Universal_String);
 
    overriding function Symbols
      (Self : access Context) return Gela.Symbol_Sets.Symbol_Set_Access;
@@ -44,6 +48,7 @@ private
    type Context is limited new Gela.Contexts.Context with record
       Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
       Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
+      Finder  : Gela.Source_Finders.Source_Finder_Access;
       Schema  : aliased Gela.GNAT_Naming_Schemas.Naming_Schema
         (Context'Unchecked_Access);
    end record;
