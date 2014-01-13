@@ -11,12 +11,11 @@ package body Gela.Plain_Lexers is
    overriding procedure Scan
      (Self    : Lexer;
       Input   : League.Strings.Universal_String;
-      Symbols : not null access Gela.Symbol_Sets.Symbol_Set'Class;
       Output  : not null access Gela.Lexers.Lexer_Destination'Class)
    is
-      pragma Unreferenced (Self);
       Scanner : aliased Gela.Scanners.Scanner;
-      Handler : aliased Gela.Lexical_Handler.Handler (Output, Symbols);
+      Handler : aliased Gela.Lexical_Handler.Handler
+        (Output, Self.Context.Symbols);
       Token   : Gela.Lexical_Types.Token_Kind := Gela.Lexical_Types.Null_Token;
    begin
       Scanner.Set_Source (Input);

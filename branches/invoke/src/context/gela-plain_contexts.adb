@@ -51,11 +51,10 @@ package body Gela.Plain_Contexts is
    -------------------
 
    overriding function Naming_Schema
-     (Self  : access Context) return Gela.Naming_Schemas.Naming_Schema_Access
-   is
-      pragma Unreferenced (Self);
+     (Self  : access Context)
+      return Gela.Naming_Schemas.Naming_Schema_Access is
    begin
-      return null;
+      return Self.Schema'Access;
    end Naming_Schema;
 
    -------------------

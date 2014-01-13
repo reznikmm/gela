@@ -8,11 +8,12 @@ with Gela.Unit_Containers;
 with Gela.Contexts;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
+with Gela.GNAT_Naming_Schemas;
 
 package Gela.Plain_Contexts is
    pragma Preelaborate;
 
-   type Context is new Gela.Contexts.Context with private;
+   type Context is limited new Gela.Contexts.Context with private;
 
    not overriding procedure Initialize (Self : in out Context);
 
@@ -40,9 +41,11 @@ package Gela.Plain_Contexts is
      (Self  : access Context) return Gela.Lexers.Lexer_Access;
 
 private
-   type Context is new Gela.Contexts.Context with record
+   type Context is limited new Gela.Contexts.Context with record
       Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
-      Lexer   : aliased Gela.Plain_Lexers.Lexer;
+      Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
+      Schema  : aliased Gela.GNAT_Naming_Schemas.Naming_Schema
+        (Context'Unchecked_Access);
    end record;
 
 end Gela.Plain_Contexts;

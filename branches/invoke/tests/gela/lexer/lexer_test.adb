@@ -8,7 +8,6 @@ with Gela.Context_Fabrics;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Lexical_Handler;
-with Gela.Symbol_Sets;
 
 procedure Lexer_Test is
    package Output is
@@ -144,7 +143,6 @@ procedure Lexer_Test is
    Context : constant Gela.Contexts.Context_Access :=
      Gela.Context_Fabrics.Create_Context (League.Application.Arguments);
    Lexer : constant Gela.Lexers.Lexer_Access := Context.Lexer;
-   Symbols : constant Gela.Symbol_Sets.Symbol_Set_Access := Context.Symbols;
    Dest : aliased Output.Lexer_Destination;
 begin
    --  Command line: "-IDIR" "FILE" "HASH"
@@ -167,7 +165,7 @@ begin
       Input.Append (Wide_Wide_Character'Val (10));
    end loop;
 
-   Lexer.Scan (Input, Symbols, Dest'Access);
+   Lexer.Scan (Input, Dest'Access);
 
    if Dest.Result.Hash /= Hash then
       Ada.Wide_Wide_Text_IO.Put_Line (Dest.Result.To_Wide_Wide_String);

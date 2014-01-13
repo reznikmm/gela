@@ -1,7 +1,6 @@
 with League.Strings;
 
 with Gela.Lexical_Types;
-with Gela.Symbol_Sets;
 
 package Gela.Lexers is
    pragma Preelaborate;
@@ -23,7 +22,6 @@ package Gela.Lexers is
    not overriding procedure Scan
      (Self    : Lexer;
       Input   : League.Strings.Universal_String;
-      Symbols : not null access Gela.Symbol_Sets.Symbol_Set'Class;
       Output  : not null access Lexer_Destination'Class) is abstract;
 
 end Gela.Lexers;
