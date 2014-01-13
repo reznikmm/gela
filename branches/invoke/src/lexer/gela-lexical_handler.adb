@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with League.Characters;
+with League.Strings;
 
 with Gela.Lexical_Types; use Gela.Lexical_Types;
 
@@ -142,8 +143,10 @@ package body Gela.Lexical_Handler is
       Skip    : in out Boolean)
    is
       pragma Unreferenced (Rule);
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
-      Value : Gela.Lexical_Types.Token;
+      Length : constant Positive := Scanner.Get_Token_Length;
+      Value  : Gela.Lexical_Types.Token;
+      Text   : constant League.Strings.Universal_String := Scanner.Get_Text;
+      Symbol : constant Gela.Lexical_Types.Symbol := Self.Symbols.Get (Text);
    begin
       Scanner.Set_Start_Condition (Gela.Scanner_Types.Allow_Char);
       Token := Gela.Lexical_Types.Character_Literal_Token;
@@ -152,15 +155,14 @@ package body Gela.Lexical_Handler is
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
-         Symbol    => 0);  --  FIXME
+         Symbol    => Symbol);
 
       Self.Output.New_Token (Value);
---           Folded    => Scanner.Get_Text);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Separator := Self.Last;
       Self.Last_Token := Token;
    end Character_Literal;
@@ -178,11 +180,11 @@ package body Gela.Lexical_Handler is
    is
       pragma Unreferenced (Rule);
       pragma Unreferenced (Token);
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
    begin
       Skip := True;
       Self.Comment := Self.Last;
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
    end Comment;
 
    ---------------
@@ -196,7 +198,7 @@ package body Gela.Lexical_Handler is
       Token   : out Gela.Lexical_Types.Token_Kind;
       Skip    : in out Boolean)
    is
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
       Value : Gela.Lexical_Types.Token;
    begin
       Scanner.Set_Start_Condition (Gela.Scanner_Types.Allow_Char);
@@ -206,14 +208,14 @@ package body Gela.Lexical_Handler is
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
          Symbol    => 0);
 
       Self.Output.New_Token (Value);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Separator := Self.Last;
       Self.Last_Token := Token;
    end Delimiter;
@@ -231,7 +233,7 @@ package body Gela.Lexical_Handler is
    is
       pragma Unreferenced (Rule);
 
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
       Value        : Gela.Lexical_Types.Token;
    begin
       Token := Gela.Lexical_Types.Error;
@@ -240,14 +242,14 @@ package body Gela.Lexical_Handler is
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
          Symbol    => 0);
 
       Self.Output.New_Token (Value);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Last_Token := Token;
    end Error;
 
@@ -298,12 +300,13 @@ package body Gela.Lexical_Handler is
    is
       pragma Unreferenced (Rule);
 
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
-      Text : constant League.Strings.Universal_String :=
-        Scanner.Get_Text.To_Lowercase;
-      Value : Gela.Lexical_Types.Token;
+      Length : constant Positive := Scanner.Get_Token_Length;
+      Text   : constant League.Strings.Universal_String := Scanner.Get_Text;
+      Value  : Gela.Lexical_Types.Token;
+      Symbol : Gela.Lexical_Types.Symbol;
    begin
-      Token := To_Token (Text);
+      Self.Symbols.Fetch (Text, Symbol);
+      Token := To_Token (Self.Symbols.Folded (Symbol));
       Skip := False;
 
       if Self.Last_Token = Gela.Lexical_Types.Apostrophe_Token and
@@ -321,15 +324,14 @@ package body Gela.Lexical_Handler is
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
-         Symbol    => 0);  --  FIXME
+         Symbol    => Symbol);
 
       Self.Output.New_Token (Value);
---         Folded    => Text);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Separator := Self.Last;
       Self.Last_Token := Token;
    end Identifier;
@@ -446,7 +448,7 @@ package body Gela.Lexical_Handler is
       pragma Unreferenced (Rule);
       pragma Unreferenced (Token);
 
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
       Comment      : Text_Index;
       Value        : Gela.Lexical_Types.Line_Span;
    begin
@@ -465,7 +467,7 @@ package body Gela.Lexical_Handler is
 
       Self.Output.New_Line (Value);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Line := Self.Line + 1;
       Self.Line_First := Self.Last;
    end New_Line;
@@ -482,7 +484,7 @@ package body Gela.Lexical_Handler is
       Skip    : in out Boolean)
    is
       pragma Unreferenced (Rule);
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
       Value : Gela.Lexical_Types.Token;
    begin
       Scanner.Set_Start_Condition (Gela.Scanner_Types.Allow_Char);
@@ -492,14 +494,14 @@ package body Gela.Lexical_Handler is
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
          Symbol    => 0);
 
       Self.Output.New_Token (Value);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Separator := Self.Last;
       Self.Last_Token := Token;
    end Numeric_Literal;
@@ -539,10 +541,10 @@ package body Gela.Lexical_Handler is
    is
       pragma Unreferenced (Rule);
       pragma Unreferenced (Token);
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
+      Length : constant Positive := Scanner.Get_Token_Length;
    begin
       Skip := True;
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
    end Space;
 
    --------------------
@@ -557,25 +559,27 @@ package body Gela.Lexical_Handler is
       Skip    : in out Boolean)
    is
       pragma Unreferenced (Rule);
-      Token_Length : constant Positive := Scanner.Get_Token_Length;
-      Value : Gela.Lexical_Types.Token;
+      Length : constant Positive := Scanner.Get_Token_Length;
+      Text   : constant League.Strings.Universal_String := Scanner.Get_Text;
+      Value  : Gela.Lexical_Types.Token;
+      Symbol : constant Gela.Lexical_Types.Symbol := Self.Symbols.Get (Text);
    begin
       Scanner.Set_Start_Condition (Gela.Scanner_Types.Allow_Char);
+
       Token := Gela.Lexical_Types.String_Literal_Token;
       Skip := False;
 
       Value :=
         (Line      => Self.Line,
          First     => Self.Last,
-         Last      => Self.Last + Token_Length - 1,
+         Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
-         Symbol    => 0);
+         Symbol    => Symbol);
 
       Self.Output.New_Token (Value);
---           Folded    => Scanner.Get_Text);
 
-      Self.Last := Self.Last + Token_Length;
+      Self.Last := Self.Last + Length;
       Self.Separator := Self.Last;
       Self.Last_Token := Token;
    end String_Literal;
@@ -603,18 +607,5 @@ package body Gela.Lexical_Handler is
          return Gela.Lexical_Types.Identifier_Token;
       end if;
    end To_Token;
-
-   -----------------------
-   -- Unfolded_To_Token --
-   -----------------------
-
-   function Unfolded_To_Token
-     (X : League.Strings.Universal_String)
-      return Gela.Lexical_Types.Token_Kind
-   is
-      Text : constant League.Strings.Universal_String := X.To_Lowercase;
-   begin
-      return To_Token (Text);
-   end Unfolded_To_Token;
 
 end Gela.Lexical_Handler;

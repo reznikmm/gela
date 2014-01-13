@@ -14,6 +14,15 @@ package body Gela.Plain_Contexts is
       return null;
    end Compilation_Unit_Bodies;
 
+   ----------------
+   -- Initialize --
+   ----------------
+
+   not overriding procedure Initialize (Self : in out Context) is
+   begin
+      Self.Symbols.Initialize;
+   end Initialize;
+
    -----------
    -- Lexer --
    -----------
@@ -66,11 +75,9 @@ package body Gela.Plain_Contexts is
    -------------
 
    overriding function Symbols
-     (Self : access Context) return Gela.Symbol_Sets.Symbol_Set_Access
-   is
-      pragma Unreferenced (Self);
+     (Self : access Context) return Gela.Symbol_Sets.Symbol_Set_Access is
    begin
-      return null;
+      return Self.Symbols'Access;
    end Symbols;
 
    ---------------------

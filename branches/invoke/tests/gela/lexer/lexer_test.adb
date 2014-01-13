@@ -8,6 +8,7 @@ with Gela.Context_Fabrics;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Lexical_Handler;
+with Gela.Symbol_Sets;
 
 procedure Lexer_Test is
    package Output is
@@ -142,9 +143,9 @@ procedure Lexer_Test is
    Input   : League.Strings.Universal_String;
    Context : constant Gela.Contexts.Context_Access :=
      Gela.Context_Fabrics.Create_Context (League.Application.Arguments);
-   Lexer : constant Gela.Lexers.Lexer_Access :=
-     Context.Lexer;
-   D : aliased Output.Lexer_Destination;
+   Lexer : constant Gela.Lexers.Lexer_Access := Context.Lexer;
+   Symbols : constant Gela.Symbol_Sets.Symbol_Set_Access := Context.Symbols;
+   Dest : aliased Output.Lexer_Destination;
 begin
    --  Command line: "-IDIR" "FILE" "HASH"
    Path := League.Application.Arguments.Element (1);
@@ -166,12 +167,12 @@ begin
       Input.Append (Wide_Wide_Character'Val (10));
    end loop;
 
-   Lexer.Scan (Input, D'Access);
+   Lexer.Scan (Input, Symbols, Dest'Access);
 
-   if D.Result.Hash /= Hash then
---      Ada.Wide_Wide_Text_IO.Put_Line (D.Result.To_Wide_Wide_String);
+   if Dest.Result.Hash /= Hash then
+      Ada.Wide_Wide_Text_IO.Put_Line (Dest.Result.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Put_Line
-        (League.Hash_Type'Wide_Wide_Image (D.Result.Hash));
+        (League.Hash_Type'Wide_Wide_Image (Dest.Result.Hash));
 
       raise Constraint_Error;
    end if;

@@ -7,20 +7,20 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with League.Strings;
-
 with Gela.Lexers;
 with Gela.Scanner_Handlers;
 with Gela.Scanners;
 with Gela.Lexical_Types;
 with Gela.Scanner_Types;
-
+with Gela.Symbol_Sets;
 package Gela.Lexical_Handler is
    pragma Preelaborate;
 
    procedure Initialize;
 
-   type Handler (Output : not null access Gela.Lexers.Lexer_Destination'Class)
+   type Handler
+     (Output  : not null access Gela.Lexers.Lexer_Destination'Class;
+      Symbols : not null access Gela.Symbol_Sets.Symbol_Set'Class)
      is new Gela.Scanner_Handlers.Handler with private;
 
    overriding procedure Identifier
@@ -100,16 +100,12 @@ package Gela.Lexical_Handler is
       Token   : out Gela.Lexical_Types.Token_Kind;
       Skip    : in out Boolean);
 
-   function Unfolded_To_Token
-     (X : League.Strings.Universal_String)
-      return Gela.Lexical_Types.Token_Kind;
-   --  Convert text to keywoard. Text could be unfolded before call this.
-
 private
 
    subtype Text_Index is Gela.Lexical_Types.Text_Index;
 
-   type Handler (Output : not null access Gela.Lexers.Lexer_Destination'Class)
+   type Handler (Output  : not null access Gela.Lexers.Lexer_Destination'Class;
+                 Symbols : not null access Gela.Symbol_Sets.Symbol_Set'Class)
      is new Gela.Scanner_Handlers.Handler with record
       Last_Token : Gela.Lexical_Types.Token_Kind :=
         Gela.Lexical_Types.Token_Kind'First;

@@ -7,11 +7,14 @@ with Gela.Unit_Containers;
 
 with Gela.Contexts;
 with Gela.Plain_Lexers;
+with Gela.Plain_Symbol_Sets;
 
 package Gela.Plain_Contexts is
    pragma Preelaborate;
 
    type Context is new Gela.Contexts.Context with private;
+
+   not overriding procedure Initialize (Self : in out Context);
 
    overriding function Symbols
      (Self : access Context) return Gela.Symbol_Sets.Symbol_Set_Access;
@@ -38,7 +41,8 @@ package Gela.Plain_Contexts is
 
 private
    type Context is new Gela.Contexts.Context with record
-      Lexer : aliased Gela.Plain_Lexers.Lexer;
+      Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
+      Lexer   : aliased Gela.Plain_Lexers.Lexer;
    end record;
 
 end Gela.Plain_Contexts;

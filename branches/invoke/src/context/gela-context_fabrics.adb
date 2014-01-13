@@ -15,6 +15,8 @@ package body Gela.Context_Fabrics is
       pragma Unreferenced (Parameters);
       Result : constant Context_Access := new Gela.Plain_Contexts.Context;
    begin
+      Result.Initialize;
+
       return Gela.Contexts.Context_Access (Result);
    end Create_Context;
 
