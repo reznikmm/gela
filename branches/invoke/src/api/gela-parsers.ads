@@ -9,7 +9,7 @@ package Gela.Parsers is
 
    not overriding procedure Next_Token
      (Self  : in out Parser_Input;
-      Token : out Gela.Lexical_Types.Token;
+      Token : out Gela.Lexical_Types.Token_Kind;
       Index : out Gela.Lexical_Types.Token_Index) is abstract;
 
    type Parser is limited interface;
