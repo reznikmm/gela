@@ -325,8 +325,8 @@ begin
    Output.P ("with Gela.Grammars;");
    Output.P ("with Gela.Grammars.LR_Parsers;");
    Output.P;
-   Output.P ("package Gela.Mutables.Parser_Data is");
-   Output.P ("   pragma Preelaborate (Gela.Mutables.Parser_Data);");
+   Output.P ("package Gela.LARL_Parsers.Data is");
+   Output.P ("   pragma Preelaborate;");
    Output.P;
    Output.P ("   procedure Next_Action");
    Output.P ("     (State : Gela.Grammars.LR_Parsers.State_Index;");
@@ -338,37 +338,71 @@ begin
    Output.P ("      NT    : Gela.Grammars.Non_Terminal_Index)");
    Output.P ("      return Gela.Grammars.LR_Parsers.State_Index;");
    Output.P;
-   Output.P ("end Gela.Mutables.Parser_Data;");
+   Output.P ("end Gela.LARL_Parsers.Data;");
 
    Output.P;
-   Output.P ("package body Gela.Mutables.Parser_Data is");
+   Output.P ("package body Gela.LARL_Parsers.Data is");
    Output.P ("   use Gela.Grammars.LR_Parsers;");
    Output.P;
 
    Print_Go_To;
    Print_Action;
 
-   Output.P ("end Gela.Mutables.Parser_Data;");
+   Output.P ("end Gela.LARL_Parsers.Data;");
    Output.P;
    Output.P ("with Gela.Grammars;");
-   Output.P ("with Gela.Mutables.Parsers;");
-   Output.P ("procedure Gela.Mutables.On_Reduce");
-   Output.P ("  (Self  : access Gela.Mutables.Parsers.Parser;");
+   Output.P ("with Gela.LARL_Parsers_Nodes;");
+   Output.P ("private procedure Gela.LARL_Parsers.On_Reduce");
+   Output.P ("  (Self  : access Parser_Context;");
    Output.P ("   Prod  : Gela.Grammars.Production_Index;");
    Output.P ("   Nodes : in out " &
-               "Gela.Mutables.Parsers.Node_Array);");
-   Output.P ("pragma Preelaborate (Gela.Mutables.On_Reduce);");
+               "Gela.LARL_Parsers_Nodes.Node_Array);");
+   Output.P ("pragma Preelaborate (Gela.LARL_Parsers.On_Reduce);");
 
-   Output.P ("with Gela.Nodes.Convertions; use Gela.Nodes.Convertions;");
-   Output.P ("with Gela.Mutables.Compilations;");
-   Output.P ("pragma Unreferenced (Gela.Mutables.Compilations);");
+   Output.P ("with Gela.Elements.Aspect_Specifications;");
+   Output.P ("with Gela.Elements.Associations;");
+   Output.P ("with Gela.Elements.Case_Expression_Paths;");
+   Output.P ("with Gela.Elements.Case_Paths;");
+   Output.P ("with Gela.Elements.Clause_Or_Pragmas;");
+   Output.P ("with Gela.Elements.Compilation_Units;");
+   Output.P ("with Gela.Elements.Component_Items;");
+   Output.P ("with Gela.Elements.Context_Items;");
+   Output.P ("with Gela.Elements.Declarative_Items;");
+   Output.P ("with Gela.Elements.Defining_Identifiers;");
+   Output.P ("with Gela.Elements.Discrete_Choices;");
+   Output.P ("with Gela.Elements.Discrete_Subtype_Definitions;");
+   Output.P ("with Gela.Elements.Discriminant_Specifications;");
+   Output.P ("with Gela.Elements.Enumeration_Literal_Specifications;");
+   Output.P ("with Gela.Elements.Exception_Choices;");
+   Output.P ("with Gela.Elements.Exception_Handlers;");
+   Output.P ("with Gela.Elements.Generic_Associations;");
+   Output.P ("with Gela.Elements.Generic_Formals;");
+   Output.P ("with Gela.Elements.If_Else_Expression_Paths;");
+   Output.P ("with Gela.Elements.If_Elsif_Else_Paths;");
+   Output.P ("with Gela.Elements.Membership_Choices;");
+   Output.P ("with Gela.Elements.Names;");
+   Output.P ("with Gela.Elements.Parameter_Specifications;");
+   Output.P ("with Gela.Elements.Pragma_Argument_Associations;");
+   Output.P ("with Gela.Elements.Program_Unit_Names;");
+   Output.P ("with Gela.Elements.Protected_Element_Declarations;");
+   Output.P ("with Gela.Elements.Protected_Operation_Declarations;");
+   Output.P ("with Gela.Elements.Protected_Operation_Items;");
+   Output.P ("with Gela.Elements.Select_Or_Else_Paths;");
+   Output.P ("with Gela.Elements.Select_Then_Abort_Paths;");
+   Output.P ("with Gela.Elements.Statements;");
+   Output.P ("with Gela.Elements.Subtype_Marks;");
+   Output.P ("with Gela.Elements.Task_Items;");
+   Output.P ("with Gela.Elements.Variants;");
+
+   Output.P ("with Gela.LARL_Parsers_Nodes;");
+   Output.P ("use Gela.LARL_Parsers_Nodes;");
    Output.P ("pragma Style_Checks (""N"");");
    Output.P;
-   Output.P ("procedure Gela.Mutables.On_Reduce");
-   Output.P ("  (Self  : access Gela.Mutables.Parsers.Parser;");
+   Output.P ("procedure Gela.LARL_Parsers.On_Reduce");
+   Output.P ("  (Self  : access Parser_Context;");
    Output.P ("   Prod  : Gela.Grammars.Production_Index;");
    Output.P ("   Nodes : in out " &
-               "Gela.Mutables.Parsers.Node_Array) is");
+               "Gela.LARL_Parsers_Nodes.Node_Array) is");
    Output.P ("begin");
    Output.P ("   case Prod is");
 
@@ -389,7 +423,7 @@ begin
    Output.P ("      when others =>");
    Output.P ("         null;");
    Output.P ("   end case;");
-   Output.P ("end Gela.Mutables.On_Reduce;");
+   Output.P ("end Gela.LARL_Parsers.On_Reduce;");
 
    Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
 

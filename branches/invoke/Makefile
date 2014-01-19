@@ -31,8 +31,8 @@ $(LEXER_STAMP): $(UAFLEX) $(LEXER)
 	touch $(LEXER_STAMP)
 
 $(PARSER): $(YACC_DRIVER) $(SYNTAX)
-	echo $(YACC_DRIVER) $(SYNTAX) > $(PARSER)
-	echo gnatchop -w $(PARSER) $(BUILD_CHOP)
+	$(YACC_DRIVER) $(SYNTAX) > $(PARSER)
+	gnatchop -w $(PARSER) $(BUILD_CHOP)
 
 $(AG_DRIVER) $(YACC_DRIVER):
 	gprbuild -m -j0 -p -P gnat/gela_ag.gpr

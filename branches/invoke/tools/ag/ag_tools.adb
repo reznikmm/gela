@@ -114,7 +114,7 @@ package body AG_Tools is
          end;
 
       elsif Part.Is_Terminal_Reference then
-         Result.Append ("Gela.Lexical_Types.Token_Index");
+         Result.Append ("Gela.Lexical_Types.Token_Count");
       else
          declare
             NT : Gela.Grammars.Non_Terminal renames

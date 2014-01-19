@@ -69,6 +69,7 @@ procedure AG_Driver is
       Prod : Gela.Grammars.Production);
    procedure Generate_Stores_List (NT : Gela.Grammars.Non_Terminal);
    procedure Generate_Visiter;
+   procedure Generate_2;
 
    Name  : constant String := Ada.Command_Line.Argument (1);
    G     : Gela.Grammars.Grammar_Access;
@@ -76,6 +77,158 @@ procedure AG_Driver is
    Reserved : constant := 3;  --  Tag, Count
 
    Offset      : Natural;
+
+   procedure Generate_2 is
+      Fab_With    : Writer;
+      Fab_Kind    : Writer;
+      Fab_When    : Writer;
+      Fabrics     : Writer;
+      Impl        : Writer;
+   begin
+      Fabrics.P ("with Gela.Lexical_Types;");
+      Fabrics.P ("with Gela.Elements;");
+      Fabrics.P;
+      Fabrics.P ("package Gela.LARL_Parsers_Nodes is");
+      Impl.P ("package body Gela.LARL_Parsers_Nodes is");
+      Fabrics.P ("   pragma Preelaborate;");
+      Fabrics.P;
+      Fabrics.P ("   type Node is private;");
+      Fabrics.P ("   type Node_Array is array (Positive range <>) of Node;");
+      Fabrics.P;
+      Fabrics.P ("   None     : constant Node;");
+      Fabrics.P ("   No_Token : constant Node;");
+      Fabrics.P;
+      Fabrics.P ("   No_Token_Index : constant " &
+                   "Gela.Lexical_Types.Token_Count := 0;");
+      Fabrics.P;
+      Fabrics.N ("   function ""-"" (X : Node)" &
+                   " return Gela.Lexical_Types.Token_Count", Impl);
+      Fabrics.P (";");
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.P ("      return X.Token;");
+      Impl.P ("   end ""-"";");
+      Impl.P;
+
+      Fabrics.N ("   function ""-"" (X : Node)" &
+                   " return access Gela.Elements.Element'Class", Impl);
+      Fabrics.P (";");
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.P ("      return X.Element;");
+      Impl.P ("   end ""-"";");
+      Impl.P;
+
+      Fabrics.N ("   function ""+"" (X : Gela.Lexical_Types.Token_Index)" &
+                   " return Node", Impl);
+      Fabrics.P (";");
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.P ("      return (Token, X);");
+      Impl.P ("   end ""+"";");
+      Impl.P;
+
+      Fabrics.N ("   function ""+"" (X : access Gela.Elements.Element'Class)" &
+                   " return Node", Impl);
+      Fabrics.P (";");
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.P ("      return (Element, X);");
+      Impl.P ("   end ""+"";");
+      Impl.P;
+
+      Fab_Kind.P ("   type Node_Kinds is");
+      Fab_Kind.P ("     (Token,");
+      Fab_Kind.N ("      Element");
+
+      for NT of G.Non_Terminal loop
+         if not NT.Is_List then
+            if Has_List (NT.Index) then
+               Fab_With.N ("with Gela.Elements.");
+               Fab_With.N (To_Ada (Plural (NT.Name)));
+               Fab_With.P (";");
+
+               Fab_Kind.P (",");
+               Fab_Kind.N ("      ");
+               Fab_Kind.N (To_Ada (NT.Name));
+               Fab_Kind.N ("_Sequence");
+
+               Fabrics.P ("   function ""-"" (X : Node) return", Impl);
+               Fabrics.N ("     Gela.Elements.", Impl);
+               Fabrics.N (To_Ada (Plural (NT.Name)), Impl);
+               Fabrics.N (".", Impl);
+               Fabrics.N (To_Ada (NT.Name), Impl);
+               Fabrics.N ("_Sequence_Access", Impl);
+               Fabrics.P (";");
+               Impl.P (" is");
+               Impl.P ("   begin");
+               Impl.N ("      return X.");
+               Impl.N (To_Ada (NT.Name));
+               Impl.P ("_Sequence;");
+               Impl.P ("   end ""-"";");
+               Impl.P;
+
+               Fabrics.P ("   function ""+""", Impl);
+               Fabrics.N ("     (X : Gela.Elements.", Impl);
+               Fabrics.N (To_Ada (Plural (NT.Name)), Impl);
+               Fabrics.N (".", Impl);
+               Fabrics.N (To_Ada (NT.Name), Impl);
+               Fabrics.P ("_Sequence_Access)", Impl);
+               Fabrics.N ("     return Node", Impl);
+               Fabrics.P (";");
+               Impl.P (" is");
+               Impl.P ("   begin");
+               Impl.N ("      return (");
+               Impl.N (To_Ada (NT.Name));
+               Impl.P ("_Sequence, X);");
+               Impl.P ("   end ""+"";");
+               Impl.P;
+
+               Fab_When.N ("         when ");
+               Fab_When.N (To_Ada (NT.Name));
+               Fab_When.P ("_Sequence =>");
+               Fab_When.N ("            ");
+               Fab_When.N (To_Ada (NT.Name));
+               Fab_When.P ("_Sequence :");
+               Fab_When.N ("              Gela.Elements.");
+               Fab_When.N (To_Ada (Plural (NT.Name)));
+               Fab_When.N (".");
+               Fab_When.N (To_Ada (NT.Name));
+               Fab_When.P ("_Sequence_Access;");
+
+            end if;
+         end if;
+      end loop;
+
+      Fabrics.P;
+      Fabrics.P ("private");
+      Fabrics.P;
+      Fabrics.N (Fab_Kind.Text);
+      Fabrics.P (");");
+      Fabrics.P;
+      Fabrics.P ("   type Node (Kind : Node_Kinds := Token) is record");
+      Fabrics.P ("      case Kind is");
+      Fabrics.P ("         when Token =>");
+      Fabrics.P ("            Token : Gela.Lexical_Types.Token_Count;");
+      Fabrics.P ("         when Element =>");
+      Fabrics.P ("            Element : Gela.Elements.Element_Access;");
+
+      Ada.Text_IO.Put_Line (Fab_With.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Fab_When.Text.To_UTF_8_String);
+      Fabrics.Clear;
+
+      Fabrics.P ("      end case;");
+      Fabrics.P ("   end record;");
+      Fabrics.P;
+      Fabrics.P ("   None     : constant Node := (Element, null);");
+      Fabrics.P ("   No_Token : constant Node := (Token, 0);");
+      Fabrics.P;
+      Fabrics.N ("end Gela.LARL_Parsers_Nodes;", Impl);
+
+      Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
+   end Generate_2;
 
    -------------------
    -- Generate_Conv --
@@ -1076,6 +1229,7 @@ begin
 
    Generate_Conv;
    Generate_Fabric;
+   Generate_2;
    Generate_Visiter;
    AG_Tools.Element_Generators.Generate_Elements (G);
    AG_Tools.Element_Generators.Generate_Fabric (G);

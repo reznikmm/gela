@@ -6,6 +6,8 @@ package Gela.Parsers is
    pragma Preelaborate;
 
    type Parser_Input is limited interface;
+   type Parser_Input_Access is access all Parser_Input'Class;
+   for Parser_Input_Access'Storage_Size use 0;
 
    not overriding procedure Next_Token
      (Self  : in out Parser_Input;
