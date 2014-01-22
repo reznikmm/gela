@@ -3,10 +3,10 @@ with "gela_build";
 project Gela_Tests is
 
    for Main use
-     ("lexer_test");
+     ("lexer_test", "parser_test");
 
    for Source_Dirs use
-     ("../tests/gela/lexer");
+     ("../tests/gela/lexer", "../tests/gela/parser");
 
    for Object_Dir use Gela_Build.Build & "/tests/gela";
 

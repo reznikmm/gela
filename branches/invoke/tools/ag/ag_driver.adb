@@ -39,13 +39,6 @@ procedure AG_Driver is
       return League.Strings.Universal_String;
    --  Return Gela.Nodes.xxx unit corresponding to NT
 
-   procedure Write_Parts
-     (Prod     : Gela.Grammars.Production;
-      Nodes_NT : in out Writer);
-
-   procedure Generate_Nodes_NT
-     (NT       : Gela.Grammars.Non_Terminal);
-
    procedure Write_Attr_With
      (NT     : Gela.Grammars.Non_Terminal;
       Output : in out Writer;
@@ -61,9 +54,7 @@ procedure AG_Driver is
       Output : in out Writer;
       Impl   : Boolean);
 
-   procedure Generate_Nodes;
    procedure Generate_Fabric;
-   procedure Generate_Conv;
    procedure Generate_Stores_Prod
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production);
@@ -119,7 +110,7 @@ procedure AG_Driver is
       Impl.P ("   end ""-"";");
       Impl.P;
 
-      Fabrics.N ("   function ""+"" (X : Gela.Lexical_Types.Token_Index)" &
+      Fabrics.N ("   function ""+"" (X : Gela.Lexical_Types.Token_Count)" &
                    " return Node", Impl);
       Fabrics.P (";");
       Impl.P (" is");
@@ -162,6 +153,9 @@ procedure AG_Driver is
                Fabrics.P (";");
                Impl.P (" is");
                Impl.P ("   begin");
+               Impl.P ("      if X = None then");
+               Impl.P ("         return null;");
+               Impl.P ("      end if;");
                Impl.N ("      return X.");
                Impl.N (To_Ada (NT.Name));
                Impl.P ("_Sequence;");
@@ -229,90 +223,6 @@ procedure AG_Driver is
       Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
    end Generate_2;
-
-   -------------------
-   -- Generate_Conv --
-   -------------------
-
-   procedure Generate_Conv is
-      Conv_With    : Writer;
-      Conv_Spec    : Writer;
-   begin
-      Conv_With.P ("with Gela.Nodes.Tokens;");
-      Conv_With.P ("pragma Unreferenced (Gela.Nodes.Tokens);");
-      Conv_Spec.P ("package Gela.Nodes.Convertions is");
-      Conv_Spec.P ("   pragma Preelaborate;");
-      Conv_Spec.P;
-
-      for NT of G.Non_Terminal loop
-         if not NT.Is_List then
-            Conv_With.N ("with Gela.Nodes.");
-            Conv_With.N (Plural (NT.Name));
-            Conv_With.P (";");
-            Conv_With.N ("pragma Unreferenced (Gela.Nodes.");
-            Conv_With.N (Plural (NT.Name));
-            Conv_With.P (");");
-
-            Conv_Spec.P ("   function ""+""");
-            Conv_Spec.N ("     (X : Gela.Nodes.");
-            Conv_Spec.N (To_Ada (NT.Name));
-            Conv_Spec.P (")");
-            Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                           " (X.its, X.Payload);");
-            Conv_Spec.P;
-            Conv_Spec.P ("   function ""-""");
-            Conv_Spec.P ("     (X : Gela.Nodes.Element)");
-            Conv_Spec.N ("      return Gela.Nodes.");
-            Conv_Spec.N (To_Ada (NT.Name));
-            Conv_Spec.N (" is");
-
-            if NT.Name.Length > 29 then
-               Conv_Spec.P;
-               Conv_Spec.N ("        ");
-            end if;
-
-            Conv_Spec.P (" (X.its, X.Payload);");
-            Conv_Spec.P;
-
-            if Has_List (NT.Index) then
-               Conv_Spec.P ("   function ""+""");
-               Conv_Spec.N ("     (X : Gela.Nodes.");
-               Conv_Spec.N (To_Ada (NT.Name));
-               Conv_Spec.P ("_Sequence)");
-               Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                              " (X.its, X.Payload);");
-               Conv_Spec.P;
-               Conv_Spec.P ("   function ""-""");
-               Conv_Spec.P ("     (X : Gela.Nodes.Element)");
-               Conv_Spec.N ("      return Gela.Nodes.");
-               Conv_Spec.N (To_Ada (NT.Name));
-               Conv_Spec.N ("_Sequence is");
-
-               if NT.Name.Length > 20 then
-                  Conv_Spec.P;
-                  Conv_Spec.N ("        ");
-               end if;
-
-               Conv_Spec.P (" (X.its, X.Payload);");
-               Conv_Spec.P;
-            end if;
-         end if;
-      end loop;
-
-      Conv_Spec.P ("   function ""+""");
-      Conv_Spec.P ("     (X : Gela.Nodes.Token)");
-      Conv_Spec.P ("      return Gela.Nodes.Element is" &
-                     " (X.its, X.Payload);");
-      Conv_Spec.P;
-      Conv_Spec.P ("   function ""-""");
-      Conv_Spec.P ("     (X : Gela.Nodes.Element)");
-      Conv_Spec.N ("      return Gela.Nodes.Token");
-      Conv_Spec.P (" is (X.its, X.Payload);");
-      Conv_Spec.P;
-      Conv_Spec.P ("end Gela.Nodes.Convertions;");
-      Ada.Text_IO.Put_Line (Conv_With.Text.To_UTF_8_String);
-      Ada.Text_IO.Put (Conv_Spec.Text.To_UTF_8_String);
-   end Generate_Conv;
 
    ---------------------
    -- Generate_Fabric --
@@ -559,123 +469,6 @@ procedure AG_Driver is
       Ada.Text_IO.Put (Fab_Body.Text.To_UTF_8_String);
    end Generate_Fabric;
 
-   --------------------
-   -- Generate_Nodes --
-   --------------------
-
-   procedure Generate_Nodes is
-      Nodes_With  : Writer;
-      Nodes       : Writer;
-   begin
-      Nodes_With.P ("with Gela.Types;");
-      Nodes_With.P ("limited with Gela.Nodes.Visiters;");
-      Nodes_With.P ("limited with Gela.Nodes.Tokens;");
-
-      Nodes.P ("package Gela.Nodes is");
-      Nodes.P ("   pragma Preelaborate;");
-      Nodes.P;
-      Nodes.P ("   type Node is interface;");
-      Nodes.P;
-      Nodes.P ("   not overriding function Compilation");
-      Nodes.P ("     (Self : Node) return Gela.Types.Compilation_Access" &
-                 " is abstract;");
-      Nodes.P;
-      Nodes.P ("   type Element is record");
-      Nodes.P ("      its     : access Node'Class;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("   end record;");
-      Nodes.P ("   type Node_Access is access all Node'Class;");
-      Nodes.P;
-      Nodes.P ("   type Visitable_Node is interface and Node;");
-      Nodes.P ("   type Visitable_Node_Access is " &
-                 "access all Visitable_Node'Class;");
-      Nodes.P ("   type Visitable_Element is record");
-      Nodes.P ("      its     : access Visitable_Node'Class;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("   end record;");
-      Nodes.P;
-      Nodes.P ("   not overriding procedure Visit");
-      Nodes.P ("     (Self    : access Visitable_Node;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("      Visiter : in out Gela.Nodes.Visiters.Visiter'Class)" &
-                 " is abstract;");
-
-      Nodes.P ("   type List_Node is interface and Node;");
-      Nodes.P;
-      Nodes.P ("   not overriding procedure Visit_Each");
-      Nodes.P ("     (Self    : access List_Node;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("      Visiter : in out Gela.Nodes.Visiters.Visiter'Class)" &
-                 " is abstract;");
-
-      for NT of G.Non_Terminal loop
-         if not NT.Is_List then
-            Nodes_With.N ("limited with Gela.Nodes.");
-            Nodes_With.N (Plural (NT.Name));
-            Nodes_With.P (";");
-            Nodes.P;
-            Nodes.N ("   type ");
-            Nodes.N (To_Ada (NT.Name));
-            Nodes.N ("_Access is");
-
-            if NT.Name.Length > 11 then
-               Nodes.P;
-               Nodes.N ("    ");
-            end if;
-
-            if NT.Name.Length > 35 then
-               Nodes.N (" access all ");
-            else
-               Nodes.N (" access all Gela.Nodes.");
-            end if;
-
-            Nodes.N (Plural (NT.Name));
-            Nodes.P (".Object'Class;");
-            Nodes.N ("   type ");
-            Nodes.N (To_Ada (NT.Name));
-            Nodes.P (" is record");
-            Nodes.N ("      its     : ");
-            Nodes.N (To_Ada (NT.Name));
-            Nodes.P ("_Access;");
-            Nodes.N ("      Payload : Gela.Types.Payload;");
-            Nodes.P;
-            Nodes.P ("   end record;");
-
-            if Has_List (NT.Index) then
-               Nodes.P;
-               Nodes.N ("   type ");
-               Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_Sequence_Access is");
-               Nodes.N ("     access all Gela.Nodes.");
-               Nodes.N (Plural (NT.Name));
-               Nodes.P (".List'Class;");
-               Nodes.N ("   type ");
-               Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_Sequence is record");
-               Nodes.N ("      its     : ");
-               Nodes.N (To_Ada (NT.Name));
-               Nodes.P ("_Sequence_Access;");
-               Nodes.N ("      Payload : Gela.Types.Payload;");
-               Nodes.P;
-               Nodes.P ("   end record;");
-            end if;
-         end if;
-      end loop;
-
-      Nodes.P;
-      Nodes.P ("   type Token_Access is access all" &
-                 " Gela.Nodes.Tokens.Object'Class;");
-      Nodes.P ("   type Token is record");
-      Nodes.P ("      its     : Token_Access;");
-      Nodes.P ("      Payload : Gela.Types.Payload;");
-      Nodes.P ("   end record;");
-      Nodes.P;
-      Nodes.N ("end Gela.Nodes;");
-
-      Ada.Text_IO.Put_Line (Nodes_With.Text.To_UTF_8_String);
-      Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
-   end Generate_Nodes;
-
    -----------------
    -- Return_Type --
    -----------------
@@ -752,113 +545,6 @@ procedure AG_Driver is
       Output.N (To_Ada (Decl.Type_Name));
       Output.N (")");
    end Write_Attr_Set;
-
-   -----------------------
-   -- Generate_Nodes_NT --
-   -----------------------
-
-   procedure Generate_Nodes_NT
-     (NT       : Gela.Grammars.Non_Terminal)
-   is
-      Nodes_NT   : Writer;
-      Impl_Count : Natural := 0;
-      Type_List  : League.String_Vectors.Universal_String_Vector;
-   begin
-      for J in G.Non_Terminal'Range loop
-         if Implement (NT.Index, J) then
-            Nodes_NT.N ("with Gela.Nodes.");
-            Nodes_NT.N (Plural (G.Non_Terminal (J).Name));
-            Nodes_NT.P (";");
-            Impl_Count := Impl_Count + 1;
-         end if;
-      end loop;
-
-      Write_Attr_With (NT, Nodes_NT, Type_List);
-
-      Nodes_NT.N ("package Gela.Nodes.");
-      Nodes_NT.N (Plural (NT.Name));
-      Nodes_NT.P (" is");
-      Nodes_NT.P ("   pragma Preelaborate;");
-      Nodes_NT.P;
-
-      if Impl_Count > 0 then
-         Nodes_NT.N ("   type Object is interface and Visitable_Node");
-
-         for J in G.Non_Terminal'Range loop
-            if Implement (NT.Index, J) then
-               Nodes_NT.P;
-               Nodes_NT.N ("     and Gela.Nodes.");
-               Nodes_NT.N (Plural (G.Non_Terminal (J).Name));
-               Nodes_NT.N (".Object");
-            end if;
-         end loop;
-
-         Nodes_NT.P (";");
-      else
-         Nodes_NT.P ("   type Object is interface and Visitable_Node;");
-      end if;
-
-      Nodes_NT.P;
-      Nodes_NT.P ("   type Object_Access is access all Object'Class;");
-      Nodes_NT.P;
-
-      Type_List.Clear;
-
-      for A in NT.First_Attribute .. NT.Last_Attribute loop
-         Write_Attr_Get (G.Declaration (A), Nodes_NT, Impl => False);
-         Nodes_NT.P (" is abstract;");
-         Nodes_NT.P;
-         Write_Attr_Set (G.Declaration (A), Nodes_NT, Impl => False);
-         Nodes_NT.P (" is abstract;");
-         Nodes_NT.P;
-      end loop;
-
-      if Is_Concrete (NT.Index) then
-         Write_Parts (G.Production (NT.First), Nodes_NT);
-      end if;
-
-      if Has_List (NT.Index) then
-         Nodes_NT.P ("   type List is interface and List_Node;");
-         Nodes_NT.P ("   type List_Access is access all List'Class;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding function Head");
-         Nodes_NT.P ("     (Self    : access List;");
-         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
-         Nodes_NT.N ("      return Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (" is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Next");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.N ("      Position : in out Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (")");
-         Nodes_NT.P ("     is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Append");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   not overriding procedure Prepend");
-         Nodes_NT.P ("     (Self     : access List;");
-         Nodes_NT.P ("      Payload  : Gela.Types.Payload;");
-         Nodes_NT.P ("      Item     : Gela.Nodes.Element) is abstract;");
-         Nodes_NT.P;
-         Nodes_NT.P ("   function Get_Payload");
-         Nodes_NT.N ("     (Object  : Gela.Nodes.");
-         Nodes_NT.N (To_Ada (NT.Name));
-         Nodes_NT.P (")");
-         Nodes_NT.P ("      return Gela.Types.Payload is (Object.Payload);");
-      end if;
-
-      Nodes_NT.N ("end Gela.Nodes.");
-      Nodes_NT.N (Plural (NT.Name));
-      Nodes_NT.P (";");
-
-      Ada.Text_IO.Put_Line (Nodes_NT.Text.To_UTF_8_String);
-   end Generate_Nodes_NT;
 
    --------------------------
    -- Generate_Stores_List --
@@ -1181,36 +867,11 @@ procedure AG_Driver is
       return "Gela.Nodes." & Plural (NT.Name);
    end Non_Terminal_Unit;
 
-   -----------------
-   -- Write_Parts --
-   -----------------
-
-   procedure Write_Parts
-     (Prod     : Gela.Grammars.Production;
-      Nodes_NT : in out Writer) is
-   begin
-      for Part of G.Part (Prod.First .. Prod.Last) loop
-         Nodes_NT.N ("   function ");
-         Nodes_NT.P (To_Ada (Part.Name));
-         Nodes_NT.P ("     (Self    : access Object;");
-         Nodes_NT.P ("      Payload : Gela.Types.Payload)");
-         Nodes_NT.N ("      return Gela.Nodes.");
-
-         Nodes_NT.N (Return_Type (Part));
-
-         Nodes_NT.P (" is abstract;");
-
-         Nodes_NT.P;
-      end loop;
-   end Write_Parts;
-
 begin
    AG_Tools.Input.Initialize (Name);
    G := AG_Tools.Input.Grammar;
 
 --     Gela.Grammars_Debug.Print (G);
-
-   Generate_Nodes;
 
    for NT of G.Non_Terminal loop
       if Has_List (NT.Index) then
@@ -1218,8 +879,6 @@ begin
       end if;
 
       if not NT.Is_List then
-         Generate_Nodes_NT (NT);
-
          for Prod of G.Production (NT.First .. NT.Last) loop
             Offset := Positive (Prod.First) - 1;
             Generate_Stores_Prod (NT, Prod);
@@ -1227,7 +886,6 @@ begin
       end if;
    end loop;
 
-   Generate_Conv;
    Generate_Fabric;
    Generate_2;
    Generate_Visiter;

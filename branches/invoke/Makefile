@@ -22,7 +22,7 @@ $(AST_STAMP): $(AG_DRIVER) $(AST)
 	-mkdir $(BUILD_CHOP)
 	-mkdir $(BUILD_NODE)
 	gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
-	rm -f $(BUILD_CHOP)/gela-{nodes,stores,pass}*
+	rm -f $(BUILD_CHOP)/gela-{nodes-visiter,stores,pass}*
 
 $(LEXER_STAMP): $(UAFLEX) $(LEXER)
 	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Scanner_Types \

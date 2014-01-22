@@ -21,19 +21,19 @@ package Gela.Elements is
       return Gela.Compilation_Units.Compilation_Unit_Access is abstract;
 
    not overriding function Is_Part_Of_Implicit
-     (Self  : Element) return Element_Access is abstract;
+     (Self  : Element) return Boolean is abstract;
 
    not overriding function Is_Part_Of_Inherited
-     (Self  : Element) return Element_Access is abstract;
+     (Self  : Element) return Boolean is abstract;
 
    not overriding function Is_Part_Of_Instance
-     (Self  : Element) return Element_Access is abstract;
+     (Self  : Element) return Boolean is abstract;
 
    not overriding function First_Token
-     (Self  : Element) return Gela.Lexical_Types.Token_Index is abstract;
+     (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
 
    not overriding function Last_Token
-     (Self  : Element) return Gela.Lexical_Types.Token_Index is abstract;
+     (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
 
    generic
       type Item is limited interface and Element;

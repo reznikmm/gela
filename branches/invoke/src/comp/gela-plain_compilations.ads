@@ -18,6 +18,8 @@ package Gela.Plain_Compilations is
        and Gela.Lexers.Lexer_Destination
        and Gela.Parsers.Parser_Input with private;
 
+   type Compilation_Access is access all Compilation;
+
    not overriding procedure Initialize (Self : in out Compilation);
 
 private

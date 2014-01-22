@@ -21,6 +21,15 @@ package body AG_Tools.Element_Generators is
      (G  : Gela.Grammars.Grammar_Access;
       NT : Gela.Grammars.Non_Terminal);
 
+   procedure Generate_Node
+     (G  : Gela.Grammars.Grammar_Access;
+      NT : Gela.Grammars.Non_Terminal);
+
+   procedure Generate_Node_Fabric (G  : Gela.Grammars.Grammar_Access);
+
+   procedure Generate_Node_Sequence
+     (NT : Gela.Grammars.Non_Terminal);
+
    procedure Generate_Constructor
      (G    : Gela.Grammars.Grammar_Access;
       NT   : Gela.Grammars.Non_Terminal;
@@ -33,6 +42,11 @@ package body AG_Tools.Element_Generators is
       NT   : Gela.Grammars.Non_Terminal;
       Spec : in out AG_Tools.Writers.Writer);
 
+   function Return_Type_Image
+     (G    : Gela.Grammars.Grammar_Access;
+      Part : Gela.Grammars.Part)
+         return League.Strings.Universal_String;
+
    --------------------------
    -- Generate_Constructor --
    --------------------------
@@ -44,7 +58,7 @@ package body AG_Tools.Element_Generators is
       Spec : in out AG_Tools.Writers.Writer;
       Used : in out NT_Map) is
    begin
-      Spec.N ("   not overriding function ");
+      Spec.N ("overriding function ");
       Spec.P (To_Ada (NT.Name));
       Spec.N ("     (Self : in out Element_Fabric");
 
@@ -63,9 +77,7 @@ package body AG_Tools.Element_Generators is
       Spec.P (")");
       Spec.N ("      return ");
       Spec.N (Return_Type (G.all, NT));
-      Spec.P ("_Access");
-      Spec.P ("        is abstract;");
-      Spec.P;
+      Spec.N ("_Access");
    end Generate_Constructor;
 
    ----------------------
@@ -193,6 +205,12 @@ package body AG_Tools.Element_Generators is
       for NT of G.Non_Terminal loop
          if not NT.Is_List then
             Generate_Element (G, NT);
+            if Input.Is_Concrete (NT.Index) then
+               Generate_Node (G, NT);
+            end if;
+            if Input.Has_List (NT.Index) then
+               Generate_Node_Sequence (NT);
+            end if;
          end if;
       end loop;
    end Generate_Elements;
@@ -225,7 +243,11 @@ package body AG_Tools.Element_Generators is
             for Prod of G.Production (NT.First .. NT.Last) loop
                if Input.Is_Concrete (NT.Index) then
                   Used (NT.Index) := True;
+                  Spec.N ("   not ");
                   Generate_Constructor (G, NT, Prod, Spec, Used);
+                  Spec.P;
+                  Spec.P ("        is abstract;");
+                  Spec.P;
                end if;
             end loop;
          end if;
@@ -234,7 +256,11 @@ package body AG_Tools.Element_Generators is
       for NT of G.Non_Terminal loop
          if not NT.Is_List and then Input.Has_List (NT.Index) then
             Used (NT.Index) := True;
+            Spec.N ("   not ");
             Generate_Sequence_Constructor (G, NT, Spec);
+            Spec.P;
+            Spec.P ("        is abstract;");
+            Spec.P;
          end if;
       end loop;
 
@@ -250,7 +276,337 @@ package body AG_Tools.Element_Generators is
 
       Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
+      Generate_Node_Fabric (G);
    end Generate_Fabric;
+
+   -------------------
+   -- Generate_Node --
+   -------------------
+
+   procedure Generate_Node
+     (G  : Gela.Grammars.Grammar_Access;
+      NT : Gela.Grammars.Non_Terminal)
+   is
+      use type League.Strings.Universal_String;
+      use type Gela.Grammars.Part_Count;
+
+      Withed : League.String_Vectors.Universal_String_Vector;
+      Withes : AG_Tools.Writers.Writer;
+      Nodes  : AG_Tools.Writers.Writer;
+      Impl   : AG_Tools.Writers.Writer;
+      Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
+      Pkg    : constant League.Strings.Universal_String :=
+        "Gela.Elements." & Plural (NT.Name);
+      Prod   : Gela.Grammars.Production renames G.Production (NT.First);
+
+      Part_Type    : League.Strings.Universal_String;
+      Package_Name : League.Strings.Universal_String;
+      Index : Positive := 1;
+   begin
+      Withed.Append (Pkg);
+      Withes.N ("with ");
+      Withes.N (Pkg);
+      Withes.P (";");
+
+      Impl.P ("with Gela.LARL_Parsers_Nodes; use Gela.LARL_Parsers_Nodes;");
+      Impl.P;
+      Impl.N ("package body Gela.Nodes.");
+      Nodes.N ("package Gela.Nodes.");
+      Nodes.N (Plural (NT.Name), Impl);
+      Nodes.P (" is", Impl);
+      Nodes.P ("   pragma Preelaborate;");
+      Nodes.P;
+      Impl.P;
+      Nodes.N ("   type ");
+      Nodes.N (Name);
+      Nodes.P (" is limited new");
+      Nodes.N ("     Gela.Elements.");
+      Nodes.N (Plural (NT.Name));
+      Nodes.N (".");
+      Nodes.N (Name);
+      Nodes.P (" with private;");
+
+      Nodes.P;
+      Nodes.N ("   type ");
+      Nodes.N (Name);
+      Nodes.P ("_Access is");
+      Nodes.N ("     access all ");
+      Nodes.N (Name);
+      Nodes.P (";");
+      Nodes.P;
+      Nodes.P ("   function Create", Impl);
+      Nodes.N
+        ("     (Comp   : Gela.Compilations.Compilation_Access", Impl);
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         Part_Type := Return_Type_Image (G, Part);
+         Package_Name := AG_Tools.Package_Name (Part_Type);
+         Nodes.P (";", Impl);
+         Nodes.N ("     ", Impl);
+         Nodes.N (To_Ada (Part.Name), Impl);
+         Nodes.N (" : ", Impl);
+         Nodes.N (Part_Type, Impl);
+      end loop;
+
+      Nodes.P (")", Impl);
+      Nodes.N ("      return ", Impl);
+      Nodes.N (Name, Impl);
+      Nodes.P (";");
+      Nodes.P;
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.P ("      return");
+      Impl.N ("        (Length                => ");
+      Impl.N (Natural (Prod.Last - Prod.First + 1));
+      Impl.P (",");
+      Impl.P ("         Enclosing_Element     => null,");
+      Impl.P ("         Enclosing_Compilation => Comp,");
+      Impl.P ("         Is_Part_Of_Implicit   => False,");
+      Impl.P ("         Is_Part_Of_Inherited  => False,");
+      Impl.P ("         Is_Part_Of_Instance   => False,");
+      Impl.P ("         Children              =>");
+      Impl.N ("           (");
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         Part_Type := Return_Type_Image (G, Part);
+         Package_Name := AG_Tools.Package_Name (Part_Type);
+         if Index /= 1 then
+            Impl.P (",");
+            Impl.N ("            ");
+         end if;
+
+         Impl.N (Index);
+         Impl.N (" => +");
+         Impl.N (To_Ada (Part.Name));
+         Index := Index + 1;
+      end loop;
+
+      Impl.P ("));");
+      Impl.P ("   end Create;");
+      Impl.P;
+
+      Nodes.P ("private");
+      Nodes.P;
+
+      Nodes.N ("   type ");
+      Nodes.N (Name);
+      Nodes.P (" is");
+      Nodes.N ("     limited new Node (Length => ");
+      Nodes.N (Natural (Prod.Last - Prod.First + 1));
+      Nodes.P (")");
+      Nodes.N ("     and Gela.Elements.");
+      Nodes.N (Plural (NT.Name));
+      Nodes.N (".");
+      Nodes.N (Name);
+      Nodes.P (" with");
+      Nodes.P ("   record");
+      Nodes.P ("      null;");
+      Nodes.P ("   end record;");
+      Nodes.P;
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         Part_Type := Return_Type_Image (G, Part);
+         Package_Name := AG_Tools.Package_Name (Part_Type);
+
+         if not Package_Name.Starts_With ("Gela.Lexical_Types")
+           and Withed.Index (Package_Name) = 0
+         then
+            Withed.Append (Package_Name);
+            Withes.N ("with ");
+            Withes.N (Package_Name);
+            Withes.P (";");
+         end if;
+
+         Nodes.N ("   overriding function ", Impl);
+         Nodes.P (To_Ada (Part.Name), Impl);
+         Nodes.N ("     (Self    : ", Impl);
+         Nodes.N (Name, Impl);
+         Nodes.P (")", Impl);
+         Nodes.N ("      return ", Impl);
+         Nodes.N (Part_Type, Impl);
+         Nodes.P (";");
+         Impl.P (" is");
+         Impl.P ("   begin");
+         Impl.N ("      return -Self.Children (");
+         Impl.N (Natural (Part.Index - Prod.First + 1));
+         Impl.P (");");
+         Impl.N ("   end ");
+         Impl.N (To_Ada (Part.Name));
+         Impl.P (";");
+         Impl.P;
+
+         Nodes.P;
+      end loop;
+
+      Nodes.N ("end Gela.Nodes.", Impl);
+      Nodes.N (Plural (NT.Name), Impl);
+      Nodes.P (";", Impl);
+      Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
+   end Generate_Node;
+
+   --------------------------
+   -- Generate_Node_Fabric --
+   --------------------------
+
+   procedure Generate_Node_Fabric (G  : Gela.Grammars.Grammar_Access) is
+      Spec   : AG_Tools.Writers.Writer;
+      Withes : AG_Tools.Writers.Writer;
+      Impl   : AG_Tools.Writers.Writer;
+      Impl_With : AG_Tools.Writers.Writer;
+      Used   : NT_Map (G.Non_Terminal'Range) := (others => False);
+   begin
+      Spec.P ("with Gela.Lexical_Types;");
+      Spec.P ("with Gela.Element_Fabrics;");
+      Spec.P ("with Gela.Compilations;");
+      Spec.P;
+
+      Impl.P ("package body Gela.Node_Fabrics is");
+      Impl.P;
+      Spec.P ("package Gela.Node_Fabrics is");
+      Spec.P ("   pragma Preelaborate;");
+      Spec.P;
+      Spec.P ("   type Element_Fabric " &
+                "(Comp : Gela.Compilations.Compilation_Access) is");
+      Spec.P ("      limited new Gela.Element_Fabrics.Element_Fabric " &
+                "with null record;");
+      Spec.P
+        ("   type Element_Fabric_Access is access all Element_Fabric'Class;");
+      Spec.P;
+
+      for NT of G.Non_Terminal loop
+         if not NT.Is_List then
+            for Prod of G.Production (NT.First .. NT.Last) loop
+               if Input.Is_Concrete (NT.Index) then
+                  Used (NT.Index) := True;
+                  Spec.N ("   ");
+                  Generate_Constructor (G, NT, Prod, Spec, Used);
+                  Spec.P (";");
+                  Spec.P;
+                  Impl.N ("   ");
+                  Generate_Constructor (G, NT, Prod, Impl, Used);
+                  Impl.P;
+                  Impl.P ("   is");
+                  Impl.N ("      Result : constant Gela.Nodes.");
+                  Impl.N (Plural (NT.Name));
+                  Impl.N (".");
+                  Impl.N (To_Ada (NT.Name));
+                  Impl.P ("_Access :=");
+                  Impl.N ("        new Gela.Nodes.");
+                  Impl.N (Plural (NT.Name));
+                  Impl.N (".");
+                  Impl.N (To_Ada (NT.Name));
+                  Impl.P ("'");
+                  Impl.N ("          (Gela.Nodes.");
+                  Impl.N (Plural (NT.Name));
+                  Impl.N (".Create (Self.Comp");
+
+                  for Part of G.Part (Prod.First .. Prod.Last) loop
+                     Impl.P (",");
+                     Impl.N ("            ");
+                     Impl.N (To_Ada (Part.Name));
+                  end loop;
+
+                  Impl.P ("));");
+                  Impl.P ("   begin");
+                  Impl.N ("      return ");
+                  Impl.N (Return_Type (G.all, NT));
+                  Impl.P ("_Access (Result);");
+                  Impl.N ("   end ");
+                  Impl.N (To_Ada (NT.Name));
+                  Impl.P (";");
+                  Impl.P;
+                  Impl_With.N ("with Gela.Nodes.");
+                  Impl_With.N (Plural (NT.Name));
+                  Impl_With.P (";");
+               end if;
+            end loop;
+         end if;
+      end loop;
+
+      for NT of G.Non_Terminal loop
+         if not NT.Is_List and then Input.Has_List (NT.Index) then
+            Used (NT.Index) := True;
+            Spec.N ("   ");
+            Generate_Sequence_Constructor (G, NT, Spec);
+            Impl.N ("   ");
+            Generate_Sequence_Constructor (G, NT, Impl);
+            Impl.P;
+            Impl.P ("   is");
+            Impl.P ("      pragma Unreferenced (Self);");
+            Impl.N ("      Result : constant Gela.Nodes.");
+            Impl.N (To_Ada (NT.Name));
+            Impl.P ("_Sequences.Sequence_Access :=");
+            Impl.N ("        new Gela.Nodes.");
+            Impl.N (To_Ada (NT.Name));
+            Impl.P ("_Sequences.Sequence;");
+            Impl.P ("   begin");
+            Impl.N ("      return ");
+            Impl.N (Return_Type (G.all, NT));
+            Impl.P ("_Sequence_Access (Result);");
+            Impl.N ("   end ");
+            Impl.N (To_Ada (NT.Name));
+            Impl.N ("_Sequence");
+            Impl.P (";");
+            Impl.P;
+            Impl_With.N ("with Gela.Nodes.");
+            Impl_With.N (To_Ada (NT.Name));
+            Impl_With.P ("_Sequences;");
+
+            Spec.P (";");
+            Spec.P;
+         end if;
+      end loop;
+
+      Spec.P ("end Gela.Node_Fabrics;", Impl);
+
+      for NT of G.Non_Terminal loop
+         if not NT.Is_List and Used (NT.Index) then
+            Withes.N ("with Gela.Elements.");
+            Withes.N (Plural (NT.Name));
+            Withes.P (";");
+         end if;
+      end loop;
+
+      Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Impl_With.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
+   end Generate_Node_Fabric;
+
+   ----------------------------
+   -- Generate_Node_Sequence --
+   ----------------------------
+
+   procedure Generate_Node_Sequence
+     (NT : Gela.Grammars.Non_Terminal)
+   is
+      Nodes  : AG_Tools.Writers.Writer;
+   begin
+      Nodes.N ("with Gela.Elements.");
+      Nodes.N (Plural (NT.Name));
+      Nodes.P (";");
+      Nodes.N ("package Gela.Nodes.");
+      Nodes.N (To_Ada (NT.Name));
+      Nodes.P ("_Sequences is");
+      Nodes.P ("  new Gela.Nodes.Node_Sequences");
+      Nodes.N ("    (Gela.Elements.");
+      Nodes.N (Plural (NT.Name));
+      Nodes.N (".");
+      Nodes.N (To_Ada (NT.Name));
+      Nodes.P ("_Sequences,");
+      Nodes.N ("     Gela.Elements.");
+      Nodes.N (Plural (NT.Name));
+      Nodes.N (".");
+      Nodes.N (To_Ada (NT.Name));
+      Nodes.P ("_Sequence);");
+      Nodes.N ("pragma Preelaborate (Gela.Nodes.");
+      Nodes.N (To_Ada (NT.Name));
+      Nodes.P ("_Sequences);");
+
+      Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
+   end Generate_Node_Sequence;
 
    -----------------------------------
    -- Generate_Sequence_Constructor --
@@ -261,16 +617,36 @@ package body AG_Tools.Element_Generators is
       NT   : Gela.Grammars.Non_Terminal;
       Spec : in out AG_Tools.Writers.Writer) is
    begin
-      Spec.N ("   not overriding function ");
+      Spec.N ("overriding function ");
       Spec.N (To_Ada (NT.Name));
       Spec.P ("_Sequence");
       Spec.P ("     (Self : in out Element_Fabric)");
       Spec.N ("      return ");
       Spec.N (Return_Type (G.all, NT));
-      Spec.P ("_Sequence_Access");
-      Spec.P ("        is abstract;");
-      Spec.P;
+      Spec.N ("_Sequence_Access");
    end Generate_Sequence_Constructor;
+
+   -----------------------
+   -- Return_Type_Image --
+   -----------------------
+
+   function Return_Type_Image
+     (G    : Gela.Grammars.Grammar_Access;
+      Part : Gela.Grammars.Part)
+         return League.Strings.Universal_String
+   is
+      use type League.Strings.Universal_String;
+
+
+      R : constant League.Strings.Universal_String :=
+        Return_Type (G.all, Part);
+   begin
+      if Part.Is_Terminal_Reference then
+         return R;
+      else
+         return R & "_Access";
+      end if;
+   end Return_Type_Image;
 
    -----------------
    -- Write_Parts --
@@ -283,38 +659,13 @@ package body AG_Tools.Element_Generators is
       Withes   : in out Writers.Writer;
       Withed   : in out League.String_Vectors.Universal_String_Vector)
    is
-      function Return_Type
-        (Part : Gela.Grammars.Part)
-         return League.Strings.Universal_String;
-
-      -----------------
-      -- Return_Type --
-      -----------------
-
-      function Return_Type
-        (Part : Gela.Grammars.Part)
-         return League.Strings.Universal_String
-      is
-         use type League.Strings.Universal_String;
-
-
-         R : constant League.Strings.Universal_String :=
-           Return_Type (G.all, Part);
-      begin
-         if Part.Is_Terminal_Reference then
-            return R;
-         else
-            return R & "_Access";
-         end if;
-      end Return_Type;
-
       Name : constant League.Strings.Universal_String :=
         To_Ada (G.Non_Terminal (Prod.Parent).Name);
       Part_Type    : League.Strings.Universal_String;
       Package_Name : League.Strings.Universal_String;
    begin
       for Part of G.Part (Prod.First .. Prod.Last) loop
-         Part_Type := Return_Type (Part);
+         Part_Type := Return_Type_Image (G, Part);
          Package_Name := AG_Tools.Package_Name (Part_Type);
 
          if not Package_Name.Starts_With ("Gela.Lexical_Types")
@@ -338,4 +689,5 @@ package body AG_Tools.Element_Generators is
          Nodes_NT.P;
       end loop;
    end Write_Parts;
+
 end AG_Tools.Element_Generators;
