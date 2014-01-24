@@ -12,31 +12,31 @@ with AG_Tools.Visit_Generators;
 with AG_Tools.NT_Generators;
 with AG_Tools.Part_Generators;
 
-package AG_Tools.Generator_Fabrics is
+package AG_Tools.Generator_Factories is
 
-   type Fabric (Context : AG_Tools.Contexts.Context_Access) is
-     new AG_Tools.Visit_Generators.Fabric with private;
+   type Factory (Context : AG_Tools.Contexts.Context_Access) is
+     new AG_Tools.Visit_Generators.Factory with private;
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       NT   : Gela.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.NT_Generator_Access;
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Part : Gela.Grammars.Part)
       return AG_Tools.Visit_Generators.Part_Generator_Access;
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Attr : Gela.Grammars.Attribute;
       NT   : Gela.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.Generator_Access;
 
 private
 
-   type Fabric (Context : AG_Tools.Contexts.Context_Access) is
-     new AG_Tools.Visit_Generators.Fabric with record
+   type Factory (Context : AG_Tools.Contexts.Context_Access) is
+     new AG_Tools.Visit_Generators.Factory with record
       NT   : aliased AG_Tools.NT_Generators.Generator (Context);
       List : aliased AG_Tools.NT_Generators.List_Generator (Context);
       Part : aliased AG_Tools.Part_Generators.Generator (Context);
@@ -45,4 +45,4 @@ private
       Head : aliased AG_Tools.Part_Generators.Head_Generator (Context);
    end record;
 
-end AG_Tools.Generator_Fabrics;
+end AG_Tools.Generator_Factories;

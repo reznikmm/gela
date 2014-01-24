@@ -112,12 +112,12 @@ Rules for Compilation. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${compilation_unit_list.ast:+Self.Fabric.Compilation_Unit_Sequence};
+        ${compilation_unit_list.ast:+Self.Factory.Compilation_Unit_Sequence};
       List : constant Gela.Elements.Compilation_Units.
         Compilation_Unit_Sequence_Access := -Conv;
    begin
       List.Prepend (-${compilation_unit.ast});
-      ${Compilation.ast} := +Self.Fabric.Compilation
+      ${Compilation.ast} := +Self.Factory.Compilation
          (List, -${context_item_list.ast:None});
    end;
 .)
@@ -129,12 +129,12 @@ Rules for abort_statement. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${name_list.ast:+Self.Fabric.Name_Sequence};
+        ${name_list.ast:+Self.Factory.Name_Sequence};
       List : constant Gela.Elements.Names.Name_Sequence_Access := -Conv;
    begin
       List.Prepend (-${name.ast});
       ${abort_statement.ast} :=
-        +Self.Fabric.Abort_Statement
+        +Self.Factory.Abort_Statement
           (-${abort_token.ast}, List, -${semicolon_token.ast});
    end;
 .)
@@ -145,7 +145,7 @@ Rules for accept_alternative. :
 (.  null;   
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${sequence_of_statements.ast:+Self.Fabric.Statement_Sequence};
+        ${sequence_of_statements.ast:+Self.Factory.Statement_Sequence};
       List : constant Gela.Elements.Statements.Statement_Sequence_Access :=
         -Conv;
    begin
@@ -165,7 +165,7 @@ accept_statement ::=
 Rules for accept_statement. :
 (.
    ${accept_statement.ast} :=
-      +Self.Fabric.Accept_Statement
+      +Self.Factory.Accept_Statement
          (-${accept_token.ast},
           -${identifier.ast},
           -${left_parenthesis_token.ast:No_Token},
@@ -206,7 +206,7 @@ access_definition ::=
 
 Rules for access_definition.function_access :
 (.
-   ${access_definition.ast} := +Self.Fabric.Anonymous_Access_To_Function_Definition
+   ${access_definition.ast} := +Self.Factory.Anonymous_Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
@@ -223,7 +223,7 @@ Rules for access_definition.function_access :
 
 Rules for access_definition.function_subtype :
 (.
-   ${access_definition.ast} := +Self.Fabric.Anonymous_Access_To_Function_Definition
+   ${access_definition.ast} := +Self.Factory.Anonymous_Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
@@ -240,7 +240,7 @@ Rules for access_definition.function_subtype :
 
 Rules for access_definition.subtype_mark :
 (.
-   ${access_definition.ast} := +Self.Fabric.
+   ${access_definition.ast} := +Self.Factory.
      Anonymous_Access_To_Object_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -251,7 +251,7 @@ Rules for access_definition.subtype_mark :
 
 Rules for access_definition.procedure :
 (.
-   ${access_definition.ast} := +Self.Fabric.
+   ${access_definition.ast} := +Self.Factory.
      Anonymous_Access_To_Procedure_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -288,7 +288,7 @@ access_type_definition ::=
 
 Rules for access_type_definition.object :
 (.
-   ${access_type_definition.ast} := +Self.Fabric.
+   ${access_type_definition.ast} := +Self.Factory.
      Access_To_Object_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -299,7 +299,7 @@ Rules for access_type_definition.object :
 
 Rules for access_type_definition.procedure :
 (.
-   ${access_type_definition.ast} := +Self.Fabric.
+   ${access_type_definition.ast} := +Self.Factory.
      Access_To_Procedure_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -313,7 +313,7 @@ Rules for access_type_definition.procedure :
 
 Rules for access_type_definition.function_access :
 (.
-   ${access_type_definition.ast} := +Self.Fabric.Access_To_Function_Definition
+   ${access_type_definition.ast} := +Self.Factory.Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
@@ -330,7 +330,7 @@ Rules for access_type_definition.function_access :
 
 Rules for access_type_definition.function_subtype :
 (.
-   ${access_type_definition.ast} := +Self.Fabric.Access_To_Function_Definition
+   ${access_type_definition.ast} := +Self.Factory.Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
@@ -353,7 +353,7 @@ allocator ::= new_token
   [left_parenthesis_token name <subpool> right_parenthesis_token] name;
 
 Rules for allocator. :
-(.  ${allocator.ast} := +Self.Fabric.Allocator
+(.  ${allocator.ast} := +Self.Factory.Allocator
    (-${new_token.ast},
     -${left_parenthesis_token.ast:No_Token},
     -${subpool.ast:None},
@@ -377,12 +377,12 @@ Rules for aspect_specification. :
 (.
    declare
       Comp : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Aspect_Specification
+        +Self.Factory.Aspect_Specification
           (-${subtype_mark.ast},
            -${arrow_token.ast:No_Token},
            -${expression.ast:None});
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${aspect_list.ast:+Self.
-        Fabric.Aspect_Specification_Sequence};
+        Factory.Aspect_Specification_Sequence};
       List : constant Gela.Elements.Aspect_Specifications.
          Aspect_Specification_Sequence_Access := -Conv;
    begin
@@ -398,7 +398,7 @@ assignment_statement ::=
 Rules for assignment_statement. :
 (.
    ${assignment_statement.ast} :=
-      +Self.Fabric.Assignment_Statement
+      +Self.Factory.Assignment_Statement
          (-${name.ast},
           -${assignment_token.ast},
           -${expression.ast},
@@ -416,22 +416,22 @@ Rules for asynchronous_select. :
 (.
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Select_Or_Path
+        +Self.Factory.Select_Or_Path
           (No_Token_Index, No_Token_Index, null, No_Token_Index,
            -${select_alternative.ast});
       Then_Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Then_Abort_Path
+        +Self.Factory.Then_Abort_Path
           (-${then_token.ast},
            -${abort_token.ast},
            -${sequence_of_statements.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Select_Then_Abort_Path_Sequence;
+        +Self.Factory.Select_Then_Abort_Path_Sequence;
       List : constant Gela.Elements.Select_Then_Abort_Paths.
         Select_Then_Abort_Path_Sequence_Access := -Conv;
    begin
       List.Append (-Item);
       List.Append (-Then_Item);
-      ${asynchronous_select.ast} := +Self.Fabric.Asynchronous_Select
+      ${asynchronous_select.ast} := +Self.Factory.Asynchronous_Select
         (-${select_token.ast},
          List,
          -${end_token.ast},
@@ -445,7 +445,7 @@ at_clause ::=
 
 Rules for at_clause. :
 (.
-   ${at_clause.ast} := +Self.Fabric.
+   ${at_clause.ast} := +Self.Factory.
      At_Clause
        (-${for_token.ast},
         -${subtype_mark.ast},
@@ -460,7 +460,7 @@ attribute_definition_clause ::=
 
 Rules for attribute_definition_clause. :
 (.
-   ${attribute_definition_clause.ast} := +Self.Fabric.
+   ${attribute_definition_clause.ast} := +Self.Factory.
      Attribute_Definition_Clause
        (-${for_token.ast},
         -${subtype_mark.ast},
@@ -473,7 +473,7 @@ attribute_reference ::=
   prefix apostrophe_token identifier;
 
 Rules for attribute_reference. :
-(.  ${attribute_reference.ast} := +Self.Fabric.Attribute_Reference
+(.  ${attribute_reference.ast} := +Self.Factory.Attribute_Reference
    (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast},
     No_Token_Index,
     null);
@@ -514,7 +514,7 @@ Rules for basic_declarative_item_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Basic_Declarative_Item_Sequence};
+        Factory.Basic_Declarative_Item_Sequence};
       List : constant Gela.Elements.Compilation_Units.
         Compilation_Unit_Sequence_Access := -Conv;
    begin
@@ -534,7 +534,7 @@ block_statement ::=
 Rules for block_statement. :
 (.
    ${block_statement.ast} :=
-      +Self.Fabric.Block_Statement
+      +Self.Factory.Block_Statement
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${declare_token.ast:No_Token},
@@ -564,12 +564,12 @@ Rules for case_expression. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${case_exp_alternative_list.ast:+Self.Fabric.Case_Expression_Path_Sequence};
+        ${case_exp_alternative_list.ast:+Self.Factory.Case_Expression_Path_Sequence};
       List : constant Gela.Elements.Case_Expression_Paths.
         Case_Expression_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-${case_expression_alternative.ast});
-      ${case_expression.ast} := +Self.Fabric.Case_Expression
+      ${case_expression.ast} := +Self.Factory.Case_Expression
         (-${case_token.ast},
          -${expression.ast},
          -${is_token.ast},
@@ -581,7 +581,7 @@ case_expression_alternative ::=
   when_token discrete_choice_list arrow_token expression;
 
 Rules for case_expression_alternative. :
-(.  ${case_expression_alternative.ast} := +Self.Fabric.Case_Expression_Path
+(.  ${case_expression_alternative.ast} := +Self.Factory.Case_Expression_Path
    (-${when_token.ast},
     -${discrete_choice_list.ast},
     -${arrow_token.ast},
@@ -598,12 +598,12 @@ Rules for case_statement. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${case_statement_alternative_list.ast:+Self.Fabric.Case_Path_Sequence};
+        ${case_statement_alternative_list.ast:+Self.Factory.Case_Path_Sequence};
       List : constant Gela.Elements.Case_Paths.Case_Path_Sequence_Access :=
         -Conv;
    begin
       List.Prepend (-${case_statement_alternative.ast});
-      ${case_statement.ast} := +Self.Fabric.Case_Statement
+      ${case_statement.ast} := +Self.Factory.Case_Statement
         (-${case_token.ast},
          -${expression.ast},
          -${is_token.ast},
@@ -621,7 +621,7 @@ case_statement_alternative ::=
 Rules for case_statement_alternative. :
 (.
    ${case_statement_alternative.ast} :=
-      +Self.Fabric.Case_Path
+      +Self.Factory.Case_Path
          (-${when_token.ast},
           -${discrete_choice_list.ast},
           -${arrow_token.ast},
@@ -633,7 +633,7 @@ choice_parameter_specification ::= defining_identifier;
 Rules for choice_parameter_specification.defining_identifier :
 (.
    ${choice_parameter_specification.ast} :=
-      +Self.Fabric.Choice_Parameter_Specification
+      +Self.Factory.Choice_Parameter_Specification
          (-${defining_identifier.ast});
 .)
 
@@ -649,7 +649,7 @@ component_clause ::=
 
 Rules for component_clause.clause :
 (.
-   ${component_clause.ast} := +Self.Fabric.
+   ${component_clause.ast} := +Self.Factory.
      Component_Clause
        (-${subtype_mark.ast},
         -${at_token.ast},
@@ -667,7 +667,7 @@ component_declaration ::=
 
 Rules for component_declaration. :
 (.
-   ${component_declaration.ast} := +Self.Fabric.
+   ${component_declaration.ast} := +Self.Factory.
      Component_Declaration
        (-${defining_identifier_list.ast},
         -${colon_token.ast},
@@ -684,14 +684,14 @@ component_definition ::=
 
 Rules for component_definition.subtype_indication :
 (.
-   ${component_definition.ast} := +Self.Fabric.Component_Definition
+   ${component_definition.ast} := +Self.Factory.Component_Definition
        (-${aliased_token.ast:No_Token},
         -${subtype_indication.ast});
 .)
 
 Rules for component_definition.access_definition :
 (.
-   ${component_definition.ast} := +Self.Fabric.Component_Definition
+   ${component_definition.ast} := +Self.Factory.Component_Definition
        (-${aliased_token.ast:No_Token},
         -${access_definition.ast});
 .)
@@ -708,7 +708,7 @@ Rules for component_list.list :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${component_item_list.ast:+Self.Fabric.
+        ${component_item_list.ast:+Self.Factory.
         Component_Item_Sequence};
       List : constant Gela.Elements.Component_Items.
         Component_Item_Sequence_Access := -Conv;
@@ -722,7 +722,7 @@ Rules for component_list.list :
 (.
   declare
      Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-       ${component_item_list.ast:+Self.Fabric.
+       ${component_item_list.ast:+Self.Factory.
        Component_Item_Sequence};
      List : constant Gela.Elements.Component_Items.
        Component_Item_Sequence_Access := -Conv;
@@ -737,7 +737,7 @@ Rules for component_list.variant_part :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Component_Item_Sequence;
+        +Self.Factory.Component_Item_Sequence;
       List : constant Gela.Elements.Component_Items.
         Component_Item_Sequence_Access := -Conv;
    begin
@@ -751,10 +751,10 @@ Rules for component_list.null :
 (.
   declare
      Comp : constant Gela.LARL_Parsers_Nodes.Node :=
-       +Self.Fabric.Null_Component
+       +Self.Factory.Null_Component
          (-${null_token.ast}, -${semicolon_token.ast});
      Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-       +Self.Fabric.Component_Item_Sequence;
+       +Self.Factory.Component_Item_Sequence;
      List : constant Gela.Elements.Component_Items.
        Component_Item_Sequence_Access := -Conv;
   begin
@@ -774,13 +774,13 @@ Rules for constrained_array_definition. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${discrete_subtype_definition_list.ast:+Self.Fabric.
+        ${discrete_subtype_definition_list.ast:+Self.Factory.
         Discrete_Subtype_Definition_Sequence};
       List : constant Gela.Elements.Discrete_Subtype_Definitions.
         Discrete_Subtype_Definition_Sequence_Access := -Conv;
    begin
       List.Prepend (-${discrete_subtype_definition.ast});
-      ${constrained_array_definition.ast} := +Self.Fabric.
+      ${constrained_array_definition.ast} := +Self.Factory.
         Constrained_Array_Definition
           (-${array_token.ast},
            -${left_parenthesis_token.ast},
@@ -800,7 +800,7 @@ decimal_fixed_point_definition ::=
 
 Rules for decimal_fixed_point_definition. :
 (.  ${decimal_fixed_point_definition.ast} :=
-     +Self.Fabric.Decimal_Fixed_Point_Definition
+     +Self.Factory.Decimal_Fixed_Point_Definition
       (-${delta_token.ast},
        -${delta.ast},
        -${digits_token.ast},
@@ -817,7 +817,7 @@ Rules for declarative_part. :
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
        ${declarative_item_list.ast:+Self.
-         Fabric.Declarative_Item_Sequence};
+         Factory.Declarative_Item_Sequence};
       List : constant Gela.Elements.Declarative_Items.
         Declarative_Item_Sequence_Access := -Conv;
    begin
@@ -829,7 +829,7 @@ Rules for declarative_part. :
 defining_character_literal ::= character_literal_token;
 
 Rules for defining_character_literal.character_literal_token :
-(.  ${defining_character_literal.ast} := +Self.Fabric.Defining_Character_Literal
+(.  ${defining_character_literal.ast} := +Self.Factory.Defining_Character_Literal
      (-${character_literal_token.ast});
 .)
 
@@ -838,13 +838,13 @@ defining_enumeration_literal ::= identifier_token;
 
 Rules for defining_enumeration_literal.identifier_token :
 (.  ${defining_enumeration_literal.ast} :=
-     +Self.Fabric.Defining_Enumeration_Literal (-${identifier_token.ast});
+     +Self.Factory.Defining_Enumeration_Literal (-${identifier_token.ast});
 .)
 
 defining_identifier ::= identifier_token;
 
 Rules for defining_identifier.identifier_token :
-(.  ${defining_identifier.ast} := +Self.Fabric.Defining_Identifier
+(.  ${defining_identifier.ast} := +Self.Factory.Defining_Identifier
      (-${identifier_token.ast});
 .)
 
@@ -855,7 +855,7 @@ Rules for defining_identifier_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${defining_id_list.ast:+Self.Fabric.Defining_Identifier_Sequence};
+        ${defining_id_list.ast:+Self.Factory.Defining_Identifier_Sequence};
       List : constant Gela.Elements.Defining_Identifiers.
         Defining_Identifier_Sequence_Access := -Conv;
    begin
@@ -867,7 +867,7 @@ Rules for defining_identifier_list. :
 defining_program_unit_name ::= identifier_token | selected_identifier;
 
 Rules for defining_program_unit_name.identifier_token :
-(.  ${defining_program_unit_name.ast} := +Self.Fabric.Defining_Identifier
+(.  ${defining_program_unit_name.ast} := +Self.Factory.Defining_Identifier
      (-${identifier_token.ast});
 .)
 
@@ -884,7 +884,7 @@ Rules for delay_alternative. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${sequence_of_statements.ast:+Self.Fabric.Statement_Sequence};
+        ${sequence_of_statements.ast:+Self.Factory.Statement_Sequence};
       List : constant Gela.Elements.Statements.
         Statement_Sequence_Access := -Conv;
    begin
@@ -899,7 +899,7 @@ delay_statement ::=
 Rules for delay_statement. :
 (.
    ${delay_statement.ast} :=
-      +Self.Fabric.Delay_Statement
+      +Self.Factory.Delay_Statement
          (-${delay_token.ast},
           -${until_token.ast:No_Token},
           -${expression.ast},
@@ -909,7 +909,7 @@ Rules for delay_statement. :
 delta_constraint ::= delta_token simple_expression [range_constraint];
 
 Rules for delta_constraint. :
-(.  ${delta_constraint.ast} := +Self.Fabric.Delta_Constraint
+(.  ${delta_constraint.ast} := +Self.Factory.Delta_Constraint
      (-${delta_token.ast}, -${simple_expression.ast}, -${range_constraint.ast:None});
 .)
 
@@ -918,7 +918,7 @@ defining_designator ::=
   string_literal_token;
 
 Rules for defining_designator.string_literal_token :
-(.  ${defining_designator.ast} := +Self.Fabric.Defining_Operator_Symbol
+(.  ${defining_designator.ast} := +Self.Factory.Defining_Operator_Symbol
      (-${string_literal_token.ast});
 .)
 
@@ -927,7 +927,7 @@ designator ::= program_unit_name | operator_symbol;
 digits_constraint ::= digits_token simple_expression [range_constraint];
 
 Rules for digits_constraint. :
-(.  ${digits_constraint.ast} := +Self.Fabric.Digits_Constraint
+(.  ${digits_constraint.ast} := +Self.Factory.Digits_Constraint
      (-${digits_token.ast}, -${simple_expression.ast}, -${range_constraint.ast:None});
 .)
 
@@ -947,7 +947,7 @@ Rules for discrete_choice_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${choice_list.ast:+Self.Fabric.Discrete_Choice_Sequence};
+        ${choice_list.ast:+Self.Factory.Discrete_Choice_Sequence};
       List : constant Gela.Elements.Discrete_Choices.
         Discrete_Choice_Sequence_Access := -Conv;
    begin
@@ -963,17 +963,17 @@ discrete_range ::=
 ;
 
 Rules for discrete_range.subtype_indication :
-(.   ${discrete_range.ast} := +Self.Fabric.Discrete_Subtype_Indication_Dr
+(.   ${discrete_range.ast} := +Self.Factory.Discrete_Subtype_Indication_Dr
      (-${simple_expression.ast}, -${range_constraint.ast});
 .)
 
 Rules for discrete_range.range :
-(.   ${discrete_range.ast} := +Self.Fabric.Simple_Expression_Range_Dr
+(.   ${discrete_range.ast} := +Self.Factory.Simple_Expression_Range_Dr
      (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
 .)
 
 Rules for discrete_range.range_attribute_reference :
-(.   ${discrete_range.ast} := +Self.Fabric.Range_Attribute_Reference_Dr
+(.   ${discrete_range.ast} := +Self.Factory.Range_Attribute_Reference_Dr
      (-${range_attribute_reference.ast});
 .)
 
@@ -982,7 +982,7 @@ discrete_simple_expression_range ::=
 ;
 
 Rules for discrete_simple_expression_range. :
-(.   ${discrete_simple_expression_range.ast} := +Self.Fabric.Discrete_Simple_Expression_Range
+(.   ${discrete_simple_expression_range.ast} := +Self.Factory.Discrete_Simple_Expression_Range
      (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
 .)
 
@@ -992,12 +992,12 @@ discrete_subtype_definition ::=
   discrete_simple_expression_range;
 
 Rules for discrete_subtype_definition.subtype_indication :
-(.   ${discrete_subtype_definition.ast} := +Self.Fabric.Discrete_Subtype_Indication
+(.   ${discrete_subtype_definition.ast} := +Self.Factory.Discrete_Subtype_Indication
      (-${subtype_mark.ast}, -${scalar_constraint.ast:None});
 .)
 
 Rules for discrete_subtype_definition.range_attribute_reference :
-(.  ${discrete_subtype_definition.ast} := +Self.Fabric.Discrete_Range_Attribute_Reference
+(.  ${discrete_subtype_definition.ast} := +Self.Factory.Discrete_Range_Attribute_Reference
      (-${range_attribute_reference.ast});
 .)
 
@@ -1019,7 +1019,7 @@ discriminant_specification ::=
 Rules for discriminant_specification.subtype_mark :
 (.
    ${discriminant_specification.ast} :=
-      +Self.Fabric.Discriminant_Specification
+      +Self.Factory.Discriminant_Specification
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${not_token.ast:No_Token},
@@ -1032,7 +1032,7 @@ Rules for discriminant_specification.subtype_mark :
 Rules for discriminant_specification.access_definition :
 (.
    ${discriminant_specification.ast} :=
-      +Self.Fabric.Discriminant_Specification
+      +Self.Factory.Discriminant_Specification
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           No_Token_Index,
@@ -1058,7 +1058,7 @@ entry_body ::=
 Rules for entry_body. :
 (.
    ${entry_body.ast} :=
-      +Self.Fabric.Entry_Body
+      +Self.Factory.Entry_Body
          (-${entry_token.ast},
           -${defining_identifier.ast},
           -${left_parenthesis_token.ast:No_Token},
@@ -1086,7 +1086,7 @@ Rules for entry_call_alternative. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${sequence_of_statements.ast:+Self.Fabric.Statement_Sequence};
+        ${sequence_of_statements.ast:+Self.Factory.Statement_Sequence};
       List : constant Gela.Elements.Statements.
         Statement_Sequence_Access := -Conv;
    begin
@@ -1100,7 +1100,7 @@ entry_call_statement ::= name semicolon_token;
 Rules for entry_call_statement. :
 (.
    ${entry_call_statement.ast} :=
-      +Self.Fabric.Procedure_Call_Statement
+      +Self.Factory.Procedure_Call_Statement
          (-${name.ast}, null, -${semicolon_token.ast});
 .)
 
@@ -1116,7 +1116,7 @@ entry_declaration ::=
 Rules for entry_declaration. :
 (.
    ${entry_declaration.ast} :=
-      +Self.Fabric.Entry_Declaration
+      +Self.Factory.Entry_Declaration
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${entry_token.ast},
@@ -1138,7 +1138,7 @@ entry_index_specification ::=
 Rules for entry_index_specification. :
 (.
    ${entry_index_specification.ast} :=
-      +Self.Fabric.Entry_Index_Specification
+      +Self.Factory.Entry_Index_Specification
          (-${for_token.ast},
           -${defining_identifier.ast},
           -${in_token.ast},
@@ -1150,12 +1150,12 @@ enumeration_literal_specification ::=
   defining_character_literal;
 
 Rules for enumeration_literal_specification.defining_enumeration_literal :
-(.   ${enumeration_literal_specification.ast} := +Self.Fabric.Enumeration_Literal_Specification
+(.   ${enumeration_literal_specification.ast} := +Self.Factory.Enumeration_Literal_Specification
      (-${defining_enumeration_literal.ast});
 .)
 
 Rules for enumeration_literal_specification.defining_character_literal :
-(.  ${enumeration_literal_specification.ast} := +Self.Fabric.Enumeration_Literal_Specification
+(.  ${enumeration_literal_specification.ast} := +Self.Factory.Enumeration_Literal_Specification
      (-${defining_character_literal.ast});
 .)
 
@@ -1169,12 +1169,12 @@ Rules for enumeration_type_definition. :
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
         ${enumeration_list.ast:+Self.
-        Fabric.Enumeration_Literal_Specification_Sequence};
+        Factory.Enumeration_Literal_Specification_Sequence};
       List : constant Gela.Elements.Enumeration_Literal_Specifications.
         Enumeration_Literal_Specification_Sequence_Access := -Conv;
    begin
       List.Prepend (-${enumeration_literal_specification.ast});
-      ${enumeration_type_definition.ast} := +Self.Fabric.
+      ${enumeration_type_definition.ast} := +Self.Factory.
         Enumeration_Type_Definition
           (-${left_parenthesis_token.ast},
            List,
@@ -1193,7 +1193,7 @@ exception_declaration ::=
 Rules for exception_declaration. :
 (.
    ${exception_declaration.ast} :=
-      +Self.Fabric.Exception_Declaration
+      +Self.Factory.Exception_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${exception_token.ast},
@@ -1215,13 +1215,13 @@ Rules for exception_handler. :
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
         ${exception_choice_list.ast:+Self.
-          Fabric.Exception_Choice_Sequence};
+          Factory.Exception_Choice_Sequence};
       List : constant Gela.Elements.Exception_Choices.
         Exception_Choice_Sequence_Access := -Conv;
    begin
       List.Prepend (-${exception_choice.ast});
       ${exception_handler.ast} :=
-        +Self.Fabric.Exception_Handler
+        +Self.Factory.Exception_Handler
           (-${when_token.ast},
            -${choice_parameter_specification.ast:None},
            -${colon_token.ast:No_Token},
@@ -1241,7 +1241,7 @@ exception_renaming_declaration ::=
 Rules for exception_renaming_declaration. :
 (.
    ${exception_renaming_declaration.ast} :=
-      +Self.Fabric.Exception_Renaming_Declaration
+      +Self.Factory.Exception_Renaming_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${exception_token.ast},
@@ -1258,7 +1258,7 @@ exit_statement ::=
 Rules for exit_statement. :
 (.
    ${exit_statement.ast} :=
-      +Self.Fabric.Exit_Statement
+      +Self.Factory.Exit_Statement
          (-${exit_token.ast},
           -${name.ast:None},
           -${when_token.ast:No_Token},
@@ -1269,7 +1269,7 @@ Rules for exit_statement. :
 explicit_dereference ::= prefix dot_token all_token;
 
 Rules for explicit_dereference. :
-(.  ${explicit_dereference.ast} := +Self.Fabric.Explicit_Dereference
+(.  ${explicit_dereference.ast} := +Self.Factory.Explicit_Dereference
      (-${prefix.ast}, -${dot_token.ast}, -${all_token.ast});
 .)
 
@@ -1297,12 +1297,12 @@ Rules for expression.xor :
 .)
 
 Rules for expression.and_then :
-(.  ${expression.ast} := +Self.Fabric.Short_Circuit
+(.  ${expression.ast} := +Self.Factory.Short_Circuit
      (-${expression.ast}, -${and_token.ast}, -${then_token.ast}, -${relation.ast});
 .)
 
 Rules for expression.or_else :
-(.  ${expression.ast} := +Self.Fabric.Short_Circuit
+(.  ${expression.ast} := +Self.Factory.Short_Circuit
      (-${expression.ast}, -${or_token.ast}, -${else_token.ast}, -${relation.ast});
 .)
 
@@ -1315,7 +1315,7 @@ extended_return_object_declaration ::=
 Rules for extended_return_object_declaration. :
 (.
    ${extended_return_object_declaration.ast} :=
-      +Self.Fabric.Return_Object_Specification
+      +Self.Factory.Return_Object_Specification
          (-${defining_identifier.ast},
           -${colon_token.ast},
           -${aliased_token.ast:No_Token},
@@ -1335,7 +1335,7 @@ extended_return_statement ::=
 Rules for extended_return_statement. :
 (.
    ${extended_return_statement.ast} :=
-      +Self.Fabric.Extended_Return_Statement
+      +Self.Factory.Extended_Return_Statement
          (-${return_token.ast},
           -${extended_return_object_declaration.ast},
           -${do_token.ast:No_Token},
@@ -1357,7 +1357,7 @@ extension_aggregate ::=
 Rules for extension_aggregate. :
 (.
    ${extension_aggregate.ast} :=
-     +Self.Fabric.Extension_Aggregate
+     +Self.Factory.Extension_Aggregate
        (-${left_parenthesis_token.ast},
         -${name.ast},
         -${with_token.ast},
@@ -1369,7 +1369,7 @@ floating_point_definition ::=
   digits_token simple_expression [real_range_specification];
 
 Rules for floating_point_definition. :
-(.  ${floating_point_definition.ast} := +Self.Fabric.Floating_Point_Definition
+(.  ${floating_point_definition.ast} := +Self.Factory.Floating_Point_Definition
       (-${digits_token.ast},
        -${simple_expression.ast},
        -${real_range_specification.ast:None});
@@ -1401,7 +1401,7 @@ formal_access_type_definition ::=
 
 Rules for formal_access_type_definition.object :
 (.
-   ${formal_access_type_definition.ast} := +Self.Fabric.
+   ${formal_access_type_definition.ast} := +Self.Factory.
      Formal_Access_To_Object_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -1412,7 +1412,7 @@ Rules for formal_access_type_definition.object :
 
 Rules for formal_access_type_definition.procedure :
 (.
-   ${formal_access_type_definition.ast} := +Self.Fabric.
+   ${formal_access_type_definition.ast} := +Self.Factory.
      Formal_Access_To_Procedure_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -1426,7 +1426,7 @@ Rules for formal_access_type_definition.procedure :
 
 Rules for formal_access_type_definition.function_access :
 (.
-   ${formal_access_type_definition.ast} := +Self.Fabric.Formal_Access_To_Function_Definition
+   ${formal_access_type_definition.ast} := +Self.Factory.Formal_Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
@@ -1443,7 +1443,7 @@ Rules for formal_access_type_definition.function_access :
 
 Rules for formal_access_type_definition.function_subtype :
 (.
-   ${formal_access_type_definition.ast} := +Self.Fabric.
+   ${formal_access_type_definition.ast} := +Self.Factory.
      Formal_Access_To_Function_Definition
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
@@ -1475,7 +1475,7 @@ formal_complete_type_declaration ::=
 Rules for formal_complete_type_declaration.definition :
 (.
    ${formal_complete_type_declaration.ast} :=
-      +Self.Fabric.Formal_Type_Declaration
+      +Self.Factory.Formal_Type_Declaration
          (-${type_token.ast},
           -${defining_identifier.ast},
           -${discriminant_part.ast:None},
@@ -1488,7 +1488,7 @@ Rules for formal_complete_type_declaration.definition :
 Rules for formal_complete_type_declaration.derived :
 (.
    ${formal_complete_type_declaration.ast} :=
-      +Self.Fabric.Formal_Type_Declaration
+      +Self.Factory.Formal_Type_Declaration
          (-${type_token.ast},
           -${defining_identifier.ast},
           -${discriminant_part.ast:None},
@@ -1507,13 +1507,13 @@ Rules for formal_constrained_array_definition. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${discrete_subtype_definition_list.ast:+Self.Fabric.
+        ${discrete_subtype_definition_list.ast:+Self.Factory.
         Discrete_Subtype_Definition_Sequence};
       List : constant Gela.Elements.Discrete_Subtype_Definitions.
         Discrete_Subtype_Definition_Sequence_Access := -Conv;
    begin
       List.Prepend (-${discrete_subtype_definition.ast});
-      ${formal_constrained_array_definition.ast} := +Self.Fabric.
+      ${formal_constrained_array_definition.ast} := +Self.Factory.
         Formal_Constrained_Array_Definition
           (-${array_token.ast},
            -${left_parenthesis_token.ast},
@@ -1530,7 +1530,7 @@ formal_decimal_fixed_point_definition ::=
 Rules for formal_decimal_fixed_point_definition. :
 (.
    ${formal_decimal_fixed_point_definition.ast} :=
-      +Self.Fabric.Formal_Decimal_Fixed_Point_Definition
+      +Self.Factory.Formal_Decimal_Fixed_Point_Definition
          (-${delta_token.ast},
           -${delta.ast},
           -${digits_token.ast},
@@ -1547,7 +1547,7 @@ formal_derived_type_definition ::=
 Rules for formal_derived_type_definition. :
 (.
    ${formal_derived_type_definition.ast} :=
-      +Self.Fabric.Formal_Derived_Type_Definition
+      +Self.Factory.Formal_Derived_Type_Definition
          (-${abstract_token.ast:No_Token},
           -${limited_token.ast:No_Token},
           -${synchronized_token.ast:No_Token},
@@ -1566,7 +1566,7 @@ formal_discrete_type_definition ::=
 Rules for formal_discrete_type_definition. :
 (.
    ${formal_discrete_type_definition.ast} :=
-      +Self.Fabric.Formal_Discrete_Type_Definition
+      +Self.Factory.Formal_Discrete_Type_Definition
          (-${left_parenthesis_token.ast},
           -${box_token.ast},
           -${right_parenthesis_token.ast});
@@ -1577,7 +1577,7 @@ formal_floating_point_definition ::= digits_token box_token;
 Rules for formal_floating_point_definition. :
 (.
    ${formal_floating_point_definition.ast} :=
-      +Self.Fabric.Formal_Floating_Point_Definition
+      +Self.Factory.Formal_Floating_Point_Definition
          (-${digits_token.ast},
           -${box_token.ast});
 .)
@@ -1606,7 +1606,7 @@ formal_function_declaration ::=
 Rules for formal_function_declaration.subtype :
 (.
    ${formal_function_declaration.ast} :=
-      +Self.Fabric.Formal_Function_Declaration
+      +Self.Factory.Formal_Function_Declaration
          (-${with_token.ast},
           -${function_token.ast},
           -${defining_designator.ast},
@@ -1628,7 +1628,7 @@ Rules for formal_function_declaration.subtype :
 Rules for formal_function_declaration.access :
 (.
    ${formal_function_declaration.ast} :=
-      +Self.Fabric.Formal_Function_Declaration
+      +Self.Factory.Formal_Function_Declaration
          (-${with_token.ast},
           -${function_token.ast},
           -${defining_designator.ast},
@@ -1656,7 +1656,7 @@ formal_incomplete_type_declaration ::=
 Rules for formal_incomplete_type_declaration. :
 (.
    ${formal_incomplete_type_declaration.ast} :=
-      +Self.Fabric.Formal_Incomplete_Type_Declaration
+      +Self.Factory.Formal_Incomplete_Type_Declaration
          (-${type_token.ast},
           -${defining_identifier.ast},
           -${discriminant_part.ast:None},
@@ -1671,7 +1671,7 @@ formal_interface_type_definition ::=
 
 Rules for formal_interface_type_definition. :
 (.
-   ${formal_interface_type_definition.ast} := +Self.Fabric.
+   ${formal_interface_type_definition.ast} := +Self.Factory.
      Formal_Interface_Type_Definition
        (-${interface_kind.ast:None},
         -${interface_token.ast},
@@ -1683,7 +1683,7 @@ formal_modular_type_definition ::= mod_token box_token;
 Rules for formal_modular_type_definition. :
 (.
    ${formal_modular_type_definition.ast} :=
-      +Self.Fabric.Formal_Modular_Type_Definition
+      +Self.Factory.Formal_Modular_Type_Definition
          (-${mod_token.ast},
           -${box_token.ast});
 .)
@@ -1707,7 +1707,7 @@ formal_object_declaration ::=
 Rules for formal_object_declaration.subtype_mark :
 (.
    ${formal_object_declaration.ast} :=
-      +Self.Fabric.Formal_Object_Declaration
+      +Self.Factory.Formal_Object_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${in_token.ast:No_Token},
@@ -1724,7 +1724,7 @@ Rules for formal_object_declaration.subtype_mark :
 Rules for formal_object_declaration.access_definition :
 (.
    ${formal_object_declaration.ast} :=
-      +Self.Fabric.Formal_Object_Declaration
+      +Self.Factory.Formal_Object_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${in_token.ast:No_Token},
@@ -1743,7 +1743,7 @@ formal_ordinary_fixed_point_definition ::=
 
 Rules for formal_ordinary_fixed_point_definition. :
 (.
-   ${formal_ordinary_fixed_point_definition.ast} := +Self.Fabric
+   ${formal_ordinary_fixed_point_definition.ast} := +Self.Factory
      .Formal_Ordinary_Fixed_Point_Definition
          (-${delta_token.ast},
           -${box_token.ast});
@@ -1763,11 +1763,11 @@ Rules for formal_package_actual_part.box :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Generic_Association_Sequence;
+        +Self.Factory.Generic_Association_Sequence;
       List : constant Gela.Elements.Generic_Associations.
         Generic_Association_Sequence_Access := -Conv;
       Box  : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Generic_Association
+        +Self.Factory.Generic_Association
           (-${others_choice.ast:None},
            -${arrow_token.ast:No_Token},
            null,
@@ -1782,11 +1782,11 @@ Rules for formal_package_actual_part.association :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${formal_package_association_list.ast:+Self.Fabric.Generic_Association_Sequence};
+        ${formal_package_association_list.ast:+Self.Factory.Generic_Association_Sequence};
       List : constant Gela.Elements.Generic_Associations.
         Generic_Association_Sequence_Access := -Conv;
       Box  : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Generic_Association
+        +Self.Factory.Generic_Association
           (-${others_choice.ast},
            -${arrow_token.ast},
            null,
@@ -1802,7 +1802,7 @@ Rules for formal_package_actual_part.association :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${formal_package_association_list.ast:+Self.Fabric.Generic_Association_Sequence};
+        ${formal_package_association_list.ast:+Self.Factory.Generic_Association_Sequence};
       List : constant Gela.Elements.Generic_Associations.
         Generic_Association_Sequence_Access := -Conv;
    begin
@@ -1820,7 +1820,7 @@ formal_package_association ::=
 Rules for formal_package_association.box :
 (.
    ${formal_package_association.ast} :=
-      +Self.Fabric.Generic_Association
+      +Self.Factory.Generic_Association
          (-${selector_name.ast},
           -${arrow_token.ast},
            null,
@@ -1838,7 +1838,7 @@ formal_package_declaration ::=
 Rules for formal_package_declaration. :
 (.
    ${formal_package_declaration.ast} :=
-      +Self.Fabric.Formal_Package_Declaration
+      +Self.Factory.Formal_Package_Declaration
          (-${with_token.ast},
           -${package_token.ast},
           -${defining_identifier.ast},
@@ -1862,7 +1862,7 @@ Rules for formal_part. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${parameter_specification_list.ast:+Self.Fabric.Parameter_Specification_Sequence};
+        ${parameter_specification_list.ast:+Self.Factory.Parameter_Specification_Sequence};
       List : constant Gela.Elements.Parameter_Specifications.
         Parameter_Specification_Sequence_Access := -Conv;
    begin
@@ -1877,7 +1877,7 @@ formal_private_type_definition ::=
 Rules for formal_private_type_definition. :
 (.
    ${formal_private_type_definition.ast} :=
-      +Self.Fabric.Formal_Private_Type_Definition
+      +Self.Factory.Formal_Private_Type_Definition
          (-${abstract_token.ast:No_Token},
           -${tagged_token.ast:No_Token},
           -${limited_token.ast:No_Token},
@@ -1896,7 +1896,7 @@ formal_procedure_declaration ::=
 Rules for formal_procedure_declaration. :
 (.
    ${formal_procedure_declaration.ast} :=
-      +Self.Fabric.Formal_Procedure_Declaration
+      +Self.Factory.Formal_Procedure_Declaration
          (-${with_token.ast},
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
@@ -1916,7 +1916,7 @@ formal_signed_integer_type_definition ::= range_token box_token;
 
 Rules for formal_signed_integer_type_definition. :
 (.
-   ${formal_signed_integer_type_definition.ast} := +Self.Fabric
+   ${formal_signed_integer_type_definition.ast} := +Self.Factory
      .Formal_Signed_Integer_Type_Definition
          (-${range_token.ast},
           -${box_token.ast});
@@ -1945,13 +1945,13 @@ Rules for formal_unconstrained_array_definition. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${index_subtype_definition_list.ast:+Self.Fabric.
+        ${index_subtype_definition_list.ast:+Self.Factory.
         Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
       List.Prepend (-${index_subtype_definition.ast});
-      ${formal_unconstrained_array_definition.ast} := +Self.Fabric.
+      ${formal_unconstrained_array_definition.ast} := +Self.Factory.
         Formal_Unconstrained_Array_Definition
           (-${array_token.ast},
            -${left_parenthesis_token.ast},
@@ -1977,7 +1977,7 @@ full_type_declaration ::=
 
 Rules for full_type_declaration.full :
 (.  ${full_type_declaration.ast} :=
-       +Self.Fabric.Full_Type_Declaration
+       +Self.Factory.Full_Type_Declaration
          (-${type_token.ast},
           -${defining_identifier.ast},
           -${discriminant_part.ast:None},
@@ -1991,14 +1991,14 @@ Rules for full_type_declaration.derived :
 (.
      declare
         Type_Definition : constant Gela.LARL_Parsers_Nodes.Node :=
-          +Self.Fabric.Derived_Type_Definition
+          +Self.Factory.Derived_Type_Definition
             (-${abstract_token.ast:No_Token},
              -${limited_token.ast:No_Token},
              -${new_token.ast},
              -${subtype_indication.ast});
      begin
        ${full_type_declaration.ast} :=
-       +Self.Fabric.Full_Type_Declaration
+       +Self.Factory.Full_Type_Declaration
          (-${type_token.ast},
           -${defining_identifier.ast},
           -${discriminant_part.ast:None},
@@ -2013,7 +2013,7 @@ Rules for full_type_declaration.derived :
 (.
      declare
         Type_Definition : constant Gela.LARL_Parsers_Nodes.Node :=
-          +Self.Fabric.Derived_Record_Definition
+          +Self.Factory.Derived_Record_Definition
             (-${abstract_token.ast:No_Token},
              -${limited_token.ast:No_Token},
              -${new_token.ast},
@@ -2023,7 +2023,7 @@ Rules for full_type_declaration.derived :
              -${record_definition.ast});
      begin
         ${full_type_declaration.ast} :=
-          +Self.Fabric.Full_Type_Declaration
+          +Self.Factory.Full_Type_Declaration
             (-${type_token.ast},
             -${defining_identifier.ast},
             -${discriminant_part.ast:None},
@@ -2061,7 +2061,7 @@ function_body ::=
 
 Rules for function_body.function_subtype :
 (.
-   ${function_body.ast} := +Self.Fabric.Function_Body
+   ${function_body.ast} := +Self.Factory.Function_Body
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${function_token.ast},
@@ -2087,7 +2087,7 @@ Rules for function_body.function_subtype :
 
 Rules for function_body.function_access :
 (.
-   ${function_body.ast} := +Self.Fabric.Function_Body
+   ${function_body.ast} := +Self.Factory.Function_Body
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${function_token.ast},
@@ -2114,7 +2114,7 @@ Rules for function_body.function_access :
 function_call ::= prefix record_aggregate;
 
 Rules for function_call. :
-(.  ${function_call.ast} := +Self.Fabric.Function_Call
+(.  ${function_call.ast} := +Self.Factory.Function_Call
      (-${prefix.ast}, -${record_aggregate.ast});
 .)
 
@@ -2145,7 +2145,7 @@ function_declaration ::=
 
 Rules for function_declaration.function_subtype :
 (.
-   ${function_declaration.ast} := +Self.Fabric.Function_Declaration
+   ${function_declaration.ast} := +Self.Factory.Function_Declaration
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${function_token.ast},
@@ -2169,7 +2169,7 @@ Rules for function_declaration.function_subtype :
 
 Rules for function_declaration.function_access :
 (.
-   ${function_declaration.ast} := +Self.Fabric.Function_Declaration
+   ${function_declaration.ast} := +Self.Factory.Function_Declaration
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${function_token.ast},
@@ -2198,7 +2198,7 @@ generic_association ::=
 
 Rules for generic_association. :
 (.
-   ${generic_association.ast} := +Self.Fabric.Generic_Association
+   ${generic_association.ast} := +Self.Factory.Generic_Association
          (-${selector_name.ast:None},
           -${arrow_token.ast:No_Token},
           -${expression.ast},
@@ -2211,7 +2211,7 @@ Rules for generic_formal_item_list.generic_formal_item :
 (.
   declare
      Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-       Fabric.Generic_Formal_Sequence};
+       Factory.Generic_Formal_Sequence};
      List : constant Gela.Elements.Generic_Formals.
        Generic_Formal_Sequence_Access := -Conv;
   begin
@@ -2247,7 +2247,7 @@ generic_function_declaration ::=
 
 Rules for generic_function_declaration.subtype :
 (.
-   ${generic_function_declaration.ast} := +Self.Fabric.Generic_Function_Declaration
+   ${generic_function_declaration.ast} := +Self.Factory.Generic_Function_Declaration
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${function_token.ast},
@@ -2265,7 +2265,7 @@ Rules for generic_function_declaration.subtype :
 
 Rules for generic_function_declaration.access :
 (.
-   ${generic_function_declaration.ast} := +Self.Fabric.Generic_Function_Declaration
+   ${generic_function_declaration.ast} := +Self.Factory.Generic_Function_Declaration
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${function_token.ast},
@@ -2306,7 +2306,7 @@ generic_instantiation ::=
 Rules for generic_instantiation.package :
 (.
    ${generic_instantiation.ast} :=
-      +Self.Fabric.Package_Instantiation
+      +Self.Factory.Package_Instantiation
          (-${package_token.ast},
           -${defining_program_unit_name.ast},
           -${is_token.ast},
@@ -2322,7 +2322,7 @@ Rules for generic_instantiation.package :
 Rules for generic_instantiation.subtype :
 (.
    ${generic_instantiation.ast} :=
-      +Self.Fabric.Function_Instantiation
+      +Self.Factory.Function_Instantiation
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${function_token.ast},
@@ -2340,7 +2340,7 @@ Rules for generic_instantiation.subtype :
 Rules for generic_instantiation.proc :
 (.
    ${generic_instantiation.ast} :=
-      +Self.Fabric.Procedure_Instantiation
+      +Self.Factory.Procedure_Instantiation
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${procedure_token.ast},
@@ -2368,7 +2368,7 @@ generic_package_declaration ::=
 Rules for generic_package_declaration. :
 (.
    ${generic_package_declaration.ast} :=
-      +Self.Fabric.Generic_Package_Declaration
+      +Self.Factory.Generic_Package_Declaration
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${package_token.ast},
@@ -2392,7 +2392,7 @@ generic_procedure_declaration ::=
 Rules for generic_procedure_declaration. :
 (.
    ${generic_procedure_declaration.ast} :=
-      +Self.Fabric.Generic_Procedure_Declaration
+      +Self.Factory.Generic_Procedure_Declaration
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${procedure_token.ast},
@@ -2430,7 +2430,7 @@ generic_renaming_declaration ::=
 Rules for generic_renaming_declaration.package :
 (.
    ${generic_renaming_declaration.ast} :=
-      +Self.Fabric.Generic_Package_Renaming
+      +Self.Factory.Generic_Package_Renaming
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${package_token.ast},
@@ -2444,7 +2444,7 @@ Rules for generic_renaming_declaration.package :
 Rules for generic_renaming_declaration.procedure :
 (.
    ${generic_renaming_declaration.ast} :=
-      +Self.Fabric.Generic_Procedure_Renaming
+      +Self.Factory.Generic_Procedure_Renaming
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${procedure_token.ast},
@@ -2458,7 +2458,7 @@ Rules for generic_renaming_declaration.procedure :
 Rules for generic_renaming_declaration.function :
 (.
    ${generic_renaming_declaration.ast} :=
-      +Self.Fabric.Generic_Function_Renaming
+      +Self.Factory.Generic_Function_Renaming
          (-${generic_token.ast},
           -${generic_formal_item_list.ast:None},
           -${function_token.ast},
@@ -2474,7 +2474,7 @@ goto_statement ::= goto_token program_unit_name semicolon_token;
 Rules for goto_statement. :
 (.
    ${goto_statement.ast} :=
-      +Self.Fabric.Goto_Statement
+      +Self.Factory.Goto_Statement
          (-${goto_token.ast},
           -${program_unit_name.ast},
           -${semicolon_token.ast});
@@ -2483,7 +2483,7 @@ Rules for goto_statement. :
 identifier ::= identifier_token;
 
 Rules for identifier.identifier_token :
-(.  ${identifier.ast} := +Self.Fabric.Identifier
+(.  ${identifier.ast} := +Self.Factory.Identifier
      (-${identifier_token.ast});
 .)
 
@@ -2496,18 +2496,18 @@ Rules for if_expression. :
 (.
    declare
       Path : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.If_Expression_Path
+        +Self.Factory.If_Expression_Path
           (-${if_token.ast},
            -${condition.ast},
            -${then_token.ast},
           -${then.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${elsif_exp_list.ast:+Self.Fabric.If_Else_Expression_Path_Sequence};
+        ${elsif_exp_list.ast:+Self.Factory.If_Else_Expression_Path_Sequence};
       List : constant Gela.Elements.If_Else_Expression_Paths.
         If_Else_Expression_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-Path);
-      ${if_expression.ast} := +Self.Fabric.If_Expression (List);
+      ${if_expression.ast} := +Self.Factory.If_Expression (List);
    end;
 .)
 
@@ -2515,23 +2515,23 @@ Rules for if_expression. :
 (.
    declare
       Path : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.If_Expression_Path
+        +Self.Factory.If_Expression_Path
           (-${if_token.ast},
            -${condition.ast},
            -${then_token.ast},
            -${then.ast});
       Tail : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Else_Expression_Path
+        +Self.Factory.Else_Expression_Path
           (-${else_token.ast},
            -${else.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${elsif_exp_list.ast:+Self.Fabric.If_Else_Expression_Path_Sequence};
+        ${elsif_exp_list.ast:+Self.Factory.If_Else_Expression_Path_Sequence};
       List : constant Gela.Elements.If_Else_Expression_Paths.
         If_Else_Expression_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-Path);
       List.Append (-Tail);
-      ${if_expression.ast} := +Self.Fabric.If_Expression (List);
+      ${if_expression.ast} := +Self.Factory.If_Expression (List);
    end;
 .)
 
@@ -2546,18 +2546,18 @@ Rules for if_statement. :
 (.
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.If_Path
+        +Self.Factory.If_Path
           (-${if_token.ast},
            -${expression.ast},
            -${then_token.ast},
            -${if.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${elsif_list.ast:+Self.Fabric.If_Elsif_Else_Path_Sequence};
+        ${elsif_list.ast:+Self.Factory.If_Elsif_Else_Path_Sequence};
       List : constant Gela.Elements.If_Elsif_Else_Paths.
         If_Elsif_Else_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-Item);
-      ${if_statement.ast} := +Self.Fabric.If_Statement
+      ${if_statement.ast} := +Self.Factory.If_Statement
         (List,
          -${end_token.ast},
          -${endif.ast},
@@ -2569,22 +2569,22 @@ Rules for if_statement. :
 (.
    declare
       If_Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.If_Path
+        +Self.Factory.If_Path
           (-${if_token.ast},
            -${expression.ast},
            -${then_token.ast},
            -${if.ast});
       Else_Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Else_Path
+        +Self.Factory.Else_Path
           (-${else_token.ast}, -${else.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${elsif_list.ast:+Self.Fabric.If_Elsif_Else_Path_Sequence};
+        ${elsif_list.ast:+Self.Factory.If_Elsif_Else_Path_Sequence};
       List : constant Gela.Elements.If_Elsif_Else_Paths.
         If_Elsif_Else_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-If_Item);
       List.Append (-Else_Item);
-      ${if_statement.ast} := +Self.Fabric.If_Statement
+      ${if_statement.ast} := +Self.Factory.If_Statement
         (List,
          -${end_token.ast},
          -${endif.ast},
@@ -2602,11 +2602,11 @@ Rules for incomplete_type_declaration. :
 (.
    declare
       Def : constant Gela.LARL_Parsers_Nodes.Node  :=
-        +Self.Fabric.Incomplete_Type_Definition
+        +Self.Factory.Incomplete_Type_Definition
           (-${tagged_token.ast:No_Token});
    begin
       ${incomplete_type_declaration.ast} :=
-         +Self.Fabric.Incomplete_Type_Declaration
+         +Self.Factory.Incomplete_Type_Declaration
            (-${type_token.ast},
             -${defining_identifier.ast},
             -${discriminant_part.ast:None},
@@ -2629,7 +2629,7 @@ Rules for interface_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${and_subtype_mark_list.ast:+Self.Fabric.
+        ${and_subtype_mark_list.ast:+Self.Factory.
         Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
@@ -2645,7 +2645,7 @@ interface_type_definition ::=
 
 Rules for interface_type_definition. :
 (.
-   ${interface_type_definition.ast} := +Self.Fabric.
+   ${interface_type_definition.ast} := +Self.Factory.
      Interface_Type_Definition
        (-${interface_kind.ast:None},
         -${interface_token.ast},
@@ -2659,7 +2659,7 @@ iterator_specification ::=
 
 Rules for iterator_specification. :
 (.
-   ${iterator_specification.ast} := +Self.Fabric.
+   ${iterator_specification.ast} := +Self.Factory.
      Element_Iterator_Specification
        (-${defining_identifier.ast},
         -${colon_token.ast:No_Token},
@@ -2678,13 +2678,13 @@ Rules for known_discriminant_part. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${discriminant_spec_list.ast:+Self.
-        Fabric.Discriminant_Specification_Sequence};
+        Factory.Discriminant_Specification_Sequence};
       List : constant Gela.Elements.Discriminant_Specifications.
         Discriminant_Specification_Sequence_Access := -Conv;
    begin
       List.Prepend (-${discriminant_specification.ast});
       ${known_discriminant_part.ast} :=
-        +Self.Fabric.Known_Discriminant_Part
+        +Self.Factory.Known_Discriminant_Part
           (-${left_parenthesis_token.ast},
            List,
            -${right_parenthesis_token.ast});
@@ -2707,7 +2707,7 @@ library_item ::=
 Rules for library_item.spec :
 (.
    ${library_item.ast} :=
-      +Self.Fabric.Compilation_Unit_Declaration
+      +Self.Factory.Compilation_Unit_Declaration
          (-${context_item_list.ast:None},
           -${private_token.ast:No_Token},
           -${library_unit_declaration.ast});
@@ -2716,7 +2716,7 @@ Rules for library_item.spec :
 Rules for library_item.body :
 (.
    ${library_item.ast} :=
-      +Self.Fabric.Compilation_Unit_Body
+      +Self.Factory.Compilation_Unit_Body
          (-${context_item_list.ast:None},
           -${library_unit_body.ast});
 .)
@@ -2738,7 +2738,7 @@ loop_parameter_specification ::=
 
 Rules for loop_parameter_specification. :
 (.  ${loop_parameter_specification.ast} :=
-     +Self.Fabric.Loop_Parameter_Specification
+     +Self.Factory.Loop_Parameter_Specification
        (-${defining_identifier.ast},
         -${in_token.ast},
         -${reverse_token.ast:No_Token},
@@ -2758,7 +2758,7 @@ loop_statement ::=
 Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
-      +Self.Fabric.Loop_Statement
+      +Self.Factory.Loop_Statement
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${loop_token.ast},
@@ -2771,7 +2771,7 @@ Rules for loop_statement. :
 Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
-      +Self.Fabric.While_Loop_Statement
+      +Self.Factory.While_Loop_Statement
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${while_token.ast},
@@ -2786,7 +2786,7 @@ Rules for loop_statement. :
 Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
-      +Self.Fabric.For_Loop_Statement
+      +Self.Factory.For_Loop_Statement
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${for_token.ast},
@@ -2801,7 +2801,7 @@ Rules for loop_statement. :
 Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
-      +Self.Fabric.For_Loop_Statement
+      +Self.Factory.For_Loop_Statement
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${for_token.ast},
@@ -2825,7 +2825,7 @@ Rules for membership_choice_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${mchoice_list.ast:+Self.Fabric.Membership_Choice_Sequence};
+        ${mchoice_list.ast:+Self.Factory.Membership_Choice_Sequence};
       List : constant Gela.Elements.Membership_Choices.
         Membership_Choice_Sequence_Access := -Conv;
    begin
@@ -2837,7 +2837,7 @@ Rules for membership_choice_list. :
 modular_type_definition ::= mod_token expression;
 
 Rules for modular_type_definition. :
-(.  ${modular_type_definition.ast} := +Self.Fabric.Modular_Type_Definition
+(.  ${modular_type_definition.ast} := +Self.Factory.Modular_Type_Definition
      (-${mod_token.ast}, -${expression.ast});
 .)
 
@@ -2851,7 +2851,7 @@ name ::=
   qualified_expression;
 
 Rules for name.character_literal_token :
-(.  ${name.ast} := +Self.Fabric.Character_Literal
+(.  ${name.ast} := +Self.Factory.Character_Literal
      (-${character_literal_token.ast});
 .)
 
@@ -2862,7 +2862,7 @@ null_statement ::= null_token semicolon_token;
 Rules for null_statement. :
 (.
    ${null_statement.ast} :=
-      +Self.Fabric.Null_Statement
+      +Self.Factory.Null_Statement
          (-${null_token.ast}, -${semicolon_token.ast});
 .)
 
@@ -2875,7 +2875,7 @@ number_declaration ::=
 Rules for number_declaration. :
 (.
    ${number_declaration.ast} :=
-      +Self.Fabric.Number_Declaration
+      +Self.Factory.Number_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${constant_token.ast},
@@ -2899,7 +2899,7 @@ object_declaration ::=
 Rules for object_declaration.object_definition :
 (.
    ${object_declaration.ast} :=
-      +Self.Fabric.Object_Declaration
+      +Self.Factory.Object_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${aliased_token.ast:No_Token},
@@ -2934,7 +2934,7 @@ object_renaming_declaration ::=
 Rules for object_renaming_declaration.subtype_mark :
 (.
    ${object_renaming_declaration.ast} :=
-      +Self.Fabric.Object_Renaming_Declaration
+      +Self.Factory.Object_Renaming_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${not_token.ast:No_Token},
@@ -2949,7 +2949,7 @@ Rules for object_renaming_declaration.subtype_mark :
 Rules for object_renaming_declaration.access_definition :
 (.
    ${object_renaming_declaration.ast} :=
-      +Self.Fabric.Object_Renaming_Declaration
+      +Self.Factory.Object_Renaming_Declaration
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           No_Token_Index,
@@ -2964,7 +2964,7 @@ Rules for object_renaming_declaration.access_definition :
 operator_symbol ::= string_literal_token;
 
 Rules for operator_symbol.string_literal_token :
-(.  ${operator_symbol.ast} := +Self.Fabric.Operator_Symbol
+(.  ${operator_symbol.ast} := +Self.Factory.Operator_Symbol
      (-${string_literal_token.ast});
 .)
 
@@ -2972,7 +2972,7 @@ ordinary_fixed_point_definition ::=
    delta_token simple_expression real_range_specification;
 
 Rules for ordinary_fixed_point_definition. :
-(.  ${ordinary_fixed_point_definition.ast} := +Self.Fabric.Ordinary_Fixed_Point_Definition
+(.  ${ordinary_fixed_point_definition.ast} := +Self.Factory.Ordinary_Fixed_Point_Definition
      (-${delta_token.ast},
       -${simple_expression.ast},
       -${real_range_specification.ast:None});
@@ -2981,7 +2981,7 @@ Rules for ordinary_fixed_point_definition. :
 others_choice ::= others_token;
 
 Rules for others_choice.others_token :
-(. ${others_choice.ast} := +Self.Fabric.Others_Choice
+(. ${others_choice.ast} := +Self.Factory.Others_Choice
      (-${others_token.ast});
 .)
 
@@ -2998,7 +2998,7 @@ package_body ::=
 Rules for package_body. :
 (.
    ${package_body.ast} :=
-      +Self.Fabric.Package_Body
+      +Self.Factory.Package_Body
          (-${package_token.ast},
           -${body_token.ast},
           -${defining_program_unit_name.ast},
@@ -3023,7 +3023,7 @@ package_body_stub ::=
 Rules for package_body_stub. :
 (.
    ${package_body_stub.ast} :=
-      +Self.Fabric.Package_Body_Stub
+      +Self.Factory.Package_Body_Stub
          (-${package_token.ast},
           -${body_token.ast},
           -${defining_program_unit_name.ast},
@@ -3045,7 +3045,7 @@ package_declaration ::=
 Rules for package_declaration. :
 (.
    ${package_declaration.ast} :=
-      +Self.Fabric.Package_Declaration
+      +Self.Factory.Package_Declaration
          (-${package_token.ast},
           -${defining_program_unit_name.ast},
           -${aspect_specification.ast:None},
@@ -3068,7 +3068,7 @@ package_renaming_declaration ::=
 Rules for package_renaming_declaration. :
 (.
    ${package_renaming_declaration.ast} :=
-      +Self.Fabric.Package_Renaming_Declaration
+      +Self.Factory.Package_Renaming_Declaration
          (-${package_token.ast},
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
@@ -3090,7 +3090,7 @@ parameter_specification ::=
 
 Rules for parameter_specification.subtype :
 (.
-   ${parameter_specification.ast} := +Self.Fabric.Parameter_Specification
+   ${parameter_specification.ast} := +Self.Factory.Parameter_Specification
        (-${defining_identifier_list.ast},
         -${colon_token.ast},
         -${aliased_token.ast:No_Token},
@@ -3105,7 +3105,7 @@ Rules for parameter_specification.subtype :
 
 Rules for parameter_specification.access :
 (.
-   ${parameter_specification.ast} := +Self.Fabric.Parameter_Specification
+   ${parameter_specification.ast} := +Self.Factory.Parameter_Specification
        (-${defining_identifier_list.ast},
         -${colon_token.ast},
         No_Token_Index,
@@ -3128,7 +3128,7 @@ pragma ::=
 
 Rules for pragma. :
 (.
-   ${pragma.ast} := +Self.Fabric.Pragma_Node
+   ${pragma.ast} := +Self.Factory.Pragma_Node
      (-${pragma_token.ast},
       -${identifier.ast},
       No_Token_Index,
@@ -3141,12 +3141,12 @@ Rules for pragma. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${pragma_argument_list.ast:+Self.
-        Fabric.Pragma_Argument_Association_Sequence};
+        Factory.Pragma_Argument_Association_Sequence};
       List : constant Gela.Elements.Pragma_Argument_Associations.
         Pragma_Argument_Association_Sequence_Access := -Conv;
    begin
       List.Prepend (-${pragma_argument_association.ast});
-      ${pragma.ast} := +Self.Fabric.Pragma_Node
+      ${pragma.ast} := +Self.Factory.Pragma_Node
         (-${pragma_token.ast},
          -${identifier.ast},
          -${left_parenthesis_token.ast},
@@ -3160,7 +3160,7 @@ pragma_argument_association ::= [identifier arrow_token] expression;
 
 Rules for pragma_argument_association. :
 (.
-   ${pragma_argument_association.ast} := +Self.Fabric.
+   ${pragma_argument_association.ast} := +Self.Factory.
      Pragma_Argument_Association
        (-${identifier.ast:None},
         -${arrow_token.ast:No_Token},
@@ -3183,7 +3183,7 @@ Rules for private_extension_declaration. :
 (.
    declare
       Def : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Private_Extension_Definition
+        +Self.Factory.Private_Extension_Definition
           (-${abstract_token.ast:No_Token},
            -${limited_token.ast:No_Token},
            -${synchronized_token.ast:No_Token},
@@ -3194,7 +3194,7 @@ Rules for private_extension_declaration. :
            -${private_token.ast});
    begin
       ${private_extension_declaration.ast} :=
-         +Self.Fabric.Private_Extension_Declaration
+         +Self.Factory.Private_Extension_Declaration
            (-${type_token.ast},
             -${defining_identifier.ast},
             -${discriminant_part.ast:None},
@@ -3217,14 +3217,14 @@ Rules for private_type_declaration. :
 (.
    declare
       Def : constant Gela.LARL_Parsers_Nodes.Node:=
-        +Self.Fabric.Private_Type_Definition
+        +Self.Factory.Private_Type_Definition
           (-${abstract_token.ast:No_Token},
            -${tagged_token.ast:No_Token},
            -${limited_token.ast:No_Token},
            -${private_token.ast});
    begin
       ${private_type_declaration.ast} :=
-         +Self.Fabric.Private_Type_Declaration
+         +Self.Factory.Private_Type_Declaration
            (-${type_token.ast},
             -${defining_identifier.ast},
             -${discriminant_part.ast:None},
@@ -3249,7 +3249,7 @@ procedure_body ::=
 Rules for procedure_body. :
 (.
    ${procedure_body.ast} :=
-      +Self.Fabric.Procedure_Body
+      +Self.Factory.Procedure_Body
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${procedure_token.ast},
@@ -3281,7 +3281,7 @@ procedure_declaration ::=
 Rules for procedure_declaration. :
 (.
    ${procedure_declaration.ast} :=
-      +Self.Fabric.Procedure_Declaration
+      +Self.Factory.Procedure_Declaration
          (-${not_token.ast:No_Token},
           -${overriding_token.ast:No_Token},
           -${procedure_token.ast},
@@ -3317,7 +3317,7 @@ protected_body ::=
 Rules for protected_body. :
 (.
    ${protected_body.ast} :=
-      +Self.Fabric.Protected_Body
+      +Self.Factory.Protected_Body
          (-${protected_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
@@ -3338,7 +3338,7 @@ protected_body_stub ::=
 Rules for protected_body_stub. :
 (.
    ${protected_body_stub.ast} :=
-      +Self.Fabric.Protected_Body_Stub
+      +Self.Factory.Protected_Body_Stub
          (-${protected_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
@@ -3357,7 +3357,7 @@ protected_definition ::=
 Rules for protected_definition. :
 (.
    ${protected_definition.ast} :=
-      +Self.Fabric.Protected_Definition
+      +Self.Factory.Protected_Definition
          (-${protected_operation_declaration_list.ast:None},
           -${private_token.ast:No_Token},
           -${protected_element_declaration_list.ast:None},
@@ -3395,7 +3395,7 @@ protected_type_declaration ::=
 Rules for protected_type_declaration. :
 (.
    ${protected_type_declaration.ast} :=
-      +Self.Fabric.Protected_Type_Declaration
+      +Self.Factory.Protected_Type_Declaration
          (-${protected_token.ast},
           -${type_token.ast},
           -${defining_identifier.ast},
@@ -3412,7 +3412,7 @@ Rules for protected_type_declaration. :
 qualified_expression ::= prefix apostrophe_token aggregate;
 
 Rules for qualified_expression. :
-(.  ${qualified_expression.ast} := +Self.Fabric.Qualified_Expression
+(.  ${qualified_expression.ast} := +Self.Factory.Qualified_Expression
      (-${prefix.ast}, -${apostrophe_token.ast}, -${aggregate.ast});
 .)
 
@@ -3424,7 +3424,7 @@ quantified_expression ::=
 
 Rules for quantified_expression.loop :
 (.
-   ${quantified_expression.ast} := +Self.Fabric.Quantified_Expression
+   ${quantified_expression.ast} := +Self.Factory.Quantified_Expression
        (-${for_token.ast},
         -${quantifier.ast},
         -${loop_parameter_specification.ast},
@@ -3434,7 +3434,7 @@ Rules for quantified_expression.loop :
 
 Rules for quantified_expression.iterator :
 (.
-   ${quantified_expression.ast} := +Self.Fabric.Quantified_Expression
+   ${quantified_expression.ast} := +Self.Factory.Quantified_Expression
        (-${for_token.ast},
         -${quantifier.ast},
         -${iterator_specification.ast},
@@ -3450,7 +3450,7 @@ raise_statement ::=
 Rules for raise_statement. :
 (.
    ${raise_statement.ast} :=
-      +Self.Fabric.Raise_Statement
+      +Self.Factory.Raise_Statement
          (-${raise_token.ast},
           -${name.ast:None},
           -${with_token.ast:No_Token},
@@ -3464,12 +3464,12 @@ range ::=
 ;
 
 Rules for range.range :
-(.  ${range.ast} := +Self.Fabric.Simple_Expression_Range
+(.  ${range.ast} := +Self.Factory.Simple_Expression_Range
      (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
 .)
 
 Rules for range.range_attribute_reference :
-(.  ${range.ast} := +Self.Fabric.Range_Attribute_Reference
+(.  ${range.ast} := +Self.Factory.Range_Attribute_Reference
      (-${range_attribute_reference.ast});
 .)
 
@@ -3478,7 +3478,7 @@ range_attribute_reference ::=
   [(exp) left_parenthesis_token expression right_parenthesis_token];
 
 Rules for range_attribute_reference. :
-(.  ${range_attribute_reference.ast} := +Self.Fabric.Attribute_Reference
+(.  ${range_attribute_reference.ast} := +Self.Factory.Attribute_Reference
      (-${prefix.ast},
       -${apostrophe_token.ast},
       null,
@@ -3497,7 +3497,7 @@ real_range_specification ::=
   simple_expression <left> double_dot_token simple_expression <right>;
 
 Rules for real_range_specification. :
-(. ${real_range_specification.ast} := +Self.Fabric.Simple_Expression_Range
+(. ${real_range_specification.ast} := +Self.Factory.Simple_Expression_Range
      (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
 .)
 
@@ -3509,7 +3509,7 @@ record_aggregate ::=
 Rules for record_aggregate. :
 (.
    ${record_aggregate.ast} :=
-     +Self.Fabric.Record_Aggregate
+     +Self.Factory.Record_Aggregate
        (-${left_parenthesis_token.ast},
         -${record_component_association_list.ast},
         -${right_parenthesis_token.ast});
@@ -3528,18 +3528,18 @@ Rules for record_component_association.discrete_range :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Discrete_Choice_Sequence;
+        +Self.Factory.Discrete_Choice_Sequence;
       List : constant Gela.Elements.Discrete_Choices.
         Discrete_Choice_Sequence_Access := -Conv;
    begin
       List.Prepend (-${discrete_range.ast});
-      ${record_component_association.ast} := +Self.Fabric.Association
+      ${record_component_association.ast} := +Self.Factory.Association
         (List, No_Token_Index, null);
    end;
 .)
 
 Rules for record_component_association.expression :
-(.   ${record_component_association.ast} := +Self.Fabric.Association
+(.   ${record_component_association.ast} := +Self.Factory.Association
      (-${discrete_choice_list.ast:None},
       -${arrow_token.ast:No_Token},
       -${expression.ast});
@@ -3549,9 +3549,9 @@ Rules for record_component_association.box :
 (.
    declare
       Box : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Box (-${box_token.ast});
+        +Self.Factory.Box (-${box_token.ast});
    begin
-     ${record_component_association.ast} := +Self.Fabric.Association
+     ${record_component_association.ast} := +Self.Factory.Association
        (-${discrete_choice_list.ast}, -${arrow_token.ast}, -Box);
    end;
 .)
@@ -3568,7 +3568,7 @@ Rules for record_component_association_list.association :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-          ${component_association_list.ast:+Self.Fabric.Association_Sequence};
+          ${component_association_list.ast:+Self.Factory.Association_Sequence};
       List : constant Gela.Elements.Associations.
         Association_Sequence_Access := -Conv;
    begin
@@ -3582,7 +3582,7 @@ Rules for record_component_association_list.null :
 (.
    declare
       List : constant Gela.Elements.Associations.
-        Association_Sequence_Access := Self.Fabric.Association_Sequence;
+        Association_Sequence_Access := Self.Factory.Association_Sequence;
    begin
       ${record_component_association_list.ast} := +List;
    end;
@@ -3599,7 +3599,7 @@ record_definition ::=
 
 Rules for record_definition.null :
 (.
-   ${record_definition.ast} := +Self.Fabric.
+   ${record_definition.ast} := +Self.Factory.
      Null_Record_Definition
        (-${null_token.ast},
         -${record_token.ast});
@@ -3607,7 +3607,7 @@ Rules for record_definition.null :
 
 Rules for record_definition.record :
 (.
-   ${record_definition.ast} := +Self.Fabric.
+   ${record_definition.ast} := +Self.Factory.
      Record_Definition
        (-${record_token.ast},
         -${component_list.ast},
@@ -3623,7 +3623,7 @@ record_representation_clause ::=
 
 Rules for record_representation_clause. :
 (.
-   ${record_representation_clause.ast} := +Self.Fabric.
+   ${record_representation_clause.ast} := +Self.Factory.
      Record_Representation_Clause
        (-${for_token.ast},
         -${subtype_mark.ast},
@@ -3645,7 +3645,7 @@ record_type_definition ::=
 Rules for record_type_definition. :
 (.
    ${record_type_definition.ast} :=
-     +Self.Fabric.Record_Type_Definition
+     +Self.Factory.Record_Type_Definition
       (-${abstract_token.ast:No_Token},
        -${tagged_token.ast:No_Token},
        -${limited_token.ast:No_Token},
@@ -3664,7 +3664,7 @@ Rules for relation.relation :
 .)
 
 Rules for relation.membership :
-(.  ${relation.ast} := +Self.Fabric.Membership_Test
+(.  ${relation.ast} := +Self.Factory.Membership_Test
      (-${simple_expression.ast},
       -${not_token.ast:No_Token},
       -${in_token.ast},
@@ -3685,7 +3685,7 @@ requeue_statement ::=
 Rules for requeue_statement. :
 (.
    ${requeue_statement.ast} :=
-      +Self.Fabric.Requeue_Statement
+      +Self.Factory.Requeue_Statement
          (-${requeue_token.ast},
           -${name.ast},
           -${with_token.ast:No_Token},
@@ -3704,7 +3704,7 @@ select_alternative ::=
 selected_component ::= prefix dot_token selector_name;
 
 Rules for selected_component. :
-(.  ${selected_component.ast} := +Self.Fabric.Selected_Component
+(.  ${selected_component.ast} := +Self.Factory.Selected_Component
      (-${prefix.ast}, -${dot_token.ast}, -${selector_name.ast});
 .)
 
@@ -3714,7 +3714,7 @@ selected_identifier ::=
 Rules for selected_identifier. :
 (.
    ${selected_identifier.ast} :=
-      +Self.Fabric.Selected_Identifier
+      +Self.Factory.Selected_Identifier
          (-${program_unit_name.ast},
           -${dot_token.ast},
           -${selector_name.ast});
@@ -3733,19 +3733,19 @@ Rules for selective_accept. :
 (.
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Select_Or_Path
+        +Self.Factory.Select_Or_Path
           (No_Token_Index,  --  Or_Token
            -${when_token.ast:No_Token},
            -${expression.ast:None},
            -${arrow_token.ast:No_Token},
            -${select_alternative.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${select_alternative_list.ast:+Self.Fabric.Select_Or_Else_Path_Sequence};
+        ${select_alternative_list.ast:+Self.Factory.Select_Or_Else_Path_Sequence};
       List : constant Gela.Elements.Select_Or_Else_Paths.
         Select_Or_Else_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-Item);
-      ${selective_accept.ast} := +Self.Fabric.Selective_Accept
+      ${selective_accept.ast} := +Self.Factory.Selective_Accept
         (-${select_token.ast},
          List,
          -${end_token.ast},
@@ -3758,23 +3758,23 @@ Rules for selective_accept. :
 (.
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Select_Or_Path
+        +Self.Factory.Select_Or_Path
           (No_Token_Index,  --  Or_Token
            -${when_token.ast:No_Token},
            -${expression.ast:None},
            -${arrow_token.ast:No_Token},
            -${select_alternative.ast});
       Else_Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Else_Path
+        +Self.Factory.Else_Path
           (-${else_token.ast}, -${sequence_of_statements.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${select_alternative_list.ast:+Self.Fabric.Select_Or_Else_Path_Sequence};
+        ${select_alternative_list.ast:+Self.Factory.Select_Or_Else_Path_Sequence};
       List : constant Gela.Elements.Select_Or_Else_Paths.
         Select_Or_Else_Path_Sequence_Access := -Conv;
    begin
       List.Prepend (-Item);
       List.Append (-Else_Item);
-      ${selective_accept.ast} := +Self.Fabric.Selective_Accept
+      ${selective_accept.ast} := +Self.Factory.Selective_Accept
         (-${select_token.ast},
          List,
          -${end_token.ast},
@@ -3789,7 +3789,7 @@ selector_name ::=
   operator_symbol;
 
 Rules for selector_name.character_literal_token :
-(.  ${selector_name.ast} := +Self.Fabric.Character_Literal
+(.  ${selector_name.ast} := +Self.Factory.Character_Literal
      (-${character_literal_token.ast});
 .)
 
@@ -3800,7 +3800,7 @@ Rules for sequence_of_exception_handlers. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${exception_handler_list.ast:+Self.Fabric.
+        ${exception_handler_list.ast:+Self.Factory.
         Exception_Handler_Sequence};
       List : constant Gela.Elements.Exception_Handlers.
         Exception_Handler_Sequence_Access := -Conv;
@@ -3819,7 +3819,7 @@ Rules for sequence_of_statements. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${statement_list.ast:+Self.Fabric.
+        ${statement_list.ast:+Self.Factory.
         Statement_Sequence};
       List : constant Gela.Elements.Statements.
         Statement_Sequence_Access := -Conv;
@@ -3833,12 +3833,12 @@ Rules for sequence_of_statements. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${statement_list.ast:+Self.Fabric.
+        ${statement_list.ast:+Self.Factory.
         Statement_Sequence};
       List : constant Gela.Elements.Statements.
         Statement_Sequence_Access := -Conv;
       Dummy : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Label_Decorator
+        +Self.Factory.Label_Decorator
           (-${label_list.ast}, null);
    begin
       List.Prepend (-${statement.ast});
@@ -3853,9 +3853,9 @@ signed_integer_type_definition ::=
 
 Rules for signed_integer_type_definition. :
 (.  ${signed_integer_type_definition.ast} :=
-     +Self.Fabric.Signed_Integer_Type_Definition
+     +Self.Factory.Signed_Integer_Type_Definition
       (-${range_token.ast},
-       Self.Fabric.Simple_Expression_Range
+       Self.Factory.Simple_Expression_Range
          (-${left.ast}, -${double_dot_token.ast}, -${right.ast}));
 .)
 
@@ -3957,12 +3957,12 @@ Rules for simple_expression.not :
 .)
 
 Rules for simple_expression.numeric_literal_token :
-(.  ${simple_expression.ast} := +Self.Fabric.Numeric_Literal
+(.  ${simple_expression.ast} := +Self.Factory.Numeric_Literal
      (-${numeric_literal_token.ast});
 .)
 
 Rules for simple_expression.null_token :
-(.  ${simple_expression.ast} := +Self.Fabric.Null_Literal
+(.  ${simple_expression.ast} := +Self.Factory.Null_Literal
      (-${null_token.ast});
 .)
 
@@ -3979,7 +3979,7 @@ simple_return_statement ::= return_token [expression] semicolon_token;
 Rules for simple_return_statement. :
 (.
    ${simple_return_statement.ast} :=
-      +Self.Fabric.Simple_Return_Statement
+      +Self.Factory.Simple_Return_Statement
          (-${return_token.ast},
           -${expression.ast:None},
           -${semicolon_token.ast});
@@ -3997,7 +3997,7 @@ single_protected_declaration ::=
 Rules for single_protected_declaration. :
 (.
    ${single_protected_declaration.ast} :=
-      +Self.Fabric.Single_Protected_Declaration
+      +Self.Factory.Single_Protected_Declaration
          (-${protected_token.ast},
           -${defining_identifier.ast},
           -${aspect_specification.ast:None},
@@ -4019,7 +4019,7 @@ single_task_declaration ::=
 Rules for single_task_declaration. :
 (.
    ${single_task_declaration.ast} :=
-      +Self.Fabric.Single_Task_Declaration
+      +Self.Factory.Single_Task_Declaration
          (-${task_token.ast},
           -${defining_identifier.ast},
           -${aspect_specification.ast:None},
@@ -4035,7 +4035,7 @@ statement ::= {label} <label_list> unlabeled_statement;
 
 Rules for statement. :
 (.
-   ${statement.ast} := +Self.Fabric.Label_Decorator
+   ${statement.ast} := +Self.Factory.Label_Decorator
           (-${label_list.ast}, -${unlabeled_statement.ast});
 .)
 
@@ -4047,7 +4047,7 @@ subtype_declaration ::=
 Rules for subtype_declaration. :
 (.
    ${subtype_declaration.ast} :=
-      +Self.Fabric.Subtype_Declaration
+      +Self.Factory.Subtype_Declaration
          (-${subtype_token.ast},
           -${defining_identifier.ast},
           -${is_token.ast},
@@ -4078,7 +4078,7 @@ subunit ::=
 Rules for subunit. :
 (.
    ${subunit.ast} :=
-      +Self.Fabric.Subunit
+      +Self.Factory.Subunit
          (-${context_item_list.ast:None},
           -${separate_token.ast},
           -${left_parenthesis_token.ast},
@@ -4100,7 +4100,7 @@ task_body ::=
 Rules for task_body. :
 (.
    ${task_body.ast} :=
-      +Self.Fabric.Task_Body
+      +Self.Factory.Task_Body
          (-${task_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
@@ -4125,7 +4125,7 @@ task_body_stub ::=
 Rules for task_body_stub. :
 (.
    ${task_body_stub.ast} :=
-      +Self.Fabric.Task_Body_Stub
+      +Self.Factory.Task_Body_Stub
          (-${task_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
@@ -4144,7 +4144,7 @@ task_definition ::=
 Rules for task_definition. :
 (.
    ${task_definition.ast} :=
-      +Self.Fabric.Task_Definition
+      +Self.Factory.Task_Definition
          (-${task_item_list.ast:None},
           -${private_token.ast:No_Token},
           -${private_items.ast:None},
@@ -4160,7 +4160,7 @@ Rules for task_item_list. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Task_Item_Sequence};
+        Factory.Task_Item_Sequence};
       List : constant Gela.Elements.Task_Items.
         Task_Item_Sequence_Access := -Conv;
    begin
@@ -4182,7 +4182,7 @@ task_type_declaration ::=
 Rules for task_type_declaration. :
 (.
    ${task_type_declaration.ast} :=
-      +Self.Fabric.Task_Type_Declaration
+      +Self.Factory.Task_Type_Declaration
          (-${task_token.ast},
           -${type_token.ast},
           -${defining_identifier.ast},
@@ -4202,10 +4202,10 @@ Rules for terminate_alternative. :
 (.
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Terminate_Alternative_Statement
+        +Self.Factory.Terminate_Alternative_Statement
           (-${terminate_token.ast}, -${semicolon_token.ast});
       List : constant Gela.Elements.Statements.
-        Statement_Sequence_Access := Self.Fabric.Statement_Sequence;
+        Statement_Sequence_Access := Self.Factory.Statement_Sequence;
    begin
       List.Append (-Item);
       ${terminate_alternative.ast} := +List;
@@ -4235,13 +4235,13 @@ Rules for unconstrained_array_definition. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${index_subtype_definition_list.ast:+Self.Fabric.
+        ${index_subtype_definition_list.ast:+Self.Factory.
         Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
       List.Prepend (-${index_subtype_definition.ast});
-      ${unconstrained_array_definition.ast} := +Self.Fabric.
+      ${unconstrained_array_definition.ast} := +Self.Factory.
         Unconstrained_Array_Definition
           (-${array_token.ast},
            -${left_parenthesis_token.ast},
@@ -4256,7 +4256,7 @@ unknown_discriminant_part ::=
  left_parenthesis_token box_token right_parenthesis_token;
 
 Rules for unknown_discriminant_part. :
-(.  ${unknown_discriminant_part.ast} := +Self.Fabric.Unknown_Discriminant_Part
+(.  ${unknown_discriminant_part.ast} := +Self.Factory.Unknown_Discriminant_Part
      (-${left_parenthesis_token.ast}, -${box_token.ast}, -${right_parenthesis_token.ast});
 .)
 
@@ -4293,13 +4293,13 @@ Rules for use_package_clause. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${program_unit_name_list.ast:+Self.
-        Fabric.Program_Unit_Name_Sequence};
+        Factory.Program_Unit_Name_Sequence};
       List : constant Gela.Elements.Program_Unit_Names.
         Program_Unit_Name_Sequence_Access := -Conv;
    begin
       List.Prepend (-${program_unit_name.ast});
       ${use_package_clause.ast} :=
-        +Self.Fabric.Use_Package_Clause
+        +Self.Factory.Use_Package_Clause
           (-${use_token.ast},
            List,
            -${semicolon_token.ast});
@@ -4315,13 +4315,13 @@ Rules for use_type_clause. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${subtype_mark_list.ast:+Self.
-        Fabric.Subtype_Mark_Sequence};
+        Factory.Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
       List.Prepend (-${subtype_mark.ast});
       ${use_type_clause.ast} :=
-        +Self.Fabric.Use_Type_Clause
+        +Self.Factory.Use_Type_Clause
           (-${use_token.ast},
            -${all_token.ast:No_Token},
            -${type_token.ast},
@@ -4335,7 +4335,7 @@ variant ::=
 
 Rules for variant. :
 (.
-   ${variant.ast} := +Self.Fabric.Variant
+   ${variant.ast} := +Self.Factory.Variant
      (-${when_token.ast},
       -${discrete_choice_list.ast},
       -${arrow_token.ast},
@@ -4353,12 +4353,12 @@ Rules for variant_part. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${variant_list.ast:+Self.Fabric.Variant_Sequence};
+        ${variant_list.ast:+Self.Factory.Variant_Sequence};
       List : constant Gela.Elements.Variants.
         Variant_Sequence_Access := -Conv;
    begin
       List.Prepend (-${variant.ast});
-      ${variant_part.ast} := +Self.Fabric.Variant_Part
+      ${variant_part.ast} := +Self.Factory.Variant_Part
         (-${case_token.ast},
          -${direct_name.ast},
          -${is_token.ast},
@@ -4379,13 +4379,13 @@ Rules for with_clause. :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${program_unit_name_list.ast:+Self.
-        Fabric.Program_Unit_Name_Sequence};
+        Factory.Program_Unit_Name_Sequence};
       List : constant Gela.Elements.Program_Unit_Names.
         Program_Unit_Name_Sequence_Access := -Conv;
    begin
       List.Prepend (-${program_unit_name.ast});
       ${with_clause.ast} :=
-        +Self.Fabric.With_Clause
+        +Self.Factory.With_Clause
           (-${limited_token.ast:No_Token},
            -${private_token.ast:No_Token},
            -${with_token.ast},
@@ -4402,7 +4402,7 @@ Rules for variant_list.variant :
 (.
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Variant_Sequence};
+        Factory.Variant_Sequence};
       List : constant Gela.Elements.Variants.Variant_Sequence_Access := -Conv;
    begin
       List.Append (-${variant.ast});
@@ -4414,7 +4414,7 @@ Rules for compilation_unit_list.compilation_unit :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Compilation_Unit_Sequence};
+        Factory.Compilation_Unit_Sequence};
       List : constant Gela.Elements.Compilation_Units.
         Compilation_Unit_Sequence_Access := -Conv;
    begin
@@ -4427,7 +4427,7 @@ Rules for context_item_list.context_item :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Context_Item_Sequence};
+        Factory.Context_Item_Sequence};
       List : constant Gela.Elements.Context_Items.
         Context_Item_Sequence_Access := -Conv;
    begin
@@ -4440,7 +4440,7 @@ Rules for program_unit_name_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Program_Unit_Name_Sequence};
+        Factory.Program_Unit_Name_Sequence};
       List : constant Gela.Elements.Program_Unit_Names.
         Program_Unit_Name_Sequence_Access := -Conv;
    begin
@@ -4454,7 +4454,7 @@ Rules for subtype_mark_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Subtype_Mark_Sequence};
+        Factory.Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
@@ -4467,7 +4467,7 @@ Rules for exception_choice_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Exception_Choice_Sequence};
+        Factory.Exception_Choice_Sequence};
       List : constant Gela.Elements.Exception_Choices.
         Exception_Choice_Sequence_Access := -Conv;
    begin
@@ -4480,7 +4480,7 @@ Rules for exception_handler_list.exception_handler :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Exception_Handler_Sequence};
+        Factory.Exception_Handler_Sequence};
       List : constant Gela.Elements.Exception_Handlers.
         Exception_Handler_Sequence_Access := -Conv;
    begin
@@ -4493,7 +4493,7 @@ Rules for statement_list.statement :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Statement_Sequence};
+        Factory.Statement_Sequence};
       List : constant Gela.Elements.Statements.
         Statement_Sequence_Access := -Conv;
    begin
@@ -4506,14 +4506,14 @@ Rules for select_alternative_list. :
 (. 
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Select_Or_Path
+        +Self.Factory.Select_Or_Path
           (-${or_token.ast},
            -${when_token.ast:No_Token},
            -${expression.ast:None},
            -${arrow_token.ast:No_Token},
            -${select_alternative.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Select_Or_Else_Path_Sequence};
+        ${head.ast:+Self.Factory.Select_Or_Else_Path_Sequence};
       List : constant Gela.Elements.Select_Or_Else_Paths.
         Select_Or_Else_Path_Sequence_Access := -Conv;
    begin
@@ -4526,7 +4526,7 @@ Rules for case_statement_alternative_list.case_statement_alternative :
 (. 
   declare
      Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-       ${head.ast:+Self.Fabric.Case_Path_Sequence};
+       ${head.ast:+Self.Factory.Case_Path_Sequence};
      List : constant Gela.Elements.Case_Paths.
        Case_Path_Sequence_Access := -Conv;
   begin
@@ -4539,13 +4539,13 @@ Rules for elsif_list. :
 (. 
    declare
       Item : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Elsif_Path
+        +Self.Factory.Elsif_Path
           (-${elsif_token.ast},
            -${expression.ast},
            -${then_token.ast},
            -${sequence_of_statements.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.If_Elsif_Else_Path_Sequence};
+        ${head.ast:+Self.Factory.If_Elsif_Else_Path_Sequence};
       List : constant Gela.Elements.If_Elsif_Else_Paths.
         If_Elsif_Else_Path_Sequence_Access := -Conv;
    begin
@@ -4558,7 +4558,7 @@ Rules for name_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Name_Sequence};
+        ${head.ast:+Self.Factory.Name_Sequence};
       List : constant Gela.Elements.Names.
         Name_Sequence_Access := -Conv;
    begin
@@ -4571,7 +4571,7 @@ Rules for label_list.label :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Defining_Identifier_Sequence};
+        Factory.Defining_Identifier_Sequence};
       List : constant Gela.Elements.Defining_Identifiers.
         Defining_Identifier_Sequence_Access := -Conv;
    begin
@@ -4584,7 +4584,7 @@ Rules for discriminant_spec_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Discriminant_Specification_Sequence};
+        Factory.Discriminant_Specification_Sequence};
       List : constant Gela.Elements.Discriminant_Specifications.
         Discriminant_Specification_Sequence_Access := -Conv;
    begin
@@ -4597,12 +4597,12 @@ Rules for aspect_list. :
 (. 
    declare
       Comp : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Aspect_Specification
+        +Self.Factory.Aspect_Specification
           (-${subtype_mark.ast},
            -${arrow_token.ast:No_Token},
            -${expression.ast:None});
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Aspect_Specification_Sequence};
+        Factory.Aspect_Specification_Sequence};
       List : constant Gela.Elements.Aspect_Specifications.
         Aspect_Specification_Sequence_Access := -Conv;
    begin
@@ -4615,7 +4615,7 @@ Rules for and_subtype_mark_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Subtype_Mark_Sequence};
+        Factory.Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
@@ -4628,7 +4628,7 @@ Rules for pragma_argument_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Pragma_Argument_Association_Sequence};
+        Factory.Pragma_Argument_Association_Sequence};
       List : constant Gela.Elements.Pragma_Argument_Associations.
         Pragma_Argument_Association_Sequence_Access := -Conv;
    begin
@@ -4641,7 +4641,7 @@ Rules for component_clause_list.component_clause :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Clause_Or_Pragma_Sequence};
+        ${head.ast:+Self.Factory.Clause_Or_Pragma_Sequence};
       List : constant Gela.Elements.Clause_Or_Pragmas.
         Clause_Or_Pragma_Sequence_Access := -Conv;
    begin
@@ -4654,7 +4654,7 @@ Rules for component_item_list.component_item :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Component_Item_Sequence};
+        ${head.ast:+Self.Factory.Component_Item_Sequence};
       List : constant Gela.Elements.Component_Items.
         Component_Item_Sequence_Access := -Conv;
    begin
@@ -4667,7 +4667,7 @@ Rules for index_subtype_definition_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Subtype_Mark_Sequence};
+        Factory.Subtype_Mark_Sequence};
       List : constant Gela.Elements.Subtype_Marks.
         Subtype_Mark_Sequence_Access := -Conv;
    begin
@@ -4680,7 +4680,7 @@ Rules for discrete_subtype_definition_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Discrete_Subtype_Definition_Sequence};
+        Factory.Discrete_Subtype_Definition_Sequence};
       List : constant Gela.Elements.Discrete_Subtype_Definitions.
         Discrete_Subtype_Definition_Sequence_Access := -Conv;
    begin
@@ -4693,7 +4693,7 @@ Rules for parameter_specification_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Parameter_Specification_Sequence};
+        ${head.ast:+Self.Factory.Parameter_Specification_Sequence};
       List : constant Gela.Elements.Parameter_Specifications.
         Parameter_Specification_Sequence_Access := -Conv;
    begin
@@ -4706,7 +4706,7 @@ Rules for defining_id_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Defining_Identifier_Sequence};
+        ${head.ast:+Self.Factory.Defining_Identifier_Sequence};
       List : constant Gela.Elements.Defining_Identifiers.
         Defining_Identifier_Sequence_Access := -Conv;
    begin
@@ -4719,7 +4719,7 @@ Rules for enumeration_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Enumeration_Literal_Specification_Sequence};
+        Factory.Enumeration_Literal_Specification_Sequence};
       List : constant Gela.Elements.Enumeration_Literal_Specifications.
         Enumeration_Literal_Specification_Sequence_Access := -Conv;
    begin
@@ -4732,7 +4732,7 @@ Rules for mchoice_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Membership_Choice_Sequence};
+        ${head.ast:+Self.Factory.Membership_Choice_Sequence};
       List : constant Gela.Elements.Membership_Choices.
         Membership_Choice_Sequence_Access := -Conv;
    begin
@@ -4745,7 +4745,7 @@ Rules for component_association_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-          ${head.ast:+Self.Fabric.Association_Sequence};
+          ${head.ast:+Self.Factory.Association_Sequence};
       List : constant Gela.Elements.Associations.
         Association_Sequence_Access := -Conv;
    begin
@@ -4758,7 +4758,7 @@ Rules for choice_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Discrete_Choice_Sequence};
+        ${head.ast:+Self.Factory.Discrete_Choice_Sequence};
       List : constant Gela.Elements.Discrete_Choices.
         Discrete_Choice_Sequence_Access := -Conv;
    begin
@@ -4771,13 +4771,13 @@ Rules for elsif_exp_list. :
 (. 
    declare
       Path : constant Gela.LARL_Parsers_Nodes.Node :=
-        +Self.Fabric.Elsif_Expression_Path
+        +Self.Factory.Elsif_Expression_Path
           (-${elsif_token.ast},
            -${condition.ast},
            -${then_token.ast},
            -${expression.ast});
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.If_Else_Expression_Path_Sequence};
+        ${head.ast:+Self.Factory.If_Else_Expression_Path_Sequence};
       List : constant Gela.Elements.If_Else_Expression_Paths.
         If_Else_Expression_Path_Sequence_Access := -Conv;
    begin
@@ -4790,7 +4790,7 @@ Rules for case_exp_alternative_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node :=
-        ${head.ast:+Self.Fabric.Case_Expression_Path_Sequence};
+        ${head.ast:+Self.Factory.Case_Expression_Path_Sequence};
       List : constant Gela.Elements.Case_Expression_Paths.
         Case_Expression_Path_Sequence_Access := -Conv;
    begin
@@ -4803,7 +4803,7 @@ Rules for declarative_item_list.declarative_item :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Declarative_Item_Sequence};
+        Factory.Declarative_Item_Sequence};
       List : constant Gela.Elements.Declarative_Items.
         Declarative_Item_Sequence_Access := -Conv;
    begin
@@ -4816,7 +4816,7 @@ Rules for protected_operation_item_list.protected_operation_item :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Protected_Operation_Item_Sequence};
+        Factory.Protected_Operation_Item_Sequence};
       List : constant Gela.Elements.Protected_Operation_Items.
         Protected_Operation_Item_Sequence_Access := -Conv;
    begin
@@ -4829,7 +4829,7 @@ Rules for formal_package_association_list. :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Generic_Association_Sequence};
+        Factory.Generic_Association_Sequence};
       List : constant Gela.Elements.Generic_Associations.
         Generic_Association_Sequence_Access := -Conv;
    begin
@@ -4842,7 +4842,7 @@ Rules for protected_operation_declaration_list.protected_operation_declaration :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Protected_Operation_Declaration_Sequence};
+        Factory.Protected_Operation_Declaration_Sequence};
       List : constant Gela.Elements.Protected_Operation_Declarations.
         Protected_Operation_Declaration_Sequence_Access := -Conv;
    begin
@@ -4855,7 +4855,7 @@ Rules for protected_element_declaration_list.protected_element_declaration :
 (. 
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
-        Fabric.Protected_Element_Declaration_Sequence};
+        Factory.Protected_Element_Declaration_Sequence};
       List : constant Gela.Elements.Protected_Element_Declarations.
         Protected_Element_Declaration_Sequence_Access := -Conv;
    begin

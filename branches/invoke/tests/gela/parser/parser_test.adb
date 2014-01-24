@@ -4,17 +4,17 @@ with League.Application;
 with League.Strings;
 
 with Gela.Contexts;
-with Gela.Context_Fabrics;
+with Gela.Context_Factories;
 with Gela.Compilations;
 with Gela.Lexers;
 with Gela.Lexical_Handler;
 with Gela.Plain_Compilations;
 with Gela.LARL_Parsers;
 with Gela.Lexical_Types;
-with Gela.Element_Fabrics;
+with Gela.Element_Factories;
 with Gela.Elements.Compilations;
 
-with Gela.Node_Fabrics;
+with Gela.Node_Factories;
 
 procedure Parser_Test is
 
@@ -26,15 +26,15 @@ procedure Parser_Test is
    File    : Ada.Wide_Wide_Text_IO.File_Type;
    Input   : League.Strings.Universal_String;
    Context : constant Gela.Contexts.Context_Access :=
-     Gela.Context_Fabrics.Create_Context (League.Application.Arguments);
+     Gela.Context_Factories.Create_Context (League.Application.Arguments);
    Lexer   : constant Gela.Lexers.Lexer_Access := Context.Lexer;
    Comp    : constant Gela.Plain_Compilations.Compilation_Access :=
      new Gela.Plain_Compilations.Compilation (Context);
    Parser  : Gela.LARL_Parsers.Parser (Context);
    Root    : Gela.Elements.Compilations.Compilation_Access;
    Last    : Gela.Lexical_Types.Token_Index;
-   Fabric  : constant Gela.Node_Fabrics.Element_Fabric_Access :=
-     new Gela.Node_Fabrics.Element_Fabric
+   Factory  : constant Gela.Node_Factories.Element_Factory_Access :=
+     new Gela.Node_Factories.Element_Factory
        (Gela.Compilations.Compilation_Access (Comp));
 begin
    --  Command line: "-IDIR" "FILE" "HASH"
@@ -62,7 +62,7 @@ begin
 
    Parser.Parse
      (Input      => Comp,
-      Fabric     => Gela.Element_Fabrics.Element_Fabric_Access (Fabric),
+      Factory     => Gela.Element_Factories.Element_Factory_Access (Factory),
       Root       => Root,
       Last_Token => Last);
 

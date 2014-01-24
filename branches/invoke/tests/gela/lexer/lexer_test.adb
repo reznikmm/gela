@@ -4,7 +4,7 @@ with League.Application;
 with League.Strings;
 
 with Gela.Contexts;
-with Gela.Context_Fabrics;
+with Gela.Context_Factories;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Lexical_Handler;
@@ -141,7 +141,7 @@ procedure Lexer_Test is
    File    : Ada.Wide_Wide_Text_IO.File_Type;
    Input   : League.Strings.Universal_String;
    Context : constant Gela.Contexts.Context_Access :=
-     Gela.Context_Fabrics.Create_Context (League.Application.Arguments);
+     Gela.Context_Factories.Create_Context (League.Application.Arguments);
    Lexer : constant Gela.Lexers.Lexer_Access := Context.Lexer;
    Dest : aliased Output.Lexer_Destination;
 begin

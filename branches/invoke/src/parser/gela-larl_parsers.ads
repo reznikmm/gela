@@ -1,5 +1,5 @@
 with Gela.Lexical_Types;
-with Gela.Element_Fabrics;
+with Gela.Element_Factories;
 with Gela.Elements.Compilations;
 with Gela.Parsers;
 with Gela.Contexts;
@@ -20,7 +20,7 @@ package Gela.LARL_Parsers is
    overriding procedure Parse
      (Self       : in out Parser;
       Input      : not null access Gela.Parsers.Parser_Input'Class;
-      Fabric     : not null Gela.Element_Fabrics.Element_Fabric_Access;
+      Factory     : not null Gela.Element_Factories.Element_Factory_Access;
       Root       : out Gela.Elements.Compilations.Compilation_Access;
       Last_Token : out Gela.Lexical_Types.Token_Index);
 
@@ -30,7 +30,7 @@ private
      limited new Gela.Parsers.Parser with null record;
 
    type Parser_Context is tagged record
-      Fabric : not null Gela.Element_Fabrics.Element_Fabric_Access;
+      Factory : not null Gela.Element_Factories.Element_Factory_Access;
    end record;
 
    function Infix_Call

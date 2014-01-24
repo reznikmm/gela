@@ -2,7 +2,7 @@ with League.Strings;
 
 with Gela.Plain_Contexts;
 
-package body Gela.Context_Fabrics is
+package body Gela.Context_Factories is
 
    type Context_Access is access all Gela.Plain_Contexts.Context;
 
@@ -34,4 +34,4 @@ package body Gela.Context_Fabrics is
       return Gela.Contexts.Context_Access (Result);
    end Create_Context;
 
-end Gela.Context_Fabrics;
+end Gela.Context_Factories;

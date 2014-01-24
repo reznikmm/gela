@@ -288,7 +288,7 @@ package body AG_Tools.NT_Generators is
       Impl.P (".List_Access");
       Impl.P ("          (Node.its);");
 
-      Self.Context.Fabric.Get (G.Part (Prod.Last)).
+      Self.Context.Factory.Get (G.Part (Prod.Last)).
          Make_Local_Variable (Prod.Last);
 
       Code.N ("      while ");
@@ -404,13 +404,13 @@ package body AG_Tools.NT_Generators is
                     G.Attribute (R.First_Argument .. R.Last_Argument);
                begin
                   for X of List loop
-                     Gen := Context.Fabric.Get (X, NT);
+                     Gen := Context.Factory.Get (X, NT);
                      Gen.Make_Get (X);
                   end loop;
 
                   Generate_Rule (R, NT, Context.Code);
 
-                  Gen := Context.Fabric.Get (Result, NT);
+                  Gen := Context.Factory.Get (Result, NT);
                   Gen.Make_Set (Result);
                end;
             when Gela.Grammars.Ordered.Descent =>
@@ -418,7 +418,7 @@ package body AG_Tools.NT_Generators is
                   Gen : AG_Tools.Visit_Generators.Part_Generator_Access;
                   P   : Part renames G.Part (Element (Each).Part);
                begin
-                  Gen := Context.Fabric.Get (P);
+                  Gen := Context.Factory.Get (P);
                   Gen.Make_Descent (P.Index, Key (Each).Pass);
                end;
          end case;

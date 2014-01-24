@@ -156,18 +156,18 @@ package body Gela.LARL_Parsers is
           Gela.Elements.Expression_Or_Boxes.Expression_Or_Box_Access (Right);
       P    : Gela.Elements.Prefixes.Prefix_Access;
       Arg  : Gela.Elements.Associations.Association_Access :=
-        Self.Fabric.Association
-          (Array_Component_Choices => Self.Fabric.Discrete_Choice_Sequence,
+        Self.Factory.Association
+          (Array_Component_Choices => Self.Factory.Discrete_Choice_Sequence,
            Arrow_Token             => 0,
            Component_Expression    => L);
       Args : constant Gela.Elements.Associations.Association_Sequence_Access :=
-        Self.Fabric.Association_Sequence;
+        Self.Factory.Association_Sequence;
    begin
       Args.Append (Arg);
 
       if Right /= null then
-         Arg := Self.Fabric.Association
-           (Array_Component_Choices => Self.Fabric.Discrete_Choice_Sequence,
+         Arg := Self.Factory.Association
+           (Array_Component_Choices => Self.Factory.Discrete_Choice_Sequence,
             Arrow_Token             => 0,
             Component_Expression    => R);
 
@@ -175,11 +175,11 @@ package body Gela.LARL_Parsers is
       end if;
 
       P := Gela.Elements.Prefixes.Prefix_Access
-        (Self.Fabric.Operator_Symbol (Prefix));
+        (Self.Factory.Operator_Symbol (Prefix));
 
-      return Self.Fabric.Function_Call
+      return Self.Factory.Function_Call
         (Prefix                   => P,
-         Function_Call_Parameters => Self.Fabric.Record_Aggregate
+         Function_Call_Parameters => Self.Factory.Record_Aggregate
            (Left_Token                    => 0,
             Record_Component_Associations => Args,
             Right_Token                   => 0));
@@ -212,7 +212,7 @@ package body Gela.LARL_Parsers is
    overriding procedure Parse
      (Self       : in out Parser;
       Input      : not null access Gela.Parsers.Parser_Input'Class;
-      Fabric     : not null Gela.Element_Fabrics.Element_Fabric_Access;
+      Factory     : not null Gela.Element_Factories.Element_Factory_Access;
       Root       : out Gela.Elements.Compilations.Compilation_Access;
       Last_Token : out Gela.Lexical_Types.Token_Index)
    is
@@ -232,7 +232,7 @@ package body Gela.LARL_Parsers is
       Result  : Gela.LARL_Parsers_Nodes.Node;
       Success : Boolean;
       Wrapper : aliased Input_Wrapper := (1, Input);
-      Context : aliased Parser_Context := (Fabric => Fabric);
+      Context : aliased Parser_Context := (Factory => Factory);
    begin
       Do_It (Context'Access, Wrapper'Access, Result, Success);
       if Success then
@@ -258,10 +258,10 @@ package body Gela.LARL_Parsers is
       Result : Gela.Elements.Defining_Expanded_Unit_Names.
         Defining_Expanded_Unit_Name_Access;
    begin
-      Result := Self.Fabric.Defining_Expanded_Unit_Name
+      Result := Self.Factory.Defining_Expanded_Unit_Name
         (Defining_Prefix   => Value.Prefix,
          Dot_Token         => Value.Dot_Token,
-         Defining_Selector => Self.Fabric.Defining_Identifier
+         Defining_Selector => Self.Factory.Defining_Identifier
            (Identifier_Token => Identifier.Identifier_Token));
 
       return Gela.Elements.Defining_Program_Unit_Names.
@@ -302,7 +302,7 @@ package body Gela.LARL_Parsers is
               Association_Sequence_Access :=
                 Args.Record_Component_Associations;
             CC     : constant Gela.Elements.Composite_Constraints.
-              Composite_Constraint_Access := Self.Fabric.Composite_Constraint
+              Composite_Constraint_Access := Self.Factory.Composite_Constraint
                 (Left_Token   => Args.Last_Token,
                  Associations => Ass,
                  Right_Token  => Args.Right_Token);
@@ -314,7 +314,7 @@ package body Gela.LARL_Parsers is
          end;
       end if;
 
-      return Self.Fabric.Subtype_Indication
+      return Self.Factory.Subtype_Indication
         (Not_Token          => Not_Token,
          Null_Token         => Null_Token,
          Subtype_Mark       => Subtype_Mark,

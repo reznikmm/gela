@@ -1,4 +1,4 @@
-with Gela.Compilation_Unit_Fabrics;
+with Gela.Compilation_Unit_Factories;
 with Gela.Elements.Compilation_Units;
 with Gela.Lexical_Types;
 
@@ -42,8 +42,8 @@ package Gela.Dependency_Lists is
    is abstract;
 
    not overriding procedure Create_Units
-     (Self   : in out Dependency_List;
-      Fabric : Gela.Compilation_Unit_Fabrics.Compilation_Unit_Fabric_Access)
-   is abstract;
+     (Self    : in out Dependency_List;
+      Factory : Gela.Compilation_Unit_Factories.
+        Compilation_Unit_Factory_Access) is abstract;
 
 end Gela.Dependency_Lists;

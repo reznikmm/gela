@@ -9,7 +9,7 @@
 
 with AG_Tools.Input;
 
-package body AG_Tools.Generator_Fabrics is
+package body AG_Tools.Generator_Factories is
 
    Head : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("head");
@@ -19,7 +19,7 @@ package body AG_Tools.Generator_Fabrics is
    ---------
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       NT   : Gela.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.NT_Generator_Access
    is
@@ -36,7 +36,7 @@ package body AG_Tools.Generator_Fabrics is
    ---------
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Part : Gela.Grammars.Part)
       return AG_Tools.Visit_Generators.Part_Generator_Access
    is
@@ -61,7 +61,7 @@ package body AG_Tools.Generator_Fabrics is
    ---------
 
    overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Attr : Gela.Grammars.Attribute;
       NT   : Gela.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.Generator_Access
@@ -76,4 +76,4 @@ package body AG_Tools.Generator_Fabrics is
       end if;
    end Get;
 
-end AG_Tools.Generator_Fabrics;
+end AG_Tools.Generator_Factories;

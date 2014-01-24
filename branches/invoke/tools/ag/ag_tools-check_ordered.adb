@@ -17,7 +17,7 @@ with Gela.Grammars.Ordered;
 with League.Strings;
 
 with AG_Tools.Contexts;
-with AG_Tools.Generator_Fabrics;
+with AG_Tools.Generator_Factories;
 with AG_Tools.Writers; use AG_Tools.Writers;
 with AG_Tools.Input;   use AG_Tools.Input;
 
@@ -87,7 +87,7 @@ package body AG_Tools.Check_Ordered is
       Spec    : AG_Tools.Writers.Writer renames Context.Spec;
       Impl    : AG_Tools.Writers.Writer renames Context.Impl;
    begin
-      Context.Fabric := new AG_Tools.Generator_Fabrics.Fabric (Context);
+      Context.Factory := new AG_Tools.Generator_Factories.Factory (Context);
       Context.Grammar := G;
       Context.Partition :=
         new Gela.Grammars.Ordered.Partition_Array'(Partitions);
@@ -124,7 +124,7 @@ package body AG_Tools.Check_Ordered is
                Pos : Cursor := Order.Ceiling ((NT.First, Pass, Step => 1));
             begin
                if Has_Element (Pos) and then Key (Pos).Prod = NT.First then
-                  Context.Fabric.Get (NT).Make_Procedure (Pos);
+                  Context.Factory.Get (NT).Make_Procedure (Pos);
                   Found := True;
                end if;
             end;

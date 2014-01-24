@@ -41,7 +41,7 @@ package AG_Tools.Contexts is
      League.String_Vectors.Universal_String_Vector;
 
    type Context is tagged record
-      Fabric    : AG_Tools.Visit_Generators.Fabric_Access;
+      Factory    : AG_Tools.Visit_Generators.Factory_Access;
       Grammar   : Gela.Grammars.Grammar_Access;
       Partition : Partition_Array_Access;
       Part_Map  : Part_Map_Access;

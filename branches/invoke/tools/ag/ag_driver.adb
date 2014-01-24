@@ -54,7 +54,7 @@ procedure AG_Driver is
       Output : in out Writer;
       Impl   : Boolean);
 
-   procedure Generate_Fabric;
+   procedure Generate_Factory;
    procedure Generate_Stores_Prod
      (NT   : Gela.Grammars.Non_Terminal;
       Prod : Gela.Grammars.Production);
@@ -73,55 +73,56 @@ procedure AG_Driver is
       Fab_With    : Writer;
       Fab_Kind    : Writer;
       Fab_When    : Writer;
-      Fabrics     : Writer;
+      Factories     : Writer;
       Impl        : Writer;
    begin
-      Fabrics.P ("with Gela.Lexical_Types;");
-      Fabrics.P ("with Gela.Elements;");
-      Fabrics.P;
-      Fabrics.P ("package Gela.LARL_Parsers_Nodes is");
+      Factories.P ("with Gela.Lexical_Types;");
+      Factories.P ("with Gela.Elements;");
+      Factories.P;
+      Factories.P ("package Gela.LARL_Parsers_Nodes is");
       Impl.P ("package body Gela.LARL_Parsers_Nodes is");
-      Fabrics.P ("   pragma Preelaborate;");
-      Fabrics.P;
-      Fabrics.P ("   type Node is private;");
-      Fabrics.P ("   type Node_Array is array (Positive range <>) of Node;");
-      Fabrics.P;
-      Fabrics.P ("   None     : constant Node;");
-      Fabrics.P ("   No_Token : constant Node;");
-      Fabrics.P;
-      Fabrics.P ("   No_Token_Index : constant " &
+      Factories.P ("   pragma Preelaborate;");
+      Factories.P;
+      Factories.P ("   type Node is private;");
+      Factories.P ("   type Node_Array is array (Positive range <>) of Node;");
+      Factories.P;
+      Factories.P ("   None     : constant Node;");
+      Factories.P ("   No_Token : constant Node;");
+      Factories.P;
+      Factories.P ("   No_Token_Index : constant " &
                    "Gela.Lexical_Types.Token_Count := 0;");
-      Fabrics.P;
-      Fabrics.N ("   function ""-"" (X : Node)" &
+      Factories.P;
+      Factories.N ("   function ""-"" (X : Node)" &
                    " return Gela.Lexical_Types.Token_Count", Impl);
-      Fabrics.P (";");
+      Factories.P (";");
       Impl.P (" is");
       Impl.P ("   begin");
       Impl.P ("      return X.Token;");
       Impl.P ("   end ""-"";");
       Impl.P;
 
-      Fabrics.N ("   function ""-"" (X : Node)" &
+      Factories.N ("   function ""-"" (X : Node)" &
                    " return access Gela.Elements.Element'Class", Impl);
-      Fabrics.P (";");
+      Factories.P (";");
       Impl.P (" is");
       Impl.P ("   begin");
       Impl.P ("      return X.Element;");
       Impl.P ("   end ""-"";");
       Impl.P;
 
-      Fabrics.N ("   function ""+"" (X : Gela.Lexical_Types.Token_Count)" &
+      Factories.N ("   function ""+"" (X : Gela.Lexical_Types.Token_Count)" &
                    " return Node", Impl);
-      Fabrics.P (";");
+      Factories.P (";");
       Impl.P (" is");
       Impl.P ("   begin");
       Impl.P ("      return (Token, X);");
       Impl.P ("   end ""+"";");
       Impl.P;
 
-      Fabrics.N ("   function ""+"" (X : access Gela.Elements.Element'Class)" &
-                   " return Node", Impl);
-      Fabrics.P (";");
+      Factories.N
+        ("   function ""+"" (X : access Gela.Elements.Element'Class)" &
+           " return Node", Impl);
+      Factories.P (";");
       Impl.P (" is");
       Impl.P ("   begin");
       Impl.P ("      return (Element, X);");
@@ -144,13 +145,13 @@ procedure AG_Driver is
                Fab_Kind.N (To_Ada (NT.Name));
                Fab_Kind.N ("_Sequence");
 
-               Fabrics.P ("   function ""-"" (X : Node) return", Impl);
-               Fabrics.N ("     Gela.Elements.", Impl);
-               Fabrics.N (To_Ada (Plural (NT.Name)), Impl);
-               Fabrics.N (".", Impl);
-               Fabrics.N (To_Ada (NT.Name), Impl);
-               Fabrics.N ("_Sequence_Access", Impl);
-               Fabrics.P (";");
+               Factories.P ("   function ""-"" (X : Node) return", Impl);
+               Factories.N ("     Gela.Elements.", Impl);
+               Factories.N (To_Ada (Plural (NT.Name)), Impl);
+               Factories.N (".", Impl);
+               Factories.N (To_Ada (NT.Name), Impl);
+               Factories.N ("_Sequence_Access", Impl);
+               Factories.P (";");
                Impl.P (" is");
                Impl.P ("   begin");
                Impl.P ("      if X = None then");
@@ -162,14 +163,14 @@ procedure AG_Driver is
                Impl.P ("   end ""-"";");
                Impl.P;
 
-               Fabrics.P ("   function ""+""", Impl);
-               Fabrics.N ("     (X : Gela.Elements.", Impl);
-               Fabrics.N (To_Ada (Plural (NT.Name)), Impl);
-               Fabrics.N (".", Impl);
-               Fabrics.N (To_Ada (NT.Name), Impl);
-               Fabrics.P ("_Sequence_Access)", Impl);
-               Fabrics.N ("     return Node", Impl);
-               Fabrics.P (";");
+               Factories.P ("   function ""+""", Impl);
+               Factories.N ("     (X : Gela.Elements.", Impl);
+               Factories.N (To_Ada (Plural (NT.Name)), Impl);
+               Factories.N (".", Impl);
+               Factories.N (To_Ada (NT.Name), Impl);
+               Factories.P ("_Sequence_Access)", Impl);
+               Factories.N ("     return Node", Impl);
+               Factories.P (";");
                Impl.P (" is");
                Impl.P ("   begin");
                Impl.N ("      return (");
@@ -194,68 +195,68 @@ procedure AG_Driver is
          end if;
       end loop;
 
-      Fabrics.P;
-      Fabrics.P ("private");
-      Fabrics.P;
-      Fabrics.N (Fab_Kind.Text);
-      Fabrics.P (");");
-      Fabrics.P;
-      Fabrics.P ("   type Node (Kind : Node_Kinds := Token) is record");
-      Fabrics.P ("      case Kind is");
-      Fabrics.P ("         when Token =>");
-      Fabrics.P ("            Token : Gela.Lexical_Types.Token_Count;");
-      Fabrics.P ("         when Element =>");
-      Fabrics.P ("            Element : Gela.Elements.Element_Access;");
+      Factories.P;
+      Factories.P ("private");
+      Factories.P;
+      Factories.N (Fab_Kind.Text);
+      Factories.P (");");
+      Factories.P;
+      Factories.P ("   type Node (Kind : Node_Kinds := Token) is record");
+      Factories.P ("      case Kind is");
+      Factories.P ("         when Token =>");
+      Factories.P ("            Token : Gela.Lexical_Types.Token_Count;");
+      Factories.P ("         when Element =>");
+      Factories.P ("            Element : Gela.Elements.Element_Access;");
 
       Ada.Text_IO.Put_Line (Fab_With.Text.To_UTF_8_String);
-      Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Factories.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Fab_When.Text.To_UTF_8_String);
-      Fabrics.Clear;
+      Factories.Clear;
 
-      Fabrics.P ("      end case;");
-      Fabrics.P ("   end record;");
-      Fabrics.P;
-      Fabrics.P ("   None     : constant Node := (Element, null);");
-      Fabrics.P ("   No_Token : constant Node := (Token, 0);");
-      Fabrics.P;
-      Fabrics.N ("end Gela.LARL_Parsers_Nodes;", Impl);
+      Factories.P ("      end case;");
+      Factories.P ("   end record;");
+      Factories.P;
+      Factories.P ("   None     : constant Node := (Element, null);");
+      Factories.P ("   No_Token : constant Node := (Token, 0);");
+      Factories.P;
+      Factories.N ("end Gela.LARL_Parsers_Nodes;", Impl);
 
-      Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Factories.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
    end Generate_2;
 
    ---------------------
-   -- Generate_Fabric --
+   -- Generate_Factory --
    ---------------------
 
-   procedure Generate_Fabric is
+   procedure Generate_Factory is
       Fab_With    : Writer;
       Body_With   : Writer;
       Fab_Body    : Writer;
       Fab_Init    : Writer;
-      Fabrics     : Writer;
+      Factories     : Writer;
       Lists       : Natural := 0;
 --      List_Attrs  : Writer;
    begin
---      Fabrics.P ("with Gela.Mutables;");
-      Fabrics.P ("with Gela.Nodes;");
-      Fabrics.P ("with Gela.Stores.Tokens;");
-      Fabrics.P;
-      Fabrics.P ("package Gela.Stores.Base_Fabrics is");
-      Fabrics.P ("   pragma Preelaborate;");
-      Fabrics.P;
-      Fabrics.P ("   type Node_Array is array (Natural range <>) of" &
+--      Factories.P ("with Gela.Mutables;");
+      Factories.P ("with Gela.Nodes;");
+      Factories.P ("with Gela.Stores.Tokens;");
+      Factories.P;
+      Factories.P ("package Gela.Stores.Base_Factories is");
+      Factories.P ("   pragma Preelaborate;");
+      Factories.P;
+      Factories.P ("   type Node_Array is array (Natural range <>) of" &
                    " Gela.Nodes.Node_Access;");
-      Fabrics.P;
-      Fabrics.P ("   type Base_Fabric (Store : not null Store_Access) is");
-      Fabrics.P ("   abstract new Abstract_Fabric with record");
-      Fabrics.P ("      Token : aliased Tokens.Token (Store);");
+      Factories.P;
+      Factories.P ("   type Base_Factory (Store : not null Store_Access) is");
+      Factories.P ("   abstract new Abstract_Factory with record");
+      Factories.P ("      Token : aliased Tokens.Token (Store);");
 
-      Fab_Body.P ("package body Gela.Stores.Base_Fabrics is");
+      Fab_Body.P ("package body Gela.Stores.Base_Factories is");
       Fab_Body.P ("   pragma Style_Checks (""-o"");");
       Fab_Body.P ("   package N renames Gela.Nodes;");
       Fab_Body.P;
-      Fab_Init.P ("   procedure Initialize (Self : access Base_Fabric) is");
+      Fab_Init.P ("   procedure Initialize (Self : access Base_Factory) is");
       Fab_Init.P ("   begin");
       Fab_Init.P ("      Self.Map :=");
       Fab_Init.N ("        (0 => Self.Token'Access");
@@ -267,11 +268,11 @@ procedure AG_Driver is
                Fab_With.N (To_Ada (NT.Name));
                Fab_With.P ("_Sequences;");
 
-               Fabrics.N ("      L");
-               Fabrics.N (Positive (NT.Index));
-               Fabrics.N (" : aliased ");
-               Fabrics.N (To_Ada (NT.Name));
-               Fabrics.P ("_Sequences.List (Store);");
+               Factories.N ("      L");
+               Factories.N (Positive (NT.Index));
+               Factories.N (" : aliased ");
+               Factories.N (To_Ada (NT.Name));
+               Factories.P ("_Sequences.List (Store);");
 
                Lists := Lists + 1;
                Fab_Init.P (",");
@@ -288,11 +289,11 @@ procedure AG_Driver is
                   Fab_With.N (Plural (NT.Name));
                   Fab_With.P (";");
 
-                  Fabrics.N ("      P");
-                  Fabrics.N (Positive (Prod.Index));
-                  Fabrics.N (" : aliased ");
-                  Fabrics.N (Plural (NT.Name));
-                  Fabrics.P (".Object (Store);");
+                  Factories.N ("      P");
+                  Factories.N (Positive (Prod.Index));
+                  Factories.N (" : aliased ");
+                  Factories.N (Plural (NT.Name));
+                  Factories.P (".Object (Store);");
 
                   Fab_Init.P (",");
                   Fab_Init.N ("         ");
@@ -305,11 +306,11 @@ procedure AG_Driver is
          end if;
       end loop;
 
-      Fabrics.N ("      Map : Node_Array (0 .. ");
-      Fabrics.N (Positive (G.Last_Production) + Lists);
-      Fabrics.P (");");
-      Fabrics.P ("   end record;");
-      Fabrics.P;
+      Factories.N ("      Map : Node_Array (0 .. ");
+      Factories.N (Positive (G.Last_Production) + Lists);
+      Factories.P (");");
+      Factories.P ("   end record;");
+      Factories.P;
 
       Lists := 0;
 
@@ -323,14 +324,14 @@ procedure AG_Driver is
          if Has_List (NT.Index) then
             Lists := Lists + 1;
 
-            Fabrics.N ("   function ", Fab_Body);
-            Fabrics.N (To_Ada (NT.Name), Fab_Body);
-            Fabrics.P ("_Sequence", Fab_Body);
-            Fabrics.P ("     (Self : access Base_Fabric'Class)", Fab_Body);
-            Fabrics.N ("      return Gela.Nodes.", Fab_Body);
-            Fabrics.N (To_Ada (NT.Name), Fab_Body);
-            Fabrics.N ("_Sequence", Fab_Body);
-            Fabrics.P (";");
+            Factories.N ("   function ", Fab_Body);
+            Factories.N (To_Ada (NT.Name), Fab_Body);
+            Factories.P ("_Sequence", Fab_Body);
+            Factories.P ("     (Self : access Base_Factory'Class)", Fab_Body);
+            Factories.N ("      return Gela.Nodes.", Fab_Body);
+            Factories.N (To_Ada (NT.Name), Fab_Body);
+            Factories.N ("_Sequence", Fab_Body);
+            Factories.P (";");
             Fab_Body.P;
             Fab_Body.P ("   is");
             Fab_Body.N ("      Object : constant Stores.");
@@ -360,7 +361,7 @@ procedure AG_Driver is
             Fab_Body.N ("   end ");
             Fab_Body.N (To_Ada (NT.Name));
             Fab_Body.P ("_Sequence;");
-            Fabrics.P ("", Fab_Body);
+            Factories.P ("", Fab_Body);
          end if;
 
          for Prod of G.Production (NT.First .. NT.Last) loop
@@ -370,32 +371,32 @@ procedure AG_Driver is
 --                   Macro_Reference (Prod);
             begin
                if Is_Concrete (NT.Index) and not NT.Is_List then
-                  Fabrics.N ("   function ", Fab_Body);
+                  Factories.N ("   function ", Fab_Body);
                   Name := To_Ada (NT.Name);
 
-                  Fabrics.P (Name, Fab_Body);
-                  Fabrics.N
-                    ("     (Self : access Base_Fabric'Class", Fab_Body);
+                  Factories.P (Name, Fab_Body);
+                  Factories.N
+                    ("     (Self : access Base_Factory'Class", Fab_Body);
 
                   for Part of G.Part (Prod.First .. Prod.Last) loop
-                     Fabrics.P (";", Fab_Body);
-                     Fabrics.N ("      ", Fab_Body);
-                     Fabrics.N (To_Ada (Part.Name), Fab_Body);
-                     Fabrics.N (" : Gela.Nodes.", Fab_Body);
+                     Factories.P (";", Fab_Body);
+                     Factories.N ("      ", Fab_Body);
+                     Factories.N (To_Ada (Part.Name), Fab_Body);
+                     Factories.N (" : Gela.Nodes.", Fab_Body);
 
                      if Part.Name.Length + Return_Type (Part).Length > 58 then
-                        Fabrics.P ("", Fab_Body);
-                        Fabrics.N ("        ", Fab_Body);
+                        Factories.P ("", Fab_Body);
+                        Factories.N ("        ", Fab_Body);
                      end if;
 
-                     Fabrics.N (Return_Type (Part), Fab_Body);
+                     Factories.N (Return_Type (Part), Fab_Body);
                   end loop;
 
-                  Fabrics.P (")", Fab_Body);
-                  Fabrics.N ("      return Gela.Nodes.", Fab_Body);
-                  Fabrics.N (To_Ada (NT.Name), Fab_Body);
-                  Fabrics.P (";");
-                  Fabrics.P ("", Fab_Body);
+                  Factories.P (")", Fab_Body);
+                  Factories.N ("      return Gela.Nodes.", Fab_Body);
+                  Factories.N (To_Ada (NT.Name), Fab_Body);
+                  Factories.P (";");
+                  Factories.P ("", Fab_Body);
 
                   Fab_Body.P ("   is");
                   Fab_Body.N ("      Object : constant Stores.");
@@ -444,14 +445,14 @@ procedure AG_Driver is
          end loop;
       end loop;
 
-      Fabrics.N ("   Last_Production : constant := ");
-      Fabrics.N (Positive (G.Last_Production));
-      Fabrics.P (";");
-      Fabrics.P;
+      Factories.N ("   Last_Production : constant := ");
+      Factories.N (Positive (G.Last_Production));
+      Factories.P (";");
+      Factories.P;
 
-      Fabrics.P ("   procedure Initialize (Self : access Base_Fabric);");
-      Fabrics.P;
-      Fabrics.N ("end Gela.Stores.Base_Fabrics;");
+      Factories.P ("   procedure Initialize (Self : access Base_Factory);");
+      Factories.P;
+      Factories.N ("end Gela.Stores.Base_Factories;");
 
       --   XXX:
       Fab_Init.P (",");
@@ -461,13 +462,13 @@ procedure AG_Driver is
       Fab_Init.P ("   end Initialize;");
       Fab_Body.N (Fab_Init.Text);
       Fab_Body.P;
-      Fab_Body.N ("end Gela.Stores.Base_Fabrics;");
+      Fab_Body.N ("end Gela.Stores.Base_Factories;");
 
       Ada.Text_IO.Put_Line (Fab_With.Text.To_UTF_8_String);
-      Ada.Text_IO.Put_Line (Fabrics.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Factories.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Body_With.Text.To_UTF_8_String);
       Ada.Text_IO.Put (Fab_Body.Text.To_UTF_8_String);
-   end Generate_Fabric;
+   end Generate_Factory;
 
    -----------------
    -- Return_Type --
@@ -893,9 +894,9 @@ begin
       end if;
    end loop;
 
-   Generate_Fabric;
+   Generate_Factory;
    Generate_2;
    Generate_Visiter;
    AG_Tools.Element_Generators.Generate_Elements (G);
-   AG_Tools.Element_Generators.Generate_Fabric (G);
+   AG_Tools.Element_Generators.Generate_Factory (G);
 end AG_Driver;

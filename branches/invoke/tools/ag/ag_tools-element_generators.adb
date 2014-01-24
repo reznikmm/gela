@@ -25,7 +25,7 @@ package body AG_Tools.Element_Generators is
      (G  : Gela.Grammars.Grammar_Access;
       NT : Gela.Grammars.Non_Terminal);
 
-   procedure Generate_Node_Fabric (G  : Gela.Grammars.Grammar_Access);
+   procedure Generate_Node_Factory (G  : Gela.Grammars.Grammar_Access);
 
    procedure Generate_Node_Sequence
      (NT : Gela.Grammars.Non_Terminal);
@@ -60,7 +60,7 @@ package body AG_Tools.Element_Generators is
    begin
       Spec.N ("overriding function ");
       Spec.P (To_Ada (NT.Name));
-      Spec.N ("     (Self : in out Element_Fabric");
+      Spec.N ("     (Self : in out Element_Factory");
 
       for Part of G.Part (Prod.First .. Prod.Last) loop
          Spec.P (";");
@@ -216,10 +216,10 @@ package body AG_Tools.Element_Generators is
    end Generate_Elements;
 
    ---------------------
-   -- Generate_Fabric --
+   -- Generate_Factory --
    ---------------------
 
-   procedure Generate_Fabric
+   procedure Generate_Factory
      (G : Gela.Grammars.Grammar_Access)
    is
       Spec   : AG_Tools.Writers.Writer;
@@ -229,13 +229,13 @@ package body AG_Tools.Element_Generators is
       Spec.P ("with Gela.Lexical_Types;");
       Spec.P;
 
-      Spec.P ("package Gela.Element_Fabrics is");
+      Spec.P ("package Gela.Element_Factories is");
       Spec.P ("   pragma Preelaborate;");
       Spec.P;
-      Spec.P ("   type Element_Fabric is limited interface;");
-      Spec.P
-        ("   type Element_Fabric_Access is access all Element_Fabric'Class;");
-      Spec.P ("   for Element_Fabric_Access'Storage_Size use 0;");
+      Spec.P ("   type Element_Factory is limited interface;");
+      Spec.P ("   type Element_Factory_Access is " &
+                "access all Element_Factory'Class;");
+      Spec.P ("   for Element_Factory_Access'Storage_Size use 0;");
       Spec.P;
 
       for NT of G.Non_Terminal loop
@@ -264,7 +264,7 @@ package body AG_Tools.Element_Generators is
          end if;
       end loop;
 
-      Spec.P ("end Gela.Element_Fabrics;");
+      Spec.P ("end Gela.Element_Factories;");
 
       for NT of G.Non_Terminal loop
          if not NT.Is_List and Used (NT.Index) then
@@ -276,8 +276,8 @@ package body AG_Tools.Element_Generators is
 
       Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
-      Generate_Node_Fabric (G);
-   end Generate_Fabric;
+      Generate_Node_Factory (G);
+   end Generate_Factory;
 
    -------------------
    -- Generate_Node --
@@ -462,10 +462,10 @@ package body AG_Tools.Element_Generators is
    end Generate_Node;
 
    --------------------------
-   -- Generate_Node_Fabric --
+   -- Generate_Node_Factory --
    --------------------------
 
-   procedure Generate_Node_Fabric (G  : Gela.Grammars.Grammar_Access) is
+   procedure Generate_Node_Factory (G  : Gela.Grammars.Grammar_Access) is
       Spec   : AG_Tools.Writers.Writer;
       Withes : AG_Tools.Writers.Writer;
       Impl   : AG_Tools.Writers.Writer;
@@ -473,21 +473,21 @@ package body AG_Tools.Element_Generators is
       Used   : NT_Map (G.Non_Terminal'Range) := (others => False);
    begin
       Spec.P ("with Gela.Lexical_Types;");
-      Spec.P ("with Gela.Element_Fabrics;");
+      Spec.P ("with Gela.Element_Factories;");
       Spec.P ("with Gela.Compilations;");
       Spec.P;
 
-      Impl.P ("package body Gela.Node_Fabrics is");
+      Impl.P ("package body Gela.Node_Factories is");
       Impl.P;
-      Spec.P ("package Gela.Node_Fabrics is");
+      Spec.P ("package Gela.Node_Factories is");
       Spec.P ("   pragma Preelaborate;");
       Spec.P;
-      Spec.P ("   type Element_Fabric " &
+      Spec.P ("   type Element_Factory " &
                 "(Comp : Gela.Compilations.Compilation_Access) is");
-      Spec.P ("      limited new Gela.Element_Fabrics.Element_Fabric " &
+      Spec.P ("      limited new Gela.Element_Factories.Element_Factory " &
                 "with null record;");
-      Spec.P
-        ("   type Element_Fabric_Access is access all Element_Fabric'Class;");
+      Spec.P ("   type Element_Factory_Access is " &
+                "access all Element_Factory'Class;");
       Spec.P;
 
       for NT of G.Non_Terminal loop
@@ -574,7 +574,7 @@ package body AG_Tools.Element_Generators is
          end if;
       end loop;
 
-      Spec.P ("end Gela.Node_Fabrics;", Impl);
+      Spec.P ("end Gela.Node_Factories;", Impl);
 
       for NT of G.Non_Terminal loop
          if not NT.Is_List and Used (NT.Index) then
@@ -588,7 +588,7 @@ package body AG_Tools.Element_Generators is
       Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl_With.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
-   end Generate_Node_Fabric;
+   end Generate_Node_Factory;
 
    ----------------------------
    -- Generate_Node_Sequence --
@@ -635,7 +635,7 @@ package body AG_Tools.Element_Generators is
       Spec.N ("overriding function ");
       Spec.N (To_Ada (NT.Name));
       Spec.P ("_Sequence");
-      Spec.P ("     (Self : in out Element_Fabric)");
+      Spec.P ("     (Self : in out Element_Factory)");
       Spec.N ("      return ");
       Spec.N (Return_Type (G.all, NT));
       Spec.N ("_Sequence_Access");

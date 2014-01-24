@@ -54,21 +54,21 @@ package AG_Tools.Visit_Generators is
       Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor) is abstract;
    --  Generate procedure
 
-   type Fabric is limited interface;
-   type Fabric_Access is access all Fabric'Class;
+   type Factory is limited interface;
+   type Factory_Access is access all Factory'Class;
 
    not overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       NT   : Gela.Grammars.Non_Terminal)
       return NT_Generator_Access is abstract;
 
    not overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Part : Gela.Grammars.Part)
       return Part_Generator_Access is abstract;
 
    not overriding function Get
-     (Self : access Fabric;
+     (Self : access Factory;
       Attr : Gela.Grammars.Attribute;
       NT   : Gela.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.Generator_Access is abstract;
