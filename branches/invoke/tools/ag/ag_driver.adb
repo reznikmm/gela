@@ -827,10 +827,11 @@ procedure AG_Driver is
    ----------------------
 
    procedure Generate_Visiter is
-      Spec : Writer;
+      Withes : Writer;
+      Spec   : Writer;
       Name : League.Strings.Universal_String;
    begin
-      Spec.P ("package Gela.Nodes.Visiters is");
+      Spec.P ("package Gela.Element_Visiters is");
       Spec.P ("   pragma Preelaborate;");
       Spec.P;
       Spec.P ("   type Visiter is limited interface;");
@@ -839,20 +840,26 @@ procedure AG_Driver is
          for Prod of G.Production (NT.First .. NT.Last) loop
             if Is_Concrete (NT.Index) and not NT.Is_List then
                Name := To_Ada (NT.Name);
+               Withes.N ("with Gela.Elements.");
+               Withes.N (Plural (Name));
+               Withes.P (";");
                Spec.P;
                Spec.N ("   not overriding procedure ");
                Spec.P (To_Ada (Name));
-               Spec.P ("     (Self    : in out Visiter;");
-               Spec.N ("      Node    : Gela.Nodes.");
+               Spec.P ("     (Self : in out Visiter;");
+               Spec.N ("      Node : not null Gela.Elements.");
+               Spec.N (Plural (Name));
+               Spec.N (".");
                Spec.N (To_Ada (Name));
-               Spec.P (")");
+               Spec.P ("_Access)");
                Spec.P ("        is null;");
             end if;
          end loop;
       end loop;
 
       Spec.P;
-      Spec.P ("end Gela.Nodes.Visiters;");
+      Spec.P ("end Gela.Element_Visiters;");
+      Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Spec.Text.To_UTF_8_String);
    end Generate_Visiter;
 

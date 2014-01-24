@@ -2,6 +2,7 @@ with Gela.Lexical_Types;
 
 limited with Gela.Compilation_Units;
 limited with Gela.Compilations;
+limited with Gela.Element_Visiters;
 
 package Gela.Elements is
    pragma Preelaborate;
@@ -34,6 +35,10 @@ package Gela.Elements is
 
    not overriding function Last_Token
      (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
+
+   not overriding procedure Visit
+     (Self    : access Element;
+      Visiter : in out Gela.Element_Visiters.Visiter) is abstract;
 
    generic
       type Item is limited interface and Element;

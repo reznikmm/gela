@@ -307,6 +307,7 @@ package body AG_Tools.Element_Generators is
       Withes.N ("with ");
       Withes.N (Pkg);
       Withes.P (";");
+      Withes.P ("with Gela.Element_Visiters;");
 
       Impl.P ("with Gela.LARL_Parsers_Nodes; use Gela.LARL_Parsers_Nodes;");
       Impl.P;
@@ -438,6 +439,20 @@ package body AG_Tools.Element_Generators is
          Nodes.P;
       end loop;
 
+      Nodes.P ("   overriding procedure Visit", Impl);
+      Nodes.N ("     (Self    : access ", Impl);
+      Nodes.N (Name, Impl);
+      Nodes.P (";", Impl);
+      Nodes.P ("      Visiter : in out Gela.Element_Visiters.Visiter)", Impl);
+      Nodes.P (";");
+      Nodes.P;
+      Impl.P (" is");
+      Impl.P ("   begin");
+      Impl.N ("      Visiter.");
+      Impl.N (Name);
+      Impl.P (" (Self);");
+      Impl.P ("   end Visit;");
+      Impl.P;
       Nodes.N ("end Gela.Nodes.", Impl);
       Nodes.N (Plural (NT.Name), Impl);
       Nodes.P (";", Impl);
