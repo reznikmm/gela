@@ -38,7 +38,7 @@ package Gela.Elements is
 
    not overriding procedure Visit
      (Self    : access Element;
-      Visiter : in out Gela.Element_Visiters.Visiter) is abstract;
+      Visiter : in out Gela.Element_Visiters.Visiter'Class) is abstract;
 
    generic
       type Item is limited interface and Element;

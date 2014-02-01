@@ -1858,12 +1858,13 @@ simple_name ::=
   enumeration_literal;
 
 Synthesized attributes
-  token  : Gela.Types.Symbol : Symbol;
+  token  : Gela.Lexical_Types.Token_Count : Index;
 
 Synthesized attributes
-  token  : Boolean : Assigned;
-
-Synthesized attributes
+  compilation_unit,
+  compilation_unit_declaration,
+  compilation_unit_body,
+  subunit,
   character_literal,
   enumeration_literal,
   defining_designator,
@@ -1897,47 +1898,69 @@ Synthesized attributes
   selected_identifier,
   selector_name,
   task_body
-  : Gela.Types.Symbol : full_name;
+  : Gela.Lexical_Types.Symbol : full_name;
+
+Rules for compilation_unit_declaration. :
+(.
+      ${compilation_unit_declaration.full_name} := ${Unit_Declaration.full_name};
+.)
+
+Rules for compilation_unit_body. :
+(.
+      ${compilation_unit_body.full_name} := ${Unit_Declaration.full_name};
+.)
+
+Rules for subunit. :
+(.
+      Self.Compilation.Context.Symbols.Join
+        (${parent_unit_name.full_name}, ${Unit_Declaration.full_name}, ${subunit.full_name});
+.)
 
 Rules for defining_identifier.identifier_token :
 (.
-      ${defining_identifier.full_name} := ${identifier_token.Symbol};
+      ${defining_identifier.full_name} := 
+        Self.Compilation.Get_Token (${identifier_token.Index}).Symbol;
 .)
 
 Rules for defining_operator_symbol.operator_symbol_token :
 (.
-      ${defining_operator_symbol.full_name} := ${operator_symbol_token.Symbol};
+      ${defining_operator_symbol.full_name} :=
+        Self.Compilation.Get_Token (${operator_symbol_token.Index}).Symbol;
 .)
 
 Rules for identifier.identifier_token :
 (.
-      ${identifier.full_name} := ${identifier_token.Symbol};
+      ${identifier.full_name} :=
+        Self.Compilation.Get_Token (${identifier_token.Index}).Symbol;
 .)
 
 Rules for operator_symbol.operator_symbol_token :
 (.
-      ${operator_symbol.full_name} := ${operator_symbol_token.Symbol};
+      ${operator_symbol.full_name} :=
+        Self.Compilation.Get_Token (${operator_symbol_token.Index}).Symbol;
 .)
 
 Rules for enumeration_literal.enumeration_literal_token :
 (.
-      ${enumeration_literal.full_name} := ${enumeration_literal_token.Symbol};
+      ${enumeration_literal.full_name} :=
+        Self.Compilation.Get_Token (${enumeration_literal_token.Index}).Symbol;
 .)
 
 Rules for character_literal.character_literal_token :
 (.
-      ${character_literal.full_name} := ${character_literal_token.Symbol};
+      ${character_literal.full_name} :=
+        Self.Compilation.Get_Token (${character_literal_token.Index}).Symbol;
 .)
 
 Rules for selected_identifier. :
 (.
-      Self.Compilation.Symbols.Join
+      Self.Compilation.Context.Symbols.Join
         (${Prefix.full_name}, ${Selector.full_name}, ${selected_identifier.full_name});
 .)
 
 Rules for defining_expanded_unit_name. :
 (.
-      Self.Compilation.Symbols.Join
+      Self.Compilation.Context.Symbols.Join
         (${Defining_Prefix.full_name},
          ${Defining_Selector.full_name},
          ${defining_expanded_unit_name.full_name});
@@ -2034,6 +2057,10 @@ Rules for protected_body. :
 .)
 
 Synthesized attributes
+  compilation_unit,
+  compilation_unit_declaration,
+  compilation_unit_body,
+  subunit,
   library_unit_body,
   package_body,
   function_body,
@@ -2055,140 +2082,111 @@ Synthesized attributes
   proper_body,
   task_body,
   protected_body
-    : Gela.Types.Unit_Kinds : unit_kind;
-
-Rules for package_body. :
-(.
-      ${package_body.unit_kind} := Gela.Types.A_Package_Body;
-.)
-
-Rules for function_body. :
-(.
-      ${function_body.unit_kind} := Gela.Types.A_Function_Body;
-.)
-
-Rules for procedure_body. :
-(.
-      ${procedure_body.unit_kind} := Gela.Types.A_Procedure_Body;
-.)
-
-Rules for procedure_declaration. :
-(.
-      ${procedure_declaration.unit_kind} := Gela.Types.A_Procedure;
-.)
-
-Rules for function_declaration. :
-(.
-      ${function_declaration.unit_kind} := Gela.Types.A_Function;
-.)
-
-Rules for package_declaration. :
-(.
-      ${package_declaration.unit_kind} := Gela.Types.A_Package;
-.)
-
-Rules for generic_procedure_declaration. :
-(.
-      ${generic_procedure_declaration.unit_kind} := Gela.Types.A_Generic_Procedure;
-.)
-
-Rules for generic_function_declaration. :
-(.
-      ${generic_function_declaration.unit_kind} := Gela.Types.A_Generic_Function;
-.)
-
-Rules for generic_package_declaration. :
-(.
-      ${generic_package_declaration.unit_kind} := Gela.Types.A_Generic_Package;
-.)
-
-Rules for package_instantiation. :
-(.
-      ${package_instantiation.unit_kind} := Gela.Types.A_Package_Instance;
-.)
-
-Rules for procedure_instantiation. :
-(.
-      ${procedure_instantiation.unit_kind} := Gela.Types.A_Procedure_Instance;
-.)
-
-Rules for function_instantiation. :
-(.
-      ${function_instantiation.unit_kind} := Gela.Types.A_Function_Instance;
-.)
-
-Rules for package_renaming_declaration. :
-(.
-      ${package_renaming_declaration.unit_kind} := Gela.Types.A_Package_Renaming;
-.)
-
-Rules for generic_package_renaming. :
-(.
-      ${generic_package_renaming.unit_kind} := Gela.Types.A_Generic_Package_Renaming;
-.)
-
-Rules for generic_procedure_renaming. :
-(.
-      ${generic_procedure_renaming.unit_kind} := Gela.Types.A_Generic_Procedure_Renaming;
-.)
-
-Rules for generic_function_renaming. :
-(.
-      ${generic_function_renaming.unit_kind} := Gela.Types.A_Generic_Function_Renaming;
-.)
-
-Rules for task_body. :
-(.
-      ${task_body.unit_kind} := Gela.Types.A_Generic_Procedure_Renaming;
-.)
-
-Rules for protected_body. :
-(.
-      ${protected_body.unit_kind} := Gela.Types.A_Generic_Function_Renaming;
-.)
-
-
-Synthesized attributes
-  compilation_unit,
-  compilation_unit_declaration,
-  compilation_unit_body,
-  subunit
-    : Gela.Types.Payload : unit_id;
+    : Gela.Semantic_Types.Unit_Kinds : unit_kind;
 
 Rules for compilation_unit_declaration. :
 (.
-      ${compilation_unit_declaration.unit_id} := Gela.Pass_Utils.Create_Unit_Declaration
-        (Comp       => Self.Compilation,
-         Full_Name  => ${Unit_Declaration.full_name},
-         Is_Private => ${private_token.Assigned},
-         Unit_Kind  => ${Unit_Declaration.unit_kind});
+      ${compilation_unit_declaration.unit_kind} := ${Unit_Declaration.unit_kind};
 .)
 
 Rules for compilation_unit_body. :
 (.
-      ${compilation_unit_body.unit_id} := Gela.Pass_Utils.Create_Unit_Body
-        (Comp       => Self.Compilation,
-         Full_Name  => ${Unit_Declaration.full_name},
-         Unit_Kind  => ${Unit_Declaration.unit_kind});
+      ${compilation_unit_body.unit_kind} := ${Unit_Declaration.unit_kind};
 .)
 
 Rules for subunit. :
 (.
-      ${subunit.unit_id} := Gela.Pass_Utils.Create_Subunit
-        (Comp      => Self.Compilation,
-         Parent    => ${parent_unit_name.full_name},
-         Name      => ${Unit_Declaration.full_name},
-         Unit_Kind => ${Unit_Declaration.unit_kind});
+      ${subunit.unit_kind} := ${Unit_Declaration.unit_kind};
 .)
-  
 
-Synthesized attributes
-  units
-    : Gela.Types.Payload : unit_id;
-
-Rules for units.compilation_unit :
+Rules for package_body. :
 (.
-      ${units.unit_id} := 1;
+      ${package_body.unit_kind} := Gela.Semantic_Types.A_Package_Body;
+.)
+
+Rules for function_body. :
+(.
+      ${function_body.unit_kind} := Gela.Semantic_Types.A_Function_Body;
+.)
+
+Rules for procedure_body. :
+(.
+      ${procedure_body.unit_kind} := Gela.Semantic_Types.A_Procedure_Body;
+.)
+
+Rules for procedure_declaration. :
+(.
+      ${procedure_declaration.unit_kind} := Gela.Semantic_Types.A_Procedure;
+.)
+
+Rules for function_declaration. :
+(.
+      ${function_declaration.unit_kind} := Gela.Semantic_Types.A_Function;
+.)
+
+Rules for package_declaration. :
+(.
+      ${package_declaration.unit_kind} := Gela.Semantic_Types.A_Package;
+.)
+
+Rules for generic_procedure_declaration. :
+(.
+      ${generic_procedure_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure;
+.)
+
+Rules for generic_function_declaration. :
+(.
+      ${generic_function_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Function;
+.)
+
+Rules for generic_package_declaration. :
+(.
+      ${generic_package_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Package;
+.)
+
+Rules for package_instantiation. :
+(.
+      ${package_instantiation.unit_kind} := Gela.Semantic_Types.A_Package_Instance;
+.)
+
+Rules for procedure_instantiation. :
+(.
+      ${procedure_instantiation.unit_kind} := Gela.Semantic_Types.A_Procedure_Instance;
+.)
+
+Rules for function_instantiation. :
+(.
+      ${function_instantiation.unit_kind} := Gela.Semantic_Types.A_Function_Instance;
+.)
+
+Rules for package_renaming_declaration. :
+(.
+      ${package_renaming_declaration.unit_kind} := Gela.Semantic_Types.A_Package_Renaming;
+.)
+
+Rules for generic_package_renaming. :
+(.
+      ${generic_package_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Package_Renaming;
+.)
+
+Rules for generic_procedure_renaming. :
+(.
+      ${generic_procedure_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure_Renaming;
+.)
+
+Rules for generic_function_renaming. :
+(.
+      ${generic_function_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Function_Renaming;
+.)
+
+Rules for task_body. :
+(.
+      ${task_body.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure_Renaming;
+.)
+
+Rules for protected_body. :
+(.
+      ${protected_body.unit_kind} := Gela.Semantic_Types.A_Generic_Function_Renaming;
 .)
 
 Rules for Compilation. :
@@ -2506,7 +2504,7 @@ Inherited attributes
   variant_part,
   while_loop_statement,
   with_clause
-    : Gela.Types.Payload : env_in;
+    : Gela.Semantic_Types.Env_Index : env_in;
 
 
 Synthesized attributes
@@ -2661,7 +2659,7 @@ Synthesized attributes
   variant,
   variant_part,
   with_clause
-    : Gela.Types.Payload : env_out;
+    : Gela.Semantic_Types.Env_Index : env_out;
 
 
 Rules for Aborted_Tasks.name :
@@ -5546,7 +5544,10 @@ Rules for unconstrained_array_definition. :
 
 Rules for units.compilation_unit :
 (.
-      ${compilation_unit.env_in} := ${head.env_out};
+      ${compilation_unit.env_in} := Gela.Pass_Utils.Create_Unit
+        (Comp       => Self.Compilation,
+         Full_Name  => ${compilation_unit.full_name},
+         Unit_Kind  => ${compilation_unit.unit_kind});
 .)
 
 Rules for units.compilation_unit :

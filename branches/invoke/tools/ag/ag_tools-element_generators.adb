@@ -47,6 +47,24 @@ package body AG_Tools.Element_Generators is
       Part : Gela.Grammars.Part)
          return League.Strings.Universal_String;
 
+   procedure Write_Attr_With
+     (G      : Gela.Grammars.Grammar_Access;
+      NT     : Gela.Grammars.Non_Terminal;
+      Output : in out AG_Tools.Writers.Writer;
+      Done   : in out League.String_Vectors.Universal_String_Vector);
+
+   procedure Write_Attr_Get
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out AG_Tools.Writers.Writer;
+      Name   : League.Strings.Universal_String;
+      Impl   : Boolean);
+
+   procedure Write_Attr_Set
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out AG_Tools.Writers.Writer;
+      Name   : League.Strings.Universal_String;
+      Impl   : Boolean);
+
    --------------------------
    -- Generate_Constructor --
    --------------------------
@@ -90,10 +108,34 @@ package body AG_Tools.Element_Generators is
    is
       use AG_Tools.Input;
       use type League.Strings.Universal_String;
+
+      procedure Write_Attr
+        (NT    : Gela.Grammars.Non_Terminal;
+         Attrs : in out AG_Tools.Writers.Writer);
+
+      Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
+
+      ----------------
+      -- Write_Attr --
+      ----------------
+
+      procedure Write_Attr
+        (NT    : Gela.Grammars.Non_Terminal;
+         Attrs : in out AG_Tools.Writers.Writer) is
+      begin
+         for A in NT.First_Attribute .. NT.Last_Attribute loop
+            Write_Attr_Get (G.Declaration (A), Attrs, Name, False);
+            Attrs.P (" is abstract;");
+            Attrs.P;
+            Write_Attr_Set (G.Declaration (A), Attrs, Name, False);
+            Attrs.P (" is abstract;");
+            Attrs.P;
+         end loop;
+      end Write_Attr;
+
       Withed : League.String_Vectors.Universal_String_Vector;
       Withes : AG_Tools.Writers.Writer;
       Nodes  : AG_Tools.Writers.Writer;
-      Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
    begin
       for J in G.Non_Terminal'Range loop
          if Implement (NT.Index, J) then
@@ -144,6 +186,9 @@ package body AG_Tools.Element_Generators is
       if Is_Concrete (NT.Index) then
          Write_Parts (G, G.Production (NT.First), Nodes, Withes, Withed);
       end if;
+
+      Write_Attr_With (G, NT, Withes, Withed);
+      Write_Attr (NT, Nodes);
 
       if Has_List (NT.Index) then
          Nodes.N ("   package ");
@@ -290,11 +335,79 @@ package body AG_Tools.Element_Generators is
       use type League.Strings.Universal_String;
       use type Gela.Grammars.Part_Count;
 
+      procedure Write_Attr
+        (NT    : Gela.Grammars.Non_Terminal;
+         Nodes : in out AG_Tools.Writers.Writer;
+         Impl  : in out AG_Tools.Writers.Writer;
+         Attrs : in out AG_Tools.Writers.Writer);
+
+      Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
       Withed : League.String_Vectors.Universal_String_Vector;
       Withes : AG_Tools.Writers.Writer;
+
+      ----------------
+      -- Write_Attr --
+      ----------------
+
+      procedure Write_Attr
+        (NT    : Gela.Grammars.Non_Terminal;
+         Nodes : in out AG_Tools.Writers.Writer;
+         Impl  : in out AG_Tools.Writers.Writer;
+         Attrs : in out AG_Tools.Writers.Writer)
+      is
+         Pkg : League.Strings.Universal_String;
+      begin
+         for A in NT.First_Attribute .. NT.Last_Attribute loop
+            declare
+               Decl : Gela.Grammars.Attribute_Declaration renames
+                 G.Declaration (A);
+            begin
+               Pkg := Package_Name (Decl.Type_Name);
+               if Withed.Index (Pkg) = 0 then
+                  Withed.Append (Pkg);
+                  Withes.N ("with ");
+                  Withes.N (Pkg);
+                  Withes.P (";");
+               end if;
+
+               Nodes.N ("      ");
+               Nodes.N (To_Ada (Decl.Name));
+               Nodes.N (" : ");
+               Nodes.N (To_Ada (Decl.Type_Name));
+               Nodes.P (";");
+               Write_Attr_Get (G.Declaration (A), Attrs, Name, True);
+               Attrs.P (";");
+               Attrs.P;
+               Write_Attr_Get (G.Declaration (A), Impl, Name, True);
+               Impl.P (" is");
+               Impl.P ("   begin");
+               Impl.N ("      return Self.");
+               Impl.N (To_Ada (Decl.Name));
+               Impl.P (";");
+               Impl.N ("   end ");
+               Impl.N (To_Ada (Decl.Name));
+               Impl.P (";");
+               Impl.P;
+               Write_Attr_Set (G.Declaration (A), Attrs, Name, True);
+               Attrs.P (";");
+               Attrs.P;
+               Write_Attr_Set (G.Declaration (A), Impl, Name, True);
+               Impl.P (" is");
+               Impl.P ("   begin");
+               Impl.N ("      Self.");
+               Impl.N (To_Ada (Decl.Name));
+               Impl.P (" := Value;");
+               Impl.N ("   end Set_");
+               Impl.N (To_Ada (Decl.Name));
+               Impl.P (";");
+               Impl.P;
+            end;
+         end loop;
+      end Write_Attr;
+
+      Attrs  : AG_Tools.Writers.Writer;
       Nodes  : AG_Tools.Writers.Writer;
       Impl   : AG_Tools.Writers.Writer;
-      Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
       Pkg    : constant League.Strings.Universal_String :=
         "Gela.Elements." & Plural (NT.Name);
       Prod   : Gela.Grammars.Production renames G.Production (NT.First);
@@ -382,7 +495,8 @@ package body AG_Tools.Element_Generators is
          Index := Index + 1;
       end loop;
 
-      Impl.P ("));");
+      Impl.P ("),");
+      Impl.P ("        others => <>);");
       Impl.P ("   end Create;");
       Impl.P;
 
@@ -401,7 +515,12 @@ package body AG_Tools.Element_Generators is
       Nodes.N (Name);
       Nodes.P (" with");
       Nodes.P ("   record");
-      Nodes.P ("      null;");
+      Write_Attr (NT, Nodes, Impl, Attrs);
+
+      if Attrs.Text.Is_Empty then
+         Nodes.P ("      null;");
+      end if;
+
       Nodes.P ("   end record;");
       Nodes.P;
 
@@ -443,7 +562,8 @@ package body AG_Tools.Element_Generators is
       Nodes.N ("     (Self    : access ", Impl);
       Nodes.N (Name, Impl);
       Nodes.P (";", Impl);
-      Nodes.P ("      Visiter : in out Gela.Element_Visiters.Visiter)", Impl);
+      Nodes.N ("      Visiter : in out Gela.Element_Visiters.Visiter'Class)",
+               Impl);
       Nodes.P (";");
       Nodes.P;
       Impl.P (" is");
@@ -453,11 +573,13 @@ package body AG_Tools.Element_Generators is
       Impl.P (" (Self);");
       Impl.P ("   end Visit;");
       Impl.P;
-      Nodes.N ("end Gela.Nodes.", Impl);
-      Nodes.N (Plural (NT.Name), Impl);
-      Nodes.P (";", Impl);
+
+      Attrs.N ("end Gela.Nodes.", Impl);
+      Attrs.N (Plural (NT.Name), Impl);
+      Attrs.P (";", Impl);
       Ada.Text_IO.Put_Line (Withes.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Nodes.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Attrs.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
    end Generate_Node;
 
@@ -662,6 +784,77 @@ package body AG_Tools.Element_Generators is
          return R & "_Access";
       end if;
    end Return_Type_Image;
+
+   ---------------------
+   -- Write_Attr_With --
+   ---------------------
+
+   procedure Write_Attr_With
+     (G     : Gela.Grammars.Grammar_Access;
+      NT     : Gela.Grammars.Non_Terminal;
+      Output : in out AG_Tools.Writers.Writer;
+      Done   : in out League.String_Vectors.Universal_String_Vector)
+   is
+      Pkg_Name   : League.Strings.Universal_String;
+   begin
+      for A in NT.First_Attribute .. NT.Last_Attribute loop
+         Pkg_Name := Package_Name (G.Declaration (A).Type_Name);
+
+         if Done.Index (Pkg_Name) = 0 then
+            Done.Append (Pkg_Name);
+            Output.N ("with ");
+            Output.N (Pkg_Name);
+            Output.P (";");
+         end if;
+      end loop;
+   end Write_Attr_With;
+
+   --------------------
+   -- Write_Attr_Get --
+   --------------------
+
+   procedure Write_Attr_Get
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out AG_Tools.Writers.Writer;
+      Name   : League.Strings.Universal_String;
+      Impl   : Boolean) is
+   begin
+      Output.N ("   ");
+      if Impl then
+         Output.N ("overriding ");
+      end if;
+      Output.N ("function ");
+      Output.P (To_Ada (Decl.Name));
+      Output.N ("     (Self    : ");
+      Output.N (Name);
+      Output.P (")");
+      Output.N ("     return ");
+      Output.N (To_Ada (Decl.Type_Name));
+   end Write_Attr_Get;
+
+   --------------------
+   -- Write_Attr_Set --
+   --------------------
+
+   procedure Write_Attr_Set
+     (Decl   : Gela.Grammars.Attribute_Declaration;
+      Output : in out AG_Tools.Writers.Writer;
+      Name   : League.Strings.Universal_String;
+      Impl   : Boolean) is
+   begin
+      Output.N ("   ");
+      if Impl then
+         Output.N ("overriding ");
+      end if;
+      Output.N ("procedure Set_");
+      Output.P (To_Ada (Decl.Name));
+      Output.N ("     (Self    : in out ");
+      Output.N (Name);
+      Output.P (";");
+      Output.N ("      Value   : ");
+      Output.N (To_Ada (Decl.Type_Name));
+      Output.N (")");
+   end Write_Attr_Set;
 
    -----------------
    -- Write_Parts --

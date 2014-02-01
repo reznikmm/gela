@@ -26,6 +26,16 @@ package body Gela.Plain_Compilations is
       return 0.0;
    end Compilation_CPU_Duration;
 
+   -------------
+   -- Context --
+   -------------
+
+   overriding function Context
+     (Self : Compilation) return Gela.Contexts.Context_Access is
+   begin
+      return Self.Context;
+   end Context;
+
    -------------------
    -- Get_Line_Span --
    -------------------

@@ -60,6 +60,10 @@ package AG_Tools.Writers is
      (Self  : in out Writer;
       Value : Natural);
 
+   procedure N
+     (Self  : in out Writer;
+      Value : Writer'Class);
+
 private
 
    type Writer is tagged record

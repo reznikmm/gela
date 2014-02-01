@@ -68,6 +68,7 @@ package body AG_Tools.NT_Generators is
 
       Impl.P (T.Substitute (Values));
    end Generate_Rule;
+
    ---------------
    -- List_Item --
    ---------------
@@ -98,12 +99,10 @@ package body AG_Tools.NT_Generators is
    begin
       Code.N ("      This_");
       Code.N (To_Ada (D.Name));
-
       Code.N (":= This.");
-      Code.P (To_Ada (D.Name));
-      Code.N ("        (Node");
+      Code.N (To_Ada (D.Name));
+      Code.P (";");
 
-      Code.N (".Payload);");
       Self.Make_Local_Variable (This, D);
    end Make_Get;
 
@@ -183,7 +182,6 @@ package body AG_Tools.NT_Generators is
       Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
       Code    : AG_Tools.Writers.Writer renames Self.Context.Code;
       Name    : constant League.Strings.Universal_String := To_Ada (NT.Name);
-      Unit    : constant League.Strings.Universal_String := Plural (NT.Name);
    begin
       Code.Clear;
       Self.Context.Attr_Map.Clear;
@@ -197,20 +195,14 @@ package body AG_Tools.NT_Generators is
       Spec.P ("", Impl);
       Impl.P ("   is");
 
-      Self.Context.Add_With ("Gela.Stores." & Unit);
-
-      Impl.N ("      This : constant Gela.Stores.");
-      Impl.P (Unit);
-      Impl.P ("        .Object_Access :=");
-      Impl.N ("        Gela.Stores.");
-      Impl.N (Unit);
-      Impl.P (".Object_Access");
-      Impl.P ("          (Node.its);");
+      Impl.N ("      This : ");
+      Impl.N (Return_Type (Self.Context.Grammar.all, NT));
+      Impl.P ("_Access renames Node;");
 
       Write_Rules (Self.Context, NT, NT.First, Pos);
 
       Impl.P ("   begin");
-      Impl.P (Code.Text);  --  <--- Make .N
+      Impl.N (Code);  --  <--- Make .N
       Impl.N ("   end ");
       Impl.N (Name);
       Impl.P (";");
@@ -232,24 +224,26 @@ package body AG_Tools.NT_Generators is
       NT  : Gela.Grammars.Non_Terminal renames
         Self.Context.Grammar.Non_Terminal (Prod.Parent);
 
-      G       : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G  : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      RT : constant League.Strings.Universal_String := Return_Type (G, NT);
       Parts   : Gela.Grammars.Ordered.Partition_Array renames
         Self.Context.Partition (NT.First_Attribute .. NT.Last_Attribute);
       Spec    : AG_Tools.Writers.Writer renames Self.Context.Spec;
       Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
       Code    : AG_Tools.Writers.Writer renames Self.Context.Code;
-      Piece   : League.Strings.Universal_String;
+      Piece   : AG_Tools.Writers.Writer;
       Item_NT : Gela.Grammars.Non_Terminal renames G.Non_Terminal
         (List_Item (G, NT));
       Item : constant League.Strings.Universal_String :=
         To_Ada (Item_NT.Name);
-      Sequences : constant League.Strings.Universal_String :=
-        Plural (Item & "_Sequence");
    begin
       Code.Clear;
       Self.Context.Attr_Map.Clear;
 
       Spec.P ("", Impl);
+      Impl.N ("   --  ");
+      Impl.N (Key.Pass);
+      Impl.P;
       Spec.N ("   not ", Impl);
       Write_Declaration (Self.Context, NT);
 
@@ -278,42 +272,32 @@ package body AG_Tools.NT_Generators is
       Spec.P ("", Impl);
       Impl.P ("   is");
 
-      Self.Context.Add_With ("Gela.Stores." & Sequences);
-
-      Impl.N ("      This : constant Gela.Stores.");
-      Impl.P (Sequences);
-      Impl.P ("        .List_Access :=");
-      Impl.N ("        Gela.Stores.");
-      Impl.N (Sequences);
-      Impl.P (".List_Access");
-      Impl.P ("          (Node.its);");
+      Impl.N ("      This : ");
+      Impl.N (RT);
+      Impl.P ("_Cursor :=");
+      Impl.P ("        Node.First;");
 
       Self.Context.Factory.Get (G.Part (Prod.Last)).
          Make_Local_Variable (Prod.Last);
 
-      Code.N ("      while ");
+      Code.P ("      while This.Has_Element loop");
+      Code.N ("      ");
       Code.N (Item);
-      Code.P (".its /= null loop");
+      Code.P (" := This.Element;");
 
       Write_Rules (Self.Context, NT, NT.First, Pos);
 
-      Code.P ("         null;");
-      Code.N ("         This.Next (Node.Payload, ");
-      Code.N (Item);
-      Code.P (");");
+      Code.P ("         This.Next;");
       Code.P ("      end loop;");
-      Piece := Code.Text;
+      Piece := Code;
       Code.Clear;
       Write_Rules (Self.Context, NT, NT.Last, Pos);
       Impl.P ("   begin");
-      Impl.N (Code.Text);
+      Impl.N (Code);
 
-      Impl.P ("      if Node.its = null then");
+      Impl.P ("      if not This.Has_Element then");
       Impl.P ("         return;");
       Impl.P ("      end if;");
-      Impl.N ("      ");
-      Impl.N (Item);
-      Impl.P (" := This.Head (Node.Payload);");
 
       Impl.N (Piece);
       Impl.N ("   end ");
@@ -337,10 +321,8 @@ package body AG_Tools.NT_Generators is
       Code.N ("      ");
 
       Code.N ("This.Set_");
-      Code.P (To_Ada (D.Name));
-      Code.N ("        (Node");
-
-      Code.N (".Payload, This_");
+      Code.N (To_Ada (D.Name));
+      Code.N ("        (This_");
       Code.N (To_Ada (D.Name));
       Code.P (");");
       Self.Make_Local_Variable (This, D);
@@ -370,12 +352,19 @@ package body AG_Tools.NT_Generators is
    is
       Spec      : AG_Tools.Writers.Writer renames Context.Spec;
       Impl      : AG_Tools.Writers.Writer renames Context.Impl;
+      RT : constant League.Strings.Universal_String :=
+        Return_Type (Context.Grammar.all, NT);
    begin
+      Context.Add_With
+        (Name => Package_Name (RT),
+         Kind => AG_Tools.Contexts.Spec_Unit);
+
       Spec.N ("overriding procedure ", Impl);
       Spec.P (To_Ada (NT.Name), Impl);
       Spec.P ("     (Self    : in out Visiter;", Impl);
-      Spec.N ("      Node    : Gela.Nodes.", Impl);
-      Spec.N (Return_Type (Context.Grammar.all, NT), Impl);
+      Spec.N ("      Node    : not null ", Impl);
+      Spec.N (RT, Impl);
+      Spec.N ("_Access", Impl);
    end Write_Declaration;
 
    -----------------
@@ -419,7 +408,7 @@ package body AG_Tools.NT_Generators is
                   P   : Part renames G.Part (Element (Each).Part);
                begin
                   Gen := Context.Factory.Get (P);
-                  Gen.Make_Descent (P.Index, Key (Each).Pass);
+                  Gen.Make_Descent (P.Index, Element (Each).Pass);
                end;
          end case;
 

@@ -13,7 +13,7 @@ with Gela.Lexers;
 package Gela.Plain_Compilations is
    pragma Preelaborate;
 
-   type Compilation (Context : access Gela.Contexts.Context'Class) is
+   type Compilation (Context : Gela.Contexts.Context_Access) is
      limited new Gela.Compilations.Compilation
        and Gela.Lexers.Lexer_Destination
        and Gela.Parsers.Parser_Input with private;
@@ -34,7 +34,7 @@ private
       Element_Type => Gela.Lexical_Types.Line_Span,
       "="          => Gela.Lexical_Types."=");
 
-   type Compilation (Context : access Gela.Contexts.Context'Class) is
+   type Compilation (Context : Gela.Contexts.Context_Access) is
      limited new Gela.Compilations.Compilation
        and Gela.Lexers.Lexer_Destination
        and Gela.Parsers.Parser_Input with
@@ -44,6 +44,9 @@ private
       Lines  : Line_Vectors.Vector;
       Update : League.Calendars.Date_Time;
    end record;
+
+   overriding function Context
+     (Self : Compilation) return Gela.Contexts.Context_Access;
 
    overriding function Text_Name
      (Self : Compilation) return League.Strings.Universal_String;

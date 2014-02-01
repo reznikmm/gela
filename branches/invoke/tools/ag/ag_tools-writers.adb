@@ -67,6 +67,13 @@ package body AG_Tools.Writers is
       Self.N (Image (2 .. Image'Last));
    end N;
 
+   procedure N
+     (Self  : in out Writer;
+      Value : Writer'Class) is
+   begin
+      Self.Text.Append (Value.Text);
+   end N;
+
    procedure P
      (Self : in out Writer;
       Text : Wide_Wide_String := "";

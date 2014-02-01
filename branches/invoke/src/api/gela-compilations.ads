@@ -2,6 +2,7 @@ with League.Calendars;
 with League.String_Vectors;
 with League.Strings;
 
+with Gela.Contexts;
 with Gela.Lexical_Types;
 
 package Gela.Compilations is
@@ -10,6 +11,9 @@ package Gela.Compilations is
    type Compilation is limited interface;
    type Compilation_Access is access all Compilation'Class;
    for Compilation_Access'Storage_Size use 0;
+
+   not overriding function Context
+     (Self : Compilation) return Gela.Contexts.Context_Access is abstract;
 
    not overriding function Text_Name
      (Self : Compilation) return League.Strings.Universal_String is abstract;

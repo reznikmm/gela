@@ -34,7 +34,7 @@ package body AG_Tools.Part_Generators is
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
-      Self.Make_Local_Variable (Part);
+      Generator'Class (Self.all).Make_Local_Variable (Part);
       if P.Name.Ends_With ("compilation_unit") then
          Code.N ("   --  Make_Descent PART ");
          Code.N (Pass);
@@ -43,10 +43,9 @@ package body AG_Tools.Part_Generators is
 
       Code.N ("      ");
       Code.N (To_Ada (P.Name));
-      Code.P (".its.Visit");
-      Code.N ("        (");
-      Code.N (To_Ada (P.Name));
-      Code.P (".Payload, Self);");
+      Code.N (".Visit (Self.Parent.P");
+      Code.N (Pass);
+      Code.P (".all);");
    end Make_Descent;
 
    ------------------
@@ -63,9 +62,9 @@ package body AG_Tools.Part_Generators is
    begin
       Self.Make_Local_Variable (Part);
 
-      Code.N ("      if ");
+      Code.N ("      if Assigned (");
       Code.N (To_Ada (P.Name));
-      Code.P (".its /= null then");
+      Code.P (") then");
       Generator (Self.all).Make_Descent (Part, Pass);
       Code.P ("      end if;");
    end Make_Descent;
@@ -85,21 +84,22 @@ package body AG_Tools.Part_Generators is
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
       NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
       Parts : Gela.Grammars.Ordered.Partition_Array renames
-        Self.Context.Partition.all;
+        Self.Context.Partition.all (NT.First_Attribute .. NT.Last_Attribute);
    begin
       Self.Make_Local_Variable (Part);
       Code.N ("   --  Make_Descent LIST ");
       Code.N (Pass);
       Code.P;
       Code.N ("      ");
-      Code.N ("Self.");
+      Code.N ("Self.Parent.");
       Code.N (To_Ada (P.Name));
       Code.N (" (");
       Code.N (To_Ada (P.Name));
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop
          if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
-            Self.Make_Local_Variable (P.Name, G.Declaration (J));
+            Self.Make_Local_Variable
+              (P.Name, G.Declaration (J));
 
             Code.N (", ");
             Code.N (To_Ada (P.Name));
@@ -142,7 +142,7 @@ package body AG_Tools.Part_Generators is
       D      : Gela.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
-      Self.Make_Local_Variable (Attribute.Origin);
+      Generator'Class (Self.all).Make_Local_Variable (Attribute.Origin);
       Origin := To_Ada (G.Part (Attribute.Origin).Name);
 
       Code.N ("      ");
@@ -152,12 +152,13 @@ package body AG_Tools.Part_Generators is
       Code.P (" :=");
       Code.N ("        ");
       Code.N (Origin);
-      Code.N (".its.");
-      Code.N (To_Ada (D.Name));
-      Code.N (" (");
-      Code.N (Origin);
-      Code.P (".Payload);");
-      Self.Make_Local_Variable (Origin, D);
+      if G.Part (Attribute.Origin).Is_Non_Terminal_Reference then
+         Code.N (".");
+         Code.N (To_Ada (D.Name));
+      end if;
+
+      Code.P (";");
+      Generator'Class (Self.all).Make_Local_Variable (Origin, D);
    end Make_Get;
 
    --------------
@@ -216,9 +217,9 @@ package body AG_Tools.Part_Generators is
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Origin := To_Ada (G.Part (Attribute.Origin).Name);
-      Code.N ("      if ");
+      Code.N ("      if Assigned (");
       Code.N (Origin);
-      Code.P (".its /= null then");
+      Code.P (") then");
       Generator (Self.all).Make_Get (Attribute);
       Code.P ("      end if;");
    end Make_Get;
@@ -264,25 +265,30 @@ package body AG_Tools.Part_Generators is
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
       Prod : Gela.Grammars.Production renames G.Production (P.Parent);
       NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      RT   : constant League.Strings.Universal_String := Return_Type (G, P);
    begin
       if not Self.Context.Part_Map (Part) then
          Self.Context.Part_Map (Part) := True;
+         Self.Context.Add_With (Package_Name (RT));
          Impl.N ("      ");
          Impl.N (To_Ada (P.Name));
 
          if Is_Converted_List (G, NT) then
-            Impl.N (" : Gela.Nodes.");
+            Impl.N (" : ");
             Impl.N (Return_Type (G, P));
-            Impl.P (";");
+            Impl.P ("_Access;");
          else
-            Impl.N (" : constant Gela.Nodes.");
-            Impl.N (Return_Type (G, P));
+            Impl.N (" : constant ");
+            Impl.N (RT);
+            if not P.Is_Terminal_Reference then
+               Impl.N ("_Access");
+            end if;
             Impl.P (" :=");
             Impl.N ("        ");
             Impl.N (This);
             Impl.N (".");
             Impl.N (To_Ada (P.Name));
-            Impl.P (" (Node.Payload);");
+            Impl.P (";");
          end if;
       end if;
    end Make_Local_Variable;
@@ -301,22 +307,19 @@ package body AG_Tools.Part_Generators is
       D      : Gela.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
-      Self.Make_Local_Variable (Attribute.Origin);
+      Generator'Class (Self.all).Make_Local_Variable (Attribute.Origin);
       Code.N ("      ");
 
       Origin := To_Ada (G.Part (Attribute.Origin).Name);
       Code.N (Origin);
-      Code.N (".its.Set_");
+      Code.N (".Set_");
       Code.P (To_Ada (D.Name));
       Code.N ("        (");
-      Code.N (Origin);
-
-      Code.N (".Payload, ");
       Code.N (Origin);
       Code.N ("_");
       Code.N (To_Ada (D.Name));
       Code.P (");");
-      Self.Make_Local_Variable (Origin, D);
+      Generator'Class (Self.all).Make_Local_Variable (Origin, D);
    end Make_Set;
 
    --------------
@@ -367,9 +370,9 @@ package body AG_Tools.Part_Generators is
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Origin := To_Ada (G.Part (Attribute.Origin).Name);
-      Code.N ("      if ");
+      Code.N ("      if Assigned (");
       Code.N (Origin);
-      Code.P (".its /= null then");
+      Code.P (") then");
       Generator (Self.all).Make_Set (Attribute);
       Code.P ("      end if;");
    end Make_Set;
