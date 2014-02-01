@@ -76,7 +76,13 @@ begin
           (Command   => Build & "/tests/gela/lexer_test",
            List_File => Tests & "/gela/lexer/list.txt",
            ACATS     => ACATS_Dir);
-      Iterator : Gela.Test_Iterators.Append.Iterator := Dirs + Lexer;
+      Parser : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.ACATS.Create
+          (Command   => Build & "/tests/gela/parser_test",
+           List_File => Tests & "/gela/lexer/list.txt",
+           ACATS     => ACATS_Dir);
+      Iterator : Gela.Test_Iterators.Append.Iterator :=
+        Dirs + Lexer + Parser;
    begin
       Iterator.Start;
 

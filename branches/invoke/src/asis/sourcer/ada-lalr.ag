@@ -293,7 +293,7 @@ Rules for access_type_definition.object :
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
-        -${general_access_modifier.ast:None},
+        -${general_access_modifier.ast:No_Token},
         -${subtype_indication.ast});
 .)
 
@@ -515,8 +515,8 @@ Rules for basic_declarative_item_list. :
    declare
       Conv : constant Gela.LARL_Parsers_Nodes.Node := ${head.ast:+Self.
         Factory.Basic_Declarative_Item_Sequence};
-      List : constant Gela.Elements.Compilation_Units.
-        Compilation_Unit_Sequence_Access := -Conv;
+      List : constant Gela.Elements.Basic_Declarative_Items.
+        Basic_Declarative_Item_Sequence_Access := -Conv;
    begin
       List.Append (-${basic_declarative_item.ast});
       ${basic_declarative_item_list.ast} := Conv;
@@ -544,7 +544,7 @@ Rules for block_statement. :
           -${exception_token.ast:No_Token},
           -${sequence_of_exception_handlers.ast:None},
           -${end_token.ast},
-          -${endid.ast:None},
+          -${endid.ast:No_Token},
           -${semicolon_token.ast});
 .)
 
@@ -1343,7 +1343,7 @@ Rules for extended_return_statement. :
           -${exception_token.ast:No_Token},
           -${sequence_of_exception_handlers.ast:None},
           -${end_token.ast:No_Token},
-          -${endreturn.ast:None},
+          -${endreturn.ast:No_Token},
           -${semicolon_token.ast});
 .)
 
@@ -1406,7 +1406,7 @@ Rules for formal_access_type_definition.object :
        (-${not_token.ast:No_Token},
         -${null_token.ast:No_Token},
         -${access_token.ast},
-        -${general_access_modifier.ast:None},
+        -${general_access_modifier.ast:No_Token},
         -${subtype_indication.ast});
 .)
 
@@ -1673,7 +1673,7 @@ Rules for formal_interface_type_definition. :
 (.
    ${formal_interface_type_definition.ast} := +Self.Factory.
      Formal_Interface_Type_Definition
-       (-${interface_kind.ast:None},
+       (-${interface_kind.ast:No_Token},
         -${interface_token.ast},
         -${and_subtype_mark_list.ast:None});
 .)
@@ -2647,7 +2647,7 @@ Rules for interface_type_definition. :
 (.
    ${interface_type_definition.ast} := +Self.Factory.
      Interface_Type_Definition
-       (-${interface_kind.ast:None},
+       (-${interface_kind.ast:No_Token},
         -${interface_token.ast},
         -${and_subtype_mark_list.ast:None});
 .)
@@ -2765,7 +2765,7 @@ Rules for loop_statement. :
           -${sequence_of_statements.ast},
           -${end_token.ast},
           -${endloop.ast},
-          -${endid.ast:None},
+          -${endid.ast:No_Token},
           -${semicolon_token.ast});
 .)
 Rules for loop_statement. :
@@ -2780,7 +2780,7 @@ Rules for loop_statement. :
           -${sequence_of_statements.ast},
           -${end_token.ast},
           -${endloop.ast},
-          -${endid.ast:None},
+          -${endid.ast:No_Token},
           -${semicolon_token.ast});
 .)
 Rules for loop_statement. :
@@ -2795,7 +2795,7 @@ Rules for loop_statement. :
           -${sequence_of_statements.ast},
           -${end_token.ast},
           -${endloop.ast},
-          -${endid.ast:None},
+          -${endid.ast:No_Token},
           -${semicolon_token.ast});
 .)
 Rules for loop_statement. :
@@ -2810,7 +2810,7 @@ Rules for loop_statement. :
           -${sequence_of_statements.ast},
           -${end_token.ast},
           -${endloop.ast},
-          -${endid.ast:None},
+          -${endid.ast:No_Token},
           -${semicolon_token.ast});
 .)
 
@@ -3632,7 +3632,7 @@ Rules for record_representation_clause. :
         -${at_token.ast:No_Token},
         -${mod_token.ast:No_Token},
         -${expression.ast:None},
-        -${at_semicolon.ast:None},
+        -${at_semicolon.ast:No_Token},
         -${component_clause_list.ast:None},
         -${end_token.ast},
         -${r.ast},

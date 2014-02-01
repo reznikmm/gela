@@ -361,6 +361,7 @@ begin
 
    Output.P ("with Gela.Elements.Aspect_Specifications;");
    Output.P ("with Gela.Elements.Associations;");
+   Output.P ("with Gela.Elements.Basic_Declarative_Items;");
    Output.P ("with Gela.Elements.Case_Expression_Paths;");
    Output.P ("with Gela.Elements.Case_Paths;");
    Output.P ("with Gela.Elements.Clause_Or_Pragmas;");

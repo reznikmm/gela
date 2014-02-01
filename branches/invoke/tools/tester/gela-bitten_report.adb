@@ -77,37 +77,34 @@ package body Gela.Bitten_Report is
          begin
             Iterator.Next (Test);
 
-            Attrs.Set_Value (Duration, Time_Image (Test.Duration));
-            Attrs.Set_Value (Status, Image (Test.Status));
-            Attrs.Set_Value (Name, Test.Name);
-            --  Attrs.Set_Value (Fixture, Test.Name);
-            Attrs.Set_Value (Fixture, Test.Fixture);
-            Attrs.Set_Value (File, Test.File);
-
-            Writer.Start_Element
-              (Qualified_Name => Bitten_Report.Test,
-               Attributes     => Attrs);
-
-            --  Bitten web interface shows only traceback, so write output and
-            --  traceback here
+            --  Skip successful tests to keep report smaller
             if Test.Status /= Gela.Test_Cases.Success then
+               Attrs.Set_Value (Duration, Time_Image (Test.Duration));
+               Attrs.Set_Value (Status, Image (Test.Status));
+               Attrs.Set_Value (Name, Test.Name);
+               --  Attrs.Set_Value (Fixture, Test.Name);
+               Attrs.Set_Value (Fixture, Test.Fixture);
+               Attrs.Set_Value (File, Test.File);
+
+               Writer.Start_Element
+                 (Qualified_Name => Bitten_Report.Test,
+                  Attributes     => Attrs);
+
+               --  Bitten web interface shows only traceback, so write output
+               --  and traceback here
                Writer.Start_Element (Qualified_Name => Traceback);
                Writer.Characters (Test.Traceback);
                Writer.Characters (Test.Output);
                Writer.End_Element (Qualified_Name => Traceback);
-            elsif not Test.Traceback.Is_Empty then
-               Writer.Start_Element (Qualified_Name => Traceback);
-               Writer.Characters (Test.Traceback);
-               Writer.End_Element (Qualified_Name => Traceback);
-            end if;
 
-            if not Test.Output.Is_Empty then
-               Writer.Start_Element (Qualified_Name => Stdout);
-               Writer.Characters (Test.Output);
-               Writer.End_Element (Qualified_Name => Stdout);
-            end if;
+               if not Test.Output.Is_Empty then
+                  Writer.Start_Element (Qualified_Name => Stdout);
+                  Writer.Characters (Test.Output);
+                  Writer.End_Element (Qualified_Name => Stdout);
+               end if;
 
-            Writer.End_Element (Qualified_Name => Bitten_Report.Test);
+               Writer.End_Element (Qualified_Name => Bitten_Report.Test);
+            end if;
          end;
       end loop;
 

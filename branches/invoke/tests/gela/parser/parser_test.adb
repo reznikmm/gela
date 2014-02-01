@@ -19,9 +19,10 @@ with Gela.Node_Factories;
 procedure Parser_Test is
 
    use type League.Hash_Type;
-
+   use type Gela.Elements.Compilations.Compilation_Access;
 
    Hash    : League.Hash_Type;
+   pragma Unreferenced (Hash);
    Path    : League.Strings.Universal_String;
    File    : Ada.Wide_Wide_Text_IO.File_Type;
    Input   : League.Strings.Universal_String;
@@ -66,7 +67,7 @@ begin
       Root       => Root,
       Last_Token => Last);
 
-   if Hash /= League.Hash_Type (Last) then
+   if Root = null then
       raise Constraint_Error;
    end if;
 end Parser_Test;
