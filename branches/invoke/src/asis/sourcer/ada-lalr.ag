@@ -118,7 +118,7 @@ Rules for Compilation. :
    begin
       List.Prepend (-${compilation_unit.ast});
       ${Compilation.ast} := +Self.Factory.Compilation
-         (List, -${context_item_list.ast:None});
+         (List, -${context_item_list.ast:(+Self.Factory.Context_Item_Sequence)});
    end;
 .)
 
@@ -172,12 +172,12 @@ Rules for accept_statement. :
           -${expression.ast:None},
           -${right_parenthesis_token.ast:No_Token},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${do_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast:No_Token},
           -${identifier_token.ast:No_Token},
           -${semicolon_token.ast});
@@ -213,7 +213,7 @@ Rules for access_definition.function_access :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         No_Token_Index,
@@ -230,7 +230,7 @@ Rules for access_definition.function_subtype :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         -${return_not.ast:No_Token},
@@ -259,7 +259,7 @@ Rules for access_definition.procedure :
         -${protected_token.ast:No_Token},
         -${procedure_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token});
 .)
 
@@ -307,7 +307,7 @@ Rules for access_type_definition.procedure :
         -${protected_token.ast:No_Token},
         -${procedure_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token});
 .)
 
@@ -320,7 +320,7 @@ Rules for access_type_definition.function_access :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         No_Token_Index,
@@ -337,7 +337,7 @@ Rules for access_type_definition.function_subtype :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         -${return_not.ast:No_Token},
@@ -538,11 +538,11 @@ Rules for block_statement. :
          (-${identifier_token.ast:No_Token},
           -${colon_token.ast:No_Token},
           -${declare_token.ast:No_Token},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast},
           -${sequence_of_statements.ast},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${endid.ast:No_Token},
           -${semicolon_token.ast});
@@ -674,7 +674,7 @@ Rules for component_declaration. :
         -${component_definition.ast},
         -${assignment_token.ast:No_Token},
         -${expression.ast:None},
-        -${aspect_specification.ast:None},
+        -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
         -${semicolon_token.ast});
 .)
 
@@ -1065,16 +1065,16 @@ Rules for entry_body. :
           -${entry_index_specification.ast:None},
           -${right_parenthesis_token.ast:No_Token},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${when_token.ast},
           -${expression.ast},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast},
           -${sequence_of_statements.ast},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${identifier_token.ast:No_Token},
           -${semicolon_token.ast});
@@ -1125,9 +1125,9 @@ Rules for entry_declaration. :
           -${discrete_subtype_definition.ast:None},
           -${right_parenthesis_token.ast:No_Token},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1197,7 +1197,7 @@ Rules for exception_declaration. :
          (-${defining_identifier_list.ast},
           -${colon_token.ast},
           -${exception_token.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1247,7 +1247,7 @@ Rules for exception_renaming_declaration. :
           -${exception_token.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1339,9 +1339,9 @@ Rules for extended_return_statement. :
          (-${return_token.ast},
           -${extended_return_object_declaration.ast},
           -${do_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast:No_Token},
           -${endreturn.ast:No_Token},
           -${semicolon_token.ast});
@@ -1420,7 +1420,7 @@ Rules for formal_access_type_definition.procedure :
         -${protected_token.ast:No_Token},
         -${procedure_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token});
 .)
 
@@ -1433,7 +1433,7 @@ Rules for formal_access_type_definition.function_access :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         No_Token_Index,
@@ -1451,7 +1451,7 @@ Rules for formal_access_type_definition.function_subtype :
         -${protected_token.ast:No_Token},
         -${function_token.ast},
         -${lp.ast:No_Token},
-        -${formal_part.ast:None},
+        -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
         -${rp.ast:No_Token},
         -${return_token.ast},
         -${return_not.ast:No_Token},
@@ -1481,7 +1481,7 @@ Rules for formal_complete_type_declaration.definition :
           -${discriminant_part.ast:None},
           -${is_token.ast:No_Token},
           -${formal_type_definition.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1554,10 +1554,10 @@ Rules for formal_derived_type_definition. :
           -${new_token.ast},
           -${subtype_mark.ast},
           -${and_token.ast:No_Token},
-          -${interface_list.ast:None},
+          -${interface_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
           -${with_token.ast:No_Token},
           -${private_token.ast:No_Token},
-          -${aspect_specification.ast:None});
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)});
 .)
 
 formal_discrete_type_definition ::=
@@ -1611,7 +1611,7 @@ Rules for formal_function_declaration.subtype :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           -${not_token.ast:No_Token},
@@ -1621,7 +1621,7 @@ Rules for formal_function_declaration.subtype :
           -${abstract_token.ast:No_Token},
           -${name.ast:None},
           -${box_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1633,7 +1633,7 @@ Rules for formal_function_declaration.access :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           No_Token_Index,
@@ -1643,7 +1643,7 @@ Rules for formal_function_declaration.access :
           -${abstract_token.ast:No_Token},
           -${name.ast:None},
           -${box_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1675,7 +1675,7 @@ Rules for formal_interface_type_definition. :
      Formal_Interface_Type_Definition
        (-${interface_kind.ast:No_Token},
         -${interface_token.ast},
-        -${and_subtype_mark_list.ast:None});
+        -${and_subtype_mark_list.ast:(+Self.Factory.Subtype_Mark_Sequence)});
 .)
 
 formal_modular_type_definition ::= mod_token box_token;
@@ -1717,7 +1717,7 @@ Rules for formal_object_declaration.subtype_mark :
           -${subtype_mark.ast},
           -${assignment_token.ast:No_Token},
           -${expression.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1734,7 +1734,7 @@ Rules for formal_object_declaration.access_definition :
           -${access_definition.ast},
           -${assignment_token.ast:No_Token},
           -${expression.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1846,9 +1846,9 @@ Rules for formal_package_declaration. :
           -${new_token.ast},
           -${program_unit_name.ast},
           -${left_parenthesis_token.ast:No_Token},
-          -${formal_package_actual_part.ast:None},
+          -${formal_package_actual_part.ast:(+Self.Factory.Generic_Association_Sequence)},
           -${right_parenthesis_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1901,14 +1901,14 @@ Rules for formal_procedure_declaration. :
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${is_token.ast:No_Token},
           -${abstract_token.ast:No_Token},
           -${box_token.ast:No_Token},
           -${null_token.ast:No_Token},
           -${name.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -1983,7 +1983,7 @@ Rules for full_type_declaration.full :
           -${discriminant_part.ast:None},
           -${is_token.ast},
           -${type_definition.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2004,7 +2004,7 @@ Rules for full_type_declaration.derived :
           -${discriminant_part.ast:None},
           -${is_token.ast},
           -Type_Definition,
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
      end;
 .)
@@ -2018,7 +2018,7 @@ Rules for full_type_declaration.derived :
              -${limited_token.ast:No_Token},
              -${new_token.ast},
              -${subtype_indication.ast},
-             -${and_subtype_mark_list.ast:None},
+             -${and_subtype_mark_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
              -${with_token.ast},
              -${record_definition.ast});
      begin
@@ -2029,7 +2029,7 @@ Rules for full_type_declaration.derived :
             -${discriminant_part.ast:None},
             -${is_token.ast},
             -Type_Definition,
-            -${aspect_specification.ast:None},
+            -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
             -${semicolon_token.ast});
      end;
 .)
@@ -2067,19 +2067,19 @@ Rules for function_body.function_subtype :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           -${not_null.ast:No_Token},
           -${null_token.ast:No_Token},
           -${subtype_mark.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${designator.ast:None},
           -${semicolon_token.ast});
@@ -2093,19 +2093,19 @@ Rules for function_body.function_access :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           No_Token_Index,
           No_Token_Index,
           -${access_definition.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${designator.ast:None},
           -${semicolon_token.ast});
@@ -2151,7 +2151,7 @@ Rules for function_declaration.function_subtype :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           -${not_null.ast:No_Token},
@@ -2163,7 +2163,7 @@ Rules for function_declaration.function_subtype :
           -${renames_token.ast:No_Token},
           -${name.ast:None},
           -${separate_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2175,7 +2175,7 @@ Rules for function_declaration.function_access :
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           No_Token_Index,
@@ -2187,7 +2187,7 @@ Rules for function_declaration.function_access :
           -${renames_token.ast:No_Token},
           -${name.ast:None},
           -${separate_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2249,17 +2249,17 @@ Rules for generic_function_declaration.subtype :
 (.
    ${generic_function_declaration.ast} := +Self.Factory.Generic_Function_Declaration
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           -${not_token.ast:No_Token},
           -${null_token.ast:No_Token},
           -${subtype_mark.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2267,17 +2267,17 @@ Rules for generic_function_declaration.access :
 (.
    ${generic_function_declaration.ast} := +Self.Factory.Generic_Function_Declaration
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${function_token.ast},
           -${defining_designator.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${return_token.ast},
           No_Token_Index,
           No_Token_Index,
           -${access_definition.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2313,9 +2313,9 @@ Rules for generic_instantiation.package :
           -${new_token.ast},
           -${program_unit_name.ast},
           -${left_parenthesis_token.ast:No_Token},
-          -${formal_package_actual_part.ast:None},
+          -${formal_package_actual_part.ast:(+Self.Factory.Generic_Association_Sequence)},
           -${right_parenthesis_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2331,9 +2331,9 @@ Rules for generic_instantiation.subtype :
           -${new_token.ast},
           -${program_unit_name.ast},
           -${left_parenthesis_token.ast:No_Token},
-          -${formal_package_actual_part.ast:None},
+          -${formal_package_actual_part.ast:(+Self.Factory.Generic_Association_Sequence)},
           -${right_parenthesis_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2349,9 +2349,9 @@ Rules for generic_instantiation.proc :
           -${new_token.ast},
           -${program_unit_name.ast},
           -${left_parenthesis_token.ast:No_Token},
-          -${formal_package_actual_part.ast:None},
+          -${formal_package_actual_part.ast:(+Self.Factory.Generic_Association_Sequence)},
           -${right_parenthesis_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2370,14 +2370,14 @@ Rules for generic_package_declaration. :
    ${generic_package_declaration.ast} :=
       +Self.Factory.Generic_Package_Declaration
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${package_token.ast},
           -${defining_program_unit_name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${public_item_list.ast:None},
+          -${public_item_list.ast:(+Self.Factory.Basic_Declarative_Item_Sequence)},
           -${private_token.ast:No_Token},
-          -${private_item_list.ast:None},
+          -${private_item_list.ast:(+Self.Factory.Basic_Declarative_Item_Sequence)},
           -${end_token.ast},
           -${program_unit_name.ast:None},
           -${semicolon_token.ast});
@@ -2394,13 +2394,13 @@ Rules for generic_procedure_declaration. :
    ${generic_procedure_declaration.ast} :=
       +Self.Factory.Generic_Procedure_Declaration
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2432,12 +2432,12 @@ Rules for generic_renaming_declaration.package :
    ${generic_renaming_declaration.ast} :=
       +Self.Factory.Generic_Package_Renaming
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${package_token.ast},
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2446,12 +2446,12 @@ Rules for generic_renaming_declaration.procedure :
    ${generic_renaming_declaration.ast} :=
       +Self.Factory.Generic_Procedure_Renaming
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2460,12 +2460,12 @@ Rules for generic_renaming_declaration.function :
    ${generic_renaming_declaration.ast} :=
       +Self.Factory.Generic_Function_Renaming
          (-${generic_token.ast},
-          -${generic_formal_item_list.ast:None},
+          -${generic_formal_item_list.ast:(+Self.Factory.Generic_Formal_Sequence)},
           -${function_token.ast},
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2649,7 +2649,7 @@ Rules for interface_type_definition. :
      Interface_Type_Definition
        (-${interface_kind.ast:No_Token},
         -${interface_token.ast},
-        -${and_subtype_mark_list.ast:None});
+        -${and_subtype_mark_list.ast:(+Self.Factory.Subtype_Mark_Sequence)});
 .)
 
 iterator_specification ::=
@@ -2708,7 +2708,7 @@ Rules for library_item.spec :
 (.
    ${library_item.ast} :=
       +Self.Factory.Compilation_Unit_Declaration
-         (-${context_item_list.ast:None},
+         (-${context_item_list.ast:(+Self.Factory.Context_Item_Sequence)},
           -${private_token.ast:No_Token},
           -${library_unit_declaration.ast});
 .)
@@ -2717,7 +2717,7 @@ Rules for library_item.body :
 (.
    ${library_item.ast} :=
       +Self.Factory.Compilation_Unit_Body
-         (-${context_item_list.ast:None},
+         (-${context_item_list.ast:(+Self.Factory.Context_Item_Sequence)},
           -${library_unit_body.ast});
 .)
 
@@ -2907,7 +2907,7 @@ Rules for object_declaration.object_definition :
           -${object_definition.ast},
           -${assignment_token.ast:No_Token},
           -${expression.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2942,7 +2942,7 @@ Rules for object_renaming_declaration.subtype_mark :
           -${subtype_mark.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -2957,7 +2957,7 @@ Rules for object_renaming_declaration.access_definition :
           -${access_definition.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -3002,13 +3002,13 @@ Rules for package_body. :
          (-${package_token.ast},
           -${body_token.ast},
           -${defining_program_unit_name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${program_unit_name.ast:None},
           -${semicolon_token.ast});
@@ -3029,7 +3029,7 @@ Rules for package_body_stub. :
           -${defining_program_unit_name.ast},
           -${is_token.ast},
           -${separate_token.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -3048,11 +3048,11 @@ Rules for package_declaration. :
       +Self.Factory.Package_Declaration
          (-${package_token.ast},
           -${defining_program_unit_name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${public_item_list.ast:None},
+          -${public_item_list.ast:(+Self.Factory.Basic_Declarative_Item_Sequence)},
           -${private_token.ast:No_Token},
-          -${private_item_list.ast:None},
+          -${private_item_list.ast:(+Self.Factory.Basic_Declarative_Item_Sequence)},
           -${end_token.ast},
           -${program_unit_name.ast:None},
           -${semicolon_token.ast});
@@ -3073,7 +3073,7 @@ Rules for package_renaming_declaration. :
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
           -${name.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -3189,7 +3189,7 @@ Rules for private_extension_declaration. :
            -${synchronized_token.ast:No_Token},
            -${new_token.ast},
            -${subtype_indication.ast},
-           -${and_subtype_mark_list.ast:None},
+           -${and_subtype_mark_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
            -${with_token.ast},
            -${private_token.ast});
    begin
@@ -3200,7 +3200,7 @@ Rules for private_extension_declaration. :
             -${discriminant_part.ast:None},
             -${is_token.ast:No_Token},
             -Def,
-            -${aspect_specification.ast:None},
+            -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
             -${semicolon_token.ast});
    end;
 .)
@@ -3230,7 +3230,7 @@ Rules for private_type_declaration. :
             -${discriminant_part.ast:None},
             -${is_token.ast:No_Token},
             -Def,
-            -${aspect_specification.ast:None},
+            -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
             -${semicolon_token.ast});
    end;
 .)
@@ -3255,15 +3255,15 @@ Rules for procedure_body. :
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast:No_Token},
-          -${sequence_of_statements.ast:None},
+          -${sequence_of_statements.ast:(+Self.Factory.Statement_Sequence)},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${program_unit_name.ast:None},
           -${semicolon_token.ast});
@@ -3287,13 +3287,13 @@ Rules for procedure_declaration. :
           -${procedure_token.ast},
           -${defining_program_unit_name.ast},
           -${lp.ast:No_Token},
-          -${formal_part.ast:None},
+          -${formal_part.ast:(+Self.Factory.Parameter_Specification_Sequence)},
           -${rp.ast:No_Token},
           -${is_token.ast:No_Token}, No_Token_Index,
           -${renames_token.ast:No_Token},
           -${name.ast:None},
           -${separate_token.ast:No_Token},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -3321,9 +3321,9 @@ Rules for protected_body. :
          (-${protected_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${protected_operation_item_list.ast:None},
+          -${protected_operation_item_list.ast:(+Self.Factory.Protected_Operation_Item_Sequence)},
           -${end_token.ast},
           -${identifier_token.ast:No_Token},
           -${semicolon_token.ast});
@@ -3344,7 +3344,7 @@ Rules for protected_body_stub. :
           -${defining_identifier.ast},
           -${is_token.ast},
           -${separate_token.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -3358,9 +3358,9 @@ Rules for protected_definition. :
 (.
    ${protected_definition.ast} :=
       +Self.Factory.Protected_Definition
-         (-${protected_operation_declaration_list.ast:None},
+         (-${protected_operation_declaration_list.ast:(+Self.Factory.Protected_Operation_Declaration_Sequence)},
           -${private_token.ast:No_Token},
-          -${protected_element_declaration_list.ast:None},
+          -${protected_element_declaration_list.ast:(+Self.Factory.Protected_Element_Declaration_Sequence)},
           -${end_token.ast},
           -${identifier_token.ast:No_Token});
 .)
@@ -3400,10 +3400,10 @@ Rules for protected_type_declaration. :
           -${type_token.ast},
           -${defining_identifier.ast},
           -${known_discriminant_part.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
           -${new_token.ast:No_Token},
-          -${interface_list.ast:None},
+          -${interface_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
           -${with_token.ast:No_Token},
           -${protected_definition.ast},
           -${semicolon_token.ast});
@@ -3540,7 +3540,7 @@ Rules for record_component_association.discrete_range :
 
 Rules for record_component_association.expression :
 (.   ${record_component_association.ast} := +Self.Factory.Association
-     (-${discrete_choice_list.ast:None},
+     (-${discrete_choice_list.ast:(+Self.Factory.Discrete_Choice_Sequence)},
       -${arrow_token.ast:No_Token},
       -${expression.ast});
 .)
@@ -3633,7 +3633,7 @@ Rules for record_representation_clause. :
         -${mod_token.ast:No_Token},
         -${expression.ast:None},
         -${at_semicolon.ast:No_Token},
-        -${component_clause_list.ast:None},
+        -${component_clause_list.ast:(+Self.Factory.Clause_Or_Pragma_Sequence)},
         -${end_token.ast},
         -${r.ast},
         -${semicolon_token.ast});
@@ -4000,10 +4000,10 @@ Rules for single_protected_declaration. :
       +Self.Factory.Single_Protected_Declaration
          (-${protected_token.ast},
           -${defining_identifier.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
           -${new_token.ast:No_Token},
-          -${interface_list.ast:None},
+          -${interface_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
           -${with_token.ast:No_Token},
           -${protected_definition.ast},
           -${semicolon_token.ast});
@@ -4022,10 +4022,10 @@ Rules for single_task_declaration. :
       +Self.Factory.Single_Task_Declaration
          (-${task_token.ast},
           -${defining_identifier.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast:No_Token},
           -${new_token.ast:No_Token},
-          -${interface_list.ast:None},
+          -${interface_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
           -${with_token.ast:No_Token},
           -${task_definition.ast:None},
           -${semicolon_token.ast});
@@ -4052,7 +4052,7 @@ Rules for subtype_declaration. :
           -${defining_identifier.ast},
           -${is_token.ast},
           -${subtype_indication.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -4079,7 +4079,7 @@ Rules for subunit. :
 (.
    ${subunit.ast} :=
       +Self.Factory.Subunit
-         (-${context_item_list.ast:None},
+         (-${context_item_list.ast:(+Self.Factory.Context_Item_Sequence)},
           -${separate_token.ast},
           -${left_parenthesis_token.ast},
           -${program_unit_name.ast},
@@ -4104,13 +4104,13 @@ Rules for task_body. :
          (-${task_token.ast},
           -${body_token.ast},
           -${defining_identifier.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast},
-          -${declarative_part.ast:None},
+          -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
           -${begin_token.ast},
           -${sequence_of_statements.ast},
           -${exception_token.ast:No_Token},
-          -${sequence_of_exception_handlers.ast:None},
+          -${sequence_of_exception_handlers.ast:(+Self.Factory.Exception_Handler_Sequence)},
           -${end_token.ast},
           -${identifier_token.ast:No_Token},
           -${semicolon_token.ast});
@@ -4131,7 +4131,7 @@ Rules for task_body_stub. :
           -${defining_identifier.ast},
           -${is_token.ast},
           -${separate_token.ast},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)
 
@@ -4145,9 +4145,9 @@ Rules for task_definition. :
 (.
    ${task_definition.ast} :=
       +Self.Factory.Task_Definition
-         (-${task_item_list.ast:None},
+         (-${task_item_list.ast:(+Self.Factory.Task_Item_Sequence)},
           -${private_token.ast:No_Token},
-          -${private_items.ast:None},
+          -${private_items.ast:(+Self.Factory.Task_Item_Sequence)},
           -${end_token.ast},
           -${identifier_token.ast:No_Token});
 .)
@@ -4187,10 +4187,10 @@ Rules for task_type_declaration. :
           -${type_token.ast},
           -${defining_identifier.ast},
           -${known_discriminant_part.ast:None},
-          -${aspect_specification.ast:None},
+          -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${is_token.ast:No_Token},
           -${new_token.ast:No_Token},
-          -${interface_list.ast:None},
+          -${interface_list.ast:(+Self.Factory.Subtype_Mark_Sequence)},
           -${with_token.ast:No_Token},
           -${task_definition.ast:None},
           -${semicolon_token.ast});
@@ -4846,7 +4846,7 @@ Rules for protected_operation_declaration_list.protected_operation_declaration :
       List : constant Gela.Elements.Protected_Operation_Declarations.
         Protected_Operation_Declaration_Sequence_Access := -Conv;
    begin
-      List.Prepend (-${protected_operation_declaration.ast});
+      List.Append (-${protected_operation_declaration.ast});
       ${protected_operation_declaration_list.ast} := Conv;
    end;
 .)
@@ -4859,7 +4859,7 @@ Rules for protected_element_declaration_list.protected_element_declaration :
       List : constant Gela.Elements.Protected_Element_Declarations.
         Protected_Element_Declaration_Sequence_Access := -Conv;
    begin
-      List.Prepend (-${protected_element_declaration.ast});
+      List.Append (-${protected_element_declaration.ast});
       ${protected_element_declaration_list.ast} := Conv;
    end;
 .)

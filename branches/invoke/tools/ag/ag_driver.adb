@@ -119,9 +119,6 @@ procedure AG_Driver is
                Factories.P (";");
                Impl.P (" is");
                Impl.P ("   begin");
-               Impl.P ("      if X = None then");
-               Impl.P ("         return null;");
-               Impl.P ("      end if;");
                Impl.N ("      return X.");
                Impl.N (To_Ada (NT.Name));
                Impl.P ("_Sequence;");
@@ -203,6 +200,7 @@ procedure AG_Driver is
       Spec.P ("   pragma Preelaborate;");
       Spec.P;
       Spec.P ("   type Visiter is limited interface;");
+      Spec.P ("   type Visiter_Access is access all Visiter'Class;");
 
       for NT of G.Non_Terminal loop
          for Prod of G.Production (NT.First .. NT.Last) loop

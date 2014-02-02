@@ -144,7 +144,7 @@ package body AG_Tools.Check_Ordered is
       Impl.P ("     (Item : access Gela.Elements.Element'Class)" &
                 " return Boolean is");
       Impl.P ("   begin");
-      Impl.P ("      return Item = null;");
+      Impl.P ("      return Item /= null;");
       Impl.P ("   end Assigned;");
       Impl.P;
       Spec.P ("   pragma Preelaborate;");
@@ -155,6 +155,7 @@ package body AG_Tools.Check_Ordered is
       Spec.P ("      Parent : not null Gela.Pass_List.Visiter_Access)");
       Spec.P
         ("     is new Gela.Element_Visiters.Visiter with null record;");
+      Spec.P ("   type Visiter_Access is access all Visiter;");
 
       for NT of G.Non_Terminal loop
          if Is_Concrete (NT.Index) and not Is_Converted_List (G.all, NT) then
@@ -230,14 +231,14 @@ package body AG_Tools.Check_Ordered is
       Head.P ("     (Compilation : not null" &
                 " Gela.Compilations.Compilation_Access) is tagged");
       Head.P ("   record");
-      Head.P ("      Parent : not null Gela.Pass_List.Visiter_Access;");
+      Head.P ("      Parent : Gela.Pass_List.Visiter_Access;");
 
       while Found loop
          Generate_Pass (G, Order, Partitions, Pass, Found);
          if Found then
             Head.N ("      P");
             Head.N (Pass);
-            Head.P (" : not null access Gela.Element_Visiters.Visiter'Class;");
+            Head.P (" : Gela.Element_Visiters.Visiter_Access;");
 
             for NT of G.Non_Terminal loop
                if Is_Converted_List (G.all, NT) then

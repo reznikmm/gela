@@ -15,6 +15,10 @@ with Gela.Element_Factories;
 with Gela.Elements.Compilations;
 
 with Gela.Node_Factories;
+with Gela.Element_Visiters;
+with Gela.Pass_List;
+with Gela.Pass_1;
+with Gela.Pass_2;
 
 procedure Parser_Test is
 
@@ -70,4 +74,20 @@ begin
    if Root = null then
       raise Constraint_Error;
    end if;
+
+   declare
+      C : constant Gela.Compilations.Compilation_Access :=
+        Gela.Compilations.Compilation_Access (Comp);
+      PL : constant Gela.Pass_List.Visiter_Access :=
+        new Gela.Pass_List.Visiter (C);
+      P1 : constant Gela.Pass_1.Visiter_Access :=
+        new Gela.Pass_1.Visiter (C, PL);
+      P2 : constant Gela.Pass_2.Visiter_Access :=
+        new Gela.Pass_2.Visiter (C, PL);
+   begin
+      PL.Parent := PL;
+      PL.P1 := Gela.Element_Visiters.Visiter_Access (P1);
+      PL.P2 := Gela.Element_Visiters.Visiter_Access (P2);
+      Root.Visit (P1.all);
+   end;
 end Parser_Test;
