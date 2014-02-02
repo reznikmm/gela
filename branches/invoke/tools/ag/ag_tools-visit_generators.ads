@@ -50,8 +50,10 @@ package AG_Tools.Visit_Generators is
    type NT_Generator_Access is access all NT_Generator'Class;
 
    not overriding procedure Make_Procedure
-     (Self : access NT_Generator;
-      Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor) is abstract;
+     (Self  : access NT_Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive) is abstract;
    --  Generate procedure
 
    type Factory is limited interface;

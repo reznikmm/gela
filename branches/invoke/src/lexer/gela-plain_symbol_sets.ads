@@ -68,6 +68,13 @@ package Gela.Plain_Symbol_Sets is
       Value : out Gela.Lexical_Types.Symbol_List);
    --  Get new symbol list as join of Head and Tail.
 
+   overriding procedure Create_List
+     (Self  : in out Symbol_Set;
+      Head  : Gela.Lexical_Types.Symbol_List;
+      Tail  : Gela.Lexical_Types.Symbol_List;
+      Value : out Gela.Lexical_Types.Symbol_List);
+   --  Get new symbol list as join of Head and Tail.
+
    overriding function Head
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)

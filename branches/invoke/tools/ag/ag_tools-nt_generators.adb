@@ -30,6 +30,7 @@ package body AG_Tools.NT_Generators is
      (Context : AG_Tools.Contexts.Context_Access;
       NT      : Gela.Grammars.Non_Terminal;
       Prod    : Gela.Grammars.Production_Index;
+      Pass    : Positive;
       Each    : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
 
    function List_Item
@@ -168,15 +169,13 @@ package body AG_Tools.NT_Generators is
    --------------------
 
    overriding procedure Make_Procedure
-     (Self : access Generator;
-      Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor)
+     (Self  : access Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive)
    is
-      Key : constant Gela.Grammars.Ordered.Key :=
-        Gela.Grammars.Ordered.Order_Maps.Key (Pos);
-      Prod : Gela.Grammars.Production renames
-        Self.Context.Grammar.Production (Key.Prod);
-      NT  : Gela.Grammars.Non_Terminal renames
-        Self.Context.Grammar.Non_Terminal (Prod.Parent);
+      Pos : Gela.Grammars.Ordered.Order_Maps.Cursor :=
+        Order.Ceiling ((NT.First, Pass, Step => 1));
 
       Spec    : AG_Tools.Writers.Writer renames Self.Context.Spec;
       Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
@@ -199,7 +198,7 @@ package body AG_Tools.NT_Generators is
       Impl.N (Return_Type (Self.Context.Grammar.all, NT));
       Impl.P ("_Access renames Node;");
 
-      Write_Rules (Self.Context, NT, NT.First, Pos);
+      Write_Rules (Self.Context, NT, NT.First, Pass, Pos);
 
       Impl.P ("   begin");
       Impl.N (Code);  --  <--- Make .N
@@ -213,16 +212,16 @@ package body AG_Tools.NT_Generators is
    --------------------
 
    overriding procedure Make_Procedure
-     (Self : access List_Generator;
-      Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor)
+     (Self  : access List_Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive)
    is
+      Pos : Gela.Grammars.Ordered.Order_Maps.Cursor :=
+        Order.Ceiling ((NT.First, Pass, Step => 1));
 
-      Key : constant Gela.Grammars.Ordered.Key :=
-        Gela.Grammars.Ordered.Order_Maps.Key (Pos);
       Prod : Gela.Grammars.Production renames
-        Self.Context.Grammar.Production (Key.Prod);
-      NT  : Gela.Grammars.Non_Terminal renames
-        Self.Context.Grammar.Non_Terminal (Prod.Parent);
+        Self.Context.Grammar.Production (NT.First);
 
       G  : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       RT : constant League.Strings.Universal_String := Return_Type (G, NT);
@@ -242,13 +241,13 @@ package body AG_Tools.NT_Generators is
 
       Spec.P ("", Impl);
       Impl.N ("   --  ");
-      Impl.N (Key.Pass);
+      Impl.N (Pass);
       Impl.P;
       Spec.N ("   not ", Impl);
       Write_Declaration (Self.Context, NT);
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop
-         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Key.Pass then
+         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
             Spec.P (";", Impl);
             Spec.N ("      ", Impl);
             Spec.N (This, Impl);
@@ -285,13 +284,14 @@ package body AG_Tools.NT_Generators is
       Code.N (Item);
       Code.P (" := This.Element;");
 
-      Write_Rules (Self.Context, NT, NT.First, Pos);
+      Write_Rules (Self.Context, NT, NT.First, Pass, Pos);
 
       Code.P ("         This.Next;");
       Code.P ("      end loop;");
       Piece := Code;
       Code.Clear;
-      Write_Rules (Self.Context, NT, NT.Last, Pos);
+      Pos := Order.Ceiling ((NT.Last, Pass, Step => 1));
+      Write_Rules (Self.Context, NT, NT.Last, Pass, Pos);
       Impl.P ("   begin");
       Impl.N (Code);
 
@@ -375,13 +375,17 @@ package body AG_Tools.NT_Generators is
      (Context : AG_Tools.Contexts.Context_Access;
       NT      : Gela.Grammars.Non_Terminal;
       Prod    : Gela.Grammars.Production_Index;
+      Pass    : Positive;
       Each    : in out Gela.Grammars.Ordered.Order_Maps.Cursor)
    is
       use Gela.Grammars;
       use Gela.Grammars.Ordered.Order_Maps;
       G       : Gela.Grammars.Grammar renames Context.Grammar.all;
    begin
-      while Has_Element (Each) and then Key (Each).Prod = Prod loop
+      while Has_Element (Each)
+        and then Key (Each).Prod = Prod
+        and then Key (Each).Pass = Pass
+      loop
 
          case Element (Each).Kind is
             when Gela.Grammars.Ordered.Evaluate_Rule =>

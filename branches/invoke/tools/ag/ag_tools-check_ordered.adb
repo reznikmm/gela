@@ -85,11 +85,14 @@ package body AG_Tools.Check_Ordered is
               (Result.Production (Key.Prod).Name.
                    To_UTF_8_String);
             Ada.Text_IO.Put_Line (Key.Pass'Img);
+
+            Ada.Text_IO.Put (" ");
             Ada.Text_IO.Put (Item.Kind'Img);
+            Ada.Text_IO.Put (" ");
 
             case Item.Kind is
                when Gela.Grammars.Ordered.Evaluate_Rule =>
-                  Ada.Text_IO.Put (Item.Rule'Img);
+                  Ada.Text_IO.Put_Line (Item.Rule'Img);
                when Gela.Grammars.Ordered.Descent =>
                   Ada.Text_IO.Put
                     (Result.Part (Item.Part).Name.
@@ -161,10 +164,11 @@ package body AG_Tools.Check_Ordered is
          if Is_Concrete (NT.Index) and not Is_Converted_List (G.all, NT) then
             declare
                use Gela.Grammars.Ordered.Order_Maps;
-               Pos : Cursor := Order.Ceiling ((NT.First, Pass, Step => 1));
+               Pos : constant Cursor :=
+                 Order.Ceiling ((NT.First, Pass, Step => 1));
             begin
                if Has_Element (Pos) and then Key (Pos).Prod = NT.First then
-                  Context.Factory.Get (NT).Make_Procedure (Pos);
+                  Context.Factory.Get (NT).Make_Procedure (Order, NT, Pass);
                   Found := True;
                end if;
             end;
@@ -244,13 +248,14 @@ package body AG_Tools.Check_Ordered is
                if Is_Converted_List (G.all, NT) then
                   declare
                      use Gela.Grammars.Ordered.Order_Maps;
-                     Pos : Cursor :=
+                     Pos : constant Cursor :=
                        Order.Ceiling ((NT.First, Pass, Step => 1));
                   begin
                      if Has_Element (Pos) and then
                        Key (Pos).Prod = NT.First
                      then
-                        Context.Factory.Get (NT).Make_Procedure (Pos);
+                        Context.Factory.Get (NT).Make_Procedure
+                          (Order, NT, Pass);
                         Found := True;
                      end if;
                   end;
@@ -258,6 +263,8 @@ package body AG_Tools.Check_Ordered is
             end loop;
 
             Pass := Pass + 1;
+            Context.Part_Map.all := (others => False);
+            Context.Attr_Map.Clear;
          end if;
       end loop;
       Head.P ("   end record;");

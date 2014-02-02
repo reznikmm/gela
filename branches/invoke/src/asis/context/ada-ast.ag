@@ -5545,9 +5545,12 @@ Rules for unconstrained_array_definition. :
 Rules for units.compilation_unit :
 (.
       ${compilation_unit.env_in} := Gela.Pass_Utils.Create_Unit
-        (Comp       => Self.Compilation,
-         Full_Name  => ${compilation_unit.full_name},
-         Unit_Kind  => ${compilation_unit.unit_kind});
+        (Comp => Self.Compilation,
+         Unit => Compilation_Unit);
+--         Full_Name    => ${compilation_unit.full_name},
+--         Unit_Kind    => ${compilation_unit.unit_kind},
+--         With_List    => ${compilation_unit.with_list},
+--         Limited_With => ${compilation_unit.limited_with_list});
 .)
 
 Rules for units.compilation_unit :
@@ -5633,4 +5636,145 @@ Rules for with_clause. :
 Rules for with_clause. :
 (.
       ${Clause_Names.env_in} := ${with_clause.env_in};
+.)
+
+Synthesized attributes
+  Context_Clause_Elements,
+  compilation_unit,
+  compilation_unit_declaration,
+  compilation_unit_body,
+  subunit,
+  context_item,
+  with_clause,
+  use_clause,
+  use_package_clause,
+  use_type_clause,
+  pragma_node  : Gela.Lexical_Types.Symbol_List : with_list;
+
+Synthesized attributes
+  Context_Clause_Elements,
+  compilation_unit,
+  compilation_unit_declaration,
+  compilation_unit_body,
+  subunit,
+  context_item,
+  with_clause,
+  use_clause,
+  use_package_clause,
+  use_type_clause,
+  pragma_node  : Gela.Lexical_Types.Symbol_List : limited_with_list;
+
+Rules for with_clause. :
+(.
+      if Gela.Lexical_Types.">" (${limited_token.Index}, 0) then
+         ${with_clause.with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+      else
+         ${with_clause.with_list} := ${Clause_Names.name_list};
+      end if;
+.)
+
+Rules for with_clause. :
+(.
+      if Gela.Lexical_Types."=" (${limited_token.Index}, 0) then
+         ${with_clause.limited_with_list} := ${Clause_Names.name_list};
+      else
+         ${with_clause.limited_with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+      end if;
+.)
+
+Rules for use_package_clause. :
+(.
+      ${use_package_clause.with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for use_package_clause. :
+(.
+      ${use_package_clause.limited_with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for use_type_clause. :
+(.
+      ${use_type_clause.with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for use_type_clause. :
+(.
+      ${use_type_clause.limited_with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for pragma_node. :
+(.
+      ${pragma_node.with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for pragma_node. :
+(.
+      ${pragma_node.limited_with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      ${Context_Clause_Elements.with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      Self.Compilation.Context.Symbols.Create_List
+        (${head.with_list}, ${context_item.with_list}, ${Context_Clause_Elements.with_list});
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      ${Context_Clause_Elements.limited_with_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      Self.Compilation.Context.Symbols.Create_List
+        (${head.limited_with_list}, ${context_item.limited_with_list}, ${Context_Clause_Elements.limited_with_list});
+.)
+
+Rules for compilation_unit_declaration. :
+(.
+      ${compilation_unit_declaration.with_list} := ${Context_Clause_Elements.with_list};
+.)
+
+Rules for compilation_unit_declaration. :
+(.
+      ${compilation_unit_declaration.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
+.)
+
+Rules for compilation_unit_body. :
+(.
+      ${compilation_unit_body.with_list} := ${Context_Clause_Elements.with_list};
+.)
+
+Rules for compilation_unit_body. :
+(.
+      ${compilation_unit_body.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
+.)
+
+Rules for subunit. :
+(.
+      ${subunit.with_list} := ${Context_Clause_Elements.with_list};
+.)
+
+Rules for subunit. :
+(.
+      ${subunit.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
+.)
+
+
+Synthesized attributes
+  Clause_Names : Gela.Lexical_Types.Symbol_List : name_list;
+
+Rules for Clause_Names.program_unit_name :
+(.
+      ${Clause_Names.name_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for Clause_Names.program_unit_name :
+(.
+      Self.Compilation.Context.Symbols.Create_List
+        (${head.name_list}, ${program_unit_name.full_name}, ${Clause_Names.name_list});
 .)

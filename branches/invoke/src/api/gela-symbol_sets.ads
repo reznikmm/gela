@@ -60,6 +60,13 @@ package Gela.Symbol_Sets is
       Value : out Gela.Lexical_Types.Symbol_List) is abstract;
    --  Get new symbol list as join of Head and Tail.
 
+   not overriding procedure Create_List
+     (Self  : in out Symbol_Set;
+      Head  : Gela.Lexical_Types.Symbol_List;
+      Tail  : Gela.Lexical_Types.Symbol_List;
+      Value : out Gela.Lexical_Types.Symbol_List) is abstract;
+   --  Get new symbol list as join of Head and Tail.
+
    not overriding function Head
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)

@@ -83,6 +83,32 @@ package body Gela.Plain_Symbol_Sets is
       end if;
    end Create_List;
 
+   -----------------
+   -- Create_List --
+   -----------------
+
+   overriding procedure Create_List
+     (Self  : in out Symbol_Set;
+      Head  : Gela.Lexical_Types.Symbol_List;
+      Tail  : Gela.Lexical_Types.Symbol_List;
+      Value : out Gela.Lexical_Types.Symbol_List)
+   is
+      Tails_Head : constant Gela.Lexical_Types.Symbol_List := Self.Head (Tail);
+      Tails_Tail : constant Gela.Lexical_Types.Symbol := Self.Tail (Tail);
+   begin
+      if Tails_Head /= Empty_Symbol_List then
+         Self.Create_List (Head  => Head,
+                           Tail  => Tails_Head,
+                           Value => Value);
+      else
+         Value := Head;
+      end if;
+
+      Self.Create_List (Head  => Value,
+                        Tail  => Tails_Tail,
+                        Value => Value);
+   end Create_List;
+
    -----------
    -- Fetch --
    -----------

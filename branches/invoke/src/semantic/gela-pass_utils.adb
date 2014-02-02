@@ -14,14 +14,12 @@ package body Gela.Pass_Utils is
    -----------------
 
    function Create_Unit
-     (Comp       : Gela.Compilations.Compilation_Access;
-      Full_Name  : Gela.Lexical_Types.Symbol;
-      Unit_Kind  : Gela.Semantic_Types.Unit_Kinds)
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
       return Gela.Semantic_Types.Env_Index
    is
       pragma Unreferenced (Comp);
-      pragma Unreferenced (Full_Name);
-      pragma Unreferenced (Unit_Kind);
+      pragma Unreferenced (Unit);
    begin
       return 0;
    end Create_Unit;

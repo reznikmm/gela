@@ -8,16 +8,15 @@
 ------------------------------------------------------------------------------
 
 with Gela.Compilations;
-with Gela.Lexical_Types;
+with Gela.Elements.Compilation_Units;
 with Gela.Semantic_Types;
 
 package Gela.Pass_Utils is
    pragma Preelaborate;
 
    function Create_Unit
-     (Comp       : Gela.Compilations.Compilation_Access;
-      Full_Name  : Gela.Lexical_Types.Symbol;
-      Unit_Kind  : Gela.Semantic_Types.Unit_Kinds)
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
       return Gela.Semantic_Types.Env_Index;
 
 end Gela.Pass_Utils;

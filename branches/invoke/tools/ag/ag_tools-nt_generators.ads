@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Gela.Grammars.Ordered;
+
 with AG_Tools.Contexts;
 with AG_Tools.Visit_Generators;
 
@@ -17,8 +18,10 @@ package AG_Tools.NT_Generators is
      is new AG_Tools.Visit_Generators.NT_Generator with null record;
 
    overriding procedure Make_Procedure
-     (Self : access Generator;
-      Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
+     (Self  : access Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive);
 
    overriding procedure Make_Local_Variable
      (Self      : access Generator;
@@ -37,8 +40,10 @@ package AG_Tools.NT_Generators is
      is new AG_Tools.Visit_Generators.NT_Generator with null record;
 
    overriding procedure Make_Procedure
-     (Self : access List_Generator;
-      Pos  : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
+     (Self  : access List_Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive);
 
    overriding procedure Make_Local_Variable
      (Self      : access List_Generator;
