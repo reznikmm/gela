@@ -29,7 +29,7 @@ package Gela.Compilation_Unit_Factories is
      (Self        : in out Compilation_Unit_Factory;
       Declaration : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Name        : Gela.Lexical_Types.Symbol;
-      Node   : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Node        : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
       return Gela.Compilation_Units.Body_Unit_Access is abstract;
 
    not overriding function Create_Subunit
