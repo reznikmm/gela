@@ -1,9 +1,11 @@
 with Gela.Symbol_Sets;
-lImited with Gela.Source_Finders;
+limited with Gela.Source_Finders;
 limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Lexers;
 limited with Gela.Naming_Schemas;
 limited with Gela.Unit_Containers;
+limited with Gela.Dependency_Lists;
+limited with Gela.Compilation_Managers;
 
 package Gela.Contexts is
    pragma Preelaborate;
@@ -41,5 +43,13 @@ package Gela.Contexts is
    not overriding function Lexer
      (Self  : access Context)
       return Gela.Lexers.Lexer_Access is abstract;
+
+   not overriding function Compilation_Manager
+     (Self  : access Context)
+      return Gela.Compilation_Managers.Compilation_Manager_Access is abstract;
+
+   not overriding function Dependency_List
+     (Self  : access Context)
+      return Gela.Dependency_Lists.Dependency_List_Access is abstract;
 
 end Gela.Contexts;

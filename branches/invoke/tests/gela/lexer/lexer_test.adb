@@ -2,6 +2,7 @@ with Ada.Wide_Wide_Text_IO;
 
 with League.Application;
 with League.Strings;
+with League.String_Vectors;
 
 with Gela.Contexts;
 with Gela.Context_Factories;
@@ -141,17 +142,18 @@ procedure Lexer_Test is
    File    : Ada.Wide_Wide_Text_IO.File_Type;
    Input   : League.Strings.Universal_String;
    Context : constant Gela.Contexts.Context_Access :=
-     Gela.Context_Factories.Create_Context (League.Application.Arguments);
+     Gela.Context_Factories.Create_Context
+       (League.String_Vectors.Empty_Universal_String_Vector);
    Lexer : constant Gela.Lexers.Lexer_Access := Context.Lexer;
    Dest : aliased Output.Lexer_Destination;
 begin
-   --  Command line: "-IDIR" "FILE" "HASH"
-   Path := League.Application.Arguments.Element (1);
+   --  Command line: "-IDIR1" "-IDIR2" "FILE" "HASH"
+   Path := League.Application.Arguments.Element (2);
    Path.Slice (3, Path.Length);
    Path.Append ("/");
-   Path.Append (League.Application.Arguments.Element (2));
+   Path.Append (League.Application.Arguments.Element (3));
    Hash := League.Hash_Type'Wide_Wide_Value
-     (League.Application.Arguments.Element (3).To_Wide_Wide_String);
+     (League.Application.Arguments.Element (4).To_Wide_Wide_String);
    Gela.Lexical_Handler.Initialize;
 
    Ada.Wide_Wide_Text_IO.Open

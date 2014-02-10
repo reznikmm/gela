@@ -96,9 +96,13 @@ package body Gela.Nodes is
 
       overriding procedure Append
         (Self : in out Sequence;
-         Item : Generic_Element_Sequences.Item_Access) is
+         Item : Generic_Element_Sequences.Item_Access)
+      is
+         X : constant Node_Access := Node_Access (Item);
+         Y : constant Generic_Element_Sequences.Item_Access :=
+           Generic_Element_Sequences.Item_Access (X);
       begin
-         Self.List.Append (Item);
+         Self.List.Append (Y);
       end Append;
 
       -------------
@@ -166,9 +170,13 @@ package body Gela.Nodes is
 
       overriding procedure Prepend
         (Self : in out Sequence;
-         Item : Generic_Element_Sequences.Item_Access) is
+         Item : Generic_Element_Sequences.Item_Access)
+      is
+         X : constant Node_Access := Node_Access (Item);
+         Y : constant Generic_Element_Sequences.Item_Access :=
+           Generic_Element_Sequences.Item_Access (X);
       begin
-         Self.List.Prepend (Item);
+         Self.List.Prepend (Y);
       end Prepend;
 
    end Node_Sequences;

@@ -134,9 +134,14 @@ package body Gela.Plain_Compilations is
    -- Initialize --
    ----------------
 
-   not overriding procedure Initialize (Self : in out Compilation) is
+   not overriding procedure Initialize
+     (Self      : in out Compilation;
+      Text_Name : League.Strings.Universal_String;
+      Source    : League.Strings.Universal_String) is
    begin
       Self.Update := League.Calendars.Clock;
+      Self.Text_Name := Text_Name;
+      Self.Source := Source;
    end Initialize;
 
    ------------
@@ -145,11 +150,9 @@ package body Gela.Plain_Compilations is
 
    overriding function Source
      (Self : Compilation)
-      return League.Strings.Universal_String
-   is
-      pragma Unreferenced (Self);
+      return League.Strings.Universal_String is
    begin
-      return League.Strings.Empty_Universal_String;
+      return Self.Source;
    end Source;
 
    ---------------
@@ -158,11 +161,9 @@ package body Gela.Plain_Compilations is
 
    overriding function Text_Name
      (Self : Compilation)
-      return League.Strings.Universal_String
-   is
-      pragma Unreferenced (Self);
+      return League.Strings.Universal_String is
    begin
-      return League.Strings.Empty_Universal_String;
+      return Self.Text_Name;
    end Text_Name;
 
    -------------------------

@@ -1861,10 +1861,6 @@ Synthesized attributes
   token  : Gela.Lexical_Types.Token_Count : Index;
 
 Synthesized attributes
-  compilation_unit,
-  compilation_unit_declaration,
-  compilation_unit_body,
-  subunit,
   character_literal,
   enumeration_literal,
   defining_designator,
@@ -1899,22 +1895,6 @@ Synthesized attributes
   selector_name,
   task_body
   : Gela.Lexical_Types.Symbol : full_name;
-
-Rules for compilation_unit_declaration. :
-(.
-      ${compilation_unit_declaration.full_name} := ${Unit_Declaration.full_name};
-.)
-
-Rules for compilation_unit_body. :
-(.
-      ${compilation_unit_body.full_name} := ${Unit_Declaration.full_name};
-.)
-
-Rules for subunit. :
-(.
-      Self.Compilation.Context.Symbols.Join
-        (${parent_unit_name.full_name}, ${Unit_Declaration.full_name}, ${subunit.full_name});
-.)
 
 Rules for defining_identifier.identifier_token :
 (.
@@ -2057,10 +2037,6 @@ Rules for protected_body. :
 .)
 
 Synthesized attributes
-  compilation_unit,
-  compilation_unit_declaration,
-  compilation_unit_body,
-  subunit,
   library_unit_body,
   package_body,
   function_body,
@@ -2083,21 +2059,6 @@ Synthesized attributes
   task_body,
   protected_body
     : Gela.Semantic_Types.Unit_Kinds : unit_kind;
-
-Rules for compilation_unit_declaration. :
-(.
-      ${compilation_unit_declaration.unit_kind} := ${Unit_Declaration.unit_kind};
-.)
-
-Rules for compilation_unit_body. :
-(.
-      ${compilation_unit_body.unit_kind} := ${Unit_Declaration.unit_kind};
-.)
-
-Rules for subunit. :
-(.
-      ${subunit.unit_kind} := ${Unit_Declaration.unit_kind};
-.)
 
 Rules for package_body. :
 (.
@@ -3399,7 +3360,14 @@ Rules for compilation_unit_body. :
 
 Rules for compilation_unit_body. :
 (.
-      ${Context_Clause_Elements.env_in} := ${compilation_unit_body.env_in};
+      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Body
+        (Comp => Self.Compilation,
+         Unit => This,
+         Full_Name    => ${Unit_Declaration.full_name},
+         Unit_Kind    => ${Unit_Declaration.unit_kind},
+         With_List    => ${Context_Clause_Elements.with_list},
+         Limited_With => ${Context_Clause_Elements.limited_with_list});
+
 .)
 
 Rules for compilation_unit_body. :
@@ -3414,7 +3382,14 @@ Rules for compilation_unit_declaration. :
 
 Rules for compilation_unit_declaration. :
 (.
-      ${Context_Clause_Elements.env_in} := ${compilation_unit_declaration.env_in};
+      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Declaration
+        (Comp => Self.Compilation,
+         Unit => This,
+         Private_Index => ${private_token.Index},
+         Full_Name     => ${Unit_Declaration.full_name},
+         Unit_Kind     => ${Unit_Declaration.unit_kind},
+         With_List     => ${Context_Clause_Elements.with_list},
+         Limited_With  => ${Context_Clause_Elements.limited_with_list});
 .)
 
 Rules for compilation_unit_declaration. :
@@ -5419,7 +5394,14 @@ Rules for subunit. :
 
 Rules for subunit. :
 (.
-      ${Context_Clause_Elements.env_in} := ${subunit.env_in};
+      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Subunit
+        (Comp => Self.Compilation,
+         Unit => This,
+         Parent_Name  => ${parent_unit_name.full_name},
+         Full_Name    => ${Unit_Declaration.full_name},
+         Unit_Kind    => ${Unit_Declaration.unit_kind},
+         With_List    => ${Context_Clause_Elements.with_list},
+         Limited_With => ${Context_Clause_Elements.limited_with_list});
 .)
 
 Rules for subunit. :
@@ -5544,13 +5526,7 @@ Rules for unconstrained_array_definition. :
 
 Rules for units.compilation_unit :
 (.
-      ${compilation_unit.env_in} := Gela.Pass_Utils.Create_Unit
-        (Comp => Self.Compilation,
-         Unit => Compilation_Unit);
---         Full_Name    => ${compilation_unit.full_name},
---         Unit_Kind    => ${compilation_unit.unit_kind},
---         With_List    => ${compilation_unit.with_list},
---         Limited_With => ${compilation_unit.limited_with_list});
+      ${compilation_unit.env_in} := ${units.env_in};
 .)
 
 Rules for units.compilation_unit :
@@ -5640,10 +5616,6 @@ Rules for with_clause. :
 
 Synthesized attributes
   Context_Clause_Elements,
-  compilation_unit,
-  compilation_unit_declaration,
-  compilation_unit_body,
-  subunit,
   context_item,
   with_clause,
   use_clause,
@@ -5653,10 +5625,6 @@ Synthesized attributes
 
 Synthesized attributes
   Context_Clause_Elements,
-  compilation_unit,
-  compilation_unit_declaration,
-  compilation_unit_body,
-  subunit,
   context_item,
   with_clause,
   use_clause,
@@ -5732,36 +5700,6 @@ Rules for Context_Clause_Elements.context_item :
 (.
       Self.Compilation.Context.Symbols.Create_List
         (${head.limited_with_list}, ${context_item.limited_with_list}, ${Context_Clause_Elements.limited_with_list});
-.)
-
-Rules for compilation_unit_declaration. :
-(.
-      ${compilation_unit_declaration.with_list} := ${Context_Clause_Elements.with_list};
-.)
-
-Rules for compilation_unit_declaration. :
-(.
-      ${compilation_unit_declaration.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
-.)
-
-Rules for compilation_unit_body. :
-(.
-      ${compilation_unit_body.with_list} := ${Context_Clause_Elements.with_list};
-.)
-
-Rules for compilation_unit_body. :
-(.
-      ${compilation_unit_body.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
-.)
-
-Rules for subunit. :
-(.
-      ${subunit.with_list} := ${Context_Clause_Elements.with_list};
-.)
-
-Rules for subunit. :
-(.
-      ${subunit.limited_with_list} := ${Context_Clause_Elements.limited_with_list};
 .)
 
 

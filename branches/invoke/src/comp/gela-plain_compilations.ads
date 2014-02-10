@@ -20,7 +20,10 @@ package Gela.Plain_Compilations is
 
    type Compilation_Access is access all Compilation;
 
-   not overriding procedure Initialize (Self : in out Compilation);
+   not overriding procedure Initialize
+     (Self      : in out Compilation;
+      Text_Name : League.Strings.Universal_String;
+      Source    : League.Strings.Universal_String);
 
 private
 
@@ -43,6 +46,8 @@ private
       Tokens : Token_Vectors.Vector;
       Lines  : Line_Vectors.Vector;
       Update : League.Calendars.Date_Time;
+      Text_Name : League.Strings.Universal_String;
+      Source    : League.Strings.Universal_String;
    end record;
 
    overriding function Context

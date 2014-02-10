@@ -17,6 +17,7 @@ package body Gela.Context_Factories is
       Result : constant Context_Access := new Gela.Plain_Contexts.Context;
       Param  : League.Strings.Universal_String;
       Path   : League.Strings.Universal_String;
+      Name   : League.Strings.Universal_String;
    begin
       for J in 1 .. Parameters.Length loop
          Param := Parameters.Element (J);
@@ -26,10 +27,12 @@ package body Gela.Context_Factories is
             end if;
 
             Path.Append (Param.Slice (3, Param.Length));
+         else
+            Name := Param;
          end if;
       end loop;
 
-      Result.Initialize (Path);
+      Result.Initialize (Path, Name);
 
       return Gela.Contexts.Context_Access (Result);
    end Create_Context;

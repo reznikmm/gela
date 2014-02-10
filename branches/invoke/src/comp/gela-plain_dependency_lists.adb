@@ -1,20 +1,16 @@
 with Ada.Containers.Hashed_Maps;
 
-with Gela.Semantic_Types;
 with Gela.Symbol_Sets;
-with Gela.Compilations;
 with Gela.Compilation_Units;
+with Gela.Elements.Library_Unit_Bodies;
+with Gela.Elements.Library_Unit_Declarations;
+with Gela.Semantic_Types;
 
 package body Gela.Plain_Dependency_Lists is
 
    function Hash
      (Item : Gela.Lexical_Types.Symbol) return Ada.Containers.Hash_Type;
    --  Support hashing of symbols
-
-   function Prefix
-     (Unit : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
-         return Gela.Lexical_Types.Symbol;
-   --  Return symbol of parent unit
 
    -------------------
    -- Add_Body_Unit --
@@ -25,17 +21,20 @@ package body Gela.Plain_Dependency_Lists is
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Compilation_Unit_Bodies.
+        Compilation_Unit_Body_Access)
    is
    begin
       if Self.Ordered.Contains ((Unit_Body, Name)) then
          --  Double append not allowed
          raise Constraint_Error;
+      elsif Self.Pending.Contains ((Unit_Body, Name)) then
+         Self.Pending.Delete ((Unit_Body, Name));
       end if;
 
       Self.Queued.Insert ((Unit_Body, Name));
       Self.Queue.Prepend
-        ((Unit_Body, Name, Withed, Limited_With, Unit, False));
+        ((Unit_Body, Name, Withed, Limited_With, Unit));
    end Add_Body_Unit;
 
    ----------------------------------
@@ -47,12 +46,15 @@ package body Gela.Plain_Dependency_Lists is
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access)
    is
    begin
       if Self.Ordered.Contains ((Unit_Declaration, Name)) then
          --  Double append not allowed
          raise Constraint_Error;
+      elsif Self.Pending.Contains ((Unit_Declaration, Name)) then
+         Self.Pending.Delete ((Unit_Declaration, Name));
       end if;
 
       Self.Queued.Insert ((Unit_Declaration, Name));
@@ -70,17 +72,27 @@ package body Gela.Plain_Dependency_Lists is
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Subunits.Subunit_Access)
    is
+      Set : constant Gela.Symbol_Sets.Symbol_Set_Access :=
+        Self.Context.Symbols;
+      Full_Name : Gela.Lexical_Types.Symbol;
    begin
-      if Self.Ordered.Contains ((Subunit, Name)) then
+      Set.Join
+        (Left  => Parent,
+         Right => Name,
+         Value => Full_Name);
+
+      if Self.Ordered.Contains ((Subunit, Full_Name)) then
          --  Double append not allowed
          raise Constraint_Error;
+      elsif Self.Pending.Contains ((Subunit, Full_Name)) then
+         Self.Pending.Delete ((Subunit, Full_Name));
       end if;
 
-      Self.Queued.Insert ((Subunit, Name));
+      Self.Queued.Insert ((Subunit, Full_Name));
       Self.Queue.Prepend
-        ((Subunit, Name, Withed, Limited_With, Unit, Parent));
+        ((Subunit, Full_Name, Withed, Limited_With, Parent, Unit));
    end Add_Subunit;
 
    ------------------
@@ -121,6 +133,10 @@ package body Gela.Plain_Dependency_Lists is
       Specs     : Spec_Maps.Map;
       --  Map of unit declarations placed in Order list
 
+      Lib    : Gela.Elements.Library_Unit_Declarations.
+        Library_Unit_Declaration_Access;
+      Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
+        Self.Context.Symbols;
       Pos    : Unit_Data_Lists.Cursor := Self.Order.First;
       Item   : Unit_Data;
       Upper  : Gela.Compilation_Units.Package_Unit_Access;
@@ -134,16 +150,18 @@ package body Gela.Plain_Dependency_Lists is
 
          case Item.Kind is
             when Unit_Declaration =>
-               Upper := Packages.Element (Prefix (Item.Unit));
+               Upper := Packages.Element (Set.Prefix (Item.Name));
 
                Decl := Factory.Create_Library_Unit_Declaration
                  (Parent => Upper,
                   Name   => Item.Name,
-                  Node   => Item.Unit);
+                  Node   => Item.Unit_Declaration);
 
                Specs.Insert (Item.Name, Decl);
 
-               case Item.Unit.Unit_Kind is
+               Lib := Item.Unit_Declaration.Unit_Declaration;
+
+               case Lib.Unit_Kind is
                   when Gela.Semantic_Types.A_Package |
                        Gela.Semantic_Types.A_Generic_Package =>
                      Upper :=
@@ -160,14 +178,14 @@ package body Gela.Plain_Dependency_Lists is
                   Parent := Factory.Create_Body_Unit
                     (Declaration => Decl,
                      Name   => Item.Name,
-                     Node   => Item.Unit);
+                     Node   => Item.Unit_Body);
                else
-                  Upper := Packages.Element (Prefix (Item.Unit));
+                  Upper := Packages.Element (Set.Prefix (Item.Name));
 
                   Parent := Factory.Create_Body_Unit_Without_Declaration
                     (Parent => Upper,
                      Name   => Item.Name,
-                     Node   => Item.Unit);
+                     Node   => Item.Unit_Body);
                end if;
 
                Bodies.Insert (Item.Name, Parent);
@@ -178,7 +196,7 @@ package body Gela.Plain_Dependency_Lists is
                Sub := Factory.Create_Subunit
                  (Parent => Parent,
                   Name   => Item.Name,
-                  Node   => Item.Unit);
+                  Node   => Item.Subunit);
          end case;
 
          Unit_Data_Lists.Next (Pos);
@@ -216,24 +234,21 @@ package body Gela.Plain_Dependency_Lists is
    is
       use type Gela.Lexical_Types.Symbol;
       use type Gela.Lexical_Types.Symbol_List;
-      Set    : Gela.Symbol_Sets.Symbol_Set_Access;
-      Pos    : Unit_Data_Lists.Cursor;
-      Item   : Unit_Data;
-      Index  : Unit_Index;
-      Withed : Gela.Lexical_Types.Symbol_List;
-      Again  : Boolean := True;
-   begin
-      if not Self.Order.Is_Empty then
-         declare
-            Comp : constant Gela.Compilations.Compilation_Access :=
-              Self.Order.First_Element.Unit.Enclosing_Compilation;
-         begin
-            Set := Comp.Context.Symbols;
-         end;
-      end if;
 
+      Set     : constant Gela.Symbol_Sets.Symbol_Set_Access :=
+        Self.Context.Symbols;
+      Pos     : Unit_Data_Lists.Cursor;
+      Lib     : Gela.Elements.Library_Unit_Bodies.Library_Unit_Body_Access;
+      Item    : Unit_Data;
+      Index   : Unit_Index;
+      Index_S : Unit_Index;
+      Withed  : Gela.Lexical_Types.Symbol_List;
+      Again   : Boolean := True;
+      Pending : Boolean;
+   begin
       while Again loop
          Again := False;
+         Pending := False;
 
          Pos := Self.Queue.First;
 
@@ -247,12 +262,19 @@ package body Gela.Plain_Dependency_Lists is
                Name := Set.Tail (Withed);
                Index := (Unit_Declaration, Name);
 
+               if Self.No_Spec.Contains (Index) then
+                  Index := (Unit_Body, Name);
+               end if;
+
                if Self.Ordered.Contains (Index) then
-                  null;
+                  null;  --  Continue with this unit
                elsif Self.Queued.Contains (Index) then
                   goto Skip_This_Item;
+               elsif Self.Pending.Contains (Index) then
+                  Pending := True;
                else
-                  Declartion := True;
+                  Self.Pending.Insert (Index);
+                  Declartion := Index.Kind = Unit_Declaration;
                   return;
                end if;
 
@@ -262,16 +284,19 @@ package body Gela.Plain_Dependency_Lists is
             case Item.Kind is
                when Unit_Declaration =>
                   --  Check if parent unit is ordered
-                  Name := Prefix (Item.Unit);
+                  Name := Set.Prefix (Item.Name);
                   Index := (Unit_Declaration, Name);
 
                   if Name = Gela.Lexical_Types.No_Symbol or else
                     Self.Ordered.Contains (Index)
                   then
-                     null;
+                     null;  --  Continue with this unit
                   elsif Self.Queued.Contains (Index) then
                      goto Skip_This_Item;
+                  elsif Self.Pending.Contains (Index) then
+                     Pending := True;
                   else
+                     Self.Pending.Insert (Index);
                      Declartion := True;
                      return;
                   end if;
@@ -281,16 +306,25 @@ package body Gela.Plain_Dependency_Lists is
                   Name  := Item.Name;
                   Index := (Unit_Declaration, Name);
 
-                  if Self.Ordered.Contains (Index) then
-                     null;
+                  if Self.No_Spec.Contains (Index) then
+                     Lib := Item.Unit_Body.Unit_Declaration;
+
+                     if Lib.Unit_Kind in Gela.Semantic_Types.A_Function_Body
+                       | Gela.Semantic_Types.A_Procedure_Body
+                     then
+                        null;  --  Continue with this unit
+                     else
+                        raise Constraint_Error;
+                     end if;
+
+                  elsif Self.Ordered.Contains (Index) then
+                     null;  --  Continue with this unit
                   elsif Self.Queued.Contains (Index) then
                      goto Skip_This_Item;
-                  elsif Item.No_Spec then
-                     null;
+                  elsif Self.Pending.Contains (Index) then
+                     Pending := True;
                   else
-                     --  Ask for spec just once
-                     Item.No_Spec := True;
-                     Self.Order.Replace_Element (Pos, Item);
+                     Self.Pending.Insert (Index);
                      Declartion := True;
                      return;
                   end if;
@@ -298,25 +332,39 @@ package body Gela.Plain_Dependency_Lists is
                when Subunit =>
                   --  Check if enclosing body is ordered
                   Name := Item.Parent;
+
+                  Index_S := (Subunit, Name);
                   Index := (Unit_Body, Name);
-                  if Self.Ordered.Contains (Index) then
-                     null;
+                  --  Check parent in existing subunits
+                  if Self.Ordered.Contains (Index_S) then
+                     null;  --  Continue with this unit
+                  elsif Self.Queued.Contains (Index_S) then
+                     goto Skip_This_Item;
+                  --  Then check parent in existing bodies
+                  elsif Self.Ordered.Contains (Index) then
+                     null;  --  Continue with this unit
                   elsif Self.Queued.Contains (Index) then
                      goto Skip_This_Item;
+                  elsif Self.Pending.Contains (Index) then
+                     Pending := True;
                   else
+                     Self.Pending.Insert (Index);
                      Declartion := True;
                      return;
                   end if;
 
             end case;
 
-            --  All dependencies are ordered. Append Item to Order
-            Self.Order.Append (Item);
-            Self.Ordered.Insert ((Item.Kind, Item.Name));
-            Self.Queue.Delete (Pos);
-            Pos := Self.Queue.First;
-            Self.Queued.Delete ((Item.Kind, Item.Name));
-            Again := True;
+            if not Pending then
+               --  All dependencies are ordered. Append Item to Order
+               --  and try again
+               Self.Order.Append (Item);
+               Self.Ordered.Insert ((Item.Kind, Item.Name));
+               Self.Queue.Delete (Pos);
+               Pos := Self.Queue.First;
+               Self.Queued.Delete ((Item.Kind, Item.Name));
+               Again := True;
+            end if;
 
             <<Skip_This_Item>>
             Unit_Data_Lists.Next (Pos);
@@ -324,28 +372,27 @@ package body Gela.Plain_Dependency_Lists is
       end loop;
 
       if not Self.Queue.Is_Empty then
-         raise Constraint_Error;
+         raise Constraint_Error
+           with Set.Image (Self.Queue.First_Element.Name).To_UTF_8_String;
       end if;
 
       Name := Gela.Lexical_Types.No_Symbol;
       Declartion := False;
    end Next_Required_Unit;
 
-   ------------
-   -- Prefix --
-   ------------
+   ---------------------------------
+   -- No_Library_Unit_Declaration --
+   ---------------------------------
 
-   function Prefix
-     (Unit : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
-         return Gela.Lexical_Types.Symbol
-   is
-      Comp : constant Gela.Compilations.Compilation_Access :=
-        Unit.Enclosing_Compilation;
-      Set : constant Gela.Symbol_Sets.Symbol_Set_Access :=
-        Comp.Context.Symbols;
+   overriding procedure No_Library_Unit_Declaration
+     (Self : in out Dependency_List;
+      Name : Gela.Lexical_Types.Symbol) is
    begin
-      return Set.Prefix (Unit.Full_Name);
-   end Prefix;
+      if Self.Pending.Contains ((Unit_Declaration, Name)) then
+         Self.Pending.Delete ((Unit_Declaration, Name));
+         Self.No_Spec.Insert ((Unit_Declaration, Name));
+      end if;
+   end No_Library_Unit_Declaration;
 
 end Gela.Plain_Dependency_Lists;
 

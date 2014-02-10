@@ -52,6 +52,7 @@ package body Gela.Test_Iterators.ACATS is
             Name : constant League.Strings.Universal_String :=
               File.Slice (File.Last_Index ('/') + 1, File.Length);
          begin
+            Args.Append ("-I" & Dir & "../include/");
             Args.Append ("-I" & Dir);
             Args.Append (Name);
             Args.Append (Line.Element (2));

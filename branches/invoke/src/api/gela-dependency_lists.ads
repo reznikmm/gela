@@ -1,5 +1,7 @@
 with Gela.Compilation_Unit_Factories;
-with Gela.Elements.Compilation_Units;
+with Gela.Elements.Compilation_Unit_Bodies;
+with Gela.Elements.Compilation_Unit_Declarations;
+with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 
 package Gela.Dependency_Lists is
@@ -15,15 +17,21 @@ package Gela.Dependency_Lists is
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access)
    is abstract;
+
+   not overriding procedure No_Library_Unit_Declaration
+     (Self         : in out Dependency_List;
+      Name         : Gela.Lexical_Types.Symbol) is abstract;
 
    not overriding procedure Add_Body_Unit
      (Self         : in out Dependency_List;
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Compilation_Unit_Bodies.
+        Compilation_Unit_Body_Access)
    is abstract;
 
    not overriding procedure Add_Subunit
@@ -32,7 +40,7 @@ package Gela.Dependency_Lists is
       Name         : Gela.Lexical_Types.Symbol;
       Withed       : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Units.Compilation_Unit_Access)
+      Unit         : Gela.Elements.Subunits.Subunit_Access)
    is abstract;
 
    not overriding procedure Next_Required_Unit

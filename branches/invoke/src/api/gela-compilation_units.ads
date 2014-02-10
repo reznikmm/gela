@@ -71,7 +71,12 @@ package Gela.Compilation_Units is
    type Subunit_Access is access all Subunit'Class;
    for Subunit_Access'Storage_Size use 0;
 
+   function Subunits
+     (Self : Subunit)
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
+      is abstract;
+
    function Corresponding_Subunit_Parent_Body
-     (Self : Subunit) return Body_Unit_Access is abstract;
+     (Self : Subunit) return Compilation_Unit_Access is abstract;
 
 end Gela.Compilation_Units;
