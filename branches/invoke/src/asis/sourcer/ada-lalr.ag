@@ -2731,6 +2731,7 @@ library_unit_declaration ::=
   generic_function_declaration |
   generic_package_declaration |
   generic_instantiation |
+  generic_renaming_declaration |
   package_renaming_declaration;
 
 loop_parameter_specification ::=
