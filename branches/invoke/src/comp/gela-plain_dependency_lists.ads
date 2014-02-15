@@ -1,7 +1,6 @@
 with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Containers.Hashed_Sets;
 
-with Gela.Compilation_Unit_Factories;
 with Gela.Contexts;
 with Gela.Dependency_Lists;
 with Gela.Elements.Compilation_Unit_Bodies;
@@ -19,7 +18,8 @@ package Gela.Plain_Dependency_Lists is
 
 private
 
-   type Unit_Kinds is (Unit_Declaration, Unit_Body, Subunit);
+   subtype Unit_Kinds is Gela.Dependency_Lists.Unit_Kinds;
+   use all type Gela.Dependency_Lists.Unit_Kinds;
 
    type Unit_Index is record
       Kind : Unit_Kinds;
@@ -33,26 +33,8 @@ private
       Hash                => Hash,
       Equivalent_Elements => "=");
 
-   type Unit_Data (Kind : Unit_Kinds := Unit_Body) is record
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-
-      case Kind is
-         when Subunit =>
-            Parent  : Gela.Lexical_Types.Symbol;
-            Subunit : Gela.Elements.Subunits.Subunit_Access;
-         when Unit_Body =>
-            Unit_Body : Gela.Elements.Compilation_Unit_Bodies.
-              Compilation_Unit_Body_Access;
-         when Unit_Declaration =>
-            Unit_Declaration : Gela.Elements.Compilation_Unit_Declarations.
-              Compilation_Unit_Declaration_Access;
-      end case;
-   end record;
-
-   package Unit_Data_Lists is
-     new Ada.Containers.Doubly_Linked_Lists (Unit_Data);
+   package Unit_Data_Lists is new Ada.Containers.Doubly_Linked_Lists
+     (Gela.Dependency_Lists.Unit_Data, Gela.Dependency_Lists."=");
 
    type Dependency_List (Context : Gela.Contexts.Context_Access) is
      limited new Gela.Dependency_Lists.Dependency_List with
@@ -99,14 +81,8 @@ private
       Limited_With : Gela.Lexical_Types.Symbol_List;
       Unit         : Gela.Elements.Subunits.Subunit_Access);
 
-   overriding procedure Next_Required_Unit
-     (Self         : in out Dependency_List;
-      Name         : out Gela.Lexical_Types.Symbol;
-      Declartion   : out Boolean);
-
-   overriding procedure Create_Units
-     (Self    : in out Dependency_List;
-      Factory : Gela.Compilation_Unit_Factories.
-        Compilation_Unit_Factory_Access);
+   overriding procedure Next_Action
+     (Self   : in out Dependency_List;
+      Action : out Gela.Dependency_Lists.Action);
 
 end Gela.Plain_Dependency_Lists;

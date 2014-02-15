@@ -10,6 +10,9 @@ with Gela.Pass_2;
 with Gela.Pass_List;
 with Gela.Plain_Compilations;
 with Gela.Source_Finders;
+with Gela.Elements.Library_Unit_Declarations;
+with Gela.Symbol_Sets;
+with Gela.Semantic_Types;
 
 package body Gela.Plain_Compilation_Managers is
 
@@ -27,6 +30,88 @@ package body Gela.Plain_Compilation_Managers is
    begin
       return Self.Context;
    end Context;
+
+   ------------------
+   -- Create_Units --
+   ------------------
+
+   not overriding procedure Create_Unit
+     (Self    : in out Compilation_Manager;
+      Item    : Gela.Dependency_Lists.Unit_Data)
+   is
+      use all type Gela.Dependency_Lists.Unit_Kinds;
+
+      Lib    : Gela.Elements.Library_Unit_Declarations.
+        Library_Unit_Declaration_Access;
+      Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
+        Self.Context.Symbols;
+      Upper  : Gela.Compilation_Units.Package_Unit_Access;
+      Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access;
+      Parent : Gela.Compilation_Units.Body_Unit_Access;
+      Sub    : Gela.Compilation_Units.Subunit_Access;
+      pragma Unreferenced (Sub);
+   begin
+      case Item.Kind is
+         when Unit_Declaration =>
+            Upper := Self.Packages.Element (Set.Prefix (Item.Name));
+
+            Decl := Self.Factory.Create_Library_Unit_Declaration
+              (Parent => Upper,
+               Name   => Item.Name,
+               Node   => Item.Unit_Declaration);
+
+            Self.Specs.Insert (Item.Name, Decl);
+
+            Lib := Item.Unit_Declaration.Unit_Declaration;
+
+            case Lib.Unit_Kind is
+               when Gela.Semantic_Types.A_Package |
+                    Gela.Semantic_Types.A_Generic_Package =>
+                  Upper :=
+                    Gela.Compilation_Units.Package_Unit_Access (Decl);
+                  Self.Packages.Insert (Item.Name, Upper);
+               when others =>
+                  null;
+            end case;
+
+         when Unit_Body =>
+            if Self.Specs.Contains (Item.Name) then
+               Decl := Self.Specs.Element (Item.Name);
+
+               Parent := Self.Factory.Create_Body_Unit
+                 (Declaration => Decl,
+                  Name   => Item.Name,
+                  Node   => Item.Unit_Body);
+            else
+               Upper := Self.Packages.Element (Set.Prefix (Item.Name));
+
+               Parent := Self.Factory.Create_Body_Unit_Without_Declaration
+                 (Parent => Upper,
+                  Name   => Item.Name,
+                  Node   => Item.Unit_Body);
+            end if;
+
+            Self.Bodies.Insert (Item.Name, Parent);
+
+         when Subunit =>
+            Parent := Self.Bodies.Element (Item.Parent);
+
+            Sub := Self.Factory.Create_Subunit
+              (Parent => Parent,
+               Name   => Item.Name,
+               Node   => Item.Subunit);
+      end case;
+   end Create_Unit;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (Item : Gela.Lexical_Types.Symbol) return Ada.Containers.Hash_Type is
+   begin
+      return Ada.Containers.Hash_Type (Item);
+   end Hash;
 
    ----------
    -- Read --
@@ -80,7 +165,7 @@ package body Gela.Plain_Compilation_Managers is
    ---------------
 
    overriding procedure Read_Body
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Symbol : Gela.Lexical_Types.Symbol)
    is
       Source_Finder : constant Gela.Source_Finders.Source_Finder_Access :=
@@ -107,7 +192,7 @@ package body Gela.Plain_Compilation_Managers is
    ----------------------
 
    overriding procedure Read_Compilation
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Name   : League.Strings.Universal_String)
    is
       Source_Finder : constant Gela.Source_Finders.Source_Finder_Access :=
@@ -134,7 +219,7 @@ package body Gela.Plain_Compilation_Managers is
    ----------------------
 
    overriding procedure Read_Declaration
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Symbol : Gela.Lexical_Types.Symbol)
    is
       Source_Finder : constant Gela.Source_Finders.Source_Finder_Access :=
@@ -164,26 +249,31 @@ package body Gela.Plain_Compilation_Managers is
    ---------------------
 
    overriding procedure Read_Dependency
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       List   : Gela.Dependency_Lists.Dependency_List_Access)
    is
       use type Gela.Lexical_Types.Symbol;
 
-      Name         : Gela.Lexical_Types.Symbol;
-      Declartion   : Boolean;
+      Action : Gela.Dependency_Lists.Action;
    begin
       loop
-         List.Next_Required_Unit
-           (Name       => Name,
-            Declartion => Declartion);
+         List.Next_Action (Action);
 
-         exit when Name = Gela.Lexical_Types.No_Symbol;
-
-         if Declartion then
-            Self.Read_Declaration (Symbol => Name);
-         else
-            Self.Read_Body (Symbol => Name);
-         end if;
+         case Action.Action_Kind is
+            when Gela.Dependency_Lists.Complete =>
+               exit;
+            when Gela.Dependency_Lists.Unit_Required =>
+               case Action.Unit_Kind is
+                  when Gela.Dependency_Lists.Unit_Declaration =>
+                     Self.Read_Declaration (Action.Full_Name);
+                  when Gela.Dependency_Lists.Unit_Body =>
+                     Self.Read_Body (Action.Full_Name);
+                  when Gela.Dependency_Lists.Subunit =>
+                     raise Constraint_Error;
+               end case;
+            when Gela.Dependency_Lists.Unit_Ready =>
+               Self.Create_Unit (Action.Unit);
+         end case;
       end loop;
    end Read_Dependency;
 

@@ -16,19 +16,19 @@ package Gela.Compilation_Managers is
         is abstract;
 
    not overriding procedure Read_Compilation
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Name   : League.Strings.Universal_String) is abstract;
 
    not overriding procedure Read_Dependency
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       List   : Gela.Dependency_Lists.Dependency_List_Access) is abstract;
 
    not overriding procedure Read_Declaration
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Symbol : Gela.Lexical_Types.Symbol) is abstract;
 
    not overriding procedure Read_Body
-     (Self   : Compilation_Manager;
+     (Self   : in out Compilation_Manager;
       Symbol : Gela.Lexical_Types.Symbol) is abstract;
 
 end Gela.Compilation_Managers;
