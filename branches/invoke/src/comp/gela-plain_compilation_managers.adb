@@ -72,7 +72,9 @@ package body Gela.Plain_Compilation_Managers is
 
             case Lib.Unit_Kind is
                when Gela.Semantic_Types.A_Package |
-                    Gela.Semantic_Types.A_Generic_Package =>
+                    Gela.Semantic_Types.A_Generic_Package |
+                    Gela.Semantic_Types.A_Package_Instance =>
+
                   Upper :=
                     Gela.Compilation_Units.Package_Unit_Access (Decl);
                   Self.Packages.Insert (Item.Name, Upper);
