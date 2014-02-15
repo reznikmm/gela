@@ -24,9 +24,10 @@ package body Gela.Plain_Contexts is
      (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
    is
-      pragma Unreferenced (Self);
+      Result : constant Gela.Plain_Compilation_Unit_Sets.
+        Compilation_Unit_Set_Access := Self.Bodies'Access;
    begin
-      return null;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access (Result);
    end Compilation_Unit_Bodies;
 
    ----------------------
@@ -189,9 +190,10 @@ package body Gela.Plain_Contexts is
      (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
    is
-      pragma Unreferenced (Self);
+      Result : constant Gela.Plain_Compilation_Unit_Sets.
+        Compilation_Unit_Set_Access := Self.Specs'Access;
    begin
-      return null;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access (Result);
    end Library_Unit_Declarations;
 
    -------------------

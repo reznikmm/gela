@@ -75,8 +75,7 @@ package body Gela.Plain_Compilation_Managers is
                     Gela.Semantic_Types.A_Generic_Package |
                     Gela.Semantic_Types.A_Package_Instance =>
 
-                  Upper :=
-                    Gela.Compilation_Units.Package_Unit_Access (Decl);
+                  Upper := Gela.Compilation_Units.Package_Unit_Access (Decl);
                   Self.Packages.Insert (Item.Name, Upper);
                when others =>
                   null;

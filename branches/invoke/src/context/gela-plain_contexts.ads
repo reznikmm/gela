@@ -13,6 +13,7 @@ with Gela.GNAT_Naming_Schemas;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Naming_Schemas;
+with Gela.Plain_Compilation_Unit_Sets;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
 with Gela.Source_Finders;
@@ -35,6 +36,8 @@ private
    type Context is limited new Gela.Contexts.Context
      and Gela.Compilation_Unit_Factories.Compilation_Unit_Factory
    with record
+      Specs   : aliased Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
+      Bodies  : aliased Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
       Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
       Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
       Finder  : Gela.Source_Finders.Source_Finder_Access;
