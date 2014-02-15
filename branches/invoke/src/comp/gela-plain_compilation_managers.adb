@@ -40,7 +40,9 @@ package body Gela.Plain_Compilation_Managers is
       Item    : Gela.Dependency_Lists.Unit_Data)
    is
       use all type Gela.Dependency_Lists.Unit_Kinds;
+      use type Gela.Lexical_Types.Symbol;
 
+      Up     : Gela.Lexical_Types.Symbol;
       Lib    : Gela.Elements.Library_Unit_Declarations.
         Library_Unit_Declaration_Access;
       Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
@@ -53,7 +55,11 @@ package body Gela.Plain_Compilation_Managers is
    begin
       case Item.Kind is
          when Unit_Declaration =>
-            Upper := Self.Packages.Element (Set.Prefix (Item.Name));
+            Up := Set.Prefix (Item.Name);
+
+            if Up /= Gela.Lexical_Types.No_Symbol then
+               Upper := Self.Packages.Element (Up);
+            end if;
 
             Decl := Self.Factory.Create_Library_Unit_Declaration
               (Parent => Upper,
@@ -83,7 +89,11 @@ package body Gela.Plain_Compilation_Managers is
                   Name   => Item.Name,
                   Node   => Item.Unit_Body);
             else
-               Upper := Self.Packages.Element (Set.Prefix (Item.Name));
+               Up := Set.Prefix (Item.Name);
+
+               if Up /= Gela.Lexical_Types.No_Symbol then
+                  Upper := Self.Packages.Element (Up);
+               end if;
 
                Parent := Self.Factory.Create_Body_Unit_Without_Declaration
                  (Parent => Upper,
