@@ -1,3 +1,4 @@
+--  This package provides types related to lexic information.
 
 package Gela.Lexical_Types is
    pragma Pure;
@@ -8,6 +9,7 @@ package Gela.Lexical_Types is
    --  Index inside a text line
 
    type Line_Count is new Natural;
+   --  Line index inside source text
    subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
 
    type Line_Span is record
@@ -15,6 +17,7 @@ package Gela.Lexical_Types is
       Last    : Text_Index;
       Comment : Text_Index;
    end record;
+   --  Index of begin, end, comment of some line in source text
 
    type Token_Kind is
      (End_Of_Input,
@@ -65,9 +68,12 @@ package Gela.Lexical_Types is
    subtype Keyword_Operator_Token is Token_Kind range Or_Token .. Not_Token;
 
    type Symbol is mod 2 ** 32;
+   --  Unique code corresponding to any name, operator symbol, character
+   --  literal or compound name
    No_Symbol : constant Symbol := 0;
 
    type Symbol_List is mod 2 ** 32;
+   --  Code corresponding to list of some symbols
    Empty_Symbol_List : constant Symbol_List := 0;
 
    type Token is record
@@ -78,11 +84,13 @@ package Gela.Lexical_Types is
       Kind      : Token_Kind;
       Symbol    : Gela.Lexical_Types.Symbol;
    end record;
+   --  Token related information
 
    type Position is record
       Line  : Line_Index;
       Colon : Colon_Index;
    end record;
+   --  Position inside source code
 
    type Token_Count is new Natural;
    subtype Token_Index is Token_Count range 1 .. Token_Count'Last;

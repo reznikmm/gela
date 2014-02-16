@@ -1,3 +1,4 @@
+--  This package provides Element interface and their methods.
 with Gela.Lexical_Types;
 
 limited with Gela.Compilation_Units;
@@ -8,18 +9,23 @@ package Gela.Elements is
    pragma Preelaborate;
 
    type Element is limited interface;
+   --  Base type for any element in abstract syntax tree of compilation unit.
+
    type Element_Access is access all Element'Class;
    for Element_Access'Storage_Size use 0;
 
    not overriding function Enclosing_Element
      (Self  : Element) return Element_Access is abstract;
+   --  Return upper element if any.
 
    not overriding function Enclosing_Compilation
      (Self  : Element) return Gela.Compilations.Compilation_Access is abstract;
+   --  Return corresponding compilation.
 
    not overriding function Enclosing_Compilation_Unit
      (Self  : Element)
       return Gela.Compilation_Units.Compilation_Unit_Access is abstract;
+   --  Return corresponding compilation unit.
 
    not overriding function Is_Part_Of_Implicit
      (Self  : Element) return Boolean is abstract;
@@ -32,20 +38,25 @@ package Gela.Elements is
 
    not overriding function First_Token
      (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
+   --  Return first token index of given element.
 
    not overriding function Last_Token
      (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
+   --  Return last token index of given element.
 
    not overriding procedure Visit
      (Self    : access Element;
       Visiter : in out Gela.Element_Visiters.Visiter'Class) is abstract;
+   --  Move Visiter over given element.
 
    generic
       type Item is limited interface and Element;
       type Item_Access is access all Item'Class;
    package Generic_Element_Sequences is
       type Sequence is limited interface;
+      --  Sequence containing given Item-s
       type Sequence_Cursor is interface;
+      --  Cursor in sequence of Item
 
       not overriding function Is_Empty
         (Self : Sequence) return Boolean is abstract;

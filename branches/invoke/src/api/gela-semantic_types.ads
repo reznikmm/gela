@@ -1,3 +1,5 @@
+--  This package provides types related to semantic information.
+
 package Gela.Semantic_Types is
    pragma Preelaborate;
 

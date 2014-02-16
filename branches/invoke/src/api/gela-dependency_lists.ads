@@ -1,3 +1,5 @@
+--  This package provides Dependency_List interface and their methods.
+
 with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
@@ -7,6 +9,10 @@ package Gela.Dependency_Lists is
    pragma Preelaborate;
 
    type Dependency_List is limited interface;
+   --  This type resolves semantic dependency between compilation units.
+   --  User provides initial unit(s) with names and with lists, then
+   --  read action needed to satisfy dependecny.
+
    type Dependency_List_Access is
      access all Dependency_List'Class;
    for Dependency_List_Access'Storage_Size use 0;
@@ -19,10 +25,12 @@ package Gela.Dependency_Lists is
       Unit         : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access)
    is abstract;
+   --  Provide library unit declaration
 
    not overriding procedure No_Library_Unit_Declaration
      (Self         : in out Dependency_List;
       Name         : Gela.Lexical_Types.Symbol) is abstract;
+   --  Provide no library unit declaration exist
 
    not overriding procedure Add_Body_Unit
      (Self         : in out Dependency_List;
@@ -32,6 +40,7 @@ package Gela.Dependency_Lists is
       Unit         : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
    is abstract;
+   --  Provide body unit
 
    not overriding procedure Add_Subunit
      (Self         : in out Dependency_List;
@@ -41,6 +50,7 @@ package Gela.Dependency_Lists is
       Limited_With : Gela.Lexical_Types.Symbol_List;
       Unit         : Gela.Elements.Subunits.Subunit_Access)
    is abstract;
+   --  Provide subunit
 
    type Unit_Kinds is (Unit_Declaration, Unit_Body, Subunit);
 
@@ -82,5 +92,6 @@ package Gela.Dependency_Lists is
      (Self   : in out Dependency_List;
       Action : out Gela.Dependency_Lists.Action)
    is abstract;
+   --  Get next action of resolving dependency
 
 end Gela.Dependency_Lists;

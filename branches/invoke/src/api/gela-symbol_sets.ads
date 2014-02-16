@@ -1,3 +1,4 @@
+--  This package provides Symbol_Set interface and its methods.
 with League.Strings;
 
 with Gela.Lexical_Types;
@@ -6,6 +7,7 @@ package Gela.Symbol_Sets is
    pragma Preelaborate;
 
    type Symbol_Set is limited interface;
+   --  Set of all symbols encountered in compilation units of some context
    type Symbol_Set_Access is access all Symbol_Set'Class;
    for Symbol_Set_Access'Storage_Size use 0;
 
