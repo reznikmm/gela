@@ -2,6 +2,7 @@ with Gela.Lexical_Handler;
 with Gela.Path_Source_Finders;
 with Gela.Plain_Dependency_Lists;
 with Gela.Plain_Compilation_Managers;
+with Gela.Plain_Compilation_Units;
 
 package body Gela.Plain_Contexts is
 
@@ -42,12 +43,15 @@ package body Gela.Plain_Contexts is
         Compilation_Unit_Body_Access)
       return Gela.Compilation_Units.Body_Unit_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Declaration);
-      pragma Unreferenced (Name);
-      pragma Unreferenced (Node);
+      Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
+        Gela.Plain_Compilation_Units.Create_Body
+          (Node   => Node,
+           Name   => Name,
+           Parent => null,
+           Decl   => Declaration);
    begin
-      return null;
+      Self.Bodies.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
+      return Gela.Compilation_Units.Body_Unit_Access (Unit);
    end Create_Body_Unit;
 
    ------------------------------------------
@@ -62,12 +66,15 @@ package body Gela.Plain_Contexts is
         Compilation_Unit_Body_Access)
       return Gela.Compilation_Units.Body_Unit_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Parent);
-      pragma Unreferenced (Name);
-      pragma Unreferenced (Node);
+      Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
+        Gela.Plain_Compilation_Units.Create_Body
+          (Node   => Node,
+           Name   => Name,
+           Parent => Parent,
+           Decl   => null);
    begin
-      return null;
+      Self.Specs.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
+      return Gela.Compilation_Units.Body_Unit_Access (Unit);
    end Create_Body_Unit_Without_Declaration;
 
    -------------------------------------
@@ -82,12 +89,14 @@ package body Gela.Plain_Contexts is
         Compilation_Unit_Declaration_Access)
       return Gela.Compilation_Units.Library_Unit_Declaration_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Parent);
-      pragma Unreferenced (Name);
-      pragma Unreferenced (Node);
+      Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
+        Gela.Plain_Compilation_Units.Create_Declaration
+          (Node   => Node,
+           Name   => Name,
+           Parent => Parent);
    begin
-      return null;
+      Self.Specs.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
+      return Gela.Compilation_Units.Library_Unit_Declaration_Access (Unit);
    end Create_Library_Unit_Declaration;
 
    --------------------
@@ -98,15 +107,18 @@ package body Gela.Plain_Contexts is
      (Self   : in out Context;
       Parent : Gela.Compilation_Units.Body_Unit_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Node        : Gela.Elements.Subunits.Subunit_Access)
+      Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Parent);
-      pragma Unreferenced (Name);
-      pragma Unreferenced (Node);
+      Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
+        Gela.Plain_Compilation_Units.Create_Subunit
+          (Node   => Node,
+           Name   => Name,
+           Parent => Gela.Plain_Compilation_Units.Compilation_Unit_Access
+             (Parent));
    begin
-      return null;
+      Self.Bodies.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
+      return Gela.Compilation_Units.Subunit_Access (Unit);
    end Create_Subunit;
 
    --------------------
@@ -120,12 +132,15 @@ package body Gela.Plain_Contexts is
       Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access
    is
-      pragma Unreferenced (Self);
-      pragma Unreferenced (Parent);
-      pragma Unreferenced (Name);
-      pragma Unreferenced (Node);
+      Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
+        Gela.Plain_Compilation_Units.Create_Subunit
+          (Node   => Node,
+           Name   => Name,
+           Parent => Gela.Plain_Compilation_Units.Compilation_Unit_Access
+             (Parent));
    begin
-      return null;
+      Self.Bodies.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
+      return Gela.Compilation_Units.Subunit_Access (Unit);
    end Create_Subunit;
 
    ---------------------

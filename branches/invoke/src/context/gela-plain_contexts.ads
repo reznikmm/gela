@@ -106,7 +106,7 @@ private
      (Self   : in out Context;
       Parent : Gela.Compilation_Units.Body_Unit_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Node        : Gela.Elements.Subunits.Subunit_Access)
+      Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access;
 
    overriding function Create_Subunit
