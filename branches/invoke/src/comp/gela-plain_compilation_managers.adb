@@ -51,7 +51,6 @@ package body Gela.Plain_Compilation_Managers is
       Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Parent : Gela.Compilation_Units.Body_Unit_Access;
       Sub    : Gela.Compilation_Units.Subunit_Access;
-      pragma Unreferenced (Sub);
    begin
       case Item.Kind is
          when Unit_Declaration =>
@@ -105,12 +104,23 @@ package body Gela.Plain_Compilation_Managers is
             Self.Bodies.Insert (Item.Name, Parent);
 
          when Subunit =>
-            Parent := Self.Bodies.Element (Item.Parent);
+            if Self.Bodies.Contains (Item.Parent) then
+               Parent := Self.Bodies.Element (Item.Parent);
 
-            Sub := Self.Factory.Create_Subunit
-              (Parent => Parent,
-               Name   => Item.Name,
-               Node   => Item.Subunit);
+               Sub := Self.Factory.Create_Subunit
+                 (Parent => Parent,
+                  Name   => Item.Name,
+                  Node   => Item.Subunit);
+            else
+               Sub := Self.Subunits.Element (Item.Parent);
+
+               Sub := Self.Factory.Create_Subunit
+                 (Parent => Sub,
+                  Name   => Item.Name,
+                  Node   => Item.Subunit);
+            end if;
+
+            Self.Subunits.Insert (Item.Name, Sub);
       end case;
    end Create_Unit;
 

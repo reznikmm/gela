@@ -48,6 +48,13 @@ private
       Equivalent_Keys => Gela.Lexical_Types."=",
       "="             => Gela.Compilation_Units."=");
 
+   package Subunit_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Gela.Lexical_Types.Symbol,
+      Element_Type    => Gela.Compilation_Units.Subunit_Access,
+      Hash            => Hash,
+      Equivalent_Keys => Gela.Lexical_Types."=",
+      "="             => Gela.Compilation_Units."=");
+
    type Compilation_Manager
      (Context : Gela.Contexts.Context_Access;
       Factory : Gela.Compilation_Unit_Factories.
@@ -60,7 +67,8 @@ private
          --  Map of unit bodies placed in Order list
          Specs     : Spec_Maps.Map;
          --  Map of unit declarations placed in Order list
-
+         Subunits  : Subunit_Maps.Map;
+         --  Map of subunits placed in Order list
    end record;
 
    overriding function Context
