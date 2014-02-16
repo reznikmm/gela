@@ -185,14 +185,26 @@ package body Gela.Plain_Dependency_Lists is
                Index := (Unit_Declaration, Item.Name);
 
                if Self.No_Spec.Contains (Index) then
+                  --  Check if parent unit is ordered
+                  Index := (Unit_Declaration, Set.Prefix (Item.Name));
                   Lib := Item.Unit_Body.Unit_Declaration;
 
-                  if Lib.Unit_Kind in Gela.Semantic_Types.A_Function_Body
+                  if Lib.Unit_Kind not in Gela.Semantic_Types.A_Function_Body
                     | Gela.Semantic_Types.A_Procedure_Body
                   then
-                     null;  --  Continue with this unit
-                  else
                      raise Constraint_Error;
+                  elsif Index.Name = Gela.Lexical_Types.No_Symbol or else
+                    Self.Ordered.Contains (Index)
+                  then
+                     null;  --  Continue with this unit
+                  elsif Self.Queued.Contains (Index) then
+                     goto Skip_This_Item;
+                  elsif Self.Pending.Contains (Index) then
+                     Pending := True;
+                  else
+                     Self.Pending.Insert (Index);
+                     Action := (Unit_Required, Index.Name, Index.Kind);
+                     return;
                   end if;
 
                elsif Self.Ordered.Contains (Index) then
