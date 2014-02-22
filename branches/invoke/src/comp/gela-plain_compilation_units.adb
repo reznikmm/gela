@@ -99,10 +99,14 @@ package body Gela.Plain_Compilation_Units is
    is
       use type Gela.Compilation_Units.Package_Unit_Access;
       use type Gela.Compilation_Units.Library_Unit_Declaration_Access;
+
+      Tree : constant Gela.Elements.Compilation_Units.Compilation_Unit_Access
+        := Gela.Elements.Compilation_Units.Compilation_Unit_Access (Node);
    begin
       return Result : constant Compilation_Unit_Access :=
         new Compilation_Unit'
           (Name                              => Name,
+           Tree                              => Tree,
            Container                         => null,
            Compilation                       => Node.Enclosing_Compilation,
            Parent                            => Parent,
@@ -136,10 +140,14 @@ package body Gela.Plain_Compilation_Units is
       return Compilation_Unit_Access
    is
       use type Gela.Compilation_Units.Package_Unit_Access;
+
+      Tree : constant Gela.Elements.Compilation_Units.Compilation_Unit_Access
+        := Gela.Elements.Compilation_Units.Compilation_Unit_Access (Node);
    begin
       return Result : constant Compilation_Unit_Access :=
         new Compilation_Unit'
           (Name                              => Name,
+           Tree                              => Tree,
            Container                         => null,
            Compilation                       => Node.Enclosing_Compilation,
            Parent                            => Parent,
@@ -164,11 +172,16 @@ package body Gela.Plain_Compilation_Units is
      (Node   : Gela.Elements.Subunits.Subunit_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Parent : Compilation_Unit_Access)
-      return Compilation_Unit_Access is
+      return Compilation_Unit_Access
+   is
+
+      Tree : constant Gela.Elements.Compilation_Units.Compilation_Unit_Access
+        := Gela.Elements.Compilation_Units.Compilation_Unit_Access (Node);
    begin
       return Result : constant Compilation_Unit_Access :=
         new Compilation_Unit'
           (Name                              => Name,
+           Tree                              => Tree,
            Container                         => null,
            Compilation                       => Node.Enclosing_Compilation,
            Parent                            => null,
@@ -221,5 +234,16 @@ package body Gela.Plain_Compilation_Units is
    begin
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access (Result);
    end Subunits;
+
+   ----------
+   -- Tree --
+   ----------
+
+   overriding function Tree
+     (Self : access Compilation_Unit)
+      return Gela.Elements.Compilation_Units.Compilation_Unit_Access is
+   begin
+      return Self.Tree;
+   end Tree;
 
 end Gela.Plain_Compilation_Units;

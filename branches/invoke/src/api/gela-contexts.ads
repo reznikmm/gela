@@ -4,6 +4,7 @@ with Gela.Symbol_Sets;
 limited with Gela.Compilation_Managers;
 limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Dependency_Lists;
+limited with Gela.Environments;
 limited with Gela.Lexers;
 limited with Gela.Naming_Schemas;
 limited with Gela.Source_Finders;
@@ -68,5 +69,10 @@ package Gela.Contexts is
      (Self  : access Context)
       return Gela.Dependency_Lists.Dependency_List_Access is abstract;
    --  Return object to trace semantic dependency between units of the context
+
+   not overriding function Environment_Set
+     (Self  : access Context)
+      return Gela.Environments.Environment_Set_Access is abstract;
+   --  Return Environment set
 
 end Gela.Contexts;

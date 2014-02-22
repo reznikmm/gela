@@ -154,6 +154,17 @@ package body Gela.Plain_Contexts is
       return Self.Dependency_List;
    end Dependency_List;
 
+   ---------------------
+   -- Environment_Set --
+   ---------------------
+
+   overriding function Environment_Set
+     (Self  : access Context)
+      return Gela.Environments.Environment_Set_Access is
+   begin
+      return Self.Env'Access;
+   end Environment_Set;
+
    ----------------
    -- Initialize --
    ----------------

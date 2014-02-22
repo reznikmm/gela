@@ -4,6 +4,7 @@ with Gela.Compilations;
 with Gela.Contexts;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Compilation_Unit_Bodies;
+with Gela.Elements.Compilation_Units;
 with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 with Gela.Plain_Compilation_Unit_Sets;
@@ -57,6 +58,7 @@ private
       Container   : Gela.Unit_Containers.Unit_Container_Access;
       Compilation : Gela.Compilations.Compilation_Access;
       Parent      : Gela.Compilation_Units.Package_Unit_Access;
+      Tree        : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
 
       Corresponding_Declaration :
         Gela.Compilation_Units.Library_Unit_Declaration_Access;
@@ -110,5 +112,9 @@ private
    overriding function Corresponding_Subunit_Parent_Body
      (Self : access Compilation_Unit)
       return Gela.Compilation_Units.Compilation_Unit_Access;
+
+   overriding function Tree
+     (Self : access Compilation_Unit)
+      return Gela.Elements.Compilation_Units.Compilation_Unit_Access;
 
 end Gela.Plain_Compilation_Units;

@@ -5,6 +5,7 @@ limited with Gela.Compilations;
 limited with Gela.Contexts;
 limited with Gela.Unit_Containers;
 with Gela.Lexical_Types;
+with Gela.Elements.Compilation_Units;
 
 package Gela.Compilation_Units is
    pragma Preelaborate;
@@ -32,6 +33,12 @@ package Gela.Compilation_Units is
    not overriding function Compilation
      (Self : access Compilation_Unit)
       return Gela.Compilations.Compilation_Access is abstract;
+   --  Return compilation of compilation unit
+
+   not overriding function Tree
+     (Self : access Compilation_Unit)
+      return Gela.Elements.Compilation_Units.Compilation_Unit_Access
+        is abstract;
    --  Return compilation of compilation unit
 
    type Library_Item is limited interface and Compilation_Unit;

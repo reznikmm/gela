@@ -9,11 +9,13 @@ with Gela.Dependency_Lists;
 with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
+with Gela.Environments;
 with Gela.GNAT_Naming_Schemas;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Naming_Schemas;
 with Gela.Plain_Compilation_Unit_Sets;
+with Gela.Library_Environments;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
 with Gela.Source_Finders;
@@ -43,6 +45,8 @@ private
       Finder  : Gela.Source_Finders.Source_Finder_Access;
       Manager : Gela.Compilation_Managers.Compilation_Manager_Access;
       Schema  : aliased Gela.GNAT_Naming_Schemas.Naming_Schema
+        (Context'Unchecked_Access);
+      Env     : aliased Gela.Library_Environments.Environment_Set
         (Context'Unchecked_Access);
       Dependency_List : Gela.Dependency_Lists.Dependency_List_Access;
    end record;
@@ -77,6 +81,10 @@ private
    overriding function Dependency_List
      (Self  : access Context)
       return Gela.Dependency_Lists.Dependency_List_Access;
+
+   overriding function Environment_Set
+     (Self  : access Context)
+      return Gela.Environments.Environment_Set_Access;
 
    overriding function Create_Library_Unit_Declaration
      (Self   : in out Context;
