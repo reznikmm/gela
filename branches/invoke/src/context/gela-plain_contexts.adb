@@ -198,6 +198,17 @@ package body Gela.Plain_Contexts is
       end if;
    end Initialize;
 
+   ----------------------------
+   -- Interpretation_Manager --
+   ----------------------------
+
+   overriding function Interpretation_Manager
+     (Self  : access Context)
+      return Gela.Interpretations.Interpretation_Manager_Access is
+   begin
+      return Self.Interpretation'Access;
+   end Interpretation_Manager;
+
    -----------
    -- Lexer --
    -----------

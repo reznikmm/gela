@@ -1,10 +1,11 @@
 --  This package provides Context interface and its methods.
 
+with Gela.Environments;
+with Gela.Interpretations;
 with Gela.Symbol_Sets;
 limited with Gela.Compilation_Managers;
 limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Dependency_Lists;
-limited with Gela.Environments;
 limited with Gela.Lexers;
 limited with Gela.Naming_Schemas;
 limited with Gela.Source_Finders;
@@ -74,5 +75,10 @@ package Gela.Contexts is
      (Self  : access Context)
       return Gela.Environments.Environment_Set_Access is abstract;
    --  Return Environment set
+
+   not overriding function Interpretation_Manager
+     (Self  : access Context)
+      return Gela.Interpretations.Interpretation_Manager_Access is abstract;
+   --  Return interpretation manager
 
 end Gela.Contexts;

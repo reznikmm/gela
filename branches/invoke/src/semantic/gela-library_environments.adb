@@ -2,6 +2,37 @@
 with Gela.Compilation_Units;
 with Gela.Elements.Defining_Names;
 with Gela.Compilation_Unit_Sets;
+with Gela.Element_Visiters;
+
+with Gela.Elements.Compilation_Unit_Bodies;
+with Gela.Elements.Compilation_Unit_Declarations;
+with Gela.Elements.Subunits;
+with Gela.Elements.Library_Unit_Bodies;
+with Gela.Elements.Library_Unit_Declarations;
+with Gela.Elements.Proper_Bodies;
+with Gela.Elements.Function_Bodies;
+with Gela.Elements.Package_Bodies;
+with Gela.Elements.Procedure_Bodies;
+with Gela.Elements.Function_Declarations;
+with Gela.Elements.Function_Instantiations;
+with Gela.Elements.Generic_Function_Declarations;
+with Gela.Elements.Generic_Function_Renamings;
+with Gela.Elements.Generic_Package_Declarations;
+with Gela.Elements.Generic_Package_Renamings;
+with Gela.Elements.Generic_Procedure_Declarations;
+with Gela.Elements.Generic_Procedure_Renamings;
+with Gela.Elements.Package_Declarations;
+with Gela.Elements.Package_Instantiations;
+with Gela.Elements.Package_Renaming_Declarations;
+with Gela.Elements.Procedure_Declarations;
+with Gela.Elements.Procedure_Instantiations;
+with Gela.Elements.Protected_Bodies;
+with Gela.Elements.Task_Bodies;
+with Gela.Elements.Defining_Designators;
+with Gela.Elements.Defining_Program_Unit_Names;
+with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Defining_Expanded_Unit_Names;
+with Gela.Elements.Defining_Operator_Symbols;
 
 package body Gela.Library_Environments is
 
@@ -24,6 +55,481 @@ package body Gela.Library_Environments is
       overriding procedure Next (Self : in out Defining_Name_Cursor);
 
    end Library_Cursor;
+
+   package Get_Defining_Name_Visiter is
+
+      type Visiter is new Gela.Element_Visiters.Visiter with record
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      end record;
+
+      overriding procedure Compilation_Unit_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Compilation_Unit_Bodies.
+           Compilation_Unit_Body_Access);
+
+      overriding procedure Compilation_Unit_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Compilation_Unit_Declarations.
+           Compilation_Unit_Declaration_Access);
+
+      overriding procedure Defining_Expanded_Unit_Name
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Expanded_Unit_Names.
+           Defining_Expanded_Unit_Name_Access);
+
+      overriding procedure Defining_Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Access);
+
+      overriding procedure Defining_Operator_Symbol
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Operator_Symbols.
+           Defining_Operator_Symbol_Access);
+
+      overriding procedure Function_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Bodies.Function_Body_Access);
+
+      overriding procedure Function_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Declarations.
+           Function_Declaration_Access);
+
+      overriding procedure Function_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Instantiations.
+           Function_Instantiation_Access);
+
+      overriding procedure Generic_Function_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Function_Declarations.
+           Generic_Function_Declaration_Access);
+
+      overriding procedure Generic_Function_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Function_Renamings.
+           Generic_Function_Renaming_Access);
+
+      overriding procedure Generic_Package_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Package_Declarations.
+           Generic_Package_Declaration_Access);
+
+      overriding procedure Generic_Package_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Package_Renamings.
+           Generic_Package_Renaming_Access);
+
+      overriding procedure Generic_Procedure_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Procedure_Declarations.
+           Generic_Procedure_Declaration_Access);
+
+      overriding procedure Generic_Procedure_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Procedure_Renamings.
+           Generic_Procedure_Renaming_Access);
+
+      overriding procedure Package_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Bodies.Package_Body_Access);
+
+      overriding procedure Package_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Declarations.
+           Package_Declaration_Access);
+
+      overriding procedure Package_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Instantiations.
+           Package_Instantiation_Access);
+
+      overriding procedure Package_Renaming_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Renaming_Declarations.
+           Package_Renaming_Declaration_Access);
+
+      overriding procedure Procedure_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Bodies.Procedure_Body_Access);
+
+      overriding procedure Procedure_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Declarations.
+           Procedure_Declaration_Access);
+
+      overriding procedure Procedure_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Instantiations.
+           Procedure_Instantiation_Access);
+
+      overriding procedure Protected_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Protected_Bodies.Protected_Body_Access);
+
+      overriding procedure Subunit
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Subunits.Subunit_Access);
+
+      overriding procedure Task_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Task_Bodies.Task_Body_Access);
+
+   end Get_Defining_Name_Visiter;
+
+   -------------------------------
+   -- Get_Defining_Name_Visiter --
+   -------------------------------
+
+   package body Get_Defining_Name_Visiter is
+
+      ---------------------------
+      -- Compilation_Unit_Body --
+      ---------------------------
+
+      overriding procedure Compilation_Unit_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Compilation_Unit_Bodies.
+           Compilation_Unit_Body_Access)
+      is
+         Decl : constant Gela.Elements.Library_Unit_Bodies.
+           Library_Unit_Body_Access := Node.Unit_Declaration;
+      begin
+         Decl.Visit (Self);
+      end Compilation_Unit_Body;
+
+      ----------------------------------
+      -- Compilation_Unit_Declaration --
+      ----------------------------------
+
+      overriding procedure Compilation_Unit_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Compilation_Unit_Declarations.
+           Compilation_Unit_Declaration_Access)
+      is
+         Decl : constant Gela.Elements.Library_Unit_Declarations.
+           Library_Unit_Declaration_Access := Node.Unit_Declaration;
+      begin
+         Decl.Visit (Self);
+      end Compilation_Unit_Declaration;
+
+      ---------------------------------
+      -- Defining_Expanded_Unit_Name --
+      ---------------------------------
+
+      overriding procedure Defining_Expanded_Unit_Name
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Expanded_Unit_Names.
+           Defining_Expanded_Unit_Name_Access) is
+      begin
+         Self.Name := Gela.Elements.Defining_Names.Defining_Name_Access (Node);
+      end Defining_Expanded_Unit_Name;
+
+      -------------------------
+      -- Defining_Identifier --
+      -------------------------
+
+      overriding procedure Defining_Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Access) is
+      begin
+         Self.Name := Gela.Elements.Defining_Names.Defining_Name_Access (Node);
+      end Defining_Identifier;
+
+      ------------------------------
+      -- Defining_Operator_Symbol --
+      ------------------------------
+
+      overriding procedure Defining_Operator_Symbol
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Defining_Operator_Symbols.
+           Defining_Operator_Symbol_Access) is
+      begin
+         Self.Name := Gela.Elements.Defining_Names.Defining_Name_Access (Node);
+      end Defining_Operator_Symbol;
+
+      -------------------
+      -- Function_Body --
+      -------------------
+
+      overriding procedure Function_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Bodies.Function_Body_Access)
+      is
+         Name : constant Gela.Elements.Defining_Designators.
+           Defining_Designator_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Function_Body;
+
+      --------------------------
+      -- Function_Declaration --
+      --------------------------
+
+      overriding procedure Function_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Declarations.
+           Function_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Designators.
+           Defining_Designator_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Function_Declaration;
+
+      ----------------------------
+      -- Function_Instantiation --
+      ----------------------------
+
+      overriding procedure Function_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Function_Instantiations.
+           Function_Instantiation_Access)
+      is
+         Name : constant Gela.Elements.Defining_Designators.
+           Defining_Designator_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Function_Instantiation;
+
+      ----------------------------------
+      -- Generic_Function_Declaration --
+      ----------------------------------
+
+      overriding procedure Generic_Function_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Function_Declarations.
+           Generic_Function_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Designators.
+           Defining_Designator_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Function_Declaration;
+
+      -------------------------------
+      -- Generic_Function_Renaming --
+      -------------------------------
+
+      overriding procedure Generic_Function_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Function_Renamings.
+           Generic_Function_Renaming_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Function_Renaming;
+
+      ---------------------------------
+      -- Generic_Package_Declaration --
+      ---------------------------------
+
+      overriding procedure Generic_Package_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Package_Declarations.
+           Generic_Package_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Package_Declaration;
+
+      ------------------------------
+      -- Generic_Package_Renaming --
+      ------------------------------
+
+      overriding procedure Generic_Package_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Package_Renamings.
+           Generic_Package_Renaming_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Package_Renaming;
+
+      -----------------------------------
+      -- Generic_Procedure_Declaration --
+      -----------------------------------
+
+      overriding procedure Generic_Procedure_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Procedure_Declarations.
+           Generic_Procedure_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Procedure_Declaration;
+
+      --------------------------------
+      -- Generic_Procedure_Renaming --
+      --------------------------------
+
+      overriding procedure Generic_Procedure_Renaming
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Generic_Procedure_Renamings.
+           Generic_Procedure_Renaming_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Generic_Procedure_Renaming;
+
+      ------------------
+      -- Package_Body --
+      ------------------
+
+      overriding procedure Package_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Bodies.Package_Body_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Package_Body;
+
+      -------------------------
+      -- Package_Declaration --
+      -------------------------
+
+      overriding procedure Package_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Declarations.
+           Package_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Package_Declaration;
+
+      ---------------------------
+      -- Package_Instantiation --
+      ---------------------------
+
+      overriding procedure Package_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Instantiations.
+           Package_Instantiation_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Package_Instantiation;
+
+      ----------------------------------
+      -- Package_Renaming_Declaration --
+      ----------------------------------
+
+      overriding procedure Package_Renaming_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Renaming_Declarations.
+           Package_Renaming_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Package_Renaming_Declaration;
+
+      --------------------
+      -- Procedure_Body --
+      --------------------
+
+      overriding procedure Procedure_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Bodies.Procedure_Body_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Procedure_Body;
+
+      ---------------------------
+      -- Procedure_Declaration --
+      ---------------------------
+
+      overriding procedure Procedure_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Declarations.
+           Procedure_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Procedure_Declaration;
+
+      -----------------------------
+      -- Procedure_Instantiation --
+      -----------------------------
+
+      overriding procedure Procedure_Instantiation
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Procedure_Instantiations.
+           Procedure_Instantiation_Access)
+      is
+         Name : constant Gela.Elements.Defining_Program_Unit_Names.
+           Defining_Program_Unit_Name_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Procedure_Instantiation;
+
+      --------------------
+      -- Protected_Body --
+      --------------------
+
+      overriding procedure Protected_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Protected_Bodies.Protected_Body_Access)
+      is
+         Name : constant Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Protected_Body;
+
+      -------------
+      -- Subunit --
+      -------------
+
+      overriding procedure Subunit
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Subunits.Subunit_Access)
+      is
+         Decl : constant Gela.Elements.Proper_Bodies.Proper_Body_Access :=
+           Node.Unit_Declaration;
+      begin
+         Decl.Visit (Self);
+      end Subunit;
+
+      ---------------
+      -- Task_Body --
+      ---------------
+
+      overriding procedure Task_Body
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Task_Bodies.Task_Body_Access)
+      is
+         Name : constant Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Access := Node.Names;
+      begin
+         Name.Visit (Self);
+      end Task_Body;
+
+   end Get_Defining_Name_Visiter;
 
    --------------------
    -- Library_Cursor --
@@ -83,7 +589,7 @@ package body Gela.Library_Environments is
       Units : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
    begin
       if Index /= Library_Env then
-         raise Constraint_Error;
+         return Library_Cursor.Defining_Name_Cursor'(Name => null);
       end if;
 
       Units := Self.Context.Library_Unit_Declarations;
@@ -94,7 +600,16 @@ package body Gela.Library_Environments is
          Unit := Units.Find (Symbol);
       end if;
 
-      return Result : Library_Cursor.Defining_Name_Cursor;
+      return Result : Library_Cursor.Defining_Name_Cursor do
+         if Unit /= null then
+            declare
+               V : Get_Defining_Name_Visiter.Visiter;
+            begin
+               Unit.Tree.Visit (V);
+               Result.Name := V.Name;
+            end;
+         end if;
+      end return;
    end Direct_Visible;
 
    -------------------------------

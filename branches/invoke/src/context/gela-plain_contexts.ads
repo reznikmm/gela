@@ -11,11 +11,13 @@ with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
 with Gela.Environments;
 with Gela.GNAT_Naming_Schemas;
+with Gela.Interpretations;
 with Gela.Lexers;
 with Gela.Lexical_Types;
+with Gela.Library_Environments;
 with Gela.Naming_Schemas;
 with Gela.Plain_Compilation_Unit_Sets;
-with Gela.Library_Environments;
+with Gela.Plain_Interpretations;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
 with Gela.Source_Finders;
@@ -49,6 +51,8 @@ private
       Env     : aliased Gela.Library_Environments.Environment_Set
         (Context'Unchecked_Access);
       Dependency_List : Gela.Dependency_Lists.Dependency_List_Access;
+      Interpretation : aliased
+        Gela.Plain_Interpretations.Interpretation_Manager;
    end record;
 
    overriding function Symbols
@@ -85,6 +89,10 @@ private
    overriding function Environment_Set
      (Self  : access Context)
       return Gela.Environments.Environment_Set_Access;
+
+   overriding function Interpretation_Manager
+     (Self  : access Context)
+      return Gela.Interpretations.Interpretation_Manager_Access;
 
    overriding function Create_Library_Unit_Declaration
      (Self   : in out Context;

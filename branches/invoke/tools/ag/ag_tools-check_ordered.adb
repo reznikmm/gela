@@ -132,6 +132,7 @@ package body AG_Tools.Check_Ordered is
 
       --      Context.Add_With ("Gela.Compilations");
       Context.Add_With ("Gela.Symbol_Sets");
+      Context.Add_With ("Gela.Environments");
       Context.Add_With ("Gela.Pass_Utils");
 
       Spec.P ("with Gela.Compilations;");
