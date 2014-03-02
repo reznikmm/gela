@@ -3,6 +3,7 @@ with Gela.Path_Source_Finders;
 with Gela.Plain_Dependency_Lists;
 with Gela.Plain_Compilation_Managers;
 with Gela.Plain_Compilation_Units;
+with Gela.Plain_Compilation_Unit_Sets;
 
 package body Gela.Plain_Contexts is
 
@@ -23,12 +24,9 @@ package body Gela.Plain_Contexts is
 
    overriding function Compilation_Unit_Bodies
      (Self  : access Context)
-      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
-   is
-      Result : constant Gela.Plain_Compilation_Unit_Sets.
-        Compilation_Unit_Set_Access := Self.Bodies'Access;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access is
    begin
-      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access (Result);
+      return Self.Bodies;
    end Compilation_Unit_Bodies;
 
    ----------------------
@@ -178,11 +176,21 @@ package body Gela.Plain_Contexts is
         new Gela.Plain_Dependency_Lists.Dependency_List
           (Self'Unchecked_Access);
 
+      Specs   : constant Gela.Plain_Compilation_Unit_Sets.
+        Compilation_Unit_Set_Access :=
+          new Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
+
+      Bodies  : constant Gela.Plain_Compilation_Unit_Sets.
+        Compilation_Unit_Set_Access :=
+          new Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
+
       Manager : constant Gela.Plain_Compilation_Managers.
         Compilation_Manager_Access :=
           new Gela.Plain_Compilation_Managers.Compilation_Manager
             (Self'Unchecked_Access, Self'Unchecked_Access);
    begin
+      Self.Specs := Specs.all'Access;
+      Self.Bodies := Bodies.all'Access;
       Gela.Lexical_Handler.Initialize;
       Self.Symbols.Initialize;
       Self.Finder := Gela.Path_Source_Finders.Create
@@ -225,12 +233,9 @@ package body Gela.Plain_Contexts is
 
    overriding function Library_Unit_Declarations
      (Self  : access Context)
-      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
-   is
-      Result : constant Gela.Plain_Compilation_Unit_Sets.
-        Compilation_Unit_Set_Access := Self.Specs'Access;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access is
    begin
-      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access (Result);
+      return Self.Specs;
    end Library_Unit_Declarations;
 
    -------------------

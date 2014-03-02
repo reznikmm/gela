@@ -2488,6 +2488,7 @@ Synthesized attributes
   Visible_Part_Declarative_Items,
   Visible_Protected_Items,
   Visible_Task_Items,
+  With_Clause_Names,
   access_definition,
   access_to_function_definition,
   access_to_object_definition,
@@ -3101,6 +3102,11 @@ Rules for Visible_Task_Items.task_item :
 Rules for With_Clause_Names.program_unit_name :
 (.
       ${program_unit_name.env_in} := ${With_Clause_Names.env_in};
+.)
+
+Rules for With_Clause_Names.program_unit_name :
+(.
+      ${With_Clause_Names.env_out} := 0;
 .)
 
 Rules for abort_statement. :
@@ -5616,6 +5622,7 @@ Rules for with_clause. :
 
 Rules for with_clause. :
 (.
+      --  Depend on ${with_clause.env_in}
       Self.Compilation.Context.Environment_Set.Library_Level_Environment
         (${With_Clause_Names.env_in});
 .)
@@ -5828,7 +5835,7 @@ Inherited attributes
   subtype_mark,
   subtype_mark_or_access_definition,
   type_definition,
-  unconstrained_array_definition : Gela.Interpretations.Interpretation_Set_Index : Down;
+  unconstrained_array_definition : Gela.Interpretations.Interpretation_Index : Down;
 
 
 Rules for accept_statement. :
@@ -6213,7 +6220,8 @@ Rules for Clause_Names.program_unit_name :
 
 Rules for With_Clause_Names.program_unit_name :
 (.
-      ${program_unit_name.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${With_Clause_Names.env_in}, ${program_unit_name.Up}, ${program_unit_name.Down});
 .)
 
 Rules for defining_expanded_unit_name. :
@@ -6624,4 +6632,15 @@ Rules for return_object_specification. :
 Rules for subtype_declaration. :
 (.
       ${Type_Declaration_View.Down} := 0;  --  FIXME
+.)
+
+Synthesized attributes
+  identifier
+   : Gela.Elements.Defining_Names.Defining_Name_Access : Defining_Name;
+
+Rules for identifier.identifier_token :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Defining_Name
+        (${identifier.Down},
+         ${identifier.Defining_Name});
 .)

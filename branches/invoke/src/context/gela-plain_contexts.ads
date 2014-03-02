@@ -16,7 +16,6 @@ with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Library_Environments;
 with Gela.Naming_Schemas;
-with Gela.Plain_Compilation_Unit_Sets;
 with Gela.Plain_Interpretations;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
@@ -40,8 +39,8 @@ private
    type Context is limited new Gela.Contexts.Context
      and Gela.Compilation_Unit_Factories.Compilation_Unit_Factory
    with record
-      Specs   : aliased Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
-      Bodies  : aliased Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
+      Specs   : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+      Bodies  : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
       Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
       Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
       Finder  : Gela.Source_Finders.Source_Finder_Access;
@@ -52,7 +51,8 @@ private
         (Context'Unchecked_Access);
       Dependency_List : Gela.Dependency_Lists.Dependency_List_Access;
       Interpretation : aliased
-        Gela.Plain_Interpretations.Interpretation_Manager;
+        Gela.Plain_Interpretations.Interpretation_Manager
+          (Context'Unchecked_Access);
    end record;
 
    overriding function Symbols
