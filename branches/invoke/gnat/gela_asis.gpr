@@ -1,19 +1,13 @@
-with "gela_common";
-with "gela_context";
-with "gela_sourcer";
+with "gela_build";
 
 project Gela_ASIS is
 
-   Build := Gela_Common.Build;
-   for Source_Dirs use ("../src/asis/api");
+   Build := Gela_Build.Build;
+   for Source_Dirs use ("../src/asis");
    for Object_Dir use Build & "/asis";
 
    package Compiler is
-      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
-      for Switches ("asis.adb") use Gela_Common.Default_Ada_Switches;
+      for Default_Switches ("ada") use Gela_Build.Check_Ada_Switches;
    end Compiler;
 
-   package Remote is
-      for Root_Dir use "..";
-   end Remote;
 end Gela_ASIS;
