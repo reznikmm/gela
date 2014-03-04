@@ -1767,10 +1767,13 @@ private
 
    Nil_Element_List : constant Element_List := (1 .. 0 => null);
 
-   type Compilation_Unit is new Gela.Compilation_Units.Compilation_Unit_Access;
-   Nil_Compilation_Unit : constant Compilation_Unit := null;
+   type Compilation_Unit is record
+      Data : Gela.Compilation_Units.Compilation_Unit_Access;
+   end record;
+
+   Nil_Compilation_Unit : constant Compilation_Unit := (Data => null);
 
    Nil_Compilation_Unit_List : constant Compilation_Unit_List :=
-     (1 .. 0 => null);
+     (1 .. 0 => <>);
 
 end Asis;

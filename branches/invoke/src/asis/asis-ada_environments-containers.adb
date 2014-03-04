@@ -12,6 +12,7 @@
 with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
+with Asis.Ada_Environments.Containers.Internals;
 
 with Gela.Compilation_Unit_Sets;
 
@@ -27,22 +28,11 @@ package body Asis.Ada_Environments.Containers is
    begin
       if Is_Open (The_Container.Context) then
          declare
-            Set   : constant Gela.Compilation_Unit_Sets.
+            Set : constant Gela.Compilation_Unit_Sets.
               Compilation_Unit_Set_Access :=
                 The_Container.List.Compilation_Unit_Bodies;
-            Index : ASIS_Natural := ASIS_Natural (Set.Length);
-            Pos   : Gela.Compilation_Unit_Sets.Compilation_Unit_Cursor'Class :=
-              Set.First;
          begin
-            return Result : Asis.Compilation_Unit_List (1 .. Index) do
-               Index := 1;
-
-               while Pos.Has_Element loop
-                  Result (Index) := Asis.Compilation_Unit (Pos.Element);
-                  Index := Index + 1;
-                  Pos.Next;
-               end loop;
-            end return;
+            return Internals.To_List (Set);
          end;
       else
          Implementation.Set_Status
@@ -151,22 +141,11 @@ package body Asis.Ada_Environments.Containers is
    begin
       if Is_Open (The_Container.Context) then
          declare
-            Set   : constant Gela.Compilation_Unit_Sets.
+            Set : constant Gela.Compilation_Unit_Sets.
               Compilation_Unit_Set_Access :=
                 The_Container.List.Library_Unit_Declarations;
-            Index : ASIS_Natural := ASIS_Natural (Set.Length);
-            Pos   : Gela.Compilation_Unit_Sets.Compilation_Unit_Cursor'Class :=
-              Set.First;
          begin
-            return Result : Asis.Compilation_Unit_List (1 .. Index) do
-               Index := 1;
-
-               while Pos.Has_Element loop
-                  Result (Index) := Asis.Compilation_Unit (Pos.Element);
-                  Index := Index + 1;
-                  Pos.Next;
-               end loop;
-            end return;
+            return Internals.To_List (Set);
          end;
       else
          Implementation.Set_Status
