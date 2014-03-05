@@ -9,46 +9,25 @@
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
-with Asis.Errors;
-with Asis.Exceptions;
-with Asis.Implementation;
 with Asis.Ada_Environments.Containers.Internals;
 
 with League.Strings;
 with League.String_Vectors;
 
---  with Gela.Contexts;
+with Gela.Compilation_Unit_Sets;
 with Gela.Compilation_Units;
 with Gela.Compilations;
---  with Gela.Unit_Containers;
-with Gela.Compilation_Unit_Sets;
-with Gela.Symbol_Sets;
 with Gela.Lexical_Types;
+with Gela.Symbol_Sets;
 
 package body Asis.Compilation_Units is
 
    package U renames Gela.Compilation_Units;
 
-   function Assigned (Unit : in Asis.Compilation_Unit) return Boolean;
-
-   procedure Check_Nil_Unit
-     (Unit : Asis.Compilation_Unit;
-      From : Wide_String);
-
    function To_List
      (Set : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access)
       return Asis.Compilation_Unit_List
         renames Asis.Ada_Environments.Containers.Internals.To_List;
-
-   --------------
-   -- Assigned --
-   --------------
-
-   function Assigned (Unit : in Asis.Compilation_Unit) return Boolean is
-      use type Gela.Compilation_Units.Compilation_Unit_Access;
-   begin
-      return Unit.Data /= null;
-   end Assigned;
 
    -------------------------------
    -- Attribute_Value_Delimiter --
@@ -84,26 +63,9 @@ package body Asis.Compilation_Units is
    is
       pragma Unreferenced (Compilation_Unit);
    begin
-      Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, "");
-      raise Asis.Exceptions.ASIS_Failed;
+      Raise_Not_Implemented ("Can_Be_Main_Program");
       return False;
    end Can_Be_Main_Program;
-
-   --------------------
-   -- Check_Nil_Unit --
-   --------------------
-
-   procedure Check_Nil_Unit
-     (Unit : Asis.Compilation_Unit;
-      From : Wide_String) is
-   begin
-      if not Assigned (Unit) then
-         Asis.Implementation.Set_Status
-           (Asis.Errors.Value_Error, "Null compilation unit in " & From);
-         raise Asis.Exceptions.ASIS_Inappropriate_Compilation_Unit;
-      end if;
-   end Check_Nil_Unit;
 
    --------------------------------------
    -- Compilation_Command_Line_Options --
@@ -468,9 +430,7 @@ package body Asis.Compilation_Units is
    is
       pragma Unreferenced (Compilation_Unit);
    begin
-      Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, "");
-      raise Asis.Exceptions.ASIS_Failed;
+      Raise_Not_Implemented ("Is_Body_Required");
       return False;
    end Is_Body_Required;
 
@@ -697,9 +657,7 @@ package body Asis.Compilation_Units is
    is
       pragma Unreferenced (Compilation_Unit);
    begin
-      Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, "");
-      raise Asis.Exceptions.ASIS_Failed;
+      Raise_Not_Implemented ("Unit_Class");
       return Not_A_Class;
    end Unit_Class;
 
@@ -741,9 +699,7 @@ package body Asis.Compilation_Units is
    is
       pragma Unreferenced (Compilation_Unit);
    begin
-      Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, "");
-      raise Asis.Exceptions.ASIS_Failed;
+      Raise_Not_Implemented ("Unit_Kind");
       return Not_A_Unit;
    end Unit_Kind;
 
@@ -756,9 +712,7 @@ package body Asis.Compilation_Units is
    is
       pragma Unreferenced (Compilation_Unit);
    begin
-      Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, "");
-      raise Asis.Exceptions.ASIS_Failed;
+      Raise_Not_Implemented ("Unit_Origin");
       return Not_An_Origin;
    end Unit_Origin;
 

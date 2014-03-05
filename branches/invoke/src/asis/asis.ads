@@ -1762,10 +1762,13 @@ private
    end record;
    Nil_Context : constant Context := (null, Associated => False, others => <>);
 
-   type Element is new Gela.Elements.Element_Access;
-   Nil_Element : constant Element := null;
+   type Element is record
+      Data : Gela.Elements.Element_Access;
+   end record;
 
-   Nil_Element_List : constant Element_List := (1 .. 0 => null);
+   Nil_Element : constant Element := (Data => null);
+
+   Nil_Element_List : constant Element_List := (1 .. 0 => <>);
 
    type Compilation_Unit is record
       Data : Gela.Compilation_Units.Compilation_Unit_Access;
@@ -1775,5 +1778,24 @@ private
 
    Nil_Compilation_Unit_List : constant Compilation_Unit_List :=
      (1 .. 0 => <>);
+
+   function Assigned (Unit : in Asis.Compilation_Unit) return Boolean;
+   --  Test if Unit is Nil_Compilation_Unit
+
+   procedure Check_Nil_Unit
+     (Unit : Asis.Compilation_Unit;
+      From : Wide_String);
+   --  Raise error if Unit is Nil_Compilation_Unit
+
+   function Assigned (Element : in Asis.Element) return Boolean;
+   --  Test if Element is Nil_Element
+
+   procedure Check_Nil_Element
+     (Element : Asis.Element;
+      From    : Wide_String);
+   --  Raise error if Element is Nil_Element
+
+   procedure Raise_Not_Implemented (From : Wide_String);
+   --  Raise error
 
 end Asis;
