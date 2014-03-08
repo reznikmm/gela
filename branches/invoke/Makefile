@@ -43,3 +43,5 @@ tests: asis
 	gprbuild -m -j0 -p -P gnat/gela_tester.gpr
 	gprbuild -m -j0 -p -P gnat/gela_grammars_tests.gpr
 	gprbuild -m -j0 -p -P gnat/gela_tests.gpr
+	gprbuild -m -j0 -p -P gnat/gela_asis_tests.gpr
+
