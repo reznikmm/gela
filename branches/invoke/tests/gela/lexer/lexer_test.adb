@@ -143,7 +143,8 @@ procedure Lexer_Test is
    Input   : League.Strings.Universal_String;
    Context : constant Gela.Contexts.Context_Access :=
      Gela.Context_Factories.Create_Context
-       (League.String_Vectors.Empty_Universal_String_Vector);
+       (League.String_Vectors.Empty_Universal_String_Vector,
+        League.Strings.Empty_Universal_String);
    Lexer : constant Gela.Lexers.Lexer_Access := Context.Lexer;
    Dest : aliased Output.Lexer_Destination;
 begin

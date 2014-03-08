@@ -1,5 +1,3 @@
-with League.Strings;
-
 with Gela.Plain_Contexts;
 
 package body Gela.Context_Factories is
@@ -11,7 +9,8 @@ package body Gela.Context_Factories is
    --------------------
 
    function Create_Context
-     (Parameters : League.String_Vectors.Universal_String_Vector)
+     (Parameters : League.String_Vectors.Universal_String_Vector;
+      Include    : League.Strings.Universal_String)
       return Gela.Contexts.Context_Access
    is
       Result : constant Context_Access := new Gela.Plain_Contexts.Context;
@@ -32,7 +31,7 @@ package body Gela.Context_Factories is
          end if;
       end loop;
 
-      Result.Initialize (Path, Name);
+      Result.Initialize (Include, Path, Name);
 
       return Gela.Contexts.Context_Access (Result);
    end Create_Context;

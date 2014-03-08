@@ -15,8 +15,11 @@ with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
 with Gela.Elements.Context_Items;
+with Asis.Extensions.Flat_Kinds;
 
 package body Asis.Elements is
+
+   package F renames Asis.Extensions.Flat_Kinds;
 
    ----------------------------
    -- Access_Definition_Kind --
@@ -361,16 +364,32 @@ package body Asis.Elements is
    ------------------
 
    function Element_Kind
-     (Element : in Asis.Element)
-      return Asis.Element_Kinds
-   is
+     (Element : in Asis.Element) return Asis.Element_Kinds is
    begin
-      if Assigned (Element) then
-         Raise_Not_Implemented ("");
-         return Not_An_Element;
-      else
-         return Not_An_Element;
-      end if;
+      case F.Flat_Kind (Element) is
+         when F.A_Pragma =>
+            return A_Pragma;
+         when F.A_Defining_Name =>
+            return A_Defining_Name;
+         when F.A_Declaration =>
+            return A_Declaration;
+         when F.A_Definition =>
+            return A_Definition;
+         when F.An_Expression =>
+            return An_Expression;
+         when F.An_Association =>
+            return An_Association;
+         when F.A_Statement =>
+            return A_Statement;
+         when F.A_Path =>
+            return A_Path;
+         when F.A_Clause =>
+            return A_Clause;
+         when F.An_Exception_Handler =>
+            return An_Exception_Handler;
+         when others =>
+            return Not_An_Element;
+      end case;
    end Element_Kind;
 
    --------------------------------

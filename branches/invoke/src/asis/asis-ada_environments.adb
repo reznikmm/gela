@@ -15,6 +15,7 @@ with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
 
+with League.Application;
 with League.Strings;
 with League.String_Vectors;
 
@@ -293,11 +294,15 @@ package body Asis.Ada_Environments is
       end if;
 
       declare
+         Gela_Include_Path : constant League.Strings.Universal_String :=
+           League.Strings.To_Universal_String ("GELA_INCLUDE_PATH");
+         Env  : constant League.Strings.Universal_String :=
+           League.Application.Environment.Value (Gela_Include_Path);
          Args : constant League.String_Vectors.Universal_String_Vector :=
            The_Context.Parameters.Split (' ');
       begin
          The_Context.Implementation :=
-           Gela.Context_Factories.Create_Context (Args);
+           Gela.Context_Factories.Create_Context (Args, Env);
       exception
          when E : others =>
             Implementation.Set_Status

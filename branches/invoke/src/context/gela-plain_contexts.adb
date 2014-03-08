@@ -169,6 +169,7 @@ package body Gela.Plain_Contexts is
 
    not overriding procedure Initialize
      (Self : in out Context;
+      Env  : League.Strings.Universal_String;
       Path : League.Strings.Universal_String;
       Comp : League.Strings.Universal_String)
    is
@@ -188,13 +189,21 @@ package body Gela.Plain_Contexts is
         Compilation_Manager_Access :=
           new Gela.Plain_Compilation_Managers.Compilation_Manager
             (Self'Unchecked_Access, Self'Unchecked_Access);
+
+      Path_Value : League.Strings.Universal_String := Env;
    begin
+      if not Path_Value.Is_Empty then
+         Path_Value.Append (":");
+      end if;
+
+      Path_Value.Append (Path);
+
       Self.Specs := Specs.all'Access;
       Self.Bodies := Bodies.all'Access;
       Gela.Lexical_Handler.Initialize;
       Self.Symbols.Initialize;
       Self.Finder := Gela.Path_Source_Finders.Create
-        (Path    => Path,
+        (Path    => Path_Value,
          Context => Self'Unchecked_Access);
       Self.Dependency_List :=
         Gela.Dependency_Lists.Dependency_List_Access (Deps);

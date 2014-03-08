@@ -31,6 +31,7 @@ package Gela.Plain_Contexts is
 
    not overriding procedure Initialize
      (Self : in out Context;
+      Env  : League.Strings.Universal_String;
       Path : League.Strings.Universal_String;
       Comp : League.Strings.Universal_String);
 

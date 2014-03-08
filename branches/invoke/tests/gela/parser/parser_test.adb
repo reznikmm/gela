@@ -26,11 +26,11 @@ begin
    for J in 1 .. League.Application.Arguments.Length - 1 loop
       Args.Append (League.Application.Arguments.Element (J));
    end loop;
-   Args.Append ("-I" & League.Application.Environment.Value (Env));
 
    Hash := League.Hash_Type'Wide_Wide_Value
      (League.Application.Arguments.Element
         (League.Application.Arguments.Length).To_Wide_Wide_String);
 
-   Context := Gela.Context_Factories.Create_Context (Args);
+   Context := Gela.Context_Factories.Create_Context
+     (Args, League.Application.Environment.Value (Env));
 end Parser_Test;
