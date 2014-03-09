@@ -65,4 +65,22 @@ package body Asis is
       raise Asis.Exceptions.ASIS_Failed;
    end Raise_Not_Implemented;
 
+   -------------
+   -- To_List --
+   -------------
+
+   function To_List
+     (X : Gela.Elements.Element_Sequence_Access) return Asis.Element_List
+   is
+      Result : Asis.Element_List (1 .. ASIS_Natural (X.Length));
+      Cursor : Gela.Elements.Element_Sequence_Cursor := X.First;
+   begin
+      for J in Result'Range loop
+         Result (J) := (Data => Cursor.Element);
+         Cursor.Next;
+      end loop;
+
+      return Result;
+   end To_List;
+
 end Asis;

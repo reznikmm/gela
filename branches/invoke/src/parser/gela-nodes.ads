@@ -47,7 +47,12 @@ package Gela.Nodes is
         (Self : Sequence)
          return Generic_Element_Sequences.Sequence_Cursor'Class;
 
+      overriding function First
+        (Self : Sequence)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class;
+
       type Sequence_Cursor is new Generic_Element_Sequences.Sequence_Cursor
+        and Gela.Elements.Element_Sequences.Sequence_Cursor
       with record
          Data : Lists.Cursor;
       end record;
@@ -56,6 +61,9 @@ package Gela.Nodes is
 
       overriding function Element
         (Self : Sequence_Cursor) return Generic_Element_Sequences.Item_Access;
+
+      overriding function Element
+        (Self : Sequence_Cursor) return Gela.Elements.Element_Access;
 
       overriding procedure Next (Self : in out Sequence_Cursor);
 

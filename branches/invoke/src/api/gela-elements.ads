@@ -49,20 +49,46 @@ package Gela.Elements is
       Visiter : in out Gela.Element_Visiters.Visiter'Class) is abstract;
    --  Move Visiter over given element.
 
-   generic
-      type Item is limited interface and Element;
-      type Item_Access is access all Item'Class;
-   package Generic_Element_Sequences is
+   package Element_Sequences is
       type Sequence is limited interface;
-      --  Sequence containing given Item-s
+      --  Sequence containing Elements
       type Sequence_Cursor is interface;
-      --  Cursor in sequence of Item
+      --  Cursor in sequence of Element
 
       not overriding function Is_Empty
         (Self : Sequence) return Boolean is abstract;
 
       not overriding function Length
         (Self : Sequence) return Natural is abstract;
+
+      not overriding function First
+        (Self : Sequence)
+         return Sequence_Cursor'Class is abstract;
+
+      not overriding function Has_Element
+        (Self : Sequence_Cursor) return Boolean is abstract;
+
+      not overriding function Element
+        (Self : Sequence_Cursor) return Element_Access is abstract;
+
+      not overriding procedure Next
+        (Self : in out Sequence_Cursor) is abstract;
+
+   end Element_Sequences;
+
+   type Element_Sequence is limited interface and Element_Sequences.Sequence;
+   type Element_Sequence_Access is access all Element_Sequence'Class;
+   for Element_Sequence_Access'Storage_Size use 0;
+   subtype Element_Sequence_Cursor is Element_Sequences.Sequence_Cursor'Class;
+
+   generic
+      type Item is limited interface and Element;
+      type Item_Access is access all Item'Class;
+   package Generic_Element_Sequences is
+      type Sequence is limited interface and Element_Sequence;
+      --  Sequence containing given Item-s
+      type Sequence_Cursor is interface;
+      --  Cursor in sequence of Item
 
       not overriding procedure Append
         (Self : in out Sequence;
@@ -86,13 +112,5 @@ package Gela.Elements is
         (Self : in out Sequence_Cursor) is abstract;
 
    end Generic_Element_Sequences;
-
-   package Element_Sequences is
-     new Generic_Element_Sequences (Element, Element_Access);
-
-   type Element_Sequence is limited interface and Element_Sequences.Sequence;
-   type Element_Sequence_Access is access all Element_Sequence'Class;
-   for Element_Sequence_Access'Storage_Size use 0;
-   subtype Element_Sequence_Cursor is Element_Sequences.Sequence_Cursor'Class;
 
 end Gela.Elements;

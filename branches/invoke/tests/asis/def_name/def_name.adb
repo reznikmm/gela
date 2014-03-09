@@ -4,10 +4,12 @@ with Ada.Strings.Wide_Fixed;
 
 with Asis;
 with Asis.Ada_Environments;
+with Asis.Clauses;
 with Asis.Compilation_Units;
 with Asis.Elements;
 with Asis.Errors;
 with Asis.Exceptions;
+with Asis.Expressions;
 with Asis.Implementation;
 
 with League.Application;
@@ -26,9 +28,20 @@ procedure Def_Name is
         Asis.Elements.Context_Clause_Elements (Unit);
    begin
       for J in Withs'Range loop
-         case Asis.Elements.Element_Kind (Withs (J)) is
-            when Asis.A_Clause =>
-               Ada.Wide_Text_IO.Put_Line (Asis.ASIS_Natural'Wide_Image (J));
+         case Asis.Elements.Clause_Kind (Withs (J)) is
+            when Asis.A_With_Clause =>
+               declare
+                  Names : constant Asis.Element_List :=
+                    Asis.Clauses.Clause_Names (Withs (J));
+                  Def : constant Asis.Defining_Name :=
+                    Asis.Expressions.Corresponding_Name_Definition (Names (1));
+               begin
+                  Ada.Wide_Text_IO.Put_Line
+                    (Asis.Expressions.Name_Image (Names (1)));
+                  Ada.Wide_Text_IO.Put_Line
+                    (Asis.Element_Kinds'Wide_Image
+                       (Asis.Elements.Element_Kind (Def)));
+               end;
             when others =>
                null;
          end case;

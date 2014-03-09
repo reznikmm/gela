@@ -116,6 +116,19 @@ package body Gela.Nodes is
          return Lists.Element (Self.Data);
       end Element;
 
+      -------------
+      -- Element --
+      -------------
+
+      overriding function Element
+        (Self : Sequence_Cursor) return Gela.Elements.Element_Access
+      is
+         Result : constant Generic_Element_Sequences.Item_Access :=
+           Self.Element;
+      begin
+         return Gela.Elements.Element_Access (Result);
+      end Element;
+
       -----------
       -- First --
       -----------
@@ -123,6 +136,17 @@ package body Gela.Nodes is
       overriding function First
         (Self : Sequence)
          return Generic_Element_Sequences.Sequence_Cursor'Class is
+      begin
+         return Sequence_Cursor'(Data => Self.List.First);
+      end First;
+
+      -----------
+      -- First --
+      -----------
+
+      overriding function First
+        (Self : Sequence)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class is
       begin
          return Sequence_Cursor'(Data => Self.List.First);
       end First;

@@ -400,8 +400,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Defining_Identifier
      (Self : in out Visiter;
       Node : not null Gela.Elements.Defining_Identifiers.
-        Defining_Identifier_Access)
-   is null;
+        Defining_Identifier_Access);
 
    overriding procedure Defining_Operator_Symbol
      (Self : in out Visiter;
@@ -784,10 +783,6 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Goto_Statements.Goto_Statement_Access)
    is null;
 
-   ----------------
-   -- Identifier --
-   ----------------
-
    overriding procedure Identifier
      (Self : in out Visiter;
       Node : not null Gela.Elements.Identifiers.Identifier_Access);
@@ -1118,8 +1113,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Selected_Component
      (Self : in out Visiter;
       Node : not null Gela.Elements.Selected_Components.
-        Selected_Component_Access)
-   is null;
+        Selected_Component_Access);
 
    overriding procedure Selected_Identifier
      (Self : in out Visiter;
@@ -1264,6 +1258,20 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.With_Clauses.With_Clause_Access);
 
+   -------------------------
+   -- Defining_Identifier --
+   -------------------------
+
+   overriding procedure Defining_Identifier
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Defining_Identifiers.
+        Defining_Identifier_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Defining_Identifier;
+   end Defining_Identifier;
+
    ----------------
    -- Identifier --
    ----------------
@@ -1274,7 +1282,7 @@ package body Asis.Extensions.Flat_Kinds is
    is
       pragma Unreferenced (Node);
    begin
-      Self.Result := An_Abort_Statement;
+      Self.Result := An_Identifier;
    end Identifier;
 
    ---------------
@@ -1287,6 +1295,20 @@ package body Asis.Extensions.Flat_Kinds is
       Element.Data.Visit (V);
       return V.Result;
    end Flat_Kind;
+
+   ------------------------
+   -- Selected_Component --
+   ------------------------
+
+   overriding procedure Selected_Component
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Selected_Components.
+        Selected_Component_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Selected_Component;
+   end Selected_Component;
 
    ------------------------
    -- Use_Package_Clause --

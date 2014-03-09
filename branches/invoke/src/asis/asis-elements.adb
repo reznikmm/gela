@@ -93,17 +93,22 @@ package body Asis.Elements is
    -- Clause_Kind --
    -----------------
 
-   function Clause_Kind
-     (Clause : in Asis.Clause)
-      return Asis.Clause_Kinds
-   is
+   function Clause_Kind (Clause : in Asis.Clause) return Asis.Clause_Kinds is
    begin
-      if Assigned (Clause) then
-         Raise_Not_Implemented ("");
-         return Not_A_Clause;
-      else
-         return Not_A_Clause;
-      end if;
+      case F.Flat_Kind (Clause) is
+         when F.A_Use_Package_Clause =>
+            return A_Use_Package_Clause;
+         when F.A_Use_Type_Clause =>
+            return A_Use_Type_Clause;
+         when F.A_With_Clause =>
+            return A_With_Clause;
+         when F.A_Representation_Clause =>
+            return A_Representation_Clause;
+         when F.A_Component_Clause =>
+            return A_Component_Clause;
+         when others =>
+            return Not_A_Clause;
+      end case;
    end Clause_Kind;
 
    -------------------------
@@ -439,16 +444,72 @@ package body Asis.Elements is
    ---------------------
 
    function Expression_Kind
-     (Expression : in Asis.Expression)
-      return Asis.Expression_Kinds
-   is
+     (Expression : in Asis.Expression) return Asis.Expression_Kinds is
    begin
-      if Assigned (Expression) then
-         Raise_Not_Implemented ("");
-         return Not_An_Expression;
-      else
-         return Not_An_Expression;
-      end if;
+      case F.Flat_Kind (Expression) is
+         when F.A_Box_Expression =>
+            return Asis.A_Box_Expression;
+         when F.An_Integer_Literal =>
+            return Asis.An_Integer_Literal;
+         when F.A_Real_Literal =>
+            return Asis.A_Real_Literal;
+         when F.A_String_Literal =>
+            return Asis.A_String_Literal;
+         when F.An_Identifier =>
+            return Asis.An_Identifier;
+         when F.An_Operator_Symbol =>
+            return Asis.An_Operator_Symbol;
+         when F.A_Character_Literal =>
+            return Asis.A_Character_Literal;
+         when F.An_Enumeration_Literal =>
+            return Asis.An_Enumeration_Literal;
+         when F.An_Explicit_Dereference =>
+            return Asis.An_Explicit_Dereference;
+         when F.A_Function_Call =>
+            return Asis.A_Function_Call;
+         when F.An_Indexed_Component =>
+            return Asis.An_Indexed_Component;
+         when F.A_Slice =>
+            return Asis.A_Slice;
+         when F.A_Selected_Component =>
+            return Asis.A_Selected_Component;
+         when F.An_Attribute_Reference =>
+            return Asis.An_Attribute_Reference;
+         when F.A_Record_Aggregate =>
+            return Asis.A_Record_Aggregate;
+         when F.An_Extension_Aggregate =>
+            return Asis.An_Extension_Aggregate;
+         when F.A_Positional_Array_Aggregate =>
+            return Asis.A_Positional_Array_Aggregate;
+         when F.A_Named_Array_Aggregate =>
+            return Asis.A_Named_Array_Aggregate;
+         when F.An_And_Then_Short_Circuit =>
+            return Asis.An_And_Then_Short_Circuit;
+         when F.An_Or_Else_Short_Circuit =>
+            return Asis.An_Or_Else_Short_Circuit;
+         when F.An_In_Range_Membership_Test =>
+            return Asis.An_In_Range_Membership_Test;
+         when F.A_Not_In_Range_Membership_Test =>
+            return Asis.A_Not_In_Range_Membership_Test;
+         when F.An_In_Type_Membership_Test =>
+            return Asis.An_In_Type_Membership_Test;
+         when F.A_Not_In_Type_Membership_Test =>
+            return Asis.A_Not_In_Type_Membership_Test;
+         when F.A_Null_Literal =>
+            return Asis.A_Null_Literal;
+         when F.A_Parenthesized_Expression =>
+            return Asis.A_Parenthesized_Expression;
+         when F.A_Type_Conversion =>
+            return Asis.A_Type_Conversion;
+         when F.A_Qualified_Expression =>
+            return Asis.A_Qualified_Expression;
+         when F.An_Allocation_From_Subtype =>
+            return Asis.An_Allocation_From_Subtype;
+         when F.An_Allocation_From_Qualified_Expression =>
+            return Asis.An_Allocation_From_Qualified_Expression;
+         when others =>
+            return Not_An_Expression;
+      end case;
    end Expression_Kind;
 
    ----------------------

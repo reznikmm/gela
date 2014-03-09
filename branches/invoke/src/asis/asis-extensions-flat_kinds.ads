@@ -468,6 +468,15 @@ package Asis.Extensions.Flat_Kinds is
    subtype A_Clause is Element_Flat_Kind range
      A_Use_Package_Clause .. A_With_Clause;
 
+   subtype An_Operator_Symbol is Element_Flat_Kind range
+     An_And_Operator .. A_Not_Operator;
+
+   subtype An_Attribute_Reference is Element_Flat_Kind range
+     An_Access_Attribute .. An_Unknown_Attribute;
+
+   subtype A_Representation_Clause is Element_Flat_Kind range
+     An_Attribute_Definition_Clause .. An_At_Clause;
+
    function Flat_Kind (Element : Asis.Element) return Element_Flat_Kind;
 
 end Asis.Extensions.Flat_Kinds;

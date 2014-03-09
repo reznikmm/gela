@@ -555,11 +555,9 @@ package body Gela.Library_Environments is
 
       overriding function Element
         (Self : Defining_Name_Cursor)
-         return Gela.Elements.Defining_Names.Defining_Name_Access
-      is
-         pragma Unreferenced (Self);
+         return Gela.Elements.Defining_Names.Defining_Name_Access is
       begin
-         return null;
+         return Self.Name;
       end Element;
 
       ----------
