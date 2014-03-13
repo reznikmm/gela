@@ -44,4 +44,10 @@ package AG_Tools is
       NT : Gela.Grammars.Non_Terminal) return Boolean;
    --  Detect if NT was a list before converting to plain AG
 
+   function List_Item
+     (G : Gela.Grammars.Grammar;
+      NT : Gela.Grammars.Non_Terminal)
+      return Gela.Grammars.Non_Terminal_Index;
+   --  Return items non-terminal for list, like NT={item}
+
 end AG_Tools;

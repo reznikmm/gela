@@ -33,12 +33,6 @@ package body AG_Tools.NT_Generators is
       Pass    : Positive;
       Each    : in out Gela.Grammars.Ordered.Order_Maps.Cursor);
 
-   function List_Item
-     (G  : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
-      return Gela.Grammars.Non_Terminal_Index;
-   --  Return items non-terminal for list, like NT={item}
-
    This : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("This");
 
@@ -69,21 +63,6 @@ package body AG_Tools.NT_Generators is
 
       Impl.P (T.Substitute (Values));
    end Generate_Rule;
-
-   ---------------
-   -- List_Item --
-   ---------------
-
-   function List_Item
-     (G : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
-      return Gela.Grammars.Non_Terminal_Index
-   is
-      Prod : Gela.Grammars.Production renames G.Production (NT.First);
-      Part : Gela.Grammars.Part renames G.Part (Prod.Last);
-   begin
-      return Part.Denote;
-   end List_Item;
 
    --------------
    -- Make_Get --

@@ -26,6 +26,21 @@ package body AG_Tools is
       return Prod.First > Prod.Last;
    end Is_Converted_List;
 
+   ---------------
+   -- List_Item --
+   ---------------
+
+   function List_Item
+     (G : Gela.Grammars.Grammar;
+      NT : Gela.Grammars.Non_Terminal)
+      return Gela.Grammars.Non_Terminal_Index
+   is
+      Prod : Gela.Grammars.Production renames G.Production (NT.First);
+      Part : Gela.Grammars.Part renames G.Part (Prod.Last);
+   begin
+      return Part.Denote;
+   end List_Item;
+
    ------------------
    -- Package_Name --
    ------------------

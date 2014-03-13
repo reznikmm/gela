@@ -7,9 +7,16 @@ with Ada.Containers.Doubly_Linked_Lists;
 
 package Gela.Nodes is
    pragma Preelaborate;
+
    type Node (Length : Positive) is
      abstract limited new Gela.Elements.Element with private;
    type Node_Access is access all Node'Class;
+
+   type Nested_Kind_Array is
+     array (Positive range <>) of Gela.Elements.Nested_Kinds;
+
+   not overriding function Nested
+     (Self : Node) return Nested_Kind_Array is abstract;
 
    generic
       with package Generic_Element_Sequences is new
@@ -99,5 +106,8 @@ private
 
    overriding function Last_Token
      (Self  : Node) return Gela.Lexical_Types.Token_Count;
+
+   overriding function Nested_Items
+     (Self  : Node) return Gela.Elements.Nested_Array;
 
 end Gela.Nodes;

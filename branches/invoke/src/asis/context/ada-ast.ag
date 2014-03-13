@@ -2151,11 +2151,6 @@ Rules for protected_body. :
 
 Rules for Compilation. :
 (.
-      ${units.env_in} := 0;  --  not used!
-.)
-
-Rules for Compilation. :
-(.
       ${Compilation_Pragmas.env_in} := ${units.env_out};
 .)
 
@@ -2252,9 +2247,6 @@ Inherited attributes
   choice_parameter_specification,
   clause_name,
   clause_or_pragma,
-  compilation_unit,
-  compilation_unit_body,
-  compilation_unit_declaration,
   component_clause,
   component_declaration,
   component_definition,
@@ -2446,7 +2438,6 @@ Inherited attributes
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
-  subunit,
   task_body,
   task_body_stub,
   task_definition,
@@ -2456,7 +2447,6 @@ Inherited attributes
   then_abort_path,
   type_definition,
   unconstrained_array_definition,
-  units,
   unknown_discriminant_part,
   use_clause,
   use_package_clause,
@@ -3366,7 +3356,7 @@ Rules for choice_parameter_specification.Names :
 
 Rules for compilation_unit_body. :
 (.
-      ${compilation_unit_body.env_out} := ${compilation_unit_body.env_in};
+      ${compilation_unit_body.env_out} := 0;  --  FIXME
 .)
 
 Rules for compilation_unit_body. :
@@ -3383,12 +3373,12 @@ Rules for compilation_unit_body. :
 
 Rules for compilation_unit_body. :
 (.
-      ${Unit_Declaration.env_in} := ${compilation_unit_body.env_in};
+      ${Unit_Declaration.env_in} := 0;  --  FIXME
 .)
 
 Rules for compilation_unit_declaration. :
 (.
-      ${compilation_unit_declaration.env_out} := ${compilation_unit_declaration.env_in};
+      ${compilation_unit_declaration.env_out} := 0;  --  FIXME
 .)
 
 Rules for compilation_unit_declaration. :
@@ -3405,7 +3395,7 @@ Rules for compilation_unit_declaration. :
 
 Rules for compilation_unit_declaration. :
 (.
-      ${Unit_Declaration.env_in} := ${compilation_unit_declaration.env_in};
+      ${Unit_Declaration.env_in} := 0;  --  FIXME
 .)
 
 Rules for component_clause. :
@@ -5400,7 +5390,7 @@ Rules for subtype_indication. :
 
 Rules for subunit. :
 (.
-      ${subunit.env_out} := ${subunit.env_in};
+      ${subunit.env_out} := 0;  --  FIXME
 .)
 
 Rules for subunit. :
@@ -5417,12 +5407,12 @@ Rules for subunit. :
 
 Rules for subunit. :
 (.
-      ${parent_unit_name.env_in} := ${subunit.env_in};
+      ${parent_unit_name.env_in} := 0;  --  FIXME
 .)
 
 Rules for subunit. :
 (.
-      ${Unit_Declaration.env_in} := ${subunit.env_in};
+      ${Unit_Declaration.env_in} := 0;  --  FIXME
 .)
 
 Rules for task_body. :
@@ -5537,12 +5527,7 @@ Rules for unconstrained_array_definition. :
 
 Rules for units.compilation_unit :
 (.
-      ${compilation_unit.env_in} := ${units.env_in};
-.)
-
-Rules for units.compilation_unit :
-(.
-      ${units.env_out} := ${units.env_in};
+      ${units.env_out} := 0;
 .)
 
 Rules for units.compilation_unit :
@@ -6643,4 +6628,20 @@ Rules for identifier.identifier_token :
       Self.Compilation.Context.Interpretation_Manager.Get_Defining_Name
         (${identifier.Down},
          ${identifier.Defining_Name});
+.)
+
+Synthesized attributes
+  identifier,
+  program_unit_name,
+  selected_identifier
+   : Gela.Lexical_Types.Text_Index : Dummy;
+
+Rules for identifier.identifier_token :
+(.
+        ${identifier.Dummy} := 0;
+.)
+
+Rules for selected_identifier. :
+(.
+      ${selected_identifier.Dummy} := 0;
 .)

@@ -39,8 +39,58 @@ package body Gela.Nodes is
    overriding function First_Token
      (Self  : Node) return Gela.Lexical_Types.Token_Count
    is
-      pragma Unreferenced (Self);
+      use Gela.LARL_Parsers_Nodes;
+      use type Gela.Lexical_Types.Token_Count;
+      use type Gela.Elements.Element_Access;
+
+      Nested   : constant Nested_Kind_Array := Node'Class (Self).Nested;
+      Result   : Gela.Lexical_Types.Token_Count;
+      Element  : Gela.Elements.Element_Access;
+      Sequence : Gela.Elements.Element_Sequence_Access;
    begin
+      for J in Nested'Range loop
+         case Nested (J) is
+            when Gela.Elements.Nested_Token =>
+               Result := -Self.Children (J);
+
+               if Result /= 0 then
+                  return Result;
+               end if;
+
+            when Gela.Elements.Nested_Element =>
+               Element := -Self.Children (J);
+
+               if Element /= null then
+                  Result := Element.First_Token;
+
+                  if Result /= 0 then
+                     return Result;
+                  end if;
+               end if;
+            when Gela.Elements.Nested_Sequence =>
+               Sequence := -Self.Children (J);
+
+               declare
+                  Cursor : Gela.Elements.Element_Sequence_Cursor :=
+                    Sequence.First;
+               begin
+                  while Cursor.Has_Element loop
+                     Element := Cursor.Element;
+
+                     if Element /= null then
+                        Result := Element.First_Token;
+
+                        if Result /= 0 then
+                           return Result;
+                        end if;
+                     end if;
+
+                     Cursor.Next;
+                  end loop;
+               end;
+         end case;
+      end loop;
+
       return 0;
    end First_Token;
 
@@ -79,10 +129,80 @@ package body Gela.Nodes is
      (Self  : Node)
       return Gela.Lexical_Types.Token_Count
    is
-      pragma Unreferenced (Self);
+      use Gela.LARL_Parsers_Nodes;
+      use type Gela.Lexical_Types.Token_Count;
+      use type Gela.Elements.Element_Access;
+
+      Nested   : constant Nested_Kind_Array := Node'Class (Self).Nested;
+      Result   : Gela.Lexical_Types.Token_Count;
+      Element  : Gela.Elements.Element_Access;
+      Sequence : Gela.Elements.Element_Sequence_Access;
    begin
+      for J in reverse Nested'Range loop
+         case Nested (J) is
+            when Gela.Elements.Nested_Token =>
+               Result := -Self.Children (J);
+
+               if Result /= 0 then
+                  return Result;
+               end if;
+
+            when Gela.Elements.Nested_Element =>
+               Element := -Self.Children (J);
+
+               if Element /= null then
+                  Result := Element.Last_Token;
+
+                  if Result /= 0 then
+                     return Result;
+                  end if;
+               end if;
+            when Gela.Elements.Nested_Sequence =>
+               Sequence := -Self.Children (J);
+
+               declare
+                  Cursor : Gela.Elements.Element_Sequence_Cursor :=
+                    Sequence.First;
+                  List   : array (1 .. Sequence.Length) of
+                    Gela.Elements.Element_Access;
+                  Index  : Positive := 1;
+               begin
+                  while Cursor.Has_Element loop
+                     List (Index) := Cursor.Element;
+                     Index := Index + 1;
+                     Cursor.Next;
+                  end loop;
+
+                  for J in reverse List'Range loop
+                     Element := List (J);
+
+                     if Element /= null then
+                        Result := Element.Last_Token;
+
+                        if Result /= 0 then
+                           return Result;
+                        end if;
+                     end if;
+
+                  end loop;
+               end;
+         end case;
+      end loop;
+
       return 0;
    end Last_Token;
+
+   ------------------
+   -- Nested_Items --
+   ------------------
+
+   overriding function Nested_Items
+     (Self  : Node) return Gela.Elements.Nested_Array
+   is
+      pragma Unreferenced (Self);
+   begin
+      return (1 => (Gela.Elements.Nested_Token, 1));
+   end Nested_Items;
 
    --------------------
    -- Node_Sequences --

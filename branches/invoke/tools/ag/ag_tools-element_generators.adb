@@ -574,6 +574,44 @@ package body AG_Tools.Element_Generators is
       Impl.P ("   end Visit;");
       Impl.P;
 
+      Attrs.P ("   overriding function Nested", Impl);
+      Attrs.N ("     (Self : ", Impl);
+      Attrs.N (Name, Impl);
+      Attrs.P (")", Impl);
+      Attrs.N ("      return Nested_Kind_Array", Impl);
+      Impl.P;
+      Impl.P ("   is");
+      Impl.P ("      pragma Unreferenced (Self);");
+      Impl.P ("   begin");
+      Impl.N ("      return (");
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         Part_Type := Return_Type_Image (G, Part);
+
+         if Part.Index /= Prod.First then
+            Impl.P (",");
+            Impl.N ("              ");
+         end if;
+
+         Impl.N (Natural (Part.Index - Prod.First + 1));
+         Impl.N (" => ");
+
+         if Part_Type.Ends_With ("Sequence_Access") then
+            Impl.N ("Gela.Elements.Nested_Sequence");
+         elsif Part_Type.Ends_With ("Token_Count") then
+            Impl.N ("Gela.Elements.Nested_Token");
+         else
+            Impl.N ("Gela.Elements.Nested_Element");
+         end if;
+      end loop;
+
+      Impl.P (");");
+      Impl.P ("   end Nested;");
+      Impl.P;
+
+      Attrs.P (";");
+      Attrs.P;
+
       Attrs.N ("end Gela.Nodes.", Impl);
       Attrs.N (Plural (NT.Name), Impl);
       Attrs.P (";", Impl);

@@ -49,6 +49,28 @@ package Gela.Elements is
       Visiter : in out Gela.Element_Visiters.Visiter'Class) is abstract;
    --  Move Visiter over given element.
 
+   type Element_Sequence is tagged;
+   type Element_Sequence_Access is access all Element_Sequence'Class;
+   for Element_Sequence_Access'Storage_Size use 0;
+
+   type Nested_Kinds is (Nested_Token, Nested_Element, Nested_Sequence);
+   type Nested (Kind : Nested_Kinds := Nested_Token) is record
+      case Kind is
+         when Nested_Token =>
+            Nested_Token : Gela.Lexical_Types.Token_Index;
+         when Nested_Element =>
+            Nested_Element : Element_Access;
+         when Nested_Sequence =>
+            Nested_Sequence : Element_Sequence_Access;
+      end case;
+   end record;
+
+   type Nested_Array is array (Positive range <>) of Nested;
+
+   not overriding function Nested_Items
+     (Self  : Element) return Nested_Array is abstract;
+   --  Return nested elements.
+
    package Element_Sequences is
       type Sequence is limited interface;
       --  Sequence containing Elements
@@ -77,8 +99,6 @@ package Gela.Elements is
    end Element_Sequences;
 
    type Element_Sequence is limited interface and Element_Sequences.Sequence;
-   type Element_Sequence_Access is access all Element_Sequence'Class;
-   for Element_Sequence_Access'Storage_Size use 0;
    subtype Element_Sequence_Cursor is Element_Sequences.Sequence_Cursor'Class;
 
    generic

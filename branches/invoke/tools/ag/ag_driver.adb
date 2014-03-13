@@ -38,8 +38,9 @@ procedure AG_Driver is
       Fab_With    : Writer;
       Fab_Kind    : Writer;
       Fab_When    : Writer;
-      Factories     : Writer;
+      Factories   : Writer;
       Impl        : Writer;
+      Conv        : Writer;
    begin
       Factories.P ("with Gela.Lexical_Types;");
       Factories.P ("with Gela.Elements;");
@@ -57,6 +58,15 @@ procedure AG_Driver is
       Factories.P ("   No_Token_Index : constant " &
                    "Gela.Lexical_Types.Token_Count := 0;");
       Factories.P;
+
+      Factories.N ("   function ""-"" (X : Node) return " &
+                     "Gela.Elements.Element_Sequence_Access", Conv);
+      Factories.P (";");
+      Factories.P;
+      Conv.P (" is");
+      Conv.P ("   begin");
+      Conv.P ("      case X.Kind is");
+
       Factories.N ("   function ""-"" (X : Node)" &
                    " return Gela.Lexical_Types.Token_Count", Impl);
       Factories.P (";");
@@ -153,9 +163,22 @@ procedure AG_Driver is
                Fab_When.N (To_Ada (NT.Name));
                Fab_When.P ("_Sequence_Access;");
 
+               Conv.N ("         when ");
+               Conv.N (To_Ada (NT.Name));
+               Conv.P ("_Sequence =>");
+               Conv.P
+                 ("            return Gela.Elements.Element_Sequence_Access");
+               Conv.N ("              (X.");
+               Conv.N (To_Ada (NT.Name));
+               Conv.P ("_Sequence);");
             end if;
          end if;
       end loop;
+
+      Conv.P ("         when others =>");
+      Conv.P ("            raise Constraint_Error;");
+      Conv.P ("      end case;");
+      Conv.P ("   end ""-"";");
 
       Factories.P;
       Factories.P ("private");
@@ -181,10 +204,11 @@ procedure AG_Driver is
       Factories.P ("   None     : constant Node := (Element, null);");
       Factories.P ("   No_Token : constant Node := (Token, 0);");
       Factories.P;
-      Factories.N ("end Gela.LARL_Parsers_Nodes;", Impl);
+      Factories.N ("end Gela.LARL_Parsers_Nodes;", Conv);
 
       Ada.Text_IO.Put_Line (Factories.Text.To_UTF_8_String);
       Ada.Text_IO.Put_Line (Impl.Text.To_UTF_8_String);
+      Ada.Text_IO.Put_Line (Conv.Text.To_UTF_8_String);
    end Generate_2;
 
    ----------------------
