@@ -7,6 +7,7 @@ with Gela.Lexers;
 with Gela.Node_Factories;
 with Gela.Pass_1;
 with Gela.Pass_2;
+with Gela.Pass_3;
 with Gela.Pass_List;
 with Gela.Plain_Compilations;
 with Gela.Source_Finders;
@@ -173,10 +174,13 @@ package body Gela.Plain_Compilation_Managers is
            new Gela.Pass_1.Visiter (C, PL);
          P2 : constant Gela.Pass_2.Visiter_Access :=
            new Gela.Pass_2.Visiter (C, PL);
+         P3 : constant Gela.Pass_3.Visiter_Access :=
+           new Gela.Pass_3.Visiter (C, PL);
       begin
          PL.Parent := PL;
          PL.P1 := Gela.Element_Visiters.Visiter_Access (P1);
          PL.P2 := Gela.Element_Visiters.Visiter_Access (P2);
+         PL.P3 := Gela.Element_Visiters.Visiter_Access (P3);
          Root.Visit (P1.all);
       end;
    end Read;

@@ -1822,7 +1822,8 @@ with_clause ::=
 defining_name ::= defining_identifier |
   defining_character_literal |
   defining_operator_symbol |
-  defining_enumeration_literal;
+  defining_enumeration_literal |
+  defining_program_unit_name;
 
 declarative_region ::=
   basic_declaration |
@@ -1862,11 +1863,14 @@ Synthesized attributes
 Synthesized attributes
   character_literal,
   enumeration_literal,
+  defining_character_literal,
   defining_designator,
+  defining_enumeration_literal,
   defining_expanded_unit_name,
   defining_identifier,
   defining_operator_symbol,
   defining_program_unit_name,
+  defining_name,
   function_body,
   function_declaration,
   function_instantiation,
@@ -1894,6 +1898,18 @@ Synthesized attributes
   selector_name,
   task_body
   : Gela.Lexical_Types.Symbol : full_name;
+
+Rules for defining_character_literal.character_literal :
+(.
+      ${defining_character_literal.full_name} :=
+        Self.Compilation.Get_Token (${character_literal.Index}).Symbol;
+.)
+
+Rules for defining_enumeration_literal.identifier :
+(.
+      ${defining_enumeration_literal.full_name} :=
+        Self.Compilation.Get_Token (${identifier.Index}).Symbol;
+.)
 
 Rules for defining_identifier.identifier_token :
 (.
@@ -5736,13 +5752,15 @@ Synthesized attributes
 Rules for identifier.identifier_token :
 (.
       Self.Compilation.Context.Interpretation_Manager.Direct_Name
-        (Self.Compilation.Get_Token (${identifier_token.Index}).Symbol,
+        (${identifier.env_in},
+         Self.Compilation.Get_Token (${identifier_token.Index}).Symbol,
          ${identifier.Up});
 .)
 
 Rules for selected_identifier. :
 (.
-      ${selected_identifier.Up} := ${Prefix.Up};
+      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
+        (${selected_identifier.env_in}, ${Prefix.Up}, ${Selector.full_name}, ${selected_identifier.Up});
 .)
 
 Inherited attributes

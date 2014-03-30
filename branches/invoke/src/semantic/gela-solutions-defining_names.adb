@@ -7,10 +7,11 @@ package body Gela.Solutions.Defining_Names is
    ------------
 
    not overriding function Create
-     (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+     (Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Save : Gela.Saves.Save_Access)
       return Defining_Name_Solution is
    begin
-      return (Name => Name);
+      return (Save, Name);
    end Create;
 
    ----------

@@ -10,7 +10,8 @@ package Gela.Solutions.Defining_Names is
       return Gela.Elements.Defining_Names.Defining_Name_Access;
 
    not overriding function Create
-     (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+     (Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Save : Gela.Saves.Save_Access)
       return Defining_Name_Solution;
 
 private

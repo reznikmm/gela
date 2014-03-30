@@ -1,6 +1,5 @@
 --  with Gela.Defining_Name_Cursors;
 with Gela.Compilation_Units;
-with Gela.Elements.Defining_Names;
 with Gela.Compilation_Unit_Sets;
 with Gela.Element_Visiters;
 
@@ -33,6 +32,7 @@ with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Defining_Operator_Symbols;
+with Gela.Symbol_Sets;
 
 package body Gela.Library_Environments is
 
@@ -622,5 +622,60 @@ package body Gela.Library_Environments is
    begin
       Value := Library_Env;
    end Library_Level_Environment;
+
+   -------------
+   -- Visible --
+   -------------
+
+   overriding function Visible
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Found  : access Boolean)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
+   is
+      use type Gela.Semantic_Types.Env_Index;
+      use type Gela.Compilation_Units.Compilation_Unit_Access;
+      Unit   : Gela.Compilation_Units.Compilation_Unit_Access;
+      Units  : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+      Name   : Gela.Lexical_Types.Symbol;
+      Set    : Gela.Symbol_Sets.Symbol_Set_Access;
+   begin
+      if Index /= Library_Env then
+         return Library_Cursor.Defining_Name_Cursor'(Name => null);
+      end if;
+
+      Set := Self.Context.Symbols;
+      Units := Self.Context.Library_Unit_Declarations;
+
+      Name := Region.Full_Name;
+      Unit := Units.Find (Name);
+
+      if Unit = null then
+         Found.all := False;
+         return Library_Cursor.Defining_Name_Cursor'(Name => null);
+      end if;
+
+      Found.all := True;
+      Set.Join (Left => Name, Right => Symbol, Value => Name);
+      Unit := Units.Find (Name);
+
+      if Unit = null then
+         Units := Self.Context.Compilation_Unit_Bodies;
+         Unit := Units.Find (Symbol);
+      end if;
+
+      return Result : Library_Cursor.Defining_Name_Cursor do
+         if Unit /= null then
+            declare
+               V : Get_Defining_Name_Visiter.Visiter;
+            begin
+               Unit.Tree.Visit (V);
+               Result.Name := V.Name;
+            end;
+         end if;
+      end return;
+   end Visible;
 
 end Gela.Library_Environments;

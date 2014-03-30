@@ -20,9 +20,26 @@ package Gela.Interpretations is
 
    not overriding procedure Direct_Name
      (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
       Name   : Gela.Lexical_Types.Symbol;
       Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
-   --  Return interpretation of Name symbol
+   --  Return interpretations of Name symbol
+
+   not overriding procedure Join_Selected_Component
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Prefix : Gela.Interpretations.Interpretation_Set_Index;
+      Name   : Gela.Lexical_Types.Symbol;
+      Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
+   --  Return interpretations of Prefix.Name symbol
+
+   not overriding procedure Split_Selected_Component
+     (Self     : in out Interpretation_Manager;
+      Value    : Gela.Interpretations.Interpretation_Index;
+      Prefix   : out Gela.Interpretations.Interpretation_Index;
+      Selector : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  For given interpretation of selected_component get interpretations of
+   --  its profix and selector
 
    not overriding procedure Chosen_Interpretation
      (Self   : in out Interpretation_Manager;

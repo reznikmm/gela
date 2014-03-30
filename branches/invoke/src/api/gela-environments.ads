@@ -1,5 +1,6 @@
 --  This package provides Environment_Set interface and its methods.
 with Gela.Defining_Name_Cursors;
+with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 
@@ -20,7 +21,18 @@ package Gela.Environments is
       Index  : Gela.Semantic_Types.Env_Index;
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class is abstract;
+   --  Return list of direct visible defining names from the environment
+   --  pointed by Index with given Symbol.
+
+   not overriding function Visible
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Found  : access Boolean)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class is abstract;
    --  Return list of defining names from the environment pointed by Index
-   --  with given Symbol.
+   --  with given Symbol which visible inside declarative region corresponding
+   --  to given Region name. Return Found = False if no such region found.
 
 end Gela.Environments;

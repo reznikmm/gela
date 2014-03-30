@@ -1,4 +1,5 @@
 limited with Gela.Int.Visiters;
+with Gela.Saves;
 
 package Gela.Int is
    pragma Preelaborate;
@@ -9,5 +10,8 @@ package Gela.Int is
    not overriding procedure Visit
      (Self    : Interpretation;
       Visiter : access Gela.Int.Visiters.Visiter'Class) is abstract;
+
+   not overriding function Save
+     (Self : Interpretation) return Gela.Saves.Save_Access is abstract;
 
 end Gela.Int;

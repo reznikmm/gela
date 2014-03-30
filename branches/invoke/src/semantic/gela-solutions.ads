@@ -1,9 +1,11 @@
 limited with Gela.Solutions.Visiters;
+with Gela.Saves;
 
 package Gela.Solutions is
    pragma Preelaborate;
 
-   type Solution is abstract tagged null record;
+   type Solution (Save : Gela.Saves.Save_Access) is
+     abstract tagged null record;
    type Solution_Access is access Solution'Class;
 
    not overriding procedure Visit
