@@ -14,6 +14,9 @@ with Gela.Element_Visiters;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Identifiers;
 with Gela.Lexical_Types;
+with Gela.Elements.Selected_Components;
+with Gela.Elements.Selector_Names;
+with Gela.Elements.Selected_Identifiers;
 
 package body Asis.Expressions is
 
@@ -564,10 +567,59 @@ package body Asis.Expressions is
      (Expression : in Asis.Expression)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Found    : Boolean := False;
+            Selector : Gela.Elements.Selector_Names.Selector_Name_Access;
+         end record;
+
+         overriding procedure Selected_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Components.
+              Selected_Component_Access);
+
+         overriding procedure Selected_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Identifiers.
+              Selected_Identifier_Access);
+      end Get;
+
+      package body Get is
+
+         ------------------------
+         -- Selected_Component --
+         ------------------------
+
+         overriding procedure Selected_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Components.
+              Selected_Component_Access) is
+         begin
+            Self.Found := True;
+            Self.Selector := Node.Selector;
+         end Selected_Component;
+
+         -------------------------
+         -- Selected_Identifier --
+         -------------------------
+
+         overriding procedure Selected_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Identifiers.
+              Selected_Identifier_Access) is
+         begin
+            Self.Found := True;
+            Self.Selector := Node.Selector;
+         end Selected_Identifier;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Expression, "Selector");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Expression.Data.Visit (V);
+      Assert_Inappropriate_Element (V.Found, "Selector");
+      return (Data => Gela.Elements.Element_Access (V.Selector));
    end Selector;
 
    ---------------------------------------------

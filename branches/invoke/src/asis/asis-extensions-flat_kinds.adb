@@ -1118,8 +1118,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Selected_Identifier
      (Self : in out Visiter;
       Node : not null Gela.Elements.Selected_Identifiers.
-        Selected_Identifier_Access)
-   is null;
+        Selected_Identifier_Access);
 
    overriding procedure Selective_Accept
      (Self : in out Visiter;
@@ -1309,6 +1308,20 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Selected_Component;
    end Selected_Component;
+
+   -------------------------
+   -- Selected_Identifier --
+   -------------------------
+
+   overriding procedure Selected_Identifier
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Selected_Identifiers.
+        Selected_Identifier_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Selected_Component;
+   end Selected_Identifier;
 
    ------------------------
    -- Use_Package_Clause --

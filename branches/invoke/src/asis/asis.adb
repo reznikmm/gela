@@ -4,6 +4,19 @@ with Asis.Implementation;
 
 package body Asis is
 
+   ----------------------------------
+   -- Assert_Inappropriate_Element --
+   ----------------------------------
+
+   procedure Assert_Inappropriate_Element (Ok : Boolean; From : Wide_String) is
+   begin
+      if not Ok then
+         Asis.Implementation.Set_Status
+           (Asis.Errors.Value_Error, "Inappropriate element in " & From);
+         raise Asis.Exceptions.ASIS_Inappropriate_Element;
+      end if;
+   end Assert_Inappropriate_Element;
+
    --------------
    -- Assigned --
    --------------

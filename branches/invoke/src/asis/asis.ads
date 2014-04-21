@@ -1798,6 +1798,9 @@ private
    procedure Raise_Not_Implemented (From : Wide_String);
    --  Raise error
 
+   procedure Assert_Inappropriate_Element (Ok : Boolean; From : Wide_String);
+   --  if not Ok then raise ASIS_Inappropriate_Element
+
    function To_List
      (X : Gela.Elements.Element_Sequence_Access) return Asis.Element_List;
    --  Convert element sequence to Asis element list
