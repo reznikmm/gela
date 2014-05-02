@@ -219,7 +219,7 @@ package body Gela.Test_Cases.Valgrind is
 
    not overriding procedure Read_Valgrind_Report (Self : in out Test_Case) is
       Source  : aliased XML.SAX.Input_Sources.Streams.Files.File_Input_Source;
-      Reader  : aliased XML.SAX.Simple_Readers.SAX_Simple_Reader;
+      Reader  : aliased XML.SAX.Simple_Readers.Simple_Reader;
       Handler : aliased Report_Readers.Report_Reader;
    begin
       Reader.Set_Content_Handler (Handler'Unchecked_Access);

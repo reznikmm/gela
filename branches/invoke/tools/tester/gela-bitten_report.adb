@@ -51,9 +51,9 @@ package body Gela.Bitten_Report is
       Result   : out League.Strings.Universal_String)
    is
       Test   : Gela.Test_Cases.Test_Case_Access;
-      Writer : XML.SAX.Pretty_Writers.SAX_Pretty_Writer;
+      Writer : XML.SAX.Pretty_Writers.XML_Pretty_Writer;
       Output : aliased
-        XML.SAX.Output_Destinations.Strings.SAX_String_Output_Destination;
+        XML.SAX.Output_Destinations.Strings.String_Output_Destination;
    begin
       Iterator.Start;
 
