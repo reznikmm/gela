@@ -26,8 +26,10 @@ package body AG_Tools.Generator_Factories is
    begin
       if Is_Converted_List (Self.Context.Grammar.all, NT) then
          return Self.List'Access;
-      else
+      elsif AG_Tools.Input.Is_Concrete (NT.Index) then
          return Self.NT'Access;
+      else
+         return Self.Abst'Access;
       end if;
    end Get;
 

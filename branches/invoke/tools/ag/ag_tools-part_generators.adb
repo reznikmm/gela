@@ -32,20 +32,20 @@ package body AG_Tools.Part_Generators is
       Pass : Positive)
    is
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
+      NT   : Gela.Grammars.Non_Terminal renames
+        Self.Context.Grammar.Non_Terminal (P.Denote);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Generator'Class (Self.all).Make_Local_Variable (Part);
-      if P.Name.Ends_With ("compilation_unit") then
-         Code.N ("   --  Make_Descent PART ");
-         Code.N (Pass);
-         Code.P;
-      end if;
 
       Code.N ("      ");
-      Code.N (To_Ada (P.Name));
-      Code.N (".Visit (Self.Parent.P");
+      Code.N (To_Ada (NT.Name));
+      Code.N ("_");
       Code.N (Pass);
-      Code.P (".all);");
+      Code.P;
+      Code.N ("        (Self, ");
+      Code.N (To_Ada (P.Name));
+      Code.P (");");
    end Make_Descent;
 
    ------------------
@@ -91,9 +91,10 @@ package body AG_Tools.Part_Generators is
       Code.N (Pass);
       Code.P;
       Code.N ("      ");
-      Code.N ("Self.Parent.");
       Code.N (To_Ada (P.Name));
-      Code.N (" (");
+      Code.N ("_");
+      Code.N (Pass);
+      Code.N (" (Self, ");
       Code.N (To_Ada (P.Name));
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop

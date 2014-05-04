@@ -11,6 +11,7 @@ with League.String_Vectors;
 
 with Gela.Grammars.Rule_Templates;
 
+with AG_Tools.Input;
 with AG_Tools.Writers;
 
 package body AG_Tools.NT_Generators is
@@ -18,7 +19,8 @@ package body AG_Tools.NT_Generators is
 
    procedure Write_Declaration
      (Context : AG_Tools.Contexts.Context_Access;
-      NT      : Gela.Grammars.Non_Terminal);
+      NT      : Gela.Grammars.Non_Terminal;
+      Pass    : Positive);
 
    procedure Generate_Rule
      (R    : Gela.Grammars.Rule;
@@ -166,7 +168,7 @@ package body AG_Tools.NT_Generators is
 
       Spec.P ("", Impl);
       Spec.N ("   ", Impl);
-      Write_Declaration (Self.Context, NT);
+      Write_Declaration (Self.Context, NT, Pass);
 
       Spec.N (")", Impl);
       Spec.N (";");
@@ -183,6 +185,8 @@ package body AG_Tools.NT_Generators is
       Impl.N (Code);  --  <--- Make .N
       Impl.N ("   end ");
       Impl.N (Name);
+      Impl.N ("_");
+      Impl.N (Pass);
       Impl.P (";");
    end Make_Procedure;
 
@@ -222,8 +226,8 @@ package body AG_Tools.NT_Generators is
       Impl.N ("   --  ");
       Impl.N (Pass);
       Impl.P;
-      Spec.N ("   not ", Impl);
-      Write_Declaration (Self.Context, NT);
+      Spec.N ("   ", Impl);
+      Write_Declaration (Self.Context, NT, Pass);
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop
          if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
@@ -281,6 +285,128 @@ package body AG_Tools.NT_Generators is
       Impl.N (Piece);
       Impl.N ("   end ");
       Impl.N (To_Ada (NT.Name));
+      Impl.N ("_");
+      Impl.N (Pass);
+      Impl.P (";");
+   end Make_Procedure;
+
+   --------------------
+   -- Make_Procedure --
+   --------------------
+
+   overriding procedure Make_Procedure
+     (Self  : access Abstract_Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive)
+   is
+      G : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+
+      type Pass_Array is array (G.Non_Terminal'Range) of Natural;
+
+      procedure Find
+        (NT     : Gela.Grammars.Non_Terminal;
+         Pass   : Positive;
+         Result : in out Pass_Array);
+
+      procedure Find
+        (NT     : Gela.Grammars.Non_Terminal;
+         Pass   : Positive;
+         Result : in out Pass_Array) is
+      begin
+         for J in NT.First .. NT.Last loop
+            declare
+               use Gela.Grammars.Ordered.Order_Maps;
+               use type Gela.Grammars.Production_Index;
+               Pos   : Cursor := Order.Ceiling ((J, Pass, Step => 1));
+               Value : Gela.Grammars.Ordered.Action;
+               Go    : Gela.Grammars.Non_Terminal_Index;
+            begin
+               while Has_Element (Pos) and then
+                 Key (Pos).Prod = J and then
+                 Key (Pos).Pass = Pass
+               loop
+                  Value := Element (Pos);
+
+                  case Value.Kind is
+                     when Gela.Grammars.Ordered.Descent =>
+                        Go := G.Part (Value.Part).Denote;
+
+                        if Input.Is_Concrete (Go) then
+                           Result (Go) := Value.Pass;
+                        else
+                           Find (G.Non_Terminal (Go), Value.Pass, Result);
+                        end if;
+                     when Gela.Grammars.Ordered.Evaluate_Rule =>
+                        null;
+                  end case;
+
+                  Next (Pos);
+               end loop;
+            end;
+
+         end loop;
+      end Find;
+
+      Found   : Pass_Array := (others => 0);
+      Spec    : AG_Tools.Writers.Writer renames Self.Context.Spec;
+      Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
+   begin
+      Find (NT, Pass, Found);
+      Spec.P ("", Impl);
+      Spec.N ("   ", Impl);
+      Write_Declaration (Self.Context, NT, Pass);
+      Spec.N (")", Impl);
+      Spec.N (";");
+      Spec.P ("", Impl);
+      Impl.P ("   is");
+      Impl.P ("      type Visiter is new Gela.Element_Visiters.Visiter" &
+                " with null record;");
+
+      for X in Found'Range loop
+         if Found (X) /= 0 then
+            Impl.N ("      overriding procedure ");
+            Impl.P (To_Ada (G.Non_Terminal (X).Name));
+            Impl.P ("        (This    : in out Visiter;");
+            Impl.N ("         Node    : not null Gela.Elements.");
+            Impl.N (Plural (G.Non_Terminal (X).Name));
+            Impl.N (".");
+            Impl.N (To_Ada (G.Non_Terminal (X).Name));
+            Impl.P ("_Access);");
+            Impl.P;
+         end if;
+      end loop;
+
+      for X in Found'Range loop
+         if Found (X) /= 0 then
+            Impl.N ("      overriding procedure ");
+            Impl.P (To_Ada (G.Non_Terminal (X).Name));
+            Impl.P ("        (This    : in out Visiter;");
+            Impl.N ("         Node    : not null Gela.Elements.");
+            Impl.N (Plural (G.Non_Terminal (X).Name));
+            Impl.N (".");
+            Impl.N (To_Ada (G.Non_Terminal (X).Name));
+            Impl.P ("_Access) is");
+            Impl.P ("      begin");
+            Impl.N ("         ");
+            Impl.N (To_Ada (G.Non_Terminal (X).Name));
+            Impl.N ("_");
+            Impl.N (Found (X));
+            Impl.P (" (Self, Node);");
+            Impl.N ("      end ");
+            Impl.N (To_Ada (G.Non_Terminal (X).Name));
+            Impl.P (";");
+            Impl.P;
+         end if;
+      end loop;
+
+      Impl.P ("      V : Visiter;");
+      Impl.P ("   begin");
+      Impl.P ("      Node.Visit (V);");
+      Impl.N ("   end ");
+      Impl.N (To_Ada (NT.Name));
+      Impl.N ("_");
+      Impl.N (Pass);
       Impl.P (";");
    end Make_Procedure;
 
@@ -327,19 +453,24 @@ package body AG_Tools.NT_Generators is
 
    procedure Write_Declaration
      (Context : AG_Tools.Contexts.Context_Access;
-      NT      : Gela.Grammars.Non_Terminal)
+      NT      : Gela.Grammars.Non_Terminal;
+      Pass    : Positive)
    is
-      Spec      : AG_Tools.Writers.Writer renames Context.Spec;
-      Impl      : AG_Tools.Writers.Writer renames Context.Impl;
-      RT : constant League.Strings.Universal_String :=
+      Spec : AG_Tools.Writers.Writer renames Context.Spec;
+      Impl : AG_Tools.Writers.Writer renames Context.Impl;
+      RT   : constant League.Strings.Universal_String :=
         Return_Type (Context.Grammar.all, NT);
    begin
       Context.Add_With
         (Name => Package_Name (RT),
          Kind => AG_Tools.Contexts.Spec_Unit);
 
-      Spec.N ("overriding procedure ", Impl);
-      Spec.P (To_Ada (NT.Name), Impl);
+      Spec.N ("not overriding procedure ", Impl);
+      Spec.N (To_Ada (NT.Name), Impl);
+      Spec.N ("_", Impl);
+      Spec.N (Pass);
+      Impl.N (Pass);
+      Spec.P ("", Impl);
       Spec.P ("     (Self    : in out Visiter;", Impl);
       Spec.N ("      Node    : not null ", Impl);
       Spec.N (RT, Impl);

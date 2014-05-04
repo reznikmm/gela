@@ -58,4 +58,26 @@ package AG_Tools.NT_Generators is
      (Self      : access List_Generator;
       Attribute : Gela.Grammars.Attribute);
 
+   type Abstract_Generator (Context : AG_Tools.Contexts.Context_Access)
+   is new AG_Tools.Visit_Generators.NT_Generator with null record;
+
+   overriding procedure Make_Procedure
+     (Self  : access Abstract_Generator;
+      Order : Gela.Grammars.Ordered.Order_Maps.Map;
+      NT    : Gela.Grammars.Non_Terminal;
+      Pass  : Positive);
+
+   overriding procedure Make_Local_Variable
+     (Self      : access Abstract_Generator;
+      Origin    : League.Strings.Universal_String;
+      Attribute : Gela.Grammars.Attribute_Declaration) is null;
+
+   overriding procedure Make_Get
+     (Self      : access Abstract_Generator;
+      Attribute : Gela.Grammars.Attribute) is null;
+
+   overriding procedure Make_Set
+     (Self      : access Abstract_Generator;
+      Attribute : Gela.Grammars.Attribute) is null;
+
 end AG_Tools.NT_Generators;

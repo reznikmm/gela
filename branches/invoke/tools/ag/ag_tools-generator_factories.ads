@@ -39,6 +39,7 @@ private
      new AG_Tools.Visit_Generators.Factory with record
       NT   : aliased AG_Tools.NT_Generators.Generator (Context);
       List : aliased AG_Tools.NT_Generators.List_Generator (Context);
+      Abst : aliased AG_Tools.NT_Generators.Abstract_Generator (Context);
       Part : aliased AG_Tools.Part_Generators.Generator (Context);
       Seq  : aliased AG_Tools.Part_Generators.List_Generator (Context);
       Opt  : aliased AG_Tools.Part_Generators.Option_Generator (Context);
