@@ -136,6 +136,30 @@ package body Gela.Plain_Interpretations is
       end if;
    end Direct_Name;
 
+   -----------------------------
+   -- Down_Selected_Component --
+   -----------------------------
+
+   overriding procedure Down_Selected_Component
+     (Self     : in out Interpretation_Manager;
+      Value    : Gela.Interpretations.Interpretation_Index;
+      Prefix   : out Gela.Interpretations.Interpretation_Index)
+   is
+      use type Gela.Interpretations.Interpretation_Index;
+      S : Gela.Solutions.Solution_Access;
+   begin
+      if Value = 0 then
+         Prefix := 0;
+      else
+         S := Self.Solutions.Element (Value);
+         New_Name_Solution
+           (Self,
+            Gela.Saves.Defining_Name_Save (S.Save.all).Name,
+            Gela.Saves.Defining_Name_Save (S.Save.all).Parent,
+            Prefix);
+      end if;
+   end Down_Selected_Component;
+
    -----------------------
    -- Get_Defining_Name --
    -----------------------
@@ -249,32 +273,5 @@ package body Gela.Plain_Interpretations is
       Result := Self.Last_Solution;
       Self.Solutions.Insert (Result, S);
    end New_Name_Solution;
-
-   ------------------------------
-   -- Split_Selected_Component --
-   ------------------------------
-
-   overriding procedure Split_Selected_Component
-     (Self     : in out Interpretation_Manager;
-      Value    : Gela.Interpretations.Interpretation_Index;
-      Prefix   : out Gela.Interpretations.Interpretation_Index;
-      Selector : out Gela.Interpretations.Interpretation_Index)
-   is
-      use type Gela.Interpretations.Interpretation_Index;
-      S : Gela.Solutions.Solution_Access;
-   begin
-      if Value = 0 then
-         Prefix := 0;
-      else
-         S := Self.Solutions.Element (Value);
-         New_Name_Solution
-           (Self,
-            Gela.Saves.Defining_Name_Save (S.Save.all).Name,
-            Gela.Saves.Defining_Name_Save (S.Save.all).Parent,
-            Prefix);
-      end if;
-
-      Selector := Value;
-   end Split_Selected_Component;
 
 end Gela.Plain_Interpretations;

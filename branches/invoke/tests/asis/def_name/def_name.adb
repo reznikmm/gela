@@ -66,6 +66,9 @@ procedure Def_Name is
                      case Asis.Elements.Expression_Kind (Names (K)) is
                         when Asis.An_Identifier =>
                            On_Identifier (Names (K));
+                        when Asis.A_Selected_Component =>
+                           On_Identifier
+                             (Asis.Expressions.Selector (Names (K)));
                         when others =>
                            null;
                      end case;
@@ -124,9 +127,11 @@ begin
    Asis.Implementation.Finalize       ("");
 
    if Hash /= Result.Hash then
-      Ada.Wide_Wide_Text_IO.Put_Line (Result.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Put_Line
+      Ada.Wide_Wide_Text_IO.Put
         (League.Hash_Type'Wide_Wide_Image (Result.Hash));
+      Ada.Wide_Wide_Text_IO.Put_Line ("  ");
+      Ada.Wide_Wide_Text_IO.Put_Line (Result.To_Wide_Wide_String);
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
    end if;
 
 exception

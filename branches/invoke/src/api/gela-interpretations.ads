@@ -33,13 +33,12 @@ package Gela.Interpretations is
       Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
    --  Return interpretations of Prefix.Name symbol
 
-   not overriding procedure Split_Selected_Component
+   not overriding procedure Down_Selected_Component
      (Self     : in out Interpretation_Manager;
       Value    : Gela.Interpretations.Interpretation_Index;
-      Prefix   : out Gela.Interpretations.Interpretation_Index;
-      Selector : out Gela.Interpretations.Interpretation_Index) is abstract;
-   --  For given interpretation of selected_component get interpretations of
-   --  its profix and selector
+      Prefix   : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  For given interpretation of selected_component get interpretation of
+   --  its profix
 
    not overriding procedure Chosen_Interpretation
      (Self   : in out Interpretation_Manager;

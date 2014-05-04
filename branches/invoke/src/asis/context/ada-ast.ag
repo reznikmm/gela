@@ -6344,12 +6344,13 @@ Rules for selected_component. :
 
 Rules for selected_identifier. :
 (.
-      ${Prefix.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Down_Selected_Component
+        (${selected_identifier.Down}, ${Prefix.Down});
 .)
 
 Rules for selected_identifier. :
 (.
-      ${Selector.Down} := 0;  --  FIXME
+      ${Selector.Down} := ${selected_identifier.Down};
 .)
 
 Rules for generic_association. :
@@ -6638,7 +6639,11 @@ Rules for subtype_declaration. :
 .)
 
 Synthesized attributes
-  identifier
+  character_literal,
+  enumeration_literal,
+  identifier,
+  operator_symbol,
+  selector_name
    : Gela.Elements.Defining_Names.Defining_Name_Access : Defining_Name;
 
 Rules for identifier.identifier_token :
@@ -6648,11 +6653,29 @@ Rules for identifier.identifier_token :
          ${identifier.Defining_Name});
 .)
 
+Rules for character_literal.character_literal_token :
+(.
+        ${character_literal.Defining_Name} := null;
+.)
+
+Rules for enumeration_literal.enumeration_literal_token :
+(.
+        ${enumeration_literal.Defining_Name} := null;
+.)
+
+Rules for operator_symbol.operator_symbol_token :
+(.
+        ${operator_symbol.Defining_Name} := null;
+.)
+
+
 Synthesized attributes
   identifier,
   program_unit_name,
   selected_identifier
    : Gela.Lexical_Types.Text_Index : Dummy;
+
+
 
 Rules for identifier.identifier_token :
 (.
@@ -6661,5 +6684,5 @@ Rules for identifier.identifier_token :
 
 Rules for selected_identifier. :
 (.
-      ${selected_identifier.Dummy} := 0;
+      ${selected_identifier.Dummy} := 0;  --  ${Selector.Defining_Name}
 .)

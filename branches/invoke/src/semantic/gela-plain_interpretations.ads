@@ -65,11 +65,10 @@ private
       Name   : Gela.Lexical_Types.Symbol;
       Result : out Gela.Interpretations.Interpretation_Set_Index);
 
-   overriding procedure Split_Selected_Component
+   overriding procedure Down_Selected_Component
      (Self     : in out Interpretation_Manager;
       Value    : Gela.Interpretations.Interpretation_Index;
-      Prefix   : out Gela.Interpretations.Interpretation_Index;
-      Selector : out Gela.Interpretations.Interpretation_Index);
+      Prefix   : out Gela.Interpretations.Interpretation_Index);
 
    overriding procedure Chosen_Interpretation
      (Self   : in out Interpretation_Manager;
