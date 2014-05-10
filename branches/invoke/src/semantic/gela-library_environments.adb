@@ -36,8 +36,6 @@ with Gela.Symbol_Sets;
 
 package body Gela.Library_Environments is
 
-   Library_Env : constant Gela.Semantic_Types.Env_Index := 1;
-
    package Library_Cursor is
       type Defining_Name_Cursor is
         new Gela.Defining_Name_Cursors.Defining_Name_Cursor
@@ -571,12 +569,27 @@ package body Gela.Library_Environments is
 
    end Library_Cursor;
 
+   ------------------------
+   -- Add_Direct_Visible --
+   ------------------------
+
+   overriding function Add_Direct_Visible
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return 0;
+   end Add_Direct_Visible;
+
    --------------------
    -- Direct_Visible --
    --------------------
 
    overriding function Direct_Visible
-     (Self   : in out Environment_Set;
+     (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
@@ -628,7 +641,7 @@ package body Gela.Library_Environments is
    -------------
 
    overriding function Visible
-     (Self   : in out Environment_Set;
+     (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Region : Gela.Elements.Defining_Names.Defining_Name_Access;
       Symbol : Gela.Lexical_Types.Symbol;

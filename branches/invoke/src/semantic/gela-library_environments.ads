@@ -20,22 +20,31 @@ package Gela.Library_Environments is
    --  Return environment that incudes library level names.
 
    overriding function Direct_Visible
-     (Self   : in out Environment_Set;
+     (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class;
 
    overriding function Visible
-     (Self   : in out Environment_Set;
+     (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Region : Gela.Elements.Defining_Names.Defining_Name_Access;
       Symbol : Gela.Lexical_Types.Symbol;
       Found  : access Boolean)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class;
 
+   Library_Env : constant Gela.Semantic_Types.Env_Index := 1;
+
 private
 
    type Environment_Set (Context : access Gela.Contexts.Context'Class) is
      new Gela.Environments.Environment_Set with null record;
+
+   overriding function Add_Direct_Visible
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index;
 
 end Gela.Library_Environments;

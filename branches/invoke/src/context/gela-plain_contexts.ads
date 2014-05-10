@@ -14,7 +14,7 @@ with Gela.GNAT_Naming_Schemas;
 with Gela.Interpretations;
 with Gela.Lexers;
 with Gela.Lexical_Types;
-with Gela.Library_Environments;
+with Gela.Plain_Environments;
 with Gela.Naming_Schemas;
 with Gela.Plain_Interpretations;
 with Gela.Plain_Lexers;
@@ -48,7 +48,7 @@ private
       Manager : Gela.Compilation_Managers.Compilation_Manager_Access;
       Schema  : aliased Gela.GNAT_Naming_Schemas.Naming_Schema
         (Context'Unchecked_Access);
-      Env     : aliased Gela.Library_Environments.Environment_Set
+      Env     : aliased Gela.Plain_Environments.Environment_Set
         (Context'Unchecked_Access);
       Dependency_List : Gela.Dependency_Lists.Dependency_List_Access;
       Interpretation : aliased
