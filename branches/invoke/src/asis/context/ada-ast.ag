@@ -5757,9 +5757,20 @@ Rules for With_Clause_Names.program_unit_name :
 .)
 
 Synthesized attributes
+  attribute_reference,
+  character_literal,
+  direct_name,
+  explicit_dereference,
+  function_call,
   identifier,
+  name,
+  operator_symbol,
+  prefix,
   program_unit_name,
-  selected_identifier
+  qualified_expression,
+  selected_component,
+  selected_identifier,
+  subtype_mark
    : Gela.Interpretations.Interpretation_Set_Index : Up;
 
 Rules for identifier.identifier_token :
@@ -5775,6 +5786,41 @@ Rules for selected_identifier. :
       Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
         (${selected_identifier.env_in}, ${Prefix.Up}, ${Selector.full_name}, ${selected_identifier.Up});
 .)
+
+Rules for selected_component. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
+        (${selected_component.env_in}, ${prefix.Up}, ${Selector.full_name}, ${selected_component.Up});
+.)
+
+Rules for attribute_reference. :
+(.
+      ${attribute_reference.Up} := 0;  --  FIXME
+.)
+
+Rules for function_call. :
+(.
+      ${function_call.Up} := 0;  --  FIXME
+.)
+
+Rules for character_literal.character_literal_token :
+(.
+      ${character_literal.Up} := 0;  --  FIXME
+.)
+Rules for explicit_dereference. :
+(.
+      ${explicit_dereference.Up} := 0;  --  FIXME
+.)
+Rules for operator_symbol.operator_symbol_token :
+(.
+      ${operator_symbol.Up} := 0;  --  FIXME
+.)
+Rules for qualified_expression. :
+(.
+      ${qualified_expression.Up} := 0;  --  FIXME
+.)
+
+
 
 Inherited attributes
   access_definition,
@@ -6428,17 +6474,23 @@ Rules for while_loop_statement. :
 
 Rules for Index_Subtype_Definitions.subtype_mark :
 (.
-      ${subtype_mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Index_Subtype_Definitions.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for Progenitor_List.subtype_mark :
 (.
-      ${subtype_mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Progenitor_List.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for Type_Clause_Names.subtype_mark :
 (.
-      ${subtype_mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Type_Clause_Names.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for access_to_function_definition. :
@@ -6453,7 +6505,9 @@ Rules for anonymous_access_to_function_definition. :
 
 Rules for anonymous_access_to_object_definition. :
 (.
-      ${Anonymous_Access_To_Object_Subtype_Mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${anonymous_access_to_object_definition.env_in}, ${Anonymous_Access_To_Object_Subtype_Mark.Up}, ${Anonymous_Access_To_Object_Subtype_Mark.Down});
 .)
 
 Rules for aspect_specification. :
@@ -6463,12 +6517,16 @@ Rules for aspect_specification. :
 
 Rules for discrete_subtype_indication. :
 (.
-      ${Subtype_Mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${discrete_subtype_indication.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
 .)
 
 Rules for discrete_subtype_indication_dr. :
 (.
-      ${Subtype_Mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${discrete_subtype_indication_dr.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
 .)
 
 Rules for discriminant_specification. :
@@ -6483,7 +6541,9 @@ Rules for formal_access_to_function_definition. :
 
 Rules for formal_derived_type_definition. :
 (.
-      ${Subtype_Mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${formal_derived_type_definition.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
 .)
 
 Rules for formal_function_declaration. :
@@ -6518,12 +6578,16 @@ Rules for object_renaming_declaration. :
 
 Rules for qualified_expression. :
 (.
-      ${Converted_Or_Qualified_Subtype_Mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${qualified_expression.env_in}, ${Converted_Or_Qualified_Subtype_Mark.Up}, ${Converted_Or_Qualified_Subtype_Mark.Down});
 .)
 
 Rules for subtype_indication. :
 (.
-      ${subtype_mark.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${subtype_indication.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for parameter_specification. :
