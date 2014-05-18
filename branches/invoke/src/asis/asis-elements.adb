@@ -16,6 +16,9 @@ with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
 with Gela.Elements.Context_Items;
 with Asis.Extensions.Flat_Kinds;
+with Gela.Elements.Library_Unit_Bodies;
+with Gela.Elements.Library_Unit_Declarations;
+with Gela.Elements.Proper_Bodies;
 
 package body Asis.Elements is
 
@@ -1028,10 +1031,72 @@ package body Asis.Elements is
      (Compilation_Unit : in Asis.Compilation_Unit)
       return Asis.Declaration
    is
+      package Get is
+
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Unit : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Compilation_Unit_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Bodies.
+              Compilation_Unit_Body_Access);
+
+         overriding procedure Compilation_Unit_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Declarations.
+              Compilation_Unit_Declaration_Access);
+
+         overriding procedure Subunit
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subunits.Subunit_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Compilation_Unit_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Bodies.
+              Compilation_Unit_Body_Access)
+         is
+            Result : constant Gela.Elements.Library_Unit_Bodies.
+              Library_Unit_Body_Access := Node.Unit_Declaration;
+         begin
+            Self.Unit := Gela.Elements.Element_Access (Result);
+         end Compilation_Unit_Body;
+
+         overriding procedure Compilation_Unit_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Declarations.
+              Compilation_Unit_Declaration_Access)
+         is
+            Result : constant Gela.Elements.Library_Unit_Declarations.
+              Library_Unit_Declaration_Access := Node.Unit_Declaration;
+         begin
+            Self.Unit := Gela.Elements.Element_Access (Result);
+         end Compilation_Unit_Declaration;
+
+         overriding procedure Subunit
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subunits.Subunit_Access)
+         is
+            Result : constant Gela.Elements.Proper_Bodies.Proper_Body_Access :=
+              Node.Unit_Declaration;
+         begin
+            Self.Unit := Gela.Elements.Element_Access (Result);
+         end Subunit;
+
+      end Get;
+
+      Tree : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
+      V    : aliased Get.Visiter;
    begin
       Check_Nil_Unit (Compilation_Unit, "Unit_Declaration");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Tree := Compilation_Unit.Data.Tree;
+      Tree.Visit (V);
+
+      return (Data => V.Unit);
    end Unit_Declaration;
 
 end Asis.Elements;

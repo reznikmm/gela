@@ -57,7 +57,7 @@ package Gela.Elements is
    type Nested (Kind : Nested_Kinds := Nested_Token) is record
       case Kind is
          when Nested_Token =>
-            Nested_Token : Gela.Lexical_Types.Token_Index;
+            Nested_Token : Gela.Lexical_Types.Token_Count;
          when Nested_Element =>
             Nested_Element : Element_Access;
          when Nested_Sequence =>

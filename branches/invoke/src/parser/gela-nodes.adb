@@ -199,9 +199,24 @@ package body Gela.Nodes is
    overriding function Nested_Items
      (Self  : Node) return Gela.Elements.Nested_Array
    is
-      pragma Unreferenced (Self);
+      use Gela.LARL_Parsers_Nodes;
+      Kinds  : constant Nested_Kind_Array := Node'Class (Self).Nested;
+      Result : Gela.Elements.Nested_Array (Kinds'Range);
    begin
-      return (1 => (Gela.Elements.Nested_Token, 1));
+      for J in Result'Range loop
+         case Kinds (J) is
+            when Gela.Elements.Nested_Token =>
+               Result (J) := (Gela.Elements.Nested_Token, -Self.Children (J));
+            when Gela.Elements.Nested_Element =>
+               Result (J) :=
+                 (Gela.Elements.Nested_Element, -Self.Children (J));
+            when Gela.Elements.Nested_Sequence =>
+               Result (J) :=
+                 (Gela.Elements.Nested_Sequence, -Self.Children (J));
+         end case;
+      end loop;
+
+      return Result;
    end Nested_Items;
 
    --------------------
