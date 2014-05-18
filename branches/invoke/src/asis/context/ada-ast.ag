@@ -4161,7 +4161,8 @@ Rules for formal_unconstrained_array_definition. :
 
 Rules for full_type_declaration. :
 (.
-      ${full_type_declaration.env_out} := ${full_type_declaration.env_in};
+      ${full_type_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Type_Declaration_View.env_out});
 .)
 
 Rules for full_type_declaration. :
@@ -4171,17 +4172,23 @@ Rules for full_type_declaration. :
 
 Rules for full_type_declaration. :
 (.
-      ${Discriminant_Part.env_in} := ${full_type_declaration.env_in};
+      ${Discriminant_Part.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${full_type_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+      --  FIXME: dont create region for enums and completions
 .)
 
 Rules for full_type_declaration. :
 (.
-      ${Type_Declaration_View.env_in} := ${full_type_declaration.env_in};
+      ${Type_Declaration_View.env_in} := ${Discriminant_Part.env_out:Discriminant_Part_Env_In};
 .)
 
 Rules for full_type_declaration. :
 (.
-      ${Aspect_Specifications.env_in} := ${full_type_declaration.env_in};
+      ${Aspect_Specifications.env_in} := ${Type_Declaration_View.env_out};
 .)
 
 Rules for function_body. :
@@ -4751,7 +4758,8 @@ Rules for package_body_stub. :
 
 Rules for package_declaration. :
 (.
-      ${package_declaration.env_out} := ${package_declaration.env_in};
+      ${package_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Private_Part_Declarative_Items.env_out});
 .)
 
 Rules for package_declaration. :
@@ -4766,12 +4774,17 @@ Rules for package_declaration. :
 
 Rules for package_declaration. :
 (.
-      ${Visible_Part_Declarative_Items.env_in} := ${package_declaration.env_in};
+      ${Visible_Part_Declarative_Items.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${package_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for package_declaration. :
 (.
-      ${Private_Part_Declarative_Items.env_in} := ${package_declaration.env_in};
+      ${Private_Part_Declarative_Items.env_in} := ${Visible_Part_Declarative_Items.env_out};
 .)
 
 Rules for package_declaration. :

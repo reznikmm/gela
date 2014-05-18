@@ -24,15 +24,6 @@ package Gela.Environments is
    --  Return list of direct visible defining names from the environment
    --  pointed by Index with given Symbol.
 
-   not overriding function Add_Direct_Visible
-     (Self   : in out Environment_Set;
-      Index  : Gela.Semantic_Types.Env_Index;
-      Symbol : Gela.Lexical_Types.Symbol;
-      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Semantic_Types.Env_Index is abstract;
-   --  Create new environment by adding (Symbol, Name) to provided env with
-   --  given Index. Return index of created set
-
    not overriding function Visible
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
@@ -43,5 +34,30 @@ package Gela.Environments is
    --  Return list of defining names from the environment pointed by Index
    --  with given Symbol which visible inside declarative region corresponding
    --  to given Region name. Return Found = False if no such region found.
+
+   not overriding function Add_Defining_Name
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by adding (Symbol, Name) to provided env with
+   --  given Index. Return index of created environment
+
+   not overriding function Enter_Declarative_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by extending provided env with new empty
+   --  declarative region named by Region defining name.
+   --  Return index of created environment
+
+   not overriding function Leave_Declarative_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by closing top declarative region in provided env
+   --  Return index of created environment
 
 end Gela.Environments;

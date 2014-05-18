@@ -135,8 +135,10 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
+      pragma Unreferenced (Template);
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       Origin : League.Strings.Universal_String;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
@@ -168,8 +170,10 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Head_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
+      pragma Unreferenced (Template);
       use type Gela.Grammars.Production_Index;
 
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
@@ -193,8 +197,10 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
+      pragma Unreferenced (Template);
       G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
@@ -210,18 +216,40 @@ package body AG_Tools.Part_Generators is
    --------------
 
    overriding procedure Make_Get
-     (Self : access Option_Generator;
-      Attribute : Gela.Grammars.Attribute)
+     (Self      : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
+      use type League.Strings.Universal_String;
       G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
-      Origin : League.Strings.Universal_String;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
+      Part   : constant League.Strings.Universal_String :=
+        G.Part (Attribute.Origin).Name;
+      Origin : constant League.Strings.Universal_String := To_Ada (Part);
+      Attr   : constant League.Strings.Universal_String :=
+        G.Declaration (Attribute.Declaration).Name;
    begin
-      Origin := To_Ada (G.Part (Attribute.Origin).Name);
       Code.N ("      if Assigned (");
       Code.N (Origin);
       Code.P (") then");
-      Generator (Self.all).Make_Get (Attribute);
+      Generator (Self.all).Make_Get (Attribute, Template);
+
+      for J in 1 .. Template.Count loop
+         if Template.Part_Name (J) = Part and then
+           Template.Attribute_Name (J) = Attr and then
+           Template.Has_Default (J)
+         then
+            Code.P ("      else");
+            Code.N ("      ");
+            Code.N (Origin);
+            Code.N ("_");
+            Code.N (To_Ada (Attr));
+            Code.N (" := ");
+            Code.N (Template.Default (J));
+            Code.P (";");
+         end if;
+      end loop;
+
       Code.P ("      end if;");
    end Make_Get;
 

@@ -10,6 +10,7 @@
 with League.Strings;
 
 with Gela.Grammars.Ordered;
+with Gela.Grammars.Rule_Templates;
 
 package AG_Tools.Visit_Generators is
 
@@ -24,7 +25,8 @@ package AG_Tools.Visit_Generators is
 
    not overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute) is abstract;
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template) is abstract;
    --  Generate code to get/fetch value of given Attribute
 
    not overriding procedure Make_Set

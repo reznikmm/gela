@@ -9,6 +9,7 @@
 
 with AG_Tools.Contexts;
 with AG_Tools.Visit_Generators;
+with Gela.Grammars.Rule_Templates;
 
 package AG_Tools.Part_Generators is
 
@@ -31,7 +32,8 @@ package AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute);
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
    overriding procedure Make_Set
      (Self      : access Generator;
@@ -47,7 +49,8 @@ package AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute);
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
    overriding procedure Make_Set
      (Self      : access List_Generator;
@@ -62,11 +65,12 @@ package AG_Tools.Part_Generators is
       Pass : Positive);
 
    overriding procedure Make_Get
-     (Self : access Option_Generator;
-      Attribute : Gela.Grammars.Attribute);
+     (Self      : access Option_Generator;
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
    overriding procedure Make_Set
-     (Self : access Option_Generator;
+     (Self      : access Option_Generator;
       Attribute : Gela.Grammars.Attribute);
 
    type Head_Generator (Context : AG_Tools.Contexts.Context_Access)
@@ -83,6 +87,7 @@ package AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Head_Generator;
-      Attribute : Gela.Grammars.Attribute);
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
 end AG_Tools.Part_Generators;

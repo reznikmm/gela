@@ -569,11 +569,11 @@ package body Gela.Library_Environments is
 
    end Library_Cursor;
 
-   ------------------------
-   -- Add_Direct_Visible --
-   ------------------------
+   -----------------------
+   -- Add_Defining_Name --
+   -----------------------
 
-   overriding function Add_Direct_Visible
+   overriding function Add_Defining_Name
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Symbol : Gela.Lexical_Types.Symbol;
@@ -582,7 +582,7 @@ package body Gela.Library_Environments is
    begin
       raise Program_Error;
       return 0;
-   end Add_Direct_Visible;
+   end Add_Defining_Name;
 
    --------------------
    -- Direct_Visible --
@@ -622,6 +622,33 @@ package body Gela.Library_Environments is
          end if;
       end return;
    end Direct_Visible;
+
+   ------------------------------
+   -- Enter_Declarative_Region --
+   ------------------------------
+
+   overriding function Enter_Declarative_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return Self.Enter_Declarative_Region (Index, Region);
+   end Enter_Declarative_Region;
+
+   ------------------------------
+   -- Leave_Declarative_Region --
+   ------------------------------
+
+   overriding function Leave_Declarative_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return Self.Leave_Declarative_Region (Index);
+   end Leave_Declarative_Region;
 
    -------------------------------
    -- Library_Level_Environment --

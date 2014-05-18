@@ -11,6 +11,7 @@ with Gela.Grammars.Ordered;
 
 with AG_Tools.Contexts;
 with AG_Tools.Visit_Generators;
+with Gela.Grammars.Rule_Templates;
 
 package AG_Tools.NT_Generators is
 
@@ -30,7 +31,8 @@ package AG_Tools.NT_Generators is
 
    overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute);
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
    overriding procedure Make_Set
      (Self      : access Generator;
@@ -52,7 +54,8 @@ package AG_Tools.NT_Generators is
 
    overriding procedure Make_Get
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute);
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template);
 
    overriding procedure Make_Set
      (Self      : access List_Generator;
@@ -74,7 +77,8 @@ package AG_Tools.NT_Generators is
 
    overriding procedure Make_Get
      (Self      : access Abstract_Generator;
-      Attribute : Gela.Grammars.Attribute) is null;
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template) is null;
 
    overriding procedure Make_Set
      (Self      : access Abstract_Generator;

@@ -9,8 +9,6 @@
 
 with League.String_Vectors;
 
-with Gela.Grammars.Rule_Templates;
-
 with AG_Tools.Input;
 with AG_Tools.Writers;
 
@@ -23,7 +21,7 @@ package body AG_Tools.NT_Generators is
       Pass    : Positive);
 
    procedure Generate_Rule
-     (R    : Gela.Grammars.Rule;
+     (T    : Gela.Grammars.Rule_Templates.Rule_Template;
       NT   : Gela.Grammars.Non_Terminal;
       Impl : in out AG_Tools.Writers.Writer);
    --  Output text of rule to Impl
@@ -39,14 +37,12 @@ package body AG_Tools.NT_Generators is
      League.Strings.To_Universal_String ("This");
 
    procedure Generate_Rule
-     (R    : Gela.Grammars.Rule;
+     (T    : Gela.Grammars.Rule_Templates.Rule_Template;
       NT   : Gela.Grammars.Non_Terminal;
       Impl : in out AG_Tools.Writers.Writer)
    is
       use Gela.Grammars;
 
-      T      : constant Rule_Templates.Rule_Template :=
-        Rule_Templates.Create (R.Text);
       Value  : League.Strings.Universal_String;
       Values : League.String_Vectors.Universal_String_Vector;
    begin
@@ -72,8 +68,10 @@ package body AG_Tools.NT_Generators is
 
    overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
+      pragma Unreferenced (Template);
       G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
       D      : Gela.Grammars.Attribute_Declaration renames
@@ -94,7 +92,8 @@ package body AG_Tools.NT_Generators is
 
    overriding procedure Make_Get
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Gela.Grammars.Attribute;
+      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
       pragma Unreferenced (Self);
       pragma Unreferenced (Attribute);
@@ -505,13 +504,15 @@ package body AG_Tools.NT_Generators is
                   Result : Attribute renames G.Attribute (R.Result);
                   List   : Attribute_Array renames
                     G.Attribute (R.First_Argument .. R.Last_Argument);
+                  T      : constant Rule_Templates.Rule_Template :=
+                    Rule_Templates.Create (R.Text);
                begin
                   for X of List loop
                      Gen := Context.Factory.Get (X, NT);
-                     Gen.Make_Get (X);
+                     Gen.Make_Get (X, T);
                   end loop;
 
-                  Generate_Rule (R, NT, Context.Code);
+                  Generate_Rule (T, NT, Context.Code);
 
                   Gen := Context.Factory.Get (Result, NT);
                   Gen.Make_Set (Result);

@@ -13,6 +13,7 @@ with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
+with Gela.Elements.Defining_Names;
 
 package Gela.Pass_Utils is
    pragma Preelaborate;
@@ -47,5 +48,13 @@ package Gela.Pass_Utils is
       With_List    : Gela.Lexical_Types.Symbol_List;
       Limited_With : Gela.Lexical_Types.Symbol_List)
       return Gela.Semantic_Types.Env_Index;
+
+   function Add_Name_Create_Region
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+      Symbol       : Gela.Lexical_Types.Symbol;
+      Name         : Gela.Elements.Defining_Names.Defining_Name_Access)
+     return Gela.Semantic_Types.Env_Index;
+   --  Add (Symbol, Name) to Env, then create new declarative region
 
 end Gela.Pass_Utils;

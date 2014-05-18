@@ -13,6 +13,31 @@ with Gela.Dependency_Lists;
 
 package body Gela.Pass_Utils is
 
+   ----------------------------
+   -- Add_Name_Create_Region --
+   ----------------------------
+
+   function Add_Name_Create_Region
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+      Symbol       : Gela.Lexical_Types.Symbol;
+      Name         : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Env_1 : Gela.Semantic_Types.Env_Index;
+      Env_2 : Gela.Semantic_Types.Env_Index;
+   begin
+      Env_1 := Comp.Context.Environment_Set.Add_Defining_Name
+        (Index  => Env,
+         Symbol => Symbol,
+         Name   => Name);
+      Env_2 := Comp.Context.Environment_Set.Enter_Declarative_Region
+        (Index  => Env_1,
+         Region => Name);
+
+      return Env_2;
+   end Add_Name_Create_Region;
+
    --------------------
    -- Create_Subunit --
    --------------------
