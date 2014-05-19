@@ -6398,7 +6398,7 @@ Rules for select_or_path. :
 
 Rules for selected_component. :
 (.
-      ${prefix.Down} := 0;  --  FIXME
+      ${prefix.Down} := ${selected_component.Down};  --  FIXME
 .)
 
 Rules for selected_identifier. :

@@ -18,6 +18,8 @@ package body Asis.Iterator is
       end if;
 
       declare
+         use type Gela.Elements.Element_Sequence_Access;
+
          Children : constant Gela.Elements.Nested_Array :=
            Element.Data.Nested_Items;
       begin
@@ -40,18 +42,20 @@ package body Asis.Iterator is
                      end;
 
                   when Gela.Elements.Nested_Sequence =>
-                     declare
-                        Next : Gela.Elements.Element_Sequence_Cursor :=
-                          Children (J).Nested_Sequence.First;
-                     begin
-                        while Next.Has_Element loop
-                           Traverse_Element
-                             ((Data => Next.Element), Control, State);
+                     if Children (J).Nested_Sequence /= null then
+                        declare
+                           Next : Gela.Elements.Element_Sequence_Cursor :=
+                             Children (J).Nested_Sequence.First;
+                        begin
+                           while Next.Has_Element loop
+                              Traverse_Element
+                                ((Data => Next.Element), Control, State);
 
-                           exit when Control /= Continue;
-                           Next.Next;
-                        end loop;
-                     end;
+                              exit when Control /= Continue;
+                              Next.Next;
+                           end loop;
+                        end;
+                     end if;
 
                end case;
 
