@@ -3,6 +3,7 @@
 with Gela.Environments;
 with Gela.Interpretations;
 with Gela.Symbol_Sets;
+with Gela.Error_Sets;
 limited with Gela.Compilation_Managers;
 limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Dependency_Lists;
@@ -10,6 +11,7 @@ limited with Gela.Lexers;
 limited with Gela.Naming_Schemas;
 limited with Gela.Source_Finders;
 limited with Gela.Unit_Containers;
+
 
 package Gela.Contexts is
    pragma Preelaborate;
@@ -80,5 +82,10 @@ package Gela.Contexts is
      (Self  : access Context)
       return Gela.Interpretations.Interpretation_Manager_Access is abstract;
    --  Return interpretation manager
+
+   not overriding function Error_Set
+     (Self  : access Context)
+      return Gela.Error_Sets.Error_Set_Access is abstract;
+   --  Return error set instance
 
 end Gela.Contexts;

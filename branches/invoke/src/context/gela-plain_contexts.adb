@@ -163,6 +163,16 @@ package body Gela.Plain_Contexts is
       return Self.Env'Access;
    end Environment_Set;
 
+   ---------------
+   -- Error_Set --
+   ---------------
+
+   overriding function Error_Set
+     (Self  : access Context) return Gela.Error_Sets.Error_Set_Access is
+   begin
+      return Self.Errors'Access;
+   end Error_Set;
+
    ----------------
    -- Initialize --
    ----------------

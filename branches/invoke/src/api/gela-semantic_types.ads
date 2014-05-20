@@ -24,4 +24,7 @@ package Gela.Semantic_Types is
    type Env_Index is new Natural;
    --  Index to reference an instance of environment state
 
+   type Error_Set_Index is new Natural;
+   --  Index to reference a set of errors
+
 end Gela.Semantic_Types;

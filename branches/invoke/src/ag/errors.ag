@@ -1,0 +1,35 @@
+Synthesized attributes
+  identifier,
+  program_unit_name,
+  selected_identifier,
+  selected_component,
+  attribute_reference,
+  function_call,
+  subtype_mark
+
+   : Gela.Semantic_Types.Error_Set_Index : Errors;
+
+Rules for identifier.identifier_token :
+(.
+        ${identifier.Errors} := 0;
+.)
+
+Rules for selected_identifier. :
+(.
+      ${selected_identifier.Errors} := 0;  --  ${Selector.Defining_Name}
+.)
+
+Rules for selected_component. :
+(.
+      ${selected_component.Errors} := 0;  --  ${Selector.Defining_Name}
+.)
+
+Rules for attribute_reference. :
+(.
+      ${attribute_reference.Errors} := 0;
+.)
+
+Rules for function_call. :
+(.
+      ${function_call.Errors} := 0;
+.)

@@ -10,12 +10,14 @@ with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Subunits;
 with Gela.Environments;
+with Gela.Error_Sets;
 with Gela.GNAT_Naming_Schemas;
 with Gela.Interpretations;
 with Gela.Lexers;
 with Gela.Lexical_Types;
-with Gela.Plain_Environments;
 with Gela.Naming_Schemas;
+with Gela.Plain_Environments;
+with Gela.Plain_Error_Sets;
 with Gela.Plain_Interpretations;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
@@ -54,6 +56,8 @@ private
       Interpretation : aliased
         Gela.Plain_Interpretations.Interpretation_Manager
           (Context'Unchecked_Access);
+      Errors : aliased Gela.Plain_Error_Sets.Error_Set
+        (Context'Unchecked_Access);
    end record;
 
    overriding function Symbols
@@ -132,5 +136,8 @@ private
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access;
+
+   overriding function Error_Set
+     (Self  : access Context) return Gela.Error_Sets.Error_Set_Access;
 
 end Gela.Plain_Contexts;
