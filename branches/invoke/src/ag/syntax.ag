@@ -1,0 +1,1861 @@
+Token token;
+
+Compilation ::=
+  {compilation_unit} <units>
+  {context_item}     <Compilation_Pragmas>
+;
+
+abort_statement ::=
+  token  <abort_token>
+  {name} <Aborted_Tasks>
+  token  <semicolon_token>;
+
+accept_statement ::=
+  token                     <accept_token>
+  identifier                <Accept_Entry_Direct_Name>
+  token                     <left_parenthesis_token>
+  expression                <Accept_Entry_Index>
+  token                     <right_parenthesis_token>
+  token                     <lp_token>
+  {parameter_specification} <Accept_Parameters>
+  token                     <rp_token>
+  token                     <do_token>
+  {statement}               <Accept_Body_Statements>
+  token                     <exception_token>
+  {exception_handler}       <Accept_Body_Exception_Handlers>
+  token                     <end_token>
+  token                     <identifier_token>
+  token                     <semicolon_token>;
+
+access_definition ::=
+  anonymous_access_to_object_definition |
+  anonymous_access_to_function_definition |
+  anonymous_access_to_procedure_definition;
+
+access_to_function_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <protected_token>
+  token <function_token>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+  token <return_token>
+  token <return_not_token>
+  token <return_null_token>
+  subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
+
+access_to_object_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <constant_token>
+  subtype_indication <subtype_indication>
+;
+
+access_to_procedure_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <protected_token>
+  token <procedure_token>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+;
+
+allocator ::=
+  token <new_token>
+  token <left_parenthesis_token>
+  name  <Subpool_Name>
+  token <right_parenthesis_token>
+  name  <Subtype_Or_Expression>
+;
+
+alt_record_definition ::= record_definition | null_record_definition;
+
+anonymous_access_to_function_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <protected_token>
+  token <function_token>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+  token <return_token>
+  token <return_not_token>
+  token <return_null_token>
+  subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>;
+
+anonymous_access_to_object_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <constant_token>
+  subtype_mark <Anonymous_Access_To_Object_Subtype_Mark>;
+
+anonymous_access_to_procedure_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <protected_token>
+  token <procedure_token>
+  token                      <lp_token>
+  {parameter_specification}  <Access_To_Subprogram_Parameter_Profile>
+  token                      <rp_token>
+;
+
+aspect_clause ::=
+  attribute_definition_clause |
+  record_representation_clause |
+  at_clause |
+  pragma_node;
+
+aspect_specification ::=
+   subtype_mark <Aspect_Mark>
+   token <arrow_token>
+   expression   <Aspect_Definition>
+;
+
+assignment_statement ::=
+  name        <Assignment_Variable_Name>
+  token       <assignment_token>
+  expression  <Assignment_Expression>
+  token       <semicolon_token>
+;
+
+association ::=
+  {discrete_choice} <Array_Component_Choices>
+  token             <arrow_token>
+  expression_or_box <Component_Expression>;
+
+asynchronous_select ::=
+  token                    <select_token>
+  {select_then_abort_path} <Asynchronous_Statement_Paths>
+  token                    <end_token>
+  token                    <end_select>
+  token                    <semicolon_token>
+;
+
+at_clause ::=
+  token      <for_token>
+  identifier <Representation_Clause_Name>
+  token      <use_token>
+  token      <at_token>
+  expression <Representation_Clause_Expression>
+  token      <semicolon_token>
+;
+
+attribute_definition_clause ::=
+  token <for_token>
+  clause_name <Representation_Clause_Name>
+  token <use_token>
+  expression <Representation_Clause_Expression>
+  token <semicolon_token>
+;
+
+clause_name ::= attribute_reference | identifier;
+
+attribute_reference ::=
+  prefix
+  token <apostrophe_token>
+  identifier <Attribute_Designator_Identifier>
+  token <designator_token>
+  expression <Attribute_Designator_Expressions>
+;
+
+basic_declarative_item ::=
+  basic_declaration |
+  aspect_clause |
+  use_clause;
+
+basic_declaration ::=
+  full_type_declaration |
+  incomplete_type_declaration |
+  private_type_declaration |
+  private_extension_declaration |
+  task_type_declaration |
+  protected_type_declaration |
+  subtype_declaration |
+  object_declaration |
+  single_task_declaration |
+  single_protected_declaration |
+  number_declaration |
+  procedure_declaration |
+  function_declaration |
+  package_declaration |
+  object_renaming_declaration |
+  exception_renaming_declaration |
+  package_renaming_declaration |
+  generic_package_renaming |
+  generic_procedure_renaming |
+  generic_function_renaming |
+  exception_declaration |
+  generic_package_declaration |
+  generic_function_declaration |
+  generic_procedure_declaration |
+  package_instantiation |
+  procedure_instantiation |
+  function_instantiation
+;
+
+block_statement ::= 
+  token               <Statement_Identifier>
+  token               <colon_token>
+  token               <declare_token>
+  {declarative_item}  <Block_Declarative_Items>
+  token               <begin_token>
+  {statement}         <Block_Statements>
+  token               <exception_token>
+  {exception_handler} <Block_Exception_Handlers>
+  token               <end_token>
+  token               <identifier_token>
+  token               <semicolon_token>;
+
+body_declaration ::= proper_body | body_stub;
+
+body_stub ::=
+  package_body_stub |
+  task_body_stub |
+  protected_body_stub;
+
+box ::= token <box_token>;
+
+case_expression ::=
+  token <case_token>
+  expression <expression>
+  token <is_token>
+  {case_expression_path} <Case_Expression_Paths>;
+
+case_expression_path ::=
+    token <when_token>
+    {discrete_choice} <Case_Path_Alternative_Choices>
+    token <arrow_token>
+    expression <Dependent_Expression>
+;
+
+case_path ::=
+    token             <when_token>
+    {discrete_choice} <Case_Statement_Alternative_Choices>
+    token             <arrow_token>
+    {statement}       <Sequence_Of_Statements>
+;
+
+case_statement ::= 
+  token       <case_token>
+  expression  <Case_Expression>
+  token       <is_token>
+  {case_path} <Case_Statement_Paths>
+  token       <end_token>
+  token       <endcase>
+  token       <semicolon_token>;
+
+character_literal ::= token <character_literal_token>;
+
+choice_parameter_specification ::= defining_identifier <Names>;
+
+clause_or_pragma ::=  component_clause | pragma_node;
+
+compilation_unit ::=
+  compilation_unit_declaration |
+  compilation_unit_body |
+  subunit;
+
+compilation_unit_body ::=
+  {context_item}    <Context_Clause_Elements>
+  library_unit_body <Unit_Declaration>;
+
+compilation_unit_declaration ::=
+  {context_item}           <Context_Clause_Elements>
+  token                    <private_token>
+  library_unit_declaration <Unit_Declaration>;
+
+component_clause ::= 
+  identifier         <Representation_Clause_Name>
+  token              <at_token>
+  simple_expression  <Component_Clause_Position>
+  token              <range_token>
+  discrete_simple_expression_range
+                     <Component_Clause_Range>
+  token              <semicolon_token>
+;
+
+component_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  component_definition   <Object_Declaration_Subtype>
+  token                  <assignment_token>
+  [expression            <Initialization_Expression>]
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+component_definition ::=
+  token <aliased_token>
+  subtype_indication_or_access_definition <Component_Subtype_Indication>
+;
+
+component_item ::=
+  component_declaration |
+  aspect_clause |
+  variant_part |
+  null_component;
+
+constrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {discrete_subtype_definition} <Discrete_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
+constraint ::= scalar_constraint | composite_constraint;
+
+composite_constraint ::=
+  token         <left_token>
+  {association} <Associations>
+  token         <right_token>
+;
+
+context_item ::= with_clause | use_clause | pragma_node;
+
+decimal_fixed_point_definition ::=
+  token                    <delta_token>
+  expression               <Delta_Expression>
+  token                    <digits_token>
+  expression               <Digits_Expression>
+  [simple_expression_range <Real_Range_Constraint>]
+;
+
+declarative_item ::= basic_declarative_item | body_declaration;
+
+defining_character_literal ::= token <character_literal>;
+
+defining_designator ::= defining_program_unit_name | defining_operator_symbol;
+
+defining_enumeration_literal ::= token <identifier>;
+
+defining_enumeration_name ::=
+  defining_enumeration_literal | defining_character_literal;
+
+defining_expanded_unit_name ::=
+  program_unit_name <Defining_Prefix>
+  token <dot_token>
+  defining_identifier <Defining_Selector>
+;
+
+defining_identifier ::= token <identifier_token>;
+
+defining_operator_symbol ::= token <operator_symbol_token>;
+
+defining_program_unit_name ::=
+  defining_identifier | defining_expanded_unit_name;
+
+delay_statement ::=
+  token      <delay_token>
+  token      <until_token>
+  expression <Delay_Expression>
+  token      <semicolon_token>
+;
+
+delta_constraint ::=
+  token            <delta_token>
+  expression       <Delta_Expression>
+  range_constraint <Real_Range_Constraint>;
+
+derived_record_definition ::=
+  token <abstract_token>
+  token <limited_token>
+  token <new_token>
+  subtype_indication <Parent_Subtype_Indication>
+  {subtype_mark}     <Progenitor_List>
+  token <with_token>
+  alt_record_definition  <Record_Definition>
+;
+
+derived_type_definition ::=
+  token <abstract_token>
+  token <limited_token>
+  token <new_token>
+  subtype_indication <Parent_Subtype_Indication>
+;
+
+digits_constraint ::=
+  token            <digits_token>
+  expression       <Digits_Expression>
+  range_constraint <Real_Range_Constraint>;
+
+direct_name ::=
+  identifier |
+  operator_symbol;
+
+discrete_choice ::= expression | discrete_range | others_choice;
+
+discrete_range ::= discrete_subtype_indication_dr | range_dr;
+
+discrete_range_attribute_reference ::=
+    attribute_reference <Range_Attribute>;
+
+discrete_simple_expression_range ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+discrete_subtype_definition ::=
+   discrete_subtype_indication |
+   discrete_range_attribute_reference |
+   discrete_simple_expression_range;
+
+discrete_subtype_indication ::=
+    subtype_mark <Subtype_Mark>
+    range_constraint <Subtype_Constraint>;
+
+discrete_subtype_indication_dr ::=
+    subtype_mark <Subtype_Mark>
+    range_constraint <Subtype_Constraint>;
+
+discriminant_part ::=
+  unknown_discriminant_part |
+  known_discriminant_part;
+
+discriminant_specification ::= 
+  {defining_identifier}             <Names>
+  token                             <colon_token>
+  token                             <not_token>
+  token                             <null_token>
+  subtype_mark_or_access_definition <Object_Declaration_Subtype>
+  token                             <assignment_token>
+  [expression                       <Initialization_Expression>]
+;
+
+designator ::= program_unit_name | operator_symbol;
+
+element_iterator_specification ::=
+   defining_identifier <Names>
+   token <colon_token>
+   subtype_indication
+   token <of_token>
+   token <reverse_token>
+   name <Iteration_Scheme_Name>;
+
+else_expression_path ::=
+    token <else_token>
+    expression <Dependent_Expression>
+;
+
+else_path ::=
+  token       <else_token>
+  {statement} <Sequence_Of_Statements>
+;
+
+elsif_expression_path ::=
+    token <elsif_token>
+    expression <Condition_Expression>
+    token <then_token>
+    expression <Dependent_Expression>
+;
+
+elsif_path ::=
+  token       <elsif_token>
+  expression  <Condition_Expression>
+  token       <then_token>
+  {statement} <Sequence_Of_Statements>
+;
+
+entry_body ::=
+  token                       <entry_token>
+  defining_program_unit_name  <Names>
+  token                       <left_parenthesis_token>
+  [entry_index_specification  <Entry_Index_Specification>]
+  token                       <right_parenthesis_token>
+  token                       <lp_token>
+  {parameter_specification}   <Parameter_Profile>
+  token                       <rp_token>
+  token                       <when_token>
+  expression                  <Entry_Barrier>
+  token                       <is_token>
+  {declarative_item}          <Body_Declarative_Items>
+  token                       <begin_token>
+  {statement}                 <Body_Statements>
+  token                       <exception_token>
+  {exception_handler}         <Body_Exception_Handlers>
+  token                       <end_token>
+  token                       <identifier_token>
+  token                       <semicolon_token>
+;
+
+entry_declaration ::= 
+  token                        <not_token>
+  token                        <overriding_token>
+  token                        <entry_token>
+  defining_identifier          <Names>
+  token                        <left_parenthesis_token>
+  [discrete_subtype_definition <Entry_Family_Definition>]
+  token                        <right_parenthesis_token>
+  token                        <lp_token>
+  {parameter_specification}    <Parameter_Profile>
+  token                        <rp_token>
+  {aspect_specification}       <Aspect_Specifications>
+  token                        <semicolon_token>
+;
+
+entry_index_specification ::=
+  token                       <for_token>
+  defining_identifier         <Names>
+  token                       <in_token>
+  discrete_subtype_definition <Specification_Subtype_Definition>
+;
+
+enumeration_literal ::= token <enumeration_literal_token>;
+
+enumeration_literal_specification ::= defining_enumeration_name <Names>;
+
+enumeration_type_definition ::=
+  token         <left_token>
+  {enumeration_literal_specification} <Enumeration_Literal_Declarations>
+  token         <right_token>
+;
+
+exception_choice ::= program_unit_name | others_choice;
+
+exception_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  token                  <exception_token>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+exception_handler ::= 
+  token <when_token>
+  choice_parameter_specification <Choice_Parameter_Specification>
+  token <colon_token>
+  {exception_choice} <Exception_Choices>
+  token <arrow_token>
+  {statement} <Handler_Statements>
+;
+
+exception_renaming_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  token                  <exception_token>
+  token                  <renames_token>
+  name <Renamed_Entity>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+exit_statement  ::=
+  token                  <exit_token>
+  program_unit_name      <Exit_Loop_Name>
+  token                  <when_token>
+  expression             <Exit_Condition>
+  token                  <semicolon_token>
+;
+
+explicit_dereference ::= name <Prefix> token <dot_token> token <all_token>;
+
+expression ::= membership_test | simple_expression | short_circuit;
+
+expression_or_box ::= expression | box;
+
+extended_return_statement ::=
+  token                       <return_token>
+  return_object_specification <Return_Object_Specification>
+  token                       <do_token>
+  {statement}                 <Extended_Return_Statements>
+  token                       <exception_token>
+  {exception_handler}         <Extended_Return_Exception_Handlers>
+  token                       <end_token>
+  token                       <endreturn>
+  token                       <semicolon_token>;
+
+extension_aggregate ::=
+  token         <left_token>
+  expression    <Extension_Aggregate_Expression>
+  token         <with_token>
+  {association} <Record_Component_Associations>
+  token         <right_token>;
+
+floating_point_definition ::=
+  token                    <digits_token>
+  expression               <Digits_Expression>
+  [simple_expression_range <Real_Range_Constraint>]
+;
+
+for_loop_statement ::= 
+  token                  <Statement_Identifier>
+  token                  <colon_token>
+  token                  <for_token>
+  iterator_specification <Loop_Parameter_Specification>
+  token                  <loop_token>
+  {statement}            <Loop_Statements>
+  token                  <end_token>
+  token                  <end_loop>
+  token                  <identifier_token>
+  token                  <semicolon_token>
+;
+
+formal_access_to_function_definition ::=
+  token                     <not_token>
+  token                     <null_token>
+  token                     <access_token>
+  token                     <protected_token>
+  token                     <function_token>
+  token                     <lp_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token                     <rp_token>
+  token                     <return_token>
+  token                     <return_not_token>
+  token                     <return_null_token>
+  subtype_mark_or_access_definition <Access_To_Function_Result_Subtype>
+;
+
+formal_access_to_object_definition ::=
+  token <not_token>
+  token <null_token>
+  token <access_token>
+  token <constant_token>
+  subtype_indication <subtype_indication>
+;
+
+formal_access_to_procedure_definition ::=
+  token                     <not_token>
+  token                     <null_token>
+  token                     <access_token>
+  token                     <protected_token>
+  token                     <procedure_token>
+  token                     <lp_token>
+  {parameter_specification} <Access_To_Subprogram_Parameter_Profile>
+  token                     <rp_token>
+;
+
+formal_constrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {discrete_subtype_definition} <Discrete_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
+formal_decimal_fixed_point_definition ::=
+  token <delta_token>
+  token <delta_box>
+  token <digits_token>
+  token <digits_box>;
+
+formal_derived_type_definition ::=
+  token                  <abstract_token>
+  token                  <limited_token>
+  token                  <synchronized_token>
+  token                  <new_token>
+  subtype_mark           <Subtype_Mark>
+  token                  <and_token>
+  {subtype_mark}         <Progenitor_List>
+  token                  <with_token>
+  token                  <private_token>
+  {aspect_specification} <Aspect_Specifications>
+;
+
+formal_discrete_type_definition ::=
+  token      <left_parenthesis_token>
+  token      <box_token>
+  token      <right_parenthesis_token>;
+
+formal_floating_point_definition ::=
+  token <digits_token>
+  token <box_token>;
+
+formal_function_declaration ::=
+  token                      <with_token>
+  token                      <function_token>
+  defining_designator        <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <return_token>
+  token                      <return_not_token>
+  token                      <return_null_token>
+  subtype_mark_or_access_definition <Result_Subtype>
+  token                      <is_token>
+  token                      <abstract_token>
+  [name                      <Formal_Subprogram_Default>]
+  token                      <box_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+formal_incomplete_type_declaration ::=
+  token                      <type_token>
+  defining_identifier        <Names>
+  discriminant_part          <Discriminant_Part>
+  token                      <is_token>
+  token                      <tagged_token>
+  token                      <semicolon_token>
+;
+
+formal_interface_type_definition ::=
+    token <kind_token>
+    token <interface_token>
+    {subtype_mark} <Progenitor_List>
+;
+
+formal_modular_type_definition ::=
+  token <mod_token>
+  token <box_token>;
+
+formal_object_declaration ::=
+  {defining_identifier}             <Names>
+  token                             <colon_token>
+  token                             <in_token>
+  token                             <out_token>
+  token                             <not_token>
+  token                             <null_token>
+  subtype_mark_or_access_definition <Object_Declaration_Subtype>
+  token                             <assignment_token>
+  [expression                       <Initialization_Expression>]
+  {aspect_specification}            <Aspect_Specifications>
+  token                             <semicolon_token>
+;
+
+formal_ordinary_fixed_point_definition ::=
+  token <delta_token>
+  token <box_token>;
+
+formal_package_declaration ::=
+  token                      <with_token>
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  token                      <is_token>
+  token                      <new_token>
+  program_unit_name          <Generic_Unit_Name>
+  token                      <left_parenthesis_token>
+  {generic_association}      <Generic_Actual_Part>
+  token                      <right_parenthesis_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+formal_private_type_definition ::=
+  token <abstract_token>
+  token <tagged_token>
+  token <limited_token>
+  token <private_token>;
+
+formal_procedure_declaration ::=
+  token                      <with_token>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <is_token>
+  token                      <abstract_token>
+  token                      <box_token>
+  token                      <null_token>
+  [name                      <Formal_Subprogram_Default>]
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+formal_signed_integer_type_definition ::=
+  token <range_token>
+  token <box_token>;
+
+formal_type_declaration ::=
+  token                  <type_token>
+  defining_identifier    <Names>
+  [discriminant_part     <Discriminant_Part>]
+  token                  <is_token>
+  formal_type_definition <Type_Declaration_View>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+formal_type_definition ::=
+  formal_private_type_definition |
+  formal_derived_type_definition |
+  formal_discrete_type_definition |
+  formal_signed_integer_type_definition |
+  formal_modular_type_definition |
+  formal_floating_point_definition |
+  formal_ordinary_fixed_point_definition |
+  formal_decimal_fixed_point_definition |
+  formal_constrained_array_definition |
+  formal_unconstrained_array_definition |
+  formal_access_to_object_definition |
+  formal_access_to_procedure_definition |
+  formal_access_to_function_definition |
+  formal_interface_type_definition
+;
+
+formal_unconstrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {subtype_mark} <Index_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
+full_type_declaration ::=
+  token         <type_token>
+  defining_identifier <Names>
+  [discriminant_part <Discriminant_Part>]
+  token         <is_token>
+  type_definition <Type_Declaration_View>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+function_body ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <function_token>
+  defining_designator        <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <return_token>
+  token                      <return_not_token>
+  token                      <return_null_token>
+  subtype_mark_or_access_definition <Result_Subtype>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {declarative_item}         <Body_Declarative_Items>
+  token                      <begin_token>
+  {statement}                <Body_Statements>
+  token                      <exception_token>
+  {exception_handler}        <Body_Exception_Handlers>
+  token                      <end_token>
+  [designator                <end_name>]
+  token                      <semicolon_token>
+;
+
+function_call ::= prefix record_aggregate <Function_Call_Parameters>;
+
+function_declaration ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <function_token>
+  defining_designator        <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <return_token>
+  token                      <return_not_token>
+  token                      <return_null_token>
+  subtype_mark_or_access_definition <Result_Subtype>
+  token                      <is_token>
+  token                      <abstract_token>
+  [expression                <Result_Expression>]
+  token                      <renames_token>
+  [expression                <Renamed_Entity>]
+  token                      <separate_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+function_instantiation ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <function_token>
+  defining_designator        <Names>
+  token                      <is_token>
+  token                      <new_token>
+  program_unit_name          <Generic_Unit_Name>
+  token                      <left_parenthesis_token>
+  {generic_association}      <Generic_Actual_Part>
+  token                      <right_parenthesis_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+
+
+library_unit_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  package_declaration |
+  generic_procedure_declaration |
+  generic_function_declaration |
+  generic_package_declaration |
+  package_instantiation |
+  procedure_instantiation |
+  function_instantiation |
+  package_renaming_declaration |
+  generic_package_renaming |
+  generic_procedure_renaming |
+  generic_function_renaming
+;
+
+library_unit_body ::= package_body | function_body | procedure_body;
+
+subunit ::=
+  {context_item}            <Context_Clause_Elements>
+  token                     <separate_token>
+  token                     <left_parenthesis_token>
+  program_unit_name         <parent_unit_name>
+  token                     <right_parenthesis_token>
+  proper_body               <Unit_Declaration>;
+
+
+range_dr ::= range_attribute_reference_dr | simple_expression_range_dr;
+
+range_attribute_reference_dr ::=
+    attribute_reference <Range_Attribute>;
+
+simple_expression_range_dr ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+procedure_call_statement ::=
+  name                    <Called_Name>
+  {parameter_association} <Call_Statement_Parameters>
+  token                   <semicolon_token>;
+
+return_object_specification ::= 
+  defining_identifier <Names>
+  token               <colon_token>
+  token               <aliased_token>
+  token               <constant_token>
+  subtype_indication_or_access_definition <Object_Declaration_Subtype>
+  token               <assignment_token>
+  [expression         <Initialization_Expression>]
+;
+
+
+
+generic_association ::=
+  generic_formal_parameter <Formal_Parameter>
+  token                    <arrow_token>
+  expression               <Actual_Parameter>
+  token                    <box_token>
+;
+
+generic_formal ::=
+  use_clause |
+  pragma_node |
+  formal_object_declaration |
+  formal_type_declaration |
+  formal_incomplete_type_declaration |
+  formal_procedure_declaration |
+  formal_function_declaration |
+  formal_package_declaration;
+
+generic_formal_parameter ::= selector_name | others_choice;
+
+generic_function_declaration ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <function_token>
+  defining_designator        <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <return_token>
+  token                      <return_not_token>
+  token                      <return_null_token>
+  subtype_mark_or_access_definition <Result_Subtype>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+generic_package_declaration ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {basic_declarative_item}   <Visible_Part_Declarative_Items>
+  token                      <private_token>
+  {basic_declarative_item}   <Private_Part_Declarative_Items>
+  token                      <end_token>
+  [program_unit_name         <end_name>]
+  token                      <semicolon_token>
+;
+
+generic_package_renaming ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  token                      <renames_token>
+  name                       <Renamed_Entity>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+generic_procedure_renaming ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <renames_token>
+  name                       <Renamed_Entity>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+generic_function_renaming ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <function_token>
+  defining_program_unit_name <Names>
+  token                      <renames_token>
+  name                       <Renamed_Entity>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+generic_procedure_declaration ::=
+  token                      <generic_token>
+  {generic_formal}           <Generic_Formal_Part>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+goto_statement  ::=
+  token                  <exit_token>
+  program_unit_name      <Goto_Label>
+  token                  <semicolon_token>
+;
+
+identifier ::= token <identifier_token>;
+
+if_expression_path ::=
+    token <if_token>
+    expression <Condition_Expression>
+    token <then_token>
+    expression <Dependent_Expression>
+;
+
+if_else_expression_path ::=
+  if_expression_path | elsif_expression_path | else_expression_path;
+
+if_expression ::= {if_else_expression_path} <Expression_Paths>;
+
+incomplete_type_declaration ::=
+  token                      <type_token>
+  defining_identifier        <Names>
+  [discriminant_part         <Discriminant_Part>]
+  token                      <is_token>
+  incomplete_type_definition <Type_Declaration_View>
+  token                      <semicolon_token>
+;
+
+incomplete_type_definition ::= token <tagged_token>;
+
+interface_type_definition ::=
+    token <kind_token>
+    token <interface_token>
+    {subtype_mark} <Progenitor_List>
+;
+
+ordinary_fixed_point_definition ::=
+  token                   <delta_token>
+  expression              <Delta_Expression>
+  simple_expression_range <Real_Range_Constraint>
+;
+
+
+quantified_expression ::=
+  token <for_token>
+  token <quantifier_token>
+  iterator_specification
+  token <arrow_token>
+  expression <predicate>
+;
+
+if_elsif_else_path ::= if_path | elsif_path | else_path;
+
+if_path ::=
+  token       <if_token>
+  expression  <Condition_Expression>
+  token       <then_token>
+  {statement} <Sequence_Of_Statements>
+;
+
+if_statement ::=
+  {if_elsif_else_path} <Statement_Paths>
+  token                <end_token>
+  token                <if_token>
+  token                <semicolon_token>
+;
+
+
+iterator_specification ::=
+  generalized_iterator_specification |
+  element_iterator_specification |
+  loop_parameter_specification
+;
+
+generalized_iterator_specification ::=
+   defining_identifier <Names>
+   token <in_token>
+   token <reverse_token>
+   name <Iteration_Scheme_Name>;
+
+loop_parameter_specification ::=
+  defining_identifier         <Names>
+  token                       <in_token>
+  token                       <reverse_token>
+  discrete_subtype_definition <Specification_Subtype_Definition>
+;
+
+loop_statement ::= 
+  token        <Statement_Identifier>
+  token        <colon_token>
+  token        <loop_token>
+  {statement}  <Loop_Statements>
+  token        <end_token>
+  token        <end_loop>
+  token        <identifier_token>
+  token        <semicolon_token>
+;
+
+while_loop_statement ::= 
+  token        <Statement_Identifier>
+  token        <colon_token>
+  token        <while_token>
+  expression   <While_Condition>
+  token        <loop_token>
+  {statement}  <Loop_Statements>
+  token        <end_token>
+  token        <end_loop>
+  token        <identifier_token>
+  token        <semicolon_token>
+;
+
+known_discriminant_part ::= 
+  token                        <left_parenthesis_token>
+  {discriminant_specification} <Discriminants>
+  token                        <right_parenthesis_token>;
+
+membership_test ::=
+  simple_expression <Membership_Test_Expression>
+  token <not_token>
+  token <in_token>
+  {membership_choice} <Membership_Test_Choices>
+;
+
+membership_choice ::= simple_expression | range_constraint;
+
+modular_type_definition ::=
+  token <mod_token>
+  expression <Mod_Static_Expression>;
+
+name ::= direct_name |
+  explicit_dereference |
+  selected_component |
+  attribute_reference |
+  function_call |
+  character_literal |
+  qualified_expression;
+
+null_component ::= token <null_token> token <semicolon_token>;
+
+null_literal ::= token <null_literal_token>;
+
+null_record_definition ::=
+  token <null_token>
+  token <record_token>;
+
+label_decorator ::=
+  {defining_identifier} <Label_Names>
+  statement             <Unlabeled_Statement>;
+
+null_statement ::=
+  token <null_token>
+  token <semicolon_token>;
+
+number_declaration ::= 
+  {defining_identifier} <Names>
+  token                 <colon_token>
+  token                 <constant_token>
+  token                 <assignment_token>
+  expression            <Initialization_Expression>
+  token                 <semicolon_token>
+;
+
+numeric_literal ::= token <numeric_literal_token>;
+
+object_declaration ::=
+  {defining_identifier}  <Names>
+  token                  <colon_token>
+  token                  <aliased_token>
+  token                  <constant_token>
+  object_definition      <Object_Declaration_Subtype>
+  token                  <assignment_token>
+  [expression            <Initialization_Expression>]
+  {aspect_specification} <Aspect_Specifications>
+  token                  <semicolon_token>
+;
+
+object_definition ::=
+  subtype_indication |
+  access_definition |
+  unconstrained_array_definition |
+  constrained_array_definition;
+
+object_renaming_declaration ::=
+  {defining_identifier} <Names>
+  token <colon_token>
+  token <not_token>
+  token <null_token>
+  subtype_mark_or_access_definition <Object_Declaration_Subtype>
+  token <renames_token>
+  name <Renamed_Entity>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+operator_symbol ::= token <operator_symbol_token>;
+
+others_choice ::= token <others_token>;
+
+package_body ::=
+  token                      <package_token>
+  token                      <body_token>
+  defining_program_unit_name <Names>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {declarative_item}         <Body_Declarative_Items>
+  token                      <begin_token>
+  {statement}                <Body_Statements>
+  token                      <exception_token>
+  {exception_handler}        <Body_Exception_Handlers>
+  token                      <end_token>
+  [program_unit_name         <end_name>]
+  token                      <semicolon_token>
+;
+
+package_body_stub ::=
+  token                      <package_token>
+  token                      <body_token>
+  defining_program_unit_name <Names>
+  token                      <is_token>
+  token                      <separate_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+package_declaration ::=
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {basic_declarative_item}   <Visible_Part_Declarative_Items>
+  token                      <private_token>
+  {basic_declarative_item}   <Private_Part_Declarative_Items>
+  token                      <end_token>
+  [program_unit_name         <end_name>]
+  token                      <semicolon_token>
+;
+
+package_instantiation ::=
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  token                      <is_token>
+  token                      <new_token>
+  program_unit_name          <Generic_Unit_Name>
+  token                      <left_parenthesis_token>
+  {generic_association}      <Generic_Actual_Part>
+  token                      <right_parenthesis_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+package_renaming_declaration ::=
+  token                      <package_token>
+  defining_program_unit_name <Names>
+  token                      <renames_token>
+  name                       <Renamed_Entity>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+parameter_association ::=
+  identifier <Formal_Parameter>
+  expression <Actual_Parameter>
+;
+
+parameter_specification ::=
+  {defining_identifier}             <Names>
+  token                             <colon_token>
+  token                             <aliased_token>
+  token                             <in_token>
+  token                             <out_token>
+  token                             <not_token>
+  token                             <null_token>
+  subtype_mark_or_access_definition <Object_Declaration_Subtype>
+  token                             <assignment_token>
+  [expression                       <Initialization_Expression>]
+;
+
+pragma_node ::=
+  token         <pragma_token>
+  identifier    <Formal_Parameter>
+  token         <left_token>
+  {pragma_argument_association} <Pragma_Argument_Associations>
+  token         <right_token>
+  token <semicolon_token>
+;
+
+pragma_argument_association ::=
+    identifier <Formal_Parameter>
+    token      <arrow_token>
+    expression <Actual_Parameter>
+;
+
+prefix ::= name;
+
+private_extension_declaration ::=
+  token                        <type_token>
+  defining_identifier          <Names>
+  [discriminant_part           <Discriminant_Part>]
+  token                        <is_token>
+  private_extension_definition <Type_Declaration_View>
+  {aspect_specification}       <Aspect_Specifications>
+  token                        <semicolon_token>
+;
+
+private_extension_definition ::=
+  token              <abstract_token>
+  token              <limited_token>
+  token              <synchronized_token>
+  token              <new_token>
+  subtype_indication <Ancestor_Subtype_Indication>
+  {subtype_mark}     <Progenitor_List>
+  token              <with_token>
+  token              <private_token>
+;
+
+private_type_declaration ::=
+  token                      <type_token>
+  defining_identifier        <Names>
+  [discriminant_part         <Discriminant_Part>]
+  token                      <is_token>
+  private_type_definition    <Type_Declaration_View>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+private_type_definition ::=
+  token <abstract_token>
+  token <tagged_token>
+  token <limited_token>
+  token <private_token>;
+
+procedure_body ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {declarative_item}         <Body_Declarative_Items>
+  token                      <begin_token>
+  {statement}                <Body_Statements>
+  token                      <exception_token>
+  {exception_handler}        <Body_Exception_Handlers>
+  token                      <end_token>
+  [program_unit_name         <end_name>]
+  token                      <semicolon_token>
+;
+
+procedure_declaration ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <lp_token>
+  {parameter_specification}  <Parameter_Profile>
+  token                      <rp_token>
+  token                      <is_token>
+  token                      <abstract_token>
+  token                      <renames_token>
+  [expression                <Renamed_Entity>]
+  token                      <separate_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+procedure_instantiation ::=
+  token                      <not_token>
+  token                      <overriding_token>
+  token                      <procedure_token>
+  defining_program_unit_name <Names>
+  token                      <is_token>
+  token                      <new_token>
+  program_unit_name          <Generic_Unit_Name>
+  token                      <left_parenthesis_token>
+  {generic_association}      <Generic_Actual_Part>
+  token                      <right_parenthesis_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+program_unit_name ::= identifier | selected_identifier;
+
+proper_body ::= 
+  procedure_body |
+  function_body |
+  package_body |
+  task_body |
+  protected_body;
+
+protected_body ::= 
+  token                      <protected_token>
+  token                      <body_token>
+  defining_identifier        <Names>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {protected_operation_item} <Protected_Operation_Items>
+  token                      <end_token>
+  token                      <identifier_token>
+  token                      <semicolon_token>
+;
+
+protected_body_stub ::=
+  token                      <protected_token>
+  token                      <body_token>
+  defining_identifier        <Names>
+  token                      <is_token>
+  token                      <separate_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+protected_definition ::=
+  {protected_operation_declaration} <Visible_Protected_Items>
+  token                             <private_token>
+  {protected_element_declaration}   <Private_Protected_Items>
+  token                             <end_token>
+  token                             <identifier_token>
+;
+
+protected_element_declaration ::=
+  protected_operation_declaration |
+  component_declaration;
+
+protected_operation_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  entry_declaration |
+  aspect_clause;
+
+protected_operation_item ::=
+  procedure_declaration |
+  function_declaration |
+  procedure_body |
+  function_body |
+  entry_body |
+  aspect_clause
+;
+
+protected_type_declaration ::= 
+  token                    <protected_token>
+  token                    <type_token>
+  defining_identifier      <Names>
+  [known_discriminant_part <Discriminant_Part>]
+  {aspect_specification}   <Aspect_Specifications>
+  token                    <is_token>
+  token                    <new_token>
+  {subtype_mark}           <Progenitor_List>
+  token                    <with_token>
+  protected_definition     <Type_Declaration_View>
+  token                    <semicolon_token>
+;
+
+qualified_expression ::=
+  subtype_mark <Converted_Or_Qualified_Subtype_Mark>
+  token <apostrophe_token>
+  expression <Converted_Or_Qualified_Expression>;
+
+raise_statement ::=
+  token      <raise_token>
+  name       <Raised_Exception>
+  token      <with_token>
+  expression <Raise_Statement_Message>
+  token      <semicolon_token>
+;
+
+range_constraint ::= range_attribute_reference | simple_expression_range;
+
+range_attribute_reference ::=
+  attribute_reference <Range_Attribute>;
+
+record_aggregate ::=
+  token         <left_token>
+  {association} <Record_Component_Associations>
+  token         <right_token>;
+
+record_definition ::=
+  token <record_token>
+    {component_item} <Record_Components>
+  token <end_token>
+  token <end_record_token>
+;
+
+record_representation_clause ::=
+  token              <for_token>
+  identifier         <Representation_Clause_Name>
+  token              <use_token>
+  token              <record_token>
+  token              <at_token>
+  token              <mod_token>
+  [expression        <Mod_Clause_Expression>]
+  token              <mod_semicolon>
+  {clause_or_pragma} <Component_Clauses>
+  token              <end_token>
+  token              <end_record>
+  token              <semicolon_token>
+;
+
+record_type_definition ::=
+  token <abstract_token>
+  token <tagged_token>
+  token <limited_token>
+  alt_record_definition <Record_Definition>
+;
+
+requeue_statement ::=
+  token <requeue_token>
+  name  <Requeue_Entry_Name>
+  token <with_token>
+  token <abort_token>
+  token <semicolon_token>
+;
+
+scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
+
+simple_expression_range ::=
+  simple_expression <Lower_Bound>
+  token <double_dot_token>
+  simple_expression <Upper_Bound>
+;
+
+select_or_else_path ::= select_or_path | else_path;
+
+select_or_path ::=
+    token      <or_token>
+    token      <when_token>
+    expression <Guard>
+    token      <arrow_token>
+    {statement} <Sequence_Of_Statements>
+;
+
+select_then_abort_path ::= select_or_path | then_abort_path;
+
+selected_component ::= prefix token <dot_token> selector_name <Selector>;
+
+selected_identifier ::=
+  program_unit_name <Prefix> token <dot_token> selector_name <Selector>;
+
+selective_accept ::=
+  token                 <select_token>
+  {select_or_else_path} <Selective_Statement_Paths>
+  token                 <end_token>
+  token                 <end_select>
+  token                 <semicolon_token>
+;
+
+selector_name ::=
+  identifier |
+  enumeration_literal |
+  character_literal |
+  operator_symbol;
+
+short_circuit ::=
+  expression <Short_Circuit_Operation_Left_Expression>
+  token <and_token>
+  token <then_token>
+  expression <Short_Circuit_Operation_Right_Expression>;
+
+signed_integer_type_definition ::=
+  token <range_token>
+  simple_expression_range <Integer_Constraint>
+;
+
+simple_expression ::=
+    numeric_literal |
+    null_literal |
+    record_aggregate |
+    extension_aggregate |
+    name |
+    allocator |
+    if_expression |
+    case_expression |
+    quantified_expression;
+
+simple_return_statement ::=
+  token      <return_token>
+  expression <Return_Expression>
+  token      <semicolon_token>
+;
+
+single_protected_declaration ::=
+  token                  <protected_token>
+  defining_identifier    <Names>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <is_token>
+  token                  <new_token>
+  {subtype_mark}         <Progenitor_List>
+  token                  <with_token>
+  protected_definition   <Object_Declaration_Subtype>
+  token                  <semicolon_token>
+;
+
+single_task_declaration ::=
+  token                  <task_token>
+  defining_identifier    <Names>
+  {aspect_specification} <Aspect_Specifications>
+  token                  <is_token>
+  token                  <new_token>
+  {subtype_mark}         <Progenitor_List>
+  token                  <with_token>
+  [task_definition       <Object_Declaration_Subtype>]
+  token                  <semicolon_token>
+;
+
+statement ::=
+  label_decorator |
+  null_statement |
+  assignment_statement |
+  exit_statement |
+  goto_statement |
+  simple_return_statement |
+  procedure_call_statement |
+  requeue_statement |
+  delay_statement |
+  terminate_alternative_statement |
+  abort_statement |
+  raise_statement |
+  pragma_node |
+  if_statement |
+  case_statement |
+  loop_statement |
+  while_loop_statement |
+  for_loop_statement |
+  block_statement |
+  extended_return_statement |
+  accept_statement |
+  selective_accept |
+  asynchronous_select;
+
+subtype_declaration ::=
+  token <subtype_token>
+  defining_identifier <Names>
+  token <is_token>
+  subtype_indication <Type_Declaration_View>
+  {aspect_specification} <Aspect_Specifications>
+  token <semicolon_token>
+;
+
+subtype_indication ::=
+  token <not_token>
+  token <null_token>
+  subtype_mark
+  [constraint <Subtype_Constraint>];
+
+subtype_indication_or_access_definition ::=
+  subtype_indication | access_definition;
+
+subtype_mark ::= identifier |
+  selected_identifier |
+  selected_component |
+  attribute_reference |
+  function_call;
+
+subtype_mark_or_access_definition ::= subtype_mark | access_definition;
+
+task_body ::= 
+  token                      <task_token>
+  token                      <body_token>
+  defining_identifier        <Names>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <is_token>
+  {declarative_item}         <Body_Declarative_Items>
+  token                      <begin_token>
+  {statement}                <Body_Statements>
+  token                      <exception_token>
+  {exception_handler}        <Body_Exception_Handlers>
+  token                      <end_token>
+  token                      <identifier_token>
+  token                      <semicolon_token>
+;
+
+task_body_stub ::=
+  token                      <task_token>
+  token                      <body_token>
+  defining_identifier        <Names>
+  token                      <is_token>
+  token                      <separate_token>
+  {aspect_specification}     <Aspect_Specifications>
+  token                      <semicolon_token>
+;
+
+task_definition ::= 
+  {task_item}   <Visible_Task_Items>
+  token         <private_token>
+  {task_item}   <Private_Task_Items>
+  token         <end_token>
+  token         <identifier_token>
+;
+
+task_item ::= entry_declaration | aspect_clause;
+
+task_type_declaration ::= 
+  token                    <task_token>
+  token                    <type_token>
+  defining_identifier      <Names>
+  [known_discriminant_part <Discriminant_Part>]
+  {aspect_specification}   <Aspect_Specifications>
+  token                    <is_token>
+  token                    <new_token>
+  {subtype_mark}           <Progenitor_List>
+  token                    <with_token>
+  [task_definition         <Type_Declaration_View>]
+  token                    <semicolon_token>
+;
+
+terminate_alternative_statement ::=
+  token <terminate_token>
+  token <semicolon_token>;
+
+then_abort_path ::= 
+    token      <then_token>
+    token      <abort_token>
+    {statement} <Sequence_Of_Statements>
+;
+
+type_definition ::=
+  enumeration_type_definition |
+  signed_integer_type_definition |
+  modular_type_definition |
+  floating_point_definition |
+  ordinary_fixed_point_definition |
+  decimal_fixed_point_definition |
+  unconstrained_array_definition |
+  constrained_array_definition |
+  record_type_definition |
+  access_to_object_definition |
+  access_to_function_definition |
+  access_to_procedure_definition |
+  derived_type_definition |
+  derived_record_definition |
+  interface_type_definition;
+
+unconstrained_array_definition ::=
+    token <array_token>
+    token <left_token>
+    {subtype_mark} <Index_Subtype_Definitions>
+    token <right_token>
+    token <of_token>
+    component_definition <Array_Component_Definition>
+;
+
+unknown_discriminant_part ::=
+    token <left_token>
+    token <box_token>
+    token <right_token>
+;
+
+use_clause ::= use_package_clause | use_type_clause;
+
+use_package_clause ::=
+  token <use_token>
+  {program_unit_name} <Clause_Names>
+  token <semicolon_token>
+;
+
+use_type_clause ::=
+  token <use_token>
+  token <all_token>
+  token <type_token>
+  {subtype_mark} <Type_Clause_Names>
+  token <semicolon_token>
+;
+
+variant_part ::=
+  token <case_token>
+  identifier <Discriminant_Direct_Name>
+  token <is_token>
+  {variant} <Variants>
+  token <end_token>
+  token <end_case_token>
+  token <semicolon_token>
+;
+
+variant ::=
+  token <when_token>
+  {discrete_choice} <Variant_Choices>
+  token <arrow_token>
+  {component_item} <Record_Components>
+;
+
+with_clause ::=
+  token <limited_token>
+  token <private_token>
+  token <with_token>
+  {program_unit_name} <With_Clause_Names>
+  token <semicolon_token>
+;
+
+defining_name ::= defining_identifier |
+  defining_character_literal |
+  defining_operator_symbol |
+  defining_enumeration_literal |
+  defining_program_unit_name;
+
+declarative_region ::=
+  basic_declaration |
+  discriminant_specification |
+  component_declaration |
+  iterator_specification |
+  parameter_specification |
+  function_body |
+  procedure_body |
+  return_object_specification |
+  entry_declaration |
+  entry_index_specification |
+  choice_parameter_specification |
+  formal_object_declaration |
+  formal_type_declaration |
+  formal_incomplete_type_declaration |
+  formal_procedure_declaration |
+  formal_function_declaration |
+  formal_package_declaration |
+  block_statement |
+  loop_statement |
+  while_loop_statement |
+  for_loop_statement |
+  extended_return_statement |
+  accept_statement |
+  exception_handler;
+
+simple_name ::=
+  identifier |
+  operator_symbol |
+  character_literal |
+  enumeration_literal;
+
+Synthesized attributes
+  token  : Gela.Lexical_Types.Token_Count : Index;

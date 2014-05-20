@@ -1,0 +1,892 @@
+Inherited attributes
+  access_definition,
+  access_to_function_definition,
+  access_to_object_definition,
+  access_to_procedure_definition,
+  allocator,
+  anonymous_access_to_function_definition,
+  anonymous_access_to_object_definition,
+  anonymous_access_to_procedure_definition,
+  attribute_reference,
+  box,
+  case_expression,
+  character_literal,
+  clause_name,
+  composite_constraint,
+  constrained_array_definition,
+  constraint,
+  decimal_fixed_point_definition,
+  delta_constraint,
+  derived_record_definition,
+  derived_type_definition,
+  designator,
+  digits_constraint,
+  direct_name,
+  discrete_choice,
+  discrete_range,
+  discrete_subtype_indication_dr,
+  enumeration_literal,
+  enumeration_type_definition,
+  exception_choice,
+  explicit_dereference,
+  expression,
+  expression_or_box,
+  extension_aggregate,
+  floating_point_definition,
+  function_call,
+  generic_formal_parameter,
+  identifier,
+  if_expression,
+  interface_type_definition,
+  membership_choice,
+  membership_test,
+  modular_type_definition,
+  name,
+  null_literal,
+  numeric_literal,
+  object_definition,
+  operator_symbol,
+  ordinary_fixed_point_definition,
+  others_choice,
+  prefix,
+  program_unit_name,
+  qualified_expression,
+  quantified_expression,
+  range_attribute_reference,
+  range_attribute_reference_dr,
+  range_constraint,
+  range_dr,
+  record_aggregate,
+  record_type_definition,
+  scalar_constraint,
+  selected_component,
+  selected_identifier,
+  selector_name,
+  short_circuit,
+  signed_integer_type_definition,
+  simple_expression,
+  simple_expression_range,
+  simple_expression_range_dr,
+  simple_name,
+  subtype_indication,
+  subtype_indication_or_access_definition,
+  subtype_mark,
+  subtype_mark_or_access_definition,
+  type_definition,
+  unconstrained_array_definition : Gela.Interpretations.Interpretation_Index : Down;
+
+
+Rules for accept_statement. :
+(.
+      ${Accept_Entry_Direct_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for accept_statement. :
+(.
+      ${Accept_Entry_Index.Down} := 0;  --  FIXME
+.)
+
+Rules for at_clause. :
+(.
+      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for at_clause. :
+(.
+      ${Representation_Clause_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for attribute_definition_clause. :
+(.
+      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for attribute_definition_clause. :
+(.
+      ${Representation_Clause_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for attribute_reference. :
+(.
+      ${Attribute_Designator_Identifier.Down} := 0;  --  FIXME
+.)
+
+Rules for attribute_reference. :
+(.
+      ${Attribute_Designator_Expressions.Down} := 0;  --  FIXME
+.)
+
+Rules for attribute_reference. :
+(.
+      ${prefix.Down} := 0;  --  FIXME
+.)
+
+Rules for component_clause. :
+(.
+      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for Aborted_Tasks.name :
+(.
+      ${name.Down} := 0;  --  FIXME
+.)
+
+Rules for allocator. :
+(.
+      ${Subpool_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for allocator. :
+(.
+      ${Subtype_Or_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for aspect_specification. :
+(.
+      ${Aspect_Definition.Down} := 0;  --  FIXME
+.)
+
+Rules for assignment_statement. :
+(.
+      ${Assignment_Variable_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for assignment_statement. :
+(.
+      ${Assignment_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for association. :
+(.
+      ${Component_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for case_expression. :
+(.
+      ${expression.Down} := 0;  --  FIXME
+.)
+
+Rules for case_expression_path. :
+(.
+      ${Dependent_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for case_statement. :
+(.
+      ${Case_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for component_clause. :
+(.
+      ${Component_Clause_Position.Down} := 0;  --  FIXME
+.)
+
+Rules for component_declaration. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for decimal_fixed_point_definition. :
+(.
+      ${Delta_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for decimal_fixed_point_definition. :
+(.
+      ${Digits_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for delay_statement. :
+(.
+      ${Delay_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for delta_constraint. :
+(.
+      ${Delta_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for digits_constraint. :
+(.
+      ${Digits_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${discrete_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for Case_Path_Alternative_Choices.discrete_choice :
+(.
+      ${discrete_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for Case_Statement_Alternative_Choices.discrete_choice :
+(.
+      ${discrete_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${discrete_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_simple_expression_range. :
+(.
+      ${Lower_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_simple_expression_range. :
+(.
+      ${Upper_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for discriminant_specification. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for element_iterator_specification. :
+(.
+      ${Iteration_Scheme_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for else_expression_path. :
+(.
+      ${Dependent_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for elsif_expression_path. :
+(.
+      ${Condition_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for elsif_expression_path. :
+(.
+      ${Dependent_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for elsif_path. :
+(.
+      ${Condition_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for entry_body. :
+(.
+      ${Entry_Barrier.Down} := 0;  --  FIXME
+.)
+
+Rules for exception_renaming_declaration. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for exit_statement. :
+(.
+      ${Exit_Condition.Down} := 0;  --  FIXME
+.)
+
+Rules for explicit_dereference. :
+(.
+      ${Prefix.Down} := 0;  --  FIXME
+.)
+
+Rules for extension_aggregate. :
+(.
+      ${Extension_Aggregate_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for floating_point_definition. :
+(.
+      ${Digits_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_function_declaration. :
+(.
+      ${Formal_Subprogram_Default.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_object_declaration. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_procedure_declaration. :
+(.
+      ${Formal_Subprogram_Default.Down} := 0;  --  FIXME
+.)
+
+Rules for function_call. :
+(.
+      ${prefix.Down} := 0;  --  FIXME
+.)
+
+Rules for function_declaration. :
+(.
+      ${Result_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for function_declaration. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for generalized_iterator_specification. :
+(.
+      ${Iteration_Scheme_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_association. :
+(.
+      ${Actual_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_function_renaming. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_package_renaming. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_procedure_renaming. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for if_expression_path. :
+(.
+      ${Condition_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for if_expression_path. :
+(.
+      ${Dependent_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for if_path. :
+(.
+      ${Condition_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${membership_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for membership_test. :
+(.
+      ${Membership_Test_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for modular_type_definition. :
+(.
+      ${Mod_Static_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for number_declaration. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for object_declaration. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for object_renaming_declaration. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for ordinary_fixed_point_definition. :
+(.
+      ${Delta_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for package_renaming_declaration. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for parameter_association. :
+(.
+      ${Formal_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for parameter_association. :
+(.
+      ${Actual_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for parameter_specification. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for pragma_argument_association. :
+(.
+      ${Formal_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for pragma_argument_association. :
+(.
+      ${Actual_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for pragma_node. :
+(.
+      ${Formal_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for procedure_call_statement. :
+(.
+      ${Called_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for procedure_declaration. :
+(.
+      ${Renamed_Entity.Down} := 0;  --  FIXME
+.)
+
+Rules for Clause_Names.program_unit_name :
+(.
+      ${program_unit_name.Down} := 0;  --  FIXME
+.)
+
+Rules for With_Clause_Names.program_unit_name :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${With_Clause_Names.env_in}, ${program_unit_name.Up}, ${program_unit_name.Down});
+.)
+
+Rules for defining_expanded_unit_name. :
+(.
+      ${Defining_Prefix.Down} := 0;  --  FIXME
+.)
+
+Rules for Exception_Choices.exception_choice :
+(.
+      ${exception_choice.Down} := 0;  --  FIXME
+.)
+
+Rules for exit_statement. :
+(.
+      ${Exit_Loop_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_package_declaration. :
+(.
+      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for function_body. :
+(.
+      ${end_name.Down} := 0;  --  FIXME
+.)
+
+Rules for function_instantiation. :
+(.
+      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_package_declaration. :
+(.
+      ${end_name.Down} := 0;  --  FIXME
+.)
+
+Rules for goto_statement. :
+(.
+      ${Goto_Label.Down} := 0;  --  FIXME
+.)
+
+Rules for package_body. :
+(.
+      ${end_name.Down} := 0;  --  FIXME
+.)
+
+Rules for package_declaration. :
+(.
+      ${end_name.Down} := 0;  --  FIXME
+.)
+
+Rules for package_instantiation. :
+(.
+      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for procedure_body. :
+(.
+      ${end_name.Down} := 0;  --  FIXME
+.)
+
+Rules for procedure_instantiation. :
+(.
+      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for qualified_expression. :
+(.
+      ${Converted_Or_Qualified_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for quantified_expression. :
+(.
+      ${predicate.Down} := 0;  --  FIXME
+.)
+
+Rules for raise_statement. :
+(.
+      ${Raised_Exception.Down} := 0;  --  FIXME
+.)
+
+Rules for raise_statement. :
+(.
+      ${Raise_Statement_Message.Down} := 0;  --  FIXME
+.)
+
+Rules for record_representation_clause. :
+(.
+      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for record_representation_clause. :
+(.
+      ${Mod_Clause_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for requeue_statement. :
+(.
+      ${Requeue_Entry_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for return_object_specification. :
+(.
+      ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for select_or_path. :
+(.
+      ${Guard.Down} := 0;  --  FIXME
+.)
+
+Rules for selected_component. :
+(.
+      ${prefix.Down} := ${selected_component.Down};  --  FIXME
+.)
+
+Rules for selected_identifier. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Down_Selected_Component
+        (${selected_identifier.Down}, ${Prefix.Down});
+.)
+
+Rules for selected_identifier. :
+(.
+      ${Selector.Down} := ${selected_identifier.Down};
+.)
+
+Rules for generic_association. :
+(.
+      ${Formal_Parameter.Down} := 0;  --  FIXME
+.)
+
+Rules for selected_component. :
+(.
+      ${Selector.Down} := 0;  --  FIXME
+.)
+
+Rules for short_circuit. :
+(.
+      ${Short_Circuit_Operation_Left_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for short_circuit. :
+(.
+      ${Short_Circuit_Operation_Right_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for simple_expression_range. :
+(.
+      ${Lower_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for simple_expression_range. :
+(.
+      ${Upper_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for simple_expression_range_dr. :
+(.
+      ${Lower_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for simple_expression_range_dr. :
+(.
+      ${Upper_Bound.Down} := 0;  --  FIXME
+.)
+
+Rules for simple_return_statement. :
+(.
+      ${Return_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for subunit. :
+(.
+      ${parent_unit_name.Down} := 0;  --  FIXME
+.)
+
+Rules for variant_part. :
+(.
+      ${Discriminant_Direct_Name.Down} := 0;  --  FIXME
+.)
+
+Rules for while_loop_statement. :
+(.
+      ${While_Condition.Down} := 0;  --  FIXME
+.)
+
+Rules for Index_Subtype_Definitions.subtype_mark :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Index_Subtype_Definitions.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+.)
+
+Rules for Progenitor_List.subtype_mark :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Progenitor_List.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+.)
+
+Rules for Type_Clause_Names.subtype_mark :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${Type_Clause_Names.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+.)
+
+Rules for access_to_function_definition. :
+(.
+      ${Access_To_Function_Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_function_definition. :
+(.
+      ${Access_To_Function_Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_object_definition. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${anonymous_access_to_object_definition.env_in}, ${Anonymous_Access_To_Object_Subtype_Mark.Up}, ${Anonymous_Access_To_Object_Subtype_Mark.Down});
+.)
+
+Rules for aspect_specification. :
+(.
+      ${Aspect_Mark.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_subtype_indication. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${discrete_subtype_indication.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+.)
+
+Rules for discrete_subtype_indication_dr. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${discrete_subtype_indication_dr.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+.)
+
+Rules for discriminant_specification. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_access_to_function_definition. :
+(.
+      ${Access_To_Function_Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_derived_type_definition. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${formal_derived_type_definition.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+.)
+
+Rules for formal_function_declaration. :
+(.
+      ${Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_object_declaration. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for function_body. :
+(.
+      ${Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for function_declaration. :
+(.
+      ${Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for generic_function_declaration. :
+(.
+      ${Result_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for object_renaming_declaration. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for qualified_expression. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${qualified_expression.env_in}, ${Converted_Or_Qualified_Subtype_Mark.Up}, ${Converted_Or_Qualified_Subtype_Mark.Down});
+.)
+
+Rules for subtype_indication. :
+(.
+      --  3.2.2 (8)
+      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
+        (${subtype_indication.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+.)
+
+Rules for parameter_specification. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_range_attribute_reference.Range_Attribute :
+(.
+      ${Range_Attribute.Down} := 0;  --  FIXME
+.)
+
+Rules for range_attribute_reference.Range_Attribute :
+(.
+      ${Range_Attribute.Down} := 0;  --  FIXME
+.)
+
+Rules for range_attribute_reference_dr.Range_Attribute :
+(.
+      ${Range_Attribute.Down} := 0;  --  FIXME
+.)
+
+Rules for delta_constraint. :
+(.
+      ${Real_Range_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for digits_constraint. :
+(.
+      ${Real_Range_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_subtype_indication. :
+(.
+      ${Subtype_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for discrete_subtype_indication_dr. :
+(.
+      ${Subtype_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for subtype_indication. :
+(.
+      ${Subtype_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for function_call. :
+(.
+      ${Function_Call_Parameters.Down} := 0;  --  FIXME
+.)
+
+Rules for decimal_fixed_point_definition. :
+(.
+      ${Real_Range_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for floating_point_definition. :
+(.
+      ${Real_Range_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for ordinary_fixed_point_definition. :
+(.
+      ${Real_Range_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for signed_integer_type_definition. :
+(.
+      ${Integer_Constraint.Down} := 0;  --  FIXME
+.)
+
+Rules for access_to_object_definition. :
+(.
+      ${subtype_indication.Down} := 0;  --  FIXME
+.)
+
+Rules for component_definition. :
+(.
+      ${Component_Subtype_Indication.Down} := 0;  --  FIXME
+.)
+
+Rules for derived_record_definition. :
+(.
+      ${Parent_Subtype_Indication.Down} := 0;  --  FIXME
+.)
+
+Rules for derived_type_definition. :
+(.
+      ${Parent_Subtype_Indication.Down} := 0;  --  FIXME
+.)
+
+Rules for element_iterator_specification. :
+(.
+      ${subtype_indication.Down} := 0;  --  FIXME
+.)
+
+Rules for formal_access_to_object_definition. :
+(.
+      ${subtype_indication.Down} := 0;  --  FIXME
+.)
+
+Rules for full_type_declaration. :
+(.
+      ${Type_Declaration_View.Down} := 0;  --  FIXME
+.)
+
+Rules for object_declaration. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for private_extension_definition. :
+(.
+      ${Ancestor_Subtype_Indication.Down} := 0;  --  FIXME
+.)
+
+Rules for return_object_specification. :
+(.
+      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+.)
+
+Rules for subtype_declaration. :
+(.
+      ${Type_Declaration_View.Down} := 0;  --  FIXME
+.)

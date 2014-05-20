@@ -2,7 +2,7 @@ GELA_BUILD=$(abspath build)
 AG_DRIVER=$(GELA_BUILD)/ag/ag_driver
 YACC_DRIVER=$(GELA_BUILD)/ag/yacc_driver
 UAFLEX=$(GELA_BUILD)/tools/uaflex-driver
-AST=src/asis/context/ada-ast.ag
+AST=$(GELA_BUILD)/ada-ast.ag
 AST_STAMP=$(GELA_BUILD)/.stamp-ast
 SYNTAX=src/asis/sourcer/ada-lalr.ag
 BUILD_CHOP=$(GELA_BUILD)/chop
@@ -22,6 +22,9 @@ $(AST_STAMP): $(AG_DRIVER) $(AST)
 	-mkdir $(BUILD_CHOP)
 	-mkdir $(BUILD_NODE)
 	gnatchop -w $(AST_STAMP) $(BUILD_CHOP)
+
+$(AST): src/ag/*.ag src/ag/main.ag.pp
+	cpp -P src/ag/main.ag.pp $(AST)
 
 $(LEXER_STAMP): $(UAFLEX) $(LEXER)
 	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Scanner_Types \

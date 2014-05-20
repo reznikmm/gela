@@ -1,0 +1,115 @@
+Synthesized attributes
+  library_unit_body,
+  package_body,
+  function_body,
+  procedure_body,
+  library_unit_declaration,
+  procedure_declaration,
+  function_declaration,
+  package_declaration,
+  generic_procedure_declaration,
+  generic_function_declaration,
+  generic_package_declaration,
+  package_instantiation,
+  procedure_instantiation,
+  function_instantiation,
+  package_renaming_declaration,
+  generic_package_renaming,
+  generic_procedure_renaming,
+  generic_function_renaming,
+  proper_body,
+  task_body,
+  protected_body
+    : Gela.Semantic_Types.Unit_Kinds : unit_kind;
+
+Rules for package_body. :
+(.
+      ${package_body.unit_kind} := Gela.Semantic_Types.A_Package_Body;
+.)
+
+Rules for function_body. :
+(.
+      ${function_body.unit_kind} := Gela.Semantic_Types.A_Function_Body;
+.)
+
+Rules for procedure_body. :
+(.
+      ${procedure_body.unit_kind} := Gela.Semantic_Types.A_Procedure_Body;
+.)
+
+Rules for procedure_declaration. :
+(.
+      ${procedure_declaration.unit_kind} := Gela.Semantic_Types.A_Procedure;
+.)
+
+Rules for function_declaration. :
+(.
+      ${function_declaration.unit_kind} := Gela.Semantic_Types.A_Function;
+.)
+
+Rules for package_declaration. :
+(.
+      ${package_declaration.unit_kind} := Gela.Semantic_Types.A_Package;
+.)
+
+Rules for generic_procedure_declaration. :
+(.
+      ${generic_procedure_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure;
+.)
+
+Rules for generic_function_declaration. :
+(.
+      ${generic_function_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Function;
+.)
+
+Rules for generic_package_declaration. :
+(.
+      ${generic_package_declaration.unit_kind} := Gela.Semantic_Types.A_Generic_Package;
+.)
+
+Rules for package_instantiation. :
+(.
+      ${package_instantiation.unit_kind} := Gela.Semantic_Types.A_Package_Instance;
+.)
+
+Rules for procedure_instantiation. :
+(.
+      ${procedure_instantiation.unit_kind} := Gela.Semantic_Types.A_Procedure_Instance;
+.)
+
+Rules for function_instantiation. :
+(.
+      ${function_instantiation.unit_kind} := Gela.Semantic_Types.A_Function_Instance;
+.)
+
+Rules for package_renaming_declaration. :
+(.
+      ${package_renaming_declaration.unit_kind} := Gela.Semantic_Types.A_Package_Renaming;
+.)
+
+Rules for generic_package_renaming. :
+(.
+      ${generic_package_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Package_Renaming;
+.)
+
+Rules for generic_procedure_renaming. :
+(.
+      ${generic_procedure_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure_Renaming;
+.)
+
+Rules for generic_function_renaming. :
+(.
+      ${generic_function_renaming.unit_kind} := Gela.Semantic_Types.A_Generic_Function_Renaming;
+.)
+
+Rules for task_body. :
+(.
+      ${task_body.unit_kind} := Gela.Semantic_Types.A_Generic_Procedure_Renaming;
+.)
+
+Rules for protected_body. :
+(.
+      ${protected_body.unit_kind} := Gela.Semantic_Types.A_Generic_Function_Renaming;
+.)
+
+

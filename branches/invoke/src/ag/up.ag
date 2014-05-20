@@ -1,0 +1,64 @@
+Synthesized attributes
+  attribute_reference,
+  character_literal,
+  direct_name,
+  explicit_dereference,
+  function_call,
+  identifier,
+  name,
+  operator_symbol,
+  prefix,
+  program_unit_name,
+  qualified_expression,
+  selected_component,
+  selected_identifier,
+  subtype_mark
+   : Gela.Interpretations.Interpretation_Set_Index : Up;
+
+Rules for identifier.identifier_token :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Direct_Name
+        (${identifier.env_in},
+         Self.Compilation.Get_Token (${identifier_token.Index}).Symbol,
+         ${identifier.Up});
+.)
+
+Rules for selected_identifier. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
+        (${selected_identifier.env_in}, ${Prefix.Up}, ${Selector.full_name}, ${selected_identifier.Up});
+.)
+
+Rules for selected_component. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
+        (${selected_component.env_in}, ${prefix.Up}, ${Selector.full_name}, ${selected_component.Up});
+.)
+
+Rules for attribute_reference. :
+(.
+      ${attribute_reference.Up} := 0;  --  FIXME
+.)
+
+Rules for function_call. :
+(.
+      ${function_call.Up} := 0;  --  FIXME
+.)
+
+Rules for character_literal.character_literal_token :
+(.
+      ${character_literal.Up} := 0;  --  FIXME
+.)
+Rules for explicit_dereference. :
+(.
+      ${explicit_dereference.Up} := 0;  --  FIXME
+.)
+Rules for operator_symbol.operator_symbol_token :
+(.
+      ${operator_symbol.Up} := 0;  --  FIXME
+.)
+Rules for qualified_expression. :
+(.
+      ${qualified_expression.Up} := 0;  --  FIXME
+.)
+

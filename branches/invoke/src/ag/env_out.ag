@@ -1,0 +1,897 @@
+Synthesized attributes
+  Accept_Parameters,
+  Access_To_Subprogram_Parameter_Profile,
+  Block_Declarative_Items,
+  Body_Declarative_Items,
+  Compilation_Pragmas,
+  Context_Clause_Elements,
+  Discriminants,
+  Enumeration_Literal_Declarations,
+  Generic_Formal_Part,
+  Parameter_Profile,
+  Private_Part_Declarative_Items,
+  Private_Protected_Items,
+  Private_Task_Items,
+  Protected_Operation_Items,
+  Record_Components,
+  Variants,
+  Visible_Part_Declarative_Items,
+  Visible_Protected_Items,
+  Visible_Task_Items,
+  With_Clause_Names,
+  access_definition,
+  access_to_function_definition,
+  access_to_object_definition,
+  access_to_procedure_definition,
+  alt_record_definition,
+  anonymous_access_to_function_definition,
+  anonymous_access_to_object_definition,
+  anonymous_access_to_procedure_definition,
+  aspect_clause,
+  at_clause,
+  attribute_definition_clause,
+  basic_declaration,
+  basic_declarative_item,
+  body_declaration,
+  body_stub,
+  choice_parameter_specification,
+  compilation_unit,
+  compilation_unit_body,
+  compilation_unit_declaration,
+  component_declaration,
+  component_item,
+  constrained_array_definition,
+  context_item,
+  decimal_fixed_point_definition,
+  declarative_item,
+  derived_record_definition,
+  derived_type_definition,
+  discriminant_part,
+  discriminant_specification,
+  element_iterator_specification,
+  entry_body,
+  entry_declaration,
+  entry_index_specification,
+  enumeration_literal_specification,
+  enumeration_type_definition,
+  exception_declaration,
+  exception_renaming_declaration,
+  floating_point_definition,
+  formal_access_to_function_definition,
+  formal_access_to_object_definition,
+  formal_access_to_procedure_definition,
+  formal_constrained_array_definition,
+  formal_decimal_fixed_point_definition,
+  formal_derived_type_definition,
+  formal_discrete_type_definition,
+  formal_floating_point_definition,
+  formal_function_declaration,
+  formal_incomplete_type_declaration,
+  formal_interface_type_definition,
+  formal_modular_type_definition,
+  formal_object_declaration,
+  formal_ordinary_fixed_point_definition,
+  formal_package_declaration,
+  formal_private_type_definition,
+  formal_procedure_declaration,
+  formal_signed_integer_type_definition,
+  formal_type_declaration,
+  formal_type_definition,
+  formal_unconstrained_array_definition,
+  full_type_declaration,
+  function_body,
+  function_declaration,
+  function_instantiation,
+  generalized_iterator_specification,
+  generic_formal,
+  generic_function_declaration,
+  generic_function_renaming,
+  generic_package_declaration,
+  generic_package_renaming,
+  generic_procedure_declaration,
+  generic_procedure_renaming,
+  incomplete_type_declaration,
+  interface_type_definition,
+  iterator_specification,
+  known_discriminant_part,
+  library_unit_declaration,
+  loop_parameter_specification,
+  modular_type_definition,
+  null_component,
+  null_record_definition,
+  number_declaration,
+  object_declaration,
+  object_definition,
+  object_renaming_declaration,
+  ordinary_fixed_point_definition,
+  package_body,
+  package_body_stub,
+  package_declaration,
+  package_instantiation,
+  package_renaming_declaration,
+  parameter_specification,
+  pragma_node,
+  private_extension_declaration,
+  private_extension_definition,
+  private_type_declaration,
+  private_type_definition,
+  procedure_body,
+  procedure_declaration,
+  procedure_instantiation,
+  proper_body,
+  protected_body,
+  protected_body_stub,
+  protected_definition,
+  protected_element_declaration,
+  protected_operation_declaration,
+  protected_operation_item,
+  protected_type_declaration,
+  record_definition,
+  record_representation_clause,
+  record_type_definition,
+  return_object_specification,
+  signed_integer_type_definition,
+  single_protected_declaration,
+  single_task_declaration,
+  subtype_declaration,
+  subtype_indication,
+  subunit,
+  task_body,
+  task_body_stub,
+  task_definition,
+  task_item,
+  task_type_declaration,
+  type_definition,
+  unconstrained_array_definition,
+  units,
+  unknown_discriminant_part,
+  use_clause,
+  use_package_clause,
+  use_type_clause,
+  variant,
+  variant_part,
+  with_clause
+    : Gela.Semantic_Types.Env_Index : env_out;
+
+
+Rules for Accept_Parameters.parameter_specification :
+(.
+      ${Accept_Parameters.env_out} := ${Accept_Parameters.env_in};
+.)
+
+Rules for Accept_Parameters.parameter_specification :
+(.
+      ${Accept_Parameters.env_out} := ${parameter_specification.env_out};
+.)
+
+Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
+(.
+      ${Access_To_Subprogram_Parameter_Profile.env_out} := ${Access_To_Subprogram_Parameter_Profile.env_in};
+.)
+
+Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
+(.
+      ${Access_To_Subprogram_Parameter_Profile.env_out} := ${parameter_specification.env_out};
+.)
+
+Rules for Block_Declarative_Items.declarative_item :
+(.
+      ${Block_Declarative_Items.env_out} := ${Block_Declarative_Items.env_in};
+.)
+
+Rules for Block_Declarative_Items.declarative_item :
+(.
+      ${Block_Declarative_Items.env_out} := ${declarative_item.env_out};
+.)
+
+Rules for Body_Declarative_Items.declarative_item :
+(.
+      ${Body_Declarative_Items.env_out} := ${Body_Declarative_Items.env_in};
+.)
+
+Rules for Body_Declarative_Items.declarative_item :
+(.
+      ${Body_Declarative_Items.env_out} := ${declarative_item.env_out};
+.)
+
+Rules for Compilation_Pragmas.context_item :
+(.
+      ${Compilation_Pragmas.env_out} := ${Compilation_Pragmas.env_in};
+.)
+
+Rules for Compilation_Pragmas.context_item :
+(.
+      ${Compilation_Pragmas.env_out} := ${context_item.env_out};
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      ${Context_Clause_Elements.env_out} := ${Context_Clause_Elements.env_in};
+.)
+
+Rules for Context_Clause_Elements.context_item :
+(.
+      ${Context_Clause_Elements.env_out} := ${context_item.env_out};
+.)
+
+Rules for Discriminants.discriminant_specification :
+(.
+      ${Discriminants.env_out} := ${Discriminants.env_in};
+.)
+
+Rules for Discriminants.discriminant_specification :
+(.
+      ${Discriminants.env_out} := ${discriminant_specification.env_out};
+.)
+
+Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
+(.
+      ${Enumeration_Literal_Declarations.env_out} := ${Enumeration_Literal_Declarations.env_in};
+.)
+
+Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
+(.
+      ${Enumeration_Literal_Declarations.env_out} := ${enumeration_literal_specification.env_out};
+.)
+
+Rules for Generic_Formal_Part.generic_formal :
+(.
+      ${Generic_Formal_Part.env_out} := ${Generic_Formal_Part.env_in};
+.)
+
+Rules for Generic_Formal_Part.generic_formal :
+(.
+      ${Generic_Formal_Part.env_out} := ${generic_formal.env_out};
+.)
+
+Rules for Parameter_Profile.parameter_specification :
+(.
+      ${Parameter_Profile.env_out} := ${Parameter_Profile.env_in};
+.)
+
+Rules for Parameter_Profile.parameter_specification :
+(.
+      ${Parameter_Profile.env_out} := ${parameter_specification.env_out};
+.)
+
+Rules for Private_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${Private_Part_Declarative_Items.env_out} := ${Private_Part_Declarative_Items.env_in};
+.)
+
+Rules for Private_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${Private_Part_Declarative_Items.env_out} := ${basic_declarative_item.env_out};
+.)
+
+Rules for Private_Protected_Items.protected_element_declaration :
+(.
+      ${Private_Protected_Items.env_out} := ${Private_Protected_Items.env_in};
+.)
+
+Rules for Private_Protected_Items.protected_element_declaration :
+(.
+      ${Private_Protected_Items.env_out} := ${protected_element_declaration.env_out};
+.)
+
+Rules for Private_Task_Items.task_item :
+(.
+      ${Private_Task_Items.env_out} := ${Private_Task_Items.env_in};
+.)
+
+Rules for Private_Task_Items.task_item :
+(.
+      ${Private_Task_Items.env_out} := ${task_item.env_out};
+.)
+
+Rules for Protected_Operation_Items.protected_operation_item :
+(.
+      ${Protected_Operation_Items.env_out} := ${Protected_Operation_Items.env_in};
+.)
+
+Rules for Protected_Operation_Items.protected_operation_item :
+(.
+      ${Protected_Operation_Items.env_out} := ${protected_operation_item.env_out};
+.)
+
+Rules for Record_Components.component_item :
+(.
+      ${Record_Components.env_out} := ${Record_Components.env_in};
+.)
+
+Rules for Record_Components.component_item :
+(.
+      ${Record_Components.env_out} := ${component_item.env_out};
+.)
+
+Rules for Variants.variant :
+(.
+      ${Variants.env_out} := ${Variants.env_in};
+.)
+
+Rules for Variants.variant :
+(.
+      ${Variants.env_out} := ${variant.env_out};
+.)
+
+Rules for Visible_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${Visible_Part_Declarative_Items.env_out} := ${Visible_Part_Declarative_Items.env_in};
+.)
+
+Rules for Visible_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${Visible_Part_Declarative_Items.env_out} := ${basic_declarative_item.env_out};
+.)
+
+Rules for Visible_Protected_Items.protected_operation_declaration :
+(.
+      ${Visible_Protected_Items.env_out} := ${Visible_Protected_Items.env_in};
+.)
+
+Rules for Visible_Protected_Items.protected_operation_declaration :
+(.
+      ${Visible_Protected_Items.env_out} := ${protected_operation_declaration.env_out};
+.)
+
+Rules for Visible_Task_Items.task_item :
+(.
+      ${Visible_Task_Items.env_out} := ${Visible_Task_Items.env_in};
+.)
+
+Rules for Visible_Task_Items.task_item :
+(.
+      ${Visible_Task_Items.env_out} := ${task_item.env_out};
+.)
+
+Rules for With_Clause_Names.program_unit_name :
+(.
+      ${With_Clause_Names.env_out} := 0;
+.)
+
+Rules for access_to_function_definition. :
+(.
+      ${access_to_function_definition.env_out} := ${access_to_function_definition.env_in};
+.)
+
+Rules for access_to_object_definition. :
+(.
+      ${access_to_object_definition.env_out} := ${access_to_object_definition.env_in};
+.)
+
+Rules for access_to_procedure_definition. :
+(.
+      ${access_to_procedure_definition.env_out} := ${access_to_procedure_definition.env_in};
+.)
+
+Rules for anonymous_access_to_function_definition. :
+(.
+      ${anonymous_access_to_function_definition.env_out} := ${anonymous_access_to_function_definition.env_in};
+.)
+
+Rules for anonymous_access_to_object_definition. :
+(.
+      ${anonymous_access_to_object_definition.env_out} := ${anonymous_access_to_object_definition.env_in};
+.)
+
+Rules for anonymous_access_to_procedure_definition. :
+(.
+      ${anonymous_access_to_procedure_definition.env_out} := ${anonymous_access_to_procedure_definition.env_in};
+.)
+
+Rules for at_clause. :
+(.
+      ${at_clause.env_out} := ${at_clause.env_in};
+.)
+
+Rules for attribute_definition_clause. :
+(.
+      ${attribute_definition_clause.env_out} := ${attribute_definition_clause.env_in};
+.)
+
+Rules for choice_parameter_specification.Names :
+(.
+      ${choice_parameter_specification.env_out} := ${choice_parameter_specification.env_in};
+.)
+
+Rules for compilation_unit_body. :
+(.
+      ${compilation_unit_body.env_out} := 0;  --  FIXME
+.)
+
+Rules for compilation_unit_declaration. :
+(.
+      ${compilation_unit_declaration.env_out} := 0;  --  FIXME
+.)
+
+Rules for component_declaration. :
+(.
+      ${component_declaration.env_out} := ${component_declaration.env_in};
+.)
+
+Rules for constrained_array_definition. :
+(.
+      ${constrained_array_definition.env_out} := ${constrained_array_definition.env_in};
+.)
+
+Rules for decimal_fixed_point_definition. :
+(.
+      ${decimal_fixed_point_definition.env_out} := ${decimal_fixed_point_definition.env_in};
+.)
+
+Rules for derived_record_definition. :
+(.
+      ${derived_record_definition.env_out} := ${derived_record_definition.env_in};
+.)
+
+Rules for derived_type_definition. :
+(.
+      ${derived_type_definition.env_out} := ${derived_type_definition.env_in};
+.)
+
+Rules for discriminant_specification. :
+(.
+      ${discriminant_specification.env_out} := ${discriminant_specification.env_in};
+.)
+
+Rules for element_iterator_specification. :
+(.
+      ${element_iterator_specification.env_out} := ${element_iterator_specification.env_in};
+.)
+
+Rules for entry_body. :
+(.
+      ${entry_body.env_out} := ${entry_body.env_in};
+.)
+
+Rules for entry_declaration. :
+(.
+      ${entry_declaration.env_out} := ${entry_declaration.env_in};
+.)
+
+Rules for entry_index_specification. :
+(.
+      ${entry_index_specification.env_out} := ${entry_index_specification.env_in};
+.)
+
+Rules for enumeration_literal_specification.Names :
+(.
+      ${enumeration_literal_specification.env_out} := ${enumeration_literal_specification.env_in};
+.)
+
+Rules for enumeration_type_definition. :
+(.
+      ${enumeration_type_definition.env_out} := ${enumeration_type_definition.env_in};
+.)
+
+Rules for exception_declaration. :
+(.
+      ${exception_declaration.env_out} := ${exception_declaration.env_in};
+.)
+
+Rules for exception_renaming_declaration. :
+(.
+      ${exception_renaming_declaration.env_out} := ${exception_renaming_declaration.env_in};
+.)
+
+Rules for floating_point_definition. :
+(.
+      ${floating_point_definition.env_out} := ${floating_point_definition.env_in};
+.)
+
+Rules for formal_access_to_function_definition. :
+(.
+      ${formal_access_to_function_definition.env_out} := ${formal_access_to_function_definition.env_in};
+.)
+
+Rules for formal_access_to_object_definition. :
+(.
+      ${formal_access_to_object_definition.env_out} := ${formal_access_to_object_definition.env_in};
+.)
+
+Rules for formal_access_to_procedure_definition. :
+(.
+      ${formal_access_to_procedure_definition.env_out} := ${formal_access_to_procedure_definition.env_in};
+.)
+
+Rules for formal_constrained_array_definition. :
+(.
+      ${formal_constrained_array_definition.env_out} := ${formal_constrained_array_definition.env_in};
+.)
+
+Rules for formal_decimal_fixed_point_definition. :
+(.
+      ${formal_decimal_fixed_point_definition.env_out} := ${formal_decimal_fixed_point_definition.env_in};
+.)
+
+Rules for formal_derived_type_definition. :
+(.
+      ${formal_derived_type_definition.env_out} := ${formal_derived_type_definition.env_in};
+.)
+
+Rules for formal_discrete_type_definition. :
+(.
+      ${formal_discrete_type_definition.env_out} := ${formal_discrete_type_definition.env_in};
+.)
+
+Rules for formal_floating_point_definition. :
+(.
+      ${formal_floating_point_definition.env_out} := ${formal_floating_point_definition.env_in};
+.)
+
+Rules for formal_function_declaration. :
+(.
+      ${formal_function_declaration.env_out} := ${formal_function_declaration.env_in};
+.)
+
+Rules for formal_incomplete_type_declaration. :
+(.
+      ${formal_incomplete_type_declaration.env_out} := ${formal_incomplete_type_declaration.env_in};
+.)
+
+Rules for formal_interface_type_definition. :
+(.
+      ${formal_interface_type_definition.env_out} := ${formal_interface_type_definition.env_in};
+.)
+
+Rules for formal_modular_type_definition. :
+(.
+      ${formal_modular_type_definition.env_out} := ${formal_modular_type_definition.env_in};
+.)
+
+Rules for formal_object_declaration. :
+(.
+      ${formal_object_declaration.env_out} := ${formal_object_declaration.env_in};
+.)
+
+Rules for formal_ordinary_fixed_point_definition. :
+(.
+      ${formal_ordinary_fixed_point_definition.env_out} := ${formal_ordinary_fixed_point_definition.env_in};
+.)
+
+Rules for formal_package_declaration. :
+(.
+      ${formal_package_declaration.env_out} := ${formal_package_declaration.env_in};
+.)
+
+Rules for formal_private_type_definition. :
+(.
+      ${formal_private_type_definition.env_out} := ${formal_private_type_definition.env_in};
+.)
+
+Rules for formal_procedure_declaration. :
+(.
+      ${formal_procedure_declaration.env_out} := ${formal_procedure_declaration.env_in};
+.)
+
+Rules for formal_signed_integer_type_definition. :
+(.
+      ${formal_signed_integer_type_definition.env_out} := ${formal_signed_integer_type_definition.env_in};
+.)
+
+Rules for formal_type_declaration. :
+(.
+      ${formal_type_declaration.env_out} := ${formal_type_declaration.env_in};
+.)
+
+Rules for formal_unconstrained_array_definition. :
+(.
+      ${formal_unconstrained_array_definition.env_out} := ${formal_unconstrained_array_definition.env_in};
+.)
+
+Rules for full_type_declaration. :
+(.
+      ${full_type_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Type_Declaration_View.env_out});
+.)
+
+Rules for function_body. :
+(.
+      ${function_body.env_out} := ${function_body.env_in};
+.)
+
+Rules for function_declaration. :
+(.
+      ${function_declaration.env_out} := ${function_declaration.env_in};
+.)
+
+Rules for function_instantiation. :
+(.
+      ${function_instantiation.env_out} := ${function_instantiation.env_in};
+.)
+
+Rules for generalized_iterator_specification. :
+(.
+      ${generalized_iterator_specification.env_out} := ${generalized_iterator_specification.env_in};
+.)
+
+Rules for generic_function_declaration. :
+(.
+      ${generic_function_declaration.env_out} := ${generic_function_declaration.env_in};
+.)
+
+Rules for generic_function_renaming. :
+(.
+      ${generic_function_renaming.env_out} := ${generic_function_renaming.env_in};
+.)
+
+Rules for generic_package_declaration. :
+(.
+      ${generic_package_declaration.env_out} := ${generic_package_declaration.env_in};
+.)
+
+Rules for generic_package_renaming. :
+(.
+      ${generic_package_renaming.env_out} := ${generic_package_renaming.env_in};
+.)
+
+Rules for generic_procedure_declaration. :
+(.
+      ${generic_procedure_declaration.env_out} := ${generic_procedure_declaration.env_in};
+.)
+
+Rules for generic_procedure_renaming. :
+(.
+      ${generic_procedure_renaming.env_out} := ${generic_procedure_renaming.env_in};
+.)
+
+Rules for incomplete_type_declaration. :
+(.
+      ${incomplete_type_declaration.env_out} := ${incomplete_type_declaration.env_in};
+.)
+
+Rules for interface_type_definition. :
+(.
+      ${interface_type_definition.env_out} := ${interface_type_definition.env_in};
+.)
+
+Rules for known_discriminant_part. :
+(.
+      ${known_discriminant_part.env_out} := ${known_discriminant_part.env_in};
+.)
+
+Rules for loop_parameter_specification. :
+(.
+      ${loop_parameter_specification.env_out} := ${loop_parameter_specification.env_in};
+.)
+
+Rules for modular_type_definition. :
+(.
+      ${modular_type_definition.env_out} := ${modular_type_definition.env_in};
+.)
+
+Rules for null_component. :
+(.
+      ${null_component.env_out} := ${null_component.env_in};
+.)
+
+Rules for null_record_definition. :
+(.
+      ${null_record_definition.env_out} := ${null_record_definition.env_in};
+.)
+
+Rules for number_declaration. :
+(.
+      ${number_declaration.env_out} := ${number_declaration.env_in};
+.)
+
+Rules for object_declaration. :
+(.
+      ${object_declaration.env_out} := ${object_declaration.env_in};
+.)
+
+Rules for object_renaming_declaration. :
+(.
+      ${object_renaming_declaration.env_out} := ${object_renaming_declaration.env_in};
+.)
+
+Rules for ordinary_fixed_point_definition. :
+(.
+      ${ordinary_fixed_point_definition.env_out} := ${ordinary_fixed_point_definition.env_in};
+.)
+
+Rules for package_body. :
+(.
+      ${package_body.env_out} := ${package_body.env_in};
+.)
+
+Rules for package_body_stub. :
+(.
+      ${package_body_stub.env_out} := ${package_body_stub.env_in};
+.)
+
+Rules for package_declaration. :
+(.
+      ${package_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Private_Part_Declarative_Items.env_out});
+.)
+
+Rules for package_instantiation. :
+(.
+      ${package_instantiation.env_out} := ${package_instantiation.env_in};
+.)
+
+Rules for package_renaming_declaration. :
+(.
+      ${package_renaming_declaration.env_out} := ${package_renaming_declaration.env_in};
+.)
+
+Rules for parameter_specification. :
+(.
+      ${parameter_specification.env_out} := ${parameter_specification.env_in};
+.)
+
+Rules for pragma_node. :
+(.
+      ${pragma_node.env_out} := ${pragma_node.env_in};
+.)
+
+Rules for private_extension_declaration. :
+(.
+      ${private_extension_declaration.env_out} := ${private_extension_declaration.env_in};
+.)
+
+Rules for private_extension_definition. :
+(.
+      ${private_extension_definition.env_out} := ${private_extension_definition.env_in};
+.)
+
+Rules for private_type_declaration. :
+(.
+      ${private_type_declaration.env_out} := ${private_type_declaration.env_in};
+.)
+
+Rules for private_type_definition. :
+(.
+      ${private_type_definition.env_out} := ${private_type_definition.env_in};
+.)
+
+Rules for procedure_body. :
+(.
+      ${procedure_body.env_out} := ${procedure_body.env_in};
+.)
+
+Rules for procedure_declaration. :
+(.
+      ${procedure_declaration.env_out} := ${procedure_declaration.env_in};
+.)
+
+Rules for procedure_instantiation. :
+(.
+      ${procedure_instantiation.env_out} := ${procedure_instantiation.env_in};
+.)
+
+Rules for protected_body. :
+(.
+      ${protected_body.env_out} := ${protected_body.env_in};
+.)
+
+Rules for protected_body_stub. :
+(.
+      ${protected_body_stub.env_out} := ${protected_body_stub.env_in};
+.)
+
+Rules for protected_definition. :
+(.
+      ${protected_definition.env_out} := ${protected_definition.env_in};
+.)
+
+Rules for protected_type_declaration. :
+(.
+      ${protected_type_declaration.env_out} := ${protected_type_declaration.env_in};
+.)
+
+Rules for record_definition. :
+(.
+      ${record_definition.env_out} := ${record_definition.env_in};
+.)
+
+Rules for record_representation_clause. :
+(.
+      ${record_representation_clause.env_out} := ${record_representation_clause.env_in};
+.)
+
+Rules for record_type_definition. :
+(.
+      ${record_type_definition.env_out} := ${record_type_definition.env_in};
+.)
+
+Rules for return_object_specification. :
+(.
+      ${return_object_specification.env_out} := ${return_object_specification.env_in};
+.)
+
+Rules for signed_integer_type_definition. :
+(.
+      ${signed_integer_type_definition.env_out} := ${signed_integer_type_definition.env_in};
+.)
+
+Rules for single_protected_declaration. :
+(.
+      ${single_protected_declaration.env_out} := ${single_protected_declaration.env_in};
+.)
+
+Rules for single_task_declaration. :
+(.
+      ${single_task_declaration.env_out} := ${single_task_declaration.env_in};
+.)
+
+Rules for subtype_declaration. :
+(.
+      ${subtype_declaration.env_out} := ${subtype_declaration.env_in};
+.)
+
+Rules for subtype_indication. :
+(.
+      ${subtype_indication.env_out} := ${subtype_indication.env_in};
+.)
+
+Rules for subunit. :
+(.
+      ${subunit.env_out} := 0;  --  FIXME
+.)
+
+Rules for task_body. :
+(.
+      ${task_body.env_out} := ${task_body.env_in};
+.)
+
+Rules for task_body_stub. :
+(.
+      ${task_body_stub.env_out} := ${task_body_stub.env_in};
+.)
+
+Rules for task_definition. :
+(.
+      ${task_definition.env_out} := ${task_definition.env_in};
+.)
+
+Rules for task_type_declaration. :
+(.
+      ${task_type_declaration.env_out} := ${task_type_declaration.env_in};
+.)
+
+Rules for unconstrained_array_definition. :
+(.
+      ${unconstrained_array_definition.env_out} := ${unconstrained_array_definition.env_in};
+.)
+
+Rules for units.compilation_unit :
+(.
+      ${units.env_out} := 0;
+.)
+
+Rules for units.compilation_unit :
+(.
+      ${units.env_out} := ${compilation_unit.env_out};
+.)
+
+Rules for unknown_discriminant_part. :
+(.
+      ${unknown_discriminant_part.env_out} := ${unknown_discriminant_part.env_in};
+.)
+
+Rules for use_package_clause. :
+(.
+      ${use_package_clause.env_out} := ${use_package_clause.env_in};
+.)
+
+Rules for use_type_clause. :
+(.
+      ${use_type_clause.env_out} := ${use_type_clause.env_in};
+.)
+
+Rules for variant. :
+(.
+      ${variant.env_out} := ${variant.env_in};
+.)
+
+Rules for variant_part. :
+(.
+      ${variant_part.env_out} := ${variant_part.env_in};
+.)
+
+Rules for with_clause. :
+(.
+      ${with_clause.env_out} := ${with_clause.env_in};
+.)
