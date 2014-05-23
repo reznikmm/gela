@@ -161,9 +161,9 @@ clause_name ::= attribute_reference | identifier;
 attribute_reference ::=
   prefix
   token <apostrophe_token>
-  identifier <Attribute_Designator_Identifier>
-  token <designator_token>
-  expression <Attribute_Designator_Expressions>
+  [identifier <Attribute_Designator_Identifier>]
+  [token <designator_token>]
+  [expression <Attribute_Designator_Expressions>]
 ;
 
 basic_declarative_item ::=
