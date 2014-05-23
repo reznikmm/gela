@@ -19,6 +19,11 @@ with Asis.Extensions.Flat_Kinds;
 with Gela.Elements.Library_Unit_Bodies;
 with Gela.Elements.Library_Unit_Declarations;
 with Gela.Elements.Proper_Bodies;
+with Gela.Elements.Defining_Character_Literals;
+with Gela.Elements.Defining_Enumeration_Literals;
+with Gela.Elements.Defining_Expanded_Unit_Names;
+with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Defining_Operator_Symbols;
 
 package body Asis.Elements is
 
@@ -422,10 +427,87 @@ package body Asis.Elements is
      (Element : in Asis.Element)
       return Asis.Element
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access);
+
+         overriding procedure Defining_Enumeration_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Enumeration_Literals.
+              Defining_Enumeration_Literal_Access);
+
+         overriding procedure Defining_Expanded_Unit_Name
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Expanded_Unit_Names.
+              Defining_Expanded_Unit_Name_Access);
+
+         overriding procedure Defining_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access);
+
+         overriding procedure Defining_Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Operator_Symbols.
+              Defining_Operator_Symbol_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Defining_Character_Literal;
+
+         overriding procedure Defining_Enumeration_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Enumeration_Literals.
+              Defining_Enumeration_Literal_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Defining_Enumeration_Literal;
+
+         overriding procedure Defining_Expanded_Unit_Name
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Expanded_Unit_Names.
+              Defining_Expanded_Unit_Name_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Defining_Expanded_Unit_Name;
+
+         overriding procedure Defining_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Defining_Identifier;
+
+         overriding procedure Defining_Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Operator_Symbols.
+              Defining_Operator_Symbol_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Defining_Operator_Symbol;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Element, "Enclosing_Element");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Element.Data.Visit (V);
+      return (Data => V.Result);
    end Enclosing_Element;
 
    -----------------------

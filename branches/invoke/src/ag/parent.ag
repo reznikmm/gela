@@ -1,0 +1,299 @@
+Inherited attributes
+  defining_character_literal,
+  defining_designator,
+  defining_enumeration_literal,
+  defining_enumeration_name,
+  defining_expanded_unit_name,
+  defining_identifier,
+  defining_name,
+  defining_operator_symbol,
+  defining_program_unit_name,
+  Label_Names,
+  Names
+
+  : Gela.Elements.Element_Access : Parent;
+
+Rules for label_decorator. :
+(.
+      ${Label_Names.Parent} := Gela.Elements.Element_Access (Unlabeled_Statement);
+.)
+
+Rules for Label_Names.defining_identifier :
+(.
+      ${defining_identifier.Parent} := ${Label_Names.Parent};
+.)
+
+Rules for Names.defining_identifier :
+(.
+      ${defining_identifier.Parent} := ${Names.Parent};
+.)
+
+Rules for choice_parameter_specification.Names :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for defining_expanded_unit_name. :
+(.
+      ${Defining_Selector.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for element_iterator_specification. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for entry_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for entry_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for entry_index_specification. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for enumeration_literal_specification.Names :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_function_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_incomplete_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_package_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_procedure_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for full_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for function_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for function_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for function_instantiation. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generalized_iterator_specification. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_function_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_function_renaming. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_package_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_package_renaming. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_procedure_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for generic_procedure_renaming. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for incomplete_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for loop_parameter_specification. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for package_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for package_body_stub. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for package_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for package_instantiation. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for package_renaming_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for private_extension_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for private_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for procedure_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for procedure_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for procedure_instantiation. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for protected_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for protected_body_stub. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for protected_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for return_object_specification. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for single_protected_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for single_task_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for subtype_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for task_body. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for task_body_stub. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for task_type_declaration. :
+(.
+      ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for component_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for discriminant_specification. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for exception_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for exception_renaming_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for formal_object_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for number_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for object_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for object_renaming_declaration. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
+
+Rules for parameter_specification. :
+(.
+	  ${Names.Parent} := Gela.Elements.Element_Access (Node);
+.)
