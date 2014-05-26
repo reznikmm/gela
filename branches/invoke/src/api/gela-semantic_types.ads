@@ -27,4 +27,7 @@ package Gela.Semantic_Types is
    type Error_Set_Index is new Natural;
    --  Index to reference a set of errors
 
+   type Type_Index is new Natural;
+   --  Index of type view
+
 end Gela.Semantic_Types;
