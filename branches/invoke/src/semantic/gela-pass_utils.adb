@@ -137,4 +137,44 @@ package body Gela.Pass_Utils is
       return 0;
    end Create_Unit_Declaration;
 
+   ---------------------
+   -- Resolve_To_Type --
+   ---------------------
+
+   procedure Resolve_To_Type
+     (Self    : Gela.Interpretations.Interpretation_Manager_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index)
+   is
+      Type_Index : Gela.Semantic_Types.Type_Index;
+   begin
+      Self.Get_Subtype
+        (Env    => Env,
+         Set    => Type_Up,
+         Result => Type_Index);
+
+      Self.Resolve_To_Type
+        (Env    => Env,
+         Set    => Expr_Up,
+         Value  => Type_Index,
+         Result => Result);
+   end Resolve_To_Type;
+   ----------------------
+   -- Shall_Be_Subtype --
+   ----------------------
+
+   procedure Shall_Be_Subtype
+     (Self   : Gela.Interpretations.Interpretation_Manager_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Result : out Gela.Interpretations.Interpretation_Index) is
+   begin
+      Self.Chosen_Interpretation
+        (Env    => Env,
+         Set    => Set,
+         Result => Result);
+   end Shall_Be_Subtype;
+
 end Gela.Pass_Utils;

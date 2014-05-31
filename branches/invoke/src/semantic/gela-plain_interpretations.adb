@@ -183,6 +183,35 @@ package body Gela.Plain_Interpretations is
 
    end Get_Defining_Name;
 
+   -----------------
+   -- Get_Subtype --
+   -----------------
+
+   overriding procedure Get_Subtype
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Result : out Gela.Semantic_Types.Type_Index)
+   is
+      pragma Unreferenced (Env);
+      use type Gela.Lexical_Types.Symbol;
+      use type Gela.Interpretations.Interpretation_Set_Index;
+      use type Gela.Elements.Defining_Names.Defining_Name_Access;
+      X    : Gela.Int.Interpretation_Access;
+      V    : aliased Get_Int.Visiter;
+   begin
+      if Set /= 0 then
+         X := Self.Interpretations.Element (Set);
+         X.Visit (V'Access);
+      end if;
+
+      if V.Name = null then
+         Result := 0;
+      else
+         Result := Self.Context.Types.Type_By_Name (V.Name);
+      end if;
+   end Get_Subtype;
+
    ----------
    -- Hash --
    ----------
@@ -273,5 +302,25 @@ package body Gela.Plain_Interpretations is
       Result := Self.Last_Solution;
       Self.Solutions.Insert (Result, S);
    end New_Name_Solution;
+
+   ---------------------
+   -- Resolve_To_Type --
+   ---------------------
+
+   overriding procedure Resolve_To_Type
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Value  : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Index)
+   is
+      pragma Unreferenced (Value);
+   begin
+      --  FIXME
+      Self.Chosen_Interpretation
+        (Env    => Env,
+         Set    => Set,
+         Result => Result);
+   end Resolve_To_Type;
 
 end Gela.Plain_Interpretations;

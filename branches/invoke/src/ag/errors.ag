@@ -1,10 +1,19 @@
 Synthesized attributes
+  attribute_reference,
+  composite_constraint,
+  constraint,
+  delta_constraint,
+  digits_constraint,
+  function_call,
   identifier,
   program_unit_name,
-  selected_identifier,
+  range_attribute_reference,
+  range_constraint,
+  scalar_constraint,
   selected_component,
-  attribute_reference,
-  function_call,
+  selected_identifier,
+  simple_expression_range,
+  subtype_indication,
   subtype_mark
 
    : Gela.Semantic_Types.Error_Set_Index : Errors;
@@ -32,4 +41,31 @@ Rules for attribute_reference. :
 Rules for function_call. :
 (.
       ${function_call.Errors} := 0;
+.)
+
+Rules for subtype_indication. :
+(.
+      ${subtype_indication.Errors} := 0;  --  ${Subtype_Constraint.Errors}
+.)
+
+Rules for delta_constraint. :
+(.
+      ${delta_constraint.Errors} := 0;
+.)
+
+Rules for digits_constraint. :
+(.
+      ${digits_constraint.Errors} := 0;
+.)
+Rules for range_attribute_reference.Range_Attribute :
+(.
+      ${range_attribute_reference.Errors} := 0;
+.)
+Rules for simple_expression_range. :
+(.
+      ${simple_expression_range.Errors} := 0;
+.)
+Rules for composite_constraint. :
+(.
+      ${composite_constraint.Errors} := 0;
 .)

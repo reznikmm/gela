@@ -81,4 +81,17 @@ private
       Value  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access);
 
+   overriding procedure Get_Subtype
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Result : out Gela.Semantic_Types.Type_Index);
+
+   overriding procedure Resolve_To_Type
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Value  : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Index);
+
 end Gela.Plain_Interpretations;

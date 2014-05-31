@@ -289,6 +289,16 @@ package body Gela.Plain_Contexts is
       return Self.Symbols'Unchecked_Access;
    end Symbols;
 
+   -----------
+   -- Types --
+   -----------
+
+   overriding function Types
+     (Self  : access Context) return Gela.Type_Managers.Type_Manager_Access is
+   begin
+      return Self.Types'Access;
+   end Types;
+
    ---------------------
    -- Unit_Containers --
    ---------------------

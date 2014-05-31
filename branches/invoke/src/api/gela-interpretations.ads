@@ -47,11 +47,26 @@ package Gela.Interpretations is
       Result : out Gela.Interpretations.Interpretation_Index) is abstract;
    --  Return chosen interpretation from Set of a complete context
 
+   not overriding procedure Resolve_To_Type
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Value  : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  Return chosen interpretation from Set restricted to be given type
+
    not overriding procedure Get_Defining_Name
      (Self   : in out Interpretation_Manager;
       Value  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access)
         is abstract;
    --  Return defining name from interpretation
+
+   not overriding procedure Get_Subtype
+     (Self   : in out Interpretation_Manager;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Result : out Gela.Semantic_Types.Type_Index) is abstract;
+   --  Set of interpretation shall resolve to denote a subtype. 3.2.2 (8)
 
 end Gela.Interpretations;

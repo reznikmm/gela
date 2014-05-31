@@ -651,22 +651,25 @@ Rules for while_loop_statement. :
 Rules for Index_Subtype_Definitions.subtype_mark :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${Index_Subtype_Definitions.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${Index_Subtype_Definitions.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for Progenitor_List.subtype_mark :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${Progenitor_List.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${Progenitor_List.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for Type_Clause_Names.subtype_mark :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${Type_Clause_Names.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${Type_Clause_Names.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
 .)
 
 Rules for access_to_function_definition. :
@@ -682,8 +685,11 @@ Rules for anonymous_access_to_function_definition. :
 Rules for anonymous_access_to_object_definition. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${anonymous_access_to_object_definition.env_in}, ${Anonymous_Access_To_Object_Subtype_Mark.Up}, ${Anonymous_Access_To_Object_Subtype_Mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${anonymous_access_to_object_definition.env_in},
+         ${Anonymous_Access_To_Object_Subtype_Mark.Up},
+         ${Anonymous_Access_To_Object_Subtype_Mark.Down});
 .)
 
 Rules for aspect_specification. :
@@ -694,15 +700,19 @@ Rules for aspect_specification. :
 Rules for discrete_subtype_indication. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${discrete_subtype_indication.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${discrete_subtype_indication.env_in}, ${Subtype_Mark.Up},
+         ${Subtype_Mark.Down});
 .)
 
 Rules for discrete_subtype_indication_dr. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${discrete_subtype_indication_dr.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${discrete_subtype_indication_dr.env_in}, ${Subtype_Mark.Up},
+         ${Subtype_Mark.Down});
 .)
 
 Rules for discriminant_specification. :
@@ -718,8 +728,10 @@ Rules for formal_access_to_function_definition. :
 Rules for formal_derived_type_definition. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${formal_derived_type_definition.env_in}, ${Subtype_Mark.Up}, ${Subtype_Mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${formal_derived_type_definition.env_in}, ${Subtype_Mark.Up},
+         ${Subtype_Mark.Down});
 .)
 
 Rules for formal_function_declaration. :
@@ -755,15 +767,29 @@ Rules for object_renaming_declaration. :
 Rules for qualified_expression. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${qualified_expression.env_in}, ${Converted_Or_Qualified_Subtype_Mark.Up}, ${Converted_Or_Qualified_Subtype_Mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${qualified_expression.env_in}, ${Converted_Or_Qualified_Subtype_Mark.Up},
+         ${Converted_Or_Qualified_Subtype_Mark.Down});
 .)
 
 Rules for subtype_indication. :
 (.
       --  3.2.2 (8)
-      Self.Compilation.Context.Interpretation_Manager.Chosen_Interpretation
-        (${subtype_indication.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+      Gela.Pass_Utils.Shall_Be_Subtype
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${subtype_indication.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+.)
+
+Rules for subtype_indication. :
+(.
+      -- 3.5 (5)
+      --  Depend on ${subtype_indication.env_in}, ${subtype_mark.Up}
+      --  Gela.Pass_Utils.Resolve_To_Type
+      --  (Subtype_Constraint.Down,
+      --   ${Subtype_Constraint.Up}, )
+
+      ${Subtype_Constraint.Down} := 0;  --  FIXME
 .)
 
 Rules for parameter_specification. :
@@ -802,11 +828,6 @@ Rules for discrete_subtype_indication. :
 .)
 
 Rules for discrete_subtype_indication_dr. :
-(.
-      ${Subtype_Constraint.Down} := 0;  --  FIXME
-.)
-
-Rules for subtype_indication. :
 (.
       ${Subtype_Constraint.Down} := 0;  --  FIXME
 .)

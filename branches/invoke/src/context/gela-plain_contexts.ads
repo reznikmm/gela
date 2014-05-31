@@ -21,8 +21,10 @@ with Gela.Plain_Error_Sets;
 with Gela.Plain_Interpretations;
 with Gela.Plain_Lexers;
 with Gela.Plain_Symbol_Sets;
+with Gela.Plain_Type_Managers;
 with Gela.Source_Finders;
 with Gela.Symbol_Sets;
+with Gela.Type_Managers;
 with Gela.Unit_Containers;
 
 package Gela.Plain_Contexts is
@@ -57,6 +59,8 @@ private
         Gela.Plain_Interpretations.Interpretation_Manager
           (Context'Unchecked_Access);
       Errors : aliased Gela.Plain_Error_Sets.Error_Set
+        (Context'Unchecked_Access);
+      Types  : aliased Gela.Plain_Type_Managers.Type_Manager
         (Context'Unchecked_Access);
    end record;
 
@@ -139,5 +143,8 @@ private
 
    overriding function Error_Set
      (Self  : access Context) return Gela.Error_Sets.Error_Set_Access;
+
+   overriding function Types
+     (Self  : access Context) return Gela.Type_Managers.Type_Manager_Access;
 
 end Gela.Plain_Contexts;
