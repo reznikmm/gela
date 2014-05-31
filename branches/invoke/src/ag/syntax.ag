@@ -364,7 +364,7 @@ delay_statement ::=
 delta_constraint ::=
   token            <delta_token>
   expression       <Delta_Expression>
-  range_constraint <Real_Range_Constraint>;
+  [range_constraint <Real_Range_Constraint>];
 
 derived_record_definition ::=
   token <abstract_token>
@@ -386,7 +386,7 @@ derived_type_definition ::=
 digits_constraint ::=
   token            <digits_token>
   expression       <Digits_Expression>
-  range_constraint <Real_Range_Constraint>;
+  [range_constraint <Real_Range_Constraint>];
 
 direct_name ::=
   identifier |
