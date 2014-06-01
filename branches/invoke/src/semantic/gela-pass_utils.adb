@@ -137,6 +137,27 @@ package body Gela.Pass_Utils is
       return 0;
    end Create_Unit_Declaration;
 
+   ------------------------------------
+   -- Numeric_Literal_Interpretation --
+   ------------------------------------
+
+   procedure Numeric_Literal_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Token  : Gela.Lexical_Types.Token_Count;
+      Result : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      Value : constant Gela.Lexical_Types.Token := Comp.Get_Token (Token);
+      Tipe  : Gela.Semantic_Types.Type_Index;
+   begin
+      if Comp.Source.Index (Value.First, Value.Last, '.') = 0 then
+         Tipe := Comp.Context.Types.Universal_Integer;
+      else
+         Tipe := Comp.Context.Types.Universal_Real;
+      end if;
+
+      Comp.Context.Interpretation_Manager.Expression (Tipe, Result);
+   end Numeric_Literal_Interpretation;
+
    ---------------------
    -- Resolve_To_Type --
    ---------------------

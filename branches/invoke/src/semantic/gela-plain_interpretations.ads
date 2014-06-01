@@ -58,6 +58,11 @@ private
       Name   : Gela.Lexical_Types.Symbol;
       Result : out Gela.Interpretations.Interpretation_Set_Index);
 
+   overriding procedure Expression
+     (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Set_Index);
+
    overriding procedure Join_Selected_Component
      (Self   : in out Interpretation_Manager;
       Env    : Gela.Semantic_Types.Env_Index;

@@ -73,4 +73,9 @@ package Gela.Pass_Utils is
       Result  : out Gela.Interpretations.Interpretation_Index);
    --  Resolve Type_Up to be type, then resolve Expr_Up have this type
 
+   procedure Numeric_Literal_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Token  : Gela.Lexical_Types.Token_Count;
+      Result : out Gela.Interpretations.Interpretation_Set_Index);
+
 end Gela.Pass_Utils;

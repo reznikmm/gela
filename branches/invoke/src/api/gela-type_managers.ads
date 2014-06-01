@@ -31,9 +31,19 @@ package Gela.Type_Managers is
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view from given type's defining name
 
---     not overriding function Universal_Integer
---       (Self  : access Type_Manager)
---        return Gela.Semantic_Types.Type_Index is abstract;
+   not overriding function Universal_Integer
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view of predefined universal_integer
+
+   not overriding function Universal_Real
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Get type view of predefined universal_real
+
+   not overriding function Universal_Access
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Get type view of predefined universal_access
 
 end Gela.Type_Managers;

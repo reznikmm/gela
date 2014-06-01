@@ -25,6 +25,12 @@ package Gela.Interpretations is
       Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
    --  Return interpretations of Name symbol
 
+   not overriding procedure Expression
+     (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
+   --  Return interpretations of expression with given type
+
    not overriding procedure Join_Selected_Component
      (Self   : in out Interpretation_Manager;
       Env    : Gela.Semantic_Types.Env_Index;

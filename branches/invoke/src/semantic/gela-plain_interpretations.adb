@@ -1,4 +1,5 @@
 with Gela.Int.Defining_Names;
+with Gela.Int.Expressions;
 with Gela.Int.Visiters;
 with Gela.Environments;
 with Gela.Defining_Name_Cursors;
@@ -159,6 +160,27 @@ package body Gela.Plain_Interpretations is
             Prefix);
       end if;
    end Down_Selected_Component;
+
+   ----------------
+   -- Expression --
+   ----------------
+
+   overriding procedure Expression
+     (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+
+      Value : Gela.Int.Interpretation_Access;
+   begin
+      Value := new Gela.Int.Expressions.Expression'
+        (Gela.Int.Expressions.Create (Tipe, Save => null));
+
+      Self.Last_Int := Self.Last_Int + 1;
+      Result := Self.Last_Int;
+      Self.Interpretations.Insert (Result, Value);
+   end Expression;
 
    -----------------------
    -- Get_Defining_Name --

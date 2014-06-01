@@ -15,6 +15,13 @@ package Gela.Plain_Type_Managers is
 
    type Type_Manager_Access is access all Type_Manager'Class;
 
+private
+
+   type Type_Manager (Context : Gela.Contexts.Context_Access) is
+     new Gela.Type_Managers.Type_Manager with record
+      null;
+   end record;
+
    overriding function Get
      (Self  : access Type_Manager;
       Index : Gela.Semantic_Types.Type_Index)
@@ -30,11 +37,13 @@ package Gela.Plain_Type_Managers is
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Type_Index;
 
-private
+   overriding function Universal_Integer
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
 
-   type Type_Manager (Context : Gela.Contexts.Context_Access) is
-     new Gela.Type_Managers.Type_Manager with record
-      null;
-   end record;
+   overriding function Universal_Real
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
+
+   overriding function Universal_Access
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
 
 end Gela.Plain_Type_Managers;

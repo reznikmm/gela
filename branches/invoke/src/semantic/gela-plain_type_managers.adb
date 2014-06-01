@@ -44,4 +44,41 @@ package body Gela.Plain_Type_Managers is
       return 0;
    end Type_From_Subtype_Mark;
 
+   ----------------------
+   -- Universal_Access --
+   ----------------------
+
+   overriding function Universal_Access
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return 0;
+   end Universal_Access;
+
+   -----------------------
+   -- Universal_Integer --
+   -----------------------
+
+   overriding function Universal_Integer
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return 0;
+   end Universal_Integer;
+
+   --------------------
+   -- Universal_Real --
+   --------------------
+
+   overriding function Universal_Real
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return 0;
+   end Universal_Real;
+
 end Gela.Plain_Type_Managers;

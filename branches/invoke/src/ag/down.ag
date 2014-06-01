@@ -784,12 +784,12 @@ Rules for subtype_indication. :
 Rules for subtype_indication. :
 (.
       -- 3.5 (5)
-      --  Depend on ${subtype_indication.env_in}, ${subtype_mark.Up}
-      --  Gela.Pass_Utils.Resolve_To_Type
-      --  (Subtype_Constraint.Down,
-      --   ${Subtype_Constraint.Up}, )
-
-      ${Subtype_Constraint.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve_To_Type
+        (Self.Compilation.Context.Interpretation_Manager,
+         ${subtype_indication.env_in},
+         ${subtype_mark.Up},
+         ${Subtype_Constraint.Up},
+         ${Subtype_Constraint.Down});
 .)
 
 Rules for parameter_specification. :

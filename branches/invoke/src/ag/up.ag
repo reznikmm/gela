@@ -1,5 +1,7 @@
 Synthesized attributes
+  allocator,
   attribute_reference,
+  case_expression,
   character_literal,
   composite_constraint,
   constraint,
@@ -7,20 +9,28 @@ Synthesized attributes
   digits_constraint,
   direct_name,
   explicit_dereference,
+  extension_aggregate,
   function_call,
   identifier,
+  if_expression,
   name,
+  null_literal,
+  numeric_literal,
   operator_symbol,
   prefix,
   program_unit_name,
   qualified_expression,
+  quantified_expression,
   range_attribute_reference,
   range_constraint,
+  record_aggregate,
   scalar_constraint,
   selected_component,
   selected_identifier,
+  simple_expression,
   simple_expression_range,
   subtype_mark
+
    : Gela.Interpretations.Interpretation_Set_Index : Up;
 
 Rules for identifier.identifier_token :
@@ -94,5 +104,50 @@ Rules for range_attribute_reference.Range_Attribute :
 Rules for simple_expression_range. :
 (.
       --  depends on ${simple_expression_range.env_in}
-      ${simple_expression_range.Up} := 0;  --  FIXME
+      --  ${Upper_Bound.Up}
+      ${simple_expression_range.Up} := ${Lower_Bound.Up};  --  FIXME
 .)
+
+Rules for allocator. :
+(.
+      ${allocator.Up} := 0;  --  FIXME
+.)
+
+Rules for case_expression. :
+(.
+      ${case_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for extension_aggregate. :
+(.
+      ${extension_aggregate.Up} := 0;  --  FIXME
+.)
+
+Rules for if_expression.Expression_Paths :
+(.
+      ${if_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for null_literal.null_literal_token :
+(.
+      ${null_literal.Up} := 0;  --  FIXME
+.)
+
+Rules for numeric_literal.numeric_literal_token :
+(.
+      --  4.2 (8/2)
+      Gela.Pass_Utils.Numeric_Literal_Interpretation
+        (Self.Compilation,
+         ${numeric_literal_token.Index}, ${numeric_literal.Up});
+.)
+
+Rules for quantified_expression. :
+(.
+      ${quantified_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for record_aggregate. :
+(.
+      ${record_aggregate.Up} := 0;  --  FIXME
+.)
+
