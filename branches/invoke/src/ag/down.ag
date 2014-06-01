@@ -788,7 +788,7 @@ Rules for subtype_indication. :
         (Self.Compilation.Context.Interpretation_Manager,
          ${subtype_indication.env_in},
          ${subtype_mark.Up},
-         ${Subtype_Constraint.Up},
+         ${Subtype_Constraint.Up:0},
          ${Subtype_Constraint.Down});
 .)
 
