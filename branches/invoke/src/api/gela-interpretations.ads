@@ -1,6 +1,5 @@
 --  This package provides Interpretation_Manager interface and its methods.
 with Gela.Elements.Defining_Names;
-with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 
 package Gela.Interpretations is
@@ -12,67 +11,72 @@ package Gela.Interpretations is
    type Interpretation_Index is new Natural;
    --  Index of interpretation inside an instance of manager
 
+   type Interpretation_Index_Array is array (Positive range <>) of
+      Interpretation_Index;
+
    type Interpretation_Manager is limited interface;
    --  This object keeps sets of possible interpretations
    type Interpretation_Manager_Access is
      access all Interpretation_Manager'Class;
    for Interpretation_Manager_Access'Storage_Size use 0;
 
-   not overriding procedure Direct_Name
+   not overriding procedure Add_Defining_Name
      (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Name   : Gela.Lexical_Types.Symbol;
-      Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
-   --  Return interpretations of Name symbol
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Down   : Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with new interpretation of defining Name
 
-   not overriding procedure Expression
+   not overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
-      Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
-   --  Return interpretations of expression with given type
+      Down   : Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with new interpretation of expression with given Type
 
-   not overriding procedure Join_Selected_Component
+   type Visiter is limited interface;
+
+   not overriding procedure On_Defining_Name
+     (Self   : in out Visiter;
+      Index  : Interpretation_Index;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Down   : Interpretation_Index_Array)
+        is abstract;
+   --  Called for each defining name interpretation
+
+   not overriding procedure On_Expression
+     (Self   : in out Visiter;
+      Index  : Interpretation_Index;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Down   : Interpretation_Index_Array)
+        is abstract;
+   --  Called for each expression interpretation
+
+   not overriding procedure Visit
      (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Prefix : Gela.Interpretations.Interpretation_Set_Index;
-      Name   : Gela.Lexical_Types.Symbol;
-      Result : out Gela.Interpretations.Interpretation_Set_Index) is abstract;
-   --  Return interpretations of Prefix.Name symbol
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Target : in out Visiter'Class) is abstract;
+   --  Iterate over all interpretations in Set and call Target visiter
 
-   not overriding procedure Down_Selected_Component
+   not overriding procedure Visit
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Index;
+      Target : in out Visiter'Class) is abstract;
+   --  For given interpretations call Target visiter
+
+   not overriding procedure Get_Down_Interpretation
      (Self     : in out Interpretation_Manager;
       Value    : Gela.Interpretations.Interpretation_Index;
-      Prefix   : out Gela.Interpretations.Interpretation_Index) is abstract;
-   --  For given interpretation of selected_component get interpretation of
-   --  its profix
-
-   not overriding procedure Chosen_Interpretation
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
-   --  Return chosen interpretation from Set of a complete context
-
-   not overriding procedure Resolve_To_Type
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Value  : Gela.Semantic_Types.Type_Index;
-      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
-   --  Return chosen interpretation from Set restricted to be given type
+      Index    : Positive;
+      Result   : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  Return interpretation from which Value was derived
 
    not overriding procedure Get_Defining_Name
      (Self   : in out Interpretation_Manager;
       Value  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access)
         is abstract;
-   --  Return defining name from interpretation
-
-   not overriding procedure Get_Subtype
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Result : out Gela.Semantic_Types.Type_Index) is abstract;
-   --  Set of interpretation shall resolve to denote a subtype. 3.2.2 (8)
 
 end Gela.Interpretations;

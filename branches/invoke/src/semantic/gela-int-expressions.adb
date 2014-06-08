@@ -7,11 +7,13 @@ package body Gela.Int.Expressions is
    ------------
 
    function Create
-     (Expression_Type : Gela.Semantic_Types.Type_Index;
-      Save : Gela.Saves.Save_Access)
+     (Children        : Natural;
+      Expression_Type : Gela.Semantic_Types.Type_Index)
       return Expression is
    begin
-      return (Expression_Type, Save);
+      return (Length          => Children,
+              Expression_Type => Expression_Type,
+              Down            => (others => 0));
    end Create;
 
    ---------------------
@@ -24,16 +26,6 @@ package body Gela.Int.Expressions is
    begin
       return Self.Expression_Type;
    end Expression_Type;
-
-   ----------
-   -- Save --
-   ----------
-
-   overriding function Save
-     (Self : Expression) return Gela.Saves.Save_Access is
-   begin
-      return Self.Save;
-   end Save;
 
    -----------
    -- Visit --

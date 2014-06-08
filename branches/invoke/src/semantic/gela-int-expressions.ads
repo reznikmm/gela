@@ -8,8 +8,8 @@ package Gela.Int.Expressions is
    type Expression is new Interpretation with private;
 
    function Create
-     (Expression_Type : Gela.Semantic_Types.Type_Index;
-      Save : Gela.Saves.Save_Access)
+     (Children        : Natural;
+      Expression_Type : Gela.Semantic_Types.Type_Index)
       return Expression;
 
    function Expression_Type
@@ -20,14 +20,10 @@ private
 
    type Expression is new Interpretation with record
       Expression_Type : Gela.Semantic_Types.Type_Index;
-      Save : Gela.Saves.Save_Access;
    end record;
 
    overriding procedure Visit
      (Self    : Expression;
       Visiter : access Gela.Int.Visiters.Visiter'Class);
-
-   overriding function Save
-     (Self : Expression) return Gela.Saves.Save_Access;
 
 end Gela.Int.Expressions;

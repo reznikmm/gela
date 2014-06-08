@@ -162,7 +162,7 @@ attribute_reference ::=
   prefix
   token <apostrophe_token>
   [identifier <Attribute_Designator_Identifier>]
-  [token <designator_token>]
+  token <designator_token>
   [expression <Attribute_Designator_Expressions>]
 ;
 

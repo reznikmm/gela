@@ -12,6 +12,7 @@ with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Expressions;
 with Asis.Implementation;
+with Asis.Iterator;
 with Asis.Text;
 
 with League.Application;
@@ -21,8 +22,41 @@ with League.String_Vectors;
 procedure Def_Name is
    procedure On_Unit (Unit : Asis.Compilation_Unit);
    procedure On_Identifier (Item : Asis.Identifier);
+   procedure On_Element (Item : Asis.Element);
+
+   procedure Pre_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String);
+
+   procedure Post_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String) is null;
+
+   procedure Iterate is new Asis.Iterator.Traverse_Element
+     (State_Information => League.Strings.Universal_String,
+      Pre_Operation     => Pre_Operation,
+      Post_Operation    => Post_Operation);
 
    Result : League.Strings.Universal_String;
+
+   ----------------
+   -- On_Element --
+   ----------------
+
+   procedure On_Element (Item : Asis.Element) is
+   begin
+      case Asis.Elements.Expression_Kind (Item) is
+         when Asis.An_Identifier =>
+            On_Identifier (Item);
+         when Asis.A_Selected_Component =>
+            On_Identifier
+              (Asis.Expressions.Selector (Item));
+         when others =>
+            null;
+      end case;
+   end On_Element;
 
    -------------------
    -- On_Identifier --
@@ -40,10 +74,14 @@ procedure Def_Name is
       Span := Asis.Text.Element_Span (Item);
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
-      Span := Asis.Text.Element_Span (Def);
       Result.Append (" =>");
-      Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
-      Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
+
+      if not Asis.Elements.Is_Nil (Def) then
+         Span := Asis.Text.Element_Span (Def);
+         Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
+         Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
+      end if;
+
       Result.Append (Wide_Wide_Character'Val (10));
    end On_Identifier;
 
@@ -52,7 +90,9 @@ procedure Def_Name is
    -------------
 
    procedure On_Unit (Unit : Asis.Compilation_Unit) is
-      Withs : constant Asis.Element_List :=
+      Control : Asis.Traverse_Control := Asis.Continue;
+
+      Withs   : constant Asis.Element_List :=
         Asis.Elements.Context_Clause_Elements (Unit);
    begin
       for J in Withs'Range loop
@@ -63,22 +103,31 @@ procedure Def_Name is
                     Asis.Clauses.Clause_Names (Withs (J));
                begin
                   for K in Names'Range loop
-                     case Asis.Elements.Expression_Kind (Names (K)) is
-                        when Asis.An_Identifier =>
-                           On_Identifier (Names (K));
-                        when Asis.A_Selected_Component =>
-                           On_Identifier
-                             (Asis.Expressions.Selector (Names (K)));
-                        when others =>
-                           null;
-                     end case;
+                     On_Element (Names (K));
                   end loop;
                end;
             when others =>
                null;
          end case;
       end loop;
+
+      Iterate (Asis.Elements.Unit_Declaration (Unit), Control, Result);
    end On_Unit;
+
+   -------------------
+   -- Pre_Operation --
+   -------------------
+
+   procedure Pre_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Control);
+      pragma Unreferenced (State);
+   begin
+      On_Element (Element);
+   end Pre_Operation;
 
    use type League.Hash_Type;
 

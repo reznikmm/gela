@@ -290,6 +290,23 @@ package body Gela.Plain_Symbol_Sets is
       return Gela.Lexical_Types.No_Symbol;
    end Get;
 
+   ---------
+   -- Get --
+   ---------
+
+   overriding function Get
+     (Self  : Symbol_Set;
+      Value : Gela.Lexical_Types.Predefined_Symbol)
+      return Gela.Lexical_Types.Symbol
+   is
+      Image : constant Wide_Wide_String :=
+        Gela.Lexical_Types.Predefined_Symbol'Wide_Wide_Image (Value);
+      Text : constant League.Strings.Universal_String :=
+        League.Strings.To_Universal_String (Image (1 .. Image'Last - 7));
+   begin
+      return Self.Get (Text);
+   end Get;
+
    ----------
    -- Hash --
    ----------

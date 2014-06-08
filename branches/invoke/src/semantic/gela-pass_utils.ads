@@ -14,10 +14,12 @@ with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Elements.Defining_Names;
-with Gela.Interpretations;
+with Gela.Resolve;
 
 package Gela.Pass_Utils is
    pragma Preelaborate;
+
+   package Resolve renames Gela.Resolve;
 
    function Create_Unit_Declaration
      (Comp          : Gela.Compilations.Compilation_Access;
@@ -57,25 +59,5 @@ package Gela.Pass_Utils is
       Name         : Gela.Elements.Defining_Names.Defining_Name_Access)
      return Gela.Semantic_Types.Env_Index;
    --  Add (Symbol, Name) to Env, then create new declarative region
-
-   procedure Shall_Be_Subtype
-     (Self   : Gela.Interpretations.Interpretation_Manager_Access;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Result : out Gela.Interpretations.Interpretation_Index);
-   --  Set of interpretation shall resolve to denote a subtype. 3.2.2 (8)
-
-   procedure Resolve_To_Type
-     (Self    : Gela.Interpretations.Interpretation_Manager_Access;
-      Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
-      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
-      Result  : out Gela.Interpretations.Interpretation_Index);
-   --  Resolve Type_Up to be type, then resolve Expr_Up have this type
-
-   procedure Numeric_Literal_Interpretation
-     (Comp   : Gela.Compilations.Compilation_Access;
-      Token  : Gela.Lexical_Types.Token_Count;
-      Result : out Gela.Interpretations.Interpretation_Set_Index);
 
 end Gela.Pass_Utils;

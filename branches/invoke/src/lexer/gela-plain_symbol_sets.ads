@@ -23,6 +23,11 @@ package Gela.Plain_Symbol_Sets is
       return Gela.Lexical_Types.Symbol;
    --  Return No_Symbol if there is no such symbol in the set.
 
+   overriding function Get
+     (Self  : Symbol_Set;
+      Value : Gela.Lexical_Types.Predefined_Symbol)
+      return Gela.Lexical_Types.Symbol;
+
    overriding procedure Fetch
      (Self  : in out Symbol_Set;
       Image : League.Strings.Universal_String;

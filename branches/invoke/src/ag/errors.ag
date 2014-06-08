@@ -1,17 +1,33 @@
 Synthesized attributes
+  allocator,
   attribute_reference,
+  case_expression,
+  character_literal,
   composite_constraint,
   constraint,
   delta_constraint,
   digits_constraint,
+  direct_name,
+  explicit_dereference,
+  extension_aggregate,
   function_call,
   identifier,
+  if_expression,
+  name,
+  null_literal,
+  numeric_literal,
+  operator_symbol,
+  prefix,
   program_unit_name,
+  qualified_expression,
+  quantified_expression,
   range_attribute_reference,
   range_constraint,
+  record_aggregate,
   scalar_constraint,
   selected_component,
   selected_identifier,
+  simple_expression,
   simple_expression_range,
   subtype_indication,
   subtype_mark
@@ -35,7 +51,7 @@ Rules for selected_component. :
 
 Rules for attribute_reference. :
 (.
-      ${attribute_reference.Errors} := 0;
+      ${attribute_reference.Errors} := 0;  -- ${prefix.Errors}
 .)
 
 Rules for function_call. :
@@ -63,9 +79,59 @@ Rules for range_attribute_reference.Range_Attribute :
 .)
 Rules for simple_expression_range. :
 (.
+      --  ${Upper_Bound.Errors}, ${Lower_Bound.Errors}
       ${simple_expression_range.Errors} := 0;
 .)
 Rules for composite_constraint. :
 (.
       ${composite_constraint.Errors} := 0;
+.)
+Rules for allocator. :
+(.
+      ${allocator.Errors} := 0;  --  FIXME
+.)
+Rules for case_expression. :
+(.
+      ${case_expression.Errors} := 0;  --  FIXME
+.)
+Rules for extension_aggregate. :
+(.
+      ${extension_aggregate.Errors} := 0;  --  FIXME
+.)
+Rules for if_expression.Expression_Paths :
+(.
+      ${if_expression.Errors} := 0;  --  FIXME
+.)
+Rules for null_literal.null_literal_token :
+(.
+      ${null_literal.Errors} := 0;  --  FIXME
+.)
+Rules for numeric_literal.numeric_literal_token :
+(.
+      ${numeric_literal.Errors} := 0;  --  FIXME
+.)
+Rules for quantified_expression. :
+(.
+      ${quantified_expression.Errors} := 0;  --  FIXME
+.)
+Rules for record_aggregate. :
+(.
+      ${record_aggregate.Errors} := 0;  --  FIXME
+.)
+
+Rules for character_literal.character_literal_token :
+(.
+      ${character_literal.Errors} := 0; --  FIXME
+.)
+Rules for explicit_dereference. :
+(.
+      ${explicit_dereference.Errors} := 0; --  FIXME
+.)
+Rules for operator_symbol.operator_symbol_token :
+(.
+      ${operator_symbol.Errors} := 0; --  FIXME
+.)
+Rules for qualified_expression. :
+(.
+      ${qualified_expression.Errors} := 0; --  FIXME
 .)

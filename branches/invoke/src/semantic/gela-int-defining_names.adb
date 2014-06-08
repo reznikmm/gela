@@ -7,11 +7,11 @@ package body Gela.Int.Defining_Names is
    ------------
 
    function Create
-     (Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Save : Gela.Saves.Save_Access)
+     (Children : Natural;
+      Name     : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Defining_Name is
    begin
-      return (Name, Save);
+      return (Length => Children, Name => Name, Down => (others => 0));
    end Create;
 
    ----------
@@ -24,16 +24,6 @@ package body Gela.Int.Defining_Names is
    begin
       return Self.Name;
    end Name;
-
-   ----------
-   -- Save --
-   ----------
-
-   overriding function Save
-     (Self : Defining_Name) return Gela.Saves.Save_Access is
-   begin
-      return Self.Save;
-   end Save;
 
    -----------
    -- Visit --

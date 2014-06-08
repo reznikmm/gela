@@ -35,27 +35,41 @@ Synthesized attributes
 
 Rules for identifier.identifier_token :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Direct_Name
-        (${identifier.env_in},
+      Gela.Pass_Utils.Resolve.Direct_Name
+        (Self.Compilation,
+         ${identifier.env_in},
          Self.Compilation.Get_Token (${identifier_token.Index}).Symbol,
          ${identifier.Up});
 .)
 
 Rules for selected_identifier. :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
-        (${selected_identifier.env_in}, ${Prefix.Up}, ${Selector.full_name}, ${selected_identifier.Up});
+      Gela.Pass_Utils.Resolve.Selected_Component
+        (Self.Compilation,
+         ${selected_identifier.env_in},
+         ${Prefix.Up},
+         ${Selector.full_name},
+         ${selected_identifier.Up});
 .)
 
 Rules for selected_component. :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Join_Selected_Component
-        (${selected_component.env_in}, ${prefix.Up}, ${Selector.full_name}, ${selected_component.Up});
+      Gela.Pass_Utils.Resolve.Selected_Component
+        (Self.Compilation,
+         ${selected_component.env_in},
+         ${prefix.Up},
+         ${Selector.full_name},
+         ${selected_component.Up});
 .)
 
 Rules for attribute_reference. :
 (.
-      ${attribute_reference.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Attribute_Reference
+        (Self.Compilation,
+         ${attribute_reference.env_in},
+         ${prefix.Up},
+         ${Attribute_Designator_Identifier.full_name:0},
+         ${attribute_reference.Up});
 .)
 
 Rules for composite_constraint. :
@@ -103,9 +117,12 @@ Rules for range_attribute_reference.Range_Attribute :
 
 Rules for simple_expression_range. :
 (.
-      --  depends on ${simple_expression_range.env_in}
-      --  ${Upper_Bound.Up}
-      ${simple_expression_range.Up} := ${Lower_Bound.Up};  --  FIXME
+      Gela.Pass_Utils.Resolve.Simple_Expression_Range
+        (Self.Compilation,
+         ${simple_expression_range.env_in},
+         ${Lower_Bound.Up},
+         ${Upper_Bound.Up},
+         ${simple_expression_range.Up});
 .)
 
 Rules for allocator. :
@@ -136,7 +153,7 @@ Rules for null_literal.null_literal_token :
 Rules for numeric_literal.numeric_literal_token :
 (.
       --  4.2 (8/2)
-      Gela.Pass_Utils.Numeric_Literal_Interpretation
+      Gela.Pass_Utils.Resolve.Numeric_Literal
         (Self.Compilation,
          ${numeric_literal_token.Index}, ${numeric_literal.Up});
 .)

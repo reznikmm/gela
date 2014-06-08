@@ -17,6 +17,11 @@ package Gela.Symbol_Sets is
       return Gela.Lexical_Types.Symbol is abstract;
    --  Return No_Symbol if there is no such symbol in the set.
 
+   not overriding function Get
+     (Self  : Symbol_Set;
+      Value : Gela.Lexical_Types.Predefined_Symbol)
+      return Gela.Lexical_Types.Symbol is abstract;
+
    not overriding procedure Fetch
      (Self  : in out Symbol_Set;
       Image : League.Strings.Universal_String;

@@ -1,186 +1,56 @@
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Visiters;
-with Gela.Environments;
-with Gela.Defining_Name_Cursors;
-with Gela.Saves;
-with Gela.Solutions.Defining_Names;
-with Gela.Solutions.Visiters;
 
 package body Gela.Plain_Interpretations is
 
-   procedure New_Name_Solution
-     (Self   : in out Interpretation_Manager'Class;
+   -----------------------
+   -- Add_Defining_Name --
+   -----------------------
+
+   overriding procedure Add_Defining_Name
+     (Self   : in out Interpretation_Manager;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Save   : Gela.Saves.Save_Access;
-      Result : out Gela.Interpretations.Interpretation_Index);
-   --  Create Defining_Name_Solution, return its index.
-
-   package Get_Int is
-
-      type Visiter is new Gela.Int.Visiters.Visiter with record
-         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-      end record;
-
-      overriding procedure Defining_Name
-        (Self  : access Visiter;
-         Value : Gela.Int.Defining_Names.Defining_Name);
-
-   end Get_Int;
-
-   package body Get_Int is
-
-      ---------------------------
-      -- Name --
-      ---------------------------
-
-      overriding procedure Defining_Name
-        (Self  : access Visiter;
-         Value : Gela.Int.Defining_Names.Defining_Name) is
-      begin
-         Self.Name := Value.Name;
-      end Defining_Name;
-
-   end Get_Int;
-
-   package Get_Name is
-
-      type Visiter is new Gela.Solutions.Visiters.Visiter with record
-         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-      end record;
-
-      overriding procedure Defining_Name
-        (Self : access Visiter;
-         Value : Gela.Solutions.Defining_Names.Defining_Name_Solution);
-
-   end Get_Name;
-
-   --------------
-   -- Get_Name --
-   --------------
-
-   package body Get_Name is
-
-      -------------------
-      -- Defining_Name --
-      -------------------
-
-      overriding procedure Defining_Name
-        (Self  : access Visiter;
-         Value : Gela.Solutions.Defining_Names.Defining_Name_Solution) is
-      begin
-         Self.Name := Value.Name;
-      end Defining_Name;
-
-   end Get_Name;
-
-   ---------------------------
-   -- Chosen_Interpretation --
-   ---------------------------
-
-   overriding procedure Chosen_Interpretation
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Result : out Gela.Interpretations.Interpretation_Index)
-   is
-      pragma Unreferenced (Env);
-      use type Gela.Lexical_Types.Symbol;
-      use type Gela.Interpretations.Interpretation_Set_Index;
-      use type Gela.Elements.Defining_Names.Defining_Name_Access;
-      X    : Gela.Int.Interpretation_Access;
-      V    : aliased Get_Int.Visiter;
-   begin
-      if Set /= 0 then
-         X := Self.Interpretations.Element (Set);
-         X.Visit (V'Access);
-      end if;
-
-      if V.Name = null then
-         Result := 0;
-      else
-         New_Name_Solution
-           (Self,
-            V.Name,
-            X.Save,
-            Result);
-      end if;
-   end Chosen_Interpretation;
-
-   -----------------
-   -- Direct_Name --
-   -----------------
-
-   overriding procedure Direct_Name
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Name   : Gela.Lexical_Types.Symbol;
-      Result : out Gela.Interpretations.Interpretation_Set_Index)
-   is
-      use type Gela.Interpretations.Interpretation_Set_Index;
-      X : constant Gela.Environments.Environment_Set_Access :=
-        Self.Context.Environment_Set;
-      Y : constant Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
-        := X.Direct_Visible (Env, Name);
-
-      Value : Gela.Int.Interpretation_Access;
-   begin
-      if Y.Has_Element then
-         Value := new Gela.Int.Defining_Names.Defining_Name'
-           (Gela.Int.Defining_Names.Create (Y.Element, Save => null));
-
-         Self.Last_Int := Self.Last_Int + 1;
-         Result := Self.Last_Int;
-         Self.Interpretations.Insert (Result, Value);
-      else
-         Result := 0;
-      end if;
-   end Direct_Name;
-
-   -----------------------------
-   -- Down_Selected_Component --
-   -----------------------------
-
-   overriding procedure Down_Selected_Component
-     (Self     : in out Interpretation_Manager;
-      Value    : Gela.Interpretations.Interpretation_Index;
-      Prefix   : out Gela.Interpretations.Interpretation_Index)
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Interpretations.Interpretation_Index;
-      S : Gela.Solutions.Solution_Access;
+
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Defining_Names.Defining_Name'
+          (Gela.Int.Defining_Names.Create
+             (Children => Down'Length,
+              Name     => Name));
    begin
-      if Value = 0 then
-         Prefix := 0;
-      else
-         S := Self.Solutions.Element (Value);
-         New_Name_Solution
-           (Self,
-            Gela.Saves.Defining_Name_Save (S.Save.all).Name,
-            Gela.Saves.Defining_Name_Save (S.Save.all).Parent,
-            Prefix);
-      end if;
-   end Down_Selected_Component;
+      Item.Down := Down;
+      Self.Last_Int := Self.Last_Int + 1;
+      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
+      Self.Interpretations.Insert (Self.Last_Int, Item);
+   end Add_Defining_Name;
 
-   ----------------
-   -- Expression --
-   ----------------
+   --------------------
+   -- Add_Expression --
+   --------------------
 
-   overriding procedure Expression
+   overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
-      Result : out Gela.Interpretations.Interpretation_Set_Index)
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
-      use type Gela.Interpretations.Interpretation_Set_Index;
+      use type Gela.Interpretations.Interpretation_Index;
 
-      Value : Gela.Int.Interpretation_Access;
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Expressions.Expression'
+          (Gela.Int.Expressions.Create
+             (Children => Down'Length,
+              Expression_Type => Tipe));
    begin
-      Value := new Gela.Int.Expressions.Expression'
-        (Gela.Int.Expressions.Create (Tipe, Save => null));
-
+      Item.Down := Down;
       Self.Last_Int := Self.Last_Int + 1;
-      Result := Self.Last_Int;
-      Self.Interpretations.Insert (Result, Value);
-   end Expression;
+      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
+      Self.Interpretations.Insert (Self.Last_Int, Item);
+   end Add_Expression;
 
    -----------------------
    -- Get_Defining_Name --
@@ -191,48 +61,77 @@ package body Gela.Plain_Interpretations is
       Value  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-      V : aliased Get_Name.Visiter;
-      S : Gela.Solutions.Solution_Access;
-   begin
-      if Value = 0 then
-         Result := null;
-      else
-         S := Self.Solutions.Element (Value);
-         S.Visit (V'Access);
-         Result := V.Name;
-      end if;
+      package Each is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+         end record;
 
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+      end Each;
+
+      ----------
+      -- Each --
+      ----------
+
+      package body Each is
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Index);
+            pragma Unreferenced (Down);
+         begin
+            Self.Name := Name;
+         end On_Defining_Name;
+
+      end Each;
+
+      Visiter : Each.Visiter;
+   begin
+      Self.Visit (Value, Visiter);
+      Result := Visiter.Name;
    end Get_Defining_Name;
 
-   -----------------
-   -- Get_Subtype --
-   -----------------
+   -----------------------------
+   -- Get_Down_Interpretation --
+   -----------------------------
 
-   overriding procedure Get_Subtype
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Result : out Gela.Semantic_Types.Type_Index)
+   overriding procedure Get_Down_Interpretation
+     (Self     : in out Interpretation_Manager;
+      Value    : Gela.Interpretations.Interpretation_Index;
+      Index    : Positive;
+      Result   : out Gela.Interpretations.Interpretation_Index)
    is
-      pragma Unreferenced (Env);
-      use type Gela.Lexical_Types.Symbol;
-      use type Gela.Interpretations.Interpretation_Set_Index;
-      use type Gela.Elements.Defining_Names.Defining_Name_Access;
-      X    : Gela.Int.Interpretation_Access;
-      V    : aliased Get_Int.Visiter;
+      use type Gela.Interpretations.Interpretation_Index;
+
+      Item : Gela.Int.Interpretation_Access;
    begin
-      if Set /= 0 then
-         X := Self.Interpretations.Element (Set);
-         X.Visit (V'Access);
+      Result := 0;
+
+      if Value = 0 then
+         return;
       end if;
 
-      if V.Name = null then
-         Result := 0;
-      else
-         Result := Self.Context.Types.Type_By_Name (V.Name);
+      Item := Self.Interpretations.Element (Value);
+
+      if Index in Item.Down'Range then
+         Result := Item.Down (Index);
       end if;
-   end Get_Subtype;
+   end Get_Down_Interpretation;
 
    ----------
    -- Hash --
@@ -256,93 +155,85 @@ package body Gela.Plain_Interpretations is
       return Ada.Containers.Hash_Type (Value);
    end Hash;
 
-   -----------------------------
-   -- Join_Selected_Component --
-   -----------------------------
+   -----------
+   -- Visit --
+   -----------
 
-   overriding procedure Join_Selected_Component
+   overriding procedure Visit
      (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
-      Prefix : Gela.Interpretations.Interpretation_Set_Index;
-      Name   : Gela.Lexical_Types.Symbol;
-      Result : out Gela.Interpretations.Interpretation_Set_Index)
-   is
-      use type Gela.Interpretations.Interpretation_Set_Index;
-      use type Gela.Elements.Defining_Names.Defining_Name_Access;
-      X : constant Gela.Environments.Environment_Set_Access :=
-        Self.Context.Environment_Set;
-
-      Found : aliased Boolean;
-      Value : Gela.Int.Interpretation_Access;
-      V     : aliased Get_Int.Visiter;
-   begin
-      if Prefix /= 0 then
-         Self.Interpretations.Element (Prefix).Visit (V'Access);
-      end if;
-
-      if V.Name /= null then
-         declare
-            Down : constant Gela.Saves.Save_Access :=
-              Self.Interpretations.Element (Prefix).Save;
-            Y : constant Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
-              := X.Visible (Env, V.Name, Name, Found'Access);
-         begin
-            if Y.Has_Element then
-               Value := new Gela.Int.Defining_Names.Defining_Name'
-                 (Gela.Int.Defining_Names.Create
-                    (Y.Element,
-                     Save => new Gela.Saves.Defining_Name_Save'
-                       (Parent => Down,
-                        Name   => Y.Element)));
-
-               Self.Last_Int := Self.Last_Int + 1;
-               Result := Self.Last_Int;
-               Self.Interpretations.Insert (Result, Value);
-            else
-               Result := 0;
-            end if;
-         end;
-      end if;
-   end Join_Selected_Component;
-
-   -----------------------
-   -- New_Name_Solution --
-   -----------------------
-
-   procedure New_Name_Solution
-     (Self   : in out Interpretation_Manager'Class;
-      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Save   : Gela.Saves.Save_Access;
-      Result : out Gela.Interpretations.Interpretation_Index)
-   is
-      use type Gela.Interpretations.Interpretation_Index;
-      S    : Gela.Solutions.Solution_Access;
-   begin
-      S := new Gela.Solutions.Defining_Names.Defining_Name_Solution'
-        (Gela.Solutions.Defining_Names.Create (Name, Save));
-      Self.Last_Solution := Self.Last_Solution + 1;
-      Result := Self.Last_Solution;
-      Self.Solutions.Insert (Result, S);
-   end New_Name_Solution;
-
-   ---------------------
-   -- Resolve_To_Type --
-   ---------------------
-
-   overriding procedure Resolve_To_Type
-     (Self   : in out Interpretation_Manager;
-      Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Value  : Gela.Semantic_Types.Type_Index;
-      Result : out Gela.Interpretations.Interpretation_Index)
-   is
-      pragma Unreferenced (Value);
+      Target : in out Gela.Interpretations.Visiter'Class) is
    begin
-      --  FIXME
-      Self.Chosen_Interpretation
-        (Env    => Env,
-         Set    => Set,
-         Result => Result);
-   end Resolve_To_Type;
+      Self.Visit (Gela.Interpretations.Interpretation_Index (Set), Target);
+   end Visit;
+
+   -----------
+   -- Visit --
+   -----------
+
+   overriding procedure Visit
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Index;
+      Target : in out Gela.Interpretations.Visiter'Class)
+   is
+      package Switch is
+         type Visiter is new Gela.Int.Visiters.Visiter with null record;
+
+         overriding procedure Defining_Name
+           (Self  : access Visiter;
+            Value : Gela.Int.Defining_Names.Defining_Name);
+
+         overriding procedure Expression
+           (Self  : access Visiter;
+            Value : Gela.Int.Expressions.Expression);
+      end Switch;
+
+      ------------
+      -- Switch --
+      ------------
+
+      package body Switch is
+
+         -------------------
+         -- Defining_Name --
+         -------------------
+
+         overriding procedure Defining_Name
+           (Self  : access Visiter;
+            Value : Gela.Int.Defining_Names.Defining_Name)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Defining_Name
+              (Index => Index,
+               Name  => Value.Name,
+               Down  => Value.Down);
+         end Defining_Name;
+
+         ----------------
+         -- Expression --
+         ----------------
+
+         overriding procedure Expression
+           (Self  : access Visiter;
+            Value : Gela.Int.Expressions.Expression)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Expression
+              (Index => Index,
+               Tipe  => Value.Expression_Type,
+               Down  => Value.Down);
+         end Expression;
+
+      end Switch;
+
+      use type Gela.Interpretations.Interpretation_Index;
+      V : aliased Switch.Visiter;
+   begin
+      if Index /= 0 then
+         Self.Interpretations.Element (Index).Visit (V'Access);
+      end if;
+   end Visit;
 
 end Gela.Plain_Interpretations;
