@@ -265,6 +265,7 @@ package body Gela.Resolve is
 
       Visiter : Each.Visiter;
    begin
+      Set := 0;
       IM.Visit (Prefix, Visiter);
    end Selected_Component;
 
