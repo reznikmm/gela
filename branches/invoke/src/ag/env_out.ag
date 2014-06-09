@@ -130,6 +130,7 @@ Synthesized attributes
   record_representation_clause,
   record_type_definition,
   return_object_specification,
+  root_type_definition,
   signed_integer_type_definition,
   single_protected_declaration,
   single_task_declaration,
@@ -894,4 +895,9 @@ Rules for variant_part. :
 Rules for with_clause. :
 (.
       ${with_clause.env_out} := ${with_clause.env_in};
+.)
+
+Rules for root_type_definition.dummy_token :
+(.
+      ${root_type_definition.env_out} := 0;
 .)

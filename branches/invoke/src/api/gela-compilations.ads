@@ -5,6 +5,7 @@ with League.String_Vectors;
 with League.Strings;
 
 with Gela.Contexts;
+with Gela.Element_Factories;
 with Gela.Lexical_Types;
 
 package Gela.Compilations is
@@ -65,5 +66,9 @@ package Gela.Compilations is
       Index : Gela.Lexical_Types.Token_Index)
       return Gela.Lexical_Types.Token is abstract;
    --  Return token information for given token
+
+   not overriding function Factory
+     (Self : Compilation) return Gela.Element_Factories.Element_Factory_Access
+        is abstract;
 
 end Gela.Compilations;

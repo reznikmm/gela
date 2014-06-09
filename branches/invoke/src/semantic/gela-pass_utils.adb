@@ -10,8 +10,14 @@
 with Gela.Contexts;
 with Gela.Compilation_Managers;
 with Gela.Dependency_Lists;
+with Gela.Plain_Type_Managers;
 
 package body Gela.Pass_Utils is
+
+   procedure Preprocess_Standard
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Unit          : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access);
 
    ----------------------------
    -- Add_Name_Create_Region --
@@ -120,6 +126,9 @@ package body Gela.Pass_Utils is
    is
       pragma Unreferenced (Private_Index);
       pragma Unreferenced (Unit_Kind);
+
+      use type Gela.Lexical_Types.Symbol;
+
       Context : constant Gela.Contexts.Context_Access := Comp.Context;
       Manager : constant Gela.Compilation_Managers.Compilation_Manager_Access
         := Context.Compilation_Manager;
@@ -132,9 +141,28 @@ package body Gela.Pass_Utils is
          Limited_With => Limited_With,
          Unit         => Unit);
 
+      if Full_Name = Comp.Context.Symbols.Get
+        (Gela.Lexical_Types.Standard_Symbol)
+      then
+         Preprocess_Standard (Comp, Unit);
+      end if;
+
       Manager.Read_Dependency (Deps);
 
       return 0;
    end Create_Unit_Declaration;
+
+   -------------------------
+   -- Preprocess_Standard --
+   -------------------------
+
+   procedure Preprocess_Standard
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Unit          : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access) is
+   begin
+      Gela.Plain_Type_Managers.Type_Manager_Access
+        (Comp.Context.Types).Initialize (Unit);
+   end Preprocess_Standard;
 
 end Gela.Pass_Utils;

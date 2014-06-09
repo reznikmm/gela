@@ -153,7 +153,8 @@ package body Gela.Plain_Compilation_Managers is
    begin
       Comp.Initialize
         (Text_Name => File,
-         Source    => Source);
+         Source    => Source,
+         Factory   => Gela.Element_Factories.Element_Factory_Access (Factory));
 
       Lexer.Scan (Source, Comp);
 

@@ -19,6 +19,12 @@ package Gela.Type_Managers is
       return Gela.Type_Views.Type_View_Access is abstract;
    --  Get type view by given Index
 
+   not overriding function Type_From_Declaration
+     (Self  : access Type_Manager;
+      Node  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Return type corresponding to Node of type declaration
+
    not overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
       Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)

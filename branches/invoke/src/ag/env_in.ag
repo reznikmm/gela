@@ -264,6 +264,7 @@ Inherited attributes
   record_type_definition,
   requeue_statement,
   return_object_specification,
+  root_type_definition,
   scalar_constraint,
   select_or_else_path,
   select_or_path,

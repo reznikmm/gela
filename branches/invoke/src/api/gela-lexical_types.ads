@@ -234,6 +234,7 @@ package Gela.Lexical_Types is
       Wide_Wide_Width_Symbol,
       Wide_Width_Symbol,
       Width_Symbol,
-      Write_Symbol);
+      Write_Symbol,
+      Standard_Symbol);
 
 end Gela.Lexical_Types;

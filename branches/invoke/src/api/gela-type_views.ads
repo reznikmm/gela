@@ -24,7 +24,7 @@ package Gela.Type_Views is
       A_Pool_Access,
       A_Procedure_Access,
       A_Function_Access,
-      A_Universal_Access,
+      An_Universal_Access,
       A_String,
       An_Other_Array,
       A_Untagged_Record,

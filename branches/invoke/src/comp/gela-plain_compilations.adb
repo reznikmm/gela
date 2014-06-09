@@ -36,6 +36,17 @@ package body Gela.Plain_Compilations is
       return Self.Context;
    end Context;
 
+   -------------
+   -- Factory --
+   -------------
+
+   overriding function Factory
+     (Self : Compilation)
+      return Gela.Element_Factories.Element_Factory_Access is
+   begin
+      return Self.Factory;
+   end Factory;
+
    -------------------
    -- Get_Line_Span --
    -------------------
@@ -137,11 +148,13 @@ package body Gela.Plain_Compilations is
    not overriding procedure Initialize
      (Self      : in out Compilation;
       Text_Name : League.Strings.Universal_String;
-      Source    : League.Strings.Universal_String) is
+      Source    : League.Strings.Universal_String;
+      Factory   : Gela.Element_Factories.Element_Factory_Access) is
    begin
       Self.Update := League.Calendars.Clock;
       Self.Text_Name := Text_Name;
       Self.Source := Source;
+      Self.Factory := Factory;
    end Initialize;
 
    ------------

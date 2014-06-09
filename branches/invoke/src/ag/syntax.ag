@@ -1544,6 +1544,10 @@ requeue_statement ::=
   token <semicolon_token>
 ;
 
+root_type_definition ::=
+  token <dummy_token>
+;
+
 scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
 
 simple_expression_range ::=
@@ -1761,7 +1765,8 @@ type_definition ::=
   access_to_procedure_definition |
   derived_type_definition |
   derived_record_definition |
-  interface_type_definition;
+  interface_type_definition |
+  root_type_definition;
 
 unconstrained_array_definition ::=
     token <array_token>

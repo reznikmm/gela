@@ -4,11 +4,12 @@ with League.Calendars;
 with League.String_Vectors;
 with League.Strings;
 
-with Gela.Contexts;
-with Gela.Lexical_Types;
 with Gela.Compilations;
-with Gela.Parsers;
+with Gela.Contexts;
+with Gela.Element_Factories;
 with Gela.Lexers;
+with Gela.Lexical_Types;
+with Gela.Parsers;
 
 package Gela.Plain_Compilations is
    pragma Preelaborate;
@@ -23,7 +24,8 @@ package Gela.Plain_Compilations is
    not overriding procedure Initialize
      (Self      : in out Compilation;
       Text_Name : League.Strings.Universal_String;
-      Source    : League.Strings.Universal_String);
+      Source    : League.Strings.Universal_String;
+      Factory   : Gela.Element_Factories.Element_Factory_Access);
 
 private
 
@@ -48,6 +50,7 @@ private
       Update : League.Calendars.Date_Time;
       Text_Name : League.Strings.Universal_String;
       Source    : League.Strings.Universal_String;
+      Factory   : Gela.Element_Factories.Element_Factory_Access;
    end record;
 
    overriding function Context
@@ -101,5 +104,8 @@ private
    overriding procedure New_Line
      (Self  : in out Compilation;
       Line  : Gela.Lexical_Types.Line_Span);
+
+   overriding function Factory
+     (Self : Compilation) return Gela.Element_Factories.Element_Factory_Access;
 
 end Gela.Plain_Compilations;

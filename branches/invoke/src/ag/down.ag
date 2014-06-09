@@ -58,6 +58,7 @@ Inherited attributes
   range_dr,
   record_aggregate,
   record_type_definition,
+  root_type_definition,
   scalar_constraint,
   selected_component,
   selected_identifier,
