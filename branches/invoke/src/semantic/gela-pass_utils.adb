@@ -141,9 +141,7 @@ package body Gela.Pass_Utils is
          Limited_With => Limited_With,
          Unit         => Unit);
 
-      if Full_Name = Comp.Context.Symbols.Get
-        (Gela.Lexical_Types.Standard_Symbol)
-      then
+      if Full_Name = Gela.Lexical_Types.Predefined_Symbols.Standard then
          Preprocess_Standard (Comp, Unit);
       end if;
 

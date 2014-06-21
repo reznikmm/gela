@@ -290,23 +290,6 @@ package body Gela.Plain_Symbol_Sets is
       return Gela.Lexical_Types.No_Symbol;
    end Get;
 
-   ---------
-   -- Get --
-   ---------
-
-   overriding function Get
-     (Self  : Symbol_Set;
-      Value : Gela.Lexical_Types.Predefined_Symbol)
-      return Gela.Lexical_Types.Symbol
-   is
-      Image : constant Wide_Wide_String :=
-        Gela.Lexical_Types.Predefined_Symbol'Wide_Wide_Image (Value);
-      Text : constant League.Strings.Universal_String :=
-        League.Strings.To_Universal_String (Image (1 .. Image'Last - 7));
-   begin
-      return Self.Get (Text);
-   end Get;
-
    ----------
    -- Hash --
    ----------
@@ -378,6 +361,178 @@ package body Gela.Plain_Symbol_Sets is
    ----------------
 
    not overriding procedure Initialize (Self  : in out Symbol_Set) is
+      pragma Warnings (Off);  --  Disable unreferenced warning for literals
+      type Predefined_Symbol_Name is
+        (All_Calls_Remote_Symbol,
+         Assert_Symbol,
+         Assertion_Policy_Symbol,
+         Asynchronous_Symbol,
+         Atomic_Symbol,
+         Atomic_Components_Symbol,
+         Attach_Handler_Symbol,
+         Controlled_Symbol,
+         Convention_Symbol,
+         Detect_Blocking_Symbol,
+         Discard_Names_Symbol,
+         Elaborate_Symbol,
+         Elaborate_All_Symbol,
+         Elaborate_Body_Symbol,
+         Export_Symbol,
+         Import_Symbol,
+         Inline_Symbol,
+         Inspection_Point_Symbol,
+         Interrupt_Handler_Symbol,
+         Interrupt_Priority_Symbol,
+         Linker_Options_Symbol,
+         List_Symbol,
+         Locking_Policy_Symbol,
+         No_Return_Symbol,
+         Normalize_Scalars_Symbol,
+         Optimize_Symbol,
+         Pack_Symbol,
+         Page_Symbol,
+         Partition_Elaboration_Policy_Symbol,
+         Preelaborable_Initialization_Symbol,
+         Preelaborate_Symbol,
+         Priority_Specific_Dispatching_Symbol,
+         Profile_Symbol,
+         Pure_Symbol,
+         Queuing_Policy_Symbol,
+         Relative_Deadline_Symbol,
+         Remote_Call_Interface_Symbol,
+         Remote_Types_Symbol,
+         Restrictions_Symbol,
+         Reviewable_Symbol,
+         Shared_Passive_Symbol,
+         Suppress_Symbol,
+         Task_Dispatching_Policy_Symbol,
+         Unchecked_Union_Symbol,
+         Unsuppress_Symbol,
+         Volatile_Symbol,
+         Volatile_Components_Symbol,
+         Access_Symbol,
+         Address_Symbol,
+         Adjacent_Symbol,
+         Aft_Symbol,
+         Alignment_Symbol,
+         Base_Symbol,
+         Bit_Order_Symbol,
+         Body_Version_Symbol,
+         Callable_Symbol,
+         Caller_Symbol,
+         Ceiling_Symbol,
+         Class_Symbol,
+         Component_Size_Symbol,
+         Compose_Symbol,
+         Constrained_Symbol,
+         Copy_Sign_Symbol,
+         Count_Symbol,
+         Definite_Symbol,
+         Delta_Symbol,
+         Denorm_Symbol,
+         Digits_Symbol,
+         Exponent_Symbol,
+         External_Tag_Symbol,
+         First_Symbol,
+         First_Bit_Symbol,
+         Floor_Symbol,
+         Fore_Symbol,
+         Fraction_Symbol,
+         Identity_Symbol,
+         Image_Symbol,
+         Input_Symbol,
+         Last_Symbol,
+         Last_Bit_Symbol,
+         Leading_Part_Symbol,
+         Length_Symbol,
+         Machine_Symbol,
+         Machine_Emax_Symbol,
+         Machine_Emin_Symbol,
+         Machine_Mantissa_Symbol,
+         Machine_Overflows_Symbol,
+         Machine_Radix_Symbol,
+         Machine_Rounding_Symbol,
+         Machine_Rounds_Symbol,
+         Max_Symbol,
+         Max_Size_In_Storage_Elements_Symbol,
+         Min_Symbol,
+         Mod_Symbol,
+         Model_Symbol,
+         Model_Emin_Symbol,
+         Model_Epsilon_Symbol,
+         Model_Mantissa_Symbol,
+         Model_Small_Symbol,
+         Modulus_Symbol,
+         Output_Symbol,
+         Partition_ID_Symbol,
+         Pos_Symbol,
+         Position_Symbol,
+         Pred_Symbol,
+         Priority_Symbol,
+         Range_Symbol,
+         Read_Symbol,
+         Remainder_Symbol,
+         Round_Symbol,
+         Rounding_Symbol,
+         Safe_First_Symbol,
+         Safe_Last_Symbol,
+         Scale_Symbol,
+         Scaling_Symbol,
+         Signed_Zeros_Symbol,
+         Size_Symbol,
+         Small_Symbol,
+         Storage_Pool_Symbol,
+         Storage_Size_Symbol,
+         Stream_Size_Symbol,
+         Succ_Symbol,
+         Tag_Symbol,
+         Terminated_Symbol,
+         Truncation_Symbol,
+         Unbiased_Rounding_Symbol,
+         Unchecked_Access_Symbol,
+         Val_Symbol,
+         Valid_Symbol,
+         Value_Symbol,
+         Version_Symbol,
+         Wide_Image_Symbol,
+         Wide_Value_Symbol,
+         Wide_Wide_Image_Symbol,
+         Wide_Wide_Value_Symbol,
+         Wide_Wide_Width_Symbol,
+         Wide_Width_Symbol,
+         Width_Symbol,
+         Write_Symbol,
+         Standard_Symbol);
+      pragma Warnings (On);
+
+      function To_Mixed_Case
+        (Name : Wide_Wide_String) return League.Strings.Universal_String;
+
+      -------------------
+      -- To_Mixed_Case --
+      -------------------
+
+      function To_Mixed_Case
+        (Name : Wide_Wide_String) return League.Strings.Universal_String
+      is
+         List  : League.String_Vectors.Universal_String_Vector;
+         Image : League.Strings.Universal_String;
+         Upper : constant League.Strings.Universal_String :=
+           League.Strings.To_Universal_String (Name);
+      begin
+         List := Upper.Split ('_');
+
+         for K in 1 .. List.Length loop
+            Image := List.Element (K).To_Lowercase;
+            Image.Replace (1, 1, List.Element (K).Slice (1, 1));
+            List.Replace (K, Image);
+         end loop;
+
+         Image := List.Join ('_');
+
+         return Image;
+      end To_Mixed_Case;
+
       Ignore : Gela.Lexical_Types.Symbol;
    begin
       for J in A1'Range loop
@@ -394,6 +549,21 @@ package body Gela.Plain_Symbol_Sets is
 
       for J in Self.Operator'Range loop
          Self.Fetch (Self.Operator (J), Ignore);
+      end loop;
+
+      for J in Predefined_Symbol_Name'Range loop
+         declare
+            Name  : constant Wide_Wide_String :=
+              Predefined_Symbol_Name'Wide_Wide_Image (J);
+            Image : constant League.Strings.Universal_String :=
+              To_Mixed_Case (Name (1 .. Name'Last - 7));
+         begin
+            Self.Fetch (Image, Ignore);
+
+            if Ignore /= 16#11_0000# + Predefined_Symbol_Name'Pos (J) then
+               raise Constraint_Error;
+            end if;
+         end;
       end loop;
    end Initialize;
 

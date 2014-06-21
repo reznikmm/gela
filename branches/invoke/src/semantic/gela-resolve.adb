@@ -39,40 +39,41 @@ package body Gela.Resolve is
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
+      Attr       : Gela.Lexical_Types.Predefined_Symbols.Symbol;
       Type_Index : Gela.Semantic_Types.Type_Index;
       Index      : Gela.Interpretations.Interpretation_Index;
    begin
       Set := 0;
+      Attr := Symbol;
 
-      if Symbol = Comp.Context.Symbols.Get
-        (Gela.Lexical_Types.Last_Symbol)
-      then
-         Get_Subtype
-           (Comp,
-            Env    => Env,
-            Set    => Prefix,
-            Index  => Index,
-            Result => Type_Index);
+      case Attr is
+         when Gela.Lexical_Types.Predefined_Symbols.Last =>
+            Get_Subtype
+              (Comp,
+               Env    => Env,
+               Set    => Prefix,
+               Index  => Index,
+               Result => Type_Index);
 
-         Comp.Context.Interpretation_Manager.Add_Expression
-           (Tipe   => Type_Index,
-            Down   => (1 => Index),
-            Result => Set);
-      elsif Symbol = Comp.Context.Symbols.Get
-        (Gela.Lexical_Types.Size_Symbol)
-      then
-         Get_Subtype
-           (Comp,
-            Env    => Env,
-            Set    => Prefix,
-            Index  => Index,
-            Result => Type_Index);
+            Comp.Context.Interpretation_Manager.Add_Expression
+              (Tipe   => Type_Index,
+               Down   => (1 => Index),
+               Result => Set);
+         when Gela.Lexical_Types.Predefined_Symbols.Size =>
+            Get_Subtype
+              (Comp,
+               Env    => Env,
+               Set    => Prefix,
+               Index  => Index,
+               Result => Type_Index);
 
-         Comp.Context.Interpretation_Manager.Add_Expression
-           (Tipe   => TM.Universal_Integer,
-            Down   => (1 => Index),
-            Result => Set);
-      end if;
+            Comp.Context.Interpretation_Manager.Add_Expression
+              (Tipe   => TM.Universal_Integer,
+               Down   => (1 => Index),
+               Result => Set);
+         when others =>
+            null;
+      end case;
    end Attribute_Reference;
 
    -----------------

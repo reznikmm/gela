@@ -95,146 +95,153 @@ package Gela.Lexical_Types is
    type Token_Count is new Natural;
    subtype Token_Index is Token_Count range 1 .. Token_Count'Last;
 
-   type Predefined_Symbol is
-     (All_Calls_Remote_Symbol,
-      Assert_Symbol,
-      Assertion_Policy_Symbol,
-      Asynchronous_Symbol,
-      Atomic_Symbol,
-      Atomic_Components_Symbol,
-      Attach_Handler_Symbol,
-      Controlled_Symbol,
-      Convention_Symbol,
-      Detect_Blocking_Symbol,
-      Discard_Names_Symbol,
-      Elaborate_Symbol,
-      Elaborate_All_Symbol,
-      Elaborate_Body_Symbol,
-      Export_Symbol,
-      Import_Symbol,
-      Inline_Symbol,
-      Inspection_Point_Symbol,
-      Interrupt_Handler_Symbol,
-      Interrupt_Priority_Symbol,
-      Linker_Options_Symbol,
-      List_Symbol,
-      Locking_Policy_Symbol,
-      No_Return_Symbol,
-      Normalize_Scalars_Symbol,
-      Optimize_Symbol,
-      Pack_Symbol,
-      Page_Symbol,
-      Partition_Elaboration_Policy_Symbol,
-      Preelaborable_Initialization_Symbol,
-      Preelaborate_Symbol,
-      Priority_Symbol,
-      Priority_Specific_Dispatching_Symbol,
-      Profile_Symbol,
-      Pure_Symbol,
-      Queuing_Policy_Symbol,
-      Relative_Deadline_Symbol,
-      Remote_Call_Interface_Symbol,
-      Remote_Types_Symbol,
-      Restrictions_Symbol,
-      Reviewable_Symbol,
-      Shared_Passive_Symbol,
-      Storage_Size_Symbol,
-      Suppress_Symbol,
-      Task_Dispatching_Policy_Symbol,
-      Unchecked_Union_Symbol,
-      Unsuppress_Symbol,
-      Volatile_Symbol,
-      Volatile_Components_Symbol,
-      Access_Symbol,
-      Address_Symbol,
-      Adjacent_Symbol,
-      Aft_Symbol,
-      Alignment_Symbol,
-      Base_Symbol,
-      Bit_Order_Symbol,
-      Body_Version_Symbol,
-      Callable_Symbol,
-      Caller_Symbol,
-      Ceiling_Symbol,
-      Class_Symbol,
-      Component_Size_Symbol,
-      Compose_Symbol,
-      Constrained_Symbol,
-      Copy_Sign_Symbol,
-      Count_Symbol,
-      Definite_Symbol,
-      Delta_Symbol,
-      Denorm_Symbol,
-      Digits_Symbol,
-      Exponent_Symbol,
-      External_Tag_Symbol,
-      First_Symbol,
-      First_Bit_Symbol,
-      Floor_Symbol,
-      Fore_Symbol,
-      Fraction_Symbol,
-      Identity_Symbol,
-      Image_Symbol,
-      Input_Symbol,
-      Last_Symbol,
-      Last_Bit_Symbol,
-      Leading_Part_Symbol,
-      Length_Symbol,
-      Machine_Symbol,
-      Machine_Emax_Symbol,
-      Machine_Emin_Symbol,
-      Machine_Mantissa_Symbol,
-      Machine_Overflows_Symbol,
-      Machine_Radix_Symbol,
-      Machine_Rounding_Symbol,
-      Machine_Rounds_Symbol,
-      Max_Symbol,
-      Max_Size_In_Storage_Elements_Symbol,
-      Min_Symbol,
-      Mod_Symbol,
-      Model_Symbol,
-      Model_Emin_Symbol,
-      Model_Epsilon_Symbol,
-      Model_Mantissa_Symbol,
-      Model_Small_Symbol,
-      Modulus_Symbol,
-      Output_Symbol,
-      Partition_ID_Symbol,
-      Pos_Symbol,
-      Position_Symbol,
-      Pred_Symbol,
-      Range_Symbol,
-      Read_Symbol,
-      Remainder_Symbol,
-      Round_Symbol,
-      Rounding_Symbol,
-      Safe_First_Symbol,
-      Safe_Last_Symbol,
-      Scale_Symbol,
-      Scaling_Symbol,
-      Signed_Zeros_Symbol,
-      Size_Symbol,
-      Small_Symbol,
-      Storage_Pool_Symbol,
-      Stream_Size_Symbol,
-      Succ_Symbol,
-      Tag_Symbol,
-      Terminated_Symbol,
-      Truncation_Symbol,
-      Unbiased_Rounding_Symbol,
-      Unchecked_Access_Symbol,
-      Val_Symbol,
-      Valid_Symbol,
-      Value_Symbol,
-      Version_Symbol,
-      Wide_Image_Symbol,
-      Wide_Value_Symbol,
-      Wide_Wide_Image_Symbol,
-      Wide_Wide_Value_Symbol,
-      Wide_Wide_Width_Symbol,
-      Wide_Width_Symbol,
-      Width_Symbol,
-      Write_Symbol,
-      Standard_Symbol);
+   package Predefined_Symbols is
+      subtype Symbol is
+        Gela.Lexical_Types.Symbol range 16#11_0000# .. 16#11_008B#;
+
+      All_Calls_Remote              : constant Symbol := 16#11_0000#;
+      Assert                        : constant Symbol := 16#11_0001#;
+      Assertion_Policy              : constant Symbol := 16#11_0002#;
+      Asynchronous                  : constant Symbol := 16#11_0003#;
+      Atomic                        : constant Symbol := 16#11_0004#;
+      Atomic_Components             : constant Symbol := 16#11_0005#;
+      Attach_Handler                : constant Symbol := 16#11_0006#;
+      Controlled                    : constant Symbol := 16#11_0007#;
+      Convention                    : constant Symbol := 16#11_0008#;
+      Detect_Blocking               : constant Symbol := 16#11_0009#;
+      Discard_Names                 : constant Symbol := 16#11_000A#;
+      Elaborate                     : constant Symbol := 16#11_000B#;
+      Elaborate_All                 : constant Symbol := 16#11_000C#;
+      Elaborate_Body                : constant Symbol := 16#11_000D#;
+      Export                        : constant Symbol := 16#11_000E#;
+      Import                        : constant Symbol := 16#11_000F#;
+      Inline                        : constant Symbol := 16#11_0010#;
+      Inspection_Point              : constant Symbol := 16#11_0011#;
+      Interrupt_Handler             : constant Symbol := 16#11_0012#;
+      Interrupt_Priority            : constant Symbol := 16#11_0013#;
+      Linker_Options                : constant Symbol := 16#11_0014#;
+      List                          : constant Symbol := 16#11_0015#;
+      Locking_Policy                : constant Symbol := 16#11_0016#;
+      No_Return                     : constant Symbol := 16#11_0017#;
+      Normalize_Scalars             : constant Symbol := 16#11_0018#;
+      Optimize                      : constant Symbol := 16#11_0019#;
+      Pack                          : constant Symbol := 16#11_001A#;
+      Page                          : constant Symbol := 16#11_001B#;
+      Partition_Elaboration_Policy  : constant Symbol := 16#11_001C#;
+      Preelaborable_Initialization  : constant Symbol := 16#11_001D#;
+      Preelaborate                  : constant Symbol := 16#11_001E#;
+      Priority_Specific_Dispatching : constant Symbol := 16#11_001F#;
+      Profile                       : constant Symbol := 16#11_0020#;
+      Pure                          : constant Symbol := 16#11_0021#;
+      Queuing_Policy                : constant Symbol := 16#11_0022#;
+      Relative_Deadline             : constant Symbol := 16#11_0023#;
+      Remote_Call_Interface         : constant Symbol := 16#11_0024#;
+      Remote_Types                  : constant Symbol := 16#11_0025#;
+      Restrictions                  : constant Symbol := 16#11_0026#;
+      Reviewable                    : constant Symbol := 16#11_0027#;
+      Shared_Passive                : constant Symbol := 16#11_0028#;
+      Suppress                      : constant Symbol := 16#11_0029#;
+      Task_Dispatching_Policy       : constant Symbol := 16#11_002A#;
+      Unchecked_Union               : constant Symbol := 16#11_002B#;
+      Unsuppress                    : constant Symbol := 16#11_002C#;
+      Volatile                      : constant Symbol := 16#11_002D#;
+      Volatile_Components           : constant Symbol := 16#11_002E#;
+      Access_Symbol                 : constant Symbol := 16#11_002F#;
+      Address                       : constant Symbol := 16#11_0030#;
+      Adjacent                      : constant Symbol := 16#11_0031#;
+      Aft                           : constant Symbol := 16#11_0032#;
+      Alignment                     : constant Symbol := 16#11_0033#;
+      Base                          : constant Symbol := 16#11_0034#;
+      Bit_Order                     : constant Symbol := 16#11_0035#;
+      Body_Version                  : constant Symbol := 16#11_0036#;
+      Callable                      : constant Symbol := 16#11_0037#;
+      Caller                        : constant Symbol := 16#11_0038#;
+      Ceiling                       : constant Symbol := 16#11_0039#;
+      Class                         : constant Symbol := 16#11_003A#;
+      Component_Size                : constant Symbol := 16#11_003B#;
+      Compose                       : constant Symbol := 16#11_003C#;
+      Constrained                   : constant Symbol := 16#11_003D#;
+      Copy_Sign                     : constant Symbol := 16#11_003E#;
+      Count                         : constant Symbol := 16#11_003F#;
+      Definite                      : constant Symbol := 16#11_0040#;
+      Delta_Symbol                  : constant Symbol := 16#11_0041#;
+      Denorm                        : constant Symbol := 16#11_0042#;
+      Digits_Symbol                 : constant Symbol := 16#11_0043#;
+      Exponent                      : constant Symbol := 16#11_0044#;
+      External_Tag                  : constant Symbol := 16#11_0045#;
+      First                         : constant Symbol := 16#11_0046#;
+      First_Bit                     : constant Symbol := 16#11_0047#;
+      Floor                         : constant Symbol := 16#11_0048#;
+      Fore                          : constant Symbol := 16#11_0049#;
+      Fraction                      : constant Symbol := 16#11_004A#;
+      Identity                      : constant Symbol := 16#11_004B#;
+      Image                         : constant Symbol := 16#11_004C#;
+      Input                         : constant Symbol := 16#11_004D#;
+      Last                          : constant Symbol := 16#11_004E#;
+      Last_Bit                      : constant Symbol := 16#11_004F#;
+      Leading_Part                  : constant Symbol := 16#11_0050#;
+      Length                        : constant Symbol := 16#11_0051#;
+      Machine                       : constant Symbol := 16#11_0052#;
+      Machine_Emax                  : constant Symbol := 16#11_0053#;
+      Machine_Emin                  : constant Symbol := 16#11_0054#;
+      Machine_Mantissa              : constant Symbol := 16#11_0055#;
+      Machine_Overflows             : constant Symbol := 16#11_0056#;
+      Machine_Radix                 : constant Symbol := 16#11_0057#;
+      Machine_Rounding              : constant Symbol := 16#11_0058#;
+      Machine_Rounds                : constant Symbol := 16#11_0059#;
+      Max                           : constant Symbol := 16#11_005A#;
+      Max_Size_In_Storage_Elements  : constant Symbol := 16#11_005B#;
+      Min                           : constant Symbol := 16#11_005C#;
+      Mod_Symbol                    : constant Symbol := 16#11_005D#;
+      Model                         : constant Symbol := 16#11_005E#;
+      Model_Emin                    : constant Symbol := 16#11_005F#;
+      Model_Epsilon                 : constant Symbol := 16#11_0060#;
+      Model_Mantissa                : constant Symbol := 16#11_0061#;
+      Model_Small                   : constant Symbol := 16#11_0062#;
+      Modulus                       : constant Symbol := 16#11_0063#;
+      Output                        : constant Symbol := 16#11_0064#;
+      Partition_ID                  : constant Symbol := 16#11_0065#;
+      Pos                           : constant Symbol := 16#11_0066#;
+      Position                      : constant Symbol := 16#11_0067#;
+      Pred                          : constant Symbol := 16#11_0068#;
+      Priority                      : constant Symbol := 16#11_0069#;
+      Range_Symbol                  : constant Symbol := 16#11_006A#;
+      Read                          : constant Symbol := 16#11_006B#;
+      Remainder                     : constant Symbol := 16#11_006C#;
+      Round                         : constant Symbol := 16#11_006D#;
+      Rounding                      : constant Symbol := 16#11_006E#;
+      Safe_First                    : constant Symbol := 16#11_006F#;
+      Safe_Last                     : constant Symbol := 16#11_0070#;
+      Scale                         : constant Symbol := 16#11_0071#;
+      Scaling                       : constant Symbol := 16#11_0072#;
+      Signed_Zeros                  : constant Symbol := 16#11_0073#;
+      Size                          : constant Symbol := 16#11_0074#;
+      Small                         : constant Symbol := 16#11_0075#;
+      Storage_Pool                  : constant Symbol := 16#11_0076#;
+      Storage_Size                  : constant Symbol := 16#11_0077#;
+      Stream_Size                   : constant Symbol := 16#11_0078#;
+      Succ                          : constant Symbol := 16#11_0079#;
+      Tag                           : constant Symbol := 16#11_007A#;
+      Terminated                    : constant Symbol := 16#11_007B#;
+      Truncation                    : constant Symbol := 16#11_007C#;
+      Unbiased_Rounding             : constant Symbol := 16#11_007D#;
+      Unchecked_Access              : constant Symbol := 16#11_007E#;
+      Val                           : constant Symbol := 16#11_007F#;
+      Valid                         : constant Symbol := 16#11_0080#;
+      Value                         : constant Symbol := 16#11_0081#;
+      Version                       : constant Symbol := 16#11_0082#;
+      Wide_Image                    : constant Symbol := 16#11_0083#;
+      Wide_Value                    : constant Symbol := 16#11_0084#;
+      Wide_Wide_Image               : constant Symbol := 16#11_0085#;
+      Wide_Wide_Value               : constant Symbol := 16#11_0086#;
+      Wide_Wide_Width               : constant Symbol := 16#11_0087#;
+      Wide_Width                    : constant Symbol := 16#11_0088#;
+      Width                         : constant Symbol := 16#11_0089#;
+      Write                         : constant Symbol := 16#11_008A#;
+      Standard                      : constant Symbol := 16#11_008B#;
+
+      subtype Attribute is Symbol range Access_Symbol .. Write;
+
+   end Predefined_Symbols;
 
 end Gela.Lexical_Types;
