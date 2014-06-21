@@ -3,6 +3,7 @@ Synthesized attributes
   attribute_reference,
   case_expression,
   character_literal,
+  clause_name,
   composite_constraint,
   constraint,
   delta_constraint,

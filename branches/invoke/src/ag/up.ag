@@ -3,16 +3,19 @@ Synthesized attributes
   attribute_reference,
   case_expression,
   character_literal,
+  clause_name,
   composite_constraint,
   constraint,
   delta_constraint,
   digits_constraint,
   direct_name,
   explicit_dereference,
+  expression,
   extension_aggregate,
   function_call,
   identifier,
   if_expression,
+  membership_test,
   name,
   null_literal,
   numeric_literal,
@@ -27,6 +30,7 @@ Synthesized attributes
   scalar_constraint,
   selected_component,
   selected_identifier,
+  short_circuit,
   simple_expression,
   simple_expression_range,
   subtype_mark
@@ -168,3 +172,12 @@ Rules for record_aggregate. :
       ${record_aggregate.Up} := 0;  --  FIXME
 .)
 
+Rules for membership_test. :
+(.
+      ${membership_test.Up} := 0;  --  FIXME
+.)
+
+Rules for short_circuit. :
+(.
+      ${short_circuit.Up} := 0;  --  FIXME
+.)

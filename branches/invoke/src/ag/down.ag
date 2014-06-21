@@ -99,12 +99,21 @@ Rules for at_clause. :
 
 Rules for attribute_definition_clause. :
 (.
-      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${attribute_definition_clause.env_in},
+         ${Representation_Clause_Name.Up},
+         ${Representation_Clause_Name.Down});
 .)
 
 Rules for attribute_definition_clause. :
 (.
-      ${Representation_Clause_Expression.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.To_Type_Or_The_Same_Type
+        (Self.Compilation,
+         ${attribute_definition_clause.env_in},
+         ${Representation_Clause_Name.Up},
+         ${Representation_Clause_Expression.Up},
+         ${Representation_Clause_Expression.Down});
 .)
 
 Rules for attribute_reference. :

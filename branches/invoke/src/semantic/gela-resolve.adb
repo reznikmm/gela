@@ -12,6 +12,17 @@ package body Gela.Resolve is
       Index  : out Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Semantic_Types.Type_Index);
 
+   procedure To_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Type_Up : Gela.Semantic_Types.Type_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index);
+
+   procedure Each_Expression
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Target : in out Gela.Interpretations.Visiter'Class);
+
    -------------------------
    -- Attribute_Reference --
    -------------------------
@@ -24,6 +35,9 @@ package body Gela.Resolve is
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Lexical_Types.Symbol;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
 
       Type_Index : Gela.Semantic_Types.Type_Index;
       Index      : Gela.Interpretations.Interpretation_Index;
@@ -42,6 +56,20 @@ package body Gela.Resolve is
 
          Comp.Context.Interpretation_Manager.Add_Expression
            (Tipe   => Type_Index,
+            Down   => (1 => Index),
+            Result => Set);
+      elsif Symbol = Comp.Context.Symbols.Get
+        (Gela.Lexical_Types.Size_Symbol)
+      then
+         Get_Subtype
+           (Comp,
+            Env    => Env,
+            Set    => Prefix,
+            Index  => Index,
+            Result => Type_Index);
+
+         Comp.Context.Interpretation_Manager.Add_Expression
+           (Tipe   => TM.Universal_Integer,
             Down   => (1 => Index),
             Result => Set);
       end if;
@@ -75,6 +103,70 @@ package body Gela.Resolve is
          NC.Next;
       end loop;
    end Direct_Name;
+
+   procedure Each_Expression
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Set    : Gela.Interpretations.Interpretation_Set_Index;
+      Target : in out Gela.Interpretations.Visiter'Class)
+   is
+      package Each is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            null;
+         end record;
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each;
+
+      ----------
+      -- Each --
+      ----------
+
+      package body Each is
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Self);
+            pragma Unreferenced (Name);
+            pragma Unreferenced (Down);
+         begin
+            null;
+         end On_Defining_Name;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Expression (Index, Tipe, Down);
+         end On_Expression;
+
+      end Each;
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      Visiter    : Each.Visiter;
+   begin
+      IM.Visit (Set, Visiter);
+   end Each_Expression;
 
    -----------------
    -- Get_Subtype --
@@ -311,6 +403,72 @@ package body Gela.Resolve is
          Result => Set);
    end Simple_Expression_Range;
 
+   ----------------------
+   -- To_The_Same_Type --
+   ----------------------
+
+   procedure To_The_Same_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index)
+   is
+      pragma Unreferenced (Env);
+
+      package Each is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            null;
+         end record;
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each;
+
+      ----------
+      -- Each --
+      ----------
+
+      package body Each is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Self);
+            pragma Unreferenced (Index);
+            pragma Unreferenced (Down);
+         begin
+            To_Type
+              (Comp    => Comp,
+               Type_Up => Tipe,
+               Expr_Up => Expr_Up,
+               Result  => Result);
+         end On_Expression;
+
+      end Each;
+
+      Visiter    : Each.Visiter;
+   begin
+      Result := 0;
+
+      Each_Expression (Comp   => Comp,
+                       Set    => Type_Up,
+                       Target => Visiter);
+   end To_The_Same_Type;
+
    -------------
    -- To_Type --
    -------------
@@ -319,6 +477,33 @@ package body Gela.Resolve is
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
       Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index)
+   is
+      Index      : Gela.Interpretations.Interpretation_Index;
+      Type_Index : Gela.Semantic_Types.Type_Index;
+   begin
+      Get_Subtype
+        (Comp,
+         Env    => Env,
+         Set    => Type_Up,
+         Index  => Index,
+         Result => Type_Index);
+
+      To_Type
+        (Comp    => Comp,
+         Type_Up => Type_Index,
+         Expr_Up => Expr_Up,
+         Result  => Result);
+   end To_Type;
+
+   -------------
+   -- To_Type --
+   -------------
+
+   procedure To_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Type_Up : Gela.Semantic_Types.Type_Index;
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
@@ -378,19 +563,52 @@ package body Gela.Resolve is
 
       end Each;
 
-      Index      : Gela.Interpretations.Interpretation_Index;
       Visiter    : Each.Visiter;
+   begin
+      Visiter.Type_Index := Type_Up;
+
+      IM.Visit (Expr_Up, Visiter);
+
+      Result := Visiter.Index;
+   end To_Type;
+
+   ------------------------------
+   -- To_Type_Or_The_Same_Type --
+   ------------------------------
+
+   procedure To_Type_Or_The_Same_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index)
+   is
+      use type Gela.Semantic_Types.Type_Index;
+
+      Index      : Gela.Interpretations.Interpretation_Index;
+      Type_Index : Gela.Semantic_Types.Type_Index;
    begin
       Get_Subtype
         (Comp,
          Env    => Env,
          Set    => Type_Up,
          Index  => Index,
-         Result => Visiter.Type_Index);
+         Result => Type_Index);
 
-      IM.Visit (Expr_Up, Visiter);
-
-      Result := Visiter.Index;
-   end To_Type;
+      if Type_Index = 0 then
+         To_The_Same_Type
+           (Comp    => Comp,
+            Env     => Env,
+            Type_Up => Type_Up,
+            Expr_Up => Expr_Up,
+            Result  => Result);
+      else
+         To_Type
+           (Comp    => Comp,
+            Type_Up => Type_Index,
+            Expr_Up => Expr_Up,
+            Result  => Result);
+      end if;
+   end To_Type_Or_The_Same_Type;
 
 end Gela.Resolve;

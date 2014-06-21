@@ -54,6 +54,24 @@ package Gela.Resolve is
       Result  : out Gela.Interpretations.Interpretation_Index);
    --  Resolve Type_Up to be type, then resolve Expr_Up have this type
 
+   procedure To_The_Same_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index);
+   --  Resolve Type_Up to be an expression of some type, then resolve Expr_Up
+   --  to have this type.
+
+   procedure To_Type_Or_The_Same_Type
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index);
+   --  Resolve Type_Up to be a type or an expression of some type,
+   --  then resolve Expr_Up to have this type.
+
    procedure Numeric_Literal
      (Comp   : Gela.Compilations.Compilation_Access;
       Token  : Gela.Lexical_Types.Token_Count;
