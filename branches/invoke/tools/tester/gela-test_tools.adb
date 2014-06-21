@@ -71,7 +71,8 @@ package body Gela.Test_Tools is
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
       Ada.Wide_Wide_Text_IO.Put_Line ("Writing " & File.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Create (Output, Name => File.To_UTF_8_String);
+      Ada.Wide_Wide_Text_IO.Create
+        (Output, Name => File.To_UTF_8_String, Form => "WCEM=8");
       Ada.Wide_Wide_Text_IO.Put_Line (Output, Text.To_Wide_Wide_String);
       Ada.Wide_Wide_Text_IO.Close (Output);
    end Write_File;

@@ -18,6 +18,7 @@ with Gela.Test_Cases;
 with Gela.Test_Iterators.Dir2;
 with Gela.Test_Iterators.ACATS;
 with Gela.Test_Iterators.Append;
+with Gela.Test_Tools;
 
 with League.Strings;
 
@@ -108,14 +109,9 @@ begin
       Gela.Bitten_Report.Generate (Iterator, Report);
    end;
 
-   declare
-      File : Ada.Wide_Wide_Text_IO.File_Type;
-   begin
-      Ada.Wide_Wide_Text_IO.Create
-        (File, Name => Output.To_UTF_8_String);
-      Ada.Wide_Wide_Text_IO.Put_Line (File, Report.To_Wide_Wide_String);
-      Ada.Wide_Wide_Text_IO.Close (File);
-   end;
+   Gela.Test_Tools.Write_File
+     (File => Output,
+      Text => Report);
 
    if Failed then
       Ada.Wide_Wide_Text_IO.Put_Line ("Some tests failed");
