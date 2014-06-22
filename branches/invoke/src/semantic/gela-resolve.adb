@@ -32,9 +32,11 @@ package body Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Prefix : Gela.Interpretations.Interpretation_Set_Index;
       Symbol : Gela.Lexical_Types.Symbol;
+      Token  : Gela.Lexical_Types.Token_Count;
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Lexical_Types.Symbol;
+      use type Gela.Lexical_Types.Token_Count;
 
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
@@ -44,7 +46,12 @@ package body Gela.Resolve is
       Index      : Gela.Interpretations.Interpretation_Index;
    begin
       Set := 0;
-      Attr := Symbol;
+
+      if Token = 0 then
+         Attr := Symbol;
+      else
+         Attr := Gela.Lexical_Types.Predefined_Symbols.Range_Symbol;
+      end if;
 
       case Attr is
          when Gela.Lexical_Types.Predefined_Symbols.Last =>
