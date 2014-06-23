@@ -66,6 +66,19 @@ package body Gela.Resolve is
               (Tipe   => Type_Index,
                Down   => (1 => Index),
                Result => Set);
+         when Gela.Lexical_Types.Predefined_Symbols.Val =>
+            Get_Subtype
+              (Comp,
+               Env    => Env,
+               Set    => Prefix,
+               Index  => Index,
+               Result => Type_Index);
+
+            Comp.Context.Interpretation_Manager.Add_Attr_Function
+              (Kind   => Attr,
+               Down   => (1 => Index),
+               Result => Set);
+
          when Gela.Lexical_Types.Predefined_Symbols.Size =>
             Get_Subtype
               (Comp,
@@ -78,6 +91,7 @@ package body Gela.Resolve is
               (Tipe   => TM.Universal_Integer,
                Down   => (1 => Index),
                Result => Set);
+
          when others =>
             null;
       end case;
@@ -134,6 +148,12 @@ package body Gela.Resolve is
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
       end Each;
 
       ----------
@@ -176,6 +196,25 @@ package body Gela.Resolve is
       IM.Visit (Set, Visiter);
    end Each_Expression;
 
+   -------------------
+   -- Function_Call --
+   -------------------
+
+   procedure Function_Call
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Prefix : Gela.Interpretations.Interpretation_Set_Index;
+      Args   : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      pragma Unreferenced (Comp);
+      pragma Unreferenced (Env);
+      pragma Unreferenced (Prefix);
+      pragma Unreferenced (Args);
+   begin
+      Set := 0;
+   end Function_Call;
+
    -----------------
    -- Get_Subtype --
    -----------------
@@ -206,6 +245,12 @@ package body Gela.Resolve is
             Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
       end Each;
 
@@ -315,6 +360,12 @@ package body Gela.Resolve is
             Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
       end Each;
 
@@ -441,6 +492,12 @@ package body Gela.Resolve is
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
       end Each;
 
       ----------
@@ -533,6 +590,12 @@ package body Gela.Resolve is
             Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
       end Each;
 

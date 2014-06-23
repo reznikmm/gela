@@ -1,8 +1,33 @@
+with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Visiters;
 
 package body Gela.Plain_Interpretations is
+
+   -----------------------
+   -- Add_Attr_Function --
+   -----------------------
+
+   overriding procedure Add_Attr_Function
+     (Self   : in out Interpretation_Manager;
+      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      use type Gela.Interpretations.Interpretation_Index;
+
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Attr_Functions.Attr_Function'
+          (Gela.Int.Attr_Functions.Create
+             (Children => Down'Length,
+              Kind     => Kind));
+   begin
+      Item.Down := Down;
+      Self.Last_Int := Self.Last_Int + 1;
+      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
+      Self.Interpretations.Insert (Self.Last_Int, Item);
+   end Add_Attr_Function;
 
    -----------------------
    -- Add_Defining_Name --
@@ -78,6 +103,11 @@ package body Gela.Plain_Interpretations is
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Index  : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
       end Each;
 
       ----------
@@ -186,6 +216,11 @@ package body Gela.Plain_Interpretations is
          overriding procedure Expression
            (Self  : access Visiter;
             Value : Gela.Int.Expressions.Expression);
+
+         overriding procedure Attr_Function
+           (Self  : access Visiter;
+            Value : Gela.Int.Attr_Functions.Attr_Function);
+
       end Switch;
 
       ------------
@@ -193,6 +228,22 @@ package body Gela.Plain_Interpretations is
       ------------
 
       package body Switch is
+
+         -------------------
+         -- Attr_Function --
+         -------------------
+
+         overriding procedure Attr_Function
+           (Self  : access Visiter;
+            Value : Gela.Int.Attr_Functions.Attr_Function)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Attr_Function
+              (Index => Index,
+               Kind  => Value.Kind,
+               Down  => Value.Down);
+         end Attr_Function;
 
          -------------------
          -- Defining_Name --

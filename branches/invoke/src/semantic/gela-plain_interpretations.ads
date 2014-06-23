@@ -5,6 +5,7 @@ with Ada.Containers.Hashed_Maps;
 with Gela.Elements.Defining_Names;
 with Gela.Contexts;
 with Gela.Interpretations;
+with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Int;
 
@@ -50,6 +51,12 @@ private
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding procedure Add_Attr_Function
+     (Self   : in out Interpretation_Manager;
+      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 

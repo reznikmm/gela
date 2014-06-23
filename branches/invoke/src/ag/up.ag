@@ -84,7 +84,12 @@ Rules for composite_constraint. :
 
 Rules for function_call. :
 (.
-      ${function_call.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Function_Call
+        (Self.Compilation,
+         ${function_call.env_in},
+         ${prefix.Up},
+         ${Function_Call_Parameters.Up},
+         ${function_call.Up});
 .)
 
 Rules for character_literal.character_literal_token :

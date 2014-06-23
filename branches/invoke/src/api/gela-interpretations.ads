@@ -1,5 +1,6 @@
 --  This package provides Interpretation_Manager interface and its methods.
 with Gela.Elements.Defining_Names;
+with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 
 package Gela.Interpretations is
@@ -36,23 +37,39 @@ package Gela.Interpretations is
         is abstract;
    --  Extend Result with new interpretation of expression with given Type
 
+   not overriding procedure Add_Attr_Function
+     (Self   : in out Interpretation_Manager;
+      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with new interpretation of attribute denoting function
+
    type Visiter is limited interface;
 
    not overriding procedure On_Defining_Name
      (Self   : in out Visiter;
-      Index  : Interpretation_Index;
+      Index  : Gela.Interpretations.Interpretation_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Down   : Interpretation_Index_Array)
+      Down   : Gela.Interpretations.Interpretation_Index_Array)
         is abstract;
    --  Called for each defining name interpretation
 
    not overriding procedure On_Expression
      (Self   : in out Visiter;
-      Index  : Interpretation_Index;
+      Index  : Gela.Interpretations.Interpretation_Index;
       Tipe   : Gela.Semantic_Types.Type_Index;
-      Down   : Interpretation_Index_Array)
+      Down   : Gela.Interpretations.Interpretation_Index_Array)
         is abstract;
    --  Called for each expression interpretation
+
+   not overriding procedure On_Attr_Function
+     (Self   : in out Visiter;
+      Index  : Gela.Interpretations.Interpretation_Index;
+      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+      Down   : Gela.Interpretations.Interpretation_Index_Array)
+   is abstract;
+   --  Called for each attribute denoting function
 
    not overriding procedure Visit
      (Self   : in out Interpretation_Manager;

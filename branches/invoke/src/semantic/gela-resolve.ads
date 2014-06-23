@@ -40,6 +40,13 @@ package Gela.Resolve is
       Right  : Gela.Interpretations.Interpretation_Set_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
 
+   procedure Function_Call
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Prefix : Gela.Interpretations.Interpretation_Set_Index;
+      Args   : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index);
+
    procedure Shall_Be_Subtype
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;

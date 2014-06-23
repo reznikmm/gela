@@ -1,5 +1,6 @@
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
+with Gela.Int.Attr_Functions;
 
 package Gela.Int.Visiters is
    pragma Preelaborate;
@@ -13,5 +14,9 @@ package Gela.Int.Visiters is
    not overriding procedure Expression
      (Self  : access Visiter;
       Value : Gela.Int.Expressions.Expression) is abstract;
+
+   not overriding procedure Attr_Function
+     (Self  : access Visiter;
+      Value : Gela.Int.Attr_Functions.Attr_Function) is abstract;
 
 end Gela.Int.Visiters;
