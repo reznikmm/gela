@@ -885,7 +885,11 @@ Rules for access_to_object_definition. :
 
 Rules for component_definition. :
 (.
-      ${Component_Subtype_Indication.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${component_definition.env_in},
+         ${Component_Subtype_Indication.Up},
+         ${Component_Subtype_Indication.Down});
 .)
 
 Rules for derived_record_definition. :

@@ -2415,7 +2415,7 @@ Rules for subtype_declaration. :
 
 Rules for subtype_declaration. :
 (.
-      ${Aspect_Specifications.env_in} := ${subtype_declaration.env_in};
+      ${Aspect_Specifications.env_in} := ${Type_Declaration_View.env_out};
 .)
 
 Rules for subtype_indication. :

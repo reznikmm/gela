@@ -40,6 +40,7 @@ Synthesized attributes
   simple_expression,
   simple_expression_range,
   subtype_indication,
+  subtype_indication_or_access_definition,
   subtype_mark,
   unconstrained_array_definition
 
