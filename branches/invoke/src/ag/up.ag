@@ -1,10 +1,15 @@
 Synthesized attributes
+  access_definition,
   allocator,
+  anonymous_access_to_object_definition,
+  anonymous_access_to_function_definition,
+  anonymous_access_to_procedure_definition,
   attribute_reference,
   case_expression,
   character_literal,
   clause_name,
   composite_constraint,
+  constrained_array_definition,
   constraint,
   delta_constraint,
   digits_constraint,
@@ -19,6 +24,7 @@ Synthesized attributes
   name,
   null_literal,
   numeric_literal,
+  object_definition,
   operator_symbol,
   prefix,
   program_unit_name,
@@ -33,7 +39,9 @@ Synthesized attributes
   short_circuit,
   simple_expression,
   simple_expression_range,
-  subtype_mark
+  subtype_indication,
+  subtype_mark,
+  unconstrained_array_definition
 
    : Gela.Interpretations.Interpretation_Set_Index : Up;
 
@@ -186,4 +194,40 @@ Rules for membership_test. :
 Rules for short_circuit. :
 (.
       ${short_circuit.Up} := 0;  --  FIXME
+.)
+
+Rules for object_definition. :
+(.
+      ${object_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for subtype_indication. :
+(.
+      ${subtype_indication.Up} := ${subtype_mark.Up};
+.)
+
+Rules for anonymous_access_to_object_definition. :
+(.
+      ${anonymous_access_to_object_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_function_definition. :
+(.
+      ${anonymous_access_to_function_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_procedure_definition. :
+(.
+      ${anonymous_access_to_procedure_definition.Up} := 0;  --  FIXME
+.)
+
+
+Rules for unconstrained_array_definition. :
+(.
+      ${unconstrained_array_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for constrained_array_definition. :
+(.
+      ${constrained_array_definition.Up} := 0;  --  FIXME
 .)

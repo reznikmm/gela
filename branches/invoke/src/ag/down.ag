@@ -329,7 +329,8 @@ Rules for formal_procedure_declaration. :
 
 Rules for function_call. :
 (.
-      ${prefix.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${function_call.Down}, 1, ${prefix.Down});
 .)
 
 Rules for function_declaration. :
@@ -404,7 +405,13 @@ Rules for number_declaration. :
 
 Rules for object_declaration. :
 (.
-      ${Initialization_Expression.Down} := 0;  --  FIXME
+      -- 3.3.1 (4)
+      Gela.Pass_Utils.Resolve.To_Type
+        (Self.Compilation,
+         ${object_declaration.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Initialization_Expression.Up:0},
+         ${Initialization_Expression.Down});
 .)
 
 Rules for object_renaming_declaration. :

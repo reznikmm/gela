@@ -10,13 +10,16 @@ Synthesized attributes
   digits_constraint,
   direct_name,
   explicit_dereference,
+  expression,
   extension_aggregate,
   function_call,
   identifier,
   if_expression,
+  membership_test,
   name,
   null_literal,
   numeric_literal,
+  object_declaration,
   operator_symbol,
   prefix,
   program_unit_name,
@@ -28,6 +31,7 @@ Synthesized attributes
   scalar_constraint,
   selected_component,
   selected_identifier,
+  short_circuit,
   simple_expression,
   simple_expression_range,
   subtype_indication,
@@ -135,4 +139,16 @@ Rules for operator_symbol.operator_symbol_token :
 Rules for qualified_expression. :
 (.
       ${qualified_expression.Errors} := 0; --  FIXME
+.)
+Rules for object_declaration. :
+(.
+      ${object_declaration.Errors} := ${Initialization_Expression.Errors};
+.)
+Rules for membership_test. :
+(.
+      ${membership_test.Errors} := 0; --  FIXME
+.)
+Rules for short_circuit. :
+(.
+      ${short_circuit.Errors} := 0; --  FIXME
 .)

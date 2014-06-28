@@ -207,12 +207,16 @@ package body Gela.Resolve is
       Args   : Gela.Interpretations.Interpretation_Set_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
-      pragma Unreferenced (Comp);
       pragma Unreferenced (Env);
-      pragma Unreferenced (Prefix);
       pragma Unreferenced (Args);
    begin
       Set := 0;
+
+      Comp.Context.Interpretation_Manager.Add_Expression
+        (Tipe   => Comp.Context.Types.Universal_Integer,
+         Down   => (1 .. 1 => Gela.Interpretations.Interpretation_Index
+                    (Prefix)),
+         Result => Set);
    end Function_Call;
 
    -----------------
