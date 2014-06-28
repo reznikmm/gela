@@ -35,13 +35,15 @@ Synthesized attributes
   simple_expression,
   simple_expression_range,
   subtype_indication,
-  subtype_mark
+  subtype_mark,
+  unconstrained_array_definition,
+  Index_Subtype_Definitions
 
    : Gela.Semantic_Types.Error_Set_Index : Errors;
 
 Rules for identifier.identifier_token :
 (.
-        ${identifier.Errors} := 0;
+        ${identifier.Errors} := 0;  --  ${identifier.Down}
 .)
 
 Rules for selected_identifier. :
@@ -151,4 +153,16 @@ Rules for membership_test. :
 Rules for short_circuit. :
 (.
       ${short_circuit.Errors} := 0; --  FIXME
+.)
+Rules for Index_Subtype_Definitions.subtype_mark :
+(.
+      ${Index_Subtype_Definitions.Errors} := 0;
+.)
+Rules for Index_Subtype_Definitions.subtype_mark :
+(.
+      ${Index_Subtype_Definitions.Errors} := ${subtype_mark.Errors};
+.)
+Rules for unconstrained_array_definition. :
+(.
+      ${unconstrained_array_definition.Errors} := ${Index_Subtype_Definitions.Errors};
 .)

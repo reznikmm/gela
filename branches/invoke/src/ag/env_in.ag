@@ -2405,7 +2405,12 @@ Rules for subtype_declaration. :
 
 Rules for subtype_declaration. :
 (.
-      ${Type_Declaration_View.env_in} := ${subtype_declaration.env_in};
+      ${Type_Declaration_View.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${subtype_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for subtype_declaration. :

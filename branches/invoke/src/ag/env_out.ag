@@ -819,7 +819,8 @@ Rules for single_task_declaration. :
 
 Rules for subtype_declaration. :
 (.
-      ${subtype_declaration.env_out} := ${subtype_declaration.env_in};
+      ${subtype_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Type_Declaration_View.env_out});
 .)
 
 Rules for subtype_indication. :
