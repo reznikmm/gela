@@ -68,7 +68,7 @@ access_to_procedure_definition ::=
 allocator ::=
   token <new_token>
   token <left_parenthesis_token>
-  name  <Subpool_Name>
+  [name  <Subpool_Name>]
   token <right_parenthesis_token>
   name  <Subtype_Or_Expression>
 ;
