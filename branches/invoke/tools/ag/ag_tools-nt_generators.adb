@@ -301,12 +301,38 @@ package body AG_Tools.NT_Generators is
    is
       G : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
 
-      type Pass_Array is array (G.Non_Terminal'Range) of Natural;
+      type Pass_Range is record
+         From, To : Natural;
+      end record;
+
+      procedure Add (Item : in out Pass_Range; Pass : Positive);
+
+      type Pass_Array is array (G.Non_Terminal'Range) of Pass_Range;
 
       procedure Find
         (NT     : Gela.Grammars.Non_Terminal;
          Pass   : Positive;
          Result : in out Pass_Array);
+
+      ---------
+      -- Add --
+      ---------
+
+      procedure Add (Item : in out Pass_Range; Pass : Positive) is
+      begin
+         if Item.From = 0 then
+            Item.From := Pass;
+         elsif Pass in Item.From .. Item.To then
+            --  Already processed in prev production like:
+            --  defining_name := defining_identifier | defining_unit_name;
+            --  defining_unit_name := defining_identifier;
+            return;
+         elsif Item.To + 1 /= Pass then
+            raise Constraint_Error;
+         end if;
+
+         Item.To := Pass;
+      end Add;
 
       procedure Find
         (NT     : Gela.Grammars.Non_Terminal;
@@ -332,7 +358,7 @@ package body AG_Tools.NT_Generators is
                         Go := G.Part (Value.Part).Denote;
 
                         if Input.Is_Concrete (Go) then
-                           Result (Go) := Value.Pass;
+                           Add (Result (Go), Value.Pass);
                         else
                            Find (G.Non_Terminal (Go), Value.Pass, Result);
                         end if;
@@ -347,7 +373,7 @@ package body AG_Tools.NT_Generators is
          end loop;
       end Find;
 
-      Found   : Pass_Array := (others => 0);
+      Found   : Pass_Array := (others => (0, 0));
       Spec    : AG_Tools.Writers.Writer renames Self.Context.Spec;
       Impl    : AG_Tools.Writers.Writer renames Self.Context.Impl;
    begin
@@ -363,7 +389,7 @@ package body AG_Tools.NT_Generators is
                 " with null record;");
 
       for X in Found'Range loop
-         if Found (X) /= 0 then
+         if Found (X).From /= 0 then
             Impl.N ("      overriding procedure ");
             Impl.P (To_Ada (G.Non_Terminal (X).Name));
             Impl.P ("        (This    : in out Visiter;");
@@ -377,7 +403,7 @@ package body AG_Tools.NT_Generators is
       end loop;
 
       for X in Found'Range loop
-         if Found (X) /= 0 then
+         if Found (X).From /= 0 then
             Impl.N ("      overriding procedure ");
             Impl.P (To_Ada (G.Non_Terminal (X).Name));
             Impl.P ("        (This    : in out Visiter;");
@@ -387,11 +413,15 @@ package body AG_Tools.NT_Generators is
             Impl.N (To_Ada (G.Non_Terminal (X).Name));
             Impl.P ("_Access) is");
             Impl.P ("      begin");
-            Impl.N ("         ");
-            Impl.N (To_Ada (G.Non_Terminal (X).Name));
-            Impl.N ("_");
-            Impl.N (Found (X));
-            Impl.P (" (Self, Node);");
+
+            for J in Found (X).From .. Found (X).To loop
+               Impl.N ("         ");
+               Impl.N (To_Ada (G.Non_Terminal (X).Name));
+               Impl.N ("_");
+               Impl.N (J);
+               Impl.P (" (Self, Node);");
+            end loop;
+
             Impl.N ("      end ");
             Impl.N (To_Ada (G.Non_Terminal (X).Name));
             Impl.P (";");
