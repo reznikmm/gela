@@ -1144,7 +1144,12 @@ Rules for exception_declaration. :
 
 Rules for exception_declaration. :
 (.
-      ${Aspect_Specifications.env_in} := ${exception_declaration.env_in};
+      ${Aspect_Specifications.env_in} :=
+        Gela.Pass_Utils.Add_Names_Create_Region
+          (Self.Compilation,
+           ${exception_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for exception_handler. :

@@ -11,6 +11,7 @@ with Gela.Contexts;
 with Gela.Compilation_Managers;
 with Gela.Dependency_Lists;
 with Gela.Plain_Type_Managers;
+with Gela.Symbol_Sets;
 
 package body Gela.Pass_Utils is
 
@@ -43,6 +44,67 @@ package body Gela.Pass_Utils is
 
       return Env_2;
    end Add_Name_Create_Region;
+
+   function Add_Names
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+      List         : Gela.Lexical_Types.Symbol_List;
+      Names        : Gela.Elements.Defining_Identifiers
+                       .Defining_Identifier_Sequence_Access)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Head   : Gela.Lexical_Types.Symbol_List := List;
+      Env_1  : Gela.Semantic_Types.Env_Index := Env;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
+      Cursor : Gela.Elements.Defining_Identifiers
+        .Defining_Identifier_Sequence_Cursor := Names.First;
+      Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
+        Comp.Context.Symbols;
+   begin
+      while Cursor.Has_Element loop
+         Name := Cursor.Element;
+         Symbol := Set.Tail (Head);
+         Head := Set.Head (Head);
+         Cursor.Next;
+
+         Env_1 := Comp.Context.Environment_Set.Add_Defining_Name
+           (Index  => Env_1,
+            Symbol => Symbol,
+            Name   => Gela.Elements.Defining_Names
+                        .Defining_Name_Access (Name));
+      end loop;
+
+      return Env_1;
+   end Add_Names;
+
+   -----------------------------
+   -- Add_Names_Create_Region --
+   -----------------------------
+
+   function Add_Names_Create_Region
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+      List         : Gela.Lexical_Types.Symbol_List;
+      Names        : Gela.Elements.Defining_Identifiers
+      .Defining_Identifier_Sequence_Access)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Env_1  : Gela.Semantic_Types.Env_Index;
+      Env_2  : Gela.Semantic_Types.Env_Index;
+      Name   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
+      Cursor : constant Gela.Elements.Defining_Identifiers
+                          .Defining_Identifier_Sequence_Cursor := Names.First;
+   begin
+      Name := Cursor.Element;
+      Env_1 := Add_Names (Comp, Env, List, Names);
+
+      Env_2 := Comp.Context.Environment_Set.Enter_Declarative_Region
+        (Index  => Env_1,
+         Region => Gela.Elements.Defining_Names.Defining_Name_Access (Name));
+
+      return Env_2;
+   end Add_Names_Create_Region;
 
    --------------------
    -- Create_Subunit --

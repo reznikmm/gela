@@ -467,7 +467,12 @@ Rules for enumeration_type_definition. :
 
 Rules for exception_declaration. :
 (.
-      ${exception_declaration.env_out} := ${exception_declaration.env_in};
+      ${exception_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${exception_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for exception_renaming_declaration. :

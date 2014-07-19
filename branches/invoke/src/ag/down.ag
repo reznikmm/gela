@@ -289,7 +289,11 @@ Rules for entry_body. :
 
 Rules for exception_renaming_declaration. :
 (.
-      ${Renamed_Entity.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${exception_renaming_declaration.env_in},
+         ${Renamed_Entity.Up},
+         ${Renamed_Entity.Down});
 .)
 
 Rules for exit_statement. :

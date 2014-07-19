@@ -1,5 +1,6 @@
 Synthesized attributes
   Clause_Names,
+  Names,
   With_Clause_Names : Gela.Lexical_Types.Symbol_List : name_list;
 
 Rules for Clause_Names.program_unit_name :
@@ -11,6 +12,17 @@ Rules for Clause_Names.program_unit_name :
 (.
       Self.Compilation.Context.Symbols.Create_List
         (${head.name_list}, ${program_unit_name.full_name}, ${Clause_Names.name_list});
+.)
+
+Rules for Names.defining_identifier :
+(.
+      ${Names.name_list} := Gela.Lexical_Types.Empty_Symbol_List;
+.)
+
+Rules for Names.defining_identifier :
+(.
+      Self.Compilation.Context.Symbols.Create_List
+        (${head.name_list}, ${defining_identifier.full_name}, ${Names.name_list});
 .)
 
 Rules for With_Clause_Names.program_unit_name :
