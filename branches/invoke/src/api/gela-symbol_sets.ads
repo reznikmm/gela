@@ -48,6 +48,14 @@ package Gela.Symbol_Sets is
       return Gela.Lexical_Types.Symbol is abstract;
    --  Return prefix if Value is compound name or No_Symbol otherwise.
 
+   function Parent
+     (Self  : Symbol_Set'Class;
+      Value : Gela.Lexical_Types.Symbol)
+      return Gela.Lexical_Types.Symbol;
+   --  If Value = Standard then return No_Symbol,
+   --  Return Standart if Self.Prefix (Value) = No_Symbol
+   --  return Self.Prefix (Value) otherwise
+
    not overriding function Selector
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol)

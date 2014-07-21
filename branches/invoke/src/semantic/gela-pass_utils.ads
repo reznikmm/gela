@@ -80,4 +80,11 @@ package Gela.Pass_Utils is
    --  Add (Symbol, Name) from List and Names to Env, then create new
    --  declarative region
 
+   function Parents_Declarative_Region
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Private_Index : Gela.Lexical_Types.Token_Count;
+      Full_Name     : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index;
+   --  Return end of declarative region of unit's parent
+
 end Gela.Pass_Utils;

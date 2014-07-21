@@ -51,7 +51,7 @@ package body Gela.Plain_Compilation_Managers is
    begin
       case Item.Kind is
          when Unit_Declaration =>
-            Up := Set.Prefix (Item.Name);
+            Up := Set.Parent (Item.Name);
 
             if Up /= Gela.Lexical_Types.No_Symbol then
                Upper := Self.Packages.Element (Up);

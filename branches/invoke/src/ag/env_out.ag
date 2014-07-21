@@ -907,3 +907,12 @@ Rules for root_type_definition.dummy_token :
 (.
       ${root_type_definition.env_out} := 0;
 .)
+
+Synthesized attributes
+  package_declaration
+    : Gela.Semantic_Types.Env_Index : declarative_region;
+
+Rules for package_declaration. :
+(.
+      ${package_declaration.declarative_region} := ${Private_Part_Declarative_Items.env_out};
+.)

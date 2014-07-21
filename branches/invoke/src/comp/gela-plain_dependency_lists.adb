@@ -164,7 +164,7 @@ package body Gela.Plain_Dependency_Lists is
          case Item.Kind is
             when Unit_Declaration =>
                --  Check if parent unit is ordered
-               Index := (Unit_Declaration, Set.Prefix (Item.Name));
+               Index := (Unit_Declaration, Set.Parent (Item.Name));
 
                if Index.Name = Gela.Lexical_Types.No_Symbol or else
                  Self.Ordered.Contains (Index)
@@ -186,7 +186,7 @@ package body Gela.Plain_Dependency_Lists is
 
                if Self.No_Spec.Contains (Index) then
                   --  Check if parent unit is ordered
-                  Index := (Unit_Declaration, Set.Prefix (Item.Name));
+                  Index := (Unit_Declaration, Set.Parent (Item.Name));
                   Lib := Item.Unit_Body.Unit_Declaration;
 
                   if Lib.Unit_Kind not in Gela.Semantic_Types.A_Function_Body

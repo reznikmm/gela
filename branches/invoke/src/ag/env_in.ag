@@ -839,7 +839,11 @@ Rules for compilation_unit_declaration. :
 
 Rules for compilation_unit_declaration. :
 (.
-      ${Unit_Declaration.env_in} := 0;  --  FIXME
+      --  ${Context_Clause_Elements.env_out}
+      ${Unit_Declaration.env_in} := Gela.Pass_Utils.Parents_Declarative_Region
+        (Comp => Self.Compilation,
+         Private_Index => ${private_token.Index},
+         Full_Name     => ${Unit_Declaration.full_name});
 .)
 
 Rules for component_clause. :
