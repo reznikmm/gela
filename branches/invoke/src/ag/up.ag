@@ -42,6 +42,7 @@ Synthesized attributes
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
+  subtype_mark_or_access_definition,
   unconstrained_array_definition
 
    : Gela.Interpretations.Interpretation_Set_Index : Up;

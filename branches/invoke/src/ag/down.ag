@@ -445,7 +445,13 @@ Rules for parameter_association. :
 
 Rules for parameter_specification. :
 (.
-      ${Initialization_Expression.Down} := 0;  --  FIXME
+      -- 6.1 (17)
+      Gela.Pass_Utils.Resolve.To_Type
+        (Self.Compilation,
+         ${parameter_specification.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Initialization_Expression.Up:0},
+         ${Initialization_Expression.Down});
 .)
 
 Rules for pragma_argument_association. :
@@ -776,7 +782,11 @@ Rules for function_body. :
 
 Rules for function_declaration. :
 (.
-      ${Result_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${function_declaration.env_in},
+         ${Result_Subtype.Up},
+         ${Result_Subtype.Down});
 .)
 
 Rules for generic_function_declaration. :
@@ -819,7 +829,11 @@ Rules for subtype_indication. :
 
 Rules for parameter_specification. :
 (.
-      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${parameter_specification.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Object_Declaration_Subtype.Down});
 .)
 
 Rules for discrete_range_attribute_reference.Range_Attribute :

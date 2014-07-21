@@ -1,19 +1,24 @@
 Synthesized attributes
   access_definition,
-  anonymous_access_to_object_definition,
-  anonymous_access_to_function_definition,
-  anonymous_access_to_procedure_definition,
   allocator,
+  anonymous_access_to_function_definition,
+  anonymous_access_to_object_definition,
+  anonymous_access_to_procedure_definition,
   attribute_reference,
   case_expression,
   character_literal,
   clause_name,
   component_definition,
   composite_constraint,
+  constrained_array_definition,
   constraint,
   delta_constraint,
   digits_constraint,
   direct_name,
+  discrete_subtype_definition,
+  discrete_subtype_indication,
+  discrete_range_attribute_reference,
+  discrete_simple_expression_range,
   explicit_dereference,
   expression,
   extension_aggregate,
@@ -25,7 +30,9 @@ Synthesized attributes
   null_literal,
   numeric_literal,
   object_declaration,
+  object_definition,
   operator_symbol,
+  parameter_specification,
   prefix,
   program_unit_name,
   qualified_expression,
@@ -42,7 +49,9 @@ Synthesized attributes
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
+  subtype_mark_or_access_definition,
   unconstrained_array_definition,
+  Discrete_Subtype_Definitions,
   Index_Subtype_Definitions
 
    : Gela.Semantic_Types.Error_Set_Index : Errors;
@@ -151,6 +160,12 @@ Rules for qualified_expression. :
 Rules for object_declaration. :
 (.
       ${object_declaration.Errors} := ${Initialization_Expression.Errors};
+      --  ${Object_Declaration_Subtype.Errors};
+.)
+Rules for parameter_specification. :
+(.
+      ${parameter_specification.Errors} := ${Initialization_Expression.Errors};
+      --  ${Object_Declaration_Subtype.Errors};
 .)
 Rules for membership_test. :
 (.
@@ -168,11 +183,25 @@ Rules for Index_Subtype_Definitions.subtype_mark :
 (.
       ${Index_Subtype_Definitions.Errors} := ${subtype_mark.Errors};
 .)
+Rules for Discrete_Subtype_Definitions.discrete_subtype_definition :
+(.
+      ${Discrete_Subtype_Definitions.Errors} := 0;
+.)
+Rules for Discrete_Subtype_Definitions.discrete_subtype_definition :
+(.
+      ${Discrete_Subtype_Definitions.Errors} := ${discrete_subtype_definition.Errors};
+.)
 Rules for unconstrained_array_definition. :
 (.
       ${unconstrained_array_definition.Errors} := ${Index_Subtype_Definitions.Errors};
       --  ${Array_Component_Definition.Errors}
 .)
+Rules for constrained_array_definition. :
+(.
+      ${constrained_array_definition.Errors} := ${Discrete_Subtype_Definitions.Errors};
+      --  ${Array_Component_Definition.Errors}
+.)
+
 Rules for component_definition. :
 (.
       ${component_definition.Errors} := ${Component_Subtype_Indication.Errors};
@@ -189,4 +218,17 @@ Rules for anonymous_access_to_function_definition. :
 Rules for anonymous_access_to_procedure_definition. :
 (.
       ${anonymous_access_to_procedure_definition.Errors} := 0;  --  FIXME
+.)
+Rules for discrete_subtype_indication. :
+(.
+      ${discrete_subtype_indication.Errors} := 0;  --  FIXME
+.)
+Rules for discrete_range_attribute_reference.Range_Attribute :
+(.
+      ${discrete_range_attribute_reference.Errors} := 0;  --  FIXME
+.)
+Rules for discrete_simple_expression_range. :
+(.
+      ${discrete_simple_expression_range.Errors} := 0;  --  FIXME
+      --  ${Upper_Bound.Errors}, ${Lower_Bound.Errors}
 .)
