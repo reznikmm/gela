@@ -12,9 +12,10 @@ with Gela.Compilation_Managers;
 with Gela.Compilation_Unit_Sets;
 with Gela.Compilation_Units;
 with Gela.Dependency_Lists;
+with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Units;
+with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Package_Declarations;
-with Gela.Elements.Library_Unit_Declarations;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
 
@@ -234,16 +235,51 @@ package body Gela.Pass_Utils is
       pragma Unreferenced (Private_Index);
       use type Gela.Lexical_Types.Symbol;
 
+      package Get is
+
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Semantic_Types.Env_Index := 0;
+         end record;
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations
+                              .Package_Declaration_Access);
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations
+            .Generic_Package_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations
+                              .Package_Declaration_Access) is
+         begin
+            Self.Result := Node.Declarative_Region;
+         end Package_Declaration;
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations
+                              .Generic_Package_Declaration_Access) is
+         begin
+            Self.Result := Node.Declarative_Region;
+         end Generic_Package_Declaration;
+
+      end Get;
+
       Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
         Comp.Context.Symbols;
       Parent : constant Gela.Lexical_Types.Symbol := Set.Parent (Full_Name);
       Unit_Set : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
       Unit   : Gela.Compilation_Units.Compilation_Unit_Access;
       Tree   : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
-      Decl   : Gela.Elements.Compilation_Unit_Declarations
-        .Compilation_Unit_Declaration_Access;
-      Lib    : Gela.Elements.Library_Unit_Declarations.
-        Library_Unit_Declaration_Access;
+      V      : Get.Visiter;
    begin
       if Parent = Gela.Lexical_Types.No_Symbol then
          return 0;
@@ -252,12 +288,9 @@ package body Gela.Pass_Utils is
       Unit_Set := Comp.Context.Library_Unit_Declarations;
       Unit := Unit_Set.Find (Parent);
       Tree := Unit.Tree;
-      Decl := Gela.Elements.Compilation_Unit_Declarations
-        .Compilation_Unit_Declaration_Access (Tree);
-      Lib  := Decl.Unit_Declaration;
+      Tree.Visit (V);
 
-      return Gela.Elements.Package_Declarations
-        .Package_Declaration_Access (Lib).Declarative_Region;
+      return V.Result;
    end Parents_Declarative_Region;
 
    -------------------------

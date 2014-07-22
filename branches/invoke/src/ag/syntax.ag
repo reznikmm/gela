@@ -412,7 +412,7 @@ discrete_subtype_definition ::=
 
 discrete_subtype_indication ::=
     subtype_mark <Subtype_Mark>
-    range_constraint <Subtype_Constraint>;
+    [range_constraint <Subtype_Constraint>];
 
 discrete_subtype_indication_dr ::=
     subtype_mark <Subtype_Mark>

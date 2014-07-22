@@ -909,9 +909,14 @@ Rules for root_type_definition.dummy_token :
 .)
 
 Synthesized attributes
+  generic_package_declaration,
   package_declaration
     : Gela.Semantic_Types.Env_Index : declarative_region;
 
+Rules for generic_package_declaration. :
+(.
+      ${generic_package_declaration.declarative_region} := ${Private_Part_Declarative_Items.env_out};
+.)
 Rules for package_declaration. :
 (.
       ${package_declaration.declarative_region} := ${Private_Part_Declarative_Items.env_out};
