@@ -12,6 +12,9 @@ Synthesized attributes
   composite_constraint,
   constrained_array_definition,
   constraint,
+  defining_expanded_unit_name,
+  defining_identifier,
+  defining_program_unit_name,
   delta_constraint,
   digits_constraint,
   direct_name,
@@ -32,6 +35,7 @@ Synthesized attributes
   object_declaration,
   object_definition,
   operator_symbol,
+  package_declaration,
   parameter_specification,
   prefix,
   program_unit_name,
@@ -231,4 +235,16 @@ Rules for discrete_simple_expression_range. :
 (.
       ${discrete_simple_expression_range.Errors} := 0;  --  FIXME
       --  ${Upper_Bound.Errors}, ${Lower_Bound.Errors}
+.)
+Rules for defining_expanded_unit_name. :
+(.
+      ${defining_expanded_unit_name.Errors} := ${Defining_Prefix.Errors};
+.)
+Rules for package_declaration. :
+(.
+      ${package_declaration.Errors} := ${Names.Errors};
+.)
+Rules for defining_identifier.identifier_token :
+(.
+      ${defining_identifier.Errors} := 0;
 .)

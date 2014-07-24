@@ -9,6 +9,8 @@
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
+with Gela.Compilations;
+with Gela.Compilation_Unit_Sets;
 with Gela.Elements.Compilation_Units;
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Unit_Bodies;
@@ -24,6 +26,7 @@ with Gela.Elements.Defining_Enumeration_Literals;
 with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Operator_Symbols;
+with Gela.Lexical_Types;
 
 package body Asis.Elements is
 
@@ -413,10 +416,64 @@ package body Asis.Elements is
      (Element : in Asis.Element)
       return Asis.Compilation_Unit
    is
+      use type Gela.Compilation_Units.Compilation_Unit_Access;
+
+      procedure Find
+        (List : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+         Unit : out Gela.Compilation_Units.Compilation_Unit_Access);
+
+      Comp    : Gela.Compilations.Compilation_Access;
+      From    : Gela.Lexical_Types.Token_Count;
+      To      : Gela.Lexical_Types.Token_Count;
+
+      ----------
+      -- Find --
+      ----------
+
+      procedure Find
+        (List : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+         Unit : out Gela.Compilation_Units.Compilation_Unit_Access)
+      is
+         use Gela.Compilations;
+         use type Gela.Lexical_Types.Token_Count;
+         Tree    : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
+         Cursor  : Gela.Compilation_Unit_Sets.Compilation_Unit_Cursor'Class :=
+           List.First;
+      begin
+         while Cursor.Has_Element loop
+            Unit := Cursor.Element;
+            Tree := Unit.Tree;
+
+            if Unit.Compilation = Comp
+              and then Tree.First_Token <= From
+              and then Tree.Last_Token >= To
+            then
+               return;
+            end if;
+
+            Cursor.Next;
+         end loop;
+
+         Unit := null;
+      end Find;
+
+      Context : Gela.Contexts.Context_Access;
+      Unit    : Gela.Compilation_Units.Compilation_Unit_Access;
+
    begin
       Check_Nil_Element (Element, "Enclosing_Compilation_Unit");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Compilation_Unit;
+      Comp := Element.Data.Enclosing_Compilation;
+      Context := Comp.Context;
+      From := Element.Data.First_Token;
+      To := Element.Data.Last_Token;
+      Find (Context.Library_Unit_Declarations, Unit);
+
+      if Unit = null then
+         Find (Context.Compilation_Unit_Bodies, Unit);
+      end if;
+
+      --  Raise_Not_Implemented ("");
+      return (Data => Unit);
    end Enclosing_Compilation_Unit;
 
    -----------------------

@@ -918,7 +918,9 @@ Rules for decimal_fixed_point_definition. :
 
 Rules for defining_expanded_unit_name. :
 (.
-      ${Defining_Prefix.env_in} := ${defining_expanded_unit_name.env_in};
+      --  depend on ${defining_expanded_unit_name.env_in};
+      Self.Compilation.Context.Environment_Set.Library_Level_Environment
+        (${Defining_Prefix.env_in});
 .)
 
 Rules for defining_expanded_unit_name. :

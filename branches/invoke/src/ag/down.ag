@@ -493,7 +493,9 @@ Rules for With_Clause_Names.program_unit_name :
 
 Rules for defining_expanded_unit_name. :
 (.
-      ${Defining_Prefix.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${defining_expanded_unit_name.env_in}, ${Defining_Prefix.Up}, ${Defining_Prefix.Down});
 .)
 
 Rules for Exception_Choices.exception_choice :
