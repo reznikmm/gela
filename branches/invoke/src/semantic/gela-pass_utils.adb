@@ -15,6 +15,7 @@ with Gela.Dependency_Lists;
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Units;
 with Gela.Elements.Generic_Package_Declarations;
+with Gela.Elements.Library_Unit_Declarations;
 with Gela.Elements.Package_Declarations;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
@@ -241,6 +242,11 @@ package body Gela.Pass_Utils is
             Result : Gela.Semantic_Types.Env_Index := 0;
          end record;
 
+         overriding procedure Compilation_Unit_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Declarations.
+              Compilation_Unit_Declaration_Access);
+
          overriding procedure Package_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Package_Declarations
@@ -254,6 +260,17 @@ package body Gela.Pass_Utils is
       end Get;
 
       package body Get is
+
+         overriding procedure Compilation_Unit_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Declarations.
+              Compilation_Unit_Declaration_Access)
+         is
+            Decl : constant Gela.Elements.Library_Unit_Declarations.
+              Library_Unit_Declaration_Access := Node.Unit_Declaration;
+         begin
+            Decl.Visit (Self);
+         end Compilation_Unit_Declaration;
 
          overriding procedure Package_Declaration
            (Self : in out Visiter;

@@ -744,7 +744,8 @@ Rules for private_extension_definition. :
 
 Rules for private_type_declaration. :
 (.
-      ${private_type_declaration.env_out} := ${private_type_declaration.env_in};
+      ${private_type_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Type_Declaration_View.env_out});
 .)
 
 Rules for private_type_definition. :
