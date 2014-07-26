@@ -14,9 +14,12 @@ with Gela.Compilation_Units;
 with Gela.Dependency_Lists;
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Units;
+with Gela.Elements.Enumeration_Type_Definitions;
+with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Library_Unit_Declarations;
 with Gela.Elements.Package_Declarations;
+with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
 
@@ -26,6 +29,9 @@ package body Gela.Pass_Utils is
      (Comp          : Gela.Compilations.Compilation_Access;
       Unit          : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access);
+
+   function Is_Enumeration
+     (Decl : Gela.Elements.Element_Access) return Boolean;
 
    ----------------------------
    -- Add_Name_Create_Region --
@@ -45,6 +51,11 @@ package body Gela.Pass_Utils is
         (Index  => Env,
          Symbol => Symbol,
          Name   => Name);
+
+      if Is_Enumeration (Name.Parent) then
+         return Env_1;
+      end if;
+
       Env_2 := Comp.Context.Environment_Set.Enter_Declarative_Region
         (Index  => Env_1,
          Region => Name);
@@ -222,6 +233,83 @@ package body Gela.Pass_Utils is
 
       return 0;
    end Create_Unit_Declaration;
+
+   --------------------
+   -- Is_Enumeration --
+   --------------------
+
+   function Is_Enumeration
+     (Decl : Gela.Elements.Element_Access) return Boolean
+   is
+      package Get is
+
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Boolean := False;
+         end record;
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access);
+
+         overriding procedure Enumeration_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Enumeration_Type_Definitions.
+              Enumeration_Type_Definition_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access)
+         is
+            View : constant Gela.Elements.Type_Definitions.
+              Type_Definition_Access := Node.Type_Declaration_View;
+         begin
+            View.Visit (Self);
+         end Full_Type_Declaration;
+
+         overriding procedure Enumeration_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Enumeration_Type_Definitions.
+              Enumeration_Type_Definition_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            Self.Result := True;
+         end Enumeration_Type_Definition;
+
+      end Get;
+
+      use type Gela.Elements.Element_Access;
+      V : Get.Visiter;
+   begin
+      if Decl /= null then
+         Decl.Visit (V);
+      end if;
+
+      return V.Result;
+   end Is_Enumeration;
+
+   ------------------------------
+   -- Leave_Declarative_Region --
+   ------------------------------
+
+   function Leave_Declarative_Region
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      if Is_Enumeration (Name.Parent) then
+         return Index;
+      else
+         return Comp.Context.Environment_Set.Leave_Declarative_Region (Index);
+      end if;
+   end Leave_Declarative_Region;
 
    --------------------------------
    -- Parents_Declarative_Region --

@@ -457,12 +457,16 @@ Rules for entry_index_specification. :
 
 Rules for enumeration_literal_specification.Names :
 (.
-      ${enumeration_literal_specification.env_out} := ${enumeration_literal_specification.env_in};
+      ${enumeration_literal_specification.env_out} :=
+        Self.Compilation.Context.Environment_Set.Add_Defining_Name
+          (Index  => ${enumeration_literal_specification.env_in},
+           Symbol => ${Names.full_name},
+           Name   => Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for enumeration_type_definition. :
 (.
-      ${enumeration_type_definition.env_out} := ${enumeration_type_definition.env_in};
+      ${enumeration_type_definition.env_out} := ${Enumeration_Literal_Declarations.env_out};
 .)
 
 Rules for exception_declaration. :
@@ -587,8 +591,11 @@ Rules for formal_unconstrained_array_definition. :
 
 Rules for full_type_declaration. :
 (.
-      ${full_type_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
-        (${Type_Declaration_View.env_out});
+      ${full_type_declaration.env_out} :=
+        Gela.Pass_Utils.Leave_Declarative_Region
+          (Self.Compilation,
+           ${Type_Declaration_View.env_out},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for function_body. :
