@@ -58,4 +58,14 @@ private
       Index  : Gela.Semantic_Types.Env_Index)
       return Gela.Semantic_Types.Env_Index;
 
+   overriding function Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding procedure Set_Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Value  : Gela.Semantic_Types.Env_Index);
+
 end Gela.Library_Environments;

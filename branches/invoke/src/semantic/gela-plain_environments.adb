@@ -1,5 +1,6 @@
-package body Gela.Plain_Environments is
+with Gela.Plain_Environments.Debug;
 
+package body Gela.Plain_Environments is
 
    package Cursors is
 
@@ -110,6 +111,29 @@ package body Gela.Plain_Environments is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
+      procedure Update_Lib_Unit_Env
+        (Old_Env : Gela.Semantic_Types.Env_Index;
+         New_Env : Gela.Semantic_Types.Env_Index);
+
+      -------------------------
+      -- Update_Lib_Unit_Env --
+      -------------------------
+
+      procedure Update_Lib_Unit_Env
+        (Old_Env : Gela.Semantic_Types.Env_Index;
+         New_Env : Gela.Semantic_Types.Env_Index)
+      is
+         Cursor : Env_Maps.Cursor := Self.Lib_Env.Find (Old_Env);
+         Symbol : Gela.Lexical_Types.Symbol;
+      begin
+         if Env_Maps.Has_Element (Cursor) then
+            Symbol := Env_Maps.Element (Cursor);
+            Self.Lib_Env.Delete (Cursor);
+            Self.Lib_Env.Insert (New_Env, Symbol);
+            Self.Units_Env.Replace (Symbol, New_Env);
+         end if;
+      end Update_Lib_Unit_Env;
+
       Region : Region_Item;
       Found  : Direct_Visible_Item_Count;
       Next   : Direct_Visible_Item :=
@@ -136,6 +160,7 @@ package body Gela.Plain_Environments is
               Self.Region.Find_Index (Region);
          begin
             if Result in Region_Item_Index then
+               Update_Lib_Unit_Env (Index, Result);
                return Result;
             end if;
          end;
@@ -144,6 +169,7 @@ package body Gela.Plain_Environments is
       Self.Direct_Visible.Append (Next);
       Region.Local := Self.Direct_Visible.Last_Index;
       Self.Region.Append (Region);
+      Update_Lib_Unit_Env (Index, Self.Region.Last_Index);
 
       return Self.Region.Last_Index;
    end Add_Defining_Name;
@@ -162,6 +188,10 @@ package body Gela.Plain_Environments is
       use type Gela.Lexical_Types.Symbol;
 
    begin
+      if Index = 37 and Symbol = 1114253 then
+         Gela.Plain_Environments.Debug (Self, Index);
+      end if;
+
       if Index = Gela.Library_Environments.Library_Env then
          return Self.Lib.Direct_Visible (Index, Symbol);
       elsif Index not in Region_Item_Index then
@@ -205,6 +235,26 @@ package body Gela.Plain_Environments is
       return Self.Region.Last_Index;
    end Enter_Declarative_Region;
 
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (X : Gela.Lexical_Types.Symbol) return Ada.Containers.Hash_Type is
+   begin
+      return Ada.Containers.Hash_Type (X);
+   end Hash;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (X : Gela.Semantic_Types.Env_Index) return Ada.Containers.Hash_Type is
+   begin
+      return Ada.Containers.Hash_Type (X);
+   end Hash;
+
    ------------------------------
    -- Leave_Declarative_Region --
    ------------------------------
@@ -230,6 +280,37 @@ package body Gela.Plain_Environments is
       Self.Lib.Library_Level_Environment (Value);
    end Library_Level_Environment;
 
+   ------------------------------
+   -- Library_Unit_Environment --
+   ------------------------------
+
+   overriding function Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index
+   is
+      use type Gela.Lexical_Types.Symbol;
+   begin
+      if Symbol = 0 then
+         return 0;
+      else
+         return Self.Units_Env.Element (Symbol);
+      end if;
+   end Library_Unit_Environment;
+
+   ----------------------------------
+   -- Set_Library_Unit_Environment --
+   ----------------------------------
+
+   overriding procedure Set_Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Value  : Gela.Semantic_Types.Env_Index) is
+   begin
+      Self.Units_Env.Include (Symbol, Value);
+      Self.Lib_Env.Include (Value, Symbol);
+   end Set_Library_Unit_Environment;
+
    -------------
    -- Visible --
    -------------
@@ -242,8 +323,11 @@ package body Gela.Plain_Environments is
       Found  : access Boolean)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
+      pragma Unreferenced (Index);
+      Lib_Env : Gela.Semantic_Types.Env_Index;
    begin
-      return Self.Lib.Visible (Index, Region, Symbol, Found);
+      Self.Library_Level_Environment (Lib_Env);
+      return Self.Lib.Visible (Lib_Env, Region, Symbol, Found);
    end Visible;
 
 end Gela.Plain_Environments;

@@ -1435,7 +1435,8 @@ Rules for full_type_declaration. :
           (Self.Compilation,
            ${full_type_declaration.env_in},
            ${Names.full_name},
-           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
       --  FIXME: dont create region for enums and completions
 .)
 
@@ -1916,7 +1917,8 @@ Rules for package_declaration. :
           (Self.Compilation,
            ${package_declaration.env_in},
            ${Names.full_name},
-           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for package_declaration. :
@@ -2051,7 +2053,8 @@ Rules for private_type_declaration. :
           (Self.Compilation,
            ${private_type_declaration.env_in},
            ${Names.full_name},
-           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
       --  FIXME: dont create region for completions
 .)
 
@@ -2427,7 +2430,8 @@ Rules for subtype_declaration. :
           (Self.Compilation,
            ${subtype_declaration.env_in},
            ${Names.full_name},
-           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for subtype_declaration. :

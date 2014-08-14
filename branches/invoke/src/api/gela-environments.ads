@@ -16,6 +16,22 @@ package Gela.Environments is
       Value : out Gela.Semantic_Types.Env_Index) is abstract;
    --  Return environment that incudes library level names.
 
+   not overriding function Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Return environment index corresponding to unit of given Symbol
+   --  This environment points to region of corresponding declaration and
+   --  includes all child units at the end of region.
+
+   not overriding procedure Set_Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Value  : Gela.Semantic_Types.Env_Index) is abstract;
+   --  Save environment index as corresponding to unit of given Symbol
+   --  After Value set as library unit environment for given Symbol
+   --  any call to Add_Defining_Name will update mapping for the Symbol.
+
    not overriding function Direct_Visible
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;

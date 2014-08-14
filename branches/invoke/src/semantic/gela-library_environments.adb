@@ -663,6 +663,33 @@ package body Gela.Library_Environments is
       Value := Library_Env;
    end Library_Level_Environment;
 
+   ------------------------------
+   -- Library_Unit_Environment --
+   ------------------------------
+
+   overriding function Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index
+   is
+      pragma Unreferenced (Self);
+      pragma Unreferenced (Symbol);
+   begin
+      return 0;
+   end Library_Unit_Environment;
+
+   ----------------------------------
+   -- Set_Library_Unit_Environment --
+   ----------------------------------
+
+   overriding procedure Set_Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Value  : Gela.Semantic_Types.Env_Index) is
+   begin
+      raise Constraint_Error;
+   end Set_Library_Unit_Environment;
+
    -------------
    -- Visible --
    -------------

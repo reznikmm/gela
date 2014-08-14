@@ -8,6 +8,7 @@ with Gela.Semantic_Types;
 with Gela.Library_Environments;
 
 with Ada.Containers.Vectors;
+with Ada.Containers.Hashed_Maps;
 
 package Gela.Plain_Environments is
    pragma Preelaborate;
@@ -47,13 +48,35 @@ private
      (Index_Type   => Region_Item_Index,
       Element_Type => Region_Item);
 
+   function Hash
+     (X : Gela.Lexical_Types.Symbol) return Ada.Containers.Hash_Type;
+
+   function Hash
+     (X : Gela.Semantic_Types.Env_Index) return Ada.Containers.Hash_Type;
+
+   package Symbol_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Gela.Lexical_Types.Symbol,
+      Element_Type    => Gela.Semantic_Types.Env_Index,
+      Hash            => Hash,
+      Equivalent_Keys => Gela.Lexical_Types."=",
+      "="             => Gela.Semantic_Types."=");
+
+   package Env_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Gela.Semantic_Types.Env_Index,
+      Element_Type    => Gela.Lexical_Types.Symbol,
+      Hash            => Hash,
+      Equivalent_Keys => Gela.Semantic_Types."=",
+      "="             => Gela.Lexical_Types."=");
+
    type Environment_Set (Context : access Gela.Contexts.Context'Class) is
      new Gela.Environments.Environment_Set with
    record
       Lib : aliased Gela.Library_Environments.Environment_Set (Context);
       Region         : Region_Vectors.Vector;
       Direct_Visible : Direct_Visible_Vectors.Vector;
---        Visible        : Visible_Vectors.Vector;
+         --        Visible        : Visible_Vectors.Vector;
+      Units_Env      : Symbol_Maps.Map;
+      Lib_Env        : Env_Maps.Map;
    end record;
 
    overriding function Add_Defining_Name
@@ -83,6 +106,16 @@ private
    overriding procedure Library_Level_Environment
      (Self  : in out Environment_Set;
       Value : out Gela.Semantic_Types.Env_Index);
+
+   overriding function Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding procedure Set_Library_Unit_Environment
+     (Self   : access Environment_Set;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Value  : Gela.Semantic_Types.Env_Index);
 
    overriding function Visible
      (Self   : access Environment_Set;

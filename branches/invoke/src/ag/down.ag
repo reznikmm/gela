@@ -430,7 +430,11 @@ Rules for ordinary_fixed_point_definition. :
 
 Rules for package_renaming_declaration. :
 (.
-      ${Renamed_Entity.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${package_renaming_declaration.env_in},
+         ${Renamed_Entity.Up},
+         ${Renamed_Entity.Down});
 .)
 
 Rules for parameter_association. :
@@ -605,7 +609,8 @@ Rules for select_or_path. :
 
 Rules for selected_component. :
 (.
-      ${prefix.Down} := ${selected_component.Down};  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${selected_component.Down}, 1, ${prefix.Down});
 .)
 
 Rules for selected_identifier. :
@@ -626,7 +631,7 @@ Rules for generic_association. :
 
 Rules for selected_component. :
 (.
-      ${Selector.Down} := 0;  --  FIXME
+      ${Selector.Down} := ${selected_component.Down};
 .)
 
 Rules for short_circuit. :

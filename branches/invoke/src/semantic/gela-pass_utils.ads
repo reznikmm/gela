@@ -54,11 +54,12 @@ package Gela.Pass_Utils is
       return Gela.Semantic_Types.Env_Index;
 
    function Add_Name_Create_Region
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Env          : Gela.Semantic_Types.Env_Index;
-      Symbol       : Gela.Lexical_Types.Symbol;
-      Name         : Gela.Elements.Defining_Names.Defining_Name_Access)
-     return Gela.Semantic_Types.Env_Index;
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Decl   : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Env_Index;
    --  Add (Symbol, Name) to Env
    --  Check if Name is part of enumeration type declaration
    --  else create new declarative region

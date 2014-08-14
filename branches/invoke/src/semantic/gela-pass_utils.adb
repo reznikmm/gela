@@ -9,16 +9,10 @@
 
 with Gela.Contexts;
 with Gela.Compilation_Managers;
-with Gela.Compilation_Unit_Sets;
-with Gela.Compilation_Units;
 with Gela.Dependency_Lists;
 with Gela.Element_Visiters;
-with Gela.Elements.Compilation_Units;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Full_Type_Declarations;
-with Gela.Elements.Generic_Package_Declarations;
-with Gela.Elements.Library_Unit_Declarations;
-with Gela.Elements.Package_Declarations;
 with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
@@ -38,11 +32,12 @@ package body Gela.Pass_Utils is
    ----------------------------
 
    function Add_Name_Create_Region
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Env          : Gela.Semantic_Types.Env_Index;
-      Symbol       : Gela.Lexical_Types.Symbol;
-      Name         : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Semantic_Types.Env_Index
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Decl   : Gela.Elements.Element_Access)
+        return Gela.Semantic_Types.Env_Index
    is
       Env_1 : Gela.Semantic_Types.Env_Index;
       Env_2 : Gela.Semantic_Types.Env_Index;
@@ -52,7 +47,7 @@ package body Gela.Pass_Utils is
          Symbol => Symbol,
          Name   => Name);
 
-      if Is_Enumeration (Name.Parent) then
+      if Is_Enumeration (Decl) then
          return Env_1;
       end if;
 
@@ -324,78 +319,18 @@ package body Gela.Pass_Utils is
       pragma Unreferenced (Private_Index);
       use type Gela.Lexical_Types.Symbol;
 
-      package Get is
-
-         type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Env_Index := 0;
-         end record;
-
-         overriding procedure Compilation_Unit_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Compilation_Unit_Declarations.
-              Compilation_Unit_Declaration_Access);
-
-         overriding procedure Package_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Package_Declarations
-                              .Package_Declaration_Access);
-
-         overriding procedure Generic_Package_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Generic_Package_Declarations
-            .Generic_Package_Declaration_Access);
-
-      end Get;
-
-      package body Get is
-
-         overriding procedure Compilation_Unit_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Compilation_Unit_Declarations.
-              Compilation_Unit_Declaration_Access)
-         is
-            Decl : constant Gela.Elements.Library_Unit_Declarations.
-              Library_Unit_Declaration_Access := Node.Unit_Declaration;
-         begin
-            Decl.Visit (Self);
-         end Compilation_Unit_Declaration;
-
-         overriding procedure Package_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Package_Declarations
-                              .Package_Declaration_Access) is
-         begin
-            Self.Result := Node.Declarative_Region;
-         end Package_Declaration;
-
-         overriding procedure Generic_Package_Declaration
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Generic_Package_Declarations
-                              .Generic_Package_Declaration_Access) is
-         begin
-            Self.Result := Node.Declarative_Region;
-         end Generic_Package_Declaration;
-
-      end Get;
-
       Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
         Comp.Context.Symbols;
       Parent : constant Gela.Lexical_Types.Symbol := Set.Parent (Full_Name);
-      Unit_Set : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
-      Unit   : Gela.Compilation_Units.Compilation_Unit_Access;
-      Tree   : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
-      V      : Get.Visiter;
+      Result : Gela.Semantic_Types.Env_Index;
    begin
       if Parent = Gela.Lexical_Types.No_Symbol then
          return 0;
       end if;
 
-      Unit_Set := Comp.Context.Library_Unit_Declarations;
-      Unit := Unit_Set.Find (Parent);
-      Tree := Unit.Tree;
-      Tree.Visit (V);
+      Result := Comp.Context.Environment_Set.Library_Unit_Environment (Parent);
 
-      return V.Result;
+      return Result;
    end Parents_Declarative_Region;
 
    -------------------------
