@@ -1,5 +1,3 @@
-with Gela.Plain_Environments.Debug;
-
 package body Gela.Plain_Environments is
 
    package Cursors is
@@ -188,10 +186,6 @@ package body Gela.Plain_Environments is
       use type Gela.Lexical_Types.Symbol;
 
    begin
-      if Index = 37 and Symbol = 1114253 then
-         Gela.Plain_Environments.Debug (Self, Index);
-      end if;
-
       if Index = Gela.Library_Environments.Library_Env then
          return Self.Lib.Direct_Visible (Index, Symbol);
       elsif Index not in Region_Item_Index then
