@@ -603,12 +603,25 @@ package body Gela.Plain_Compilation_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Subunits.Subunit_Access)
          is
+            Symbol : Gela.Lexical_Types.Symbol;
+            Parent : constant Gela.Elements.Program_Unit_Names.
+              Program_Unit_Name_Access := Node.Parent_Unit_Name;
             Decl : constant Gela.Elements.Proper_Bodies.Proper_Body_Access :=
               Node.Unit_Declaration;
          begin
+            Parent.Visit (Self);
+            Symbol := Self.Symbol;
             Self.Withed := Gela.Lexical_Types.Empty_Symbol_List;
             Self.Add_With (Node.Context_Clause_Elements);
             Decl.Visit (Self);
+
+            Value :=
+              (Kind          => Gela.Dependency_Lists.Subunit,
+               Name          => Self.Symbol,
+               Withed        => Self.Withed,
+               Limited_With  => Gela.Lexical_Types.Empty_Symbol_List,
+               Subunit       => Node,
+               Parent        => Symbol);
          end Subunit;
 
          ---------------
