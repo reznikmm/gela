@@ -1,6 +1,4 @@
 with Gela.Symbol_Sets;
-with Gela.Elements.Library_Unit_Bodies;
-with Gela.Semantic_Types;
 
 package body Gela.Plain_Dependency_Lists is
 
@@ -30,7 +28,7 @@ package body Gela.Plain_Dependency_Lists is
 
       Self.Queued.Insert ((Unit_Body, Name));
       Self.Queue.Prepend
-        ((Unit_Body, Name, Withed, Limited_With, Unit));
+        ((Unit_Body, Name, Withed, Limited_With, Unit, False));
    end Add_Body_Unit;
 
    --------------------------
@@ -147,7 +145,6 @@ package body Gela.Plain_Dependency_Lists is
       Set     : constant Gela.Symbol_Sets.Symbol_Set_Access :=
         Self.Context.Symbols;
       Pos     : Unit_Data_Lists.Cursor := Self.Queue.First;
-      Lib     : Gela.Elements.Library_Unit_Bodies.Library_Unit_Body_Access;
       Item    : Gela.Dependency_Lists.Unit_Data;
       Index   : Unit_Index;
       Index_S : Unit_Index;
@@ -208,11 +205,8 @@ package body Gela.Plain_Dependency_Lists is
                if Self.No_Spec.Contains (Index) then
                   --  Check if parent unit is ordered
                   Index := (Unit_Declaration, Set.Parent (Item.Name));
-                  Lib := Item.Unit_Body.Unit_Declaration;
 
-                  if Lib.Unit_Kind not in Gela.Semantic_Types.A_Function_Body
-                    | Gela.Semantic_Types.A_Procedure_Body
-                  then
+                  if not Item.Is_Subprogram then
                      raise Constraint_Error;
                   elsif Index.Name = Gela.Lexical_Types.No_Symbol or else
                     Self.Ordered.Contains (Index)

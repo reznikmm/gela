@@ -75,6 +75,7 @@ package body Gela.Plain_Compilation_Managers is
 
          type Visiter is new Gela.Element_Visiters.Visiter with record
             Is_Package : Boolean := False;
+            Is_Subprogram : Boolean := False;
             Symbol : Gela.Lexical_Types.Symbol := 0;
             Withed : Gela.Lexical_Types.Symbol_List :=
               Gela.Lexical_Types.Empty_Symbol_List;
@@ -246,11 +247,12 @@ package body Gela.Plain_Compilation_Managers is
             Decl.Visit (Self);
 
             Value :=
-              (Kind         => Gela.Dependency_Lists.Unit_Body,
-               Name         => Self.Symbol,
-               Withed       => Self.Withed,
-               Limited_With => Gela.Lexical_Types.Empty_Symbol_List,
-               Unit_Body    => Node);
+              (Kind          => Gela.Dependency_Lists.Unit_Body,
+               Name          => Self.Symbol,
+               Withed        => Self.Withed,
+               Limited_With  => Gela.Lexical_Types.Empty_Symbol_List,
+               Unit_Body     => Node,
+               Is_Subprogram => Self.Is_Subprogram);
          end Compilation_Unit_Body;
 
          ----------------------------------
@@ -326,6 +328,7 @@ package body Gela.Plain_Compilation_Managers is
             Name : constant Gela.Elements.Defining_Designators.
               Defining_Designator_Access := Node.Names;
          begin
+            Self.Is_Subprogram := True;
             Name.Visit (Self);
          end Function_Body;
 
@@ -521,6 +524,7 @@ package body Gela.Plain_Compilation_Managers is
             Name : constant Gela.Elements.Defining_Program_Unit_Names.
               Defining_Program_Unit_Name_Access := Node.Names;
          begin
+            Self.Is_Subprogram := True;
             Name.Visit (Self);
          end Procedure_Body;
 

@@ -66,6 +66,7 @@ package Gela.Dependency_Lists is
          when Unit_Body =>
             Unit_Body : Gela.Elements.Compilation_Unit_Bodies.
               Compilation_Unit_Body_Access;
+            Is_Subprogram : Boolean;
          when Unit_Declaration =>
             Unit_Declaration : Gela.Elements.Compilation_Unit_Declarations.
               Compilation_Unit_Declaration_Access;
