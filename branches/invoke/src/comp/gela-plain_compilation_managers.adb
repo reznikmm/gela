@@ -616,6 +616,11 @@ package body Gela.Plain_Compilation_Managers is
             Self.Add_With (Node.Context_Clause_Elements);
             Decl.Visit (Self);
 
+            Comp.Context.Symbols.Join
+              (Left  => Symbol,
+               Right => Self.Symbol,
+               Value => Self.Symbol);
+
             Value :=
               (Kind          => Gela.Dependency_Lists.Subunit,
                Name          => Self.Symbol,
