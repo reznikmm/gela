@@ -33,6 +33,27 @@ package body Gela.Plain_Dependency_Lists is
         ((Unit_Body, Name, Withed, Limited_With, Unit));
    end Add_Body_Unit;
 
+   --------------------------
+   -- Add_Compilation_Unit --
+   --------------------------
+
+   overriding procedure Add_Compilation_Unit
+     (Self  : in out Dependency_List;
+      Value : Gela.Dependency_Lists.Unit_Data)
+   is
+      Index : constant Unit_Index := (Value.Kind, Value.Name);
+   begin
+      if Self.Ordered.Contains (Index) then
+         --  Double append not allowed
+         raise Constraint_Error;
+      elsif Self.Pending.Contains (Index) then
+         Self.Pending.Delete (Index);
+      end if;
+
+      Self.Queued.Insert (Index);
+      Self.Queue.Prepend (Value);
+   end Add_Compilation_Unit;
+
    ----------------------------------
    -- Add_Library_Unit_Declaration --
    ----------------------------------
@@ -55,7 +76,7 @@ package body Gela.Plain_Dependency_Lists is
 
       Self.Queued.Insert ((Unit_Declaration, Name));
       Self.Queue.Prepend
-        ((Unit_Declaration, Name, Withed, Limited_With, Unit));
+        ((Unit_Declaration, Name, Withed, Limited_With, Unit, False));
    end Add_Library_Unit_Declaration;
 
    -----------------

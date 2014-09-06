@@ -20,7 +20,7 @@ package Gela.LARL_Parsers is
    overriding procedure Parse
      (Self       : in out Parser;
       Input      : not null access Gela.Parsers.Parser_Input'Class;
-      Factory     : not null Gela.Element_Factories.Element_Factory_Access;
+      Factory    : not null Gela.Element_Factories.Element_Factory_Access;
       Root       : out Gela.Elements.Compilations.Compilation_Access;
       Last_Token : out Gela.Lexical_Types.Token_Index);
 

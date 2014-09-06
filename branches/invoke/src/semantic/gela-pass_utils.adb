@@ -7,9 +7,6 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Contexts;
-with Gela.Compilation_Managers;
-with Gela.Dependency_Lists;
 with Gela.Element_Visiters;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Full_Type_Declarations;
@@ -137,22 +134,14 @@ package body Gela.Pass_Utils is
       Limited_With : Gela.Lexical_Types.Symbol_List)
       return Gela.Semantic_Types.Env_Index
    is
+      pragma Unreferenced (Comp);
+      pragma Unreferenced (Unit);
+      pragma Unreferenced (Parent_Name);
+      pragma Unreferenced (Full_Name);
       pragma Unreferenced (Unit_Kind);
-      Context : constant Gela.Contexts.Context_Access := Comp.Context;
-      Manager : constant Gela.Compilation_Managers.Compilation_Manager_Access
-        := Context.Compilation_Manager;
-      Deps    : constant Gela.Dependency_Lists.Dependency_List_Access :=
-        Context.Dependency_List;
+      pragma Unreferenced (With_List);
+      pragma Unreferenced (Limited_With);
    begin
-      Deps.Add_Subunit
-        (Parent       => Parent_Name,
-         Name         => Full_Name,
-         Withed       => With_List,
-         Limited_With => Limited_With,
-         Unit         => Unit);
-
-      Manager.Read_Dependency (Deps);
-
       return 0;
    end Create_Subunit;
 
@@ -170,21 +159,13 @@ package body Gela.Pass_Utils is
       Limited_With : Gela.Lexical_Types.Symbol_List)
       return Gela.Semantic_Types.Env_Index
    is
+      pragma Unreferenced (Comp);
+      pragma Unreferenced (Unit);
+      pragma Unreferenced (Full_Name);
       pragma Unreferenced (Unit_Kind);
-      Context : constant Gela.Contexts.Context_Access := Comp.Context;
-      Manager : constant Gela.Compilation_Managers.Compilation_Manager_Access
-        := Context.Compilation_Manager;
-      Deps    : constant Gela.Dependency_Lists.Dependency_List_Access :=
-        Context.Dependency_List;
+      pragma Unreferenced (With_List);
+      pragma Unreferenced (Limited_With);
    begin
-      Deps.Add_Body_Unit
-        (Name         => Full_Name,
-         Withed       => With_List,
-         Limited_With => Limited_With,
-         Unit         => Unit);
-
-      Manager.Read_Dependency (Deps);
-
       return 0;
    end Create_Unit_Body;
 
@@ -205,26 +186,15 @@ package body Gela.Pass_Utils is
    is
       pragma Unreferenced (Private_Index);
       pragma Unreferenced (Unit_Kind);
+      pragma Unreferenced (With_List);
+      pragma Unreferenced (Limited_With);
 
       use type Gela.Lexical_Types.Symbol;
 
-      Context : constant Gela.Contexts.Context_Access := Comp.Context;
-      Manager : constant Gela.Compilation_Managers.Compilation_Manager_Access
-        := Context.Compilation_Manager;
-      Deps    : constant Gela.Dependency_Lists.Dependency_List_Access :=
-        Context.Dependency_List;
    begin
-      Deps.Add_Library_Unit_Declaration
-        (Name         => Full_Name,
-         Withed       => With_List,
-         Limited_With => Limited_With,
-         Unit         => Unit);
-
       if Full_Name = Gela.Lexical_Types.Predefined_Symbols.Standard then
          Preprocess_Standard (Comp, Unit);
       end if;
-
-      Manager.Read_Dependency (Deps);
 
       return 0;
    end Create_Unit_Declaration;

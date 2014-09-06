@@ -69,6 +69,7 @@ package Gela.Dependency_Lists is
          when Unit_Declaration =>
             Unit_Declaration : Gela.Elements.Compilation_Unit_Declarations.
               Compilation_Unit_Declaration_Access;
+            Is_Package       : Boolean;
       end case;
    end record;
 
@@ -87,6 +88,11 @@ package Gela.Dependency_Lists is
             null;
       end case;
    end record;
+
+   not overriding procedure Add_Compilation_Unit
+     (Self  : in out Dependency_List;
+      Value : Unit_Data) is abstract;
+   --  Provide compilation unit
 
    not overriding procedure Next_Action
      (Self   : in out Dependency_List;

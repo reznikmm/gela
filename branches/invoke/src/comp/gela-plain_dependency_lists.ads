@@ -81,6 +81,10 @@ private
       Limited_With : Gela.Lexical_Types.Symbol_List;
       Unit         : Gela.Elements.Subunits.Subunit_Access);
 
+   overriding procedure Add_Compilation_Unit
+     (Self  : in out Dependency_List;
+      Value : Gela.Dependency_Lists.Unit_Data);
+
    overriding procedure Next_Action
      (Self   : in out Dependency_List;
       Action : out Gela.Dependency_Lists.Action);
