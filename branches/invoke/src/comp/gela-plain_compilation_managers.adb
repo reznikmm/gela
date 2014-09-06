@@ -626,8 +626,7 @@ package body Gela.Plain_Compilation_Managers is
                Name          => Self.Symbol,
                Withed        => Self.Withed,
                Limited_With  => Gela.Lexical_Types.Empty_Symbol_List,
-               Subunit       => Node,
-               Parent        => Symbol);
+               Subunit       => Node);
          end Subunit;
 
          ---------------
@@ -725,6 +724,7 @@ package body Gela.Plain_Compilation_Managers is
       Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Parent : Gela.Compilation_Units.Body_Unit_Access;
       Sub    : Gela.Compilation_Units.Subunit_Access;
+      Symbol : Gela.Lexical_Types.Symbol;
    begin
       case Item.Kind is
          when Unit_Declaration =>
@@ -770,15 +770,17 @@ package body Gela.Plain_Compilation_Managers is
             Self.Bodies.Insert (Item.Name, Parent);
 
          when Subunit =>
-            if Self.Bodies.Contains (Item.Parent) then
-               Parent := Self.Bodies.Element (Item.Parent);
+            Symbol := Set.Prefix (Item.Name);
+
+            if Self.Bodies.Contains (Symbol) then
+               Parent := Self.Bodies.Element (Symbol);
 
                Sub := Self.Factory.Create_Subunit
                  (Parent => Parent,
                   Name   => Item.Name,
                   Node   => Item.Subunit);
             else
-               Sub := Self.Subunits.Element (Item.Parent);
+               Sub := Self.Subunits.Element (Symbol);
 
                Sub := Self.Factory.Create_Subunit
                  (Parent => Sub,

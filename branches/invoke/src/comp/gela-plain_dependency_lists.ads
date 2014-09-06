@@ -3,9 +3,6 @@ with Ada.Containers.Hashed_Sets;
 
 with Gela.Contexts;
 with Gela.Dependency_Lists;
-with Gela.Elements.Compilation_Unit_Bodies;
-with Gela.Elements.Compilation_Unit_Declarations;
-with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 
 package Gela.Plain_Dependency_Lists is
@@ -53,33 +50,9 @@ private
       --  Set of absent subprogram units over Next_Required_Unit call
    end record;
 
-   overriding procedure Add_Library_Unit_Declaration
-     (Self         : in out Dependency_List;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access);
-
    overriding procedure No_Library_Unit_Declaration
      (Self         : in out Dependency_List;
       Name         : Gela.Lexical_Types.Symbol);
-
-   overriding procedure Add_Body_Unit
-     (Self         : in out Dependency_List;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Unit_Bodies.
-        Compilation_Unit_Body_Access);
-
-   overriding procedure Add_Subunit
-     (Self         : in out Dependency_List;
-      Parent       : Gela.Lexical_Types.Symbol;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Subunits.Subunit_Access);
 
    overriding procedure Add_Compilation_Unit
      (Self  : in out Dependency_List;

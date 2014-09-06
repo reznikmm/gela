@@ -811,12 +811,7 @@ Rules for choice_parameter_specification.Names :
 Rules for compilation_unit_body. :
 (.
       ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Body
-        (Comp => Self.Compilation,
-         Unit => This,
-         Full_Name    => ${Unit_Declaration.full_name},
-         Unit_Kind    => ${Unit_Declaration.unit_kind},
-         With_List    => ${Context_Clause_Elements.with_list},
-         Limited_With => ${Context_Clause_Elements.limited_with_list});
+        (Self.Compilation);
 
 .)
 
@@ -830,11 +825,7 @@ Rules for compilation_unit_declaration. :
       ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Declaration
         (Comp => Self.Compilation,
          Unit => This,
-         Private_Index => ${private_token.Index},
-         Full_Name     => ${Unit_Declaration.full_name},
-         Unit_Kind     => ${Unit_Declaration.unit_kind},
-         With_List     => ${Context_Clause_Elements.with_list},
-         Limited_With  => ${Context_Clause_Elements.limited_with_list});
+         Full_Name     => ${Unit_Declaration.full_name});
 .)
 
 Rules for compilation_unit_declaration. :
@@ -2452,13 +2443,7 @@ Rules for subtype_indication. :
 Rules for subunit. :
 (.
       ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Subunit
-        (Comp => Self.Compilation,
-         Unit => This,
-         Parent_Name  => ${parent_unit_name.full_name},
-         Full_Name    => ${Unit_Declaration.full_name},
-         Unit_Kind    => ${Unit_Declaration.unit_kind},
-         With_List    => ${Context_Clause_Elements.with_list},
-         Limited_With => ${Context_Clause_Elements.limited_with_list});
+        (Comp => Self.Compilation);
 .)
 
 Rules for subunit. :

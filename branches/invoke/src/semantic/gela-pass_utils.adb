@@ -125,22 +125,10 @@ package body Gela.Pass_Utils is
    --------------------
 
    function Create_Subunit
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Unit         : Gela.Elements.Subunits.Subunit_Access;
-      Parent_Name  : Gela.Lexical_Types.Symbol;
-      Full_Name    : Gela.Lexical_Types.Symbol;
-      Unit_Kind    : Gela.Semantic_Types.Unit_Kinds;
-      With_List    : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List)
+     (Comp         : Gela.Compilations.Compilation_Access)
       return Gela.Semantic_Types.Env_Index
    is
       pragma Unreferenced (Comp);
-      pragma Unreferenced (Unit);
-      pragma Unreferenced (Parent_Name);
-      pragma Unreferenced (Full_Name);
-      pragma Unreferenced (Unit_Kind);
-      pragma Unreferenced (With_List);
-      pragma Unreferenced (Limited_With);
    begin
       return 0;
    end Create_Subunit;
@@ -150,21 +138,10 @@ package body Gela.Pass_Utils is
    ----------------------
 
    function Create_Unit_Body
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Unit         : Gela.Elements.Compilation_Unit_Bodies.
-        Compilation_Unit_Body_Access;
-      Full_Name    : Gela.Lexical_Types.Symbol;
-      Unit_Kind    : Gela.Semantic_Types.Unit_Kinds;
-      With_List    : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List)
+     (Comp         : Gela.Compilations.Compilation_Access)
       return Gela.Semantic_Types.Env_Index
    is
       pragma Unreferenced (Comp);
-      pragma Unreferenced (Unit);
-      pragma Unreferenced (Full_Name);
-      pragma Unreferenced (Unit_Kind);
-      pragma Unreferenced (With_List);
-      pragma Unreferenced (Limited_With);
    begin
       return 0;
    end Create_Unit_Body;
@@ -177,20 +154,10 @@ package body Gela.Pass_Utils is
      (Comp          : Gela.Compilations.Compilation_Access;
       Unit          : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access;
-      Private_Index : Gela.Lexical_Types.Token_Count;
-      Full_Name     : Gela.Lexical_Types.Symbol;
-      Unit_Kind     : Gela.Semantic_Types.Unit_Kinds;
-      With_List     : Gela.Lexical_Types.Symbol_List;
-      Limited_With  : Gela.Lexical_Types.Symbol_List)
+      Full_Name     : Gela.Lexical_Types.Symbol)
       return Gela.Semantic_Types.Env_Index
    is
-      pragma Unreferenced (Private_Index);
-      pragma Unreferenced (Unit_Kind);
-      pragma Unreferenced (With_List);
-      pragma Unreferenced (Limited_With);
-
       use type Gela.Lexical_Types.Symbol;
-
    begin
       if Full_Name = Gela.Lexical_Types.Predefined_Symbols.Standard then
          Preprocess_Standard (Comp, Unit);

@@ -17,41 +17,6 @@ package Gela.Dependency_Lists is
      access all Dependency_List'Class;
    for Dependency_List_Access'Storage_Size use 0;
 
-   not overriding procedure Add_Library_Unit_Declaration
-     (Self         : in out Dependency_List;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access)
-   is abstract;
-   --  Provide library unit declaration
-
-   not overriding procedure No_Library_Unit_Declaration
-     (Self         : in out Dependency_List;
-      Name         : Gela.Lexical_Types.Symbol) is abstract;
-   --  Provide no library unit declaration exist
-
-   not overriding procedure Add_Body_Unit
-     (Self         : in out Dependency_List;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Compilation_Unit_Bodies.
-        Compilation_Unit_Body_Access)
-   is abstract;
-   --  Provide body unit
-
-   not overriding procedure Add_Subunit
-     (Self         : in out Dependency_List;
-      Parent       : Gela.Lexical_Types.Symbol;
-      Name         : Gela.Lexical_Types.Symbol;
-      Withed       : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List;
-      Unit         : Gela.Elements.Subunits.Subunit_Access)
-   is abstract;
-   --  Provide subunit
-
    type Unit_Kinds is (Unit_Declaration, Unit_Body, Subunit);
 
    type Unit_Data (Kind : Unit_Kinds := Unit_Body) is record
@@ -61,7 +26,6 @@ package Gela.Dependency_Lists is
 
       case Kind is
          when Subunit =>
-            Parent  : Gela.Lexical_Types.Symbol;
             Subunit : Gela.Elements.Subunits.Subunit_Access;
          when Unit_Body =>
             Unit_Body : Gela.Elements.Compilation_Unit_Bodies.
@@ -94,6 +58,11 @@ package Gela.Dependency_Lists is
      (Self  : in out Dependency_List;
       Value : Unit_Data) is abstract;
    --  Provide compilation unit
+
+   not overriding procedure No_Library_Unit_Declaration
+     (Self         : in out Dependency_List;
+      Name         : Gela.Lexical_Types.Symbol) is abstract;
+   --  Provide no library unit declaration exist
 
    not overriding procedure Next_Action
      (Self   : in out Dependency_List;

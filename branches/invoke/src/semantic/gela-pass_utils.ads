@@ -8,11 +8,9 @@
 ------------------------------------------------------------------------------
 
 with Gela.Compilations;
-with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Identifiers;
-with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Resolve;
@@ -26,31 +24,15 @@ package Gela.Pass_Utils is
      (Comp          : Gela.Compilations.Compilation_Access;
       Unit          : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access;
-      Private_Index : Gela.Lexical_Types.Token_Count;
-      Full_Name     : Gela.Lexical_Types.Symbol;
-      Unit_Kind     : Gela.Semantic_Types.Unit_Kinds;
-      With_List     : Gela.Lexical_Types.Symbol_List;
-      Limited_With  : Gela.Lexical_Types.Symbol_List)
+      Full_Name     : Gela.Lexical_Types.Symbol)
       return Gela.Semantic_Types.Env_Index;
 
    function Create_Unit_Body
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Unit         : Gela.Elements.Compilation_Unit_Bodies.
-        Compilation_Unit_Body_Access;
-      Full_Name    : Gela.Lexical_Types.Symbol;
-      Unit_Kind    : Gela.Semantic_Types.Unit_Kinds;
-      With_List    : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List)
+     (Comp         : Gela.Compilations.Compilation_Access)
       return Gela.Semantic_Types.Env_Index;
 
    function Create_Subunit
-     (Comp         : Gela.Compilations.Compilation_Access;
-      Unit         : Gela.Elements.Subunits.Subunit_Access;
-      Parent_Name  : Gela.Lexical_Types.Symbol;
-      Full_Name    : Gela.Lexical_Types.Symbol;
-      Unit_Kind    : Gela.Semantic_Types.Unit_Kinds;
-      With_List    : Gela.Lexical_Types.Symbol_List;
-      Limited_With : Gela.Lexical_Types.Symbol_List)
+     (Comp         : Gela.Compilations.Compilation_Access)
       return Gela.Semantic_Types.Env_Index;
 
    function Add_Name_Create_Region
