@@ -495,6 +495,7 @@ package body Gela.Plain_Compilation_Managers is
               Defining_Program_Unit_Name_Access := Node.Names;
          begin
             Name.Visit (Self);
+            Self.Is_Package := True;
          end Package_Instantiation;
 
          ----------------------------------
