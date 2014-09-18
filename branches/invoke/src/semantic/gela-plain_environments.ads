@@ -7,8 +7,9 @@ with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Library_Environments;
 
-with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Maps;
+with Ada.Containers.Vectors;
+with Gela.Peristent_Lists;
 
 package Gela.Plain_Environments is
    pragma Preelaborate;
@@ -19,34 +20,49 @@ package Gela.Plain_Environments is
 
 private
 
-   type Direct_Visible_Item_Count is range 0 .. Natural'Last;
-   subtype Direct_Visible_Item_Index is
-     Direct_Visible_Item_Count range 1 .. Direct_Visible_Item_Count'Last;
+   --  Direct_Visible_Item  --
 
    type Direct_Visible_Item is record
-      Prev   : Direct_Visible_Item_Count;
       Symbol : Gela.Lexical_Types.Symbol;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
    end record;
 
-   package Direct_Visible_Vectors is new Ada.Containers.Vectors
-     (Index_Type   => Direct_Visible_Item_Index,
-      Element_Type => Direct_Visible_Item);
+   package Direct_Visible_Item_Lists is new Gela.Peristent_Lists
+     (Element_Type => Direct_Visible_Item);
 
-   subtype Region_Item_Index is Gela.Semantic_Types.Env_Index
-     range 2 .. Gela.Semantic_Types.Env_Index'Last;
+   subtype Direct_Visible_Item_Count is Direct_Visible_Item_Lists.Count_Type;
+   subtype Direct_Visible_Item_Index is Direct_Visible_Item_Lists.Index_Type;
+
+   --  Region_Item  --
 
    type Region_Item is record
-      Prev    : Gela.Semantic_Types.Env_Index;
-      Region  : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Local   : Direct_Visible_Item_Count;
---        Visible : Direct_Visible_Item_Count;
-      --        Visible        : Visible_Item_Index;
+      Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      --  Defining name corresponding to given region, if any
+      Local : Direct_Visible_Item_Count;
+      --  List of Direct_Visible_Item.
    end record;
 
-   package Region_Vectors is new Ada.Containers.Vectors
-     (Index_Type   => Region_Item_Index,
-      Element_Type => Region_Item);
+   package Region_Item_Lists is new Gela.Peristent_Lists
+     (Element_Type => Region_Item);
+
+   subtype Region_Item_Count is Region_Item_Lists.Count_Type;
+   subtype Region_Item_Index is Region_Item_Lists.Index_Type;
+
+   --  Env_Item  --
+
+   type Env_Item is record
+      Nested_Region_List : Region_Item_Count;
+      --  List of nested region, current - first
+      Other_Region_List  : Region_Item_Count;
+      --  List of all visible regions except Nested_Region_List
+   end record;
+
+   subtype Env_Item_Index is Gela.Semantic_Types.Env_Index
+     range 1 .. Gela.Semantic_Types.Env_Index'Last;
+
+   package Env_Item_Vectors is new Ada.Containers.Vectors
+     (Index_Type   => Env_Item_Index,
+      Element_Type => Env_Item);
 
    function Hash
      (X : Gela.Lexical_Types.Symbol) return Ada.Containers.Hash_Type;
@@ -72,17 +88,25 @@ private
      new Gela.Environments.Environment_Set with
    record
       Lib : aliased Gela.Library_Environments.Environment_Set (Context);
-      Region         : Region_Vectors.Vector;
-      Direct_Visible : Direct_Visible_Vectors.Vector;
-         --        Visible        : Visible_Vectors.Vector;
+      Env            : Env_Item_Vectors.Vector;
+      Region         : Region_Item_Lists.Container;
+      Direct_Visible : Direct_Visible_Item_Lists.Container;
       Units_Env      : Symbol_Maps.Map;
+      --  Map of library level regions
       Lib_Env        : Env_Maps.Map;
+      --  Reverse mapping for Units_Env
    end record;
 
    overriding function Add_Defining_Name
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding function Add_Use_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
 

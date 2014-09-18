@@ -46,7 +46,7 @@ package body Gela.Plain_Environments is
         (Self : Defining_Name_Cursor)
          return Gela.Elements.Defining_Names.Defining_Name_Access is
       begin
-         return Self.Set.Direct_Visible.Element (Self.Name).Name;
+         return Self.Set.Direct_Visible.Head (Self.Name).Name;
       end Element;
 
       ----------
@@ -56,9 +56,9 @@ package body Gela.Plain_Environments is
       overriding procedure Next (Self : in out Defining_Name_Cursor) is
          Set    : constant Plain_Environment_Set_Access := Self.Set;
          Symbol : constant Gela.Lexical_Types.Symbol :=
-           Set.Direct_Visible.Element (Self.Name).Symbol;
+           Set.Direct_Visible.Head (Self.Name).Symbol;
       begin
-         Self.Name := Set.Direct_Visible.Element (Self.Name).Prev;
+         Self.Name := Set.Direct_Visible.Tail (Self.Name);
 
          Internal_Next (Self, Symbol);
       end Next;
@@ -73,22 +73,22 @@ package body Gela.Plain_Environments is
       is
          use type Gela.Lexical_Types.Symbol;
 
-         Region : Gela.Semantic_Types.Env_Index;
+         Region : Region_Item_Count;
          Set    : constant Plain_Environment_Set_Access := Self.Set;
       begin
          loop
             if Self.Name in Direct_Visible_Item_Index then
-               if Set.Direct_Visible.Element (Self.Name).Symbol = Symbol then
+               if Set.Direct_Visible.Head (Self.Name).Symbol = Symbol then
                   return;
                else
-                  Self.Name := Set.Direct_Visible.Element (Self.Name).Prev;
+                  Self.Name := Set.Direct_Visible.Tail (Self.Name);
                end if;
             else
-               Region := Set.Region.Element (Self.Region).Prev;
+               Region := Set.Region.Tail (Self.Region);
 
                if Region in Region_Item_Index then
                   Self.Region := Region;
-                  Self.Name := Set.Region.Element (Self.Region).Local;
+                  Self.Name := Set.Region.Head (Self.Region).Local;
                else
                   return;
                end if;
@@ -109,9 +109,12 @@ package body Gela.Plain_Environments is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
+      use type Gela.Semantic_Types.Env_Index;
+      use type Region_Item_Count;
+
       procedure Update_Lib_Unit_Env
         (Old_Env : Gela.Semantic_Types.Env_Index;
-         New_Env : Gela.Semantic_Types.Env_Index);
+         New_Env : Env_Item_Index);
 
       -------------------------
       -- Update_Lib_Unit_Env --
@@ -119,7 +122,7 @@ package body Gela.Plain_Environments is
 
       procedure Update_Lib_Unit_Env
         (Old_Env : Gela.Semantic_Types.Env_Index;
-         New_Env : Gela.Semantic_Types.Env_Index)
+         New_Env : Env_Item_Index)
       is
          Cursor : Env_Maps.Cursor := Self.Lib_Env.Find (Old_Env);
          Symbol : Gela.Lexical_Types.Symbol;
@@ -132,45 +135,69 @@ package body Gela.Plain_Environments is
          end if;
       end Update_Lib_Unit_Env;
 
-      Region : Region_Item;
-      Found  : Direct_Visible_Item_Count;
-      Next   : Direct_Visible_Item :=
-        (Prev   => 0,
-         Symbol => Symbol,
+      Env       : Env_Item;
+      Env_Index : Gela.Semantic_Types.Env_Index;
+      Reg       : Region_Item;
+      DV        : constant Direct_Visible_Item :=
+        (Symbol => Symbol,
          Name   => Name);
    begin
-      if Index in Region_Item_Index then
-         Region := Self.Region.Element (Index);
-         Next.Prev := Region.Local;
+      if Index in Env_Item_Index then
+         Env := Self.Env.Element (Index);
       else
-         Region := (Prev   => 0,
-                    Region => null,
-                    Local  => 0);
+         Env := (Nested_Region_List => 0, Other_Region_List => 0);
       end if;
 
-      Found := Self.Direct_Visible.Find_Index (Next);
-
-      if Found in Direct_Visible_Item_Index then
-         Region.Local := Found;
-
-         declare
-            Result : constant Gela.Semantic_Types.Env_Index :=
-              Self.Region.Find_Index (Region);
-         begin
-            if Result in Region_Item_Index then
-               Update_Lib_Unit_Env (Index, Result);
-               return Result;
-            end if;
-         end;
+      if Env.Nested_Region_List = 0 then
+         Reg := (Name => null, Local => 0);
+      else
+         Reg := Self.Region.Head (Env.Nested_Region_List);
       end if;
 
-      Self.Direct_Visible.Append (Next);
-      Region.Local := Self.Direct_Visible.Last_Index;
-      Self.Region.Append (Region);
-      Update_Lib_Unit_Env (Index, Self.Region.Last_Index);
+      Self.Direct_Visible.Prepend
+        (Value  => DV,
+         Input  => Reg.Local,
+         Output => Reg.Local);
 
-      return Self.Region.Last_Index;
+      if Env.Nested_Region_List = 0 then
+         --  Create Nested_Region_List as (Reg)
+         Self.Region.Prepend
+           (Value  => Reg,
+            Input  => 0,
+            Output => Env.Nested_Region_List);
+      else
+         --  Replace head of Nested_Region_List with Reg
+         Self.Region.Prepend
+           (Value  => Reg,
+            Input  => Self.Region.Tail (Env.Nested_Region_List),
+            Output => Env.Nested_Region_List);
+      end if;
+
+      Env_Index := Self.Env.Find_Index (Env);
+
+      if Env_Index = 0 then
+         Self.Env.Append (Env);
+         Env_Index := Self.Env.Last_Index;
+      end if;
+
+      Update_Lib_Unit_Env (Index, Env_Index);
+
+      return Env_Index;
    end Add_Defining_Name;
+
+   ---------------------
+   -- Add_Use_Package --
+   ---------------------
+
+   overriding function Add_Use_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+      pragma Unreferenced (Self, Name, Index);
+   begin
+      return 0;
+   end Add_Use_Package;
 
    --------------------
    -- Direct_Visible --
@@ -185,18 +212,21 @@ package body Gela.Plain_Environments is
       use type Gela.Semantic_Types.Env_Index;
       use type Gela.Lexical_Types.Symbol;
 
+      Env : Env_Item;
    begin
       if Index = Gela.Library_Environments.Library_Env then
          return Self.Lib.Direct_Visible (Index, Symbol);
-      elsif Index not in Region_Item_Index then
+      elsif Index not in Env_Item_Index then
          return Cursors.Defining_Name_Cursor'
            (null, Region_Item_Index'First, 0);
       end if;
 
+      Env := Self.Env.Element (Index);
+
       return Result : Cursors.Defining_Name_Cursor :=
         (Set    => Plain_Environment_Set_Access (Self),
-         Region => Index,
-         Name   => Self.Region.Element (Index).Local)
+         Region => Env.Nested_Region_List,
+         Name   => Self.Region.Head (Env.Nested_Region_List).Local)
       do
          Cursors.Internal_Next (Result, Symbol);
       end return;
@@ -212,21 +242,37 @@ package body Gela.Plain_Environments is
       Region : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
-      Next : constant Region_Item :=
-        (Prev   => Index,
-         Region => Region,
+      Env   : Env_Item;
+      Found : Gela.Semantic_Types.Env_Index;
+      Next  : constant Region_Item :=
+        (Name   => Region,
          Local  => 0);
-
-      Found : constant Gela.Semantic_Types.Env_Index :=
-        Self.Region.Find_Index (Next);
    begin
-      if Found in Region_Item_Index then
-         return Found;
+      if Index in Env_Item_Index then
+         Env := Self.Env.Element (Index);
+      else
+         Env := (Nested_Region_List => 0, Other_Region_List => 0);
       end if;
 
-      Self.Region.Append (Next);
+      Self.Region.Prepend
+        (Value  => Next,
+         Input  => Env.Nested_Region_List,
+         Output => Env.Nested_Region_List);
 
-      return Self.Region.Last_Index;
+--     Shall we delete region with the same Name from Other_Region_List?
+--        Self.Region.Delete
+--          (Input  => Env.Other_Region_List,
+--           Value  => Next,
+--           Output => Env.Other_Region_List);
+
+      Found := Self.Env.Find_Index (Env);
+
+      if Found not in Env_Item_Index then
+         Self.Env.Append (Env);
+         Found := Self.Env.Last_Index;
+      end if;
+
+      return Found;
    end Enter_Declarative_Region;
 
    ----------
@@ -258,9 +304,28 @@ package body Gela.Plain_Environments is
       Index  : Gela.Semantic_Types.Env_Index)
       return Gela.Semantic_Types.Env_Index
    is
-      Region : constant Region_Item := Self.Region.Element (Index);
+      Found  : Gela.Semantic_Types.Env_Index;
+      Env    : Env_Item := Self.Env.Element (Index);
+      Region : constant Region_Item :=
+        Self.Region.Head (Env.Nested_Region_List);
    begin
-      return Region.Prev;
+      --  Push top region to Other_Region_List
+      Self.Region.Prepend
+        (Value  => Region,
+         Input  => Env.Other_Region_List,
+         Output => Env.Other_Region_List);
+
+      --  Pop top region from Nested_Region_List
+      Env.Nested_Region_List := Self.Region.Tail (Env.Nested_Region_List);
+
+      Found := Self.Env.Find_Index (Env);
+
+      if Found not in Env_Item_Index then
+         Self.Env.Append (Env);
+         Found := Self.Env.Last_Index;
+      end if;
+
+      return Found;
    end Leave_Declarative_Region;
 
    -------------------------------

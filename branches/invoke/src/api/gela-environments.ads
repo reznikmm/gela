@@ -60,6 +60,14 @@ package Gela.Environments is
    --  Create new environment by adding (Symbol, Name) to provided env with
    --  given Index. Return index of created environment
 
+   not overriding function Add_Use_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by adding use package <Name> to provided env
+   --  with given Index. Return index of created environment
+
    not overriding function Enter_Declarative_Region
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
