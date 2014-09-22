@@ -1,14 +1,13 @@
 package body Gela.Plain_Environments is
 
    package Cursors is
-
-      --  Direct Visible cursor
+      --  Cursor over names in Direct_Visible_Item_List with some Symbol
       type Defining_Name_Cursor is
         new Gela.Defining_Name_Cursors.Defining_Name_Cursor with
          record
             Set    : Plain_Environment_Set_Access;
-            Region : Region_Item_Index;
             Name   : Direct_Visible_Item_Count;
+            --  Points to Direct_Visible_Item_List
          end record;
 
       overriding function Has_Element
@@ -25,6 +24,10 @@ package body Gela.Plain_Environments is
         (Self   : in out Defining_Name_Cursor;
          Symbol : Gela.Lexical_Types.Symbol);
    end Cursors;
+
+   -------------
+   -- Cursors --
+   -------------
 
    package body Cursors is
 
@@ -60,8 +63,48 @@ package body Gela.Plain_Environments is
       begin
          Self.Name := Set.Direct_Visible.Tail (Self.Name);
 
-         Internal_Next (Self, Symbol);
+         Defining_Name_Cursor'Class (Self).Internal_Next (Symbol);
       end Next;
+
+      -------------------
+      -- Internal_Next --
+      -------------------
+
+      procedure Internal_Next
+        (Self   : in out Defining_Name_Cursor;
+         Symbol : Gela.Lexical_Types.Symbol)
+      is
+         use type Gela.Lexical_Types.Symbol;
+
+         Set : constant Plain_Environment_Set_Access := Self.Set;
+      begin
+         while Self.Name in Direct_Visible_Item_Index
+           and then Set.Direct_Visible.Head (Self.Name).Symbol /= Symbol
+         loop
+            Self.Name := Set.Direct_Visible.Tail (Self.Name);
+         end loop;
+      end Internal_Next;
+
+   end Cursors;
+
+   package Direct_Visible_Cursors is
+      --  Cursor over names in Local then go to enclosing region, etc
+      type Defining_Name_Cursor is
+        new Cursors.Defining_Name_Cursor with
+         record
+            Region : Region_Item_Index;
+         end record;
+
+      procedure Internal_Next
+        (Self   : in out Defining_Name_Cursor;
+         Symbol : Gela.Lexical_Types.Symbol);
+   end Direct_Visible_Cursors;
+
+   ----------------------------
+   -- Direct_Visible_Cursors --
+   ----------------------------
+
+   package body Direct_Visible_Cursors is
 
       -------------------
       -- Internal_Next --
@@ -77,26 +120,132 @@ package body Gela.Plain_Environments is
          Set    : constant Plain_Environment_Set_Access := Self.Set;
       begin
          loop
-            if Self.Name in Direct_Visible_Item_Index then
-               if Set.Direct_Visible.Head (Self.Name).Symbol = Symbol then
-                  return;
-               else
-                  Self.Name := Set.Direct_Visible.Tail (Self.Name);
-               end if;
-            else
-               Region := Set.Region.Tail (Self.Region);
+            Cursors.Defining_Name_Cursor (Self).Internal_Next (Symbol);
+            exit when Self.Has_Element;
+            Region := Set.Region.Tail (Self.Region);
 
-               if Region in Region_Item_Index then
-                  Self.Region := Region;
-                  Self.Name := Set.Region.Head (Self.Region).Local;
-               else
-                  return;
-               end if;
+            if Region in Region_Item_Index then
+               Self.Region := Region;
+               Self.Name := Set.Region.Head (Self.Region).Local;
+            else
+               return;
             end if;
          end loop;
       end Internal_Next;
 
-   end Cursors;
+   end Direct_Visible_Cursors;
+
+   package Use_Package_Cursors is
+      --  Cursor over names in each used package
+      type Defining_Name_Cursor is
+        new Cursors.Defining_Name_Cursor with
+         record
+            Env      : Env_Item_Index;
+            Region   : Region_Item_Index;
+            --  Position in Env_Item.Nested_Region_List list
+            Use_Name : Defining_Name_Item_Index;
+            --  Position in Region.Use_Package list
+         end record;
+
+      function Name_To_Region
+        (Self : Defining_Name_Cursor;
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+         return Region_Item_Count;
+
+      procedure Internal_Next
+        (Self   : in out Defining_Name_Cursor;
+         Symbol : Gela.Lexical_Types.Symbol);
+   end Use_Package_Cursors;
+
+   ----------------------------
+   -- Direct_Visible_Cursors --
+   ----------------------------
+
+   package body Use_Package_Cursors is
+
+      -------------------
+      -- Internal_Next --
+      -------------------
+
+      procedure Internal_Next
+        (Self   : in out Defining_Name_Cursor;
+         Symbol : Gela.Lexical_Types.Symbol)
+      is
+         use type Gela.Lexical_Types.Symbol;
+         use type Defining_Name_Item_Count;
+         use type Region_Item_Count;
+
+         Name   : Defining_Name_Item_Count;
+         Region : Region_Item_Count;
+         Set    : constant Plain_Environment_Set_Access := Self.Set;
+      begin
+         loop
+            --  Next name in Region.Local
+            Cursors.Defining_Name_Cursor (Self).Internal_Next (Symbol);
+            exit when Self.Has_Element;
+
+            Region := 0;
+
+            while Region = 0 loop
+               --  Next name in use clauses of Region
+               Name := Self.Set.Use_Package.Tail (Self.Use_Name);
+
+               while Name = 0 loop
+                  Region := Self.Set.Region.Tail (Self.Region);
+
+                  if Region = 0 then
+                     return;
+                  end if;
+
+                  Self.Region := Region;
+                  Name := Self.Set.Region.Head (Region).Use_Package;
+               end loop;
+
+               Region := Self.Name_To_Region
+                 (Self.Set.Use_Package.Head (Name));
+            end loop;
+
+            Self.Name := Set.Region.Head (Self.Region).Local;
+         end loop;
+      end Internal_Next;
+
+      --------------------
+      -- Name_To_Region --
+      --------------------
+
+      function Name_To_Region
+        (Self : Defining_Name_Cursor;
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+         return Region_Item_Count
+      is
+         use type Region_Item_Count;
+         use type Gela.Elements.Defining_Names.Defining_Name_Access;
+
+         Env  : constant Env_Item := Self.Set.Env.Element (Self.Env);
+         Next : Region_Item_Count := Env.Nested_Region_List;
+      begin
+         while Next /= 0 loop
+            if Self.Set.Region.Head (Next).Name = Name then
+               return Next;
+            end if;
+
+            Next := Self.Set.Region.Tail (Next);
+         end loop;
+
+         Next := Env.Other_Region_List;
+
+         while Next /= 0 loop
+            if Self.Set.Region.Head (Next).Name = Name then
+               return Next;
+            end if;
+
+            Next := Self.Set.Region.Tail (Next);
+         end loop;
+
+         return 0;
+      end Name_To_Region;
+
+   end Use_Package_Cursors;
 
    -----------------------
    -- Add_Defining_Name --
@@ -149,7 +298,7 @@ package body Gela.Plain_Environments is
       end if;
 
       if Env.Nested_Region_List = 0 then
-         Reg := (Name => null, Local => 0);
+         Reg := (Name => null, Local => 0, Use_Package => 0);
       else
          Reg := Self.Region.Head (Env.Nested_Region_List);
       end if;
@@ -193,10 +342,33 @@ package body Gela.Plain_Environments is
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Semantic_Types.Env_Index is
-      pragma Unreferenced (Self, Name, Index);
+      return Gela.Semantic_Types.Env_Index
+   is
+      use type Gela.Semantic_Types.Env_Index;
+
+      Env_Index : Gela.Semantic_Types.Env_Index;
+      Env : Env_Item := Self.Env.Element (Index);
+      Reg : Region_Item := Self.Region.Head (Env.Nested_Region_List);
    begin
-      return 0;
+      Self.Use_Package.Prepend
+        (Value  => Name,
+         Input  => Reg.Use_Package,
+         Output => Reg.Use_Package);
+
+      --  Replace head of Nested_Region_List with Reg
+      Self.Region.Prepend
+        (Value  => Reg,
+         Input  => Self.Region.Tail (Env.Nested_Region_List),
+         Output => Env.Nested_Region_List);
+
+      Env_Index := Self.Env.Find_Index (Env);
+
+      if Env_Index = 0 then
+         Self.Env.Append (Env);
+         Env_Index := Self.Env.Last_Index;
+      end if;
+
+      return Env_Index;
    end Add_Use_Package;
 
    --------------------
@@ -217,18 +389,18 @@ package body Gela.Plain_Environments is
       if Index = Gela.Library_Environments.Library_Env then
          return Self.Lib.Direct_Visible (Index, Symbol);
       elsif Index not in Env_Item_Index then
-         return Cursors.Defining_Name_Cursor'
-           (null, Region_Item_Index'First, 0);
+         return Direct_Visible_Cursors.Defining_Name_Cursor'
+           (Set => null, Region => Region_Item_Index'First, Name => 0);
       end if;
 
       Env := Self.Env.Element (Index);
 
-      return Result : Cursors.Defining_Name_Cursor :=
+      return Result : Direct_Visible_Cursors.Defining_Name_Cursor :=
         (Set    => Plain_Environment_Set_Access (Self),
          Region => Env.Nested_Region_List,
          Name   => Self.Region.Head (Env.Nested_Region_List).Local)
       do
-         Cursors.Internal_Next (Result, Symbol);
+         Result.Internal_Next (Symbol);
       end return;
    end Direct_Visible;
 
@@ -245,8 +417,9 @@ package body Gela.Plain_Environments is
       Env   : Env_Item;
       Found : Gela.Semantic_Types.Env_Index;
       Next  : constant Region_Item :=
-        (Name   => Region,
-         Local  => 0);
+        (Name        => Region,
+         Local       => 0,
+         Use_Package => 0);
    begin
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);
@@ -369,6 +542,26 @@ package body Gela.Plain_Environments is
       Self.Units_Env.Include (Symbol, Value);
       Self.Lib_Env.Include (Value, Symbol);
    end Set_Library_Unit_Environment;
+
+   -----------------
+   -- Use_Visible --
+   -----------------
+
+   overriding function Use_Visible
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
+   is
+      pragma Unreferenced (Self);
+      pragma Unreferenced (Symbol);
+
+      --  No use clause considered at library level
+      Result : constant Use_Package_Cursors.Defining_Name_Cursor :=
+        (Set => null, Name => 0, Region => 1, Env => Index, Use_Name => 1);
+   begin
+      return Result;
+   end Use_Visible;
 
    -------------
    -- Visible --

@@ -74,4 +74,10 @@ private
       Symbol : Gela.Lexical_Types.Symbol;
       Value  : Gela.Semantic_Types.Env_Index);
 
+   overriding function Use_Visible
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class;
+
 end Gela.Library_Environments;

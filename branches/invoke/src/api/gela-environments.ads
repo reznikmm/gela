@@ -40,6 +40,14 @@ package Gela.Environments is
    --  Return list of direct visible defining names from the environment
    --  pointed by Index with given Symbol.
 
+   not overriding function Use_Visible
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class is abstract;
+   --  Return list of use visible defining names from the environment
+   --  pointed by Index with given Symbol.
+
    not overriding function Visible
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;

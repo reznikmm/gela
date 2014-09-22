@@ -33,6 +33,12 @@ private
    subtype Direct_Visible_Item_Count is Direct_Visible_Item_Lists.Count_Type;
    subtype Direct_Visible_Item_Index is Direct_Visible_Item_Lists.Index_Type;
 
+   package Defining_Name_Lists is new Gela.Peristent_Lists
+     (Element_Type => Gela.Elements.Defining_Names.Defining_Name_Access);
+
+   subtype Defining_Name_Item_Count is Defining_Name_Lists.Count_Type;
+   subtype Defining_Name_Item_Index is Defining_Name_Lists.Index_Type;
+
    --  Region_Item  --
 
    type Region_Item is record
@@ -40,6 +46,8 @@ private
       --  Defining name corresponding to given region, if any
       Local : Direct_Visible_Item_Count;
       --  List of Direct_Visible_Item.
+      Use_Package : Defining_Name_Item_Count;
+      --  List of use_package_clauses in the region
    end record;
 
    package Region_Item_Lists is new Gela.Peristent_Lists
@@ -91,6 +99,7 @@ private
       Env            : Env_Item_Vectors.Vector;
       Region         : Region_Item_Lists.Container;
       Direct_Visible : Direct_Visible_Item_Lists.Container;
+      Use_Package    : Defining_Name_Lists.Container;
       Units_Env      : Symbol_Maps.Map;
       --  Map of library level regions
       Lib_Env        : Env_Maps.Map;
@@ -140,6 +149,12 @@ private
      (Self   : access Environment_Set;
       Symbol : Gela.Lexical_Types.Symbol;
       Value  : Gela.Semantic_Types.Env_Index);
+
+   overriding function Use_Visible
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class;
 
    overriding function Visible
      (Self   : access Environment_Set;

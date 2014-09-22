@@ -704,6 +704,26 @@ package body Gela.Library_Environments is
       raise Constraint_Error;
    end Set_Library_Unit_Environment;
 
+   -----------------
+   -- Use_Visible --
+   -----------------
+
+   overriding function Use_Visible
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
+   is
+      pragma Unreferenced (Self);
+      pragma Unreferenced (Index);
+      pragma Unreferenced (Symbol);
+
+      --  No use clause considered at library level
+      Result : Library_Cursor.Defining_Name_Cursor;
+   begin
+      return Result;
+   end Use_Visible;
+
    -------------
    -- Visible --
    -------------
