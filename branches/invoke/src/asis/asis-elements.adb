@@ -27,6 +27,90 @@ with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Operator_Symbols;
 with Gela.Lexical_Types;
+with Gela.Elements.Abort_Statements;
+with Gela.Elements.Accept_Statements;
+with Gela.Elements.Assignment_Statements;
+with Gela.Elements.Asynchronous_Selects;
+with Gela.Elements.At_Clauses;
+with Gela.Elements.Attribute_Definition_Clauses;
+with Gela.Elements.Choice_Parameter_Specifications;
+with Gela.Elements.Block_Statements;
+with Gela.Elements.Case_Statements;
+with Gela.Elements.Component_Clauses;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Delay_Statements;
+with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Element_Iterator_Specifications;
+with Gela.Elements.Entry_Bodies;
+with Gela.Elements.Entry_Declarations;
+with Gela.Elements.Entry_Index_Specifications;
+with Gela.Elements.Exception_Declarations;
+with Gela.Elements.Exception_Handlers;
+with Gela.Elements.Exception_Renaming_Declarations;
+with Gela.Elements.Exit_Statements;
+with Gela.Elements.Extended_Return_Statements;
+with Gela.Elements.For_Loop_Statements;
+with Gela.Elements.Formal_Function_Declarations;
+with Gela.Elements.Formal_Incomplete_Type_Declarations;
+with Gela.Elements.Formal_Object_Declarations;
+with Gela.Elements.Formal_Package_Declarations;
+with Gela.Elements.Formal_Procedure_Declarations;
+with Gela.Elements.Formal_Type_Declarations;
+with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Function_Bodies;
+with Gela.Elements.Function_Declarations;
+with Gela.Elements.Function_Instantiations;
+with Gela.Elements.Generalized_Iterator_Specifications;
+with Gela.Elements.Generic_Function_Declarations;
+with Gela.Elements.Generic_Function_Renamings;
+with Gela.Elements.Generic_Package_Declarations;
+with Gela.Elements.Generic_Package_Renamings;
+with Gela.Elements.Generic_Procedure_Declarations;
+with Gela.Elements.Generic_Procedure_Renamings;
+with Gela.Elements.Goto_Statements;
+with Gela.Elements.If_Statements;
+with Gela.Elements.Incomplete_Type_Declarations;
+with Gela.Elements.Loop_Parameter_Specifications;
+with Gela.Elements.Loop_Statements;
+with Gela.Elements.Null_Components;
+with Gela.Elements.Null_Statements;
+with Gela.Elements.Number_Declarations;
+with Gela.Elements.Object_Declarations;
+with Gela.Elements.Object_Renaming_Declarations;
+with Gela.Elements.Package_Bodies;
+with Gela.Elements.Package_Body_Stubs;
+with Gela.Elements.Package_Declarations;
+with Gela.Elements.Package_Instantiations;
+with Gela.Elements.Package_Renaming_Declarations;
+with Gela.Elements.Parameter_Specifications;
+with Gela.Elements.Pragma_Nodes;
+with Gela.Elements.Private_Extension_Declarations;
+with Gela.Elements.Private_Type_Declarations;
+with Gela.Elements.Procedure_Bodies;
+with Gela.Elements.Procedure_Call_Statements;
+with Gela.Elements.Procedure_Declarations;
+with Gela.Elements.Procedure_Instantiations;
+with Gela.Elements.Protected_Bodies;
+with Gela.Elements.Return_Object_Specifications;
+with Gela.Elements.Protected_Body_Stubs;
+with Gela.Elements.Protected_Type_Declarations;
+with Gela.Elements.Raise_Statements;
+with Gela.Elements.Record_Representation_Clauses;
+with Gela.Elements.Requeue_Statements;
+with Gela.Elements.Selective_Accepts;
+with Gela.Elements.Simple_Return_Statements;
+with Gela.Elements.Single_Protected_Declarations;
+with Gela.Elements.Single_Task_Declarations;
+with Gela.Elements.Task_Bodies;
+with Gela.Elements.Subtype_Declarations;
+with Gela.Elements.Task_Body_Stubs;
+with Gela.Elements.Task_Type_Declarations;
+with Gela.Elements.Terminate_Alternative_Statements;
+with Gela.Elements.Use_Package_Clauses;
+with Gela.Elements.Use_Type_Clauses;
+with Gela.Elements.Variant_Parts;
+with Gela.Elements.While_Loop_Statements;
+with Gela.Elements.With_Clauses;
 
 package body Asis.Elements is
 
@@ -489,6 +573,60 @@ package body Asis.Elements is
             Result : Gela.Elements.Element_Access;
          end record;
 
+         overriding procedure Abort_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Abort_Statements.
+              Abort_Statement_Access);
+
+         overriding procedure Accept_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Accept_Statements.
+              Accept_Statement_Access);
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access);
+
+         overriding procedure Asynchronous_Select
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Asynchronous_Selects.
+              Asynchronous_Select_Access);
+
+         overriding procedure At_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.At_Clauses.At_Clause_Access);
+
+         overriding procedure Attribute_Definition_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Attribute_Definition_Clauses.
+              Attribute_Definition_Clause_Access);
+
+         overriding procedure Block_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Block_Statements.
+              Block_Statement_Access);
+
+         overriding procedure Case_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Case_Statements.
+              Case_Statement_Access);
+
+         overriding procedure Choice_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Choice_Parameter_Specifications.
+              Choice_Parameter_Specification_Access);
+
+         overriding procedure Component_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Clauses.
+              Component_Clause_Access);
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access);
+
          overriding procedure Defining_Character_Literal
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Character_Literals.
@@ -514,9 +652,454 @@ package body Asis.Elements is
             Node : not null Gela.Elements.Defining_Operator_Symbols.
               Defining_Operator_Symbol_Access);
 
+         overriding procedure Delay_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Delay_Statements.
+              Delay_Statement_Access);
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access);
+
+         overriding procedure Element_Iterator_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Element_Iterator_Specifications.
+              Element_Iterator_Specification_Access);
+
+         overriding procedure Entry_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Bodies.Entry_Body_Access);
+
+         overriding procedure Entry_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Declarations.
+              Entry_Declaration_Access);
+
+         overriding procedure Entry_Index_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Index_Specifications.
+              Entry_Index_Specification_Access);
+
+         overriding procedure Exception_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Declarations.
+              Exception_Declaration_Access);
+
+         overriding procedure Exception_Handler
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Handlers.
+              Exception_Handler_Access);
+
+         overriding procedure Exception_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Renaming_Declarations.
+              Exception_Renaming_Declaration_Access);
+
+         overriding procedure Exit_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exit_Statements.
+              Exit_Statement_Access);
+
+         overriding procedure Extended_Return_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Extended_Return_Statements.
+              Extended_Return_Statement_Access);
+
+         overriding procedure For_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.For_Loop_Statements.
+              For_Loop_Statement_Access);
+
+         overriding procedure Formal_Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Function_Declarations.
+              Formal_Function_Declaration_Access);
+
+         overriding procedure Formal_Incomplete_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Incomplete_Type_Declarations.
+              Formal_Incomplete_Type_Declaration_Access);
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access);
+
+         overriding procedure Formal_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Package_Declarations.
+              Formal_Package_Declaration_Access);
+
+         overriding procedure Formal_Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Procedure_Declarations.
+              Formal_Procedure_Declaration_Access);
+
+         overriding procedure Formal_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Type_Declarations.
+              Formal_Type_Declaration_Access);
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access);
+
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access);
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access);
+
+         overriding procedure Function_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Instantiations.
+              Function_Instantiation_Access);
+
+         overriding procedure Generalized_Iterator_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generalized_Iterator_Specifications.
+              Generalized_Iterator_Specification_Access);
+
+         overriding procedure Generic_Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Function_Declarations.
+              Generic_Function_Declaration_Access);
+
+         overriding procedure Generic_Function_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Function_Renamings.
+              Generic_Function_Renaming_Access);
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access);
+
+         overriding procedure Generic_Package_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Renamings.
+              Generic_Package_Renaming_Access);
+
+         overriding procedure Generic_Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Procedure_Declarations.
+              Generic_Procedure_Declaration_Access);
+
+         overriding procedure Generic_Procedure_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Procedure_Renamings.
+              Generic_Procedure_Renaming_Access);
+
+         overriding procedure Goto_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Goto_Statements.
+              Goto_Statement_Access);
+
+         overriding procedure If_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.If_Statements.If_Statement_Access);
+
+         overriding procedure Incomplete_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Incomplete_Type_Declarations.
+              Incomplete_Type_Declaration_Access);
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access);
+
+         overriding procedure Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Statements.
+              Loop_Statement_Access);
+
+         overriding procedure Null_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Null_Components.
+              Null_Component_Access);
+
+         overriding procedure Null_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Null_Statements.
+              Null_Statement_Access);
+
+         overriding procedure Number_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Number_Declarations.
+              Number_Declaration_Access);
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access);
+
+         overriding procedure Object_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Renaming_Declarations.
+              Object_Renaming_Declaration_Access);
+
+         overriding procedure Package_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Bodies.Package_Body_Access);
+
+         overriding procedure Package_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Body_Stubs.
+              Package_Body_Stub_Access);
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access);
+
+         overriding procedure Package_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Instantiations.
+              Package_Instantiation_Access);
+
+         overriding procedure Package_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Renaming_Declarations.
+              Package_Renaming_Declaration_Access);
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access);
+
+         overriding procedure Pragma_Node
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Pragma_Nodes.Pragma_Node_Access);
+
+         overriding procedure Private_Extension_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Extension_Declarations.
+              Private_Extension_Declaration_Access);
+
+         overriding procedure Private_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Declarations.
+              Private_Type_Declaration_Access);
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access);
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access);
+
+         overriding procedure Procedure_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Instantiations.
+              Procedure_Instantiation_Access);
+
+         overriding procedure Protected_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Bodies.
+              Protected_Body_Access);
+
+         overriding procedure Protected_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Body_Stubs.
+              Protected_Body_Stub_Access);
+
+         overriding procedure Protected_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Type_Declarations.
+              Protected_Type_Declaration_Access);
+
+         overriding procedure Raise_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Raise_Statements.
+              Raise_Statement_Access);
+
+         overriding procedure Record_Representation_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Representation_Clauses.
+              Record_Representation_Clause_Access);
+
+         overriding procedure Requeue_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Requeue_Statements.
+              Requeue_Statement_Access);
+
+         overriding procedure Return_Object_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Return_Object_Specifications.
+              Return_Object_Specification_Access);
+
+         overriding procedure Selective_Accept
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selective_Accepts.
+              Selective_Accept_Access);
+
+         overriding procedure Simple_Return_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Return_Statements.
+              Simple_Return_Statement_Access);
+
+         overriding procedure Single_Protected_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Protected_Declarations.
+              Single_Protected_Declaration_Access);
+
+         overriding procedure Single_Task_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Task_Declarations.
+              Single_Task_Declaration_Access);
+
+         overriding procedure Subtype_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Declarations.
+              Subtype_Declaration_Access);
+
+         overriding procedure Task_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Bodies.Task_Body_Access);
+
+         overriding procedure Task_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Body_Stubs.
+              Task_Body_Stub_Access);
+
+         overriding procedure Task_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Type_Declarations.
+              Task_Type_Declaration_Access);
+
+         overriding procedure Terminate_Alternative_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Terminate_Alternative_Statements.
+              Terminate_Alternative_Statement_Access);
+
+         overriding procedure Use_Package_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Use_Package_Clauses.
+              Use_Package_Clause_Access);
+
+         overriding procedure Use_Type_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Use_Type_Clauses.
+              Use_Type_Clause_Access);
+
+         overriding procedure Variant_Part
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variant_Parts.Variant_Part_Access);
+
+         overriding procedure While_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.While_Loop_Statements.
+              While_Loop_Statement_Access);
+
+         overriding procedure With_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.With_Clauses.With_Clause_Access);
+
       end Get;
 
       package body Get is
+
+         overriding procedure Abort_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Abort_Statements.
+              Abort_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Abort_Statement;
+
+         overriding procedure Accept_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Accept_Statements.
+              Accept_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Accept_Statement;
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Assignment_Statement;
+
+         overriding procedure Asynchronous_Select
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Asynchronous_Selects.
+              Asynchronous_Select_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Asynchronous_Select;
+
+         overriding procedure At_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.At_Clauses.At_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end At_Clause;
+
+         overriding procedure Attribute_Definition_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Attribute_Definition_Clauses.
+              Attribute_Definition_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Attribute_Definition_Clause;
+
+         overriding procedure Block_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Block_Statements.
+              Block_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Block_Statement;
+
+         overriding procedure Case_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Case_Statements.
+              Case_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Case_Statement;
+
+         overriding procedure Choice_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Choice_Parameter_Specifications.
+              Choice_Parameter_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Choice_Parameter_Specification;
+
+         overriding procedure Component_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Clauses.
+              Component_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Component_Clause;
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Component_Declaration;
 
          overriding procedure Defining_Character_Literal
            (Self : in out Visiter;
@@ -557,6 +1140,584 @@ package body Asis.Elements is
          begin
             Self.Result := Node.Parent;
          end Defining_Operator_Symbol;
+
+         overriding procedure Delay_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Delay_Statements.
+              Delay_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Delay_Statement;
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Discriminant_Specification;
+
+         overriding procedure Element_Iterator_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Element_Iterator_Specifications.
+              Element_Iterator_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Element_Iterator_Specification;
+
+         overriding procedure Entry_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Bodies.Entry_Body_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Entry_Body;
+
+         overriding procedure Entry_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Declarations.
+              Entry_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Entry_Declaration;
+
+         overriding procedure Entry_Index_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Index_Specifications.
+              Entry_Index_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Entry_Index_Specification;
+
+         overriding procedure Exception_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Declarations.
+              Exception_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Exception_Declaration;
+
+         overriding procedure Exception_Handler
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Handlers.
+              Exception_Handler_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Exception_Handler;
+
+         overriding procedure Exception_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exception_Renaming_Declarations.
+              Exception_Renaming_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Exception_Renaming_Declaration;
+
+         overriding procedure Exit_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Exit_Statements.
+              Exit_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Exit_Statement;
+
+         overriding procedure Extended_Return_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Extended_Return_Statements.
+              Extended_Return_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Extended_Return_Statement;
+
+         overriding procedure For_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.For_Loop_Statements.
+              For_Loop_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end For_Loop_Statement;
+
+         overriding procedure Formal_Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Function_Declarations.
+              Formal_Function_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Function_Declaration;
+
+         overriding procedure Formal_Incomplete_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Incomplete_Type_Declarations.
+              Formal_Incomplete_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Incomplete_Type_Declaration;
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Object_Declaration;
+
+         overriding procedure Formal_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Package_Declarations.
+              Formal_Package_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Package_Declaration;
+
+         overriding procedure Formal_Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Procedure_Declarations.
+              Formal_Procedure_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Procedure_Declaration;
+
+         overriding procedure Formal_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Type_Declarations.
+              Formal_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Formal_Type_Declaration;
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Full_Type_Declaration;
+
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Function_Body;
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Function_Declaration;
+
+         overriding procedure Function_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Instantiations.
+              Function_Instantiation_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Function_Instantiation;
+
+         overriding procedure Generalized_Iterator_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generalized_Iterator_Specifications.
+              Generalized_Iterator_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generalized_Iterator_Specification;
+
+         overriding procedure Generic_Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Function_Declarations.
+              Generic_Function_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Function_Declaration;
+
+         overriding procedure Generic_Function_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Function_Renamings.
+              Generic_Function_Renaming_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Function_Renaming;
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Package_Declaration;
+
+         overriding procedure Generic_Package_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Renamings.
+              Generic_Package_Renaming_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Package_Renaming;
+
+         overriding procedure Generic_Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Procedure_Declarations.
+              Generic_Procedure_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Procedure_Declaration;
+
+         overriding procedure Generic_Procedure_Renaming
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Procedure_Renamings.
+              Generic_Procedure_Renaming_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Generic_Procedure_Renaming;
+
+         overriding procedure Goto_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Goto_Statements.
+              Goto_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Goto_Statement;
+
+         overriding procedure If_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.If_Statements.If_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end If_Statement;
+
+         overriding procedure Incomplete_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Incomplete_Type_Declarations.
+              Incomplete_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Incomplete_Type_Declaration;
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Loop_Parameter_Specification;
+
+         overriding procedure Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Statements.
+              Loop_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Loop_Statement;
+
+         overriding procedure Null_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Null_Components.
+              Null_Component_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Null_Component;
+
+         overriding procedure Null_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Null_Statements.
+              Null_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Null_Statement;
+
+         overriding procedure Number_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Number_Declarations.
+              Number_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Number_Declaration;
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Object_Declaration;
+
+         overriding procedure Object_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Renaming_Declarations.
+              Object_Renaming_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Object_Renaming_Declaration;
+
+         overriding procedure Package_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Bodies.Package_Body_Access)
+         is
+         begin
+            Self.Result := Node.Parent;
+         end Package_Body;
+
+         overriding procedure Package_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Body_Stubs.
+              Package_Body_Stub_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Package_Body_Stub;
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Package_Declaration;
+
+         overriding procedure Package_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Instantiations.
+              Package_Instantiation_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Package_Instantiation;
+
+         overriding procedure Package_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Renaming_Declarations.
+              Package_Renaming_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Package_Renaming_Declaration;
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Parameter_Specification;
+
+         overriding procedure Pragma_Node
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Pragma_Nodes.Pragma_Node_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Pragma_Node;
+
+         overriding procedure Private_Extension_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Extension_Declarations.
+              Private_Extension_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Private_Extension_Declaration;
+
+         overriding procedure Private_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Declarations.
+              Private_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Private_Type_Declaration;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Procedure_Body;
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Procedure_Call_Statement;
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Procedure_Declaration;
+
+         overriding procedure Procedure_Instantiation
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Instantiations.
+              Procedure_Instantiation_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Procedure_Instantiation;
+
+         overriding procedure Protected_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Bodies.
+              Protected_Body_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Protected_Body;
+
+         overriding procedure Protected_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Body_Stubs.
+              Protected_Body_Stub_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Protected_Body_Stub;
+
+         overriding procedure Protected_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Protected_Type_Declarations.
+              Protected_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Protected_Type_Declaration;
+
+         overriding procedure Raise_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Raise_Statements.
+              Raise_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Raise_Statement;
+
+         overriding procedure Record_Representation_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Representation_Clauses.
+              Record_Representation_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Record_Representation_Clause;
+
+         overriding procedure Requeue_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Requeue_Statements.
+              Requeue_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Requeue_Statement;
+
+         overriding procedure Return_Object_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Return_Object_Specifications.
+              Return_Object_Specification_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Return_Object_Specification;
+
+         overriding procedure Selective_Accept
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selective_Accepts.
+              Selective_Accept_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Selective_Accept;
+
+         overriding procedure Simple_Return_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Return_Statements.
+              Simple_Return_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Simple_Return_Statement;
+
+         overriding procedure Single_Protected_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Protected_Declarations.
+              Single_Protected_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Single_Protected_Declaration;
+
+         overriding procedure Single_Task_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Task_Declarations.
+              Single_Task_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Single_Task_Declaration;
+
+         overriding procedure Subtype_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Declarations.
+              Subtype_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Subtype_Declaration;
+
+         overriding procedure Task_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Bodies.Task_Body_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Task_Body;
+
+         overriding procedure Task_Body_Stub
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Body_Stubs.
+              Task_Body_Stub_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Task_Body_Stub;
+
+         overriding procedure Task_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Type_Declarations.
+              Task_Type_Declaration_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Task_Type_Declaration;
+
+         overriding procedure Terminate_Alternative_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Terminate_Alternative_Statements.
+              Terminate_Alternative_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Terminate_Alternative_Statement;
+
+         overriding procedure Use_Package_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Use_Package_Clauses.
+              Use_Package_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Use_Package_Clause;
+
+         overriding procedure Use_Type_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Use_Type_Clauses.
+              Use_Type_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Use_Type_Clause;
+
+         overriding procedure Variant_Part
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variant_Parts.Variant_Part_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end Variant_Part;
+
+         overriding procedure While_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.While_Loop_Statements.
+              While_Loop_Statement_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end While_Loop_Statement;
+
+         overriding procedure With_Clause
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.With_Clauses.With_Clause_Access) is
+         begin
+            Self.Result := Node.Parent;
+         end With_Clause;
 
       end Get;
 
