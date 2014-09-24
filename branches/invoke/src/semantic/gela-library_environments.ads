@@ -14,11 +14,6 @@ package Gela.Library_Environments is
    type Environment_Set_Access is access all Environment_Set'Class;
    for Environment_Set_Access'Storage_Size use 0;
 
-   overriding procedure Library_Level_Environment
-     (Self  : in out Environment_Set;
-      Value : out Gela.Semantic_Types.Env_Index);
-   --  Return environment that incudes library level names.
-
    overriding function Direct_Visible
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
@@ -33,7 +28,8 @@ package Gela.Library_Environments is
       Found  : access Boolean)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class;
 
-   Library_Env : constant Gela.Semantic_Types.Env_Index := 1;
+   Library_Env : constant Gela.Semantic_Types.Env_Index :=
+     Gela.Semantic_Types.Env_Index'Last;
 
 private
 
@@ -62,6 +58,10 @@ private
    overriding function Leave_Declarative_Region
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding function Library_Level_Environment
+     (Self  : Environment_Set)
       return Gela.Semantic_Types.Env_Index;
 
    overriding function Library_Unit_Environment

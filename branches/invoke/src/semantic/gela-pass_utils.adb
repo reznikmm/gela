@@ -17,9 +17,8 @@ with Gela.Symbol_Sets;
 package body Gela.Pass_Utils is
 
    procedure Preprocess_Standard
-     (Comp          : Gela.Compilations.Compilation_Access;
-      Unit          : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access);
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Element_Access);
 
    function Is_Enumeration
      (Decl : Gela.Elements.Element_Access) return Boolean;
@@ -36,11 +35,27 @@ package body Gela.Pass_Utils is
       Decl   : Gela.Elements.Element_Access)
         return Gela.Semantic_Types.Env_Index
    is
+      use type Gela.Semantic_Types.Env_Index;
+      use type Gela.Lexical_Types.Symbol;
+
+      Env_0 : Gela.Semantic_Types.Env_Index;
       Env_1 : Gela.Semantic_Types.Env_Index;
       Env_2 : Gela.Semantic_Types.Env_Index;
    begin
+      if Env = Comp.Context.Environment_Set.Library_Level_Environment then
+         Env_0 := Parents_Declarative_Region (Comp, Symbol);
+
+         if Symbol = Gela.Lexical_Types.Predefined_Symbols.Standard then
+            Preprocess_Standard (Comp, Decl);
+         end if;
+
+
+      else
+         Env_0 := Env;
+      end if;
+
       Env_1 := Comp.Context.Environment_Set.Add_Defining_Name
-        (Index  => Env,
+        (Index  => Env_0,
          Symbol => Symbol,
          Name   => Name);
 
@@ -119,52 +134,6 @@ package body Gela.Pass_Utils is
 
       return Env_2;
    end Add_Names_Create_Region;
-
-   --------------------
-   -- Create_Subunit --
-   --------------------
-
-   function Create_Subunit
-     (Comp         : Gela.Compilations.Compilation_Access)
-      return Gela.Semantic_Types.Env_Index
-   is
-      pragma Unreferenced (Comp);
-   begin
-      return 0;
-   end Create_Subunit;
-
-   ----------------------
-   -- Create_Unit_Body --
-   ----------------------
-
-   function Create_Unit_Body
-     (Comp         : Gela.Compilations.Compilation_Access)
-      return Gela.Semantic_Types.Env_Index
-   is
-      pragma Unreferenced (Comp);
-   begin
-      return 0;
-   end Create_Unit_Body;
-
-   -----------------------------
-   -- Create_Unit_Declaration --
-   -----------------------------
-
-   function Create_Unit_Declaration
-     (Comp          : Gela.Compilations.Compilation_Access;
-      Unit          : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access;
-      Full_Name     : Gela.Lexical_Types.Symbol)
-      return Gela.Semantic_Types.Env_Index
-   is
-      use type Gela.Lexical_Types.Symbol;
-   begin
-      if Full_Name = Gela.Lexical_Types.Predefined_Symbols.Standard then
-         Preprocess_Standard (Comp, Unit);
-      end if;
-
-      return 0;
-   end Create_Unit_Declaration;
 
    --------------------
    -- Is_Enumeration --
@@ -249,11 +218,9 @@ package body Gela.Pass_Utils is
 
    function Parents_Declarative_Region
      (Comp          : Gela.Compilations.Compilation_Access;
-      Private_Index : Gela.Lexical_Types.Token_Count;
       Full_Name     : Gela.Lexical_Types.Symbol)
       return Gela.Semantic_Types.Env_Index
    is
-      pragma Unreferenced (Private_Index);
       use type Gela.Lexical_Types.Symbol;
 
       Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
@@ -275,9 +242,8 @@ package body Gela.Pass_Utils is
    -------------------------
 
    procedure Preprocess_Standard
-     (Comp          : Gela.Compilations.Compilation_Access;
-      Unit          : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access) is
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Element_Access) is
    begin
       Gela.Plain_Type_Managers.Type_Manager_Access
         (Comp.Context.Types).Initialize (Unit);

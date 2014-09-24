@@ -8,7 +8,6 @@
 ------------------------------------------------------------------------------
 
 with Gela.Compilations;
-with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Lexical_Types;
@@ -19,21 +18,6 @@ package Gela.Pass_Utils is
    pragma Preelaborate;
 
    package Resolve renames Gela.Resolve;
-
-   function Create_Unit_Declaration
-     (Comp          : Gela.Compilations.Compilation_Access;
-      Unit          : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access;
-      Full_Name     : Gela.Lexical_Types.Symbol)
-      return Gela.Semantic_Types.Env_Index;
-
-   function Create_Unit_Body
-     (Comp         : Gela.Compilations.Compilation_Access)
-      return Gela.Semantic_Types.Env_Index;
-
-   function Create_Subunit
-     (Comp         : Gela.Compilations.Compilation_Access)
-      return Gela.Semantic_Types.Env_Index;
 
    function Add_Name_Create_Region
      (Comp   : Gela.Compilations.Compilation_Access;
@@ -73,7 +57,6 @@ package Gela.Pass_Utils is
 
    function Parents_Declarative_Region
      (Comp          : Gela.Compilations.Compilation_Access;
-      Private_Index : Gela.Lexical_Types.Token_Count;
       Full_Name     : Gela.Lexical_Types.Symbol)
       return Gela.Semantic_Types.Env_Index;
    --  Return end of declarative region of unit's parent

@@ -65,8 +65,11 @@ private
       --  List of all visible regions except Nested_Region_List
    end record;
 
+   use type Gela.Semantic_Types.Env_Index;
+
    subtype Env_Item_Index is Gela.Semantic_Types.Env_Index
-     range 1 .. Gela.Semantic_Types.Env_Index'Last;
+     range 1 .. Gela.Semantic_Types.Env_Index'Last - 1;
+   --  Reserve last for Library_Level_Environment index
 
    package Env_Item_Vectors is new Ada.Containers.Vectors
      (Index_Type   => Env_Item_Index,
@@ -136,9 +139,9 @@ private
       Index  : Gela.Semantic_Types.Env_Index)
       return Gela.Semantic_Types.Env_Index;
 
-   overriding procedure Library_Level_Environment
-     (Self  : in out Environment_Set;
-      Value : out Gela.Semantic_Types.Env_Index);
+   overriding function Library_Level_Environment
+     (Self  : Environment_Set)
+      return Gela.Semantic_Types.Env_Index;
 
    overriding function Library_Unit_Environment
      (Self   : access Environment_Set;

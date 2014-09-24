@@ -810,31 +810,28 @@ Rules for choice_parameter_specification.Names :
 
 Rules for compilation_unit_body. :
 (.
-      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Body
-        (Self.Compilation);
-
+      ${Context_Clause_Elements.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for compilation_unit_body. :
 (.
-      ${Unit_Declaration.env_in} := 0;  --  FIXME
+      ${Unit_Declaration.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for compilation_unit_declaration. :
 (.
-      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Unit_Declaration
-        (Comp => Self.Compilation,
-         Unit => This,
-         Full_Name     => ${Unit_Declaration.full_name});
+      ${Context_Clause_Elements.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for compilation_unit_declaration. :
 (.
-      --  ${Context_Clause_Elements.env_out}
-      ${Unit_Declaration.env_in} := Gela.Pass_Utils.Parents_Declarative_Region
-        (Comp => Self.Compilation,
-         Private_Index => ${private_token.Index},
-         Full_Name     => ${Unit_Declaration.full_name});
+      --  depends on ${Context_Clause_Elements.env_out}
+      --  depends on ${Unit_Declaration.full_name}???
+      ${Unit_Declaration.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for component_clause. :
@@ -910,8 +907,8 @@ Rules for decimal_fixed_point_definition. :
 Rules for defining_expanded_unit_name. :
 (.
       --  depend on ${defining_expanded_unit_name.env_in};
-      Self.Compilation.Context.Environment_Set.Library_Level_Environment
-        (${Defining_Prefix.env_in});
+      ${Defining_Prefix.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for defining_expanded_unit_name. :
@@ -2442,18 +2439,21 @@ Rules for subtype_indication. :
 
 Rules for subunit. :
 (.
-      ${Context_Clause_Elements.env_in} := Gela.Pass_Utils.Create_Subunit
-        (Comp => Self.Compilation);
+      ${Context_Clause_Elements.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for subunit. :
 (.
-      ${parent_unit_name.env_in} := 0;  --  FIXME
+      ${parent_unit_name.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for subunit. :
 (.
-      ${Unit_Declaration.env_in} := 0;  --  FIXME
+      --  depends on ${Context_Clause_Elements.env_out}
+      ${Unit_Declaration.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 
 Rules for task_body. :
@@ -2584,7 +2584,7 @@ Rules for while_loop_statement. :
 Rules for with_clause. :
 (.
       --  Depend on ${with_clause.env_in}
-      Self.Compilation.Context.Environment_Set.Library_Level_Environment
-        (${With_Clause_Names.env_in});
+      ${With_Clause_Names.env_in} :=
+        Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
 

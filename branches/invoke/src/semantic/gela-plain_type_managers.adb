@@ -36,8 +36,7 @@ package body Gela.Plain_Type_Managers is
 
    procedure Initialize
      (Self     : access Type_Manager;
-      Standard : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access)
+      Standard : Gela.Elements.Element_Access)
    is
       procedure Create
         (Category : Gela.Type_Views.Category_Kinds;

@@ -668,13 +668,13 @@ package body Gela.Library_Environments is
    -- Library_Level_Environment --
    -------------------------------
 
-   overriding procedure Library_Level_Environment
-     (Self  : in out Environment_Set;
-      Value : out Gela.Semantic_Types.Env_Index)
+   overriding function Library_Level_Environment
+     (Self  : Environment_Set)
+      return Gela.Semantic_Types.Env_Index
    is
       pragma Unreferenced (Self);
    begin
-      Value := Library_Env;
+      return Library_Env;
    end Library_Level_Environment;
 
    ------------------------------

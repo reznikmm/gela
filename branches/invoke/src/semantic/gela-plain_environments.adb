@@ -258,7 +258,6 @@ package body Gela.Plain_Environments is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
-      use type Gela.Semantic_Types.Env_Index;
       use type Region_Item_Count;
 
       procedure Update_Lib_Unit_Env
@@ -344,7 +343,6 @@ package body Gela.Plain_Environments is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
-      use type Gela.Semantic_Types.Env_Index;
 
       Env_Index : Gela.Semantic_Types.Env_Index;
       Env : Env_Item := Self.Env.Element (Index);
@@ -381,7 +379,6 @@ package body Gela.Plain_Environments is
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
-      use type Gela.Semantic_Types.Env_Index;
       use type Gela.Lexical_Types.Symbol;
 
       Env : Env_Item;
@@ -505,11 +502,11 @@ package body Gela.Plain_Environments is
    -- Library_Level_Environment --
    -------------------------------
 
-   overriding procedure Library_Level_Environment
-     (Self  : in out Environment_Set;
-      Value : out Gela.Semantic_Types.Env_Index) is
+   overriding function Library_Level_Environment
+     (Self  : Environment_Set)
+      return Gela.Semantic_Types.Env_Index is
    begin
-      Self.Lib.Library_Level_Environment (Value);
+      return Self.Lib.Library_Level_Environment;
    end Library_Level_Environment;
 
    ------------------------------
@@ -576,9 +573,9 @@ package body Gela.Plain_Environments is
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
       pragma Unreferenced (Index);
-      Lib_Env : Gela.Semantic_Types.Env_Index;
+      Lib_Env : constant Gela.Semantic_Types.Env_Index :=
+        Self.Library_Level_Environment;
    begin
-      Self.Library_Level_Environment (Lib_Env);
       return Self.Lib.Visible (Lib_Env, Region, Symbol, Found);
    end Visible;
 

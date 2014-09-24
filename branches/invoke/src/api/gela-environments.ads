@@ -11,9 +11,9 @@ package Gela.Environments is
    type Environment_Set_Access is access all Environment_Set'Class;
    for Environment_Set_Access'Storage_Size use 0;
 
-   not overriding procedure Library_Level_Environment
-     (Self  : in out Environment_Set;
-      Value : out Gela.Semantic_Types.Env_Index) is abstract;
+   not overriding function Library_Level_Environment
+     (Self  : Environment_Set)
+      return Gela.Semantic_Types.Env_Index is abstract;
    --  Return environment that incudes library level names.
 
    not overriding function Library_Unit_Environment

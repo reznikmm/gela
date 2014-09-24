@@ -3,7 +3,6 @@
 with Ada.Containers.Ordered_Maps;
 
 with Gela.Contexts;
-with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Subtype_Marks;
 with Gela.Semantic_Types;
@@ -20,8 +19,7 @@ package Gela.Plain_Type_Managers is
 
    procedure Initialize
      (Self     : access Type_Manager;
-      Standard : Gela.Elements.Compilation_Unit_Declarations.
-        Compilation_Unit_Declaration_Access);
+      Standard : Gela.Elements.Element_Access);
 
 private
 
