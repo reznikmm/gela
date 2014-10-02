@@ -8,21 +8,20 @@
 ------------------------------------------------------------------------------
 
 with Gela.Element_Visiters;
-with Gela.Elements.Enumeration_Type_Definitions;
-with Gela.Elements.Full_Type_Declarations;
-with Gela.Elements.Type_Definitions;
-with Gela.Plain_Type_Managers;
-with Gela.Symbol_Sets;
-with Gela.Elements.Package_Declarations;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Context_Items;
-with Gela.Elements.Use_Package_Clauses;
-with Gela.Environments;
-with Gela.Elements.Program_Unit_Names;
+with Gela.Elements.Enumeration_Type_Definitions;
+with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Identifiers;
+with Gela.Elements.Package_Declarations;
+with Gela.Elements.Program_Unit_Names;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
-with Gela.Plain_Environments.Debug;
+with Gela.Elements.Type_Definitions;
+with Gela.Elements.Use_Package_Clauses;
+with Gela.Environments;
+with Gela.Plain_Type_Managers;
+with Gela.Symbol_Sets;
 
 package body Gela.Pass_Utils is
 
@@ -140,11 +139,6 @@ package body Gela.Pass_Utils is
 
                Cursor.Next;
             end loop;
-
-            Gela.Plain_Environments.Debug
-              (Gela.Plain_Environments.Plain_Environment_Set_Access
-                 (Comp.Context.Environment_Set),
-               Env);
          end Use_Package_Clause;
       end Get;
 
