@@ -2063,7 +2063,14 @@ Rules for procedure_body. :
 
 Rules for procedure_body. :
 (.
-      ${Parameter_Profile.env_in} := ${procedure_body.env_in};
+      --  FIXME: add name after parameters ARM 8.2(2)
+      ${Parameter_Profile.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${procedure_body.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for procedure_body. :
@@ -2073,17 +2080,17 @@ Rules for procedure_body. :
 
 Rules for procedure_body. :
 (.
-      ${Body_Declarative_Items.env_in} := ${procedure_body.env_in};
+      ${Body_Declarative_Items.env_in} := ${Parameter_Profile.env_out};
 .)
 
 Rules for procedure_body. :
 (.
-      ${Body_Statements.env_in} := ${procedure_body.env_in};
+      ${Body_Statements.env_in} := ${Body_Declarative_Items.env_out};
 .)
 
 Rules for procedure_body. :
 (.
-      ${Body_Exception_Handlers.env_in} := ${procedure_body.env_in};
+      ${Body_Exception_Handlers.env_in} := ${Body_Declarative_Items.env_out};
 .)
 
 Rules for procedure_body. :
@@ -2108,7 +2115,14 @@ Rules for procedure_declaration. :
 
 Rules for procedure_declaration. :
 (.
-      ${Parameter_Profile.env_in} := ${procedure_declaration.env_in};
+      --  FIXME: add name after parameters ARM 8.2(2)
+      ${Parameter_Profile.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${procedure_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for procedure_declaration. :

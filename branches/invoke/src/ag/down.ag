@@ -485,7 +485,9 @@ Rules for procedure_declaration. :
 
 Rules for Clause_Names.program_unit_name :
 (.
-      ${program_unit_name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${Clause_Names.env_in}, ${program_unit_name.Up}, ${program_unit_name.Down});
 .)
 
 Rules for With_Clause_Names.program_unit_name :

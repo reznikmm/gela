@@ -111,19 +111,39 @@ package body Gela.Resolve is
         Comp.Context.Interpretation_Manager;
       ES : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
-      NC : Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
-        := ES.Direct_Visible (Env, Symbol);
+      DV : Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
+        ES.Direct_Visible (Env, Symbol);
+
+      Have_Direct_Visible : constant Boolean := DV.Has_Element;
    begin
       Set := 0;
 
-      while NC.Has_Element loop
+      while DV.Has_Element loop
          IM.Add_Defining_Name
-           (Name   => NC.Element,
+           (Name   => DV.Element,
             Down   => (1 .. 0 => 0),
             Result => Set);
 
-         NC.Next;
+         DV.Next;
       end loop;
+
+      if Have_Direct_Visible then
+         return;
+      end if;
+
+      declare
+         UV : Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
+           ES.Use_Visible (Env, Symbol);
+      begin
+         while UV.Has_Element loop
+            IM.Add_Defining_Name
+              (Name   => UV.Element,
+               Down   => (1 .. 0 => 0),
+               Result => Set);
+
+            UV.Next;
+         end loop;
+      end;
    end Direct_Name;
 
    procedure Each_Expression
