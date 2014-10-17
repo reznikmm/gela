@@ -10,6 +10,7 @@ with Gela.Library_Environments;
 with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Vectors;
 with Gela.Peristent_Lists;
+with Gela.Name_List_Managers;
 
 package Gela.Plain_Environments is
    pragma Preelaborate;
@@ -19,19 +20,6 @@ package Gela.Plain_Environments is
    type Plain_Environment_Set_Access is access all Environment_Set;
 
 private
-
-   --  Direct_Visible_Item  --
-
-   type Direct_Visible_Item is record
-      Symbol : Gela.Lexical_Types.Symbol;
-      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-   end record;
-
-   package Direct_Visible_Item_Lists is new Gela.Peristent_Lists
-     (Element_Type => Direct_Visible_Item);
-
-   subtype Direct_Visible_Item_Count is Direct_Visible_Item_Lists.Count_Type;
-   subtype Direct_Visible_Item_Index is Direct_Visible_Item_Lists.Index_Type;
 
    package Defining_Name_Lists is new Gela.Peristent_Lists
      (Element_Type => Gela.Elements.Defining_Names.Defining_Name_Access);
@@ -44,7 +32,7 @@ private
    type Region_Item is record
       Name : Gela.Elements.Defining_Names.Defining_Name_Access;
       --  Defining name corresponding to given region, if any
-      Local : Direct_Visible_Item_Count;
+      Local : Gela.Name_List_Managers.List;
       --  List of Direct_Visible_Item.
       Use_Package : Defining_Name_Item_Count;
       --  List of use_package_clauses in the region
@@ -98,16 +86,26 @@ private
    type Environment_Set (Context : access Gela.Contexts.Context'Class) is
      new Gela.Environments.Environment_Set with
    record
+      Names : aliased Gela.Name_List_Managers.Name_List_Manager;
       Lib : aliased Gela.Library_Environments.Environment_Set (Context);
       Env            : Env_Item_Vectors.Vector;
       Region         : Region_Item_Lists.Container;
-      Direct_Visible : Direct_Visible_Item_Lists.Container;
       Use_Package    : Defining_Name_Lists.Container;
       Units_Env      : Symbol_Maps.Map;
       --  Map of library level regions
       Lib_Env        : Env_Maps.Map;
       --  Reverse mapping for Units_Env
    end record;
+
+   overriding function Empty_Environment
+     (Self  : Environment_Set)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding function Add_With_Clause
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index;
 
    overriding function Add_Defining_Name
      (Self   : in out Environment_Set;

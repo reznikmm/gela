@@ -598,6 +598,18 @@ package body Gela.Library_Environments is
       return 0;
    end Add_Use_Package;
 
+   overriding function Add_With_Clause
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index
+   is
+      pragma Unreferenced (Self);
+      pragma Unreferenced (Symbol);
+   begin
+      return Index;
+   end Add_With_Clause;
+
    --------------------
    -- Direct_Visible --
    --------------------
@@ -636,6 +648,18 @@ package body Gela.Library_Environments is
          end if;
       end return;
    end Direct_Visible;
+
+   -----------------------
+   -- Empty_Environment --
+   -----------------------
+
+   overriding function Empty_Environment
+     (Self  : Environment_Set) return Gela.Semantic_Types.Env_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return 0;
+   end Empty_Environment;
 
    ------------------------------
    -- Enter_Declarative_Region --
