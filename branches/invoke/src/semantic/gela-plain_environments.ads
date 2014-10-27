@@ -46,11 +46,14 @@ private
 
    --  Env_Item  --
 
+   type Region_Enum is (Nested, Other, Withed);
+   --  Nested - List of nested regions, current - first
+   --  Other  - List of all visible regions except Nested_Region_List
+   --  Withed - List of regions available over with clauses
+
+   type Region_List_Array is array (Region_Enum) of Region_Item_Count;
    type Env_Item is record
-      Nested_Region_List : Region_Item_Count;
-      --  List of nested region, current - first
-      Other_Region_List  : Region_Item_Count;
-      --  List of all visible regions except Nested_Region_List
+      Region_List : Region_List_Array;
    end record;
 
    use type Gela.Semantic_Types.Env_Index;

@@ -1,11 +1,17 @@
 Synthesized attributes
+  abort_statement,
+  accept_statement,
   access_definition,
   allocator,
   anonymous_access_to_function_definition,
   anonymous_access_to_object_definition,
   anonymous_access_to_procedure_definition,
+  assignment_statement,
+  asynchronous_select,
   attribute_reference,
+  block_statement,
   case_expression,
+  case_statement,
   character_literal,
   clause_name,
   component_definition,
@@ -15,48 +21,67 @@ Synthesized attributes
   defining_expanded_unit_name,
   defining_identifier,
   defining_program_unit_name,
+  delay_statement,
   delta_constraint,
   digits_constraint,
   direct_name,
-  discrete_subtype_definition,
-  discrete_subtype_indication,
   discrete_range_attribute_reference,
   discrete_simple_expression_range,
+  discrete_subtype_definition,
+  discrete_subtype_indication,
+  exit_statement,
   explicit_dereference,
   expression,
+  extended_return_statement,
   extension_aggregate,
+  for_loop_statement,
   function_call,
+  goto_statement,
   identifier,
   if_expression,
+  if_statement,
+  label_decorator,
+  loop_statement,
   membership_test,
   name,
   null_literal,
+  null_statement,
   numeric_literal,
   object_declaration,
   object_definition,
   operator_symbol,
   package_declaration,
   parameter_specification,
+  pragma_node,
   prefix,
+  procedure_call_statement,
   program_unit_name,
   qualified_expression,
   quantified_expression,
+  raise_statement,
   range_attribute_reference,
   range_constraint,
   record_aggregate,
+  requeue_statement,
   scalar_constraint,
   selected_component,
   selected_identifier,
+  selective_accept,
   short_circuit,
   simple_expression,
   simple_expression_range,
+  simple_return_statement,
+  statement,
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
+  terminate_alternative_statement,
   unconstrained_array_definition,
+  while_loop_statement,
   Discrete_Subtype_Definitions,
-  Index_Subtype_Definitions
+  Index_Subtype_Definitions,
+  Body_Statements
 
    : Gela.Semantic_Types.Error_Set_Index : Errors;
 
@@ -195,6 +220,14 @@ Rules for Discrete_Subtype_Definitions.discrete_subtype_definition :
 (.
       ${Discrete_Subtype_Definitions.Errors} := ${discrete_subtype_definition.Errors};
 .)
+Rules for Body_Statements.statement :
+(.
+      ${Body_Statements.Errors} := 0;
+.)
+Rules for Body_Statements.statement :
+(.
+      ${Body_Statements.Errors} := ${statement.Errors};
+.)
 Rules for unconstrained_array_definition. :
 (.
       ${unconstrained_array_definition.Errors} := ${Index_Subtype_Definitions.Errors};
@@ -247,4 +280,96 @@ Rules for package_declaration. :
 Rules for defining_identifier.identifier_token :
 (.
       ${defining_identifier.Errors} := 0;
+.)
+Rules for abort_statement. :
+(.
+      ${abort_statement.Errors} := 0;  --  FIXME
+.)
+Rules for accept_statement. :
+(.
+      ${accept_statement.Errors} := 0;  --  FIXME
+.)
+Rules for assignment_statement. :
+(.
+      ${assignment_statement.Errors} := 0;  --  FIXME
+.)
+Rules for asynchronous_select. :
+(.
+      ${asynchronous_select.Errors} := 0;  --  FIXME
+.)
+Rules for block_statement. :
+(.
+      ${block_statement.Errors} := 0;  --  FIXME
+.)
+Rules for case_statement. :
+(.
+      ${case_statement.Errors} := 0;  --  FIXME
+.)
+Rules for delay_statement. :
+(.
+      ${delay_statement.Errors} := 0;  --  FIXME
+.)
+Rules for exit_statement. :
+(.
+      ${exit_statement.Errors} := 0;  --  FIXME
+.)
+Rules for extended_return_statement. :
+(.
+      ${extended_return_statement.Errors} := 0;  --  FIXME
+.)
+Rules for for_loop_statement. :
+(.
+      ${for_loop_statement.Errors} := 0;  --  FIXME
+.)
+Rules for goto_statement. :
+(.
+      ${goto_statement.Errors} := 0;  --  FIXME
+.)
+Rules for if_statement. :
+(.
+      ${if_statement.Errors} := 0;  --  FIXME
+.)
+Rules for label_decorator. :
+(.
+      ${label_decorator.Errors} := 0;  --  FIXME
+.)
+Rules for loop_statement. :
+(.
+      ${loop_statement.Errors} := 0;  --  FIXME
+.)
+Rules for null_statement. :
+(.
+      ${null_statement.Errors} := 0;  --  FIXME
+.)
+Rules for pragma_node. :
+(.
+      ${pragma_node.Errors} := 0;  --  FIXME
+.)
+Rules for procedure_call_statement. :
+(.
+      ${procedure_call_statement.Errors} := 0;  --  FIXME
+.)
+Rules for raise_statement. :
+(.
+      ${raise_statement.Errors} := 0;  --  FIXME
+.)
+Rules for requeue_statement. :
+(.
+      ${requeue_statement.Errors} := 0;  --  FIXME
+.)
+Rules for selective_accept. :
+(.
+      ${selective_accept.Errors} := 0;  --  FIXME
+.)
+Rules for simple_return_statement. :
+(.
+      ${simple_return_statement.Errors} := 0;  --  FIXME
+.)
+Rules for terminate_alternative_statement. :
+(.
+      ${terminate_alternative_statement.Errors} := 0;  --  FIXME
+.)
+Rules for while_loop_statement. :
+(.
+      ${while_loop_statement.Errors} := 0;  --  FIXME
 .)

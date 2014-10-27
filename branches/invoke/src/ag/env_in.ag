@@ -816,6 +816,7 @@ Rules for compilation_unit_body. :
 
 Rules for compilation_unit_body. :
 (.
+      --  depends on ${Context_Clause_Elements.env_out}
       ${Unit_Declaration.env_in} :=
         Self.Compilation.Context.Environment_Set.Library_Level_Environment;
 .)
@@ -2090,6 +2091,7 @@ Rules for procedure_body. :
 
 Rules for procedure_body. :
 (.
+      --  ${Body_Statements.Errors}
       ${Body_Exception_Handlers.env_in} := ${Body_Declarative_Items.env_out};
 .)
 

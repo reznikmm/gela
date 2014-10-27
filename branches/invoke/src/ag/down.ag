@@ -475,7 +475,12 @@ Rules for pragma_node. :
 
 Rules for procedure_call_statement. :
 (.
-      ${Called_Name.Down} := 0;  --  FIXME
+      --  FIXME  take parameters into account
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${procedure_call_statement.env_in},
+         ${Called_Name.Up},
+         ${Called_Name.Down});
 .)
 
 Rules for procedure_declaration. :

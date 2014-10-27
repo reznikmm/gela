@@ -8,17 +8,20 @@
 ------------------------------------------------------------------------------
 
 with Gela.Element_Visiters;
+with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Context_Items;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Package_Declarations;
+with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Program_Unit_Names;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Use_Package_Clauses;
+with Gela.Elements.With_Clauses;
 with Gela.Environments;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
@@ -49,6 +52,11 @@ package body Gela.Pass_Utils is
             Name : Gela.Elements.Defining_Names.Defining_Name_Access;
          end record;
 
+         overriding procedure Compilation_Unit_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Bodies.
+              Compilation_Unit_Body_Access);
+
          overriding procedure Compilation_Unit_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Compilation_Unit_Declarations.
@@ -63,6 +71,11 @@ package body Gela.Pass_Utils is
             Node : not null Gela.Elements.Package_Declarations.
               Package_Declaration_Access);
 
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
+
          overriding procedure Selected_Identifier
            (Self : in out Visiter;
             Node : not null Gela.Elements.Selected_Identifiers.
@@ -73,9 +86,28 @@ package body Gela.Pass_Utils is
             Node : not null Gela.Elements.Use_Package_Clauses.
               Use_Package_Clause_Access);
 
+         overriding procedure With_Clause  --  Use env.out instead
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.With_Clauses.With_Clause_Access);
       end Get;
 
       package body Get is
+
+         overriding procedure Compilation_Unit_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Compilation_Unit_Bodies.
+              Compilation_Unit_Body_Access)
+         is
+            List : constant Gela.Elements.Context_Items.
+              Context_Item_Sequence_Access := Node.Context_Clause_Elements;
+
+            Cursor : Gela.Elements.Element_Sequence_Cursor'Class := List.First;
+         begin
+            while Cursor.Has_Element loop
+               Cursor.Element.Visit (Self);
+               Cursor.Next;
+            end loop;
+         end Compilation_Unit_Body;
 
          overriding procedure Compilation_Unit_Declaration
            (Self : in out Visiter;
@@ -107,6 +139,14 @@ package body Gela.Pass_Utils is
          begin
             Node.Parent.Visit (Self);
          end Package_Declaration;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access) is
+         begin
+            Node.Parent.Visit (Self);
+         end Procedure_Body;
 
          overriding procedure Selected_Identifier
            (Self : in out Visiter;
@@ -140,6 +180,26 @@ package body Gela.Pass_Utils is
                Cursor.Next;
             end loop;
          end Use_Package_Clause;
+
+         overriding procedure With_Clause  --  Use env.out instead
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.With_Clauses.With_Clause_Access)
+         is
+            pragma Unreferenced (Self);
+            use type Gela.Lexical_Types.Symbol_List;
+
+            List : Gela.Lexical_Types.Symbol_List := Node.With_List;
+            Set : constant Gela.Environments.Environment_Set_Access :=
+              Comp.Context.Environment_Set;
+         begin
+            while List /= Gela.Lexical_Types.Empty_Symbol_List loop
+               Env := Set.Add_With_Clause
+                 (Index  => Env,
+                  Symbol => Comp.Context.Symbols.Tail (List));
+               List := Comp.Context.Symbols.Head (List);
+            end loop;
+         end With_Clause;
+
       end Get;
 
       V : Get.Visiter;
