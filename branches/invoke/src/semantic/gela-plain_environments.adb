@@ -149,7 +149,6 @@ package body Gela.Plain_Environments is
          Symbol : constant Gela.Lexical_Types.Symbol := Self.Current.Symbol;
          Local  : Gela.Name_List_Managers.List;
          Target : Region_Item_Count;
-         Name   : Defining_Name_Item_Count;
       begin
          Self.Current.Next;
 
@@ -158,20 +157,21 @@ package body Gela.Plain_Environments is
 
             while Target = 0 loop
                --  Next name in use clauses of Region
-               Name := Self.Set.Use_Package.Tail (Self.Use_Name);
+               Self.Use_Name := Self.Set.Use_Package.Tail (Self.Use_Name);
 
-               while Name = 0 loop
+               while Self.Use_Name = 0 loop
                   Self.Region := Self.Set.Region.Tail (Self.Region);
 
                   if Self.Region = 0 then
                      return;
                   end if;
 
-                  Name := Self.Set.Region.Head (Self.Region).Use_Package;
+                  Self.Use_Name :=
+                    Self.Set.Region.Head (Self.Region).Use_Package;
                end loop;
 
                Target := Self.Name_To_Region
-                 (Self.Set.Use_Package.Head (Name));
+                 (Self.Set.Use_Package.Head (Self.Use_Name));
             end loop;
 
             Local := Self.Set.Region.Head (Target).Local;
@@ -400,6 +400,11 @@ package body Gela.Plain_Environments is
       end Append;
 
    begin
+      if Target in 0 | Self.Library_Level_Environment then
+         --  Fix constraint_error because library_bodies doesn have env yet
+         return Index;
+      end if;
+
       Target := Self.Leave_Declarative_Region (Target);
       Target_Env := Self.Env.Element (Target);
       List := Target_Env.Region_List (Other);

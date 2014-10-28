@@ -918,7 +918,9 @@ Rules for root_type_definition.dummy_token :
 .)
 
 Synthesized attributes
+  compilation_unit_body,
   compilation_unit_declaration,
+  function_body,
   function_declaration,
   function_instantiation,
   generic_function_declaration,
@@ -927,10 +929,13 @@ Synthesized attributes
   generic_package_renaming,
   generic_procedure_declaration,
   generic_procedure_renaming,
+  library_unit_body,
   library_unit_declaration,
+  package_body,
   package_declaration,
   package_instantiation,
   package_renaming_declaration,
+  procedure_body,
   procedure_declaration,
   procedure_instantiation
     : Gela.Semantic_Types.Env_Index : declarative_region;
@@ -938,6 +943,13 @@ Synthesized attributes
 Rules for compilation_unit_declaration. :
 (.
       ${compilation_unit_declaration.declarative_region} := ${Unit_Declaration.declarative_region};
+      Self.Compilation.Context.Environment_Set.Set_Library_Unit_Environment
+        (${Unit_Declaration.full_name}, ${Unit_Declaration.declarative_region});
+.)
+
+Rules for compilation_unit_body. :
+(.
+      ${compilation_unit_body.declarative_region} := ${Unit_Declaration.declarative_region};
       Self.Compilation.Context.Environment_Set.Set_Library_Unit_Environment
         (${Unit_Declaration.full_name}, ${Unit_Declaration.declarative_region});
 .)
@@ -997,4 +1009,16 @@ Rules for procedure_declaration. :
 Rules for procedure_instantiation. :
 (.
       ${procedure_instantiation.declarative_region} := 0; --  FIXME
+.)
+Rules for package_body. :
+(.
+      ${package_body.declarative_region} := 0; --  FIXME
+.)
+Rules for function_body. :
+(.
+      ${function_body.declarative_region} := 0; --  FIXME
+.)
+Rules for procedure_body. :
+(.
+      ${procedure_body.declarative_region} := 0; --  FIXME
 .)

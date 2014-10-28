@@ -14,7 +14,7 @@ accept_statement ::=
   token                     <accept_token>
   identifier                <Accept_Entry_Direct_Name>
   token                     <left_parenthesis_token>
-  expression                <Accept_Entry_Index>
+  [expression               <Accept_Entry_Index>]
   token                     <right_parenthesis_token>
   token                     <lp_token>
   {parameter_specification} <Accept_Parameters>
@@ -1490,11 +1490,11 @@ qualified_expression ::=
   expression <Converted_Or_Qualified_Expression>;
 
 raise_statement ::=
-  token      <raise_token>
-  name       <Raised_Exception>
-  token      <with_token>
-  expression <Raise_Statement_Message>
-  token      <semicolon_token>
+  token       <raise_token>
+  name        <Raised_Exception>
+  token       <with_token>
+  [expression <Raise_Statement_Message>]
+  token       <semicolon_token>
 ;
 
 range_constraint ::= range_attribute_reference | simple_expression_range;
@@ -1610,9 +1610,9 @@ simple_expression ::=
     quantified_expression;
 
 simple_return_statement ::=
-  token      <return_token>
-  expression <Return_Expression>
-  token      <semicolon_token>
+  token       <return_token>
+  [expression <Return_Expression>]
+  token       <semicolon_token>
 ;
 
 single_protected_declaration ::=
