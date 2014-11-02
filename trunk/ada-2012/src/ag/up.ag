@@ -1,0 +1,235 @@
+Synthesized attributes
+  access_definition,
+  allocator,
+  anonymous_access_to_object_definition,
+  anonymous_access_to_function_definition,
+  anonymous_access_to_procedure_definition,
+  attribute_reference,
+  case_expression,
+  character_literal,
+  clause_name,
+  composite_constraint,
+  constrained_array_definition,
+  constraint,
+  delta_constraint,
+  digits_constraint,
+  direct_name,
+  explicit_dereference,
+  expression,
+  extension_aggregate,
+  function_call,
+  identifier,
+  if_expression,
+  membership_test,
+  name,
+  null_literal,
+  numeric_literal,
+  object_definition,
+  operator_symbol,
+  prefix,
+  program_unit_name,
+  qualified_expression,
+  quantified_expression,
+  range_attribute_reference,
+  range_constraint,
+  record_aggregate,
+  scalar_constraint,
+  selected_component,
+  selected_identifier,
+  short_circuit,
+  simple_expression,
+  simple_expression_range,
+  subtype_indication,
+  subtype_indication_or_access_definition,
+  subtype_mark,
+  subtype_mark_or_access_definition,
+  unconstrained_array_definition
+
+   : Gela.Interpretations.Interpretation_Set_Index : Up;
+
+Rules for identifier.identifier_token :
+(.
+      Gela.Pass_Utils.Resolve.Direct_Name
+        (Self.Compilation,
+         ${identifier.env_in},
+         Self.Compilation.Get_Token (${identifier_token.Index}).Symbol,
+         ${identifier.Up});
+.)
+
+Rules for selected_identifier. :
+(.
+      Gela.Pass_Utils.Resolve.Selected_Component
+        (Self.Compilation,
+         ${selected_identifier.env_in},
+         ${Prefix.Up},
+         ${Selector.full_name},
+         ${selected_identifier.Up});
+.)
+
+Rules for selected_component. :
+(.
+      Gela.Pass_Utils.Resolve.Selected_Component
+        (Self.Compilation,
+         ${selected_component.env_in},
+         ${prefix.Up},
+         ${Selector.full_name},
+         ${selected_component.Up});
+.)
+
+Rules for attribute_reference. :
+(.
+      Gela.Pass_Utils.Resolve.Attribute_Reference
+        (Self.Compilation,
+         ${attribute_reference.env_in},
+         ${prefix.Up},
+         ${Attribute_Designator_Identifier.full_name:0},
+         ${range_token.Index},
+         ${attribute_reference.Up});
+.)
+
+Rules for composite_constraint. :
+(.
+      ${composite_constraint.Up} := 0;  --  FIXME
+.)
+
+Rules for function_call. :
+(.
+      Gela.Pass_Utils.Resolve.Function_Call
+        (Self.Compilation,
+         ${function_call.env_in},
+         ${prefix.Up},
+         ${Function_Call_Parameters.Up},
+         ${function_call.Up});
+.)
+
+Rules for character_literal.character_literal_token :
+(.
+      ${character_literal.Up} := 0;  --  FIXME
+.)
+Rules for explicit_dereference. :
+(.
+      ${explicit_dereference.Up} := 0;  --  FIXME
+.)
+Rules for operator_symbol.operator_symbol_token :
+(.
+      ${operator_symbol.Up} := 0;  --  FIXME
+.)
+Rules for qualified_expression. :
+(.
+      ${qualified_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for delta_constraint. :
+(.
+      ${delta_constraint.Up} := ${Real_Range_Constraint.Up};
+.)
+
+Rules for digits_constraint. :
+(.
+      ${digits_constraint.Up} := ${Real_Range_Constraint.Up};
+.)
+
+Rules for range_attribute_reference.Range_Attribute :
+(.
+      --  depends on ${range_attribute_reference.env_in}
+      ${range_attribute_reference.Up} := ${Range_Attribute.Up};
+.)
+
+Rules for simple_expression_range. :
+(.
+      Gela.Pass_Utils.Resolve.Simple_Expression_Range
+        (Self.Compilation,
+         ${simple_expression_range.env_in},
+         ${Lower_Bound.Up},
+         ${Upper_Bound.Up},
+         ${simple_expression_range.Up});
+.)
+
+Rules for allocator. :
+(.
+      ${allocator.Up} := 0;  --  FIXME
+.)
+
+Rules for case_expression. :
+(.
+      ${case_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for extension_aggregate. :
+(.
+      ${extension_aggregate.Up} := 0;  --  FIXME
+.)
+
+Rules for if_expression.Expression_Paths :
+(.
+      ${if_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for null_literal.null_literal_token :
+(.
+      ${null_literal.Up} := 0;  --  FIXME
+.)
+
+Rules for numeric_literal.numeric_literal_token :
+(.
+      --  4.2 (8/2)
+      Gela.Pass_Utils.Resolve.Numeric_Literal
+        (Self.Compilation,
+         ${numeric_literal_token.Index}, ${numeric_literal.Up});
+.)
+
+Rules for quantified_expression. :
+(.
+      ${quantified_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for record_aggregate. :
+(.
+      ${record_aggregate.Up} := 0;  --  FIXME
+.)
+
+Rules for membership_test. :
+(.
+      ${membership_test.Up} := 0;  --  FIXME
+.)
+
+Rules for short_circuit. :
+(.
+      ${short_circuit.Up} := 0;  --  FIXME
+.)
+
+Rules for object_definition. :
+(.
+      ${object_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for subtype_indication. :
+(.
+      ${subtype_indication.Up} := ${subtype_mark.Up};
+.)
+
+Rules for anonymous_access_to_object_definition. :
+(.
+      ${anonymous_access_to_object_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_function_definition. :
+(.
+      ${anonymous_access_to_function_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for anonymous_access_to_procedure_definition. :
+(.
+      ${anonymous_access_to_procedure_definition.Up} := 0;  --  FIXME
+.)
+
+
+Rules for unconstrained_array_definition. :
+(.
+      ${unconstrained_array_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for constrained_array_definition. :
+(.
+      ${constrained_array_definition.Up} := 0;  --  FIXME
+.)

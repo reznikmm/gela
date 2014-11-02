@@ -1,0 +1,13 @@
+with "gela_common";
+
+project Gela_Context is
+
+   Build := Gela_Common.Build;
+   for Source_Dirs use ("../src/asis/context", Build & "/node");
+   for Object_Dir use Build & "/context";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Gela_Context;

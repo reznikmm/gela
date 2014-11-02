@@ -1,0 +1,16 @@
+with "matreshka/league";
+with "gela_common";
+with "gela_grammars";
+
+project Gela_AG is
+   for Source_Dirs use ("../tools/ag");
+
+   for Main use ("ag_driver", "yacc_driver", "to_ayacc");
+
+   for Object_Dir use Gela_Common.Build & "/ag";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Gela_AG;

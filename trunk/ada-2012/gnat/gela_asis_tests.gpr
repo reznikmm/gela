@@ -1,0 +1,19 @@
+with "gela_common";
+with "gela_asis";
+
+project Gela_ASIS_Tests is
+
+   for Main use
+     ("ts_00018", "def_name");
+
+   for Source_Dirs use
+     ("../tests/asis/ts_00018",
+      "../tests/asis/def_name");
+
+   for Object_Dir use Gela_Common.Build & "/asis";
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Gela_ASIS_Tests;
