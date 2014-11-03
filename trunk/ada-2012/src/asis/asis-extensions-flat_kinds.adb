@@ -997,14 +997,12 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Procedure_Body
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Procedure_Bodies.Procedure_Body_Access)
-   is null;
+      Node : not null Gela.Elements.Procedure_Bodies.Procedure_Body_Access);
 
    overriding procedure Procedure_Call_Statement
      (Self : in out Visiter;
       Node : not null Gela.Elements.Procedure_Call_Statements.
-        Procedure_Call_Statement_Access)
-   is null;
+        Procedure_Call_Statement_Access);
 
    overriding procedure Procedure_Declaration
      (Self : in out Visiter;
@@ -1294,6 +1292,33 @@ package body Asis.Extensions.Flat_Kinds is
       Element.Data.Visit (V);
       return V.Result;
    end Flat_Kind;
+
+   --------------------
+   -- Procedure_Body --
+   --------------------
+
+   overriding procedure Procedure_Body
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Procedure_Bodies.Procedure_Body_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Procedure_Body_Declaration;
+   end Procedure_Body;
+
+   ------------------------------
+   -- Procedure_Call_Statement --
+   ------------------------------
+
+   overriding procedure Procedure_Call_Statement
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Procedure_Call_Statements.
+        Procedure_Call_Statement_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Procedure_Call_Statement;
+   end Procedure_Call_Statement;
 
    ------------------------
    -- Selected_Component --

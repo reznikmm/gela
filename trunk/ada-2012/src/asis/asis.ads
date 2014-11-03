@@ -914,7 +914,7 @@ package Asis is
       An_Anonymous_Access_To_Protected_Function);  --  3.10(6) access protected
                                                    --                 function
 
-   subtype An_Anonymous_Access_to_Object_Definition is Access_Definition_Kinds
+   subtype An_Anonymous_Access_To_Object_Definition is Access_Definition_Kinds
       range An_Anonymous_Access_To_Variable .. An_Anonymous_Access_To_Constant;
 
    subtype An_Anonymous_Access_to_Subprogram_Definition
