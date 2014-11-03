@@ -1,0 +1,17 @@
+with "gela_common";
+with "gela_asis";
+
+project Compiler is
+
+   for Main use ("gela-compiler.adb");
+
+   for Source_Dirs use
+     ("../source/compiler");
+
+   for Object_Dir use Gela_Common.Build;
+
+   package Compiler is
+      for Default_Switches ("ada") use Gela_Common.Check_Ada_Switches;
+   end Compiler;
+
+end Compiler;
