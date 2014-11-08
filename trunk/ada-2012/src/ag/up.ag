@@ -39,6 +39,7 @@ Synthesized attributes
   short_circuit,
   simple_expression,
   simple_expression_range,
+  string_literal,
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
@@ -177,6 +178,13 @@ Rules for numeric_literal.numeric_literal_token :
         (Self.Compilation,
          ${numeric_literal_token.Index}, ${numeric_literal.Up});
 .)
+
+Rules for string_literal.string_literal_token :
+(.
+      --  LARL syntax has only operator_symbol
+      ${string_literal.Up} := 0;
+.)
+
 
 Rules for quantified_expression. :
 (.

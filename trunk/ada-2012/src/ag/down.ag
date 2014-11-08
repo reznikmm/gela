@@ -69,6 +69,7 @@ Inherited attributes
   simple_expression_range,
   simple_expression_range_dr,
   simple_name,
+  string_literal,
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,

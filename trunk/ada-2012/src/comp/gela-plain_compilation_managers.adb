@@ -8,7 +8,7 @@ with Gela.Elements.Compilations;
 with Gela.Elements.Subunits;
 with Gela.LARL_Parsers;
 with Gela.Lexers;
-with Gela.Node_Factories;
+with Gela.Fix_Node_Factories;
 with Gela.Pass_List;
 with Gela.Plain_Compilations;
 with Gela.Source_Finders;
@@ -819,8 +819,8 @@ package body Gela.Plain_Compilation_Managers is
       Parser  : Gela.LARL_Parsers.Parser (Self.Context);
       Root    : Gela.Elements.Compilations.Compilation_Access;
       Last    : Gela.Lexical_Types.Token_Index;
-      Factory : constant Gela.Node_Factories.Element_Factory_Access :=
-        new Gela.Node_Factories.Element_Factory (C);
+      Factory : constant Gela.Fix_Node_Factories.Element_Factory_Access :=
+        new Gela.Fix_Node_Factories.Element_Factory (C);
    begin
       Comp.Initialize
         (Text_Name => File,

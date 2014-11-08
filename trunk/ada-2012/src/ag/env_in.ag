@@ -283,6 +283,7 @@ Inherited attributes
   single_protected_declaration,
   single_task_declaration,
   statement,
+  string_literal,
   subtype_declaration,
   subtype_indication,
   subtype_indication_or_access_definition,

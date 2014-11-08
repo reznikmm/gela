@@ -1601,6 +1601,7 @@ signed_integer_type_definition ::=
 simple_expression ::=
     numeric_literal |
     null_literal |
+    string_literal |
     record_aggregate |
     extension_aggregate |
     name |
@@ -1663,6 +1664,8 @@ statement ::=
   accept_statement |
   selective_accept |
   asynchronous_select;
+
+string_literal ::= token <string_literal_token>;
 
 subtype_declaration ::=
   token <subtype_token>
