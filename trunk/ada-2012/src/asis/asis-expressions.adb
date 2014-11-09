@@ -11,12 +11,16 @@
 
 with Gela.Compilations;
 with Gela.Element_Visiters;
+with Gela.Elements.Associations;
 with Gela.Elements.Defining_Names;
+with Gela.Elements.Expression_Or_Boxes;
 with Gela.Elements.Identifiers;
-with Gela.Lexical_Types;
+with Gela.Elements.Numeric_Literals;
 with Gela.Elements.Selected_Components;
-with Gela.Elements.Selector_Names;
 with Gela.Elements.Selected_Identifiers;
+with Gela.Elements.Selector_Names;
+with Gela.Elements.String_Literals;
+with Gela.Lexical_Types;
 
 package body Asis.Expressions is
 
@@ -28,10 +32,38 @@ package body Asis.Expressions is
      (Association : in Asis.Association)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Expression_Or_Boxes.
+                       Expression_Or_Box_Access;
+         end record;
+
+         overriding procedure Association
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Associations.Association_Access);
+
+      end Get;
+
+      package body Get is
+
+         -----------------
+         -- Association --
+         -----------------
+
+         overriding procedure Association
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Associations.Association_Access) is
+         begin
+            Self.Result := Node.Component_Expression;
+         end Association;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Association, "Actual_Parameter");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Association.Data.Visit (V);
+      return (Data => Gela.Elements.Element_Access (V.Result));
    end Actual_Parameter;
 
    ------------------------------------
@@ -679,10 +711,61 @@ package body Asis.Expressions is
      (Expression : in Asis.Expression)
       return Wide_String
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Symbol : Gela.Lexical_Types.Symbol;
+         end record;
+
+         overriding procedure Numeric_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Numeric_Literals.
+              Numeric_Literal_Access);
+
+         overriding procedure String_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.String_Literals.
+              String_Literal_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Numeric_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Numeric_Literals.
+              Numeric_Literal_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.Numeric_Literal_Token;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end Numeric_Literal;
+
+         overriding procedure String_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.String_Literals.
+              String_Literal_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.String_Literal_Token;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end String_Literal;
+
+      end Get;
+
+      V       : Get.Visiter;
+      Comp    : Gela.Compilations.Compilation_Access;
+      Context : Gela.Contexts.Context_Access;
    begin
       Check_Nil_Element (Expression, "Value_Image");
-      Raise_Not_Implemented ("");
-      return "";
+      Expression.Data.Visit (V);
+      Comp := Expression.Data.Enclosing_Compilation;
+      Context := Comp.Context;
+      return Context.Symbols.Image (V.Symbol).To_UTF_16_Wide_String;
    end Value_Image;
 
 end Asis.Expressions;

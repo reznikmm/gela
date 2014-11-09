@@ -1101,7 +1101,7 @@ Rules for entry_call_statement. :
 (.
    ${entry_call_statement.ast} :=
       +Self.Factory.Procedure_Call_Statement
-         (-${name.ast}, null, -${semicolon_token.ast});
+         (-${name.ast}, -${semicolon_token.ast});
 .)
 
 entry_declaration ::= 

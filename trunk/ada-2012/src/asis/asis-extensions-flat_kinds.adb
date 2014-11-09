@@ -169,6 +169,7 @@ with Gela.Elements.Simple_Expression_Ranges;
 with Gela.Elements.Simple_Return_Statements;
 with Gela.Elements.Single_Protected_Declarations;
 with Gela.Elements.Single_Task_Declarations;
+with Gela.Elements.String_Literals;
 with Gela.Elements.Subtype_Declarations;
 with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subunits;
@@ -1164,6 +1165,10 @@ package body Asis.Extensions.Flat_Kinds is
         Single_Task_Declaration_Access)
    is null;
 
+   overriding procedure String_Literal
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.String_Literals.String_Literal_Access);
+
    overriding procedure Subtype_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Subtype_Declarations.
@@ -1347,6 +1352,19 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Selected_Component;
    end Selected_Identifier;
+
+   --------------------
+   -- String_Literal --
+   --------------------
+
+   overriding procedure String_Literal
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.String_Literals.String_Literal_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_String_Literal;
+   end String_Literal;
 
    ------------------------
    -- Use_Package_Clause --

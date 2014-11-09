@@ -20,7 +20,6 @@ Inherited attributes
   Body_Declarative_Items,
   Body_Exception_Handlers,
   Body_Statements,
-  Call_Statement_Parameters,
   Case_Expression_Paths,
   Case_Path_Alternative_Choices,
   Case_Statement_Alternative_Choices,
@@ -382,11 +381,6 @@ Rules for Body_Exception_Handlers.exception_handler :
 Rules for Body_Statements.statement :
 (.
       ${statement.env_in} := ${Body_Statements.env_in};
-.)
-
-Rules for Call_Statement_Parameters.parameter_association :
-(.
-      ${parameter_association.env_in} := ${Call_Statement_Parameters.env_in};
 .)
 
 Rules for Case_Expression_Paths.case_expression_path :
@@ -2103,12 +2097,7 @@ Rules for procedure_body. :
 
 Rules for procedure_call_statement. :
 (.
-      ${Called_Name.env_in} := ${procedure_call_statement.env_in};
-.)
-
-Rules for procedure_call_statement. :
-(.
-      ${Call_Statement_Parameters.env_in} := ${procedure_call_statement.env_in};
+      ${Function_Call.env_in} := ${procedure_call_statement.env_in};
 .)
 
 Rules for procedure_declaration. :

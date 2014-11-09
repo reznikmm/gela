@@ -10,10 +10,12 @@
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
 with Gela.Element_Visiters;
-with Gela.Elements.Names;
+with Gela.Elements.Associations;
 with Gela.Elements.Function_Calls;
+with Gela.Elements.Names;
 with Gela.Elements.Prefixes;
 with Gela.Elements.Procedure_Call_Statements;
+with Gela.Elements.Record_Aggregates;
 
 package body Asis.Statements is
 
@@ -190,14 +192,60 @@ package body Asis.Statements is
       Normalized : in Boolean := False)
       return Asis.Association_List
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access)
+         is
+            Prefix : constant Gela.Elements.Names.Name_Access :=
+              Node.Function_Call;
+         begin
+            Prefix.Visit (Self);
+         end Procedure_Call_Statement;
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+         is
+            RA : constant Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access := Node.Function_Call_Parameters;
+            List  : constant Gela.Elements.Associations.
+              Association_Sequence_Access :=
+                RA.Record_Component_Associations;
+         begin
+            Self.Result := Gela.Elements.Element_Sequence_Access (List);
+         end Function_Call;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Statement, "Call_Statement_Parameters");
+      Statement.Data.Visit (V);
+
       if Normalized then
          Raise_Not_Implemented ("");
          return Asis.Nil_Element_List;
       else
-         Raise_Not_Implemented ("");
-         return Asis.Nil_Element_List;
+         return Asis.To_List (V.Result);
       end if;
    end Call_Statement_Parameters;
 
@@ -211,7 +259,6 @@ package body Asis.Statements is
    is
       package Get is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Found  : Boolean := True;
             Result : Gela.Elements.Element_Access;
          end record;
 
@@ -234,13 +281,9 @@ package body Asis.Statements is
               Procedure_Call_Statement_Access)
          is
             Prefix : constant Gela.Elements.Names.Name_Access :=
-              Node.Called_Name;
+              Node.Function_Call;
          begin
             Prefix.Visit (Self);
-
-            if not Self.Found then
-               Self.Result := Gela.Elements.Element_Access (Prefix);
-            end if;
          end Procedure_Call_Statement;
 
          overriding procedure Function_Call
@@ -251,7 +294,6 @@ package body Asis.Statements is
               Node.Prefix;
          begin
             Self.Result := Gela.Elements.Element_Access (Prefix);
-            Self.Found := True;
          end Function_Call;
 
       end Get;

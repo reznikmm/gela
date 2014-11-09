@@ -480,8 +480,8 @@ Rules for procedure_call_statement. :
       Gela.Pass_Utils.Resolve.Interpretation
         (Self.Compilation,
          ${procedure_call_statement.env_in},
-         ${Called_Name.Up},
-         ${Called_Name.Down});
+         ${Function_Call.Up},
+         ${Function_Call.Down});
 .)
 
 Rules for procedure_declaration. :

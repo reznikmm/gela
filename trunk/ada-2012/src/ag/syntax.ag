@@ -917,8 +917,7 @@ simple_expression_range_dr ::=
 ;
 
 procedure_call_statement ::=
-  name                    <Called_Name>
-  {parameter_association} <Call_Statement_Parameters>
+  name                    <Function_Call>
   token                   <semicolon_token>;
 
 return_object_specification ::= 

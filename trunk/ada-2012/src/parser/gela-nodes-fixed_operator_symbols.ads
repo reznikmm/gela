@@ -1,3 +1,6 @@
+--  This package provides special version of Operator_Symbol element.
+--  This element works as String_Literal or Operator_Symbol depending on
+--  its state.
 
 
 with Gela.Nodes.Operator_Symbols;
