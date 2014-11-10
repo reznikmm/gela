@@ -12,13 +12,20 @@
 with Asis.Elements;
 with Asis.Compilation_Units;
 
+with Gela.Compilations;
+
 with Gela.Element_Visiters;
+with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Entry_Bodies;
 with Gela.Elements.Function_Bodies;
 with Gela.Elements.Package_Bodies;
+with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Procedure_Bodies;
+with Gela.Elements.Procedure_Declarations;
 with Gela.Elements.Task_Bodies;
 with Gela.Elements.Statements;
+with Gela.Lexical_Types;
 
 package body Asis.Declarations is
 
@@ -596,10 +603,42 @@ package body Asis.Declarations is
      (Defining_Name : in Asis.Defining_Name)
       return Program_Text
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Symbol : Gela.Lexical_Types.Symbol;
+         end record;
+
+         overriding procedure Defining_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Defining_Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.Identifier_Token;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end Defining_Identifier;
+      end Get;
+
+      V       : Get.Visiter;
+      Comp    : Gela.Compilations.Compilation_Access;
+      Context : Gela.Contexts.Context_Access;
    begin
       Check_Nil_Element (Defining_Name, "Defining_Name_Image");
-      Raise_Not_Implemented ("");
-      return "";
+      Defining_Name.Data.Visit (V);
+      Comp := Defining_Name.Data.Enclosing_Compilation;
+      Context := Comp.Context;
+      return Context.Symbols.Image (V.Symbol).To_UTF_16_Wide_String;
    end Defining_Name_Image;
 
    ---------------------
@@ -832,10 +871,65 @@ package body Asis.Declarations is
      (Declaration : in Asis.Declaration)
       return Asis.Defining_Name_List
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Name  : Gela.Elements.Element_Access;
+            Names : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access)
+         is
+            Name : constant Gela.Elements.Defining_Program_Unit_Names.
+              Defining_Program_Unit_Name_Access := Node.Names;
+         begin
+            Self.Name := Gela.Elements.Element_Access (Name);
+         end Procedure_Body;
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access)
+         is
+            Name : constant Gela.Elements.Defining_Program_Unit_Names.
+              Defining_Program_Unit_Name_Access := Node.Names;
+         begin
+            Self.Name := Gela.Elements.Element_Access (Name);
+         end Procedure_Declaration;
+
+      end Get;
+
+      use type Gela.Elements.Element_Access;
+      use type Gela.Elements.Element_Sequence_Access;
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Names");
-      Raise_Not_Implemented ("");
-      return Nil_Element_List;
+      Declaration.Data.Visit (V);
+
+      if V.Name /= null then
+         return (1 => (Data => V.Name));
+      elsif V.Names /= null then
+         return Asis.To_List (V.Names);
+      else
+         Raise_Not_Implemented ("");
+         return Asis.Nil_Element_List;
+      end if;
    end Names;
 
    -----------------------------
@@ -913,10 +1007,40 @@ package body Asis.Declarations is
      (Declaration : in Asis.Declaration)
       return Asis.Parameter_Specification_List
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            List : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access)
+         is
+            List : constant Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Sequence_Access :=
+                Node.Parameter_Profile;
+         begin
+            Self.List := Gela.Elements.Element_Sequence_Access (List);
+         end Procedure_Declaration;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Parameter_Profile");
-      Raise_Not_Implemented ("");
-      return Nil_Element_List;
+      Declaration.Data.Visit (V);
+
+      return Asis.To_List (V.List);
    end Parameter_Profile;
 
    ---------------------------

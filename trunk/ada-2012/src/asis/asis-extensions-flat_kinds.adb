@@ -264,8 +264,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Association
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Associations.Association_Access)
-   is null;
+      Node : not null Gela.Elements.Associations.Association_Access);
 
    overriding procedure Asynchronous_Select
      (Self : in out Visiter;
@@ -716,8 +715,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Function_Call
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
-   is null;
+      Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
 
    overriding procedure Function_Declaration
      (Self : in out Visiter;
@@ -1008,8 +1006,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Procedure_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Procedure_Declarations.
-        Procedure_Declaration_Access)
-   is null;
+        Procedure_Declaration_Access);
 
    overriding procedure Procedure_Instantiation
      (Self : in out Visiter;
@@ -1071,8 +1068,8 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Record_Aggregate
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Record_Aggregates.Record_Aggregate_Access)
-   is null;
+      Node : not null Gela.Elements.Record_Aggregates.
+        Record_Aggregate_Access);
 
    overriding procedure Record_Definition
      (Self : in out Visiter;
@@ -1260,6 +1257,15 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.With_Clauses.With_Clause_Access);
 
+   overriding procedure Association
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Associations.Association_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Parameter_Association;
+   end Association;
+
    -------------------------
    -- Defining_Identifier --
    -------------------------
@@ -1298,6 +1304,19 @@ package body Asis.Extensions.Flat_Kinds is
       return V.Result;
    end Flat_Kind;
 
+   -------------------
+   -- Function_Call --
+   -------------------
+
+   overriding procedure Function_Call
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Function_Call;
+   end Function_Call;
+
    --------------------
    -- Procedure_Body --
    --------------------
@@ -1324,6 +1343,25 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Procedure_Call_Statement;
    end Procedure_Call_Statement;
+
+   overriding procedure Procedure_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Procedure_Declarations.
+        Procedure_Declaration_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Procedure_Declaration;
+   end Procedure_Declaration;
+
+   overriding procedure Record_Aggregate
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Record_Aggregates.Record_Aggregate_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Record_Aggregate;
+   end Record_Aggregate;
 
    ------------------------
    -- Selected_Component --

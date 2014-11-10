@@ -713,7 +713,7 @@ package body Asis.Expressions is
    is
       package Get is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Symbol : Gela.Lexical_Types.Symbol;
+            Token : Gela.Lexical_Types.Token_Count;
          end record;
 
          overriding procedure Numeric_Literal
@@ -734,12 +734,8 @@ package body Asis.Expressions is
             Node : not null Gela.Elements.Numeric_Literals.
               Numeric_Literal_Access)
          is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Numeric_Literal_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Token := Node.Numeric_Literal_Token;
          end Numeric_Literal;
 
          overriding procedure String_Literal
@@ -747,25 +743,23 @@ package body Asis.Expressions is
             Node : not null Gela.Elements.String_Literals.
               String_Literal_Access)
          is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.String_Literal_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Token := Node.String_Literal_Token;
          end String_Literal;
 
       end Get;
 
       V       : Get.Visiter;
       Comp    : Gela.Compilations.Compilation_Access;
-      Context : Gela.Contexts.Context_Access;
+      Source  : League.Strings.Universal_String;
+      Token   : Gela.Lexical_Types.Token;
    begin
       Check_Nil_Element (Expression, "Value_Image");
       Expression.Data.Visit (V);
       Comp := Expression.Data.Enclosing_Compilation;
-      Context := Comp.Context;
-      return Context.Symbols.Image (V.Symbol).To_UTF_16_Wide_String;
+      Source := Comp.Source;
+      Token := Comp.Get_Token (V.Token);
+      return Source.Slice (Token.First, Token.Last).To_UTF_16_Wide_String;
    end Value_Image;
 
 end Asis.Expressions;
