@@ -50,6 +50,37 @@ package body Gela.Engines is
         Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Pos (Item.Kind) + This;
    end Hash;
 
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Item : Asis.Element) return Ada.Containers.Hash_Type is
+   begin
+      return Ada.Containers.Hash_Type (Asis.Elements.Hash (Item));
+   end Hash;
+
+   ---------
+   -- Map --
+   ---------
+
+   function Map
+     (Self     : access Engine;
+      Element  : Asis.Element) return Mapped_Element
+   is
+      Pos : constant Element_Maps.Cursor := Self.Element_Map.Find (Element);
+      Result : Mapped_Element;
+   begin
+      if Element_Maps.Has_Element (Pos) then
+         Result := Element_Maps.Element (Pos);
+      else
+         Result := Self.Next_Mapped;
+         Self.Element_Map.Insert (Element, Result);
+         Self.Next_Mapped := Self.Next_Mapped + 1;
+      end if;
+
+      return Result;
+   end Map;
+
    -------------------
    -- Register_Rule --
    -------------------

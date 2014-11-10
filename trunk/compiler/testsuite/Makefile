@@ -10,7 +10,7 @@ run: $(EXE)
 
 $(ODIR)/%.ll: %.ADA
 	echo ADACOMP -o $@ $<
-	cat support/a22006b.s > $@
+	cat support/a22006b.ll > $@
 
 $(ODIR)/%.ll: %.c
 	clang -S -emit-llvm -o $@ $<

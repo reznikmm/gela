@@ -20,7 +20,7 @@ void report__test (_ada_string * name, _ada_string * descr)
     test_name_len = max_name_len;
   
   for (j=0; j<test_name_len; j++)
-    test_name[j] = name->data[name->lower + j];
+    test_name[j] = name->data[j];
 
   printf ("\n,.,. %.*s ACATS 3.0 14-11-02 15:50:00\n",
           test_name_len,
@@ -29,7 +29,7 @@ void report__test (_ada_string * name, _ada_string * descr)
           test_name_len,
           test_name,
           descr->upper - descr->lower + 1,
-          descr->data + descr->lower);
+          descr->data);
 
 }
 
@@ -40,10 +40,12 @@ void report__result ()
     printf ("==== %.*s PASSED ============================\n",
             test_name_len,
             test_name);
+    break;
   case does_not_apply:
     printf ("++++ %.*s NOT-APPLICABLE ++++++++++++++++++++\n",
             test_name_len,
             test_name);
+    break;
   case action_required:
     printf ("!!!! %.*s TENTATIVELY PASSED !!!!!!!!!!!!!!!!\n",
             test_name_len,

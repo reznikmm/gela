@@ -1,3 +1,5 @@
+with Ada.Characters.Latin_1;
+
 package body Gela.Properties.Text is
 
    -------------
@@ -11,17 +13,31 @@ package body Gela.Properties.Text is
    is
       Pos : constant String_Hash_Maps.Cursor := Self.String_Map.Find (Value);
    begin
-      if String_Hash_Maps.Has_Element (Pos) then
+      if Value = "" then
+         return 0;
+      elsif String_Hash_Maps.Has_Element (Pos) then
          return String_Hash_Maps.Element (Pos);
       end if;
+
       Self.String_Vector.Append
         (Ada.Strings.Unbounded.To_Unbounded_String (Value));
+
       return Result : constant Text :=
         2 * Text (Self.String_Vector.Last_Index)
       do
          Self.String_Map.Insert (Value, Result);
       end return;
    end Literal;
+
+   --------------
+   -- New_Line --
+   --------------
+
+   function New_Line
+     (Self  : access Text_Container) return Text is
+   begin
+      return Self.Literal ((1 => Ada.Characters.Latin_1.LF));
+   end New_Line;
 
    ----------
    -- Join --
@@ -62,9 +78,14 @@ package body Gela.Properties.Text is
       Node : constant Join_Node := (Left, Right);
       Pos : constant Join_Node_Hash_Maps.Cursor := Self.Join_Map.Find (Node);
    begin
-      if Join_Node_Hash_Maps.Has_Element (Pos) then
+      if Left = 0 then
+         return Right;
+      elsif Right = 0 then
+         return Left;
+      elsif Join_Node_Hash_Maps.Has_Element (Pos) then
          return Join_Node_Hash_Maps.Element (Pos);
       end if;
+
       Self.Join_Vector.Append (Node);
 
       return Result : constant Text :=
@@ -72,6 +93,20 @@ package body Gela.Properties.Text is
       do
          Self.Join_Map.Insert (Node, Result);
       end return;
+   end Join;
+
+   ----------
+   -- Join --
+   ----------
+
+   function Join
+     (Self  : access Text_Container;
+      Left  : Text;
+      Right : Natural) return Text
+   is
+      Image : constant String := Natural'Image (Right);
+   begin
+      return Self.Join (Left, Image (2 .. Image'Last));
    end Join;
 
    -----------
@@ -103,7 +138,9 @@ package body Gela.Properties.Text is
          end if;
       end Add;
    begin
-      Add (Item);
+      if Item /= 0 then
+         Add (Item);
+      end if;
 
       return Ada.Strings.Unbounded.To_String (Result);
    end Value;

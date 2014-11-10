@@ -15,6 +15,9 @@ package Gela.Properties.Text is
      (Self  : access Text_Container;
       Value : String) return Text;
 
+   function New_Line
+     (Self  : access Text_Container) return Text;
+
    function Join
      (Self  : access Text_Container;
       Left  : Text;
@@ -29,6 +32,11 @@ package Gela.Properties.Text is
      (Self  : access Text_Container;
       Left  : Text;
       Right : Text) return Text;
+
+   function Join
+     (Self  : access Text_Container;
+      Left  : Text;
+      Right : Natural) return Text;
 
    function Value
      (Self : access Text_Container;

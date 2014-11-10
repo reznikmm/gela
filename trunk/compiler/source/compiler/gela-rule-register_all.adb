@@ -1,8 +1,15 @@
 with Asis.Extensions.Flat_Kinds;
 
 with Gela.Properties;
+with Gela.Rule.Declarations.Defining_Identifier;
+with Gela.Rule.Declarations.Subprogram;
 with Gela.Rule.Declarations.Subprogram_Body;
+with Gela.Rule.Expressions.Identifier;
+with Gela.Rule.Expressions.String_Literal;
 with Gela.Rule.Statements.Procedure_Call;
+
+with Gela.Rule.Empty;
+with Gela.Rule.Join_Nested;
 
 procedure Gela.Rule.Register_All
   (Engine : in out Gela.Engines.Engine)
@@ -18,5 +25,55 @@ begin
      (Kind     => F.A_Procedure_Call_Statement,
       Property => N.Code,
       Action   => Statements.Procedure_Call.Code'Access);
+
+   Engine.Register_Rule
+     (Kind     => F.A_Defining_Identifier,
+      Property => N.Global,
+      Action   => Gela.Rule.Empty.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Function_Call,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.An_Identifier,
+      Property => N.Global,
+      Action   => Gela.Rule.Expressions.Identifier.Global'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Parameter_Association,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Procedure_Declaration,
+      Property => N.Global,
+      Action   => Gela.Rule.Declarations.Subprogram.Global'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Procedure_Body_Declaration,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Procedure_Call_Statement,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Record_Aggregate,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_String_Literal,
+      Property => N.Global,
+      Action   => Gela.Rule.Expressions.String_Literal.Global'Access);
+
+   Engine.Register_Rule
+     (Kind     => F.A_Defining_Identifier,
+      Property => N.Value,
+      Action   => Gela.Rule.Declarations.Defining_Identifier.Value'Access);
+   Engine.Register_Rule
+     (Kind     => F.An_Identifier,
+      Property => N.Value,
+      Action   => Gela.Rule.Expressions.Identifier.Value'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_String_Literal,
+      Property => N.Value,
+      Action   => Gela.Rule.Expressions.String_Literal.Value'Access);
 end Gela.Rule.Register_All;
 

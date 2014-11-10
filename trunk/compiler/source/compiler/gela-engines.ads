@@ -1,6 +1,7 @@
 with Ada.Containers.Hashed_Maps;
 
 with Asis;
+with Asis.Elements;
 with Asis.Extensions.Flat_Kinds;
 
 with Gela.Properties.Text;
@@ -31,6 +32,14 @@ package Gela.Engines is
    function Text_Container
      (Self : access Engine) return Gela.Properties.Text.Text_Container_Access;
 
+   type Mapped_Element is new Positive;
+   --  Persistent mapping Asis.Element to Positive
+
+   function Map
+     (Self     : access Engine;
+      Element  : Asis.Element) return Mapped_Element;
+   --  Return mapped index or create mapping if absent
+
 private
 
    type Rule_Key is record
@@ -46,8 +55,19 @@ private
       Hash            => Hash,
       Equivalent_Keys => "=");
 
+   function Hash (Item : Asis.Element) return Ada.Containers.Hash_Type;
+
+   package Element_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Asis.Element,
+      Element_Type    => Mapped_Element,
+      Hash            => Hash,
+      Equivalent_Keys => Asis.Elements.Is_Identical,
+      "="             => "=");
+
    type Engine is tagged limited record
       Text_Rules     : Text_Rule_Maps.Map;
+      Element_Map    : Element_Maps.Map;
+      Next_Mapped    : Mapped_Element := 1;
       Text_Container : aliased Gela.Properties.Text.Text_Container;
    end record;
 
