@@ -1,16 +1,18 @@
-TEST= A22006B
-ODIR = /tmp
+TEST = A22006B
+GELA_BUILD ?= ../build
+ODIR = $(GELA_BUILD)
 EXE = $(patsubst %,$(ODIR)/%,$(TEST:=.exe))
 
-VPATH=acats/A:support
+ACATS = ../../../acats
+ADACOMP = $(ODIR)/gela-compiler -I$(ACATS)/include/ 
+VPATH=$(ACATS)/A:support
 
 run: $(EXE)
 	for J in $(EXE); do lli $$J; done | tee $(ODIR)/run.log
 	diff -u expected $(ODIR)/run.log
 
 $(ODIR)/%.ll: %.ADA
-	echo ADACOMP -o $@ $<
-	cat support/a22006b.ll > $@
+	$(ADACOMP) -I$(dir $<) $(notdir $<) > $@
 
 $(ODIR)/%.ll: %.c
 	clang -S -emit-llvm -o $@ $<

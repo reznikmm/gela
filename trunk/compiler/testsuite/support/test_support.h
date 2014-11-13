@@ -4,5 +4,5 @@ typedef struct {
   int    upper;
 } _ada_string;
 
-void report__test (_ada_string * name, _ada_string * descr);
-void report__result ();
+void TEST (_ada_string * name, _ada_string * descr);
+void RESULT ();

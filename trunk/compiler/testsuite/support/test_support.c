@@ -9,7 +9,7 @@ static status test_status = fail;
 static char test_name [max_name_len];
 static int test_name_len;
 
-void report__test (_ada_string * name, _ada_string * descr)
+void TEST (_ada_string * name, _ada_string * descr)
 {
   int j;
   test_status = pass;
@@ -33,7 +33,7 @@ void report__test (_ada_string * name, _ada_string * descr)
 
 }
 
-void report__result ()
+void RESULT ()
 {
   switch (test_status){
   case pass:
