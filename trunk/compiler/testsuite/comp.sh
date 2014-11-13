@@ -10,7 +10,7 @@ file=${array[$len-2]}
 extension="${file##*.}"
 basename="${file%.*}"
 testsuite=`dirname $0`
-build=${GELA_BUILD:-/tmp}
+build=${GELA_BUILD:-build}
 
 $build/gela-compiler $args > $build/${basename}.ll
 
