@@ -41,6 +41,11 @@ procedure Gela.Test_Driver2 is
      Build & "/report.xml";
    --  Where to store report file (/tmp/build/report.xml)
 
+   Compiler_Test : constant League.Strings.Universal_String :=
+     Gela.Host.Source_Root & "/compiler/testsuite";
+   --  Path to directory containing compiler tests sources
+   --  (trunk/compiler/testsuite)
+
 --     procedure Generate is
 --        Grammars_Directory : constant League.Strings.Universal_String :=
 --          Gela.Host.Source_Root & "/source/grammars";
@@ -87,8 +92,13 @@ begin
           (Command   => Build & "/asis/def_name",
            List_File => Tests & "/asis/def_name/list.txt",
            ACATS     => ACATS_Dir);
+      Run_Compiler : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.ACATS.Create
+          (Command   => Compiler_Test & "/comp.sh",
+           List_File => Compiler_Test & "/list.txt",
+           ACATS     => ACATS_Dir);
       Iterator : Gela.Test_Iterators.Append.Iterator :=
-        Dirs + Lexer + Parser + Def_Name;
+        Dirs + Lexer + Parser + Def_Name + Run_Compiler;
    begin
       Iterator.Start;
 
