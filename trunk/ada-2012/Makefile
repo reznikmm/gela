@@ -4,10 +4,10 @@ YACC_DRIVER=$(GELA_BUILD)/ag/yacc_driver
 UAFLEX=$(GELA_BUILD)/tools/uaflex-driver
 AST=$(GELA_BUILD)/ada-ast.ag
 AST_STAMP=$(GELA_BUILD)/.stamp-ast
-SYNTAX=src/asis/sourcer/ada-lalr.ag
+SYNTAX=src/parser/ada-lalr.ag
 BUILD_CHOP=$(GELA_BUILD)/chop
 BUILD_NODE=$(GELA_BUILD)/node
-LEXER=$(abspath src/asis/sourcer/ada.l)
+LEXER=$(abspath src/lexer/ada.l)
 LEXER_STAMP=$(GELA_BUILD)/.stamp-ada.l
 PARSER=$(GELA_BUILD)/.stamp-ada.p
 
