@@ -4,6 +4,7 @@ with Gela.Plain_Dependency_Lists;
 with Gela.Plain_Compilation_Managers;
 with Gela.Plain_Compilation_Units;
 with Gela.Plain_Compilation_Unit_Sets;
+with Gela.Plain_Value_Sets;
 
 package body Gela.Plain_Contexts is
 
@@ -200,6 +201,9 @@ package body Gela.Plain_Contexts is
           new Gela.Plain_Compilation_Managers.Compilation_Manager
             (Self'Unchecked_Access, Self'Unchecked_Access);
 
+      Values : constant Gela.Plain_Value_Sets.Value_Set_Access :=
+        new Gela.Plain_Value_Sets.Value_Set;
+
       Path_Value : League.Strings.Universal_String := Env;
    begin
       if not Path_Value.Is_Empty then
@@ -219,6 +223,7 @@ package body Gela.Plain_Contexts is
         Gela.Dependency_Lists.Dependency_List_Access (Deps);
       Self.Manager :=
         Gela.Compilation_Managers.Compilation_Manager_Access (Manager);
+      Self.Values := Gela.Value_Sets.Value_Set_Access (Values);
 
       if not Comp.Is_Empty then
          Manager.Read_Compilation (Comp);
@@ -310,5 +315,11 @@ package body Gela.Plain_Contexts is
    begin
       return (1 .. 0 => <>);
    end Unit_Containers;
+
+   overriding function Values
+     (Self : access Context) return Gela.Value_Sets.Value_Set_Access is
+   begin
+      return Self.Values;
+   end Values;
 
 end Gela.Plain_Contexts;

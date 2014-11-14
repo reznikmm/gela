@@ -30,4 +30,7 @@ package Gela.Semantic_Types is
    type Type_Index is new Natural;
    --  Index of type view
 
+   type Value_Index is new Natural;
+   --  Index of static value
+
 end Gela.Semantic_Types;

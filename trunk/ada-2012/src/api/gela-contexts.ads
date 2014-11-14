@@ -5,6 +5,7 @@ with Gela.Error_Sets;
 with Gela.Interpretations;
 with Gela.Symbol_Sets;
 with Gela.Type_Managers;
+with Gela.Value_Sets;
 limited with Gela.Compilation_Managers;
 limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Dependency_Lists;
@@ -92,5 +93,10 @@ package Gela.Contexts is
      (Self  : access Context)
       return Gela.Type_Managers.Type_Manager_Access is abstract;
    --  Return type manager instance
+
+   not overriding function Values
+     (Self : access Context)
+      return Gela.Value_Sets.Value_Set_Access is abstract;
+   --  Return set of valuess used in all units of given context
 
 end Gela.Contexts;

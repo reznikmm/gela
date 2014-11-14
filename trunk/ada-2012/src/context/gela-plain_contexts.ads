@@ -26,6 +26,7 @@ with Gela.Source_Finders;
 with Gela.Symbol_Sets;
 with Gela.Type_Managers;
 with Gela.Unit_Containers;
+with Gela.Value_Sets;
 
 package Gela.Plain_Contexts is
    pragma Preelaborate;
@@ -50,6 +51,7 @@ private
       Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
       Finder  : Gela.Source_Finders.Source_Finder_Access;
       Manager : Gela.Compilation_Managers.Compilation_Manager_Access;
+      Values  : Gela.Value_Sets.Value_Set_Access;
       Schema  : aliased Gela.GNAT_Naming_Schemas.Naming_Schema
         (Context'Unchecked_Access);
       Env     : aliased Gela.Plain_Environments.Environment_Set
@@ -146,5 +148,8 @@ private
 
    overriding function Types
      (Self  : access Context) return Gela.Type_Managers.Type_Manager_Access;
+
+   overriding function Values
+     (Self : access Context) return Gela.Value_Sets.Value_Set_Access;
 
 end Gela.Plain_Contexts;
