@@ -1,3 +1,6 @@
+with Gela.Compilations;
+with Gela.Lexical_Types;
+
 with Gela.Element_Visiters;
 with Gela.Elements.Abort_Statements;
 with Gela.Elements.Accept_Statements;
@@ -904,8 +907,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Operator_Symbol
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Operator_Symbols.Operator_Symbol_Access)
-   is null;
+      Node : not null Gela.Elements.Operator_Symbols.Operator_Symbol_Access);
 
    overriding procedure Ordinary_Fixed_Point_Definition
      (Self : in out Visiter;
@@ -1316,6 +1318,30 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Function_Call;
    end Function_Call;
+
+   overriding procedure Operator_Symbol
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Operator_Symbols.Operator_Symbol_Access)
+   is
+      Comp    : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+      Token : constant Gela.Lexical_Types.Token :=
+        Comp.Get_Token (Node.Operator_Symbol_Token);
+      Map : constant array
+        (Gela.Lexical_Types.Symbol range 1 .. 19) of Element_Flat_Kind
+        :=
+        (A_Less_Than_Operator, An_Equal_Operator, A_Greater_Than_Operator,
+         A_Minus_Operator, A_Divide_Operator, A_Multiply_Operator,
+         A_Concatenate_Operator, A_Plus_Operator,
+         A_Less_Than_Or_Equal_Operator, A_Greater_Than_Or_Equal_Operator,
+         A_Not_Equal_Operator, An_Exponentiate_Operator, An_Or_Operator,
+         An_And_Operator, An_Xor_Operator, A_Mod_Operator, A_Rem_Operator,
+         An_Abs_Operator, A_Not_Operator);
+   begin
+      if Token.Symbol in Map'Range then
+         Self.Result := Map (Token.Symbol);
+      end if;
+   end Operator_Symbol;
 
    --------------------
    -- Procedure_Body --

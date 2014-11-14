@@ -200,7 +200,15 @@ package body Gela.Lexical_Handler is
    is
       Length : constant Positive := Scanner.Get_Token_Length;
       Value : Gela.Lexical_Types.Token;
+      Text   : League.Strings.Universal_String;
+      Symbol : Gela.Lexical_Types.Symbol;
    begin
+      Text.Append ('"');
+      Text.Append (Scanner.Get_Text);
+      Text.Append ('"');
+
+      Self.Symbols.Fetch (Text, Symbol);
+
       Scanner.Set_Start_Condition (Gela.Scanner_Types.Allow_Char);
       Token := Map (Rule);
       Skip := False;
@@ -211,7 +219,7 @@ package body Gela.Lexical_Handler is
          Last      => Self.Last + Length - 1,
          Separator => Self.Separator,
          Kind      => Token,
-         Symbol    => 0);
+         Symbol    => Symbol);
 
       Self.Output.New_Token (Value);
 
