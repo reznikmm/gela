@@ -27,6 +27,14 @@ package Gela.Engines is
      (Self     : in out Engine;
       Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
       Property : Gela.Properties.Property_Name;
+      Action   : Text_Rule_Callback;
+      Redefine : Boolean := False);
+
+   procedure Register_Rule
+     (Self     : in out Engine;
+      From     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      To       : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      Property : Gela.Properties.Property_Name;
       Action   : Text_Rule_Callback);
 
    function Text_Container

@@ -89,11 +89,36 @@ package body Gela.Engines is
      (Self     : in out Engine;
       Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
       Property : Gela.Properties.Property_Name;
-      Action   : Text_Rule_Callback)
+      Action   : Text_Rule_Callback;
+      Redefine : Boolean := False)
    is
       Key : constant Rule_Key := (Kind, Property);
    begin
-      Self.Text_Rules.Insert (Key, Action);
+      if not Redefine then
+         Self.Text_Rules.Insert (Key, Action);
+      elsif not Self.Text_Rules.Contains (Key) then
+         raise Constraint_Error with "Not redefined " &
+           Gela.Properties.Property_Name'Image (Property) & " for " &
+           Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Image (Kind);
+      else
+         Self.Text_Rules.Include (Key, Action);
+      end if;
+   end Register_Rule;
+
+   -------------------
+   -- Register_Rule --
+   -------------------
+
+   procedure Register_Rule
+     (Self     : in out Engine;
+      From     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      To       : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      Property : Gela.Properties.Property_Name;
+      Action   : Text_Rule_Callback) is
+   begin
+      for J in From .. To loop
+         Self.Register_Rule (J, Property, Action);
+      end loop;
    end Register_Rule;
 
    --------------------

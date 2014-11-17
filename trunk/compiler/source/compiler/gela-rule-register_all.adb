@@ -5,7 +5,6 @@ with Gela.Rule.Declarations.Defining_Identifier;
 with Gela.Rule.Declarations.Subprogram;
 with Gela.Rule.Declarations.Subprogram_Body;
 with Gela.Rule.Expressions.Identifier;
-with Gela.Rule.Expressions.String_Literal;
 with Gela.Rule.Statements.Procedure_Call;
 
 with Gela.Rule.Empty;
@@ -31,14 +30,6 @@ begin
       Property => N.Global,
       Action   => Gela.Rule.Empty.Text'Access);
    Engine.Register_Rule
-     (Kind     => F.A_Function_Call,
-      Property => N.Global,
-      Action   => Gela.Rule.Join_Nested.Text'Access);
-   Engine.Register_Rule
-     (Kind     => F.An_Identifier,
-      Property => N.Global,
-      Action   => Gela.Rule.Expressions.Identifier.Global'Access);
-   Engine.Register_Rule
      (Kind     => F.A_Parameter_Association,
       Property => N.Global,
       Action   => Gela.Rule.Join_Nested.Text'Access);
@@ -55,25 +46,30 @@ begin
       Property => N.Global,
       Action   => Gela.Rule.Join_Nested.Text'Access);
    Engine.Register_Rule
-     (Kind     => F.A_Record_Aggregate,
+     (From     => Asis.Extensions.Flat_Kinds.An_Expression'First,
+      To       => Asis.Extensions.Flat_Kinds.An_Expression'Last,
       Property => N.Global,
-      Action   => Gela.Rule.Join_Nested.Text'Access);
+      Action   => Gela.Rule.Expressions.Global'Access);
    Engine.Register_Rule
-     (Kind     => F.A_String_Literal,
+     (Kind     => F.An_Identifier,
       Property => N.Global,
-      Action   => Gela.Rule.Expressions.String_Literal.Global'Access);
+      Action   => Gela.Rule.Expressions.Identifier.Global'Access,
+      Redefine => True);
 
    Engine.Register_Rule
      (Kind     => F.A_Defining_Identifier,
-      Property => N.Value,
+      Property => N.Non_Static_Value,
       Action   => Gela.Rule.Declarations.Defining_Identifier.Value'Access);
    Engine.Register_Rule
      (Kind     => F.An_Identifier,
-      Property => N.Value,
-      Action   => Gela.Rule.Expressions.Identifier.Value'Access);
+      Property => N.Non_Static_Value,
+      Action   => Gela.Rule.Expressions.Identifier.Non_Static_Value'Access);
+
    Engine.Register_Rule
-     (Kind     => F.A_String_Literal,
+     (From     => Asis.Extensions.Flat_Kinds.An_Expression'First,
+      To       => Asis.Extensions.Flat_Kinds.An_Expression'Last,
       Property => N.Value,
-      Action   => Gela.Rule.Expressions.String_Literal.Value'Access);
+      Action   => Gela.Rule.Expressions.Value'Access);
+
 end Gela.Rule.Register_All;
 

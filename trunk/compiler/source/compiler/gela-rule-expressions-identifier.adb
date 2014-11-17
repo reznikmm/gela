@@ -27,7 +27,7 @@ package body Gela.Rule.Expressions.Identifier is
    -- Value --
    -----------
 
-   function Value
+   function Non_Static_Value
      (Engine   : access Gela.Engines.Engine;
       Element  : Asis.Element;
       Property : Gela.Properties.Property_Name)
@@ -46,6 +46,6 @@ package body Gela.Rule.Expressions.Identifier is
       Result := Engine.Text_Container.Join (Result, Txt);
 
       return Result;
-   end Value;
+   end Non_Static_Value;
 
 end Gela.Rule.Expressions.Identifier;

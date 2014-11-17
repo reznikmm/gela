@@ -24,7 +24,7 @@ package body Gela.Rule.Declarations.Subprogram is
       Result := Engine.Text_Container.Literal ("declare void ");
 
       Result := Engine.Text_Container.Join
-        (Result, Engine.Get (Name, Gela.Properties.Value));
+        (Result, Engine.Get (Name, Gela.Properties.Non_Static_Value));
 
       Result := Engine.Text_Container.Join (Result, "(");
 

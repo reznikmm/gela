@@ -11,7 +11,7 @@ package Gela.Rule.Expressions.Identifier is
       Property : Gela.Properties.Property_Name)
      return Gela.Properties.Text.Text;
 
-   function Value
+   function Non_Static_Value
      (Engine   : access Gela.Engines.Engine;
       Element  : Asis.Element;
       Property : Gela.Properties.Property_Name)
