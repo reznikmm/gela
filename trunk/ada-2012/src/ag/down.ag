@@ -947,6 +947,7 @@ Rules for formal_access_to_object_definition. :
 
 Rules for full_type_declaration. :
 (.
+      --  Deps on ${Names.Errors}
       ${Type_Declaration_View.Down} := 0;  --  FIXME
 .)
 
