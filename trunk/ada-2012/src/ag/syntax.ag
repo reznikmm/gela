@@ -127,9 +127,9 @@ assignment_statement ::=
 ;
 
 association ::=
-  {discrete_choice} <Array_Component_Choices>
-  token             <arrow_token>
-  expression_or_box <Component_Expression>;
+  {discrete_choice}  <Array_Component_Choices>
+  token              <arrow_token>
+  [expression_or_box <Component_Expression>];
 
 asynchronous_select ::=
   token                    <select_token>
