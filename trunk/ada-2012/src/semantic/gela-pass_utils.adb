@@ -7,6 +7,8 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
+with League.Strings;
+
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
@@ -324,6 +326,26 @@ package body Gela.Pass_Utils is
 
       return Env_2;
    end Add_Names_Create_Region;
+
+   -------------------------
+   -- Create_String_Value --
+   -------------------------
+
+   function Create_String_Value
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Full_Name     : Gela.Lexical_Types.Token_Index)
+      return Gela.Semantic_Types.Value_Index
+   is
+      Token  : constant Gela.Lexical_Types.Token := Comp.Get_Token (Full_Name);
+      Source : constant League.Strings.Universal_String := Comp.Source;
+      Image  : constant League.Strings.Universal_String :=
+        Source.Slice (Token.First, Token.Last);
+      Result : Gela.Semantic_Types.Value_Index;
+   begin
+      Comp.Context.Values.String_Literal (Image, Result);
+
+      return Result;
+   end Create_String_Value;
 
    --------------------
    -- Is_Enumeration --

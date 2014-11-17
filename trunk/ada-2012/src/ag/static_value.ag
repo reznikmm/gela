@@ -1,0 +1,16 @@
+Synthesized attributes
+operator_symbol,
+string_literal
+   : Gela.Semantic_Types.Value_Index : static_value;
+
+Rules for string_literal.string_literal_token :
+(.
+	  ${string_literal.static_value} := Gela.Pass_Utils.Create_String_Value
+	    (Self.Compilation, ${string_literal_token.Index});
+.)
+
+Rules for operator_symbol.operator_symbol_token :
+(.
+	  ${operator_symbol.static_value} := Gela.Pass_Utils.Create_String_Value
+	    (Self.Compilation, ${operator_symbol_token.Index});
+.)

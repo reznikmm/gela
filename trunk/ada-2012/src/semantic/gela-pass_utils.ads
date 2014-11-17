@@ -61,4 +61,10 @@ package Gela.Pass_Utils is
       return Gela.Semantic_Types.Env_Index;
    --  Return end of declarative region of unit's parent
 
+   function Create_String_Value
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Full_Name     : Gela.Lexical_Types.Token_Index)
+      return Gela.Semantic_Types.Value_Index;
+   --  Return end of declarative region of unit's parent
+
 end Gela.Pass_Utils;
