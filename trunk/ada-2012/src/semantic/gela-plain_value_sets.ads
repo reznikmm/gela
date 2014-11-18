@@ -19,12 +19,18 @@ package Gela.Plain_Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index);
    --  Get string value for given literal.
 
-   overriding procedure Concat
+   overriding procedure List
      (Self  : in out Value_Set;
-      Left  : Gela.Semantic_Types.Value_Index;
-      Right : Gela.Semantic_Types.Value_Index;
+      Head  : Gela.Semantic_Types.Value_Index;
+      Tail  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index);
-   --  Return "Left & Right"
+   --  Get string value for given literal.
+
+   overriding procedure Apply
+     (Self  : in out Value_Set;
+      Name  : Gela.Semantic_Types.Static_Operator;
+      Args  : Gela.Semantic_Types.Value_Index;
+      Value : out Gela.Semantic_Types.Value_Index);
 
    overriding function Image
      (Self  : Value_Set;
@@ -36,10 +42,16 @@ private
    subtype Positive_Value_Index is Gela.Semantic_Types.Value_Index
      range 1 .. Gela.Semantic_Types.Value_Index'Last;
 
-   type Value_Kinds is (String_Value);
+   type Value_Kinds is (String_Value, List_Value);
 
    type Value (Kind : Value_Kinds := String_Value) is record
-      String : League.Strings.Universal_String;
+      case Kind is
+         when String_Value =>
+            String : League.Strings.Universal_String;
+         when List_Value =>
+            Head : Positive_Value_Index;
+            Tail : Positive_Value_Index;
+      end case;
    end record;
 
    function Hash (X : Value) return Ada.Containers.Hash_Type;
@@ -60,5 +72,10 @@ private
       Map    : Hash_Maps.Map;
       Vector : Vectors.Vector;
    end record;
+
+   not overriding procedure Put_Value
+     (Self  : in out Value_Set;
+      Item  : Value;
+      Value : out Gela.Semantic_Types.Value_Index);
 
 end Gela.Plain_Value_Sets;

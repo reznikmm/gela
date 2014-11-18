@@ -1,7 +1,46 @@
 Synthesized attributes
-operator_symbol,
-string_literal
+  Record_Component_Associations,
+  allocator,
+  association,
+  attribute_reference,
+  box,
+  case_expression,
+  character_literal,
+  direct_name,
+  explicit_dereference,
+  expression,
+  expression_or_box,
+  extension_aggregate,
+  function_call,
+  identifier,
+  if_expression,
+  membership_test,
+  name,
+  null_literal,
+  numeric_literal,
+  operator_symbol,
+  qualified_expression,
+  quantified_expression,
+  record_aggregate,
+  selected_component,
+  short_circuit,
+  simple_expression,
+  string_literal
    : Gela.Semantic_Types.Value_Index : static_value;
+
+Rules for Record_Component_Associations.association :
+(.
+      ${Record_Component_Associations.static_value} := 0;
+.)
+
+Rules for Record_Component_Associations.association :
+(.
+	   Self.Compilation.Context.Values.List
+	     (Head  => ${head.static_value},
+          Tail  => ${association.static_value},
+          Value => ${Record_Component_Associations.static_value});
+.)
+
 
 Rules for string_literal.string_literal_token :
 (.
@@ -13,4 +52,83 @@ Rules for operator_symbol.operator_symbol_token :
 (.
 	  ${operator_symbol.static_value} := Gela.Pass_Utils.Create_String_Value
 	    (Self.Compilation, ${operator_symbol_token.Index});
+.)
+
+Rules for identifier.identifier_token :
+(.
+	  ${identifier.static_value} := 0;  --  FIXME
+.)
+
+Rules for attribute_reference. :
+(.
+	  ${attribute_reference.static_value} := 0;  --  FIXME
+.)
+Rules for character_literal.character_literal_token :
+(.
+	  ${character_literal.static_value} := 0;  --  FIXME
+.)
+Rules for explicit_dereference. :
+(.
+	  ${explicit_dereference.static_value} := 0;  --  FIXME
+.)
+Rules for function_call. :
+(.
+	  ${function_call.static_value} := Gela.Pass_Utils.Create_Function_Call_Value
+	    (Self.Compilation, ${Function_Call_Parameters.static_value});
+.)
+Rules for qualified_expression. :
+(.
+	  ${qualified_expression.static_value} := 0;  --  FIXME
+.)
+Rules for selected_component. :
+(.
+	  ${selected_component.static_value} := 0;  --  FIXME
+.)
+Rules for numeric_literal.numeric_literal_token :
+(.
+      ${numeric_literal.static_value} := 0;  --  FIXME
+.)
+Rules for null_literal.null_literal_token :
+(.
+      ${null_literal.static_value} := 0;  --  FIXME
+.)
+Rules for record_aggregate. :
+(.
+      ${record_aggregate.static_value} := ${Record_Component_Associations.static_value};
+.)
+Rules for extension_aggregate. :
+(.
+      ${extension_aggregate.static_value} := 0;  --  FIXME
+.)
+Rules for allocator. :
+(.
+      ${allocator.static_value} := 0;  --  FIXME
+.)
+Rules for if_expression.Expression_Paths :
+(.
+      ${if_expression.static_value} := 0;  --  FIXME
+.)
+Rules for case_expression. :
+(.
+      ${case_expression.static_value} := 0;  --  FIXME
+.)
+Rules for quantified_expression. :
+(.
+      ${quantified_expression.static_value} := 0;  --  FIXME
+.)
+Rules for membership_test. :
+(.
+      ${membership_test.static_value} := 0;  --  FIXME
+.)
+Rules for short_circuit. :
+(.
+      ${short_circuit.static_value} := 0;  --  FIXME
+.)
+Rules for box.box_token :
+(.
+      ${box.static_value} := 0;  --  FIXME
+.)
+Rules for association. :
+(.
+      ${association.static_value} := ${Component_Expression.static_value:0};
 .)

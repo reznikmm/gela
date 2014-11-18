@@ -17,12 +17,19 @@ package Gela.Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
    --  Get string value for given literal.
 
-   not overriding procedure Concat
+   not overriding procedure List
      (Self  : in out Value_Set;
-      Left  : Gela.Semantic_Types.Value_Index;
-      Right : Gela.Semantic_Types.Value_Index;
+      Head  : Gela.Semantic_Types.Value_Index;
+      Tail  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
-   --  Return "Left & Right"
+   --  Get list as (Head, Tail)
+
+   not overriding procedure Apply
+     (Self  : in out Value_Set;
+      Name  : Gela.Semantic_Types.Static_Operator;
+      Args  : Gela.Semantic_Types.Value_Index;
+      Value : out Gela.Semantic_Types.Value_Index) is abstract;
+   --  Return Name (Args)
 
    not overriding function Image
      (Self  : Value_Set;

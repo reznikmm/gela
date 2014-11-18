@@ -327,6 +327,25 @@ package body Gela.Pass_Utils is
       return Env_2;
    end Add_Names_Create_Region;
 
+   --------------------------------
+   -- Create_Function_Call_Value --
+   --------------------------------
+
+   function Create_Function_Call_Value
+     (Comp          : Gela.Compilations.Compilation_Access;
+      Arguments     : Gela.Semantic_Types.Value_Index)
+      return Gela.Semantic_Types.Value_Index
+   is
+      Result : Gela.Semantic_Types.Value_Index;
+   begin
+      Comp.Context.Values.Apply
+        (Name  => Gela.Semantic_Types.Concat,
+         Args  => Arguments,
+         Value => Result);
+
+      return Result;
+   end Create_Function_Call_Value;
+
    -------------------------
    -- Create_String_Value --
    -------------------------
@@ -342,7 +361,8 @@ package body Gela.Pass_Utils is
         Source.Slice (Token.First, Token.Last);
       Result : Gela.Semantic_Types.Value_Index;
    begin
-      Comp.Context.Values.String_Literal (Image, Result);
+      Comp.Context.Values.String_Literal
+        (Image.Slice (2, Image.Length - 1), Result);
 
       return Result;
    end Create_String_Value;

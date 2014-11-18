@@ -33,4 +33,6 @@ package Gela.Semantic_Types is
    type Value_Index is new Natural;
    --  Index of static value
 
+   type Static_Operator is (Concat);
+
 end Gela.Semantic_Types;

@@ -23,7 +23,9 @@ package body Asis.Iterator is
          Children : constant Gela.Elements.Nested_Array :=
            Element.Data.Nested_Items;
       begin
-         Pre_Operation (Element, Control, State);
+         if not Auxilary (Element) then
+            Pre_Operation (Element, Control, State);
+         end if;
 
          if Control = Continue then
             for J in Children'Range loop
@@ -67,7 +69,7 @@ package body Asis.Iterator is
             end if;
          end if;
 
-         if Control = Continue then
+         if Control = Continue and then not Auxilary (Element) then
             Post_Operation (Element, Control, State);
          end if;
 

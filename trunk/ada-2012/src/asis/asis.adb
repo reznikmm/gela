@@ -2,6 +2,11 @@ with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
 
+with Gela.Element_Visiters;
+with Gela.Elements.Function_Calls;
+with Gela.Elements.Procedure_Call_Statements;
+with Gela.Elements.Record_Aggregates;
+
 package body Asis is
 
    ----------------------------------
@@ -36,6 +41,76 @@ package body Asis is
    begin
       return Element.Data /= null;
    end Assigned;
+
+   --------------
+   -- Auxilary --
+   --------------
+
+   function Auxilary (Element : in Asis.Element) return Boolean is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Boolean := False;
+            Is_Function_Call : Boolean := False;
+            Is_Record_Aggregate : Boolean := False;
+         end record;
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access);
+
+         overriding procedure Record_Aggregate
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+         is
+         begin
+            if Self.Is_Record_Aggregate then
+               Self.Result := True;
+            else
+               Self.Is_Function_Call := True;
+               Node.Parent.Visit (Self);
+            end if;
+         end Function_Call;
+
+         overriding procedure Procedure_Call_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Call_Statements.
+              Procedure_Call_Statement_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            Self.Result := Self.Is_Function_Call;
+         end Procedure_Call_Statement;
+
+         overriding procedure Record_Aggregate
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access) is
+         begin
+            Self.Is_Record_Aggregate := True;
+            Node.Parent.Visit (Self);
+         end Record_Aggregate;
+
+      end Get;
+
+      V : Get.Visiter;
+   begin
+      Element.Data.Visit (V);
+      return V.Result;
+   end Auxilary;
 
    --------------------
    -- Check_Nil_Unit --

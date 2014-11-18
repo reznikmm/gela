@@ -1724,10 +1724,18 @@ package body Asis.Elements is
       end Get;
 
       V : Get.Visiter;
+      Next : Asis.Element := Element;
    begin
       Check_Nil_Element (Element, "Enclosing_Element");
-      Element.Data.Visit (V);
-      return (Data => V.Result);
+      loop
+         V.Result := null;
+         Next.Data.Visit (V);
+         Next := (Data => V.Result);
+
+         if not Assigned (Next) or else not Auxilary (Next) then
+            return Next;
+         end if;
+      end loop;
    end Enclosing_Element;
 
    -----------------------

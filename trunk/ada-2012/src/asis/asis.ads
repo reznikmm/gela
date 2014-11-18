@@ -1790,6 +1790,9 @@ private
    function Assigned (Element : in Asis.Element) return Boolean;
    --  Test if Element is Nil_Element
 
+   function Auxilary (Element : in Asis.Element) return Boolean;
+   --  Test if Element is internal purpose element
+
    procedure Check_Nil_Element
      (Element : Asis.Element;
       From    : Wide_String);

@@ -6,19 +6,74 @@ package body Gela.Plain_Value_Sets is
    -- Concat --
    ------------
 
-   overriding procedure Concat
+   overriding procedure Apply
      (Self  : in out Value_Set;
-      Left  : Gela.Semantic_Types.Value_Index;
-      Right : Gela.Semantic_Types.Value_Index;
+      Name  : Gela.Semantic_Types.Static_Operator;
+      Args  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index)
    is
       use type League.Strings.Universal_String;
-
-      Image : constant League.Strings.Universal_String :=
-        Self.Image (Left) & Self.Image (Right);
+      use type Gela.Semantic_Types.Value_Index;
    begin
-      Self.String_Literal (Image, Value);
-   end Concat;
+      if Args = 0 then
+         Value := 0;
+         return;
+      end if;
+
+      case Name is
+         when Gela.Semantic_Types.Concat =>
+            declare
+               Item : constant Gela.Plain_Value_Sets.Value :=
+                 Self.Vector.Element (Args);
+            begin
+               if Item.Kind = List_Value then
+                  Self.String_Literal
+                    (Self.Image (Item.Head) & Self.Image (Item.Tail),
+                     Value);
+               else
+                  Value := 0;
+                  return;
+               end if;
+            end;
+      end case;
+   end Apply;
+
+   ----------
+   -- List --
+   ----------
+
+   overriding procedure List
+     (Self  : in out Value_Set;
+      Head  : Gela.Semantic_Types.Value_Index;
+      Tail  : Gela.Semantic_Types.Value_Index;
+      Value : out Gela.Semantic_Types.Value_Index)
+   is
+      use type Gela.Semantic_Types.Value_Index;
+   begin
+      if Tail = 0 then
+         Value := 0;
+      elsif Head = 0 then
+         Value := Tail;
+      else
+         Self.Put_Value ((List_Value, Head, Tail), Value);
+      end if;
+   end List;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (X : Value) return Ada.Containers.Hash_Type is
+      use type Ada.Containers.Hash_Type;
+   begin
+      case X.Kind is
+         when String_Value =>
+            return League.Strings.Hash (X.String);
+         when List_Value =>
+            return 65_213 * Ada.Containers.Hash_Type (X.Head) +
+              Ada.Containers.Hash_Type (X.Tail);
+      end case;
+   end Hash;
 
    -----------
    -- Image --
@@ -32,14 +87,25 @@ package body Gela.Plain_Value_Sets is
       return Self.Vector.Element (Value).String;
    end Image;
 
-   ----------
-   -- Hash --
-   ----------
+   ---------------
+   -- Put_Value --
+   ---------------
 
-   function Hash (X : Value) return Ada.Containers.Hash_Type is
+   not overriding procedure Put_Value
+     (Self  : in out Value_Set;
+      Item  : Value;
+      Value : out Gela.Semantic_Types.Value_Index)
+   is
+      Pos  : constant Hash_Maps.Cursor := Self.Map.Find (Item);
    begin
-      return League.Strings.Hash (X.String);
-   end Hash;
+      if Hash_Maps.Has_Element (Pos) then
+         Value := Hash_Maps.Element (Pos);
+      else
+         Self.Vector.Append (Item);
+         Value := Self.Vector.Last_Index;
+         Self.Map.Insert (Item, Value);
+      end if;
+   end Put_Value;
 
    --------------------
    -- String_Literal --
@@ -51,15 +117,8 @@ package body Gela.Plain_Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index)
    is
       Item : constant Gela.Plain_Value_Sets.Value := (String_Value, Image);
-      Pos  : constant Hash_Maps.Cursor := Self.Map.Find (Item);
    begin
-      if Hash_Maps.Has_Element (Pos) then
-         Value := Hash_Maps.Element (Pos);
-      else
-         Self.Vector.Append (Item);
-         Value := Self.Vector.Last_Index;
-         Self.Map.Insert (Item, Value);
-      end if;
+      Self.Put_Value (Item, Value);
    end String_Literal;
 
 
