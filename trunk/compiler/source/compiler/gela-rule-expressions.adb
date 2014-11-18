@@ -35,7 +35,7 @@ package body Gela.Rule.Expressions is
          end loop;
 
          Tipe := Engine.Text_Container.Literal ("[");
-         Tipe := Engine.Text_Container.Join (Tipe, Image'Length - 2);
+         Tipe := Engine.Text_Container.Join (Tipe, Image'Length);
          Tipe := Engine.Text_Container.Join (Tipe, " x i8] ");
 
          Result := Engine.Get (Element, Gela.Properties.Value);
@@ -57,7 +57,7 @@ package body Gela.Rule.Expressions is
          Result := Engine.Text_Container.Join
            (Result, ", i32 0, i32 0), i32 1, i32 ");
 
-         Result := Engine.Text_Container.Join (Result, Image'Length - 2);
+         Result := Engine.Text_Container.Join (Result, Image'Length);
          Result := Engine.Text_Container.Join (Result, "}");
 
          Result := Engine.Text_Container.Join
@@ -69,8 +69,9 @@ package body Gela.Rule.Expressions is
          Result := Engine.Text_Container.Join (Result, "unnamed_addr ");
          Result := Engine.Text_Container.Join (Result, "constant ");
          Result := Engine.Text_Container.Join (Result, Tipe);
-         Result := Engine.Text_Container.Join (Result, " c");
+         Result := Engine.Text_Container.Join (Result, " c""");
          Result := Engine.Text_Container.Join (Result, Text);
+         Result := Engine.Text_Container.Join (Result, """");
 
          Result := Engine.Text_Container.Join
            (Result, Engine.Text_Container.New_Line);
