@@ -15,8 +15,9 @@ package body Gela.Plain_Value_Sets is
       use type League.Strings.Universal_String;
       use type Gela.Semantic_Types.Value_Index;
    begin
+      Value := 0;
+
       if Args = 0 then
-         Value := 0;
          return;
       end if;
 
@@ -26,13 +27,13 @@ package body Gela.Plain_Value_Sets is
                Item : constant Gela.Plain_Value_Sets.Value :=
                  Self.Vector.Element (Args);
             begin
-               if Item.Kind = List_Value then
+               if Item.Kind = List_Value and then
+                 Self.Vector.Element (Item.Head).Kind = String_Value and then
+                 Self.Vector.Element (Item.Tail).Kind = String_Value
+               then
                   Self.String_Literal
                     (Self.Image (Item.Head) & Self.Image (Item.Tail),
                      Value);
-               else
-                  Value := 0;
-                  return;
                end if;
             end;
       end case;
