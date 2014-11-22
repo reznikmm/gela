@@ -160,10 +160,21 @@ package body Asis.Elements is
      (Association : in Asis.Association)
       return Asis.Association_Kinds
    is
+      Map : constant array (F.An_Association) of Asis.Association_Kinds :=
+        (F.A_Pragma_Argument_Association => Asis.A_Pragma_Argument_Association,
+         F.A_Discriminant_Association => Asis.A_Discriminant_Association,
+         F.A_Record_Component_Association =>
+           Asis.A_Record_Component_Association,
+         F.An_Array_Component_Association =>
+           Asis.An_Array_Component_Association,
+         F.A_Parameter_Association => Asis.A_Parameter_Association,
+         F.A_Generic_Association => Asis.A_Generic_Association);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Association);
    begin
-      if Assigned (Association) then
-         Raise_Not_Implemented ("");
-         return Not_An_Association;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_An_Association;
       end if;
@@ -367,10 +378,90 @@ package body Asis.Elements is
      (Declaration : in Asis.Declaration)
       return Asis.Declaration_Kinds
    is
+      Map : constant array (F.A_Declaration) of Asis.Declaration_Kinds :=
+        (F.An_Ordinary_Type_Declaration => Asis.An_Ordinary_Type_Declaration,
+         F.A_Task_Type_Declaration => Asis.A_Task_Type_Declaration,
+         F.A_Protected_Type_Declaration => Asis.A_Protected_Type_Declaration,
+         F.An_Incomplete_Type_Declaration =>
+           Asis.An_Incomplete_Type_Declaration,
+         F.A_Private_Type_Declaration => Asis.A_Private_Type_Declaration,
+         F.A_Private_Extension_Declaration =>
+           Asis.A_Private_Extension_Declaration,
+         F.A_Subtype_Declaration => Asis.A_Subtype_Declaration,
+         F.A_Variable_Declaration => Asis.A_Variable_Declaration,
+         F.A_Constant_Declaration => Asis.A_Constant_Declaration,
+         F.A_Deferred_Constant_Declaration =>
+           Asis.A_Deferred_Constant_Declaration,
+         F.A_Single_Task_Declaration => Asis.A_Single_Task_Declaration,
+         F.A_Single_Protected_Declaration =>
+           Asis.A_Single_Protected_Declaration,
+         F.An_Integer_Number_Declaration => Asis.An_Integer_Number_Declaration,
+         F.A_Real_Number_Declaration => Asis.A_Real_Number_Declaration,
+         F.An_Enumeration_Literal_Specification =>
+           Asis.An_Enumeration_Literal_Specification,
+         F.A_Discriminant_Specification => Asis.A_Discriminant_Specification,
+         F.A_Component_Declaration => Asis.A_Component_Declaration,
+         F.A_Return_Object_Specification => Asis.A_Return_Object_Specification,
+         F.A_Loop_Parameter_Specification =>
+           Asis.A_Loop_Parameter_Specification,
+         F.A_Procedure_Declaration => Asis.A_Procedure_Declaration,
+         F.A_Function_Declaration => Asis.A_Function_Declaration,
+         F.A_Parameter_Specification => Asis.A_Parameter_Specification,
+         F.A_Procedure_Body_Declaration => Asis.A_Procedure_Body_Declaration,
+         F.A_Function_Body_Declaration => Asis.A_Function_Body_Declaration,
+         F.A_Package_Declaration => Asis.A_Package_Declaration,
+         F.A_Package_Body_Declaration => Asis.A_Package_Body_Declaration,
+         F.An_Object_Renaming_Declaration =>
+           Asis.An_Object_Renaming_Declaration,
+         F.An_Exception_Renaming_Declaration =>
+           Asis.An_Exception_Renaming_Declaration,
+         F.A_Package_Renaming_Declaration =>
+           Asis.A_Package_Renaming_Declaration,
+         F.A_Procedure_Renaming_Declaration =>
+           Asis.A_Procedure_Renaming_Declaration,
+         F.A_Function_Renaming_Declaration =>
+           Asis.A_Function_Renaming_Declaration,
+         F.A_Generic_Package_Renaming_Declaration =>
+           Asis.A_Generic_Package_Renaming_Declaration,
+         F.A_Generic_Procedure_Renaming_Declaration =>
+           Asis.A_Generic_Procedure_Renaming_Declaration,
+         F.A_Generic_Function_Renaming_Declaration =>
+           Asis.A_Generic_Function_Renaming_Declaration,
+         F.A_Task_Body_Declaration => Asis.A_Task_Body_Declaration,
+         F.A_Protected_Body_Declaration => Asis.A_Protected_Body_Declaration,
+         F.An_Entry_Declaration => Asis.An_Entry_Declaration,
+         F.An_Entry_Body_Declaration => Asis.An_Entry_Body_Declaration,
+         F.An_Entry_Index_Specification => Asis.An_Entry_Index_Specification,
+         F.A_Procedure_Body_Stub => Asis.A_Procedure_Body_Stub,
+         F.A_Function_Body_Stub => Asis.A_Function_Body_Stub,
+         F.A_Package_Body_Stub => Asis.A_Package_Body_Stub,
+         F.A_Task_Body_Stub => Asis.A_Task_Body_Stub,
+         F.A_Protected_Body_Stub => Asis.A_Protected_Body_Stub,
+         F.An_Exception_Declaration => Asis.An_Exception_Declaration,
+         F.A_Choice_Parameter_Specification =>
+           Asis.A_Choice_Parameter_Specification,
+         F.A_Generic_Procedure_Declaration =>
+           Asis.A_Generic_Procedure_Declaration,
+         F.A_Generic_Function_Declaration =>
+           Asis.A_Generic_Function_Declaration,
+         F.A_Generic_Package_Declaration => Asis.A_Generic_Package_Declaration,
+         F.A_Package_Instantiation => Asis.A_Package_Instantiation,
+         F.A_Procedure_Instantiation => Asis.A_Procedure_Instantiation,
+         F.A_Function_Instantiation => Asis.A_Function_Instantiation,
+         F.A_Formal_Object_Declaration => Asis.A_Formal_Object_Declaration,
+         F.A_Formal_Type_Declaration => Asis.A_Formal_Type_Declaration,
+         F.A_Formal_Procedure_Declaration =>
+           Asis.A_Formal_Procedure_Declaration,
+         F.A_Formal_Function_Declaration => Asis.A_Formal_Function_Declaration,
+         F.A_Formal_Package_Declaration => Asis.A_Formal_Package_Declaration,
+         F.A_Formal_Package_Declaration_With_Box =>
+           Asis.A_Formal_Package_Declaration_With_Box);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Declaration);
    begin
-      if Assigned (Declaration) then
-         Raise_Not_Implemented ("");
-         return Not_A_Declaration;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Declaration;
       end if;
@@ -419,12 +510,20 @@ package body Asis.Elements is
       return Asis.Defining_Name_Kinds
    is
    begin
-      if Assigned (Defining_Name) then
-         Raise_Not_Implemented ("");
-         return Not_A_Defining_Name;
-      else
-         return Not_A_Defining_Name;
-      end if;
+      case F.Flat_Kind (Defining_Name) is
+         when F.A_Defining_Identifier =>
+            return Asis.A_Defining_Identifier;
+         when F.A_Defining_Character_Literal =>
+            return Asis.A_Defining_Character_Literal;
+         when F.A_Defining_Enumeration_Literal =>
+            return Asis.A_Defining_Enumeration_Literal;
+         when F.A_Defining_Operator_Symbol =>
+            return Asis.A_Defining_Operator_Symbol;
+         when F.A_Defining_Expanded_Name =>
+            return Asis.A_Defining_Expanded_Name;
+         when others =>
+            return Not_A_Defining_Name;
+      end case;
    end Defining_Name_Kind;
 
    ---------------------
@@ -436,12 +535,56 @@ package body Asis.Elements is
       return Asis.Definition_Kinds
    is
    begin
-      if Assigned (Definition) then
-         Raise_Not_Implemented ("");
-         return Not_A_Definition;
-      else
-         return Not_A_Definition;
-      end if;
+      case F.Flat_Kind (Definition) is
+         when F.A_Type_Definition =>
+            return Asis.A_Type_Definition;
+         when F.A_Subtype_Indication =>
+            return Asis.A_Subtype_Indication;
+         when F.A_Constraint =>
+            return Asis.A_Constraint;
+         when F.A_Component_Definition =>
+            return Asis.A_Component_Definition;
+         when F.A_Discrete_Subtype_Definition =>
+            return Asis.A_Discrete_Subtype_Definition;
+         when F.A_Discrete_Range =>
+            return Asis.A_Discrete_Range;
+         when F.An_Unknown_Discriminant_Part =>
+            return Asis.An_Unknown_Discriminant_Part;
+         when F.A_Known_Discriminant_Part =>
+            return Asis.A_Known_Discriminant_Part;
+         when F.A_Record_Definition =>
+            return Asis.A_Record_Definition;
+         when F.A_Null_Record_Definition =>
+            return Asis.A_Null_Record_Definition;
+         when F.A_Null_Component =>
+            return Asis.A_Null_Component;
+         when F.A_Variant_Part =>
+            return Asis.A_Variant_Part;
+         when F.A_Variant =>
+            return Asis.A_Variant;
+         when F.An_Others_Choice =>
+            return Asis.An_Others_Choice;
+         when F.An_Access_Definition =>
+            return Asis.An_Access_Definition;
+         when F.An_Incomplete_Type_Definition =>
+            return Asis.An_Incomplete_Type_Definition;
+         when F.A_Tagged_Incomplete_Type_Definition =>
+            return Asis.A_Tagged_Incomplete_Type_Definition;
+         when F.A_Private_Type_Definition =>
+            return Asis.A_Private_Type_Definition;
+         when F.A_Tagged_Private_Type_Definition =>
+            return Asis.A_Tagged_Private_Type_Definition;
+         when F.A_Private_Extension_Definition =>
+            return Asis.A_Private_Extension_Definition;
+         when F.A_Task_Definition =>
+            return Asis.A_Task_Definition;
+         when F.A_Protected_Definition =>
+            return Asis.A_Protected_Definition;
+         when F.A_Formal_Type_Definition =>
+            return Asis.A_Formal_Type_Definition;
+         when others =>
+            return Asis.Not_A_Definition;
+      end case;
    end Definition_Kind;
 
    -------------------------
@@ -2294,10 +2437,44 @@ package body Asis.Elements is
      (Statement : in Asis.Statement)
       return Asis.Statement_Kinds
    is
+      Map : constant array (F.A_Statement) of Asis.Statement_Kinds :=
+        (F.A_Null_Statement => Asis.A_Null_Statement,
+         F.An_Assignment_Statement => Asis.An_Assignment_Statement,
+         F.An_If_Statement => Asis.An_If_Statement,
+         F.A_Case_Statement => Asis.A_Case_Statement,
+         F.A_Loop_Statement => Asis.A_Loop_Statement,
+         F.A_While_Loop_Statement => Asis.A_While_Loop_Statement,
+         F.A_For_Loop_Statement => Asis.A_For_Loop_Statement,
+         F.A_Block_Statement => Asis.A_Block_Statement,
+         F.An_Exit_Statement => Asis.An_Exit_Statement,
+         F.A_Goto_Statement => Asis.A_Goto_Statement,
+         F.A_Procedure_Call_Statement => Asis.A_Procedure_Call_Statement,
+         F.A_Simple_Return_Statement => Asis.A_Simple_Return_Statement,
+         F.An_Extended_Return_Statement => Asis.An_Extended_Return_Statement,
+         F.An_Accept_Statement => Asis.An_Accept_Statement,
+         F.An_Entry_Call_Statement => Asis.An_Entry_Call_Statement,
+         F.A_Requeue_Statement => Asis.A_Requeue_Statement,
+         F.A_Requeue_Statement_With_Abort =>
+           Asis.A_Requeue_Statement_With_Abort,
+         F.A_Delay_Until_Statement => Asis.A_Delay_Until_Statement,
+         F.A_Delay_Relative_Statement => Asis.A_Delay_Relative_Statement,
+         F.A_Terminate_Alternative_Statement =>
+           Asis.A_Terminate_Alternative_Statement,
+         F.A_Selective_Accept_Statement => Asis.A_Selective_Accept_Statement,
+         F.A_Timed_Entry_Call_Statement => Asis.A_Timed_Entry_Call_Statement,
+         F.A_Conditional_Entry_Call_Statement =>
+           Asis.A_Conditional_Entry_Call_Statement,
+         F.An_Asynchronous_Select_Statement =>
+           Asis.An_Asynchronous_Select_Statement,
+         F.An_Abort_Statement => Asis.An_Abort_Statement,
+         F.A_Raise_Statement => Asis.A_Raise_Statement,
+         F.A_Code_Statement => Asis.A_Code_Statement);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Statement);
    begin
-      if Assigned (Statement) then
-         Raise_Not_Implemented ("");
-         return Not_A_Statement;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Statement;
       end if;

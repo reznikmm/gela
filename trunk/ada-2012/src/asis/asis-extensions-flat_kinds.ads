@@ -447,11 +447,33 @@ package Asis.Extensions.Flat_Kinds is
    subtype A_Defining_Name is Element_Flat_Kind range
      A_Defining_Identifier .. A_Defining_Expanded_Name;
 
+   subtype A_Defining_Operator_Symbol is Element_Flat_Kind range
+     A_Defining_And_Operator .. A_Defining_Not_Operator;
+
    subtype A_Declaration is Element_Flat_Kind range
      An_Ordinary_Type_Declaration .. A_Formal_Package_Declaration_With_Box;
 
    subtype A_Definition is Element_Flat_Kind range
      A_Derived_Type_Definition .. A_Formal_Synchronized_Interface;
+
+   subtype A_Type_Definition is Element_Flat_Kind range
+     A_Derived_Type_Definition .. An_Access_To_Protected_Function;
+
+   subtype A_Constraint is Element_Flat_Kind range
+     A_Range_Attribute_Reference .. A_Discriminant_Constraint;
+
+   subtype A_Discrete_Subtype_Definition is Element_Flat_Kind range
+     A_Discrete_Subtype_Indication .. A_Discrete_Simple_Expression_Range;
+
+   subtype A_Discrete_Range is Element_Flat_Kind range
+     A_Discrete_Subtype_Indication_DR .. A_Discrete_Simple_Expression_Range_DR;
+
+   subtype An_Access_Definition is Element_Flat_Kind range
+     An_Anonymous_Access_To_Variable
+       .. An_Anonymous_Access_To_Protected_Function;
+
+   subtype A_Formal_Type_Definition is Element_Flat_Kind range
+     A_Formal_Private_Type_Definition .. A_Formal_Access_To_Protected_Function;
 
    subtype An_Expression is Element_Flat_Kind range
      A_Box_Expression .. An_Allocation_From_Qualified_Expression;

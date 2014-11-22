@@ -149,7 +149,7 @@ package body Asis is
    procedure Raise_Not_Implemented (From : Wide_String) is
    begin
       Asis.Implementation.Set_Status
-        (Asis.Errors.Not_Implemented_Error, From);
+        (Asis.Errors.Not_Implemented_Error, "Not_Implemented:" & From);
       raise Asis.Exceptions.ASIS_Failed;
    end Raise_Not_Implemented;
 
