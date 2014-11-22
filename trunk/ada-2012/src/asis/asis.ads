@@ -212,7 +212,7 @@ package Asis is
    type Element is private;
    Nil_Element : constant Element;
 
-   overriding
+   overriding
    function "=" (Left  : Element;
                  Right : Element)
                  return Boolean is abstract;
@@ -1402,7 +1402,7 @@ package Asis is
    type Compilation_Unit is private;
    Nil_Compilation_Unit : constant Compilation_Unit;
 
-   overriding
+   overriding
    function "=" (Left  : Compilation_Unit;
                  Right : Compilation_Unit)
                  return Boolean is abstract;
