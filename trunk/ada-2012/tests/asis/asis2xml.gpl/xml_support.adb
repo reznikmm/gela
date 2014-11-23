@@ -123,22 +123,23 @@ package body XML_Support is
          State   => To);
 
       --  Add the compilation pragmas (if any).
-      declare
-         Compilation_Pragmas : constant Asis.Pragma_Element_List
-           := Asis.Elements.Compilation_Pragmas (The_Unit);
-         Pragmas : constant DOM.Core.Node
-           := DOM.Core.Nodes.Append_Child
-             (Unit,
-              DOM.Core.Documents.Create_Element (To.Document,
-                                                 "compilation_pragmas"));
-      begin
-         for C in Compilation_Pragmas'Range loop
-            To.Current := Pragmas;
-            Traverse_Tree_For_XML (Element => Compilation_Pragmas (C),
-                                   Control => The_Control,
-                                   State   => To);
-         end loop;
-      end;
+--  FIX ME: when implemented in Gela ASIS
+--        declare
+--           Compilation_Pragmas : constant Asis.Pragma_Element_List
+--             := Asis.Elements.Compilation_Pragmas (The_Unit);
+--           Pragmas : constant DOM.Core.Node
+--             := DOM.Core.Nodes.Append_Child
+--               (Unit,
+--                DOM.Core.Documents.Create_Element (To.Document,
+--                                                   "compilation_pragmas"));
+--        begin
+--           for C in Compilation_Pragmas'Range loop
+--              To.Current := Pragmas;
+--              Traverse_Tree_For_XML (Element => Compilation_Pragmas (C),
+--                                     Control => The_Control,
+--                                     State   => To);
+--           end loop;
+--        end;
 
       --  Restore the starting node.
       To.Current := Starting;
@@ -176,13 +177,12 @@ package body XML_Support is
    procedure Add_Trait (K : Asis.Trait_Kinds; To : DOM.Core.Node) is
    begin
       case K is
-         when Asis.Not_A_Trait | Asis.An_Ordinary_Trait => null;
          when Asis.An_Aliased_Trait =>
             DOM.Core.Elements.Set_Attribute (To, "aliased", "true");
          when Asis.An_Access_Definition_Trait =>
             DOM.Core.Elements.Set_Attribute (To, "access", "true");
-         when Asis.A_Null_Exclusion_Trait =>
-            DOM.Core.Elements.Set_Attribute (To, "not_null", "true");
+--           when Asis.A_Null_Exclusion_Trait =>
+--              DOM.Core.Elements.Set_Attribute (To, "not_null", "true");
          when Asis.A_Reverse_Trait =>
             DOM.Core.Elements.Set_Attribute (To, "reverse", "true");
          when Asis.A_Private_Trait =>
@@ -204,6 +204,10 @@ package body XML_Support is
             DOM.Core.Elements.Set_Attribute (To, "abstract", "true");
             DOM.Core.Elements.Set_Attribute (To, "limited", "true");
             DOM.Core.Elements.Set_Attribute (To, "private", "true");
+         --  when Asis.Not_A_Trait | Asis.An_Ordinary_Trait => null;
+         --  To be compatible with other version of ASIS
+         when others =>
+            null;
       end case;
    end Add_Trait;
 
@@ -367,9 +371,9 @@ package body XML_Support is
                      when A_Box_Default =>
                         DOM.Core.Elements.Set_Attribute
                           (State.Current, "default", "box");
-                     when A_Null_Default =>
-                        DOM.Core.Elements.Set_Attribute
-                          (State.Current, "default", "null"); -- 2005
+--                       when A_Null_Default =>
+--                          DOM.Core.Elements.Set_Attribute
+--                            (State.Current, "default", "null"); -- 2005
                      when others => null;
                   end case;
                when others => null;

@@ -92,13 +92,18 @@ begin
           (Command   => Build & "/asis/def_name",
            List_File => Tests & "/asis/def_name/list.txt",
            ACATS     => ACATS_Dir);
+      ASIS2XML : constant Gela.Test_Iterators.Iterator'Class :=
+        Gela.Test_Iterators.ACATS.Create
+          (Command   => Build & "/asis/gela2xml",
+           List_File => Tests & "/asis/asis2xml.gpl/list.txt",
+           ACATS     => ACATS_Dir);
       Run_Compiler : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Compiler_Test & "/comp.sh",
            List_File => Compiler_Test & "/list.txt",
            ACATS     => ACATS_Dir);
       Iterator : Gela.Test_Iterators.Append.Iterator :=
-        Dirs + Lexer + Parser + Def_Name + Run_Compiler;
+        Dirs + Lexer + Parser + Def_Name + ASIS2XML + Run_Compiler;
    begin
       Iterator.Start;
 

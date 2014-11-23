@@ -48,5 +48,8 @@ tests: asis
 	gprbuild -m -j0 -p -P gnat/gela_tests.gpr
 	gprbuild -m -j0 -p -P gnat/gela_asis_tests.gpr
 ifneq ($(realpath compiler),)
-	$(MAKE) -C compiler tests
+	-$(MAKE) -C compiler tests
+endif
+ifneq ($(realpath tests/asis/asis2xml.gpl),)
+	gprbuild -m -j0 -p -P tests/asis/asis2xml.gpl/gela2xml.gpr
 endif

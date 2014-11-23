@@ -1,6 +1,15 @@
 with Gela.Elements;
+with Asis.Extensions.Flat_Kinds;
 
 package body Asis.Iterator is
+
+   --  We need to skip some children of element while iterating, because
+   --  ASIS doesn't need all of them. For instance we keep "end_name" of
+   --  procedure body, but ASIS never iterate it.
+   Skip : constant array (Asis.Extensions.Flat_Kinds.Element_Flat_Kind) of
+     Natural :=
+       (Asis.Extensions.Flat_Kinds.A_Procedure_Body_Declaration => 16,
+        others => 0);
 
    ----------------------
    -- Traverse_Element --
@@ -20,6 +29,7 @@ package body Asis.Iterator is
       declare
          use type Gela.Elements.Element_Sequence_Access;
 
+         Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
          Children : constant Gela.Elements.Nested_Array :=
            Element.Data.Nested_Items;
       begin
@@ -28,6 +38,8 @@ package body Asis.Iterator is
          end if;
 
          if Control = Continue then
+            Kind := Asis.Extensions.Flat_Kinds.Flat_Kind (Element);
+
             for J in Children'Range loop
                case Children (J).Kind is
                   when Gela.Elements.Nested_Token =>
@@ -38,7 +50,7 @@ package body Asis.Iterator is
                         Next : constant Asis.Element :=
                           (Data => Children (J).Nested_Element);
                      begin
-                        if Assigned (Next) then
+                        if Assigned (Next) and Skip (Kind) /= J then
                            Traverse_Element (Next, Control, State);
                         end if;
                      end;

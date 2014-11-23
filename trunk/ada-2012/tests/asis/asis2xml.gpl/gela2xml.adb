@@ -38,7 +38,7 @@ with DOM.Core.Nodes;
 with XML_Support;
 with String_Streams;
 
-procedure ASIS2XML is
+procedure Gela2XML is
 
    function "+" (Item : String) return Wide_String
      renames Ada.Characters.Handling.To_Wide_String;
@@ -117,7 +117,7 @@ begin
    declare
       Params : Ada.Strings.Unbounded.Unbounded_String;
    begin
-      for J in 1 .. Ada.Command_Line.Argument_Count - 2 loop
+      for J in 1 .. Ada.Command_Line.Argument_Count - 1 loop
          if J /= 1 then
             Ada.Strings.Unbounded.Append (Params, " ");
          end if;
@@ -204,4 +204,4 @@ exception
                  Ada.Exceptions.Exception_Message (E));
       Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
 
-end ASIS2XML;
+end Gela2XML;
