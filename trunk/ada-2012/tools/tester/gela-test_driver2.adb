@@ -11,7 +11,7 @@ with Ada.Characters.Conversions;
 with Ada.Command_Line;
 with Ada.Wide_Wide_Text_IO;
 with Ada.Exceptions;
-
+with System.Multiprocessors;
 with Gela.Bitten_Report;
 with Gela.Host;
 with Gela.Test_Cases;
@@ -23,6 +23,7 @@ with Gela.Test_Tools;
 with League.Strings;
 
 procedure Gela.Test_Driver2 is
+   use type Gela.Test_Cases.Test_Case_Access;
    use type League.Strings.Universal_String;
 
    Tests : constant League.Strings.Universal_String :=
@@ -62,6 +63,76 @@ procedure Gela.Test_Driver2 is
 --        --  FIXME run uaflex2 here
 --     end Generate;
 
+   protected Queue is
+      entry Put (Test : Gela.Test_Cases.Test_Case_Access);
+      entry Get (Test : out Gela.Test_Cases.Test_Case_Access);
+   private
+      Data : Gela.Test_Cases.Test_Case_Access;
+   end Queue;
+
+   protected body Queue is
+
+      entry Put (Test : Gela.Test_Cases.Test_Case_Access)
+        when Data = null is
+      begin
+         Data := Test;
+      end Put;
+
+      entry Get (Test : out Gela.Test_Cases.Test_Case_Access) when Data /= null
+      is
+      begin
+         Test := Data;
+         Data := null;
+      end Get;
+
+   end Queue;
+
+   task type Worker is
+      entry Complete (Failed : in out Boolean);
+   end Worker;
+
+   task body Worker is
+      Failed : Boolean := False;
+      Test   : Gela.Test_Cases.Test_Case_Access;
+   begin
+      loop
+         select
+            accept Complete (Failed : in out Boolean) do
+               Failed := Failed and Worker.Failed;
+            end Complete;
+
+            exit;
+         else
+            select
+               Queue.Get (Test);
+               Test.Run;
+
+               case Test.Status is
+                  when Gela.Test_Cases.Failure
+                     | Gela.Test_Cases.Error =>
+
+                     Failed := True;
+                  when others =>
+                     null;
+               end case;
+
+            or
+               delay 0.5;
+            end select;
+         end select;
+      end loop;
+   exception
+      when E : others =>
+         Ada.Wide_Wide_Text_IO.Put_Line ("Worker dead!");
+         Ada.Wide_Wide_Text_IO.Put_Line
+           (Ada.Characters.Conversions.To_Wide_Wide_String
+              (Ada.Exceptions.Exception_Information (E)));
+   end Worker;
+
+   CPU : constant System.Multiprocessors.CPU_Range :=
+     System.Multiprocessors.Number_Of_CPUs;
+
+   Workers  : array (1 .. CPU) of Worker;
    Test     : Gela.Test_Cases.Test_Case_Access;
    Report   : League.Strings.Universal_String;
    Failed   : Boolean := False;
@@ -109,16 +180,11 @@ begin
 
       while Iterator.Has_More_Tests loop
          Iterator.Next (Test);
-         Test.Run;
+         Queue.Put (Test);
+      end loop;
 
-         case Test.Status is
-         when Gela.Test_Cases.Failure
-            | Gela.Test_Cases.Error =>
-
-            Failed := True;
-         when others =>
-            null;
-         end case;
+      for J in Workers'Range loop
+         Workers (J).Complete (Failed);
       end loop;
 
       Gela.Bitten_Report.Generate (Iterator, Report);

@@ -9,12 +9,9 @@
 
 with Ada.Directories;
 with Gela.Test_Tools;
-with Gela.Test_Cases.Append;
-with Gela.Test_Cases.Build;
 with Gela.Test_Cases.Input;
 with Gela.Test_Cases.Execute;
 with Gela.Test_Cases.Valgrind;
-with League.String_Vectors;
 
 package body Gela.Test_Iterators.Dir2 is
 
@@ -31,11 +28,6 @@ package body Gela.Test_Iterators.Dir2 is
       Build  : League.Strings.Universal_String;
       Found  : out Boolean);
 
-   function Create_GPR_Build
-     (Dir    : Ada.Directories.Directory_Entry_Type;
-      Build  : League.Strings.Universal_String)
-      return Test_Cases.Build.Test_Case_Access;
-
    --------------------
    -- Add_Each_Input --
    --------------------
@@ -47,7 +39,6 @@ package body Gela.Test_Iterators.Dir2 is
       Found  : out Boolean)
    is
       use Ada.Directories;
-      use Gela.Test_Cases.Append;
 
       Each  : Search_Type;
       Item  : Directory_Entry_Type;
@@ -81,10 +72,10 @@ package body Gela.Test_Iterators.Dir2 is
             end if;
          end;
 
-         Run := Gela.Test_Cases.Input.Create
-           (Dir, Build, Input, Expect);
+         Run := Gela.Test_Cases.Input.Create (Dir, Build, Input, Expect);
+         Test := Gela.Test_Cases.Test_Case_Access (Run);
 
-         Result.List.Append (Create_GPR_Build (Dir, Build) + Run);
+         Result.List.Append (Test);
 
          --  run with Valgrind
 
@@ -92,7 +83,7 @@ package body Gela.Test_Iterators.Dir2 is
            (Dir, Build, Input, Expect);
 
          Test := Gela.Test_Cases.Valgrind.Create
-           (Create_GPR_Build (Dir, Build) + Run);
+           (Run);
 
          Result.List.Append (Test);
 
@@ -109,7 +100,6 @@ package body Gela.Test_Iterators.Dir2 is
      return Iterator
    is
       use Ada.Directories;
-      use Gela.Test_Cases.Append;
 
       Root : constant String := Source.To_UTF_8_String;
       Each : Search_Type;
@@ -162,31 +152,6 @@ package body Gela.Test_Iterators.Dir2 is
    -- Create_GPR_Build --
    ----------------------
 
-   function Create_GPR_Build
-     (Dir    : Ada.Directories.Directory_Entry_Type;
-      Build  : League.Strings.Universal_String)
-         return Test_Cases.Build.Test_Case_Access
-   is
-      Dir_Name  : constant League.Strings.Universal_String :=
-        League.Strings.From_UTF_8_String (Ada.Directories.Simple_Name (Dir));
-      Full_Path : constant League.Strings.Universal_String :=
-        League.Strings.From_UTF_8_String (Ada.Directories.Full_Name (Dir));
-      GPR_Build : Gela.Test_Cases.Build.Test_Case_Access;
-      Options   : League.String_Vectors.Universal_String_Vector;
-   begin
-      Options.Append (Dir_Name & ".adb");
-      Options.Append ("-XSOURCE_DIR=" & Dir_Name);
-      Options.Append ("-XOBJECT_DIR=" & Build & "/" & Dir_Name);
-
-      GPR_Build := new Gela.Test_Cases.Build.Test_Case'
-        (Gela.Test_Cases.Build.Create
-           (Source  => Full_Path & "/../../..",
-            Build   => Build,
-            Project => Full_Path & "/../simple.gpr",
-            Options => Options));
-
-      return GPR_Build;
-   end Create_GPR_Build;
 
    --------------------
    -- Has_More_Tests --

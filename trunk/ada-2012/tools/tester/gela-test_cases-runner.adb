@@ -49,7 +49,6 @@ package body Gela.Test_Cases.Runner is
          Arguments   => Self.Arguments,
          Exit_Code   => Code,
          Output      => Self.Output,
-         Output_File => Self.Name,
          Directory   => Self.Directory);
 
       Self.Status := (if Code = 0 then Success else Failure);

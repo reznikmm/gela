@@ -18,16 +18,12 @@ package Gela.Host is
         League.String_Vectors.Empty_Universal_String_Vector;
       Exit_Code   : out Integer;
       Output      : out League.Strings.Universal_String;
-      Output_File : League.Strings.Universal_String :=
-        League.Strings.Empty_Universal_String;
       Directory   : League.Strings.Universal_String :=
         League.Strings.Empty_Universal_String);
    --  Execute Command with Arguments in Directory, place execution output
-   --  to Output_File and return it's content as Output parameter.
+   --  to Output parameter.
    --  Return execution status in Exit_Code.
    --  If Command is simple file name, then search Command in PATH.
-   --  If Output_File is empty, use unique file name.
-   --  If Output_File is simple file name, when place it in temp directory.
 
    function Build_Root return League.Strings.Universal_String;
    --  Build root is a directory where gela-test_driver was built

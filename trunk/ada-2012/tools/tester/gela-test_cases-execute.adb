@@ -39,9 +39,6 @@ package body Gela.Test_Cases.Execute is
       function Parent (Self : Test_Case) return Universal_String;
       --  Path to directory containing tests (truck/tests/)
 
-      function Output_File (Self : Test_Case) return Universal_String;
-      --  Where to save test's output (<TEST>.log)
-
       procedure Run (Self : in out Test_Case);
       --  Run executable:
       --   (if no Input)
@@ -177,15 +174,6 @@ package body Gela.Test_Cases.Execute is
          return Self.Output;
       end Output;
 
-      -----------------
-      -- Output_File --
-      -----------------
-
-      function Output_File (Self : Test_Case) return Universal_String is
-      begin
-         return Self.Name & ".log";
-      end Output_File;
-
       ------------
       -- Parent --
       ------------
@@ -244,7 +232,6 @@ package body Gela.Test_Cases.Execute is
                Arguments   => Self.Arguments,
                Exit_Code   => Code,
                Output      => Self.Output,
-               Output_File => Self.Output_File,
                Directory   => Self.Full_Path);
 
             Self.Status := Code_To_Status (Code);
