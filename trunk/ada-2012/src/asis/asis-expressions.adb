@@ -16,6 +16,7 @@ with Gela.Elements.Defining_Names;
 with Gela.Elements.Expression_Or_Boxes;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Numeric_Literals;
+with Gela.Elements.Operator_Symbols;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
@@ -426,7 +427,7 @@ package body Asis.Expressions is
    is
    begin
       Check_Nil_Element (Expression, "Is_Prefix_Call");
-      Raise_Not_Implemented ("");
+--      Raise_Not_Implemented ("");
       return False;
    end Is_Prefix_Call;
 
@@ -496,12 +497,17 @@ package body Asis.Expressions is
    is
       package Get is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Symbol : Gela.Lexical_Types.Symbol;
+            Symbol : Gela.Lexical_Types.Symbol := 0;
          end record;
 
          overriding procedure Identifier
            (Self : in out Visiter;
             Node : not null Gela.Elements.Identifiers.Identifier_Access);
+
+         overriding procedure Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Operator_Symbols.
+              Operator_Symbol_Access);
       end Get;
 
       package body Get is
@@ -521,7 +527,23 @@ package body Asis.Expressions is
          begin
             Self.Symbol := Comp.Get_Token (Token).Symbol;
          end Identifier;
+
+         overriding procedure Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Operator_Symbols.
+              Operator_Symbol_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.Operator_Symbol_Token;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end Operator_Symbol;
+
       end Get;
+
+      use type Gela.Lexical_Types.Symbol;
 
       V       : Get.Visiter;
       Comp    : Gela.Compilations.Compilation_Access;
@@ -529,6 +551,7 @@ package body Asis.Expressions is
    begin
       Check_Nil_Element (Expression, "Name_Image");
       Expression.Data.Visit (V);
+      Assert_Inappropriate_Element (V.Symbol /= 0, "Name_Image");
       Comp := Expression.Data.Enclosing_Compilation;
       Context := Comp.Context;
       return Context.Symbols.Image (V.Symbol).To_UTF_16_Wide_String;
