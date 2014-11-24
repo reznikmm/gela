@@ -93,7 +93,7 @@ package body Gela.Plain_Type_Managers is
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
         return Gela.Semantic_Types.Type_Index
    is
-      Decl : constant Gela.Elements.Element_Access := Node.Parent;
+      Decl : constant Gela.Elements.Element_Access := Node.Enclosing_Element;
    begin
       return Self.Type_From_Declaration (Decl);
    end Type_By_Name;

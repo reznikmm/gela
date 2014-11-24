@@ -81,7 +81,7 @@ package body Asis is
                Self.Result := True;
             else
                Self.Is_Function_Call := True;
-               Node.Parent.Visit (Self);
+               Node.Enclosing_Element.Visit (Self);
             end if;
          end Function_Call;
 
@@ -101,7 +101,7 @@ package body Asis is
               Record_Aggregate_Access) is
          begin
             Self.Is_Record_Aggregate := True;
-            Node.Parent.Visit (Self);
+            Node.Enclosing_Element.Visit (Self);
          end Record_Aggregate;
 
       end Get;

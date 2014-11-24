@@ -8,7 +8,6 @@
 #include "down.ag"
 #include "def_name.ag"
 #include "errors.ag"
-#include "parent.ag"
 #include "static_value.ag"
 
 Synthesized attributes

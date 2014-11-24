@@ -139,7 +139,7 @@ package body Gela.Pass_Utils is
             Node : not null Gela.Elements.Package_Declarations.
               Package_Declaration_Access) is
          begin
-            Node.Parent.Visit (Self);
+            Node.Enclosing_Element.Visit (Self);
          end Package_Declaration;
 
          overriding procedure Procedure_Body
@@ -147,7 +147,7 @@ package body Gela.Pass_Utils is
             Node : not null Gela.Elements.Procedure_Bodies.
               Procedure_Body_Access) is
          begin
-            Node.Parent.Visit (Self);
+            Node.Enclosing_Element.Visit (Self);
          end Procedure_Body;
 
          overriding procedure Selected_Identifier
@@ -437,7 +437,7 @@ package body Gela.Pass_Utils is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index is
    begin
-      if Is_Enumeration (Name.Parent) then
+      if Is_Enumeration (Name.Enclosing_Element) then
          return Index;
       else
          return Comp.Context.Environment_Set.Leave_Declarative_Region (Index);
