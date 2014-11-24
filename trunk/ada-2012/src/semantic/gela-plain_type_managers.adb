@@ -1,10 +1,11 @@
 with Gela.Compilations;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
+with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Views;
-with Gela.Elements.Root_Type_Definitions;
 
 package body Gela.Plain_Type_Managers is
 
@@ -40,7 +41,7 @@ package body Gela.Plain_Type_Managers is
    is
       procedure Create
         (Category : Gela.Type_Views.Category_Kinds;
-         Index   : Gela.Semantic_Types.Type_Index);
+         Index    : Gela.Semantic_Types.Type_Index);
 
       Comp : constant Gela.Compilations.Compilation_Access :=
         Standard.Enclosing_Compilation;
@@ -49,19 +50,22 @@ package body Gela.Plain_Type_Managers is
 
       procedure Create
         (Category : Gela.Type_Views.Category_Kinds;
-         Index   : Gela.Semantic_Types.Type_Index)
+         Index    : Gela.Semantic_Types.Type_Index)
       is
+         Id   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
          Def  : Gela.Elements.Root_Type_Definitions
                   .Root_Type_Definition_Access;
          Node : Gela.Elements.Full_Type_Declarations
                   .Full_Type_Declaration_Access;
       begin
+         Id := Factory.Defining_Identifier (Identifier_Token => 0);
+
          Def := Factory.Root_Type_Definition (0);
          Def.Set_Type_Kind (Index);
 
          Node := Factory.Full_Type_Declaration
            (Type_Token            => 0,
-            Names                 => null,
+            Names                 => Id,
             Discriminant_Part     => null,
             Is_Token              => 0,
             Type_Declaration_View =>

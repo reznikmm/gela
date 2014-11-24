@@ -14,6 +14,9 @@ package Gela.Elements is
    type Element_Access is access all Element'Class;
    for Element_Access'Storage_Size use 0;
 
+   function Assigned (Self : access Element'Class) return Boolean
+     is (Self /= null);
+
    not overriding function Enclosing_Element
      (Self  : Element) return Element_Access is abstract;
    --  Return upper element if any.

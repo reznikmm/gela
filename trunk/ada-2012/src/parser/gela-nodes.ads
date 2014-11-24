@@ -1,4 +1,5 @@
 with Gela.Elements;
+with Gela.Elements.Set_Enclosing;
 with Gela.Compilations;
 with Gela.Compilation_Units;
 with Gela.LARL_Parsers_Nodes;
@@ -9,7 +10,8 @@ package Gela.Nodes is
    pragma Preelaborate;
 
    type Node (Length : Positive) is
-     abstract limited new Gela.Elements.Element with private;
+     abstract limited new Gela.Elements.Element
+     and Gela.Elements.Set_Enclosing.Element with private;
    type Node_Access is access all Node'Class;
 
    type Nested_Kind_Array is
@@ -25,7 +27,8 @@ package Gela.Nodes is
         and Generic_Element_Sequences.Sequence;
    package Node_Sequences is
 
-      type Sequence is limited new Item_Sequence with private;
+      type Sequence is limited new Item_Sequence
+        and Gela.Elements.Set_Enclosing.Element with private;
       type Sequence_Access is access all Sequence;
 
    private
@@ -33,10 +36,11 @@ package Gela.Nodes is
         (Element_Type => Generic_Element_Sequences.Item_Access,
          "="          => Generic_Element_Sequences."=");
 
-      type Sequence is limited new Item_Sequence with
-         record
-            List : Lists.List;
-         end record;
+      type Sequence is limited new Item_Sequence
+        and Gela.Elements.Set_Enclosing.Element
+      with record
+         List : Lists.List;
+      end record;
 
       overriding function Is_Empty (Self : Sequence) return Boolean;
 
@@ -57,6 +61,10 @@ package Gela.Nodes is
       overriding function First
         (Self : Sequence)
          return Gela.Elements.Element_Sequences.Sequence_Cursor'Class;
+
+      overriding procedure Set_Enclosing_Element
+        (Self  : in out Sequence;
+         Value : Gela.Elements.Element_Access);
 
       type Sequence_Cursor is new Generic_Element_Sequences.Sequence_Cursor
         and Gela.Elements.Element_Sequences.Sequence_Cursor
@@ -79,6 +87,7 @@ package Gela.Nodes is
 private
 
    type Node (Length : Positive) is abstract limited new Gela.Elements.Element
+     and Gela.Elements.Set_Enclosing.Element
    with record
       Enclosing_Element     : Gela.Elements.Element_Access;
       Enclosing_Compilation : Gela.Compilations.Compilation_Access;
@@ -109,5 +118,9 @@ private
 
    overriding function Nested_Items
      (Self  : Node) return Gela.Elements.Nested_Array;
+
+   overriding procedure Set_Enclosing_Element
+     (Self  : in out Node;
+      Value : Gela.Elements.Element_Access);
 
 end Gela.Nodes;

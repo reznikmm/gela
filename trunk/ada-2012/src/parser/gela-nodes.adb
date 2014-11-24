@@ -338,6 +338,36 @@ package body Gela.Nodes is
          Self.List.Prepend (Y);
       end Prepend;
 
+      ---------------------------
+      -- Set_Enclosing_Element --
+      ---------------------------
+
+      overriding procedure Set_Enclosing_Element
+        (Self  : in out Sequence;
+         Value : Gela.Elements.Element_Access)
+      is
+         Pos : Gela.Elements.Element_Sequences.Sequence_Cursor'Class :=
+           Self.First;
+         Item : Gela.Elements.Set_Enclosing.Element_Access;
+      begin
+         while Pos.Has_Element loop
+            Item := Gela.Elements.Set_Enclosing.Element_Access (Pos.Element);
+            Item.Set_Enclosing_Element (Value);
+            Pos.Next;
+         end loop;
+      end Set_Enclosing_Element;
+
    end Node_Sequences;
+
+   ---------------------------
+   -- Set_Enclosing_Element --
+   ---------------------------
+
+   overriding procedure Set_Enclosing_Element
+     (Self  : in out Node;
+      Value : Gela.Elements.Element_Access) is
+   begin
+      Self.Enclosing_Element := Value;
+   end Set_Enclosing_Element;
 
 end Gela.Nodes;

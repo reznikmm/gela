@@ -532,7 +532,7 @@ exception_declaration ::=
 
 exception_handler ::= 
   token <when_token>
-  choice_parameter_specification <Choice_Parameter_Specification>
+  [choice_parameter_specification <Choice_Parameter_Specification>]
   token <colon_token>
   {exception_choice} <Exception_Choices>
   token <arrow_token>
@@ -551,9 +551,9 @@ exception_renaming_declaration ::=
 
 exit_statement  ::=
   token                  <exit_token>
-  program_unit_name      <Exit_Loop_Name>
+  [program_unit_name     <Exit_Loop_Name>]
   token                  <when_token>
-  expression             <Exit_Condition>
+  [expression            <Exit_Condition>]
   token                  <semicolon_token>
 ;
 
@@ -933,10 +933,10 @@ return_object_specification ::=
 
 
 generic_association ::=
-  generic_formal_parameter <Formal_Parameter>
-  token                    <arrow_token>
-  expression               <Actual_Parameter>
-  token                    <box_token>
+  [generic_formal_parameter <Formal_Parameter>]
+  token                     <arrow_token>
+  [expression               <Actual_Parameter>]
+  token                     <box_token>
 ;
 
 generic_formal ::=
@@ -1315,9 +1315,9 @@ pragma_node ::=
 ;
 
 pragma_argument_association ::=
-    identifier <Formal_Parameter>
-    token      <arrow_token>
-    expression <Actual_Parameter>
+    [identifier <Formal_Parameter>]
+    token       <arrow_token>
+    expression  <Actual_Parameter>
 ;
 
 prefix ::= name;
@@ -1490,7 +1490,7 @@ qualified_expression ::=
 
 raise_statement ::=
   token       <raise_token>
-  name        <Raised_Exception>
+  [name       <Raised_Exception>]
   token       <with_token>
   [expression <Raise_Statement_Message>]
   token       <semicolon_token>
@@ -1558,10 +1558,10 @@ simple_expression_range ::=
 select_or_else_path ::= select_or_path | else_path;
 
 select_or_path ::=
-    token      <or_token>
-    token      <when_token>
-    expression <Guard>
-    token      <arrow_token>
+    token       <or_token>
+    token       <when_token>
+    [expression <Guard>]
+    token       <arrow_token>
     {statement} <Sequence_Of_Statements>
 ;
 

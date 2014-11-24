@@ -415,6 +415,7 @@ package body AG_Tools.Element_Generators is
       Part_Type    : League.Strings.Universal_String;
       Package_Name : League.Strings.Universal_String;
       Index : Positive := 1;
+      Option : Boolean;
    begin
       Withed.Append (Pkg);
       Withes.N ("with ");
@@ -437,7 +438,8 @@ package body AG_Tools.Element_Generators is
       Nodes.N ("     Gela.Elements.");
       Nodes.N (Plural (NT.Name));
       Nodes.N (".");
-      Nodes.N (Name);
+      Nodes.P (Name);
+      Nodes.N ("     and Gela.Elements.Set_Enclosing.Element");
       Nodes.P (" with private;");
 
       Nodes.P;
@@ -469,7 +471,9 @@ package body AG_Tools.Element_Generators is
       Nodes.P;
       Impl.P (" is");
       Impl.P ("   begin");
-      Impl.P ("      return");
+      Impl.N ("      return Result : aliased ");
+      Impl.N (Name);
+      Impl.P (" :=");
       Impl.N ("        (Length                => ");
       Impl.N (Natural (Prod.Last - Prod.First + 1));
       Impl.P (",");
@@ -496,7 +500,44 @@ package body AG_Tools.Element_Generators is
       end loop;
 
       Impl.P ("),");
-      Impl.P ("        others => <>);");
+      Impl.P ("         others => <>)");
+      Impl.P ("      do");
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         if Part.Is_Non_Terminal_Reference or Part.Is_List_Reference then
+            Option := AG_Tools.Input.Is_Option (G.all, Part);
+
+            if Option then
+               Impl.N ("         if ");
+               Impl.N (To_Ada (Part.Name));
+               Impl.P (".Assigned then");
+               Impl.N ("   ");
+            end if;
+
+            Impl.P ("         Gela.Elements.Set_Enclosing.Element'Class");
+
+            if Option then
+               Impl.N ("   ");
+            end if;
+
+            Impl.N ("           (");
+            Impl.N (To_Ada (Part.Name));
+            Impl.P (".all).Set_Enclosing_Element");
+
+            if Option then
+               Impl.N ("   ");
+            end if;
+
+            Impl.P ("             (Result'Unchecked_Access);");
+
+            if Option then
+               Impl.P ("         end if;");
+            end if;
+         end if;
+      end loop;
+
+      Impl.P ("         null;");
+      Impl.P ("      end return;");
       Impl.P ("   end Create;");
       Impl.P;
 
