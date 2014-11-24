@@ -98,7 +98,7 @@ procedure Gela.Test_Driver2 is
       loop
          select
             accept Complete (Failed : in out Boolean) do
-               Failed := Failed and Worker.Failed;
+               Failed := Failed or Worker.Failed;
             end Complete;
 
             exit;

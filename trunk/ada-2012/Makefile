@@ -54,3 +54,7 @@ ifneq ($(realpath tests/asis/asis2xml.gpl),)
 	ADA_PROJECT_PATH=$(ADA_PROJECT_PATH):gnat \
 	gprbuild -m -j0 -p -P tests/asis/asis2xml.gpl/gela2xml.gpr
 endif
+
+check:
+	GELA_INCLUDE_PATH=$(realpath src/adalib/) \
+	$(GELA_BUILD)/gela-test_driver2
