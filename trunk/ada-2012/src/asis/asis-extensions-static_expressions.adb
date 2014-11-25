@@ -1,6 +1,6 @@
 with Gela.Compilations;
 with Gela.Element_Visiters;
-with Gela.Elements.Function_Calls;
+with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.String_Literals;
 with Gela.Semantic_Types;
 
@@ -25,9 +25,10 @@ package body Asis.Extensions.Static_Expressions is
             Result : Gela.Semantic_Types.Value_Index := 0;
          end record;
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
 
          overriding procedure String_Literal
            (Self : in out Visiter;
@@ -38,13 +39,14 @@ package body Asis.Extensions.Static_Expressions is
 
       package body Get is
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
          is
          begin
             Self.Result := Node.Static_Value;
-         end Function_Call;
+         end Auxiliary_Apply;
 
          overriding procedure String_Literal
            (Self : in out Visiter;

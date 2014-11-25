@@ -18,6 +18,7 @@ with Gela.Elements.Asynchronous_Selects;
 with Gela.Elements.At_Clauses;
 with Gela.Elements.Attribute_Definition_Clauses;
 with Gela.Elements.Attribute_References;
+with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Block_Statements;
 with Gela.Elements.Boxes;
 with Gela.Elements.Case_Expression_Paths;
@@ -92,7 +93,6 @@ with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Formal_Unconstrained_Array_Definitions;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Function_Bodies;
-with Gela.Elements.Function_Calls;
 with Gela.Elements.Function_Declarations;
 with Gela.Elements.Function_Instantiations;
 with Gela.Elements.Generalized_Iterator_Specifications;
@@ -291,6 +291,10 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Attribute_References.
         Attribute_Reference_Access)
    is null;
+
+   overriding procedure Auxiliary_Apply
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access);
 
    overriding procedure Block_Statement
      (Self : in out Visiter;
@@ -715,10 +719,6 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Function_Bodies.Function_Body_Access)
    is null;
-
-   overriding procedure Function_Call
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
 
    overriding procedure Function_Declaration
      (Self : in out Visiter;
@@ -1268,6 +1268,15 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Parameter_Association;
    end Association;
 
+   overriding procedure Auxiliary_Apply
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Function_Call;
+   end Auxiliary_Apply;
+
    -------------------------
    -- Defining_Identifier --
    -------------------------
@@ -1305,19 +1314,6 @@ package body Asis.Extensions.Flat_Kinds is
       Element.Data.Visit (V);
       return V.Result;
    end Flat_Kind;
-
-   -------------------
-   -- Function_Call --
-   -------------------
-
-   overriding procedure Function_Call
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
-   is
-      pragma Unreferenced (Node);
-   begin
-      Self.Result := A_Function_Call;
-   end Function_Call;
 
    overriding procedure Operator_Symbol
      (Self : in out Visiter;

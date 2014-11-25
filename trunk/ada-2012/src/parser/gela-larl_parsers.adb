@@ -144,7 +144,7 @@ package body Gela.LARL_Parsers is
       Prefix : Gela.Lexical_Types.Token_Count;
       Left   : Gela.Elements.Expressions.Expression_Access;
       Right  : Gela.Elements.Expressions.Expression_Access := null)
-      return Gela.Elements.Function_Calls.Function_Call_Access
+      return Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access
    is
       use type Gela.Elements.Expressions.Expression_Access;
 
@@ -177,7 +177,7 @@ package body Gela.LARL_Parsers is
       P := Gela.Elements.Prefixes.Prefix_Access
         (Self.Factory.Operator_Symbol (Prefix));
 
-      return Self.Factory.Function_Call
+      return Self.Factory.Auxiliary_Apply
         (Prefix                   => P,
          Function_Call_Parameters => Self.Factory.Record_Aggregate
            (Left_Token                    => 0,
@@ -289,11 +289,13 @@ package body Gela.LARL_Parsers is
         (Constraint);
 
       if Subtype_Constraint = null and then
-        Mark.all in Gela.Elements.Function_Calls.Function_Call'Class
+        Mark.all in Gela.Elements.Auxiliary_Applies.Auxiliary_Apply'Class
       then
          declare
-            Call : constant Gela.Elements.Function_Calls.Function_Call_Access
-              := Gela.Elements.Function_Calls.Function_Call_Access (Mark);
+            Call : constant Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access
+                := Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access
+                  (Mark);
             Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
               Call.Prefix;
             Args   : constant Gela.Elements.Record_Aggregates.

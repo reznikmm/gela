@@ -2114,7 +2114,7 @@ Rules for function_body.function_access :
 function_call ::= prefix record_aggregate;
 
 Rules for function_call. :
-(.  ${function_call.ast} := +Self.Factory.Function_Call
+(.  ${function_call.ast} := +Self.Factory.Auxiliary_Apply
      (-${prefix.ast}, -${record_aggregate.ast});
 .)
 

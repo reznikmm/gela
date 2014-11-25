@@ -33,7 +33,7 @@ Inherited attributes
   expression_or_box,
   extension_aggregate,
   floating_point_definition,
-  function_call,
+  auxiliary_apply,
   generic_formal_parameter,
   identifier,
   if_expression,
@@ -332,10 +332,10 @@ Rules for formal_procedure_declaration. :
       ${Formal_Subprogram_Default.Down} := 0;  --  FIXME
 .)
 
-Rules for function_call. :
+Rules for auxiliary_apply. :
 (.
       Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
-        (${function_call.Down}, 1, ${prefix.Down});
+        (${auxiliary_apply.Down}, 1, ${prefix.Down});
 .)
 
 Rules for function_declaration. :
@@ -886,7 +886,7 @@ Rules for discrete_subtype_indication_dr. :
       ${Subtype_Constraint.Down} := 0;  --  FIXME
 .)
 
-Rules for function_call. :
+Rules for auxiliary_apply. :
 (.
       ${Function_Call_Parameters.Down} := 0;  --  FIXME
 .)

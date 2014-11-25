@@ -3,7 +3,7 @@ with Asis.Exceptions;
 with Asis.Implementation;
 
 with Gela.Element_Visiters;
-with Gela.Elements.Function_Calls;
+with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Procedure_Call_Statements;
 with Gela.Elements.Record_Aggregates;
 
@@ -54,9 +54,10 @@ package body Asis is
             Is_Record_Aggregate : Boolean := False;
          end record;
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;
@@ -72,9 +73,10 @@ package body Asis is
 
       package body Get is
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
          is
          begin
             if Self.Is_Record_Aggregate then
@@ -83,7 +85,7 @@ package body Asis is
                Self.Is_Function_Call := True;
                Node.Enclosing_Element.Visit (Self);
             end if;
-         end Function_Call;
+         end Auxiliary_Apply;
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;

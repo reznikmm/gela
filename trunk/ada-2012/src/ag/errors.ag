@@ -38,7 +38,7 @@ Synthesized attributes
   extended_return_statement,
   extension_aggregate,
   for_loop_statement,
-  function_call,
+  auxiliary_apply,
   goto_statement,
   identifier,
   if_expression,
@@ -110,9 +110,9 @@ Rules for attribute_reference. :
       ${attribute_reference.Errors} := 0;  -- ${prefix.Errors}
 .)
 
-Rules for function_call. :
+Rules for auxiliary_apply. :
 (.
-      ${function_call.Errors} := 0;
+      ${auxiliary_apply.Errors} := 0;
 .)
 
 Rules for subtype_indication. :

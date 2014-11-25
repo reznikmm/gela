@@ -837,7 +837,7 @@ function_body ::=
   token                      <semicolon_token>
 ;
 
-function_call ::= prefix record_aggregate <Function_Call_Parameters>;
+auxiliary_apply ::= prefix record_aggregate <Function_Call_Parameters>;
 
 function_declaration ::=
   token                      <not_token>
@@ -1161,7 +1161,7 @@ name ::= direct_name |
   explicit_dereference |
   selected_component |
   attribute_reference |
-  function_call |
+  auxiliary_apply |
   character_literal |
   qualified_expression;
 
@@ -1688,7 +1688,7 @@ subtype_mark ::= identifier |
   selected_identifier |
   selected_component |
   attribute_reference |
-  function_call;
+  auxiliary_apply;
 
 subtype_mark_or_access_definition ::= subtype_mark | access_definition;
 

@@ -17,7 +17,7 @@ Synthesized attributes
   explicit_dereference,
   expression,
   extension_aggregate,
-  function_call,
+  auxiliary_apply,
   identifier,
   if_expression,
   membership_test,
@@ -93,14 +93,14 @@ Rules for composite_constraint. :
       ${composite_constraint.Up} := 0;  --  FIXME
 .)
 
-Rules for function_call. :
+Rules for auxiliary_apply. :
 (.
       Gela.Pass_Utils.Resolve.Function_Call
         (Self.Compilation,
-         ${function_call.env_in},
+         ${auxiliary_apply.env_in},
          ${prefix.Up},
          ${Function_Call_Parameters.Up},
-         ${function_call.Up});
+         ${auxiliary_apply.Up});
 .)
 
 Rules for character_literal.character_literal_token :

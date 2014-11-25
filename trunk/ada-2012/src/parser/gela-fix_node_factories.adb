@@ -1,6 +1,6 @@
 with Gela.Nodes.Fixed_Operator_Symbols;
 with Gela.Element_Visiters;
-with Gela.Elements.Function_Calls;
+with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Associations;
 with Gela.Elements.Record_Aggregates;
 with Gela.Elements.Prefixes;
@@ -35,26 +35,28 @@ package body Gela.Fix_Node_Factories is
    is
       package Get is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Elements.Function_Calls.Function_Call_Access;
+            Result : Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access;
          end record;
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
       end Get;
 
       package body Get is
 
-         overriding procedure Function_Call
+         overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
          is
          begin
             Self.Result := Node;
-         end Function_Call;
+         end Auxiliary_Apply;
       end Get;
 
-      use type Gela.Elements.Function_Calls.Function_Call_Access;
+      use type Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access;
 
       V    : Get.Visiter;
       Parent : Gela.Node_Factories.Element_Factory renames
@@ -78,8 +80,8 @@ package body Gela.Fix_Node_Factories is
                (Left_Token                    => 0,
                 Record_Component_Associations => Args,
                 Right_Token                   => 0);
-         Call : constant Gela.Elements.Function_Calls.Function_Call_Access :=
-           Self.Function_Call
+         Call : constant Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access
+           := Self.Auxiliary_Apply
              (Prefix                   => Prefix,
               Function_Call_Parameters => RA);
          Name : constant Gela.Elements.Names.Name_Access :=

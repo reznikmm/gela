@@ -11,7 +11,7 @@ Synthesized attributes
   expression,
   expression_or_box,
   extension_aggregate,
-  function_call,
+  auxiliary_apply,
   identifier,
   if_expression,
   membership_test,
@@ -71,9 +71,9 @@ Rules for explicit_dereference. :
 (.
 	  ${explicit_dereference.static_value} := 0;  --  FIXME
 .)
-Rules for function_call. :
+Rules for auxiliary_apply. :
 (.
-	  ${function_call.static_value} := Gela.Pass_Utils.Create_Function_Call_Value
+	  ${auxiliary_apply.static_value} := Gela.Pass_Utils.Create_Function_Call_Value
 	    (Self.Compilation, ${Function_Call_Parameters.static_value});
 .)
 Rules for qualified_expression. :
