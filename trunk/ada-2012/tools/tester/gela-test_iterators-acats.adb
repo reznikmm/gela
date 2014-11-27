@@ -25,7 +25,8 @@ package body Gela.Test_Iterators.ACATS is
    function Create
      (Command   : League.Strings.Universal_String;
       List_File : League.Strings.Universal_String;
-      ACATS     : League.Strings.Universal_String)
+      ACATS     : League.Strings.Universal_String;
+      Fixture   : League.Strings.Universal_String)
      return Iterator
    is
 
@@ -63,7 +64,7 @@ package body Gela.Test_Iterators.ACATS is
                   Arguments => Args,
                   Info      =>
                     (Name    => Name,
-                     Fixture => League.Strings.To_Universal_String ("ACATS"),
+                     Fixture => Fixture,
                      File    => <>)));
 
             Result.List.Append (Test);

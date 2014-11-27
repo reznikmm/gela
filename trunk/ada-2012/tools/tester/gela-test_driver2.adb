@@ -152,26 +152,31 @@ begin
         Gela.Test_Iterators.ACATS.Create
           (Command   => Build & "/tests/gela/lexer_test",
            List_File => Tests & "/gela/lexer/list.txt",
+           Fixture   => League.Strings.To_Universal_String ("lexer_test"),
            ACATS     => ACATS_Dir);
       Parser : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Build & "/tests/gela/parser_test",
            List_File => Tests & "/gela/parser/list.txt",
+           Fixture   => League.Strings.To_Universal_String ("parser_test"),
            ACATS     => ACATS_Dir);
       Def_Name : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Build & "/asis/def_name",
            List_File => Tests & "/asis/def_name/list.txt",
+           Fixture   => League.Strings.To_Universal_String ("def_name"),
            ACATS     => ACATS_Dir);
       ASIS2XML : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Build & "/asis/gela2xml",
            List_File => Tests & "/asis/asis2xml.gpl/list.txt",
+           Fixture   => League.Strings.To_Universal_String ("asis2xml"),
            ACATS     => ACATS_Dir);
       Run_Compiler : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Compiler_Test & "/comp.sh",
            List_File => Compiler_Test & "/list.txt",
+           Fixture   => League.Strings.To_Universal_String ("comp.sh"),
            ACATS     => ACATS_Dir);
       Iterator : Gela.Test_Iterators.Append.Iterator :=
         Dirs + Lexer + Parser + Def_Name + ASIS2XML + Run_Compiler;
@@ -180,6 +185,9 @@ begin
 
       while Iterator.Has_More_Tests loop
          Iterator.Next (Test);
+         Ada.Wide_Wide_Text_IO.Put_Line
+           (Test.Fixture.To_Wide_Wide_String & "/" &
+              Test.Name.To_Wide_Wide_String);
          Queue.Put (Test);
       end loop;
 

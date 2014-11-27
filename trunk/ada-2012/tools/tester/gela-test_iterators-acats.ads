@@ -17,7 +17,8 @@ package Gela.Test_Iterators.ACATS is
    function Create
      (Command   : League.Strings.Universal_String;
       List_File : League.Strings.Universal_String;
-      ACATS     : League.Strings.Universal_String)
+      ACATS     : League.Strings.Universal_String;
+      Fixture   : League.Strings.Universal_String)
       return Iterator;
    --  Create iterator for enumerating tests containing in Source directory.
    --  Build point to directory where tests will be build.

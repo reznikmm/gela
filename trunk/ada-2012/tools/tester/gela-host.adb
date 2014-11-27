@@ -10,7 +10,6 @@
 with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Streams;
-with Ada.Wide_Wide_Text_IO;
 with GNAT.OS_Lib;
 with GNAT.Source_Info;
 with Interfaces.C.Strings;
@@ -153,8 +152,6 @@ package body Gela.Host is
          Text.Append (Directory);
          Text.Append ("]");
       end if;
-
-      Ada.Wide_Wide_Text_IO.Put_Line (Text.To_Wide_Wide_String);
 
       if pipe2 (FD => Output1, Flags => O_CLOEXEC) = -1 then
          raise Program_Error with "pipe (output) failed";
