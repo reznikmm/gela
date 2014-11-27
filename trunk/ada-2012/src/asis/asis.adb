@@ -3,7 +3,9 @@ with Asis.Exceptions;
 with Asis.Implementation;
 
 with Gela.Element_Visiters;
+with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Procedure_Call_Statements;
 with Gela.Elements.Record_Aggregates;
 
@@ -48,16 +50,28 @@ package body Asis is
 
    function Auxilary (Element : in Asis.Element) return Boolean is
       package Get is
+         type Flag is (Is_Association, Is_Function_Call, Is_Record_Aggregate);
+         type Flag_Array is array (Flag) of Boolean;
+         None : constant Flag_Array := (others => False);
+
          type Visiter is new Gela.Element_Visiters.Visiter with record
             Result : Boolean := False;
-            Is_Function_Call : Boolean := False;
-            Is_Record_Aggregate : Boolean := False;
+            Flags : Flag_Array := None;
          end record;
+
+         overriding procedure Association
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Associations.Association_Access);
 
          overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
             Node : not null Gela.Elements.Auxiliary_Applies.
               Auxiliary_Apply_Access);
+
+         overriding procedure Composite_Constraint
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access);
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;
@@ -73,19 +87,38 @@ package body Asis is
 
       package body Get is
 
+         overriding procedure Association
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Associations.Association_Access) is
+         begin
+            if Self.Flags = None then
+               Self.Flags (Is_Association) := True;
+               Node.Enclosing_Element.Visit (Self);
+            end if;
+         end Association;
+
          overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
             Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access)
-         is
+              Auxiliary_Apply_Access) is
          begin
-            if Self.Is_Record_Aggregate then
-               Self.Result := True;
-            else
-               Self.Is_Function_Call := True;
+            if Self.Flags = None then
+               Self.Flags (Is_Function_Call) := True;
                Node.Enclosing_Element.Visit (Self);
+            else
+               Self.Result := Self.Flags (Is_Record_Aggregate);
             end if;
          end Auxiliary_Apply;
+
+         overriding procedure Composite_Constraint
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            Self.Result := Self.Flags (Is_Association);
+         end Composite_Constraint;
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;
@@ -94,7 +127,7 @@ package body Asis is
          is
             pragma Unreferenced (Node);
          begin
-            Self.Result := Self.Is_Function_Call;
+            Self.Result := Self.Flags (Is_Function_Call);
          end Procedure_Call_Statement;
 
          overriding procedure Record_Aggregate
@@ -102,8 +135,10 @@ package body Asis is
             Node : not null Gela.Elements.Record_Aggregates.
               Record_Aggregate_Access) is
          begin
-            Self.Is_Record_Aggregate := True;
-            Node.Enclosing_Element.Visit (Self);
+            if Self.Flags = None then
+               Self.Flags (Is_Record_Aggregate) := True;
+               Node.Enclosing_Element.Visit (Self);
+            end if;
          end Record_Aggregate;
 
       end Get;

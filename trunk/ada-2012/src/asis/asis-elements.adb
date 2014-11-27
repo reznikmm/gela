@@ -167,10 +167,19 @@ package body Asis.Elements is
      (Definition : in Asis.Constraint)
       return Asis.Constraint_Kinds
    is
+      Map : constant array (F.A_Constraint) of Asis.Constraint_Kinds :=
+        (F.A_Range_Attribute_Reference => Asis.A_Range_Attribute_Reference,
+         F.A_Simple_Expression_Range => Asis.A_Simple_Expression_Range,
+         F.A_Digits_Constraint => Asis.A_Digits_Constraint,
+         F.A_Delta_Constraint => Asis.A_Delta_Constraint,
+         F.An_Index_Constraint => Asis.An_Index_Constraint,
+         F.A_Discriminant_Constraint => Asis.A_Discriminant_Constraint);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Definition);
    begin
-      if Assigned (Definition) then
-         Raise_Not_Implemented ("");
-         return Not_A_Constraint;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Constraint;
       end if;
@@ -506,10 +515,19 @@ package body Asis.Elements is
      (Definition : in Asis.Discrete_Range)
       return Asis.Discrete_Range_Kinds
    is
+      Map : constant array (F.A_Discrete_Range) of Asis.Discrete_Range_Kinds
+        := (F.A_Discrete_Subtype_Indication_DR =>
+              A_Discrete_Subtype_Indication,
+            F.A_Discrete_Range_Attribute_Reference_DR =>
+              A_Discrete_Range_Attribute_Reference,
+            F.A_Discrete_Simple_Expression_Range_DR =>
+              A_Discrete_Simple_Expression_Range);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Definition);
    begin
-      if Assigned (Definition) then
-         Raise_Not_Implemented ("");
-         return Not_A_Discrete_Range;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Discrete_Range;
       end if;
@@ -1245,7 +1263,7 @@ package body Asis.Elements is
    is
    begin
       if Assigned (Element) then
-         Raise_Not_Implemented ("");
+--         Raise_Not_Implemented ("");
          return Not_A_Trait;
       else
          return Not_A_Trait;

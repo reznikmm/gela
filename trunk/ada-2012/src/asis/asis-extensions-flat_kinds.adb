@@ -262,8 +262,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Assignment_Statement
      (Self : in out Visiter;
       Node : not null Gela.Elements.Assignment_Statements.
-        Assignment_Statement_Access)
-   is null;
+        Assignment_Statement_Access);
 
    overriding procedure Association
      (Self : in out Visiter;
@@ -371,8 +370,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Composite_Constraint
      (Self : in out Visiter;
       Node : not null Gela.Elements.Composite_Constraints.
-        Composite_Constraint_Access)
-   is null;
+        Composite_Constraint_Access);
 
    overriding procedure Constrained_Array_Definition
      (Self : in out Visiter;
@@ -890,14 +888,12 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Numeric_Literal
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Numeric_Literals.Numeric_Literal_Access)
-   is null;
+      Node : not null Gela.Elements.Numeric_Literals.Numeric_Literal_Access);
 
    overriding procedure Object_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Object_Declarations.
-        Object_Declaration_Access)
-   is null;
+        Object_Declaration_Access);
 
    overriding procedure Object_Renaming_Declaration
      (Self : in out Visiter;
@@ -1143,8 +1139,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Simple_Expression_Range_Dr
      (Self : in out Visiter;
       Node : not null Gela.Elements.Simple_Expression_Range_Drs.
-        Simple_Expression_Range_Dr_Access)
-   is null;
+        Simple_Expression_Range_Dr_Access);
 
    overriding procedure Simple_Return_Statement
      (Self : in out Visiter;
@@ -1177,8 +1172,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Subtype_Indication
      (Self : in out Visiter;
       Node : not null Gela.Elements.Subtype_Indications.
-        Subtype_Indication_Access)
-   is null;
+        Subtype_Indication_Access);
 
    overriding procedure Subunit
      (Self : in out Visiter;
@@ -1259,6 +1253,16 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.With_Clauses.With_Clause_Access);
 
+   overriding procedure Assignment_Statement
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Assignment_Statements.
+        Assignment_Statement_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Assignment_Statement;
+   end Assignment_Statement;
+
    overriding procedure Association
      (Self : in out Visiter;
       Node : not null Gela.Elements.Associations.Association_Access)
@@ -1276,6 +1280,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Function_Call;
    end Auxiliary_Apply;
+
+   overriding procedure Composite_Constraint
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Composite_Constraints.
+        Composite_Constraint_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Index_Constraint;  --  FIXME
+   end Composite_Constraint;
 
    -------------------------
    -- Defining_Identifier --
@@ -1314,6 +1328,29 @@ package body Asis.Extensions.Flat_Kinds is
       Element.Data.Visit (V);
       return V.Result;
    end Flat_Kind;
+
+   overriding procedure Numeric_Literal
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Numeric_Literals.Numeric_Literal_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Integer_Literal;
+   end Numeric_Literal;
+
+   overriding procedure Object_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Object_Declarations.
+        Object_Declaration_Access)
+   is
+      use type Gela.Lexical_Types.Token_Count;
+   begin
+      if Node.Constant_Token = 0 then
+         Self.Result := A_Variable_Declaration;
+      else
+         Self.Result := A_Constant_Declaration;
+      end if;
+   end Object_Declaration;
 
    overriding procedure Operator_Symbol
      (Self : in out Visiter;
@@ -1413,6 +1450,16 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Selected_Component;
    end Selected_Identifier;
 
+   overriding procedure Simple_Expression_Range_Dr
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Simple_Expression_Range_Drs.
+        Simple_Expression_Range_Dr_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Discrete_Simple_Expression_Range_DR;
+   end Simple_Expression_Range_Dr;
+
    --------------------
    -- String_Literal --
    --------------------
@@ -1425,6 +1472,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_String_Literal;
    end String_Literal;
+
+   overriding procedure Subtype_Indication
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Subtype_Indications.
+        Subtype_Indication_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Subtype_Indication;
+   end Subtype_Indication;
 
    ------------------------
    -- Use_Package_Clause --
