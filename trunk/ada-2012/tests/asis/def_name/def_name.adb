@@ -2,6 +2,7 @@ with Ada.Command_Line;
 with Ada.Strings.Wide_Fixed;
 with Ada.Wide_Text_IO;
 with Ada.Wide_Wide_Text_IO;
+with Ada.Containers.Generic_Array_Sort;
 
 with Asis;
 with Asis.Ada_Environments;
@@ -22,7 +23,38 @@ procedure Def_Name is
    procedure On_Unit (Unit : Asis.Compilation_Unit);
    procedure On_Identifier (Item : Asis.Identifier);
 
+   function Less (Left, Right : Asis.Compilation_Unit) return Boolean;
+
+   procedure Sort is new Ada.Containers.Generic_Array_Sort
+     (Index_Type   => Asis.List_Index,
+      Element_Type => Asis.Compilation_Unit,
+      Array_Type   => Asis.Compilation_Unit_List,
+      "<"          => Less);
+
    Result : League.Strings.Universal_String;
+
+   ----------
+   -- Less --
+   ----------
+
+   function Less (Left, Right : Asis.Compilation_Unit) return Boolean is
+      use type Asis.Text.Line_Number;
+
+      Left_Line : constant Asis.Text.Line_Number :=
+        Asis.Text.First_Line_Number (Asis.Elements.Unit_Declaration (Left));
+      Right_Line : constant Asis.Text.Line_Number :=
+        Asis.Text.First_Line_Number (Asis.Elements.Unit_Declaration (Right));
+      Left_Name : constant Asis.Program_Text :=
+        Asis.Compilation_Units.Text_Name (Left);
+      Right_Name : constant Asis.Program_Text :=
+        Asis.Compilation_Units.Text_Name (Right);
+   begin
+      if Left_Name = Right_Name then
+         return Left_Line < Right_Line;
+      else
+         return Left_Name < Right_Name;
+      end if;
+   end Less;
 
    -------------------
    -- On_Identifier --
@@ -109,9 +141,11 @@ begin
    declare
       Name : constant Wide_String := "/" &
         Args.Element (Args.Length).To_UTF_16_Wide_String;
-      List : constant Asis.Compilation_Unit_List :=
+      List : Asis.Compilation_Unit_List :=
         Asis.Compilation_Units.Compilation_Units (Context);
    begin
+      Sort (List);
+
       for J in List'Range loop
          if Name = Ada.Strings.Wide_Fixed.Tail
                      (Source => Asis.Compilation_Units.Text_Name (List (J)),
