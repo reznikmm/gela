@@ -16,6 +16,7 @@ with Interfaces.C.Strings;
 
 with League.Application;
 with League.Text_Codecs;
+with League.Stream_Element_Vectors;
 
 package body Gela.Host is
 
@@ -208,6 +209,7 @@ package body Gela.Host is
          GNAT.OS_Lib.Close (Output1 (1));
 
          declare
+            Data   : League.Stream_Element_Vectors.Stream_Element_Vector;
             Codec  : constant League.Text_Codecs.Text_Codec :=
               League.Text_Codecs.Codec_For_Application_Locale;
             Buffer : Ada.Streams.Stream_Element_Array (1 .. 1024);
@@ -219,10 +221,11 @@ package body Gela.Host is
 
                exit when Count <= 0;
 
-               Output.Append
-                 (Codec.Decode
-                    (Buffer (1 .. Ada.Streams.Stream_Element_Offset (Count))));
+               Data.Append
+                 (Buffer (1 .. Ada.Streams.Stream_Element_Offset (Count)));
             end loop;
+
+            Output.Append (Codec.Decode (Data));
 
             GNAT.OS_Lib.Close (Input (1));
             GNAT.OS_Lib.Close (Output1 (0));
