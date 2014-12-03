@@ -9,30 +9,42 @@
 
 with League.Strings;
 
+with Gela.Element_Factories;
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Unit_Bodies;
-with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Context_Items;
+with Gela.Elements.Defining_Designators;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Function_Declarations;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Package_Declarations;
+with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Program_Unit_Names;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Use_Package_Clauses;
 with Gela.Elements.With_Clauses;
 with Gela.Environments;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
+with Gela.Elements.Defining_Operator_Symbols;
+with Gela.Defining_Name_Cursors;
 
 package body Gela.Pass_Utils is
 
    procedure Preprocess_Standard
      (Comp : Gela.Compilations.Compilation_Access;
       Unit : Gela.Elements.Element_Access);
+
+   procedure Postprocess_Standard
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access;
+      Env  : in out Gela.Semantic_Types.Env_Index);
 
    function Is_Enumeration
      (Decl : Gela.Elements.Element_Access) return Boolean;
@@ -333,13 +345,14 @@ package body Gela.Pass_Utils is
 
    function Create_Function_Call_Value
      (Comp          : Gela.Compilations.Compilation_Access;
+      Name          : Gela.Semantic_Types.Value_Index;
       Arguments     : Gela.Semantic_Types.Value_Index)
       return Gela.Semantic_Types.Value_Index
    is
       Result : Gela.Semantic_Types.Value_Index;
    begin
       Comp.Context.Values.Apply
-        (Name  => Gela.Semantic_Types.Concat,
+        (Name  => Name,
          Args  => Arguments,
          Value => Result);
 
@@ -366,6 +379,20 @@ package body Gela.Pass_Utils is
 
       return Result;
    end Create_String_Value;
+
+   procedure End_Of_Compilation_Unit_Declaration
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Unit   : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Env    : in out Gela.Semantic_Types.Env_Index)
+   is
+      use type Gela.Lexical_Types.Symbol;
+   begin
+      if Symbol = Gela.Lexical_Types.Predefined_Symbols.Standard then
+         Postprocess_Standard (Comp, Unit, Env);
+      end if;
+   end End_Of_Compilation_Unit_Declaration;
 
    --------------------
    -- Is_Enumeration --
@@ -468,6 +495,177 @@ package body Gela.Pass_Utils is
 
       return Result;
    end Parents_Declarative_Region;
+
+   --------------------------
+   -- Postprocess_Standard --
+   --------------------------
+
+   procedure Postprocess_Standard
+     (Comp : Gela.Compilations.Compilation_Access;
+      Unit : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access;
+      Env  : in out Gela.Semantic_Types.Env_Index)
+   is
+      pragma Unreferenced (Unit);
+
+      function Create_Operator
+        (Operator_Symbol : Gela.Lexical_Types.Symbol;
+         Type_Symbol     : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Function_Declarations.
+                  Function_Declaration_Access;
+
+      function Create_Subtype
+        (Type_Symbol : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+           Subtype_Mark_Or_Access_Definition_Access;
+
+      function Get_Type
+        (Type_Symbol : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      Env_Set : constant Gela.Environments.Environment_Set_Access :=
+        Comp.Context.Environment_Set;
+
+      Factory : constant Gela.Element_Factories.Element_Factory_Access :=
+        Comp.Factory;
+
+      ---------------------
+      -- Create_Operator --
+      ---------------------
+
+      function Create_Operator
+        (Operator_Symbol : Gela.Lexical_Types.Symbol;
+         Type_Symbol     : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Function_Declarations.
+                  Function_Declaration_Access
+      is
+         FD : Gela.Elements.Function_Declarations.Function_Declaration_Access;
+
+         Oper : constant Gela.Elements.Defining_Operator_Symbols.
+           Defining_Operator_Symbol_Access :=
+             Factory.Defining_Operator_Symbol
+               (Operator_Symbol_Token => 0);
+
+         Name : Gela.Elements.Defining_Designators.Defining_Designator_Access;
+
+         Param : Gela.Elements.Parameter_Specifications.
+           Parameter_Specification_Access;
+
+         Params : constant Gela.Elements.Parameter_Specifications.
+           Parameter_Specification_Sequence_Access :=
+             Factory.Parameter_Specification_Sequence;
+
+         Mark : Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+           Subtype_Mark_Or_Access_Definition_Access;
+      begin
+         Oper.Set_Full_Name (Operator_Symbol);
+
+         Name := Gela.Elements.Defining_Designators.Defining_Designator_Access
+           (Oper);
+
+         for J in 1 .. 2 loop
+            Mark := Create_Subtype (Type_Symbol);
+
+            Param := Factory.Parameter_Specification
+              (Names                      =>
+                 Factory.Defining_Identifier_Sequence,
+               Colon_Token                => 0,
+               Aliased_Token              => 0,
+               In_Token                   => 0,
+               Out_Token                  => 0,
+               Not_Token                  => 0,
+               Null_Token                 => 0,
+               Object_Declaration_Subtype => Mark,
+               Assignment_Token           => 0,
+               Initialization_Expression  => null);
+                     Params.Append (Param);
+         end loop;
+
+         Mark := Create_Subtype (Type_Symbol);
+
+         FD := Factory.Function_Declaration
+           (Not_Token             => 0,
+            Overriding_Token      => 0,
+            Function_Token        => 0,
+            Names                 => Name,
+            Lp_Token              => 0,
+            Parameter_Profile     => Params,
+            Rp_Token              => 0,
+            Return_Token          => 0,
+            Return_Not_Token      => 0,
+            Return_Null_Token     => 0,
+            Result_Subtype        => Mark,
+            Is_Token              => 0,
+            Abstract_Token        => 0,
+            Result_Expression     => null,
+            Renames_Token         => 0,
+            Renamed_Entity        => null,
+            Separate_Token        => 0,
+            Aspect_Specifications => Factory.Aspect_Specification_Sequence,
+            Semicolon_Token       => 0);
+
+         Env := Env_Set.Add_Defining_Name
+           (Index  => Env,
+            Symbol => Operator_Symbol,
+            Name   => Gela.Elements.Defining_Names.Defining_Name_Access
+              (Name));
+
+         return FD;
+      end Create_Operator;
+
+      --------------------
+      -- Create_Subtype --
+      --------------------
+
+      function Create_Subtype
+        (Type_Symbol     : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+           Subtype_Mark_Or_Access_Definition_Access
+      is
+         Identifier : Gela.Elements.Identifiers.Identifier_Access;
+
+         Mark : Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+           Subtype_Mark_Or_Access_Definition_Access;
+      begin
+         Identifier := Factory.Identifier (Identifier_Token => 0);
+         Identifier.Set_Full_Name (Type_Symbol);
+         Identifier.Set_Defining_Name (Get_Type (Type_Symbol));
+
+         Mark := Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+           Subtype_Mark_Or_Access_Definition_Access (Identifier);
+
+         return Mark;
+      end Create_Subtype;
+
+      --------------
+      -- Get_Type --
+      --------------
+
+      function Get_Type
+        (Type_Symbol : Gela.Lexical_Types.Symbol)
+         return Gela.Elements.Defining_Names.Defining_Name_Access
+      is
+         Pos : constant Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
+           := Env_Set.Direct_Visible (Env, Type_Symbol);
+      begin
+         if Pos.Has_Element then
+            return Pos.Element;
+         else
+            raise Constraint_Error;
+         end if;
+      end Get_Type;
+
+      FD : Gela.Elements.Function_Declarations.Function_Declaration_Access;
+      pragma Unreferenced (FD);
+   begin
+      FD := Create_Operator
+        (Operator_Symbol => Gela.Lexical_Types.Operators.Hyphen_Operator,
+         Type_Symbol     => Gela.Lexical_Types.Predefined_Symbols.Integer);
+
+      FD := Create_Operator
+        (Operator_Symbol => Gela.Lexical_Types.Operators.Ampersand_Operator,
+         Type_Symbol     => Gela.Lexical_Types.Predefined_Symbols.String);
+   end Postprocess_Standard;
 
    -------------------------
    -- Preprocess_Standard --

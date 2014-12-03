@@ -502,7 +502,17 @@ package body Gela.Plain_Symbol_Sets is
          Wide_Width_Symbol,
          Width_Symbol,
          Write_Symbol,
-         Standard_Symbol);
+         Standard_Symbol,
+         Boolean_Symbol,
+         Integer_Symbol,
+         Float_Symbol,
+         Character_Symbol,
+         Wide_Character_Symbol,
+         Wide_Wide_Character_Symbol,
+         String_Symbol,
+         Wide_String_Symbol,
+         Wide_Wide_String_Symbol,
+         Duration_Symbol);
       pragma Warnings (On);
 
       function To_Mixed_Case

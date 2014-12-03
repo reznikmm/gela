@@ -8,6 +8,7 @@
 ------------------------------------------------------------------------------
 
 with Gela.Compilations;
+with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Lexical_Types;
@@ -69,7 +70,15 @@ package Gela.Pass_Utils is
 
    function Create_Function_Call_Value
      (Comp          : Gela.Compilations.Compilation_Access;
+      Name          : Gela.Semantic_Types.Value_Index;
       Arguments     : Gela.Semantic_Types.Value_Index)
       return Gela.Semantic_Types.Value_Index;
+
+   procedure End_Of_Compilation_Unit_Declaration
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Unit   : Gela.Elements.Compilation_Unit_Declarations.
+        Compilation_Unit_Declaration_Access;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Env    : in out Gela.Semantic_Types.Env_Index);
 
 end Gela.Pass_Utils;

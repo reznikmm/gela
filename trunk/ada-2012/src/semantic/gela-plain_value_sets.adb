@@ -1,5 +1,11 @@
 with League.Strings.Hash;
 
+with Gela.Element_Visiters;
+with Gela.Elements.Defining_Designators;
+with Gela.Elements.Defining_Operator_Symbols;
+with Gela.Elements.Function_Declarations;
+with Gela.Lexical_Types;
+
 package body Gela.Plain_Value_Sets is
 
    ------------
@@ -8,20 +14,32 @@ package body Gela.Plain_Value_Sets is
 
    overriding procedure Apply
      (Self  : in out Value_Set;
-      Name  : Gela.Semantic_Types.Static_Operator;
+      Name  : Gela.Semantic_Types.Value_Index;
       Args  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index)
    is
       use type League.Strings.Universal_String;
       use type Gela.Semantic_Types.Value_Index;
+      Op : Gela.Semantic_Types.Static_Operator;
    begin
       Value := 0;
 
-      if Args = 0 then
+      if Args = 0 or Name = 0 then
          return;
       end if;
 
-      case Name is
+      declare
+         Item : constant Gela.Plain_Value_Sets.Value :=
+           Self.Vector.Element (Name);
+      begin
+         if Item.Kind = Denote_Function then
+            Op := Item.Op;
+         else
+            return;
+         end if;
+      end;
+
+      case Op is
          when Gela.Semantic_Types.Concat =>
             declare
                Item : constant Gela.Plain_Value_Sets.Value :=
@@ -61,6 +79,92 @@ package body Gela.Plain_Value_Sets is
    end List;
 
    ----------
+   -- Name --
+   ----------
+
+   overriding procedure Name
+     (Self  : in out Value_Set;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Value : out Gela.Semantic_Types.Value_Index)
+   is
+
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Semantic_Types.Value_Index := 0;
+         end record;
+
+         overriding procedure Defining_Operator_Symbol
+           (V    : in out Visiter;
+            Node : not null Gela.Elements.Defining_Operator_Symbols.
+              Defining_Operator_Symbol_Access);
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Defining_Operator_Symbol
+           (V    : in out Visiter;
+            Node : not null Gela.Elements.Defining_Operator_Symbols.
+              Defining_Operator_Symbol_Access)
+         is
+            Symbol : constant Gela.Lexical_Types.Symbol := Node.Full_Name;
+         begin
+            case Symbol is
+               when Gela.Lexical_Types.Operators.Ampersand_Operator =>
+                  declare
+                     Item  : constant Gela.Plain_Value_Sets.Value :=
+                       (Denote_Function, Gela.Semantic_Types.Concat);
+                  begin
+                     Put_Value (Self  => Self,
+                                Item  => Item,
+                                Value => V.Result);
+                  end;
+               when others =>
+                  null;
+            end case;
+         end Defining_Operator_Symbol;
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access)
+         is
+            Name : constant Gela.Elements.Defining_Designators.
+              Defining_Designator_Access := Node.Names;
+         begin
+            Name.Visit (Self);
+         end Function_Declaration;
+
+      end Get;
+
+      use type Gela.Elements.Element_Access;
+      use type Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      V : aliased Get.Visiter;
+   begin
+      if Name /= null and then Name.Enclosing_Element = null then
+         Name.Enclosing_Element.Visit (V);
+      else
+         --  FIXME stub until name resolution ready
+         declare
+            Item  : constant Gela.Plain_Value_Sets.Value :=
+              (Denote_Function, Gela.Semantic_Types.Concat);
+         begin
+            Put_Value (Self  => Self,
+                       Item  => Item,
+                       Value => V.Result);
+         end;
+      end if;
+
+      Value := V.Result;
+   end Name;
+
+   ----------
    -- Hash --
    ----------
 
@@ -68,6 +172,8 @@ package body Gela.Plain_Value_Sets is
       use type Ada.Containers.Hash_Type;
    begin
       case X.Kind is
+         when Denote_Function =>
+            return Gela.Semantic_Types.Static_Operator'Pos (X.Op);
          when String_Value =>
             return League.Strings.Hash (X.String);
          when List_Value =>

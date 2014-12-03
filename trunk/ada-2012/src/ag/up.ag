@@ -113,7 +113,11 @@ Rules for explicit_dereference. :
 .)
 Rules for operator_symbol.operator_symbol_token :
 (.
-      ${operator_symbol.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Direct_Name
+        (Self.Compilation,
+         ${operator_symbol.env_in},
+         Self.Compilation.Get_Token (${operator_symbol_token.Index}).Symbol,
+         ${operator_symbol.Up});
 .)
 Rules for qualified_expression. :
 (.

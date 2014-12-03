@@ -2,6 +2,7 @@
 with League.Strings;
 
 with Gela.Semantic_Types;
+with Gela.Elements.Defining_Names;
 
 package Gela.Value_Sets is
    pragma Preelaborate;
@@ -17,6 +18,12 @@ package Gela.Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
    --  Get string value for given literal.
 
+   not overriding procedure Name
+     (Self  : in out Value_Set;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Value : out Gela.Semantic_Types.Value_Index) is abstract;
+   --  Get value corresponding to given defining name
+
    not overriding procedure List
      (Self  : in out Value_Set;
       Head  : Gela.Semantic_Types.Value_Index;
@@ -26,7 +33,7 @@ package Gela.Value_Sets is
 
    not overriding procedure Apply
      (Self  : in out Value_Set;
-      Name  : Gela.Semantic_Types.Static_Operator;
+      Name  : Gela.Semantic_Types.Value_Index;
       Args  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
    --  Return Name (Args)

@@ -945,6 +945,10 @@ Rules for compilation_unit_declaration. :
       ${compilation_unit_declaration.declarative_region} := ${Unit_Declaration.declarative_region};
       Self.Compilation.Context.Environment_Set.Set_Library_Unit_Environment
         (${Unit_Declaration.full_name}, ${Unit_Declaration.declarative_region});
+      Gela.Pass_Utils.End_Of_Compilation_Unit_Declaration
+        (Self.Compilation, Node,
+         ${Unit_Declaration.full_name},
+         ${Unit_Declaration.declarative_region});
 .)
 
 Rules for compilation_unit_body. :

@@ -95,9 +95,52 @@ package Gela.Lexical_Types is
    type Token_Count is new Natural;
    subtype Token_Index is Token_Count range 1 .. Token_Count'Last;
 
+   package Operators is
+      subtype Symbol is Gela.Lexical_Types.Symbol range 1 .. 19;
+
+      Less_Operator             : constant Symbol := Token_Kind'Pos
+                                                      (Less_Token);
+      Equal_Operator            : constant Symbol := Token_Kind'Pos
+                                                      (Equal_Token);
+      Greater_Operator          : constant Symbol := Token_Kind'Pos
+                                                      (Greater_Token);
+      Hyphen_Operator           : constant Symbol := Token_Kind'Pos
+                                                      (Hyphen_Token);
+      Slash_Operator            : constant Symbol := Token_Kind'Pos
+                                                      (Slash_Token);
+      Star_Operator             : constant Symbol := Token_Kind'Pos
+                                                      (Star_Token);
+      Ampersand_Operator        : constant Symbol := Token_Kind'Pos
+                                                      (Ampersand_Token);
+      Plus_Operator             : constant Symbol := Token_Kind'Pos
+                                                      (Plus_Token);
+      Less_Or_Equal_Operator    : constant Symbol := Token_Kind'Pos
+                                                      (Less_Or_Equal_Token);
+      Greater_Or_Equal_Operator : constant Symbol := Token_Kind'Pos
+                                                      (Greater_Or_Equal_Token);
+      Inequality_Operator       : constant Symbol := Token_Kind'Pos
+                                                      (Inequality_Token);
+      Double_Star_Operator      : constant Symbol := Token_Kind'Pos
+                                                      (Double_Star_Token);
+      Or_Operator               : constant Symbol := Token_Kind'Pos
+                                                      (Or_Token);
+      And_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (And_Token);
+      Xor_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (Xor_Token);
+      Mod_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (Mod_Token);
+      Rem_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (Rem_Token);
+      Abs_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (Abs_Token);
+      Not_Operator              : constant Symbol := Token_Kind'Pos
+                                                      (Not_Token);
+   end Operators;
+
    package Predefined_Symbols is
       subtype Symbol is
-        Gela.Lexical_Types.Symbol range 16#11_0000# .. 16#11_008B#;
+        Gela.Lexical_Types.Symbol range 16#11_0000# .. 16#11_0095#;
 
       All_Calls_Remote              : constant Symbol := 16#11_0000#;
       Assert                        : constant Symbol := 16#11_0001#;
@@ -239,6 +282,16 @@ package Gela.Lexical_Types is
       Width                         : constant Symbol := 16#11_0089#;
       Write                         : constant Symbol := 16#11_008A#;
       Standard                      : constant Symbol := 16#11_008B#;
+      Boolean                       : constant Symbol := 16#11_008C#;
+      Integer                       : constant Symbol := 16#11_008D#;
+      Float                         : constant Symbol := 16#11_008E#;
+      Character                     : constant Symbol := 16#11_008F#;
+      Wide_Character                : constant Symbol := 16#11_0090#;
+      Wide_Wide_Character           : constant Symbol := 16#11_0091#;
+      String                        : constant Symbol := 16#11_0092#;
+      Wide_String                   : constant Symbol := 16#11_0093#;
+      Wide_Wide_String              : constant Symbol := 16#11_0094#;
+      Duration                      : constant Symbol := 16#11_0095#;
 
       subtype Attribute is Symbol range Access_Symbol .. Write;
 

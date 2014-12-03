@@ -19,6 +19,7 @@ Synthesized attributes
   null_literal,
   numeric_literal,
   operator_symbol,
+  prefix,
   qualified_expression,
   quantified_expression,
   record_aggregate,
@@ -50,13 +51,27 @@ Rules for string_literal.string_literal_token :
 
 Rules for operator_symbol.operator_symbol_token :
 (.
-	  ${operator_symbol.static_value} := Gela.Pass_Utils.Create_String_Value
-	    (Self.Compilation, ${operator_symbol_token.Index});
+      --  Copy/Paste from def_name :-/
+      Self.Compilation.Context.Interpretation_Manager.Get_Defining_Name
+        (${operator_symbol.Down},
+         This_Defining_Name);
+
+      Self.Compilation.Context.Values.Name
+        (This_Defining_Name,
+         ${operator_symbol.static_value});
+
 .)
 
 Rules for identifier.identifier_token :
 (.
-	  ${identifier.static_value} := 0;  --  FIXME
+      --  Copy/Paste from def_name :-/
+      Self.Compilation.Context.Interpretation_Manager.Get_Defining_Name
+        (${identifier.Down},
+         This_Defining_Name);
+
+      Self.Compilation.Context.Values.Name
+        (This_Defining_Name,
+	       ${identifier.static_value}); -- ${identifier.Down}
 .)
 
 Rules for attribute_reference. :
@@ -73,8 +88,10 @@ Rules for explicit_dereference. :
 .)
 Rules for auxiliary_apply. :
 (.
-	  ${auxiliary_apply.static_value} := Gela.Pass_Utils.Create_Function_Call_Value
-	    (Self.Compilation, ${Function_Call_Parameters.static_value});
+      Self.Compilation.Context.Values.Apply
+        (Name  => ${prefix.static_value},
+         Args  => ${Function_Call_Parameters.static_value},
+         Value => ${auxiliary_apply.static_value});
 .)
 Rules for qualified_expression. :
 (.
