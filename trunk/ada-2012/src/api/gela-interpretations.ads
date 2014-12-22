@@ -49,7 +49,6 @@ package Gela.Interpretations is
 
    not overriding procedure On_Defining_Name
      (Self   : in out Visiter;
-      Index  : Gela.Interpretations.Interpretation_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
       Down   : Gela.Interpretations.Interpretation_Index_Array)
         is abstract;
@@ -57,7 +56,6 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression
      (Self   : in out Visiter;
-      Index  : Gela.Interpretations.Interpretation_Index;
       Tipe   : Gela.Semantic_Types.Type_Index;
       Down   : Gela.Interpretations.Interpretation_Index_Array)
         is abstract;
@@ -65,23 +63,41 @@ package Gela.Interpretations is
 
    not overriding procedure On_Attr_Function
      (Self   : in out Visiter;
-      Index  : Gela.Interpretations.Interpretation_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array)
-   is abstract;
+        is abstract;
    --  Called for each attribute denoting function
 
    not overriding procedure Visit
      (Self   : in out Interpretation_Manager;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Target : in out Visiter'Class) is abstract;
-   --  Iterate over all interpretations in Set and call Target visiter
-
-   not overriding procedure Visit
-     (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Index;
       Target : in out Visiter'Class) is abstract;
-   --  For given interpretations call Target visiter
+   --  For interpretation with given persistent Index apply Target visiter
+
+   type Cursor is limited interface;
+
+   not overriding function Has_Element (Self : Cursor) return Boolean is
+     abstract;
+   --  Check if cursor points to an interpretation
+
+   not overriding procedure Next (Self : in out Cursor) is abstract;
+   --  Go to next interpretation in set under cursor
+
+   not overriding procedure Visit
+     (Self   : Cursor;
+      Target : access Visiter'Class) is abstract;
+   --  For current interpretation for cursor apply Target visiter
+
+   not overriding function Get_Index
+     (Self : Cursor) return Gela.Interpretations.Interpretation_Index
+        is abstract;
+   --  Request persistent index for current interpretation
+
+   not overriding function Get_Cursor
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+      return Gela.Interpretations.Cursor'Class is abstract;
+   --  Get cursor to iterate over all interpretations in Set
 
    not overriding procedure Get_Down_Interpretation
      (Self     : in out Interpretation_Manager;

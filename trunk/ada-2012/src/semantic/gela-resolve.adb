@@ -158,19 +158,16 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -184,7 +181,6 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
@@ -197,13 +193,12 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Expression (Index, Tipe, Down);
+            Target.On_Expression (Tipe, Down);
          end On_Expression;
 
       end Each;
@@ -211,9 +206,13 @@ package body Gela.Resolve is
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
-      Visiter    : Each.Visiter;
+      Visiter : aliased Each.Visiter;
+      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Set);
    begin
-      IM.Visit (Set, Visiter);
+      while Cursor.Has_Element loop
+         Cursor.Visit (Visiter'Access);
+         Cursor.Next;
+      end loop;
    end Each_Expression;
 
    -------------------
@@ -260,19 +259,16 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array);
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -284,6 +280,8 @@ package body Gela.Resolve is
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
+      Cursor : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Set);
+
       ----------
       -- Each --
       ----------
@@ -292,7 +290,6 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
@@ -300,23 +297,18 @@ package body Gela.Resolve is
             pragma Unreferenced (Down);
          begin
             Self.Result := TM.Type_By_Name (Name);
-            Self.Index := Index;
+            Self.Index := Cursor.Get_Index;
          end On_Defining_Name;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is
-         begin
-            null;
-         end On_Expression;
 
       end Each;
 
-      Visiter : Each.Visiter;
+      Visiter : aliased Each.Visiter;
    begin
-      IM.Visit (Set, Visiter);
+      while Cursor.Has_Element loop
+         Cursor.Visit (Visiter'Access);
+         Cursor.Next;
+      end loop;
+
       Index := Visiter.Index;
       Result := Visiter.Result;
    end Get_Subtype;
@@ -327,10 +319,20 @@ package body Gela.Resolve is
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Result : out Gela.Interpretations.Interpretation_Index)
    is
-      pragma Unreferenced (Comp);
       pragma Unreferenced (Env);
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      Cursor : constant Gela.Interpretations.Cursor'Class :=
+        IM.Get_Cursor (Set);
+
    begin
-      Result := Gela.Interpretations.Interpretation_Index (Set);
+      if Cursor.Has_Element then
+         Result := Cursor.Get_Index;
+      else
+         Result := 0;
+      end if;
    end Interpretation;
 
    ---------------------
@@ -375,19 +377,16 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array);
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -399,6 +398,8 @@ package body Gela.Resolve is
       ES : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
 
+      Cursor : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Prefix);
+
       ----------
       -- Each --
       ----------
@@ -407,7 +408,6 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
@@ -420,28 +420,22 @@ package body Gela.Resolve is
             while NC.Has_Element loop
                IM.Add_Defining_Name
                  (Name   => NC.Element,
-                  Down   => (1 => Index),
+                  Down   => (1 => Cursor.Get_Index),
                   Result => Set);
 
                NC.Next;
             end loop;
          end On_Defining_Name;
 
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is
-         begin
-            null;
-         end On_Expression;
-
       end Each;
 
-      Visiter : Each.Visiter;
+      Visiter : aliased Each.Visiter;
    begin
       Set := 0;
-      IM.Visit (Prefix, Visiter);
+      while Cursor.Has_Element loop
+         Cursor.Visit (Visiter'Access);
+         Cursor.Next;
+      end loop;
    end Selected_Component;
 
    ----------------------
@@ -506,19 +500,16 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -532,12 +523,10 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Self);
-            pragma Unreferenced (Index);
             pragma Unreferenced (Down);
          begin
             To_Type
@@ -605,19 +594,16 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -625,6 +611,8 @@ package body Gela.Resolve is
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
+
+      Cursor : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Expr_Up);
 
       ----------
       -- Each --
@@ -634,35 +622,36 @@ package body Gela.Resolve is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Name);
             pragma Unreferenced (Down);
          begin
-            Self.Index := Index;
+            Self.Index := Cursor.Get_Index;
          end On_Defining_Name;
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Tipe);
             pragma Unreferenced (Down);
          begin
-            Self.Index := Index;
+            Self.Index := Cursor.Get_Index;
          end On_Expression;
 
       end Each;
 
-      Visiter    : Each.Visiter;
+      Visiter : aliased Each.Visiter;
    begin
       Visiter.Type_Index := Type_Up;
 
-      IM.Visit (Expr_Up, Visiter);
+      while Cursor.Has_Element loop
+         Cursor.Visit (Visiter'Access);
+         Cursor.Next;
+      end loop;
 
       Result := Visiter.Index;
    end To_Type;

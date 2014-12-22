@@ -15,18 +15,13 @@ package body Gela.Plain_Interpretations is
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Attr_Functions.Attr_Function'
           (Gela.Int.Attr_Functions.Create
              (Children => Down'Length,
               Kind     => Kind));
    begin
-      Item.Down := Down;
-      Self.Last_Int := Self.Last_Int + 1;
-      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
-      Self.Interpretations.Insert (Self.Last_Int, Item);
+      Self.Plian_Int_Set.Add (Result, Item);
    end Add_Attr_Function;
 
    -----------------------
@@ -39,18 +34,13 @@ package body Gela.Plain_Interpretations is
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Defining_Names.Defining_Name'
           (Gela.Int.Defining_Names.Create
              (Children => Down'Length,
               Name     => Name));
    begin
-      Item.Down := Down;
-      Self.Last_Int := Self.Last_Int + 1;
-      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
-      Self.Interpretations.Insert (Self.Last_Int, Item);
+      Self.Plian_Int_Set.Add (Result, Item);
    end Add_Defining_Name;
 
    --------------------
@@ -63,18 +53,13 @@ package body Gela.Plain_Interpretations is
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Expressions.Expression'
           (Gela.Int.Expressions.Create
              (Children => Down'Length,
               Expression_Type => Tipe));
    begin
-      Item.Down := Down;
-      Self.Last_Int := Self.Last_Int + 1;
-      Result := Gela.Interpretations.Interpretation_Set_Index (Self.Last_Int);
-      Self.Interpretations.Insert (Self.Last_Int, Item);
+      Self.Plian_Int_Set.Add (Result, Item);
    end Add_Expression;
 
    -----------------------
@@ -93,19 +78,16 @@ package body Gela.Plain_Interpretations is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Semantic_Types.Type_Index;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
          overriding procedure On_Attr_Function
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Tipe   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
       end Each;
@@ -118,11 +100,9 @@ package body Gela.Plain_Interpretations is
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
-            Index  : Gela.Interpretations.Interpretation_Index;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
-            pragma Unreferenced (Index);
             pragma Unreferenced (Down);
          begin
             Self.Name := Name;
@@ -146,8 +126,6 @@ package body Gela.Plain_Interpretations is
       Index    : Positive;
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-
       Item : Gela.Int.Interpretation_Access;
    begin
       Result := 0;
@@ -156,46 +134,56 @@ package body Gela.Plain_Interpretations is
          return;
       end if;
 
-      Item := Self.Interpretations.Element (Value);
+      Item := Self.Item_Batches.Element (Value / Batch_Size).Element (Value);
 
       if Index in Item.Down'Range then
          Result := Item.Down (Index);
       end if;
    end Get_Down_Interpretation;
 
-   ----------
-   -- Hash --
-   ----------
+   ----------------
+   -- Get_Cursor --
+   ----------------
 
-   function Hash
-     (Value : Gela.Interpretations.Interpretation_Set_Index)
-      return Ada.Containers.Hash_Type is
-   begin
-      return Ada.Containers.Hash_Type (Value);
-   end Hash;
-
-   ----------
-   -- Hash --
-   ----------
-
-   function Hash
-     (Value : Gela.Interpretations.Interpretation_Index)
-      return Ada.Containers.Hash_Type is
-   begin
-      return Ada.Containers.Hash_Type (Value);
-   end Hash;
-
-   -----------
-   -- Visit --
-   -----------
-
-   overriding procedure Visit
+   overriding function Get_Cursor
      (Self   : in out Interpretation_Manager;
-      Set    : Gela.Interpretations.Interpretation_Set_Index;
-      Target : in out Gela.Interpretations.Visiter'Class) is
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+      return Gela.Interpretations.Cursor'Class is
    begin
-      Self.Visit (Gela.Interpretations.Interpretation_Index (Set), Target);
-   end Visit;
+      return Self.Set_Batches.Element (Set / Batch_Size).Get_Cursor (Set);
+   end Get_Cursor;
+
+   ---------------------
+   -- Reserve_Indexes --
+   ---------------------
+
+   overriding procedure Reserve_Indexes
+     (Self : in out Interpretation_Manager;
+      Set  : Gela.Int_Sets.Interpretation_Set_Access;
+      From : out Gela.Interpretations.Interpretation_Set_Index;
+      To   : out Gela.Interpretations.Interpretation_Set_Index) is
+   begin
+      Self.Set_Batches.Append (Set);
+      From := Self.Set_Batches.Last_Index * Batch_Size;
+      To := From + Batch_Size - 1;
+      From := Gela.Interpretations.Interpretation_Set_Index'Max (1, From);
+   end Reserve_Indexes;
+
+   ---------------------
+   -- Reserve_Indexes --
+   ---------------------
+
+   overriding procedure Reserve_Indexes
+     (Self : in out Interpretation_Manager;
+      Set  : Gela.Int_Sets.Interpretation_Set_Access;
+      From : out Gela.Interpretations.Interpretation_Index;
+      To   : out Gela.Interpretations.Interpretation_Index) is
+   begin
+      Self.Item_Batches.Append (Set);
+      From := Self.Item_Batches.Last_Index * Batch_Size;
+      To := From + Batch_Size - 1;
+      From := Gela.Interpretations.Interpretation_Index'Max (1, From);
+   end Reserve_Indexes;
 
    -----------
    -- Visit --
@@ -240,8 +228,7 @@ package body Gela.Plain_Interpretations is
             pragma Unreferenced (Self);
          begin
             Target.On_Attr_Function
-              (Index => Index,
-               Kind  => Value.Kind,
+              (Kind  => Value.Kind,
                Down  => Value.Down);
          end Attr_Function;
 
@@ -256,8 +243,7 @@ package body Gela.Plain_Interpretations is
             pragma Unreferenced (Self);
          begin
             Target.On_Defining_Name
-              (Index => Index,
-               Name  => Value.Name,
+              (Name  => Value.Name,
                Down  => Value.Down);
          end Defining_Name;
 
@@ -272,18 +258,17 @@ package body Gela.Plain_Interpretations is
             pragma Unreferenced (Self);
          begin
             Target.On_Expression
-              (Index => Index,
-               Tipe  => Value.Expression_Type,
+              (Tipe  => Value.Expression_Type,
                Down  => Value.Down);
          end Expression;
 
       end Switch;
 
-      use type Gela.Interpretations.Interpretation_Index;
       V : aliased Switch.Visiter;
    begin
       if Index /= 0 then
-         Self.Interpretations.Element (Index).Visit (V'Access);
+         Self.Item_Batches.Element (Index / Batch_Size).Element (Index).Visit
+           (V'Access);
       end if;
    end Visit;
 
