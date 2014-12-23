@@ -690,7 +690,12 @@ Rules for number_declaration. :
 
 Rules for object_declaration. :
 (.
-      ${object_declaration.env_out} := ${object_declaration.env_in};
+      ${object_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${object_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for object_renaming_declaration. :

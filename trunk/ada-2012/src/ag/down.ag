@@ -160,7 +160,12 @@ Rules for aspect_specification. :
 
 Rules for assignment_statement. :
 (.
-      ${Assignment_Variable_Name.Down} := 0;  --  FIXME
+      --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${assignment_statement.env_in},
+         ${Assignment_Variable_Name.Up},
+         ${Assignment_Variable_Name.Down});
 .)
 
 Rules for assignment_statement. :
