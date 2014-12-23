@@ -11,7 +11,10 @@ package body Gela.Int.Defining_Names is
       Name     : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Defining_Name is
    begin
-      return (Length => Down'Length, Name => Name, Down => Down);
+      return (Index  => 0,
+              Length => Down'Length,
+              Name   => Name,
+              Down   => Down);
    end Create;
 
    ----------

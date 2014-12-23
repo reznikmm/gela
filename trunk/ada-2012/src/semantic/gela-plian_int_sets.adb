@@ -118,8 +118,14 @@ package body Gela.Plian_Int_Sets is
    is
       use type Gela.Interpretations.Interpretation_Index;
 
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
       Result : Gela.Interpretations.Interpretation_Index;
    begin
+      if Item.Index /= 0 then
+         return Item.Index;
+      end if;
+
       if Self.Set.Item_From = Self.Set.Item_To then
          Self.Set.Ids.Reserve_Indexes
               (Gela.Int_Sets.Interpretation_Set_Access (Self.Set),
@@ -129,7 +135,8 @@ package body Gela.Plian_Int_Sets is
 
       Result := Self.Set.Item_From;
       Self.Set.Item_From := Self.Set.Item_From + 1;
-      Self.Set.Int_Map.Insert (Result, Int_Lists.Element (Self.Pos));
+      Self.Set.Int_Map.Insert (Result, Item);
+      Item.Index := Result;
 
       return Result;
    end Get_Index;

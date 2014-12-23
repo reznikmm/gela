@@ -11,7 +11,8 @@ package body Gela.Int.Expressions is
       Expression_Type : Gela.Semantic_Types.Type_Index)
       return Expression is
    begin
-      return (Length          => Down'Length,
+      return (Index           => 0,
+              Length          => Down'Length,
               Expression_Type => Expression_Type,
               Down            => Down);
    end Create;

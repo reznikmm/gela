@@ -11,7 +11,8 @@ package body Gela.Int.Attr_Functions is
       Kind     : Gela.Lexical_Types.Predefined_Symbols.Attribute)
       return Attr_Function is
    begin
-      return (Length => Down'Length,
+      return (Index  => 0,
+              Length => Down'Length,
               Kind   => Kind,
               Down   => Down);
    end Create;

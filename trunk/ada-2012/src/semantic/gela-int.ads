@@ -5,7 +5,8 @@ package Gela.Int is
    pragma Preelaborate;
 
    type Interpretation (Length : Natural) is abstract tagged record
-      Down : Gela.Interpretations.Interpretation_Index_Array (1 .. Length);
+      Index : Gela.Interpretations.Interpretation_Index;
+      Down  : Gela.Interpretations.Interpretation_Index_Array (1 .. Length);
    end record;
 
    type Interpretation_Access is access Interpretation'Class;
