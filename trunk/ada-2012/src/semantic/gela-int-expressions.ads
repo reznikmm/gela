@@ -8,7 +8,7 @@ package Gela.Int.Expressions is
    type Expression is new Interpretation with private;
 
    function Create
-     (Children        : Natural;
+     (Down            : Gela.Interpretations.Interpretation_Index_Array;
       Expression_Type : Gela.Semantic_Types.Type_Index)
       return Expression;
 

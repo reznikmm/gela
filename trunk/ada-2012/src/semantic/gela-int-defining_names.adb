@@ -7,11 +7,11 @@ package body Gela.Int.Defining_Names is
    ------------
 
    function Create
-     (Children : Natural;
+     (Down     : Gela.Interpretations.Interpretation_Index_Array;
       Name     : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Defining_Name is
    begin
-      return (Length => Children, Name => Name, Down => (others => 0));
+      return (Length => Down'Length, Name => Name, Down => Down);
    end Create;
 
    ----------

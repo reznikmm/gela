@@ -228,14 +228,22 @@ package body Gela.Resolve is
    is
       pragma Unreferenced (Env);
       pragma Unreferenced (Args);
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      Cursor : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Prefix);
    begin
       Set := 0;
 
-      Comp.Context.Interpretation_Manager.Add_Expression
-        (Tipe   => Comp.Context.Types.Universal_Integer,
-         Down   => (1 .. 1 => Gela.Interpretations.Interpretation_Index
-                    (Prefix)),
-         Result => Set);
+      while Cursor.Has_Element loop
+         Comp.Context.Interpretation_Manager.Add_Expression
+           (Tipe   => Comp.Context.Types.Universal_Integer,
+            Down   => (1 .. 1 => Cursor.Get_Index),
+            Result => Set);
+
+         Cursor.Next;
+      end loop;
    end Function_Call;
 
    -----------------
@@ -470,14 +478,29 @@ package body Gela.Resolve is
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       pragma Unreferenced (Env);
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      Cursor_Left  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Left);
+      Cursor_Right : Gela.Interpretations.Cursor'Class :=
+        IM.Get_Cursor (Right);
+
    begin
       Set := 0;
+      while Cursor_Left.Has_Element loop
+         while Cursor_Right.Has_Element loop
+            --  FIX ME: compare types of left and right interpretation
+            Comp.Context.Interpretation_Manager.Add_Expression
+              (Tipe   => 0,
+               Down   => (Cursor_Left.Get_Index,
+                          Cursor_Right.Get_Index),
+               Result => Set);
 
-      Comp.Context.Interpretation_Manager.Add_Expression
-        (Tipe   => 0,
-         Down   => (Gela.Interpretations.Interpretation_Index (Left),
-                    Gela.Interpretations.Interpretation_Index (Right)),
-         Result => Set);
+            Cursor_Right.Next;
+         end loop;
+
+         Cursor_Left.Next;
+      end loop;
    end Simple_Expression_Range;
 
    ----------------------

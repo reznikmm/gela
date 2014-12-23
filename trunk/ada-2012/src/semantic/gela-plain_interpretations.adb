@@ -5,6 +5,40 @@ with Gela.Int.Visiters;
 
 package body Gela.Plain_Interpretations is
 
+   package Empty_Cursors is
+      type Cursor is new Gela.Interpretations.Cursor with null record;
+
+      overriding function Has_Element (Self : Cursor) return Boolean;
+
+      overriding procedure Next (Self : in out Cursor) is null;
+
+      overriding procedure Visit
+        (Self   : Cursor;
+         Target : access Gela.Interpretations.Visiter'Class) is null;
+
+      overriding function Get_Index
+        (Self : Cursor) return Gela.Interpretations.Interpretation_Index;
+
+   end Empty_Cursors;
+
+   package body Empty_Cursors is
+
+      overriding function Has_Element (Self : Cursor) return Boolean is
+         pragma Unreferenced (Self);
+      begin
+         return False;
+      end Has_Element;
+
+      overriding function Get_Index
+        (Self : Cursor) return Gela.Interpretations.Interpretation_Index
+      is
+         pragma Unreferenced (Self);
+      begin
+         return 0;
+      end Get_Index;
+
+   end Empty_Cursors;
+
    -----------------------
    -- Add_Attr_Function --
    -----------------------
@@ -18,7 +52,7 @@ package body Gela.Plain_Interpretations is
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Attr_Functions.Attr_Function'
           (Gela.Int.Attr_Functions.Create
-             (Children => Down'Length,
+             (Down     => Down,
               Kind     => Kind));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
@@ -37,7 +71,7 @@ package body Gela.Plain_Interpretations is
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Defining_Names.Defining_Name'
           (Gela.Int.Defining_Names.Create
-             (Children => Down'Length,
+             (Down     => Down,
               Name     => Name));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
@@ -56,7 +90,7 @@ package body Gela.Plain_Interpretations is
       Item : constant Gela.Int.Interpretation_Access :=
         new Gela.Int.Expressions.Expression'
           (Gela.Int.Expressions.Create
-             (Children => Down'Length,
+             (Down            => Down,
               Expression_Type => Tipe));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
@@ -150,7 +184,11 @@ package body Gela.Plain_Interpretations is
       Set    : Gela.Interpretations.Interpretation_Set_Index)
       return Gela.Interpretations.Cursor'Class is
    begin
-      return Self.Set_Batches.Element (Set / Batch_Size).Get_Cursor (Set);
+      if Set = 0 then
+         return None : Empty_Cursors.Cursor;
+      else
+         return Self.Set_Batches.Element (Set / Batch_Size).Get_Cursor (Set);
+      end if;
    end Get_Cursor;
 
    ---------------------

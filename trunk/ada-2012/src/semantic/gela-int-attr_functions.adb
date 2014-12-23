@@ -7,13 +7,13 @@ package body Gela.Int.Attr_Functions is
    ------------
 
    function Create
-     (Children : Natural;
+     (Down     : Gela.Interpretations.Interpretation_Index_Array;
       Kind     : Gela.Lexical_Types.Predefined_Symbols.Attribute)
       return Attr_Function is
    begin
-      return (Length => Children,
+      return (Length => Down'Length,
               Kind   => Kind,
-              Down   => (others => 0));
+              Down   => Down);
    end Create;
 
    ----------

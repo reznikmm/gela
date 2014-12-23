@@ -8,7 +8,7 @@ package Gela.Int.Attr_Functions is
    type Attr_Function is new Interpretation with private;
 
    function Create
-     (Children : Natural;
+     (Down     : Gela.Interpretations.Interpretation_Index_Array;
       Kind     : Gela.Lexical_Types.Predefined_Symbols.Attribute)
       return Attr_Function;
 

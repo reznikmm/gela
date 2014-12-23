@@ -7,13 +7,13 @@ package body Gela.Int.Expressions is
    ------------
 
    function Create
-     (Children        : Natural;
+     (Down            : Gela.Interpretations.Interpretation_Index_Array;
       Expression_Type : Gela.Semantic_Types.Type_Index)
       return Expression is
    begin
-      return (Length          => Children,
+      return (Length          => Down'Length,
               Expression_Type => Expression_Type,
-              Down            => (others => 0));
+              Down            => Down);
    end Create;
 
    ---------------------

@@ -8,7 +8,7 @@ package Gela.Int.Defining_Names is
    type Defining_Name is new Interpretation with private;
 
    function Create
-     (Children : Natural;
+     (Down     : Gela.Interpretations.Interpretation_Index_Array;
       Name     : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Defining_Name;
 
