@@ -307,6 +307,234 @@ Inherited attributes
   with_clause
     : Gela.Semantic_Types.Env_Index : env_in;
 
+Rules for Aborted_Tasks.name :
+(.
+      ${head.env_in} := ${Aborted_Tasks.env_in};
+.)
+Rules for Accept_Body_Exception_Handlers.exception_handler :
+(.
+      ${head.env_in} := ${Accept_Body_Exception_Handlers.env_in};
+.)
+Rules for Accept_Body_Statements.statement :
+(.
+      ${head.env_in} := ${Accept_Body_Statements.env_in};
+.)
+Rules for Accept_Parameters.parameter_specification :
+(.
+      ${head.env_in} := ${Accept_Parameters.env_in};
+.)
+Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
+(.
+      ${head.env_in} := ${Access_To_Subprogram_Parameter_Profile.env_in};
+.)
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${head.env_in} := ${Array_Component_Choices.env_in};
+.)
+Rules for Aspect_Specifications.aspect_specification :
+(.
+      ${head.env_in} := ${Aspect_Specifications.env_in};
+.)
+Rules for Associations.association :
+(.
+      ${head.env_in} := ${Associations.env_in};
+.)
+Rules for Asynchronous_Statement_Paths.select_then_abort_path :
+(.
+      ${head.env_in} := ${Asynchronous_Statement_Paths.env_in};
+.)
+Rules for Block_Declarative_Items.declarative_item :
+(.
+      ${head.env_in} := ${Block_Declarative_Items.env_in};
+.)
+Rules for Block_Exception_Handlers.exception_handler :
+(.
+      ${head.env_in} := ${Block_Exception_Handlers.env_in};
+.)
+Rules for Block_Statements.statement :
+(.
+      ${head.env_in} := ${Block_Statements.env_in};
+.)
+Rules for Body_Declarative_Items.declarative_item :
+(.
+      ${head.env_in} := ${Body_Declarative_Items.env_in};
+.)
+Rules for Body_Exception_Handlers.exception_handler :
+(.
+      ${head.env_in} := ${Body_Exception_Handlers.env_in};
+.)
+Rules for Body_Statements.statement :
+(.
+      ${head.env_in} := ${Body_Statements.env_in};
+.)
+Rules for Case_Expression_Paths.case_expression_path :
+(.
+      ${head.env_in} := ${Case_Expression_Paths.env_in};
+.)
+Rules for Case_Path_Alternative_Choices.discrete_choice :
+(.
+      ${head.env_in} := ${Case_Path_Alternative_Choices.env_in};
+.)
+Rules for Case_Statement_Alternative_Choices.discrete_choice :
+(.
+      ${head.env_in} := ${Case_Statement_Alternative_Choices.env_in};
+.)
+Rules for Case_Statement_Paths.case_path :
+(.
+      ${head.env_in} := ${Case_Statement_Paths.env_in};
+.)
+Rules for Clause_Names.program_unit_name :
+(.
+      ${head.env_in} := ${Clause_Names.env_in};
+.)
+Rules for Compilation_Pragmas.context_item :
+(.
+      ${head.env_in} := ${Compilation_Pragmas.env_in};
+.)
+Rules for Component_Clauses.clause_or_pragma :
+(.
+      ${head.env_in} := ${Component_Clauses.env_in};
+.)
+Rules for Context_Clause_Elements.context_item :
+(.
+      ${head.env_in} := ${Context_Clause_Elements.env_in};
+.)
+Rules for Discrete_Subtype_Definitions.discrete_subtype_definition :
+(.
+      ${head.env_in} := ${Discrete_Subtype_Definitions.env_in};
+.)
+Rules for Discriminants.discriminant_specification :
+(.
+      ${head.env_in} := ${Discriminants.env_in};
+.)
+Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
+(.
+      ${head.env_in} := ${Enumeration_Literal_Declarations.env_in};
+.)
+Rules for Exception_Choices.exception_choice :
+(.
+      ${head.env_in} := ${Exception_Choices.env_in};
+.)
+Rules for Expression_Paths.if_else_expression_path :
+(.
+      ${head.env_in} := ${Expression_Paths.env_in};
+.)
+Rules for Extended_Return_Exception_Handlers.exception_handler :
+(.
+      ${head.env_in} := ${Extended_Return_Exception_Handlers.env_in};
+.)
+Rules for Extended_Return_Statements.statement :
+(.
+      ${head.env_in} := ${Extended_Return_Statements.env_in};
+.)
+Rules for Generic_Actual_Part.generic_association :
+(.
+      ${head.env_in} := ${Generic_Actual_Part.env_in};
+.)
+Rules for Generic_Formal_Part.generic_formal :
+(.
+      ${head.env_in} := ${Generic_Formal_Part.env_in};
+.)
+Rules for Handler_Statements.statement :
+(.
+      ${head.env_in} := ${Handler_Statements.env_in};
+.)
+Rules for Index_Subtype_Definitions.subtype_mark :
+(.
+      ${head.env_in} := ${Index_Subtype_Definitions.env_in};
+.)
+Rules for Label_Names.defining_identifier :
+(.
+      ${head.env_in} := ${Label_Names.env_in};
+.)
+Rules for Loop_Statements.statement :
+(.
+      ${head.env_in} := ${Loop_Statements.env_in};
+.)
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${head.env_in} := ${Membership_Test_Choices.env_in};
+.)
+Rules for Names.defining_identifier :
+(.
+      ${head.env_in} := ${Names.env_in};
+.)
+Rules for Parameter_Profile.parameter_specification :
+(.
+      ${head.env_in} := ${Parameter_Profile.env_in};
+.)
+Rules for Pragma_Argument_Associations.pragma_argument_association :
+(.
+      ${head.env_in} := ${Pragma_Argument_Associations.env_in};
+.)
+Rules for Private_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${head.env_in} := ${Private_Part_Declarative_Items.env_in};
+.)
+Rules for Private_Protected_Items.protected_element_declaration :
+(.
+      ${head.env_in} := ${Private_Protected_Items.env_in};
+.)
+Rules for Private_Task_Items.task_item :
+(.
+      ${head.env_in} := ${Private_Task_Items.env_in};
+.)
+Rules for Progenitor_List.subtype_mark :
+(.
+      ${head.env_in} := ${Progenitor_List.env_in};
+.)
+Rules for Protected_Operation_Items.protected_operation_item :
+(.
+      ${head.env_in} := ${Protected_Operation_Items.env_in};
+.)
+Rules for Record_Component_Associations.association :
+(.
+      ${head.env_in} := ${Record_Component_Associations.env_in};
+.)
+Rules for Record_Components.component_item :
+(.
+      ${head.env_in} := ${Record_Components.env_in};
+.)
+Rules for Selective_Statement_Paths.select_or_else_path :
+(.
+      ${head.env_in} := ${Selective_Statement_Paths.env_in};
+.)
+Rules for Sequence_Of_Statements.statement :
+(.
+      ${head.env_in} := ${Sequence_Of_Statements.env_in};
+.)
+Rules for Statement_Paths.if_elsif_else_path :
+(.
+      ${head.env_in} := ${Statement_Paths.env_in};
+.)
+Rules for Type_Clause_Names.subtype_mark :
+(.
+      ${head.env_in} := ${Type_Clause_Names.env_in};
+.)
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${head.env_in} := ${Variant_Choices.env_in};
+.)
+Rules for Variants.variant :
+(.
+      ${head.env_in} := ${Variants.env_in};
+.)
+Rules for Visible_Part_Declarative_Items.basic_declarative_item :
+(.
+      ${head.env_in} := ${Visible_Part_Declarative_Items.env_in};
+.)
+Rules for Visible_Protected_Items.protected_operation_declaration :
+(.
+      ${head.env_in} := ${Visible_Protected_Items.env_in};
+.)
+Rules for Visible_Task_Items.task_item :
+(.
+      ${head.env_in} := ${Visible_Task_Items.env_in};
+.)
+Rules for With_Clause_Names.program_unit_name :
+(.
+      ${head.env_in} := ${With_Clause_Names.env_in};
+.)
 
 Rules for Aborted_Tasks.name :
 (.

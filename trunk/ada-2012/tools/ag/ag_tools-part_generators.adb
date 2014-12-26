@@ -121,12 +121,34 @@ package body AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive)
    is
-      pragma Unreferenced (Part);
+      use type League.Strings.Universal_String;
+      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
+      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
+      Parts : Gela.Grammars.Ordered.Partition_Array renames
+        Self.Context.Partition.all (NT.First_Attribute .. NT.Last_Attribute);
    begin
+--      Self.Make_Local_Variable (Part);
       Code.N ("   --  Make_Descent HEAD ");
       Code.N (Pass);
       Code.P;
+      Code.N ("      Descent");
+      Code.N (" (This");
+
+      for J in NT.First_Attribute .. NT.Last_Attribute loop
+         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
+            Self.Make_Local_Variable
+              (P.Name, G.Declaration (J));
+
+            Code.N (", ");
+            Code.N (To_Ada (P.Name));
+            Code.N ("_");
+            Code.N (To_Ada (G.Declaration (J).Name));
+         end if;
+      end loop;
+
+      Code.P (");");
    end Make_Descent;
 
    --------------
@@ -181,14 +203,8 @@ package body AG_Tools.Part_Generators is
       D    : Gela.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
-      Code.N ("      ");
-      Code.N ("Head_");
-      Code.N (To_Ada (D.Name));
-      Code.N (" := This_");
-      Code.N (To_Ada (D.Name));
-      Code.P (";");
-
       Self.Make_Local_Variable (Head, D);
+      Code.P ("         --  Make_Get HEAD");
    end Make_Get;
 
    --------------

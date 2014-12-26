@@ -222,9 +222,6 @@ package body AG_Tools.NT_Generators is
       Self.Context.Attr_Map.Clear;
 
       Spec.P ("", Impl);
-      Impl.N ("   --  ");
-      Impl.N (Pass);
-      Impl.P;
       Spec.N ("   ", Impl);
       Write_Declaration (Self.Context, NT, Pass);
 
@@ -237,11 +234,21 @@ package body AG_Tools.NT_Generators is
             Spec.N (To_Ada (G.Declaration (J).Name), Impl);
             Spec.N (" : ", Impl);
 
+            Code.P (";");
+            Code.N ("      ");
+            Code.N (This);
+            Code.N ("_");
+            Code.N (To_Ada (G.Declaration (J).Name));
+            Code.N (" : ");
+
             if not G.Declaration (J).Is_Inherited then
                Spec.N ("out ", Impl);
+               Code.N ("out ");
             end if;
 
             Spec.N (To_Ada (G.Declaration (J).Type_Name), Impl);
+            Code.N (To_Ada (G.Declaration (J).Type_Name));
+
             Self.Context.Add_With
               (Package_Name (To_Ada (G.Declaration (J).Type_Name)),
                AG_Tools.Contexts.Spec_Unit);
@@ -253,35 +260,59 @@ package body AG_Tools.NT_Generators is
       Spec.P ("", Impl);
       Impl.P ("   is");
 
-      Impl.N ("      This : ");
+      Code.P (")");
+
+      Impl.P ("      procedure Descent");
+      Impl.N ("      (This : in out ");
       Impl.N (RT);
-      Impl.P ("_Cursor :=");
-      Impl.P ("        Node.First;");
+      Impl.N ("_Cursor");
+      Impl.N (Code);
+      Code.Clear;
+      Impl.P ("      is");
 
       Self.Context.Factory.Get (G.Part (Prod.Last)).
          Make_Local_Variable (Prod.Last);
 
-      Code.P ("      while This.Has_Element loop");
-      Code.N ("      ");
-      Code.N (Item);
-      Code.P (" := This.Element;");
-
       Write_Rules (Self.Context, NT, NT.First, Pass, Pos);
-
-      Code.P ("         This.Next;");
-      Code.P ("      end loop;");
+      Impl.P ("      begin");
+      Impl.P ("         if not This.Has_Element then");
       Piece := Code;
       Code.Clear;
+
       Pos := Order.Ceiling ((NT.Last, Pass, Step => 1));
       Write_Rules (Self.Context, NT, NT.Last, Pass, Pos);
-      Impl.P ("   begin");
       Impl.N (Code);
+      Code.Clear;
+      Impl.P ("            return;");
+      Impl.P ("         end if;");
 
-      Impl.P ("      if not This.Has_Element then");
-      Impl.P ("         return;");
-      Impl.P ("      end if;");
+      Impl.N ("         ");
+      Impl.N (Item);
+      Impl.P (" := This.Element;");
+      Impl.P ("         This.Next;");
 
       Impl.N (Piece);
+
+      Impl.P ("      end Descent;");
+      Impl.P;
+      Impl.N ("      This : ");
+      Impl.N (RT);
+      Impl.P ("_Cursor :=");
+      Impl.P ("        Node.First;");
+      Impl.P ("   begin");
+      Impl.N ("      Descent (This");
+
+      for J in NT.First_Attribute .. NT.Last_Attribute loop
+         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
+            Impl.N (", ");
+            Impl.N (This);
+            Impl.N ("_");
+            Impl.N (To_Ada (G.Declaration (J).Name));
+         end if;
+      end loop;
+
+      Impl.P (");");
+
       Impl.N ("   end ");
       Impl.N (To_Ada (NT.Name));
       Impl.N ("_");

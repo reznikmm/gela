@@ -86,6 +86,8 @@ package body AG_Tools.Check_Ordered is
             case Item.Kind is
                when Gela.Grammars.Ordered.Evaluate_Rule =>
                   Ada.Text_IO.Put_Line (Item.Rule'Img);
+                  Ada.Text_IO.Put_Line
+                    (Result.Rule (Item.Rule).Text.To_UTF_8_String);
                when Gela.Grammars.Ordered.Descent =>
                   Ada.Text_IO.Put
                     (Result.Part (Item.Part).Name.

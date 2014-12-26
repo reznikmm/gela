@@ -69,9 +69,15 @@ package body AG_Tools.Writers is
 
    procedure N
      (Self  : in out Writer;
-      Value : Writer'Class) is
+      Value : Writer'Class)
+   is
+      Text : constant League.Strings.Universal_String := Value.Text;
+      List : constant League.String_Vectors.Universal_String_Vector :=
+        Text.Split (New_Line);
    begin
-      Self.Text.Append (Value.Text);
+      for J in 1 .. List.Length loop
+         Self.P (List.Element (J));
+      end loop;
    end N;
 
    procedure P
@@ -94,15 +100,13 @@ package body AG_Tools.Writers is
 
    procedure P
      (Self   : in out Writer;
-      Text   : League.Strings.Universal_String)
-   is
-      LF : constant Wide_Wide_Character := Wide_Wide_Character'Val (10);
+      Text   : League.Strings.Universal_String) is
    begin
-      if Text.Index (LF) > 0 then
+      if Text.Index (New_Line) > 0 then
          declare
             List : League.String_Vectors.Universal_String_Vector;
          begin
-            List := Text.Split (LF);
+            List := Text.Split (New_Line);
             for J in 1 .. List.Length loop
                Self.P (List.Element (J));
             end loop;

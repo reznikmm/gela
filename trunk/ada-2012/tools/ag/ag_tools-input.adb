@@ -164,15 +164,10 @@ package body AG_Tools.Input is
                      declare
                         use type Gela.Grammars.Part_Count;
                         R : Gela.Grammars.Rule renames G.Rule (Y);
-                        A : Gela.Grammars.Attribute renames
-                          G.Attribute (R.Result);
                      begin
                         V.Create_Rule (N.Name, S.Name, R.Text);
 
                         if not Is_Concrete (N.Index) then
-                           raise Constraint_Error;
-                        elsif N.Is_List and A.Origin = S.First then
-                           --  Rule for eval head.inherited is not supported
                            raise Constraint_Error;
                         end if;
                      end;
@@ -245,30 +240,8 @@ package body AG_Tools.Input is
       V      : in out Gela.Grammars.Constructors.Constructor;
       Parent : Gela.Grammars.Non_Terminal_Index)
    is
-      NT : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Parent);
    begin
-      for J in NT.First_Attribute .. NT.Last_Attribute loop
-         declare
-            A : Gela.Grammars.Attribute_Declaration renames G.Declaration (J);
-            Text : League.Strings.Universal_String;
-         begin
-            if A.Is_Inherited then
-               Text.Append ("         ${head.");
-               Text.Append (A.Name);
-               Text.Append ("} := ${");
-               Text.Append (NT.Name);
-               Text.Append (".");
-               Text.Append (A.Name);
-               Text.Append ("};");
-               Text.Append (Wide_Wide_Character'Val (10));
-
-               V.Create_Rule
-                 (NT.Name,
-                  G.Production (NT.First).Name,
-                  Text);
-            end if;
-         end;
-      end loop;
+      null;
    end Copy_Head_Attr;
 
    ----------------------
