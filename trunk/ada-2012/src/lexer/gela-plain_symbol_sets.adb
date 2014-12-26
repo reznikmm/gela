@@ -58,17 +58,17 @@ package body Gela.Plain_Symbol_Sets is
 
    overriding procedure Create_List
      (Self  : in out Symbol_Set;
-      Head  : Gela.Lexical_Types.Symbol_List :=
+      Head  : Gela.Lexical_Types.Symbol;
+      Tail  : Gela.Lexical_Types.Symbol_List :=
         Gela.Lexical_Types.Empty_Symbol_List;
-      Tail  : Gela.Lexical_Types.Symbol;
       Value : out Gela.Lexical_Types.Symbol_List)
    is
-      Node   : constant List_Node := (Gela.Lexical_Types.Symbol (Head), Tail);
+      Node   : constant List_Node := (Head, Gela.Lexical_Types.Symbol (Tail));
       Cursor : List_Maps.Cursor;
    begin
-      if Head = Gela.Lexical_Types.Empty_Symbol_List then
+      if Tail = Gela.Lexical_Types.Empty_Symbol_List then
          --  Symbol and Symbol_List have the same encoding, just cast.
-         Value := Gela.Lexical_Types.Symbol_List (Tail);
+         Value := Gela.Lexical_Types.Symbol_List (Head);
          return;
       end if;
 
@@ -93,15 +93,15 @@ package body Gela.Plain_Symbol_Sets is
       Tail  : Gela.Lexical_Types.Symbol_List;
       Value : out Gela.Lexical_Types.Symbol_List) is
    begin
-      if Tail = Empty_Symbol_List then
-         Value := Head;
+      if Head = Empty_Symbol_List then
+         Value := Tail;
       else
-         Self.Create_List (Head  => Head,
-                           Tail  => Self.Head (Tail),
+         Self.Create_List (Head  => Self.Tail (Head),
+                           Tail  => Tail,
                            Value => Value);
 
-         Self.Create_List (Head  => Value,
-                           Tail  => Self.Tail (Tail),
+         Self.Create_List (Head  => Self.Head (Head),
+                           Tail  => Value,
                            Value => Value);
       end if;
    end Create_List;
@@ -308,18 +308,18 @@ package body Gela.Plain_Symbol_Sets is
    overriding function Head
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)
-      return Gela.Lexical_Types.Symbol_List is
+      return Gela.Lexical_Types.Symbol is
    begin
       if Value in List_Symbol then
          declare
             Index : constant List_Index := From_Symbol_List (Value);
             Node  : constant List_Node := Self.Lists.Element (Index);
          begin
-         --  Symbol and Symbol_List have the same encoding, just cast.
-            return Gela.Lexical_Types.Symbol_List (Node.Left);
+            return Node.Left;
          end;
       else
-         return Gela.Lexical_Types.Empty_Symbol_List;
+         --  Symbol and Symbol_List have the same encoding, just cast.
+         return Gela.Lexical_Types.Symbol (Value);
       end if;
    end Head;
 
@@ -638,18 +638,18 @@ package body Gela.Plain_Symbol_Sets is
    overriding function Tail
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)
-      return Gela.Lexical_Types.Symbol is
+      return Gela.Lexical_Types.Symbol_List is
    begin
       if Value in List_Symbol then
          declare
             Index : constant List_Index := From_Symbol_List (Value);
             Node  : constant List_Node := Self.Lists.Element (Index);
          begin
-            return Node.Right;
+            --  Symbol and Symbol_List have the same encoding, just cast.
+            return Gela.Lexical_Types.Symbol_List (Node.Right);
          end;
       else
-         --  Symbol and Symbol_List have the same encoding, just cast.
-         return Gela.Lexical_Types.Symbol (Value);
+         return Gela.Lexical_Types.Empty_Symbol_List;
       end if;
    end Tail;
 

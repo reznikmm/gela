@@ -659,8 +659,8 @@ package body Gela.Plain_Compilation_Managers is
             while Cursor.Has_Element loop
                Cursor.Element.Visit (Self);
                Comp.Context.Symbols.Create_List
-                 (Head  => Self.Withed,
-                  Tail  => Self.Symbol,
+                 (Head  => Self.Symbol,
+                  Tail  => Self.Withed,
                   Value => Self.Withed);
 
                Cursor.Next;

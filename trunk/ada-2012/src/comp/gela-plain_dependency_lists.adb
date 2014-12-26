@@ -76,7 +76,7 @@ package body Gela.Plain_Dependency_Lists is
 
          --  Check if withed units are ordered
          while Withed /= Gela.Lexical_Types.Empty_Symbol_List loop
-            Index := (Unit_Declaration, Set.Tail (Withed));
+            Index := (Unit_Declaration, Set.Head (Withed));
 
             if Self.No_Spec.Contains (Index) then
                Index := (Unit_Body, Index.Name);
@@ -94,7 +94,7 @@ package body Gela.Plain_Dependency_Lists is
                return;
             end if;
 
-            Withed := Set.Head (Withed);
+            Withed := Set.Tail (Withed);
          end loop;
 
          case Item.Kind is

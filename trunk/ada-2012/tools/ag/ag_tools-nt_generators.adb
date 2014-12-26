@@ -270,8 +270,8 @@ package body AG_Tools.NT_Generators is
       Code.Clear;
       Impl.P ("      is");
 
-      Self.Context.Factory.Get (G.Part (Prod.Last)).
-         Make_Local_Variable (Prod.Last);
+      Self.Context.Factory.Get (G.Part (Prod.First)).
+         Make_Local_Variable (Prod.First);
 
       Write_Rules (Self.Context, NT, NT.First, Pass, Pos);
       Impl.P ("      begin");

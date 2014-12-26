@@ -72,7 +72,7 @@ Rules for Context_Clause_Elements.context_item :
 Rules for Context_Clause_Elements.context_item :
 (.
       Self.Compilation.Context.Symbols.Create_List
-        (${head.with_list}, ${context_item.with_list}, ${Context_Clause_Elements.with_list});
+        (${context_item.with_list}, ${tail.with_list}, ${Context_Clause_Elements.with_list});
 .)
 
 Rules for Context_Clause_Elements.context_item :
@@ -83,5 +83,5 @@ Rules for Context_Clause_Elements.context_item :
 Rules for Context_Clause_Elements.context_item :
 (.
       Self.Compilation.Context.Symbols.Create_List
-        (${head.limited_with_list}, ${context_item.limited_with_list}, ${Context_Clause_Elements.limited_with_list});
+        (${context_item.limited_with_list}, ${tail.limited_with_list}, ${Context_Clause_Elements.limited_with_list});
 .)

@@ -209,8 +209,8 @@ package body Gela.Pass_Utils is
             while List /= Gela.Lexical_Types.Empty_Symbol_List loop
                Env := Set.Add_With_Clause
                  (Index  => Env,
-                  Symbol => Comp.Context.Symbols.Tail (List));
-               List := Comp.Context.Symbols.Head (List);
+                  Symbol => Comp.Context.Symbols.Head (List));
+               List := Comp.Context.Symbols.Tail (List);
             end loop;
          end With_Clause;
 
@@ -286,7 +286,7 @@ package body Gela.Pass_Utils is
                        .Defining_Identifier_Sequence_Access)
       return Gela.Semantic_Types.Env_Index
    is
-      Head   : Gela.Lexical_Types.Symbol_List := List;
+      Tail   : Gela.Lexical_Types.Symbol_List := List;
       Env_1  : Gela.Semantic_Types.Env_Index := Env;
       Symbol : Gela.Lexical_Types.Symbol;
       Name   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
@@ -297,8 +297,8 @@ package body Gela.Pass_Utils is
    begin
       while Cursor.Has_Element loop
          Name := Cursor.Element;
-         Symbol := Set.Tail (Head);
-         Head := Set.Head (Head);
+         Symbol := Set.Head (Tail);
+         Tail := Set.Tail (Tail);
          Cursor.Next;
 
          Env_1 := Comp.Context.Environment_Set.Add_Defining_Name

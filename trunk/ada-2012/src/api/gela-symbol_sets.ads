@@ -64,9 +64,9 @@ package Gela.Symbol_Sets is
 
    not overriding procedure Create_List
      (Self  : in out Symbol_Set;
-      Head  : Gela.Lexical_Types.Symbol_List :=
+      Head  : Gela.Lexical_Types.Symbol;
+      Tail  : Gela.Lexical_Types.Symbol_List :=
         Gela.Lexical_Types.Empty_Symbol_List;
-      Tail  : Gela.Lexical_Types.Symbol;
       Value : out Gela.Lexical_Types.Symbol_List) is abstract;
    --  Get new symbol list as join of Head and Tail.
 
@@ -80,13 +80,13 @@ package Gela.Symbol_Sets is
    not overriding function Head
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)
-      return Gela.Lexical_Types.Symbol_List is abstract;
+      return Gela.Lexical_Types.Symbol is abstract;
    --  Return head of Value.
 
    not overriding function Tail
      (Self  : Symbol_Set;
       Value : Gela.Lexical_Types.Symbol_List)
-      return Gela.Lexical_Types.Symbol is abstract;
+      return Gela.Lexical_Types.Symbol_List is abstract;
    --  Return tail symbol of Value.
 
 end Gela.Symbol_Sets;

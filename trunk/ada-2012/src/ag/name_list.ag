@@ -11,7 +11,7 @@ Rules for Clause_Names.program_unit_name :
 Rules for Clause_Names.program_unit_name :
 (.
       Self.Compilation.Context.Symbols.Create_List
-        (${head.name_list}, ${program_unit_name.full_name}, ${Clause_Names.name_list});
+        (${program_unit_name.full_name}, ${tail.name_list}, ${Clause_Names.name_list});
 .)
 
 Rules for Names.defining_identifier :
@@ -22,7 +22,7 @@ Rules for Names.defining_identifier :
 Rules for Names.defining_identifier :
 (.
       Self.Compilation.Context.Symbols.Create_List
-        (${head.name_list}, ${defining_identifier.full_name}, ${Names.name_list});
+        (${defining_identifier.full_name}, ${tail.name_list}, ${Names.name_list});
 .)
 
 Rules for With_Clause_Names.program_unit_name :
@@ -33,5 +33,5 @@ Rules for With_Clause_Names.program_unit_name :
 Rules for With_Clause_Names.program_unit_name :
 (.
       Self.Compilation.Context.Symbols.Create_List
-        (${head.name_list}, ${program_unit_name.full_name}, ${With_Clause_Names.name_list});
+        (${program_unit_name.full_name}, ${tail.name_list}, ${With_Clause_Names.name_list});
 .)

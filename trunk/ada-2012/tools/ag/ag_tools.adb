@@ -36,7 +36,7 @@ package body AG_Tools is
       return Gela.Grammars.Non_Terminal_Index
    is
       Prod : Gela.Grammars.Production renames G.Production (NT.First);
-      Part : Gela.Grammars.Part renames G.Part (Prod.Last);
+      Part : Gela.Grammars.Part renames G.Part (Prod.First);
    begin
       return Part.Denote;
    end List_Item;
@@ -159,7 +159,7 @@ package body AG_Tools is
       Prod : Gela.Grammars.Production renames G.Production (NT.First);
    begin
       if NT.Is_List or Is_Converted_List (G, NT) then
-         Result := Return_Type (G, G.Part (Prod.First + 1));
+         Result := Return_Type (G, G.Part (Prod.First));
          Result.Append ("_Sequence");
       else
          Result := To_Ada (NT.Name);

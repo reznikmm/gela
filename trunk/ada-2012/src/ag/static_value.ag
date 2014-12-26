@@ -37,9 +37,9 @@ Rules for Record_Component_Associations.association :
 Rules for Record_Component_Associations.association :
 (.
 	   Self.Compilation.Context.Values.List
-	     (Head  => ${head.static_value},
-          Tail  => ${association.static_value},
-          Value => ${Record_Component_Associations.static_value});
+	     (Tail  => ${tail.static_value},
+        Head  => ${association.static_value},
+        Value => ${Record_Component_Associations.static_value});
 .)
 
 

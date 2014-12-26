@@ -63,11 +63,6 @@ package body AG_Tools.Input is
       Parent : Gela.Grammars.Non_Terminal_Index;
       Done   : in out League.String_Vectors.Universal_String_Vector);
 
-   procedure Copy_Head_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Parent : Gela.Grammars.Non_Terminal_Index);
-
    procedure Copy_Productions
      (G : Gela.Grammars.Grammar;
       V : in out Gela.Grammars.Constructors.Constructor;
@@ -231,19 +226,6 @@ package body AG_Tools.Input is
       end loop;
    end Copy_Attr;
 
-   --------------------
-   -- Copy_Head_Attr --
-   --------------------
-
-   procedure Copy_Head_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Parent : Gela.Grammars.Non_Terminal_Index)
-   is
-   begin
-      null;
-   end Copy_Head_Attr;
-
    ----------------------
    -- Copy_Productions --
    ----------------------
@@ -353,7 +335,7 @@ package body AG_Tools.Input is
       use type Gela.Grammars.Non_Terminal_Count;
 
       F : constant Gela.Grammars.Grammar :=
-        Gela.Grammars.Reader.Read (File_Name);
+        Gela.Grammars.Reader.Read (File_Name, Tail_List => True);
    begin
       Concrete := new NT_List'(F.Non_Terminal'Range => False);
       With_List := new NT_List'(F.Non_Terminal'Range => False);
@@ -406,10 +388,6 @@ package body AG_Tools.Input is
                   end;
                end if;
             end loop;
-
-            if F.Non_Terminal (Parent).Is_List then
-               Copy_Head_Attr (F, V, Parent);
-            end if;
          end loop;
 
          G := new Gela.Grammars.Grammar'(V.Complete);
@@ -459,11 +437,8 @@ package body AG_Tools.Input is
          declare
             NT   : Gela.Grammars.Non_Terminal renames
               G.Non_Terminal (Part.Denote);
-            Prod : Gela.Grammars.Production renames
-              G.Production (NT.First);
-            Part : Gela.Grammars.Part renames G.Part (Prod.Last);
          begin
-            return Part.Denote;
+            return List_Item (G, NT);
          end;
       end if;
 

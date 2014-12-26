@@ -11,8 +11,8 @@ with AG_Tools.Input;
 
 package body AG_Tools.Generator_Factories is
 
-   Head : constant League.Strings.Universal_String :=
-     League.Strings.To_Universal_String ("head");
+   Tail : constant League.Strings.Universal_String :=
+     League.Strings.To_Universal_String ("tail");
 
    ---------
    -- Get --
@@ -45,7 +45,7 @@ package body AG_Tools.Generator_Factories is
       use type League.Strings.Universal_String;
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
    begin
-      if Part.Name = Head then
+      if Part.Name = Tail then
          return Self.Head'Access;
       elsif not Part.Is_Terminal_Reference
         and then Is_Converted_List (G, G.Non_Terminal (Part.Denote))

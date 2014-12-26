@@ -12,8 +12,8 @@ with Gela.Grammars.Ordered;
 
 package body AG_Tools.Part_Generators is
 
-   Head : constant League.Strings.Universal_String :=
-     League.Strings.To_Universal_String ("head");
+   Tail : constant League.Strings.Universal_String :=
+     League.Strings.To_Universal_String ("tail");
    This : constant League.Strings.Universal_String :=
      League.Strings.To_Universal_String ("This");
 
@@ -203,8 +203,8 @@ package body AG_Tools.Part_Generators is
       D    : Gela.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
-      Self.Make_Local_Variable (Head, D);
-      Code.P ("         --  Make_Get HEAD");
+      Self.Make_Local_Variable (Tail, D);
+      Code.P ("         --  Make_Get tail");
    end Make_Get;
 
    --------------
@@ -380,8 +380,8 @@ package body AG_Tools.Part_Generators is
       D      : Gela.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
-      Self.Make_Local_Variable (Head, D);
-      Code.P ("         --  Make_Set HEAD");
+      Self.Make_Local_Variable (Tail, D);
+      Code.P ("         --  Make_Set tail");
    end Make_Set;
 
    --------------
