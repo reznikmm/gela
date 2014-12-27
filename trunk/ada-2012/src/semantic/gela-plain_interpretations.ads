@@ -72,6 +72,18 @@ private
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 
+   overriding procedure Add_Tuple
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Set_Index;
+      Right  : Gela.Interpretations.Interpretation_Set_Index;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding procedure Get_Tuple_Index
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Index;
+      Right  : Gela.Interpretations.Interpretation_Index;
+      Result : out Gela.Interpretations.Interpretation_Index);
+
    overriding function Get_Cursor
      (Self   : in out Interpretation_Manager;
       Set    : Gela.Interpretations.Interpretation_Set_Index)

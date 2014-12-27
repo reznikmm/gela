@@ -18,6 +18,11 @@ package Gela.Plian_Int_Sets is
       Index : in out Gela.Interpretations.Interpretation_Set_Index;
       Item  : Gela.Int.Interpretation_Access);
 
+   not overriding procedure Add
+     (Self  : access Interpretation_Set;
+      Index : out Gela.Interpretations.Interpretation_Index;
+      Item  : Gela.Int.Interpretation_Access);
+
 private
 
    package Int_Lists is new Ada.Containers.Doubly_Linked_Lists

@@ -2,6 +2,7 @@ with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Visiters;
+with Gela.Int.Tuples;
 
 package body Gela.Plian_Int_Sets is
 
@@ -52,6 +53,30 @@ package body Gela.Plian_Int_Sets is
       end if;
 
       Self.Map.Update_Element (Pos, Update'Access);
+   end Add;
+
+   ---------
+   -- Add --
+   ---------
+
+   not overriding procedure Add
+     (Self  : access Interpretation_Set;
+      Index : out Gela.Interpretations.Interpretation_Index;
+      Item  : Gela.Int.Interpretation_Access)
+   is
+      use type Gela.Interpretations.Interpretation_Index;
+   begin
+      if Self.Item_From = Self.Item_To then
+         Self.Ids.Reserve_Indexes
+              (Gela.Int_Sets.Interpretation_Set_Access (Self),
+               Self.Item_From,
+               Self.Item_To);
+      end if;
+
+      Index := Self.Item_From;
+      Self.Item_From := Self.Item_From + 1;
+      Self.Int_Map.Insert (Index, Item);
+      Item.Index := Index;
    end Add;
 
    -------------
@@ -126,17 +151,7 @@ package body Gela.Plian_Int_Sets is
          return Item.Index;
       end if;
 
-      if Self.Set.Item_From = Self.Set.Item_To then
-         Self.Set.Ids.Reserve_Indexes
-              (Gela.Int_Sets.Interpretation_Set_Access (Self.Set),
-               Self.Set.Item_From,
-               Self.Set.Item_To);
-      end if;
-
-      Result := Self.Set.Item_From;
-      Self.Set.Item_From := Self.Set.Item_From + 1;
-      Self.Set.Int_Map.Insert (Result, Item);
-      Item.Index := Result;
+      Self.Set.Add (Result, Item);
 
       return Result;
    end Get_Index;
@@ -205,6 +220,13 @@ package body Gela.Plian_Int_Sets is
            (Self  : access Visiter;
             Value : Gela.Int.Attr_Functions.Attr_Function);
 
+         overriding procedure Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Tuple);
+
+         overriding procedure Chosen_Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Chosen_Tuple);
       end Each;
 
       package body Each is
@@ -241,6 +263,28 @@ package body Gela.Plian_Int_Sets is
               (Kind => Value.Kind,
                Down => Value.Down);
          end Attr_Function;
+
+         overriding procedure Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Tuple)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Tuple
+              (Value => Value.Value,
+               Down  => (1 .. 0 => 0));
+         end Tuple;
+
+         overriding procedure Chosen_Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Chosen_Tuple)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Tuple
+              (Value => (1 .. 0 => 0),
+               Down  => Value.Down);
+         end Chosen_Tuple;
 
       end Each;
 

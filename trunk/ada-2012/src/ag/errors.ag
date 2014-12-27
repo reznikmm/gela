@@ -176,7 +176,7 @@ Rules for quantified_expression. :
 .)
 Rules for record_aggregate. :
 (.
-      ${record_aggregate.Errors} := 0;  --  FIXME
+      ${record_aggregate.Errors} := ${Record_Component_Associations.Errors};
 .)
 
 Rules for character_literal.character_literal_token :
@@ -394,7 +394,7 @@ Rules for while_loop_statement. :
 .)
 Rules for association. :
 (.
-      ${association.Errors} := 0;  --  FIXME
+      ${association.Errors} := ${Component_Expression.Errors:0};  --  FIXME
 .)
 Rules for box.box_token :
 (.

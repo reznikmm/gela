@@ -7,6 +7,7 @@ Inherited attributes
   anonymous_access_to_function_definition,
   anonymous_access_to_object_definition,
   anonymous_access_to_procedure_definition,
+  association,
   attribute_reference,
   box,
   case_expression,
@@ -75,8 +76,33 @@ Inherited attributes
   subtype_mark,
   subtype_mark_or_access_definition,
   type_definition,
-  unconstrained_array_definition : Gela.Interpretations.Interpretation_Index : Down;
+  unconstrained_array_definition,
 
+  Associations,
+  Record_Component_Associations
+   : Gela.Interpretations.Interpretation_Index : Down;
+
+Rules for Associations.association :
+(.
+      ${association.Down} := ${Associations.Down};  --  FIXME
+.)
+
+Rules for Associations.association :
+(.
+      ${tail.Down} := ${Associations.Down};  --  FIXME
+.)
+
+Rules for Record_Component_Associations.association :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Record_Component_Associations.Down}, 1, ${association.Down});
+.)
+
+Rules for Record_Component_Associations.association :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Record_Component_Associations.Down}, 2, ${tail.Down});
+.)
 
 Rules for accept_statement. :
 (.
@@ -175,7 +201,7 @@ Rules for assignment_statement. :
 
 Rules for association. :
 (.
-      ${Component_Expression.Down} := 0;  --  FIXME
+      ${Component_Expression.Down} := ${association.Down};  --  FIXME
 .)
 
 Rules for case_expression. :
@@ -201,6 +227,11 @@ Rules for component_clause. :
 Rules for component_declaration. :
 (.
       ${Initialization_Expression.Down} := 0;  --  FIXME
+.)
+
+Rules for composite_constraint. :
+(.
+      ${Associations.Down} := 0;  --  FIXME
 .)
 
 Rules for decimal_fixed_point_definition. :
@@ -893,7 +924,18 @@ Rules for discrete_subtype_indication_dr. :
 
 Rules for auxiliary_apply. :
 (.
-      ${Function_Call_Parameters.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${auxiliary_apply.Down}, 2, ${Function_Call_Parameters.Down});
+.)
+
+Rules for extension_aggregate. :
+(.
+      ${Record_Component_Associations.Down} := ${extension_aggregate.Down};
+.)
+
+Rules for record_aggregate. :
+(.
+      ${Record_Component_Associations.Down} := ${record_aggregate.Down};
 .)
 
 Rules for decimal_fixed_point_definition. :

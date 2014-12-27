@@ -251,13 +251,15 @@ package body Asis.Expressions is
          overriding procedure Identifier
            (Self : in out Visiter;
             Node : not null Gela.Elements.Identifiers.Identifier_Access);
+
+         overriding procedure Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Operator_Symbols.
+              Operator_Symbol_Access);
+
       end Get;
 
       package body Get is
-
-         ----------------
-         -- Identifier --
-         ----------------
 
          overriding procedure Identifier
            (Self : in out Visiter;
@@ -266,6 +268,15 @@ package body Asis.Expressions is
          begin
             Self.Result := Node.Defining_Name;
          end Identifier;
+
+         overriding procedure Operator_Symbol
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Operator_Symbols.
+              Operator_Symbol_Access) is
+         begin
+            Self.Result := Node.Defining_Name;
+         end Operator_Symbol;
+
       end Get;
 
       V : Get.Visiter;

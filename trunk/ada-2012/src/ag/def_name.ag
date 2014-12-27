@@ -25,6 +25,8 @@ Rules for enumeration_literal.enumeration_literal_token :
 
 Rules for operator_symbol.operator_symbol_token :
 (.
-        ${operator_symbol.Defining_Name} := null;
+      Self.Compilation.Context.Interpretation_Manager.Get_Defining_Name
+        (${operator_symbol.Down},
+         ${operator_symbol.Defining_Name});
 .)
 

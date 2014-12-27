@@ -15,6 +15,9 @@ package Gela.Interpretations is
    type Interpretation_Index_Array is array (Positive range <>) of
       Interpretation_Index;
 
+   type Interpretation_Set_Index_Array is array (Positive range <>) of
+      Interpretation_Set_Index;
+
    type Interpretation_Manager is limited interface;
    --  This object keeps sets of possible interpretations
    type Interpretation_Manager_Access is
@@ -45,6 +48,23 @@ package Gela.Interpretations is
         is abstract;
    --  Extend Result with new interpretation of attribute denoting function
 
+   not overriding procedure Add_Tuple
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Set_Index;
+      Right  : Gela.Interpretations.Interpretation_Set_Index;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with (Left, Right) tuple aka cartesian product.
+   --  Left = 0 or else index got by another Add_Tuple call
+
+   not overriding procedure Get_Tuple_Index
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Index;
+      Right  : Gela.Interpretations.Interpretation_Index;
+      Result : out Gela.Interpretations.Interpretation_Index)
+        is abstract;
+   --  Register chosen tuple interpretation
+
    type Visiter is limited interface;
 
    not overriding procedure On_Defining_Name
@@ -67,6 +87,12 @@ package Gela.Interpretations is
       Down   : Gela.Interpretations.Interpretation_Index_Array)
         is abstract;
    --  Called for each attribute denoting function
+
+   not overriding procedure On_Tuple
+     (Self  : in out Visiter;
+      Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+      Down  : Gela.Interpretations.Interpretation_Index_Array) is abstract;
+   --  Called for each tuple
 
    not overriding procedure Visit
      (Self   : in out Interpretation_Manager;

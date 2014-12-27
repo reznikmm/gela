@@ -2,6 +2,7 @@ with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Visiters;
+with Gela.Int.Tuples;
 
 package body Gela.Plain_Interpretations is
 
@@ -96,6 +97,82 @@ package body Gela.Plain_Interpretations is
       Self.Plian_Int_Set.Add (Result, Item);
    end Add_Expression;
 
+   ---------------
+   -- Add_Tuple --
+   ---------------
+
+   overriding procedure Add_Tuple
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Set_Index;
+      Right  : Gela.Interpretations.Interpretation_Set_Index;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      package Each is
+         type Visiter is new Gela.Interpretations.Visiter with null record;
+         --  Only tuples are expected here
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+         overriding procedure On_Tuple
+           (V     : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each;
+
+      package body Each is
+
+         overriding procedure On_Tuple
+           (V     : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (V, Down);
+            use type Gela.Interpretations.Interpretation_Set_Index_Array;
+
+            Item : constant Gela.Int.Interpretation_Access :=
+              new Gela.Int.Tuples.Tuple'
+                (Gela.Int.Tuples.Create (Left & Value));
+         begin
+            Self.Plian_Int_Set.Add (Result, Item);
+         end On_Tuple;
+
+      end Each;
+
+      Item : Gela.Int.Interpretation_Access;
+      V    : aliased Each.Visiter;
+   begin
+      if Right = 0 then
+         Item := new Gela.Int.Tuples.Tuple'
+           (Gela.Int.Tuples.Create (Value => (1 => Left)));
+
+         Self.Plian_Int_Set.Add (Result, Item);
+      else
+         declare
+            Cursor : Gela.Interpretations.Cursor'Class :=
+              Self.Get_Cursor (Right);
+         begin
+            while Cursor.Has_Element loop
+               Cursor.Visit (V'Access);
+               Cursor.Next;
+            end loop;
+         end;
+      end if;
+   end Add_Tuple;
+
    -----------------------
    -- Get_Defining_Name --
    -----------------------
@@ -124,6 +201,12 @@ package body Gela.Plain_Interpretations is
            (Self   : in out Visiter;
             Tipe   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
             Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array)
+         is null;
       end Each;
 
       ----------
@@ -192,6 +275,25 @@ package body Gela.Plain_Interpretations is
    end Get_Cursor;
 
    ---------------------
+   -- Get_Tuple_Index --
+   ---------------------
+
+   overriding procedure Get_Tuple_Index
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Index;
+      Right  : Gela.Interpretations.Interpretation_Index;
+      Result : out Gela.Interpretations.Interpretation_Index)
+   is
+      use type Gela.Interpretations.Interpretation_Index_Array;
+
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Tuples.Chosen_Tuple'
+          (Length => 2, Index => 0, Down => Left & Right);
+   begin
+      Self.Plian_Int_Set.Add (Result, Item);
+   end Get_Tuple_Index;
+
+   ---------------------
    -- Reserve_Indexes --
    ---------------------
 
@@ -247,6 +349,14 @@ package body Gela.Plain_Interpretations is
            (Self  : access Visiter;
             Value : Gela.Int.Attr_Functions.Attr_Function);
 
+         overriding procedure Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Tuple);
+
+         overriding procedure Chosen_Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Chosen_Tuple);
+
       end Switch;
 
       ------------
@@ -299,6 +409,32 @@ package body Gela.Plain_Interpretations is
               (Tipe  => Value.Expression_Type,
                Down  => Value.Down);
          end Expression;
+
+         -----------
+         -- Tuple --
+         -----------
+
+         overriding procedure Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Tuple)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Tuple (Value.Value, (1 .. 0 => 0));
+         end Tuple;
+
+         ------------------
+         -- Chosen_Tuple --
+         ------------------
+
+         overriding procedure Chosen_Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Chosen_Tuple)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Tuple ((1 .. 0 => 0), Value.Down);
+         end Chosen_Tuple;
 
       end Switch;
 

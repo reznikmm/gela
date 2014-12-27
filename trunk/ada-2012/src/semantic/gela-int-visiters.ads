@@ -1,6 +1,7 @@
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Attr_Functions;
+with Gela.Int.Tuples;
 
 package Gela.Int.Visiters is
    pragma Preelaborate;
@@ -18,5 +19,13 @@ package Gela.Int.Visiters is
    not overriding procedure Attr_Function
      (Self  : access Visiter;
       Value : Gela.Int.Attr_Functions.Attr_Function) is abstract;
+
+   not overriding procedure Tuple
+     (Self  : access Visiter;
+      Value : Gela.Int.Tuples.Tuple) is abstract;
+
+   not overriding procedure Chosen_Tuple
+     (Self  : access Visiter;
+      Value : Gela.Int.Tuples.Chosen_Tuple) is abstract;
 
 end Gela.Int.Visiters;

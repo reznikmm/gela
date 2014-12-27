@@ -134,23 +134,32 @@ package body Asis.Text is
    ------------------
 
    function Element_Span (Element : in Asis.Element) return Span is
+      use type Gela.Lexical_Types.Token_Count;
+
       Comp      : constant Gela.Compilations.Compilation_Access :=
         Element.Data.Enclosing_Compilation;
-      From      : constant Gela.Lexical_Types.Token :=
-        Comp.Get_Token (Element.Data.First_Token);
-      To        : constant Gela.Lexical_Types.Token :=
-        Comp.Get_Token (Element.Data.Last_Token);
-      From_Line : constant Gela.Lexical_Types.Line_Span :=
-        Comp.Get_Line_Span (From.Line);
-      To_Line   : constant Gela.Lexical_Types.Line_Span :=
-        Comp.Get_Line_Span (From.Line);
    begin
-      return
-        (First_Line   => Line_Number_Positive (From.Line),
-         First_Column => Character_Position_Positive
-           (From.First - From_Line.First + 1),
-         Last_Line    => Line_Number (To.Line),
-         Last_Column  => Character_Position (To.Last - To_Line.First + 1));
+      if Element.Data.First_Token = 0 or Element.Data.Last_Token = 0 then
+         return Nil_Span;
+      end if;
+
+      declare
+         From      : constant Gela.Lexical_Types.Token :=
+           Comp.Get_Token (Element.Data.First_Token);
+         To        : constant Gela.Lexical_Types.Token :=
+           Comp.Get_Token (Element.Data.Last_Token);
+         From_Line : constant Gela.Lexical_Types.Line_Span :=
+           Comp.Get_Line_Span (From.Line);
+         To_Line   : constant Gela.Lexical_Types.Line_Span :=
+           Comp.Get_Line_Span (From.Line);
+      begin
+         return
+           (First_Line   => Line_Number_Positive (From.Line),
+            First_Column => Character_Position_Positive
+              (From.First - From_Line.First + 1),
+            Last_Line    => Line_Number (To.Line),
+            Last_Column  => Character_Position (To.Last - To_Line.First + 1));
+      end;
    end Element_Span;
 
    -----------------------

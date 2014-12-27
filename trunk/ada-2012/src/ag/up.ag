@@ -4,7 +4,9 @@ Synthesized attributes
   anonymous_access_to_object_definition,
   anonymous_access_to_function_definition,
   anonymous_access_to_procedure_definition,
+  association,
   attribute_reference,
+  box,
   case_expression,
   character_literal,
   clause_name,
@@ -16,6 +18,7 @@ Synthesized attributes
   direct_name,
   explicit_dereference,
   expression,
+  expression_or_box,
   extension_aggregate,
   auxiliary_apply,
   identifier,
@@ -44,9 +47,22 @@ Synthesized attributes
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
-  unconstrained_array_definition
-
+  unconstrained_array_definition,
+  
+  Record_Component_Associations
    : Gela.Interpretations.Interpretation_Set_Index : Up;
+
+Rules for Record_Component_Associations.association :
+(.
+      ${Record_Component_Associations.Up} := 0;
+.)
+
+Rules for Record_Component_Associations.association :
+(.
+      ${Record_Component_Associations.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${association.Up}, ${tail.Up}, ${Record_Component_Associations.Up});
+.)
 
 Rules for identifier.identifier_token :
 (.
@@ -75,6 +91,12 @@ Rules for selected_component. :
          ${prefix.Up},
          ${Selector.full_name},
          ${selected_component.Up});
+.)
+
+Rules for association. :
+(.
+      --  FIXME
+      ${association.Up} := ${Component_Expression.Up:0};
 .)
 
 Rules for attribute_reference. :
@@ -186,7 +208,10 @@ Rules for numeric_literal.numeric_literal_token :
 Rules for string_literal.string_literal_token :
 (.
       --  LARL syntax has only operator_symbol
-      ${string_literal.Up} := 0;
+      --  TEMPORARY {string_literal.Up} := 0;
+      Gela.Pass_Utils.Resolve.Numeric_Literal
+        (Self.Compilation,
+         ${string_literal_token.Index}, ${string_literal.Up});
 .)
 
 
@@ -197,7 +222,7 @@ Rules for quantified_expression. :
 
 Rules for record_aggregate. :
 (.
-      ${record_aggregate.Up} := 0;  --  FIXME
+      ${record_aggregate.Up} := ${Record_Component_Associations.Up};
 .)
 
 Rules for membership_test. :
@@ -244,4 +269,9 @@ Rules for unconstrained_array_definition. :
 Rules for constrained_array_definition. :
 (.
       ${constrained_array_definition.Up} := 0;  --  FIXME
+.)
+
+Rules for box.box_token :
+(.
+      ${box.Up} := 0;  --  FIXME
 .)
