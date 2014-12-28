@@ -70,9 +70,9 @@ package body Gela.Plain_Value_Sets is
       use type Gela.Semantic_Types.Value_Index;
    begin
       if Tail = 0 then
-         Value := 0;
+         Value := Head;
       elsif Head = 0 then
-         Value := Tail;
+         Value := 0;
       else
          Self.Put_Value ((List_Value, Head, Tail), Value);
       end if;
