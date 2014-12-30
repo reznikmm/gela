@@ -111,21 +111,6 @@ package body Gela.Plain_Interpretations is
          type Visiter is new Gela.Interpretations.Visiter with null record;
          --  Only tuples are expected here
 
-         overriding procedure On_Defining_Name
-           (Self   : in out Visiter;
-            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-
-         overriding procedure On_Attr_Function
-           (Self   : in out Visiter;
-            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-
          overriding procedure On_Tuple
            (V     : in out Visiter;
             Value : Gela.Interpretations.Interpretation_Set_Index_Array;
@@ -192,21 +177,6 @@ package body Gela.Plain_Interpretations is
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-
-         overriding procedure On_Attr_Function
-           (Self   : in out Visiter;
-            Tipe   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
-            Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
-            Down  : Gela.Interpretations.Interpretation_Index_Array)
-         is null;
       end Each;
 
       ----------
