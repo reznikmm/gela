@@ -72,6 +72,11 @@ private
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 
+   overriding procedure Add_Placeholder
+     (Self   : in out Interpretation_Manager;
+      Kind   : Gela.Interpretations.Placeholder_Kind;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
    overriding procedure Add_Tuple
      (Self   : in out Interpretation_Manager;
       Left   : Gela.Interpretations.Interpretation_Set_Index;

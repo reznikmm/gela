@@ -1,4 +1,5 @@
 with Gela.Compilations;
+with Gela.Elements.Constraints;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
@@ -90,5 +91,16 @@ package Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Result : out Gela.Interpretations.Interpretation_Index);
+
+   function Placeholder
+     (Comp : Gela.Compilations.Compilation_Access)
+      return Gela.Interpretations.Interpretation_Set_Index;
+
+   procedure Constraint
+     (Constraint : Gela.Elements.Constraints.Constraint_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
+      Constr     : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index);
 
 end Gela.Resolve;

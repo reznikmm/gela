@@ -1,5 +1,3 @@
-limited with Gela.Int.Visiters;
-
 package Gela.Int.Tuples is
    pragma Preelaborate;
 

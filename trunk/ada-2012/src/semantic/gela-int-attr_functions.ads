@@ -1,7 +1,5 @@
 with Gela.Lexical_Types;
 
---  limited with Gela.Int.Visiters;
-
 package Gela.Int.Attr_Functions is
    pragma Preelaborate;
 

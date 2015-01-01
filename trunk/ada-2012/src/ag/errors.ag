@@ -27,6 +27,9 @@ Synthesized attributes
   delta_constraint,
   digits_constraint,
   direct_name,
+  discrete_choice,
+  discrete_range,
+  discrete_subtype_indication_dr,
   discrete_range_attribute_reference,
   discrete_simple_expression_range,
   discrete_subtype_definition,
@@ -53,6 +56,7 @@ Synthesized attributes
   object_declaration,
   object_definition,
   operator_symbol,
+  others_choice,
   package_declaration,
   parameter_specification,
   pragma_node,
@@ -63,7 +67,9 @@ Synthesized attributes
   quantified_expression,
   raise_statement,
   range_attribute_reference,
+  range_attribute_reference_dr,
   range_constraint,
+  range_dr,
   record_aggregate,
   requeue_statement,
   scalar_constraint,
@@ -73,6 +79,7 @@ Synthesized attributes
   short_circuit,
   simple_expression,
   simple_expression_range,
+  simple_expression_range_dr,
   simple_return_statement,
   statement,
   string_literal,
@@ -83,6 +90,8 @@ Synthesized attributes
   terminate_alternative_statement,
   unconstrained_array_definition,
   while_loop_statement,
+  Array_Component_Choices,
+  Associations,
   Discrete_Subtype_Definitions,
   Index_Subtype_Definitions,
   Body_Statements,
@@ -117,7 +126,12 @@ Rules for auxiliary_apply. :
 
 Rules for subtype_indication. :
 (.
-      ${subtype_indication.Errors} := 0;  --  ${Subtype_Constraint.Errors}
+      ${subtype_indication.Errors} := ${Subtype_Constraint.Errors};
+.)
+
+Rules for discrete_subtype_indication_dr. :
+(.
+      ${discrete_subtype_indication_dr.Errors} := ${Subtype_Constraint.Errors};
 .)
 
 Rules for delta_constraint. :
@@ -133,14 +147,23 @@ Rules for range_attribute_reference.Range_Attribute :
 (.
       ${range_attribute_reference.Errors} := 0;
 .)
+Rules for range_attribute_reference_dr.Range_Attribute :
+(.
+      ${range_attribute_reference_dr.Errors} := 0;
+.)
 Rules for simple_expression_range. :
 (.
       --  ${Upper_Bound.Errors}, ${Lower_Bound.Errors}
       ${simple_expression_range.Errors} := 0;
 .)
+Rules for simple_expression_range_dr. :
+(.
+      --  ${Upper_Bound.Errors}, ${Lower_Bound.Errors}
+      ${simple_expression_range_dr.Errors} := 0;
+.)
 Rules for composite_constraint. :
 (.
-      ${composite_constraint.Errors} := 0;
+      ${composite_constraint.Errors} := ${Associations.Errors};
 .)
 Rules for allocator. :
 (.
@@ -212,6 +235,18 @@ Rules for membership_test. :
 Rules for short_circuit. :
 (.
       ${short_circuit.Errors} := 0; --  FIXME
+.)
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${Array_Component_Choices.Errors} := 0;
+.)
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${Array_Component_Choices.Errors} := ${discrete_choice.Errors}; --  FIXME
+.)
+Rules for Associations.association :
+(.
+      ${Associations.Errors} := 0; --  FIXME
 .)
 Rules for Index_Subtype_Definitions.subtype_mark :
 (.
@@ -399,4 +434,8 @@ Rules for association. :
 Rules for box.box_token :
 (.
       ${box.Errors} := 0;  --  FIXME
+.)
+Rules for others_choice.others_token :
+(.
+      ${others_choice.Errors} := 0;  --  FIXME
 .)

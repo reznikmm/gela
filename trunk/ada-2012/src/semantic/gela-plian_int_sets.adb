@@ -1,8 +1,9 @@
 with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
-with Gela.Int.Visiters;
+with Gela.Int.Placeholders;
 with Gela.Int.Tuples;
+with Gela.Int.Visiters;
 
 package body Gela.Plian_Int_Sets is
 
@@ -208,6 +209,14 @@ package body Gela.Plian_Int_Sets is
       package Each is
          type Visiter is new Gela.Int.Visiters.Visiter with null record;
 
+         overriding procedure Attr_Function
+           (Self  : access Visiter;
+            Value : Gela.Int.Attr_Functions.Attr_Function);
+
+         overriding procedure Chosen_Tuple
+           (Self  : access Visiter;
+            Value : Gela.Int.Tuples.Chosen_Tuple);
+
          overriding procedure Defining_Name
            (Self  : access Visiter;
             Value : Gela.Int.Defining_Names.Defining_Name);
@@ -216,17 +225,14 @@ package body Gela.Plian_Int_Sets is
            (Self  : access Visiter;
             Value : Gela.Int.Expressions.Expression);
 
-         overriding procedure Attr_Function
+         overriding procedure Placeholder
            (Self  : access Visiter;
-            Value : Gela.Int.Attr_Functions.Attr_Function);
+            Value : Gela.Int.Placeholders.Placeholder);
 
          overriding procedure Tuple
            (Self  : access Visiter;
             Value : Gela.Int.Tuples.Tuple);
 
-         overriding procedure Chosen_Tuple
-           (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Chosen_Tuple);
       end Each;
 
       package body Each is
@@ -263,6 +269,17 @@ package body Gela.Plian_Int_Sets is
               (Kind => Value.Kind,
                Down => Value.Down);
          end Attr_Function;
+
+         overriding procedure Placeholder
+           (Self  : access Visiter;
+            Value : Gela.Int.Placeholders.Placeholder)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Placeholder
+              (Kind => Value.Placeholder_Kind,
+               Down => Value.Down);
+         end Placeholder;
 
          overriding procedure Tuple
            (Self  : access Visiter;

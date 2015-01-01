@@ -1,7 +1,5 @@
 with Gela.Semantic_Types;
 
-limited with Gela.Int.Visiters;
-
 package Gela.Int.Expressions is
    pragma Preelaborate;
 

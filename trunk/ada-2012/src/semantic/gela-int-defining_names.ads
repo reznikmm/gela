@@ -1,7 +1,5 @@
 with Gela.Elements.Defining_Names;
 
-limited with Gela.Int.Visiters;
-
 package Gela.Int.Defining_Names is
    pragma Preelaborate;
 

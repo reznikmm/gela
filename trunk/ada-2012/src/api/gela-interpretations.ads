@@ -65,6 +65,16 @@ package Gela.Interpretations is
         is abstract;
    --  Register chosen tuple interpretation
 
+   type Placeholder_Kind is (Absent);
+
+   not overriding procedure Add_Placeholder
+     (Self   : in out Interpretation_Manager;
+      Kind   : Gela.Interpretations.Placeholder_Kind;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Placeholder interpretation represents some syntax construct.
+   --  This eliminates need to traverse syntax tree in some situation
+
    type Visiter is limited interface;
 
    not overriding procedure On_Defining_Name
@@ -84,6 +94,12 @@ package Gela.Interpretations is
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each attribute denoting function
+
+   not overriding procedure On_Placeholder
+     (Self   : in out Visiter;
+      Kind   : Gela.Interpretations.Placeholder_Kind;
+      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+   --  Called for each placeholder
 
    not overriding procedure On_Tuple
      (Self  : in out Visiter;

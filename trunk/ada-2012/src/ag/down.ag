@@ -97,12 +97,14 @@ Rules for Array_Component_Choices.discrete_choice :
 
 Rules for Associations.association :
 (.
-      ${association.Down} := ${Associations.Down};  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Associations.Down}, 1, ${association.Down});
 .)
 
 Rules for Associations.association :
 (.
-      ${tail.Down} := ${Associations.Down};  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Associations.Down}, 2, ${tail.Down});
 .)
 
 Rules for Record_Component_Associations.association :
@@ -251,7 +253,7 @@ Rules for component_declaration. :
 
 Rules for composite_constraint. :
 (.
-      ${Associations.Down} := 0;  --  FIXME
+      ${Associations.Down} := ${composite_constraint.Down};
 .)
 
 Rules for decimal_fixed_point_definition. :
@@ -717,12 +719,14 @@ Rules for simple_expression_range. :
 
 Rules for simple_expression_range_dr. :
 (.
-      ${Lower_Bound.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${simple_expression_range_dr.Down}, 1, ${Lower_Bound.Down});
 .)
 
 Rules for simple_expression_range_dr. :
 (.
-      ${Upper_Bound.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${simple_expression_range_dr.Down}, 2, ${Upper_Bound.Down});
 .)
 
 Rules for simple_return_statement. :
@@ -884,9 +888,8 @@ Rules for subtype_indication. :
 
 Rules for subtype_indication. :
 (.
-      -- 3.5 (5)
-      Gela.Pass_Utils.Resolve.To_Type
-        (Self.Compilation,
+      Gela.Pass_Utils.Resolve.Constraint
+        (Subtype_Constraint,
          ${subtype_indication.env_in},
          ${subtype_mark.Up},
          ${Subtype_Constraint.Up:0},

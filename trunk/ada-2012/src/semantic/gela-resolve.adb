@@ -1,5 +1,9 @@
 with Gela.Defining_Name_Cursors;
+with Gela.Element_Visiters;
+with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Defining_Names;
+with Gela.Elements.Range_Attribute_References;
+with Gela.Elements.Simple_Expression_Ranges;
 with Gela.Environments;
 with Gela.Type_Managers;
 
@@ -96,6 +100,209 @@ package body Gela.Resolve is
             null;
       end case;
    end Attribute_Reference;
+
+   procedure Constraint
+     (Constraint : Gela.Elements.Constraints.Constraint_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
+      Constr     : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index)
+   is
+      package Each_Constraint is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Comp : Gela.Compilations.Compilation_Access;
+         end record;
+
+         overriding procedure Composite_Constraint
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access);
+
+         overriding procedure Range_Attribute_Reference
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Range_Attribute_References.
+              Range_Attribute_Reference_Access);
+
+         overriding procedure Simple_Expression_Range
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Expression_Ranges.
+              Simple_Expression_Range_Access);
+
+      end Each_Constraint;
+
+      package Each_Tuple is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            Comp       : Gela.Compilations.Compilation_Access;
+            Level      : Positive;
+            Type_Index : Gela.Semantic_Types.Type_Index;
+            Index      : Gela.Interpretations.Interpretation_Index;
+            Success    : Boolean;
+         end record;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each_Tuple;
+
+      package body Each_Constraint is
+
+         overriding procedure Composite_Constraint
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access)
+         is
+            pragma Unreferenced (Node);
+
+            IM   : constant Gela.Interpretations.Interpretation_Manager_Access
+              := Self.Comp.Context.Interpretation_Manager;
+            Index         : Gela.Interpretations.Interpretation_Index;
+            Tuple_Visiter : aliased Each_Tuple.Visiter :=
+              (Comp => Self.Comp, Level => 1, others => <>);
+            Cursor        : Gela.Interpretations.Cursor'Class :=
+              IM.Get_Cursor (Constr);
+         begin
+            Get_Subtype
+              (Self.Comp,
+               Env    => Env,
+               Set    => Type_Up,
+               Index  => Index,
+               Result => Tuple_Visiter.Type_Index);
+
+            while Cursor.Has_Element loop
+               Tuple_Visiter.Success := False;
+               Cursor.Visit (Tuple_Visiter'Access);
+
+               if Tuple_Visiter.Success then
+                  Result := Tuple_Visiter.Index;
+               end if;
+
+               Cursor.Next;
+            end loop;
+         end Composite_Constraint;
+
+         overriding procedure Range_Attribute_Reference
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Range_Attribute_References.
+              Range_Attribute_Reference_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            --  3.5 (5)
+            Gela.Resolve.To_Type
+              (Comp    => Self.Comp,
+               Env     => Env,
+               Type_Up => Type_Up,
+               Expr_Up => Constr,
+               Result  => Result);
+         end Range_Attribute_Reference;
+
+         overriding procedure Simple_Expression_Range
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Expression_Ranges.
+              Simple_Expression_Range_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            --  3.5 (5)
+            Gela.Resolve.To_Type
+              (Comp    => Self.Comp,
+               Env     => Env,
+               Type_Up => Type_Up,
+               Expr_Up => Constr,
+               Result  => Result);
+         end Simple_Expression_Range;
+
+      end Each_Constraint;
+
+      package body Each_Tuple is
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down);
+            IM   : constant Gela.Interpretations.Interpretation_Manager_Access
+              := Self.Comp.Context.Interpretation_Manager;
+         begin
+            if Self.Level = 1 then
+               declare
+                  Chosen : Gela.Interpretations.Interpretation_Index;
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Value'Range);
+               begin
+                  for J in Value'Range loop
+                     declare
+                        Cursor : Gela.Interpretations.Cursor'Class :=
+                          IM.Get_Cursor (Value (J));
+                     begin
+                        Self.Level := 2;
+                        Self.Index := 0;
+
+                        while Cursor.Has_Element loop
+                           Cursor.Visit (Self'Unchecked_Access);
+                           Cursor.Next;
+                        end loop;
+
+                        List (J) := Self.Index;
+                     end;
+                  end loop;
+
+                  Chosen := 0;
+
+                  for J in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (J), Chosen, Chosen);
+                  end loop;
+
+                  Self.Index := Chosen;
+               end;
+            else
+               declare
+                  Chosen : Gela.Interpretations.Interpretation_Index;
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Value'Range);
+               begin
+                  for J in Value'Range loop
+                     declare
+                        Cursor : Gela.Interpretations.Cursor'Class :=
+                          IM.Get_Cursor (Value (J));
+                     begin
+                        while Cursor.Has_Element loop
+                           List (J) := Cursor.Get_Index;
+                           Cursor.Next;
+                        end loop;
+
+                     end;
+                  end loop;
+
+                  Chosen := 0;
+
+                  for J in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (J), Chosen, Chosen);
+                  end loop;
+
+                  Self.Index := Chosen;
+                  Self.Success := True;
+               end;
+            end if;
+         end On_Tuple;
+
+      end Each_Tuple;
+
+      V : Each_Constraint.Visiter;
+
+   begin
+      if not Constraint.Assigned then
+         Result := 0;
+         return;
+      end if;
+      V.Comp := Constraint.Enclosing_Compilation;
+
+      Constraint.Visit (V);
+
+   end Constraint;
 
    -----------------
    -- Direct_Name --
@@ -446,6 +653,23 @@ package body Gela.Resolve is
          Down   => (1 .. 0 => 0),
          Result => Result);
    end Numeric_Literal;
+
+   -----------------
+   -- Placeholder --
+   -----------------
+
+   function Placeholder
+     (Comp : Gela.Compilations.Compilation_Access)
+      return Gela.Interpretations.Interpretation_Set_Index
+   is
+      Result : Gela.Interpretations.Interpretation_Set_Index := 0;
+   begin
+      Comp.Context.Interpretation_Manager.Add_Placeholder
+        (Kind   => Gela.Interpretations.Absent,
+         Result => Result);
+
+      return Result;
+   end Placeholder;
 
    ------------------------
    -- Selected_Component --

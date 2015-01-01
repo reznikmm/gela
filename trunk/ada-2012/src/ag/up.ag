@@ -16,6 +16,9 @@ Synthesized attributes
   delta_constraint,
   digits_constraint,
   direct_name,
+  discrete_choice,
+  discrete_range,
+  discrete_subtype_indication_dr,
   explicit_dereference,
   expression,
   expression_or_box,
@@ -29,12 +32,15 @@ Synthesized attributes
   numeric_literal,
   object_definition,
   operator_symbol,
+  others_choice,
   prefix,
   program_unit_name,
   qualified_expression,
   quantified_expression,
   range_attribute_reference,
+  range_attribute_reference_dr,
   range_constraint,
+  range_dr,
   record_aggregate,
   scalar_constraint,
   selected_component,
@@ -42,6 +48,7 @@ Synthesized attributes
   short_circuit,
   simple_expression,
   simple_expression_range,
+  simple_expression_range_dr,
   string_literal,
   subtype_indication,
   subtype_indication_or_access_definition,
@@ -50,6 +57,7 @@ Synthesized attributes
   unconstrained_array_definition,
   
   Array_Component_Choices,
+  Associations,
   Record_Component_Associations
    : Gela.Interpretations.Interpretation_Set_Index : Up;
 
@@ -62,8 +70,21 @@ Rules for Array_Component_Choices.discrete_choice :
 (.
       ${Array_Component_Choices.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
-        (0,  --  {discrete_choice.Up},
-         ${tail.Up}, ${Array_Component_Choices.Up});
+        (${discrete_choice.Up},
+         ${tail.Up},
+         ${Array_Component_Choices.Up});
+.)
+
+Rules for Associations.association :
+(.
+      ${Associations.Up} := 0;
+.)
+
+Rules for Associations.association :
+(.
+      ${Associations.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${association.Up}, ${tail.Up}, ${Associations.Up});
 .)
 
 Rules for Record_Component_Associations.association :
@@ -111,7 +132,9 @@ Rules for association. :
 (.
       ${association.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
-        (${Component_Expression.Up:0}, ${Array_Component_Choices.Up}, ${association.Up});
+        (${Component_Expression.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
+         ${Array_Component_Choices.Up},
+         ${association.Up});
 .)
 
 Rules for attribute_reference. :
@@ -127,7 +150,7 @@ Rules for attribute_reference. :
 
 Rules for composite_constraint. :
 (.
-      ${composite_constraint.Up} := 0;  --  FIXME
+      ${composite_constraint.Up} := ${Associations.Up};
 .)
 
 Rules for auxiliary_apply. :
@@ -177,6 +200,12 @@ Rules for range_attribute_reference.Range_Attribute :
       ${range_attribute_reference.Up} := ${Range_Attribute.Up};
 .)
 
+Rules for range_attribute_reference_dr.Range_Attribute :
+(.
+      --  depends on ${range_attribute_reference_dr.env_in}
+      ${range_attribute_reference_dr.Up} := ${Range_Attribute.Up};
+.)
+
 Rules for simple_expression_range. :
 (.
       Gela.Pass_Utils.Resolve.Simple_Expression_Range
@@ -185,6 +214,16 @@ Rules for simple_expression_range. :
          ${Lower_Bound.Up},
          ${Upper_Bound.Up},
          ${simple_expression_range.Up});
+.)
+
+Rules for simple_expression_range_dr. :
+(.
+      Gela.Pass_Utils.Resolve.Simple_Expression_Range
+        (Self.Compilation,
+         ${simple_expression_range_dr.env_in},
+         ${Lower_Bound.Up},
+         ${Upper_Bound.Up},
+         ${simple_expression_range_dr.Up});
 .)
 
 Rules for allocator. :
@@ -260,6 +299,11 @@ Rules for subtype_indication. :
       ${subtype_indication.Up} := ${subtype_mark.Up};
 .)
 
+Rules for discrete_subtype_indication_dr. :
+(.
+      ${discrete_subtype_indication_dr.Up} := ${Subtype_Mark.Up};
+.)
+
 Rules for anonymous_access_to_object_definition. :
 (.
       ${anonymous_access_to_object_definition.Up} := 0;  --  FIXME
@@ -289,4 +333,9 @@ Rules for constrained_array_definition. :
 Rules for box.box_token :
 (.
       ${box.Up} := 0;  --  FIXME
+.)
+
+Rules for others_choice.others_token :
+(.
+      ${others_choice.Up} := 0;  --  FIXME
 .)
