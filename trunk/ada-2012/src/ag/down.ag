@@ -78,9 +78,22 @@ Inherited attributes
   type_definition,
   unconstrained_array_definition,
 
+  Array_Component_Choices,
   Associations,
   Record_Component_Associations
    : Gela.Interpretations.Interpretation_Index : Down;
+
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Array_Component_Choices.Down}, 1, ${discrete_choice.Down});
+.)
+
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Array_Component_Choices.Down}, 2, ${tail.Down});
+.)
 
 Rules for Associations.association :
 (.
@@ -201,7 +214,14 @@ Rules for assignment_statement. :
 
 Rules for association. :
 (.
-      ${Component_Expression.Down} := ${association.Down};  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${association.Down}, 1, ${Component_Expression.Down});
+.)
+
+Rules for association. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${association.Down}, 2, ${Array_Component_Choices.Down});
 .)
 
 Rules for case_expression. :
@@ -257,11 +277,6 @@ Rules for delta_constraint. :
 Rules for digits_constraint. :
 (.
       ${Digits_Expression.Down} := 0;  --  FIXME
-.)
-
-Rules for Array_Component_Choices.discrete_choice :
-(.
-      ${discrete_choice.Down} := 0;  --  FIXME
 .)
 
 Rules for Case_Path_Alternative_Choices.discrete_choice :

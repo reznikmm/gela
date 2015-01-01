@@ -49,8 +49,22 @@ Synthesized attributes
   subtype_mark_or_access_definition,
   unconstrained_array_definition,
   
+  Array_Component_Choices,
   Record_Component_Associations
    : Gela.Interpretations.Interpretation_Set_Index : Up;
+
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${Array_Component_Choices.Up} := 0;
+.)
+
+Rules for Array_Component_Choices.discrete_choice :
+(.
+      ${Array_Component_Choices.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (0,  --  {discrete_choice.Up},
+         ${tail.Up}, ${Array_Component_Choices.Up});
+.)
 
 Rules for Record_Component_Associations.association :
 (.
@@ -95,8 +109,9 @@ Rules for selected_component. :
 
 Rules for association. :
 (.
-      --  FIXME
-      ${association.Up} := ${Component_Expression.Up:0};
+      ${association.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${Component_Expression.Up:0}, ${Array_Component_Choices.Up}, ${association.Up});
 .)
 
 Rules for attribute_reference. :
