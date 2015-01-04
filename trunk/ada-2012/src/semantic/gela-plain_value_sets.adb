@@ -39,22 +39,43 @@ package body Gela.Plain_Value_Sets is
          end if;
       end;
 
-      case Op is
-         when Gela.Semantic_Types.Concat =>
-            declare
-               Item : constant Gela.Plain_Value_Sets.Value :=
-                 Self.Vector.Element (Args);
-            begin
-               if Item.Kind = List_Value and then
-                 Self.Vector.Element (Item.Head).Kind = String_Value and then
-                 Self.Vector.Element (Item.Tail).Kind = String_Value
+      declare
+         use type Gela.Arithmetic.Integers.Value;
+
+         Item : constant Gela.Plain_Value_Sets.Value :=
+           Self.Vector.Element (Args);
+         Left  : Gela.Plain_Value_Sets.Value;
+         Right : Gela.Plain_Value_Sets.Value;
+      begin
+         if Item.Kind /= List_Value then
+            Self.String_Literal
+              (League.Strings.To_Universal_String ("???"),
+               Value);
+            return;
+         end if;
+
+         Left := Self.Vector.Element (Item.Head);
+         Right := Self.Vector.Element (Item.Tail);
+         case Op is
+            when Gela.Semantic_Types.Ampersand_Operator =>
+               if Left.Kind = String_Value and then
+                 Right.Kind = String_Value
                then
                   Self.String_Literal
-                    (Self.Image (Item.Head) & Self.Image (Item.Tail),
+                    (Left.String & Right.String,
                      Value);
                end if;
-            end;
-      end case;
+            when Gela.Semantic_Types.Hyphen_Operator =>
+               if Left.Kind = Integer_Value and then
+                 Right.Kind = Integer_Value
+               then
+                  Self.Put_Value
+                    ((Integer_Value, Left.Integer - Right.Integer), Value);
+               end if;
+            when others =>
+               raise Constraint_Error with "unimplemeneted";
+         end case;
+      end;
    end Apply;
 
    ----------
@@ -112,21 +133,17 @@ package body Gela.Plain_Value_Sets is
             Node : not null Gela.Elements.Defining_Operator_Symbols.
               Defining_Operator_Symbol_Access)
          is
+            use type Gela.Lexical_Types.Symbol;
+
             Symbol : constant Gela.Lexical_Types.Symbol := Node.Full_Name;
+            Op : constant Gela.Semantic_Types.Static_Operator :=
+              Gela.Semantic_Types.Static_Operator'Val (Symbol - 1);
+            Item  : constant Gela.Plain_Value_Sets.Value :=
+              (Denote_Function, Op);
          begin
-            case Symbol is
-               when Gela.Lexical_Types.Operators.Ampersand_Operator =>
-                  declare
-                     Item  : constant Gela.Plain_Value_Sets.Value :=
-                       (Denote_Function, Gela.Semantic_Types.Concat);
-                  begin
-                     Put_Value (Self  => Self,
-                                Item  => Item,
-                                Value => V.Result);
-                  end;
-               when others =>
-                  null;
-            end case;
+            Put_Value (Self  => Self,
+                       Item  => Item,
+                       Value => V.Result);
          end Defining_Operator_Symbol;
 
          overriding procedure Function_Declaration
@@ -147,13 +164,13 @@ package body Gela.Plain_Value_Sets is
 
       V : aliased Get.Visiter;
    begin
-      if Name /= null and then Name.Enclosing_Element = null then
+      if Name /= null and then Name.Enclosing_Element /= null then
          Name.Enclosing_Element.Visit (V);
       else
          --  FIXME stub until name resolution ready
          declare
             Item  : constant Gela.Plain_Value_Sets.Value :=
-              (Denote_Function, Gela.Semantic_Types.Concat);
+              (Denote_Function, Gela.Semantic_Types.Ampersand_Operator);
          begin
             Put_Value (Self  => Self,
                        Item  => Item,
@@ -174,6 +191,8 @@ package body Gela.Plain_Value_Sets is
       case X.Kind is
          when Denote_Function =>
             return Gela.Semantic_Types.Static_Operator'Pos (X.Op);
+         when Integer_Value =>
+            return Gela.Arithmetic.Integers.Hash (X.Integer);
          when String_Value =>
             return League.Strings.Hash (X.String);
          when List_Value =>
@@ -189,10 +208,37 @@ package body Gela.Plain_Value_Sets is
    overriding function Image
      (Self  : Value_Set;
       Value : Gela.Semantic_Types.Value_Index)
-      return League.Strings.Universal_String is
+      return League.Strings.Universal_String
+   is
+      Item : constant Gela.Plain_Value_Sets.Value :=
+        Self.Vector.Element (Value);
    begin
-      return Self.Vector.Element (Value).String;
+      case Item.Kind is
+         when String_Value =>
+            return Item.String;
+         when Integer_Value =>
+            return League.Strings.From_UTF_8_String
+              (Gela.Arithmetic.Integers.Image (Item.Integer));
+         when others =>
+            raise Constraint_Error;
+      end case;
    end Image;
+
+   ---------------------
+   -- Numeric_Literal --
+   ---------------------
+
+   overriding procedure Numeric_Literal
+     (Self  : in out Value_Set;
+      Image : League.Strings.Universal_String;
+      Value : out Gela.Semantic_Types.Value_Index)
+   is
+      X : constant Gela.Arithmetic.Integers.Value :=
+        Gela.Arithmetic.Integers.Literal (Image.To_UTF_8_String);
+      Item : constant Gela.Plain_Value_Sets.Value := (Integer_Value, X);
+   begin
+      Self.Put_Value (Item, Value);
+   end Numeric_Literal;
 
    ---------------
    -- Put_Value --

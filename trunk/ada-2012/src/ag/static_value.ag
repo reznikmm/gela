@@ -103,7 +103,8 @@ Rules for selected_component. :
 .)
 Rules for numeric_literal.numeric_literal_token :
 (.
-      ${numeric_literal.static_value} := 0;  --  FIXME
+    ${numeric_literal.static_value} := Gela.Pass_Utils.Create_Numeric_Value
+      (Self.Compilation, ${numeric_literal_token.Index});
 .)
 Rules for null_literal.null_literal_token :
 (.

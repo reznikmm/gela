@@ -4,6 +4,7 @@ with Ada.Containers.Vectors;
 
 with League.Strings;
 
+with Gela.Arithmetic.Integers;
 with Gela.Elements.Defining_Names;
 with Gela.Semantic_Types;
 with Gela.Value_Sets;
@@ -18,12 +19,15 @@ private
    subtype Positive_Value_Index is Gela.Semantic_Types.Value_Index
      range 1 .. Gela.Semantic_Types.Value_Index'Last;
 
-   type Value_Kinds is (String_Value, List_Value, Denote_Function);
+   type Value_Kinds is
+     (Integer_Value, String_Value, List_Value, Denote_Function);
 
    type Value (Kind : Value_Kinds := String_Value) is record
       case Kind is
          when Denote_Function =>
             Op : Gela.Semantic_Types.Static_Operator;
+         when Integer_Value =>
+            Integer : Gela.Arithmetic.Integers.Value;
          when String_Value =>
             String : League.Strings.Universal_String;
          when List_Value =>
@@ -57,6 +61,11 @@ private
       Value : out Gela.Semantic_Types.Value_Index);
 
    overriding procedure String_Literal
+     (Self  : in out Value_Set;
+      Image : League.Strings.Universal_String;
+      Value : out Gela.Semantic_Types.Value_Index);
+
+   overriding procedure Numeric_Literal
      (Self  : in out Value_Set;
       Image : League.Strings.Universal_String;
       Value : out Gela.Semantic_Types.Value_Index);

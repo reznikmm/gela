@@ -359,6 +359,22 @@ package body Gela.Pass_Utils is
       return Result;
    end Create_Function_Call_Value;
 
+   function Create_Numeric_Value
+     (Comp  : Gela.Compilations.Compilation_Access;
+      Value : Gela.Lexical_Types.Token_Index)
+      return Gela.Semantic_Types.Value_Index
+   is
+      Token  : constant Gela.Lexical_Types.Token := Comp.Get_Token (Value);
+      Source : constant League.Strings.Universal_String := Comp.Source;
+      Image  : constant League.Strings.Universal_String :=
+        Source.Slice (Token.First, Token.Last);
+      Result : Gela.Semantic_Types.Value_Index;
+   begin
+      Comp.Context.Values.Numeric_Literal (Image, Result);
+
+      return Result;
+   end Create_Numeric_Value;
+
    -------------------------
    -- Create_String_Value --
    -------------------------

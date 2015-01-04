@@ -33,6 +33,26 @@ package Gela.Semantic_Types is
    type Value_Index is new Natural;
    --  Index of static value
 
-   type Static_Operator is (Concat);
+   --  See also Gela.Lexical_Types.Operators
+   type Static_Operator is
+     (Less_Operator,
+      Equal_Operator,
+      Greater_Operator,
+      Hyphen_Operator,
+      Slash_Operator,
+      Star_Operator,
+      Ampersand_Operator,
+      Plus_Operator,
+      Less_Or_Equal_Operator,
+      Greater_Or_Equal_Operator,
+      Inequality_Operator,
+      Double_Star_Operator,
+      Or_Operator,
+      And_Operator,
+      Xor_Operator,
+      Mod_Operator,
+      Rem_Operator,
+      Abs_Operator,
+      Not_Operator);
 
 end Gela.Semantic_Types;

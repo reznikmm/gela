@@ -7,10 +7,11 @@
 ------------------------------------------------------------------------------
 --  $Revision$ $Date$
 
+with Ada.Streams;
 with Ada.Strings.Fixed;
 with Ada.Strings.Maps.Constants;
 
-with Ada.Streams;
+with League.Stream_Element_Vectors.Hash;
 
 package body Gela.Arithmetic.Integers is
 
@@ -724,6 +725,16 @@ package body Gela.Arithmetic.Integers is
          return Minus;
       end if;
    end Get_Sign;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Left : Value) return Ada.Containers.Hash_Type is
+   begin
+      return League.Stream_Element_Vectors.Hash
+        (League.Stream_Element_Vectors.Stream_Element_Vector (Left));
+   end Hash;
 
    -----------
    -- Image --

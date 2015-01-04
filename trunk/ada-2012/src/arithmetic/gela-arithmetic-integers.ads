@@ -9,6 +9,8 @@
 --  Purpose:
 --  Multyprecission integer arithmetic
 
+with Ada.Containers;
+
 with League.Stream_Element_Vectors;
 
 package Gela.Arithmetic.Integers is
@@ -40,6 +42,7 @@ package Gela.Arithmetic.Integers is
    function "not" (Left : Value) return Value;
 
    function Image (Left : Value) return String;
+   function Hash (Left : Value) return Ada.Containers.Hash_Type;
 
    function Zero return Value;
    function One  return Value;

@@ -18,6 +18,12 @@ package Gela.Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
    --  Get string value for given literal.
 
+   not overriding procedure Numeric_Literal
+     (Self  : in out Value_Set;
+      Image : League.Strings.Universal_String;
+      Value : out Gela.Semantic_Types.Value_Index) is abstract;
+   --  Get numeric value for given literal.
+
    not overriding procedure Name
      (Self  : in out Value_Set;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
