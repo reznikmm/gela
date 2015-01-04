@@ -269,6 +269,7 @@ package body Gela.Resolve is
                         Cursor : Gela.Interpretations.Cursor'Class :=
                           IM.Get_Cursor (Value (J));
                      begin
+                        List (J) := 0;
                         while Cursor.Has_Element loop
                            List (J) := Cursor.Get_Index;
                            Cursor.Next;
