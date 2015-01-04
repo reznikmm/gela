@@ -9,6 +9,12 @@
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
+with Gela.Element_Visiters;
+with Gela.Elements.Constraints;
+with Gela.Elements.Simple_Expression_Range_Drs;
+with Gela.Elements.Simple_Expressions;
+with Gela.Elements.Subtype_Indications;
+
 package body Asis.Definitions is
 
    ---------------------------------------
@@ -533,13 +539,39 @@ package body Asis.Definitions is
    ------------------------
 
    function Subtype_Constraint
-     (Definition : in Asis.Definition)
-      return Asis.Constraint
+     (Definition : in Asis.Definition) return Asis.Constraint
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access)
+         is
+            X : constant Gela.Elements.Constraints.Constraint_Access :=
+              Node.Subtype_Constraint;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Subtype_Indication;
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Definition, "Subtype_Constraint");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Definition.Data.Visit (V);
+
+      return (Data => V.Result);
    end Subtype_Constraint;
 
    ------------------
@@ -564,10 +596,37 @@ package body Asis.Definitions is
      (Constraint : in Asis.Range_Constraint)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Simple_Expression_Range_Dr
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Expression_Range_Drs.
+              Simple_Expression_Range_Dr_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Simple_Expression_Range_Dr
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Expression_Range_Drs.
+              Simple_Expression_Range_Dr_Access)
+         is
+            X : constant Gela.Elements.Simple_Expressions.
+              Simple_Expression_Access := Node.Upper_Bound;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Simple_Expression_Range_Dr;
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Constraint, "Upper_Bound");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Constraint.Data.Visit (V);
+
+      return (Data => V.Result);
    end Upper_Bound;
 
    ---------------------

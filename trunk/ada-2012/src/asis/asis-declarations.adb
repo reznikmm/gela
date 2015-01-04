@@ -13,18 +13,30 @@ with Asis.Elements;
 with Asis.Compilation_Units;
 
 with Gela.Compilations;
-
 with Gela.Element_Visiters;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Component_Definitions;
+with Gela.Elements.Declarative_Items;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Program_Unit_Names;
+with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Entry_Bodies;
+with Gela.Elements.Formal_Object_Declarations;
 with Gela.Elements.Function_Bodies;
+with Gela.Elements.Object_Declarations;
+with Gela.Elements.Object_Definitions;
+with Gela.Elements.Object_Renaming_Declarations;
 with Gela.Elements.Package_Bodies;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Procedure_Declarations;
-with Gela.Elements.Task_Bodies;
+with Gela.Elements.Protected_Definitions;
+with Gela.Elements.Single_Protected_Declarations;
+with Gela.Elements.Single_Task_Declarations;
 with Gela.Elements.Statements;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Elements.Task_Bodies;
+with Gela.Elements.Task_Definitions;
 with Gela.Lexical_Types;
 
 package body Asis.Declarations is
@@ -53,10 +65,87 @@ package body Asis.Declarations is
       return Asis.Element_List
    is
       pragma Unreferenced (Include_Pragmas);
+
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Declarative_Items.
+              Declarative_Item_Sequence_Access;
+         end record;
+
+         overriding procedure Entry_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Bodies.Entry_Body_Access);
+
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access);
+
+         overriding procedure Package_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Bodies.Package_Body_Access);
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
+
+         overriding procedure Task_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Bodies.Task_Body_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Entry_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Entry_Bodies.Entry_Body_Access) is
+         begin
+            Self.Result := Node.Body_Declarative_Items;
+         end Entry_Body;
+
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access) is
+         begin
+            Self.Result := Node.Body_Declarative_Items;
+         end Function_Body;
+
+         overriding procedure Package_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Bodies.Package_Body_Access)
+         is
+         begin
+            Self.Result := Node.Body_Declarative_Items;
+         end Package_Body;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access) is
+         begin
+            Self.Result := Node.Body_Declarative_Items;
+         end Procedure_Body;
+
+         overriding procedure Task_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Task_Bodies.Task_Body_Access) is
+         begin
+            Self.Result := Node.Body_Declarative_Items;
+         end Task_Body;
+
+      end Get;
+
+      V : Get.Visiter;
+      Result : Gela.Elements.Element_Sequence_Access;
    begin
       Check_Nil_Element (Declaration, "Body_Declarative_Items");
-      Raise_Not_Implemented ("");
-      return Nil_Element_List;
+      Declaration.Data.Visit (V);
+      Result := Gela.Elements.Element_Sequence_Access (V.Result);
+
+      return Asis.To_List (Result);
    end Body_Declarative_Items;
 
    -----------------------------
@@ -877,6 +966,11 @@ package body Asis.Declarations is
             Names : Gela.Elements.Element_Sequence_Access;
          end record;
 
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access);
+
          overriding procedure Procedure_Body
            (Self : in out Visiter;
             Node : not null Gela.Elements.Procedure_Bodies.
@@ -890,6 +984,17 @@ package body Asis.Declarations is
       end Get;
 
       package body Get is
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access)
+         is
+            Names : constant Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Sequence_Access := Node.Names;
+         begin
+            Self.Names := Gela.Elements.Element_Sequence_Access (Names);
+         end Object_Declaration;
 
          overriding procedure Procedure_Body
            (Self : in out Visiter;
@@ -974,12 +1079,157 @@ package body Asis.Declarations is
    --------------------------------
 
    function Object_Declaration_Subtype
-     (Declaration : in Asis.Declaration)
-      return Asis.Definition is
+     (Declaration : in Asis.Declaration) return Asis.Definition
+   is
+
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access);
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access);
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access);
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access);
+
+         overriding procedure Object_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Renaming_Declarations.
+              Object_Renaming_Declaration_Access);
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access);
+
+         overriding procedure Single_Protected_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Protected_Declarations.
+              Single_Protected_Declaration_Access);
+
+         overriding procedure Single_Task_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Task_Declarations.
+              Single_Task_Declaration_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access)
+         is
+            X : constant Gela.Elements.Component_Definitions.
+              Component_Definition_Access := Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Component_Declaration;
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Discriminant_Specification;
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Formal_Object_Declaration;
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access)
+         is
+            X : constant Gela.Elements.Object_Definitions.
+              Object_Definition_Access := Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Object_Declaration;
+
+         overriding procedure Object_Renaming_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Renaming_Declarations.
+              Object_Renaming_Declaration_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Object_Renaming_Declaration;
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Parameter_Specification;
+
+         overriding procedure Single_Protected_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Protected_Declarations.
+              Single_Protected_Declaration_Access)
+         is
+            X : constant Gela.Elements.Protected_Definitions.
+              Protected_Definition_Access := Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Single_Protected_Declaration;
+
+         overriding procedure Single_Task_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Single_Task_Declarations.
+              Single_Task_Declaration_Access)
+         is
+            X : constant Gela.Elements.Task_Definitions.
+              Task_Definition_Access := Node.Object_Declaration_Subtype;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Single_Task_Declaration;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Object_Declaration_Subtype");
-      Raise_Not_Implemented ("");
-      return Nil_Element;
+      Declaration.Data.Visit (V);
+
+      return (Data => V.Result);
    end Object_Declaration_Subtype;
 
    -------------------------------
