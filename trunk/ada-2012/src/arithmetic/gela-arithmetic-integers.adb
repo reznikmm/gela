@@ -897,7 +897,7 @@ package body Gela.Arithmetic.Integers is
       Base   : Positive := 10;
       Base_V : Value := Ten;
       Sharp  : Natural := Index (Text, "#");
-      E      : Natural := Index (Text, "E", Mapping => Upper_Case_Map);
+      E      : Natural := Text'First;
       Result : Value;
       Exp    : Value;
    begin
@@ -906,11 +906,14 @@ package body Gela.Arithmetic.Integers is
       end if;
 
       if Sharp /= 0 then
-         Base := Positive'Value (Text (Text'First .. Sharp - 1));
+         Base   := Positive'Value (Text (Text'First .. Sharp - 1));
          Base_V := Simple_Literal (Text (Text'First .. Sharp - 1));
+         E := Index (Text, (1 => Text (Sharp)), From => Sharp + 1);
       else
          Sharp := Text'First - 1;
       end if;
+
+      E := Index (Text, "E", Mapping => Upper_Case_Map, From => E);
 
       if E /= 0 then
          Exp := Simple_Literal (Text (E + 1 .. Text'Last));
