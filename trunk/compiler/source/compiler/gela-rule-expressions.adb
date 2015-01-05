@@ -94,7 +94,9 @@ package body Gela.Rule.Expressions is
       Val : constant Asis.Extensions.Static_Expressions.Value :=
         Asis.Extensions.Static_Expressions.Static_Value (Element);
    begin
-      if Asis.Extensions.Static_Expressions.Is_Static (Val) then
+      if not Val.Is_Static then
+         return Engine.Get (Element, Gela.Properties.Non_Static_Value);
+      elsif Val.Is_String then
          declare
             Id     : constant Gela.Engines.Mapped_Element :=
               Engine.Map (Element);
@@ -111,7 +113,16 @@ package body Gela.Rule.Expressions is
             return Result;
          end;
       else
-         return Engine.Get (Element, Gela.Properties.Non_Static_Value);
+         declare
+            Image : constant Wide_String := Val.Value_Image;
+            Text  : String (Image'Range);
+         begin
+            for J in Image'Range loop
+               Text (J) := Character'Val (Wide_Character'Pos (Image (J)));
+            end loop;
+
+            return Engine.Text_Container.Literal (Text);
+         end;
       end if;
    end Value;
 

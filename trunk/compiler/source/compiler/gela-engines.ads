@@ -17,6 +17,11 @@ package Gela.Engines is
       Property : Gela.Properties.Property_Name)
      return Gela.Properties.Text.Text;
 
+   function Get
+     (Self     : access Engine;
+      Element  : Asis.Element;
+      Property : Gela.Properties.Boolean_Property_Name) return Boolean;
+
    type Text_Rule_Callback is access function
      (Engine   : access Gela.Engines.Engine;
       Element  : Asis.Element;
@@ -37,6 +42,19 @@ package Gela.Engines is
       Property : Gela.Properties.Property_Name;
       Action   : Text_Rule_Callback);
 
+   type Boolean_Rule_Callback is access function
+     (Engine   : access Gela.Engines.Engine;
+      Element  : Asis.Element;
+      Property : Gela.Properties.Boolean_Property_Name)
+     return Boolean;
+
+   procedure Register_Rule
+     (Self     : in out Engine;
+      Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      Property : Gela.Properties.Boolean_Property_Name;
+      Action   : Boolean_Rule_Callback;
+      Redefine : Boolean := False);
+
    function Text_Container
      (Self : access Engine) return Gela.Properties.Text.Text_Container_Access;
 
@@ -47,6 +65,9 @@ package Gela.Engines is
      (Self     : access Engine;
       Element  : Asis.Element) return Mapped_Element;
    --  Return mapped index or create mapping if absent
+
+   function Unique (Self : access Engine) return Positive;
+   --  Return unique value for each call
 
 private
 
@@ -63,6 +84,19 @@ private
       Hash            => Hash,
       Equivalent_Keys => "=");
 
+   type Boolean_Rule_Key is record
+      Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      Property : Gela.Properties.Boolean_Property_Name;
+   end record;
+
+   function Hash (Item : Boolean_Rule_Key) return Ada.Containers.Hash_Type;
+
+   package Boolean_Rule_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Boolean_Rule_Key,
+      Element_Type    => Boolean_Rule_Callback,
+      Hash            => Hash,
+      Equivalent_Keys => "=");
+
    function Hash (Item : Asis.Element) return Ada.Containers.Hash_Type;
 
    package Element_Maps is new Ada.Containers.Hashed_Maps
@@ -74,8 +108,10 @@ private
 
    type Engine is tagged limited record
       Text_Rules     : Text_Rule_Maps.Map;
+      Boolean_Rules  : Boolean_Rule_Maps.Map;
       Element_Map    : Element_Maps.Map;
       Next_Mapped    : Mapped_Element := 1;
+      Unique         : Natural := 0;
       Text_Container : aliased Gela.Properties.Text.Text_Container;
    end record;
 

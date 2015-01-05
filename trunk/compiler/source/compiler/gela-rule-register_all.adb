@@ -4,6 +4,9 @@ with Gela.Properties;
 with Gela.Rule.Declarations.Defining_Identifier;
 with Gela.Rule.Declarations.Subprogram;
 with Gela.Rule.Declarations.Subprogram_Body;
+with Gela.Rule.Declarations.Variable;
+with Gela.Rule.Definitions.Simple_Expression_Range;
+with Gela.Rule.Definitions.Subtype_Definition;
 with Gela.Rule.Expressions.Identifier;
 with Gela.Rule.Statements.Procedure_Call;
 
@@ -20,6 +23,18 @@ begin
      (Kind     => F.A_Procedure_Body_Declaration,
       Property => N.Code,
       Action   => Declarations.Subprogram_Body.Code'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Variable_Declaration,
+      Property => N.Code,
+      Action   => Declarations.Variable.Code'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Subtype_Indication,
+      Property => N.Code,
+      Action   => Gela.Rule.Empty.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.An_Assignment_Statement,
+      Property => N.Code,
+      Action   => Gela.Rule.Empty.Text'Access);
    Engine.Register_Rule
      (Kind     => F.A_Procedure_Call_Statement,
       Property => N.Code,
@@ -42,6 +57,18 @@ begin
       Property => N.Global,
       Action   => Gela.Rule.Join_Nested.Text'Access);
    Engine.Register_Rule
+     (Kind     => F.A_Variable_Declaration,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Subtype_Indication,
+      Property => N.Global,
+      Action   => Gela.Rule.Empty.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.An_Assignment_Statement,
+      Property => N.Global,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
      (Kind     => F.A_Procedure_Call_Statement,
       Property => N.Global,
       Action   => Gela.Rule.Join_Nested.Text'Access);
@@ -57,6 +84,19 @@ begin
       Redefine => True);
 
    Engine.Register_Rule
+     (Kind     => F.A_Subtype_Indication,
+      Property => N.Length,
+      Action   => Gela.Rule.Definitions.Subtype_Definition.Length'Access);
+   Engine.Register_Rule
+     (Kind     => F.An_Index_Constraint,
+      Property => N.Length,
+      Action   => Gela.Rule.Join_Nested.Text'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Discrete_Simple_Expression_Range_DR,
+      Property => N.Length,
+      Action   => Gela.Rule.Definitions.Simple_Expression_Range.Length'Access);
+
+   Engine.Register_Rule
      (Kind     => F.A_Defining_Identifier,
       Property => N.Non_Static_Value,
       Action   => Gela.Rule.Declarations.Defining_Identifier.Value'Access);
@@ -70,6 +110,19 @@ begin
       To       => Asis.Extensions.Flat_Kinds.An_Expression'Last,
       Property => N.Value,
       Action   => Gela.Rule.Expressions.Value'Access);
+
+   Engine.Register_Rule
+     (Kind     => F.A_Procedure_Declaration,
+      Property => N.Is_Local,
+      Action   => Gela.Rule.Declarations.Subprogram.Is_Local'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Procedure_Body_Declaration,
+      Property => N.Is_Local,
+      Action   => Gela.Rule.Declarations.Subprogram.Is_Local'Access);
+   Engine.Register_Rule
+     (Kind     => F.A_Variable_Declaration,
+      Property => N.Is_Local,
+      Action   => Gela.Rule.Declarations.Variable.Is_Local'Access);
 
 end Gela.Rule.Register_All;
 

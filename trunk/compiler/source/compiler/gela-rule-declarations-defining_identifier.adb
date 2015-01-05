@@ -1,4 +1,5 @@
 with Asis.Declarations;
+with Asis.Elements;
 
 package body Gela.Rule.Declarations.Defining_Identifier is
 
@@ -23,7 +24,14 @@ package body Gela.Rule.Declarations.Defining_Identifier is
          Txt (J) := Character'Val (Wide_Character'Pos (Image (J)));
       end loop;
 
-      Result := Engine.Text_Container.Literal ("@");
+      if Engine.Get
+        (Asis.Elements.Enclosing_Element (Element), Gela.Properties.Is_Local)
+      then
+         Result := Engine.Text_Container.Literal ("%");
+      else
+         Result := Engine.Text_Container.Literal ("@");
+      end if;
+
       Result := Engine.Text_Container.Join (Result, Txt);
 
       return Result;

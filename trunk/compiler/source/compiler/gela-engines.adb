@@ -33,6 +33,36 @@ package body Gela.Engines is
       end if;
    end Get;
 
+   ---------
+   -- Get --
+   ---------
+
+   function Get
+     (Self     : access Engine;
+      Element  : Asis.Element;
+      Property : Gela.Properties.Boolean_Property_Name) return Boolean
+   is
+      Key : constant Boolean_Rule_Key :=
+        (Asis.Extensions.Flat_Kinds.Flat_Kind (Element), Property);
+      Pos : constant Boolean_Rule_Maps.Cursor :=
+        Self.Boolean_Rules.Find (Key);
+      Rule : Boolean_Rule_Callback;
+   begin
+      if Boolean_Rule_Maps.Has_Element (Pos) then
+         Rule := Boolean_Rule_Maps.Element (Pos);
+
+         return Rule.all (Self, Element, Property);
+      else
+         Ada.Text_IO.Put ("Rule not found for kind ");
+         Ada.Text_IO.Put
+           (Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Image (Key.Kind));
+         Ada.Text_IO.Put (" property ");
+         Ada.Text_IO.Put_Line
+           (Gela.Properties.Boolean_Property_Name'Image (Key.Property));
+         raise Constraint_Error;
+      end if;
+   end Get;
+
    ----------
    -- Hash --
    ----------
@@ -45,6 +75,23 @@ package body Gela.Engines is
           (Gela.Properties.Property_Name'Last);
       This : constant Ada.Containers.Hash_Type :=
         Gela.Properties.Property_Name'Pos (Item.Property);
+   begin
+      return (Last + 1) *
+        Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Pos (Item.Kind) + This;
+   end Hash;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Item : Boolean_Rule_Key) return Ada.Containers.Hash_Type is
+      use type Ada.Containers.Hash_Type;
+
+      Last : constant Ada.Containers.Hash_Type :=
+        Gela.Properties.Property_Name'Pos
+          (Gela.Properties.Property_Name'Last);
+      This : constant Ada.Containers.Hash_Type :=
+        Gela.Properties.Boolean_Property_Name'Pos (Item.Property);
    begin
       return (Last + 1) *
         Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Pos (Item.Kind) + This;
@@ -121,6 +168,30 @@ package body Gela.Engines is
       end loop;
    end Register_Rule;
 
+   -------------------
+   -- Register_Rule --
+   -------------------
+
+   procedure Register_Rule
+     (Self     : in out Engine;
+      Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+      Property : Gela.Properties.Boolean_Property_Name;
+      Action   : Boolean_Rule_Callback;
+      Redefine : Boolean := False)
+   is
+      Key : constant Boolean_Rule_Key := (Kind, Property);
+   begin
+      if not Redefine then
+         Self.Boolean_Rules.Insert (Key, Action);
+      elsif not Self.Boolean_Rules.Contains (Key) then
+         raise Constraint_Error with "Not redefined " &
+           Gela.Properties.Boolean_Property_Name'Image (Property) & " for " &
+           Asis.Extensions.Flat_Kinds.Element_Flat_Kind'Image (Kind);
+      else
+         Self.Boolean_Rules.Include (Key, Action);
+      end if;
+   end Register_Rule;
+
    --------------------
    -- Text_Container --
    --------------------
@@ -131,5 +202,15 @@ package body Gela.Engines is
    begin
       return Self.Text_Container'Access;
    end Text_Container;
+
+   ------------
+   -- Unique --
+   ------------
+
+   function Unique (Self : access Engine) return Positive is
+   begin
+      Self.Unique := Self.Unique + 1;
+      return Self.Unique;
+   end Unique;
 
 end Gela.Engines;

@@ -44,4 +44,19 @@ package body Gela.Rule.Declarations.Subprogram is
       return Result;
    end Global;
 
+   --------------
+   -- Is_Local --
+   --------------
+
+   function Is_Local
+     (Engine   : access Gela.Engines.Engine;
+      Element  : Asis.Element;
+      Property : Gela.Properties.Boolean_Property_Name)
+      return Boolean
+   is
+      pragma Unreferenced (Engine, Element, Property);
+   begin
+      return False;
+   end Is_Local;
+
 end Gela.Rule.Declarations.Subprogram;
