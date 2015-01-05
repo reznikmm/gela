@@ -7,12 +7,14 @@ package Asis.Extensions.Static_Expressions is
    function Static_Value (Expression : Asis.Expression) return Value;
 
    function Is_Static (Self : Value) return Boolean;
+   function Is_String (Self : Value) return Boolean;
    function Value_Image (Self : Value) return Asis.Program_Text;
 
 private
 
    type Value is tagged record
       Is_Static : Boolean := False;
+      Is_String : Boolean := False;
       Image     : League.Strings.Universal_String;
    end record;
 

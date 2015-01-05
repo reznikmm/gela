@@ -15,6 +15,15 @@ package body Asis.Extensions.Static_Expressions is
       return Self.Is_Static;
    end Is_Static;
 
+   ---------------
+   -- Is_String --
+   ---------------
+
+   function Is_String (Self : Value) return Boolean is
+   begin
+      return Self.Is_String;
+   end Is_String;
+
    ------------------
    -- Static_Value --
    ------------------
@@ -71,7 +80,9 @@ package body Asis.Extensions.Static_Expressions is
             Comp  : constant Gela.Compilations.Compilation_Access :=
               Expression.Data.Enclosing_Compilation;
          begin
-            return (True, Comp.Context.Values.Image (V.Result));
+            return (Is_Static => True,
+                    Is_String => Comp.Context.Values.Is_String (V.Result),
+                    Image     => Comp.Context.Values.Image (V.Result));
          end;
       end if;
    end Static_Value;

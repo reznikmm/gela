@@ -87,6 +87,10 @@ private
       Args  : Gela.Semantic_Types.Value_Index;
       Value : out Gela.Semantic_Types.Value_Index);
 
+   overriding function Is_String
+     (Self  : Value_Set;
+      Value : Gela.Semantic_Types.Value_Index) return Boolean;
+
    overriding function Image
      (Self  : Value_Set;
       Value : Gela.Semantic_Types.Value_Index)

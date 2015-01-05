@@ -224,6 +224,17 @@ package body Gela.Plain_Value_Sets is
       end case;
    end Image;
 
+   ---------------
+   -- Is_String --
+   ---------------
+
+   overriding function Is_String
+     (Self  : Value_Set;
+      Value : Gela.Semantic_Types.Value_Index) return Boolean is
+   begin
+      return Self.Vector.Element (Value).Kind = String_Value;
+   end Is_String;
+
    ---------------------
    -- Numeric_Literal --
    ---------------------

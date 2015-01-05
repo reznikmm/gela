@@ -44,6 +44,11 @@ package Gela.Value_Sets is
       Value : out Gela.Semantic_Types.Value_Index) is abstract;
    --  Return Name (Args)
 
+   not overriding function Is_String
+     (Self  : Value_Set;
+      Value : Gela.Semantic_Types.Value_Index) return Boolean is abstract;
+   --  Check if given value is string
+
    not overriding function Image
      (Self  : Value_Set;
       Value : Gela.Semantic_Types.Value_Index)
