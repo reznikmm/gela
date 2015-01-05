@@ -109,6 +109,17 @@ package body Gela.Properties.Text is
       return Self.Join (Left, Image (2 .. Image'Last));
    end Join;
 
+   -------------------
+   -- Join_New_Line --
+   -------------------
+
+   function Join_New_Line
+     (Self  : access Text_Container;
+      Left  : Text) return Text is
+   begin
+      return Self.Join (Left, Self.New_Line);
+   end Join_New_Line;
+
    -----------
    -- Value --
    -----------

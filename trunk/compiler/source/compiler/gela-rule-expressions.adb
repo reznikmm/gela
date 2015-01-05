@@ -60,8 +60,7 @@ package body Gela.Rule.Expressions is
          Result := Engine.Text_Container.Join (Result, Image'Length);
          Result := Engine.Text_Container.Join (Result, "}");
 
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, "@_str.data");
          Result := Engine.Text_Container.Join (Result, Id);
@@ -73,8 +72,7 @@ package body Gela.Rule.Expressions is
          Result := Engine.Text_Container.Join (Result, Text);
          Result := Engine.Text_Container.Join (Result, """");
 
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          return Result;
       end;

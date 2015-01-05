@@ -23,18 +23,18 @@ package body Gela.Rule.Declarations.Subprogram_Body is
    begin
       Result := Engine.Text_Container.Literal
         ("%_ada_string = type { i8*, i32, i32 }");
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       Result := Engine.Text_Container.Join
         (Result, "declare void @llvm.trap() noreturn nounwind");
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       Result := Engine.Text_Container.Join
         (Result,
          "declare void @llvm.memmove.p0i8.p0i8.i32(i8*, i8*, i32, i32, i1)");
+
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       Result := Engine.Text_Container.Join
         (Result, Engine.Get (Element, Gela.Properties.Global));
@@ -46,8 +46,7 @@ package body Gela.Rule.Declarations.Subprogram_Body is
 
       Result := Engine.Text_Container.Join (Result, " () {");
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       for J in List'Range loop
          Result := Engine.Text_Container.Join
@@ -56,8 +55,7 @@ package body Gela.Rule.Declarations.Subprogram_Body is
 
       Result := Engine.Text_Container.Join (Result, " ret void");
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       Result := Engine.Text_Container.Join (Result, "}");
 

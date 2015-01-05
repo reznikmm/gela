@@ -38,6 +38,10 @@ package Gela.Properties.Text is
       Left  : Text;
       Right : Natural) return Text;
 
+   function Join_New_Line
+     (Self  : access Text_Container;
+      Left  : Text) return Text;
+
    function Value
      (Self : access Text_Container;
       Item : Text) return String;

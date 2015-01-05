@@ -60,8 +60,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, Upper_Value);
          Result := Engine.Text_Container.Join (Result, ", %");
          Result := Engine.Text_Container.Join (Result, Lower_Value);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Output := Engine.Unique;
 
@@ -70,8 +69,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, " = add i32 %");
          Result := Engine.Text_Container.Join (Result, Diff_Value);
          Result := Engine.Text_Container.Join (Result, ", 1");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
       end Write_Length;
 
       ----------------
@@ -95,8 +93,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, Value);
          Result := Engine.Text_Container.Join (Result, ", i32 0, i32 ");
          Result := Engine.Text_Container.Join (Result, Index);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, " %");
          Result := Engine.Text_Container.Join (Result, Item_Value);
@@ -104,8 +101,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, Tipe);
          Result := Engine.Text_Container.Join (Result, " %");
          Result := Engine.Text_Container.Join (Result, Item_Address);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Output := Item_Value;
       end Write_Load;
@@ -129,8 +125,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, Left);
          Result := Engine.Text_Container.Join (Result, ", %");
          Result := Engine.Text_Container.Join (Result, Right);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, " br i1 %");
          Result := Engine.Text_Container.Join (Result, Condition);
@@ -138,25 +133,21 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, Fail);
          Result := Engine.Text_Container.Join (Result, ", label %");
          Result := Engine.Text_Container.Join (Result, Success);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, "; label ");
          Result := Engine.Text_Container.Join (Result, Fail);
          Result := Engine.Text_Container.Join (Result, ":");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join
            (Result, " call void @llvm.trap() unreachable");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, "; label ");
          Result := Engine.Text_Container.Join (Result, Success);
          Result := Engine.Text_Container.Join (Result, ":");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
       end Write_Check;
 
       ----------------
@@ -177,8 +168,7 @@ package body Gela.Rule.Statements.Assignment is
          Result := Engine.Text_Container.Join (Result, ", i32 %");
          Result := Engine.Text_Container.Join (Result, Length);
          Result := Engine.Text_Container.Join (Result, ", i32 0, i1 0)");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
       end Write_Move;
 
       Result : Gela.Properties.Text.Text;
@@ -203,8 +193,7 @@ package body Gela.Rule.Statements.Assignment is
       Write_Load (Result, Right_Text, 0, "i8**", Right_Data);
       Write_Move (Result, Left_Data, Right_Data, Left_Length);
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       return Result;
    end Code;

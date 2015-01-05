@@ -45,8 +45,7 @@ package body Gela.Rule.Statements.Procedure_Call is
 
       Result := Engine.Text_Container.Join (Result, ")");
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       return Result;
    end Code;

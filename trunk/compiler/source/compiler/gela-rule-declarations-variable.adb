@@ -33,8 +33,7 @@ package body Gela.Rule.Declarations.Variable is
             " = getelementptr inbounds %_ada_string * %MAX_LEN_STRING_LIT," &
             " i32 0, i32 ");
          Result := Engine.Text_Container.Join (Result, Index);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
          Result := Engine.Text_Container.Join (Result, " store ");
          Result := Engine.Text_Container.Join (Result, Item_Tp);
          Result := Engine.Text_Container.Join (Result, " ");
@@ -43,8 +42,7 @@ package body Gela.Rule.Declarations.Variable is
          Result := Engine.Text_Container.Join (Result, Item_Tp);
          Result := Engine.Text_Container.Join (Result, "* %");
          Result := Engine.Text_Container.Join (Result, Tmp);
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
       end Store;
 
 
@@ -65,14 +63,12 @@ package body Gela.Rule.Declarations.Variable is
            (Result, ".address = alloca i8, i32 ");
          Result := Engine.Text_Container.Join
            (Result, Engine.Get (Subtp, Gela.Properties.Length));
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Result := Engine.Text_Container.Join (Result, Name);
          Result := Engine.Text_Container.Join
            (Result, " = alloca %_ada_string");
-         Result := Engine.Text_Container.Join
-           (Result, Engine.Text_Container.New_Line);
+         Result := Engine.Text_Container.Join_New_Line (Result);
 
          Name := Engine.Text_Container.Join (Name, ".address");
 
@@ -81,8 +77,7 @@ package body Gela.Rule.Declarations.Variable is
          Store (Result, 2, "i32", Engine.Get (Subtp, Gela.Properties.Length));
       end loop;
 
-      Result := Engine.Text_Container.Join
-        (Result, Engine.Text_Container.New_Line);
+      Result := Engine.Text_Container.Join_New_Line (Result);
 
       return Result;
    end Code;
