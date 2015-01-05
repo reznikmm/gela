@@ -208,7 +208,7 @@ package body Gela.Arithmetic.Integers is
          end if;
       end loop;
 
-      return To_Value (Result_Text (1 .. Result_Last));
+      return To_Value (Result_Text (0 .. Result_Last));
    end "**";
 
    ---------
@@ -411,7 +411,7 @@ package body Gela.Arithmetic.Integers is
 
       Left_Last := Get_Last (Left_Text);
 
-      return To_Value (Left_Text (1 .. Left_Last));
+      return To_Value (Left_Text (0 .. Left_Last));
    end "not";
 
    ----------
@@ -924,9 +924,12 @@ package body Gela.Arithmetic.Integers is
 
       Result := Simple_Literal (Text (Sharp + 1 .. E - 1), Base);
 
-      if Exp /= Zero then
+      if Exp > Zero then
          Exp := Base_V ** Exp;
          Result := Result * Exp;
+      elsif Exp < Zero then
+         Exp := Base_V ** (-Exp);
+         Result := Result / Exp;
       end if;
 
       return Result;
