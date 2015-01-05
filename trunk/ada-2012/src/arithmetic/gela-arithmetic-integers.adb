@@ -799,7 +799,7 @@ package body Gela.Arithmetic.Integers is
             when 'A' .. 'F' =>
                Left (Result'First) :=
                  X (Character'Pos (Temp) - Character'Pos ('A') + 10);
-            when '_' | '.' | '#' =>
+            when '_' | '.' | '#' | ':' =>
                Skip := True;
             when others =>
                raise Constraint_Error;
@@ -901,6 +901,10 @@ package body Gela.Arithmetic.Integers is
       Result : Value;
       Exp    : Value;
    begin
+      if Sharp = 0 then
+         Sharp := Index (Text, ":");
+      end if;
+
       if Sharp /= 0 then
          Base := Positive'Value (Text (Text'First .. Sharp - 1));
          Base_V := Simple_Literal (Text (Text'First .. Sharp - 1));
