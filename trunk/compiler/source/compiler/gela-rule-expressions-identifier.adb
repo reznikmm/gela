@@ -33,19 +33,10 @@ package body Gela.Rule.Expressions.Identifier is
       Property : Gela.Properties.Property_Name)
       return Gela.Properties.Text.Text
    is
-      pragma Unreferenced (Property);
-      Image  : constant Wide_String := Asis.Expressions.Name_Image (Element);
-      Txt    : String (Image'Range);
-      Result : Gela.Properties.Text.Text;
+      Def : constant Asis.Defining_Name :=
+        Asis.Expressions.Corresponding_Name_Definition (Element);
    begin
-      for J in Image'Range loop
-         Txt (J) := Character'Val (Wide_Character'Pos (Image (J)));
-      end loop;
-
-      Result := Engine.Text_Container.Literal ("@");
-      Result := Engine.Text_Container.Join (Result, Txt);
-
-      return Result;
+      return Engine.Get (Def, Property);
    end Non_Static_Value;
 
 end Gela.Rule.Expressions.Identifier;

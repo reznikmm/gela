@@ -8,6 +8,7 @@ with Gela.Rule.Declarations.Variable;
 with Gela.Rule.Definitions.Simple_Expression_Range;
 with Gela.Rule.Definitions.Subtype_Definition;
 with Gela.Rule.Expressions.Identifier;
+with Gela.Rule.Statements.Assignment;
 with Gela.Rule.Statements.Procedure_Call;
 
 with Gela.Rule.Empty;
@@ -34,7 +35,7 @@ begin
    Engine.Register_Rule
      (Kind     => F.An_Assignment_Statement,
       Property => N.Code,
-      Action   => Gela.Rule.Empty.Text'Access);
+      Action   => Gela.Rule.Statements.Assignment.Code'Access);
    Engine.Register_Rule
      (Kind     => F.A_Procedure_Call_Statement,
       Property => N.Code,
