@@ -211,7 +211,12 @@ Rules for assignment_statement. :
 
 Rules for assignment_statement. :
 (.
-      ${Assignment_Expression.Down} := 0;  --  FIXME
+      --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${assignment_statement.env_in},
+         ${Assignment_Expression.Up},
+         ${Assignment_Expression.Down});
 .)
 
 Rules for association. :

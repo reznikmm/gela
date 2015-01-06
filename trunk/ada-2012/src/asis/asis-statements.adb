@@ -10,8 +10,10 @@
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
 with Gela.Element_Visiters;
+with Gela.Elements.Assignment_Statements;
 with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Expressions;
 with Gela.Elements.Names;
 with Gela.Elements.Prefixes;
 with Gela.Elements.Procedure_Call_Statements;
@@ -115,10 +117,36 @@ package body Asis.Statements is
      (Statement : in Asis.Statement)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access)
+         is
+            X : constant Gela.Elements.Expressions.Expression_Access :=
+              Node.Assignment_Expression;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Assignment_Statement;
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Statement, "Assignment_Expression");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Statement.Data.Visit (V);
+      return (Data => V.Result);
    end Assignment_Expression;
 
    ------------------------------
@@ -129,10 +157,36 @@ package body Asis.Statements is
      (Statement : in Asis.Statement)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Assignment_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Assignment_Statements.
+              Assignment_Statement_Access)
+         is
+            X : constant Gela.Elements.Names.Name_Access :=
+              Node.Assignment_Variable_Name;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Assignment_Statement;
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Statement, "Assignment_Variable_Name");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Statement.Data.Visit (V);
+      return (Data => V.Result);
    end Assignment_Variable_Name;
 
    -----------------------------
