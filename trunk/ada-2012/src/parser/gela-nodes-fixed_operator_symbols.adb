@@ -1,3 +1,6 @@
+with Gela.Elements.Defining_Names;
+with Gela.Interpretations;
+
 package body Gela.Nodes.Fixed_Operator_Symbols is
 
    --------------------------
@@ -20,16 +23,15 @@ package body Gela.Nodes.Fixed_Operator_Symbols is
      (Self    : access Operator_Symbol;
       Visiter : in out Gela.Element_Visiters.Visiter'Class)
    is
-      use type Gela.Lexical_Types.Symbol;
-      Comp    : constant Gela.Compilations.Compilation_Access :=
-        Self.Enclosing_Compilation;
-      Token : constant Gela.Lexical_Types.Token :=
-        Comp.Get_Token (Self.Operator_Symbol_Token);
+      use type Gela.Interpretations.Interpretation_Index;
+
+      Name : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Self.Defining_Name;
    begin
-      if Token.Symbol = Gela.Lexical_Types.No_Symbol then
-         Visiter.String_Literal (Self);
-      else
+      if Self.Down = 0 or else Name.Assigned then
          Visiter.Operator_Symbol (Self);
+      else
+         Visiter.String_Literal (Self);
       end if;
    end Visit;
 
