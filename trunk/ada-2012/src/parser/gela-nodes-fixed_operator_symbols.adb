@@ -1,5 +1,4 @@
-with Gela.Elements.Defining_Names;
-with Gela.Interpretations;
+with Gela.Semantic_Types;
 
 package body Gela.Nodes.Fixed_Operator_Symbols is
 
@@ -23,16 +22,13 @@ package body Gela.Nodes.Fixed_Operator_Symbols is
      (Self    : access Operator_Symbol;
       Visiter : in out Gela.Element_Visiters.Visiter'Class)
    is
-      use type Gela.Interpretations.Interpretation_Index;
-
-      Name : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
-        Self.Defining_Name;
    begin
-      if Self.Down = 0 or else Name.Assigned then
-         Visiter.Operator_Symbol (Self);
-      else
-         Visiter.String_Literal (Self);
-      end if;
+      case Self.Kind is
+         when Gela.Semantic_Types.Is_Operator =>
+            Visiter.Operator_Symbol (Self);
+         when Gela.Semantic_Types.Is_String =>
+            Visiter.String_Literal (Self);
+      end case;
    end Visit;
 
 end Gela.Nodes.Fixed_Operator_Symbols;

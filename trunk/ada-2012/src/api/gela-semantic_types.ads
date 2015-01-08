@@ -55,4 +55,6 @@ package Gela.Semantic_Types is
       Abs_Operator,
       Not_Operator);
 
+   type Auxiliary_Operator_Kinds is (Is_Operator, Is_String);
+
 end Gela.Semantic_Types;

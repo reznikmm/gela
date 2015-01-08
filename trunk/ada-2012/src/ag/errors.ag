@@ -126,12 +126,12 @@ Rules for auxiliary_apply. :
 
 Rules for subtype_indication. :
 (.
-      ${subtype_indication.Errors} := ${Subtype_Constraint.Errors};
+      ${subtype_indication.Errors} := ${Subtype_Constraint.Errors:0};
 .)
 
 Rules for discrete_subtype_indication_dr. :
 (.
-      ${discrete_subtype_indication_dr.Errors} := ${Subtype_Constraint.Errors};
+      ${discrete_subtype_indication_dr.Errors} := ${Subtype_Constraint.Errors:0};
 .)
 
 Rules for delta_constraint. :

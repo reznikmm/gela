@@ -18,3 +18,15 @@ Rules for root_type_definition.dummy_token :
 (.
       ${root_type_definition.type_kind} := 0;
 .)
+
+Synthesized attributes
+  operator_symbol
+   : Gela.Semantic_Types.Auxiliary_Operator_Kinds : kind;
+
+Rules for operator_symbol.operator_symbol_token :
+(.
+      --  Depends on ${operator_symbol.Down};
+      ${operator_symbol.kind} := Gela.Semantic_Types.Is_Operator;
+.)
+
+

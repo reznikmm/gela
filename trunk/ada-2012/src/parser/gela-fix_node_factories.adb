@@ -4,6 +4,7 @@ with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Associations;
 with Gela.Elements.Record_Aggregates;
 with Gela.Elements.Prefixes;
+with Gela.Semantic_Types;
 
 package body Gela.Fix_Node_Factories is
 
@@ -23,7 +24,7 @@ package body Gela.Fix_Node_Factories is
               (Self.Comp,
                Operator_Symbol_Token));
    begin
-      Result.Set_Down (0);
+      Result.Set_Kind (Gela.Semantic_Types.Is_Operator);
 
       return Gela.Elements.Operator_Symbols.Operator_Symbol_Access (Result);
    end Operator_Symbol;
