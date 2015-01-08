@@ -295,8 +295,9 @@ package body Gela.Resolve is
       V : Each_Constraint.Visiter;
 
    begin
+      Result := 0;
+
       if not Constraint.Assigned then
-         Result := 0;
          return;
       end if;
       V.Comp := Constraint.Enclosing_Compilation;
