@@ -225,7 +225,7 @@ Rules for object_declaration. :
 .)
 Rules for parameter_specification. :
 (.
-      ${parameter_specification.Errors} := ${Initialization_Expression.Errors};
+      ${parameter_specification.Errors} := ${Initialization_Expression.Errors:0};
       --  ${Object_Declaration_Subtype.Errors};
 .)
 Rules for membership_test. :

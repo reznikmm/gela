@@ -1,13 +1,11 @@
 with "matreshka/league";
 with "gela_grammars";
+with "gela_common";
 
 project Gela_Build is
 
-   Build := external ("GELA_BUILD", "../build");
-
-   Default_Ada_Switches :=  ("-gnat12", "-gnatW8", "-g");
-
-   Check_Ada_Switches := Default_Ada_Switches & ("-gnatwea", "-gnaty");
+   Build := Gela_Common.Build;
+   Check_Ada_Switches := Gela_Common.Check_Ada_Switches;
 
    for Source_Dirs use ("../src/api", "../src/context",
      "../src/lexer", "../src/parser", "../src/semantic",

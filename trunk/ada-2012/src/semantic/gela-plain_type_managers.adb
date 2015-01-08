@@ -162,6 +162,7 @@ package body Gela.Plain_Type_Managers is
 
       V    : Visiters.Visiter;
    begin
+      V.Result := 0;
       Node.Visit (V);
 
       return V.Result;
