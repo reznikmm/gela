@@ -8,11 +8,13 @@ with Asis;
 with Asis.Ada_Environments;
 with Asis.Clauses;
 with Asis.Compilation_Units;
+with Asis.Declarations;
 with Asis.Elements;
 with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Expressions;
 with Asis.Implementation;
+with Asis.Iterator;
 with Asis.Text;
 
 with League.Application;
@@ -31,7 +33,25 @@ procedure Def_Name is
       Array_Type   => Asis.Compilation_Unit_List,
       "<"          => Less);
 
+   procedure On_Element (Item : Asis.Element);
+
+   procedure Pre_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String);
+
+   procedure Post_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String) is null;
+
+   procedure Iterate is new Asis.Iterator.Traverse_Element
+     (State_Information => League.Strings.Universal_String,
+      Pre_Operation     => Pre_Operation,
+      Post_Operation    => Post_Operation);
+
    Result : League.Strings.Universal_String;
+   Deep   : Boolean;
 
    ----------
    -- Less --
@@ -56,12 +76,34 @@ procedure Def_Name is
       end if;
    end Less;
 
+   ----------------
+   -- On_Element --
+   ----------------
+
+   procedure On_Element (Item : Asis.Element) is
+   begin
+      case Asis.Elements.Expression_Kind (Item) is
+         when Asis.An_Identifier =>
+            On_Identifier (Item);
+         when Asis.A_Selected_Component =>
+            On_Identifier
+              (Asis.Expressions.Selector (Item));
+         when Asis.An_Operator_Symbol =>
+            On_Identifier (Item);
+         when others =>
+            null;
+      end case;
+   end On_Element;
+
    -------------------
    -- On_Identifier --
    -------------------
 
    procedure On_Identifier (Item : Asis.Identifier) is
       Span  : Asis.Text.Span;
+      Tipe  : Asis.Type_Definition;
+      Decl  : Asis.Declaration;
+      Unit  : Asis.Compilation_Unit;
       Def   : constant Asis.Defining_Name :=
         Asis.Expressions.Corresponding_Name_Definition (Item);
    begin
@@ -72,10 +114,42 @@ procedure Def_Name is
       Span := Asis.Text.Element_Span (Item);
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
-      Span := Asis.Text.Element_Span (Def);
-      Result.Append (" =>");
-      Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
-      Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
+      Result.Append (" => ");
+
+      if Asis.Elements.Is_Nil (Def) then
+         null;
+      elsif Asis.Elements.Is_Part_Of_Implicit (Def) then
+         Result.Append ("Is_Part_Of_Implicit ");
+         Decl := Asis.Elements.Enclosing_Element (Def);
+
+         if Asis.Elements.Declaration_Kind (Decl) in
+           Asis.A_Function_Declaration | Asis.A_Procedure_Declaration
+         then
+            Tipe := Asis.Declarations.Corresponding_Type (Decl);
+
+            if not Asis.Elements.Is_Nil (Tipe) then
+               Decl := Asis.Elements.Enclosing_Element (Tipe);
+               declare
+                  Names : constant Asis.Defining_Name_List :=
+                    Asis.Declarations.Names (Decl);
+               begin
+                  Result.Append
+                    (League.Strings.From_UTF_16_Wide_String
+                       (Asis.Declarations.Defining_Name_Image
+                            (Names (Names'First))));
+               end;
+            end if;
+         end if;
+      else
+         Unit := Asis.Elements.Enclosing_Compilation_Unit (Def);
+         Result.Append
+           (League.Strings.From_UTF_16_Wide_String
+              (Asis.Compilation_Units.Unit_Full_Name (Unit)));
+         Span := Asis.Text.Element_Span (Def);
+         Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
+         Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
+      end if;
+
       Result.Append (Wide_Wide_Character'Val (10));
    end On_Identifier;
 
@@ -84,48 +158,65 @@ procedure Def_Name is
    -------------
 
    procedure On_Unit (Unit : Asis.Compilation_Unit) is
-      Withs : constant Asis.Element_List :=
+      Control : Asis.Traverse_Control := Asis.Continue;
+
+      Withs   : constant Asis.Element_List :=
         Asis.Elements.Context_Clause_Elements (Unit);
    begin
       for J in Withs'Range loop
          case Asis.Elements.Clause_Kind (Withs (J)) is
-            when Asis.A_With_Clause =>
+            when Asis.A_With_Clause | Asis.A_Use_Package_Clause =>
                declare
                   Names : constant Asis.Element_List :=
                     Asis.Clauses.Clause_Names (Withs (J));
                begin
                   for K in Names'Range loop
-                     case Asis.Elements.Expression_Kind (Names (K)) is
-                        when Asis.An_Identifier =>
-                           On_Identifier (Names (K));
-                        when Asis.A_Selected_Component =>
-                           On_Identifier
-                             (Asis.Expressions.Selector (Names (K)));
-                        when others =>
-                           null;
-                     end case;
+                     On_Element (Names (K));
                   end loop;
                end;
             when others =>
                null;
          end case;
       end loop;
+
+      if Deep then
+         Iterate (Asis.Elements.Unit_Declaration (Unit), Control, Result);
+      end if;
    end On_Unit;
+
+   -------------------
+   -- Pre_Operation --
+   -------------------
+
+   procedure Pre_Operation
+     (Element : in     Asis.Element;
+      Control : in out Asis.Traverse_Control;
+      State   : in out League.Strings.Universal_String)
+   is
+      pragma Unreferenced (Control);
+      pragma Unreferenced (State);
+   begin
+      On_Element (Element);
+   end Pre_Operation;
 
    use type League.Hash_Type;
 
-   Args    : League.String_Vectors.Universal_String_Vector;
-   Params  : League.Strings.Universal_String;
-   Context : Asis.Context;
-   Hash    : League.Hash_Type;
+   Args     : League.String_Vectors.Universal_String_Vector;
+   Last_Arg : League.Strings.Universal_String;
+   Params   : League.Strings.Universal_String;
+   Context  : Asis.Context;
+   Hash     : League.Hash_Type;
 begin
    for J in 1 .. League.Application.Arguments.Length - 1 loop
       Args.Append (League.Application.Arguments.Element (J));
    end loop;
 
-   Hash := League.Hash_Type'Wide_Wide_Value
-     (League.Application.Arguments.Element
-        (League.Application.Arguments.Length).To_Wide_Wide_String);
+   Last_Arg := League.Application.Arguments.Element
+     (League.Application.Arguments.Length);
+
+   Hash := League.Hash_Type'Wide_Wide_Value (Last_Arg.To_Wide_Wide_String);
+
+   Deep := Last_Arg.Starts_With ("+");
 
    Params := Args.Join (' ');
 

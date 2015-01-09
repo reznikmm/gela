@@ -22,7 +22,9 @@ with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Entry_Bodies;
 with Gela.Elements.Formal_Object_Declarations;
+with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Function_Bodies;
+with Gela.Elements.Function_Declarations;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Object_Renaming_Declarations;
@@ -37,6 +39,7 @@ with Gela.Elements.Statements;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Elements.Task_Bodies;
 with Gela.Elements.Task_Definitions;
+with Gela.Elements.Type_Definitions;
 with Gela.Lexical_Types;
 
 package body Asis.Declarations is
@@ -593,10 +596,46 @@ package body Asis.Declarations is
      (Declaration : in Asis.Declaration)
       return Asis.Type_Definition
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access);
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Function_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Declarations.
+              Function_Declaration_Access) is
+         begin
+            Self.Result := Node.Corresponding_Type;
+         end Function_Declaration;
+
+         overriding procedure Procedure_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Declarations.
+              Procedure_Declaration_Access) is
+         begin
+            Self.Result := Node.Corresponding_Type;
+         end Procedure_Declaration;
+      end Get;
+
+      V       : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Corresponding_Type");
-      Raise_Not_Implemented ("");
-      return Nil_Element;
+      Declaration.Data.Visit (V);
+      return Asis.Declarations.Type_Declaration_View ((Data => V.Result));
    end Corresponding_Type;
 
    ------------------------------------
@@ -966,6 +1005,11 @@ package body Asis.Declarations is
             Names : Gela.Elements.Element_Sequence_Access;
          end record;
 
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access);
+
          overriding procedure Object_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Object_Declarations.
@@ -984,6 +1028,17 @@ package body Asis.Declarations is
       end Get;
 
       package body Get is
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access)
+         is
+            Name : constant Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access := Node.Names;
+         begin
+            Self.Name := Gela.Elements.Element_Access (Name);
+         end Full_Type_Declaration;
 
          overriding procedure Object_Declaration
            (Self : in out Visiter;
@@ -1443,10 +1498,36 @@ package body Asis.Declarations is
      (Declaration : in Asis.Declaration)
       return Asis.Definition
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Full_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Full_Type_Declarations.
+              Full_Type_Declaration_Access)
+         is
+            X : constant Gela.Elements.Type_Definitions.Type_Definition_Access
+              := Node.Type_Declaration_View;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Full_Type_Declaration;
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Type_Declaration_View");
-      Raise_Not_Implemented ("");
-      return Nil_Element;
+      Declaration.Data.Visit (V);
+      return (Data => V.Result);
    end Type_Declaration_View;
 
    ------------------------------------

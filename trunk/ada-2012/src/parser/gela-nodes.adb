@@ -370,4 +370,31 @@ package body Gela.Nodes is
       Self.Enclosing_Element := Value;
    end Set_Enclosing_Element;
 
+   --------------------------
+   -- Set_Part_Of_Implicit --
+   --------------------------
+
+   not overriding procedure Set_Part_Of_Implicit (Self : in out Node) is
+   begin
+      Self.Is_Part_Of_Implicit := True;
+   end Set_Part_Of_Implicit;
+
+   ---------------------------
+   -- Set_Part_Of_Inherited --
+   ---------------------------
+
+   not overriding procedure Set_Part_Of_Inherited (Self : in out Node) is
+   begin
+      Self.Is_Part_Of_Inherited := True;
+   end Set_Part_Of_Inherited;
+
+   --------------------------
+   -- Set_Part_Of_Instance --
+   --------------------------
+
+   not overriding procedure Set_Part_Of_Instance (Self : in out Node) is
+   begin
+      Self.Is_Part_Of_Instance := True;
+   end Set_Part_Of_Instance;
+
 end Gela.Nodes;

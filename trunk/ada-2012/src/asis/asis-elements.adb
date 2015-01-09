@@ -1025,8 +1025,7 @@ package body Asis.Elements is
    function Is_Part_Of_Implicit (Element : in Asis.Element) return Boolean is
    begin
       if Assigned (Element) then
-         Raise_Not_Implemented ("");
-         return False;
+         return Element.Data.Is_Part_Of_Implicit;
       else
          return False;
       end if;
@@ -1042,8 +1041,7 @@ package body Asis.Elements is
    is
    begin
       if Assigned (Element) then
-         Raise_Not_Implemented ("");
-         return False;
+         return Element.Data.Is_Part_Of_Inherited;
       else
          return False;
       end if;
@@ -1056,7 +1054,7 @@ package body Asis.Elements is
    function Is_Part_Of_Instance (Element : in Asis.Element) return Boolean is
    begin
       if Assigned (Element) then
-         return False;
+         return Element.Data.Is_Part_Of_Instance;
       else
          return False;
       end if;

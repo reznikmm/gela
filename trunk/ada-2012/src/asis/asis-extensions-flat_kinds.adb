@@ -721,8 +721,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Function_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Function_Declarations.
-        Function_Declaration_Access)
-   is null;
+        Function_Declaration_Access);
 
    overriding procedure Function_Instantiation
      (Self : in out Visiter;
@@ -1304,6 +1303,15 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Defining_Identifier;
    end Defining_Identifier;
+
+   overriding procedure Function_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Function_Declarations.
+        Function_Declaration_Access) is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Function_Declaration;
+   end Function_Declaration;
 
    ----------------
    -- Identifier --

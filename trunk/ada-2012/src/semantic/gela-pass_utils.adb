@@ -29,6 +29,7 @@ with Gela.Elements.Type_Definitions;
 with Gela.Elements.Use_Package_Clauses;
 with Gela.Elements.With_Clauses;
 with Gela.Environments;
+with Gela.Nodes;
 with Gela.Plain_Type_Managers;
 with Gela.Symbol_Sets;
 with Gela.Elements.Defining_Operator_Symbols;
@@ -539,6 +540,9 @@ package body Gela.Pass_Utils is
         (Type_Symbol : Gela.Lexical_Types.Symbol)
          return Gela.Elements.Defining_Names.Defining_Name_Access;
 
+      procedure Set_Part_Of_Implicit
+        (Element : access Gela.Elements.Element'Class);
+
       Env_Set : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
 
@@ -575,6 +579,7 @@ package body Gela.Pass_Utils is
            Subtype_Mark_Or_Access_Definition_Access;
       begin
          Oper.Set_Full_Name (Operator_Symbol);
+         Set_Part_Of_Implicit (Oper);
 
          Name := Gela.Elements.Defining_Designators.Defining_Designator_Access
            (Oper);
@@ -595,6 +600,8 @@ package body Gela.Pass_Utils is
                Assignment_Token           => 0,
                Initialization_Expression  => null);
                      Params.Append (Param);
+
+            Set_Part_Of_Implicit (Param);
          end loop;
 
          Mark := Create_Subtype (Type_Symbol);
@@ -619,6 +626,9 @@ package body Gela.Pass_Utils is
             Separate_Token        => 0,
             Aspect_Specifications => Factory.Aspect_Specification_Sequence,
             Semicolon_Token       => 0);
+
+         Set_Part_Of_Implicit (FD);
+         FD.Set_Corresponding_Type (Get_Type (Type_Symbol).Enclosing_Element);
 
          Env := Env_Set.Add_Defining_Name
            (Index  => Env,
@@ -646,6 +656,7 @@ package body Gela.Pass_Utils is
          Identifier := Factory.Identifier (Identifier_Token => 0);
          Identifier.Set_Full_Name (Type_Symbol);
          Identifier.Set_Defining_Name (Get_Type (Type_Symbol));
+         Set_Part_Of_Implicit (Identifier);
 
          Mark := Gela.Elements.Subtype_Mark_Or_Access_Definitions.
            Subtype_Mark_Or_Access_Definition_Access (Identifier);
@@ -670,6 +681,19 @@ package body Gela.Pass_Utils is
             raise Constraint_Error;
          end if;
       end Get_Type;
+
+      --------------------------
+      -- Set_Part_Of_Implicit --
+      --------------------------
+
+      procedure Set_Part_Of_Implicit
+        (Element : access Gela.Elements.Element'Class)
+      is
+         Node : constant Gela.Nodes.Node_Access :=
+           Gela.Nodes.Node_Access (Element);
+      begin
+         Node.Set_Part_Of_Implicit;
+      end Set_Part_Of_Implicit;
 
       FD : Gela.Elements.Function_Declarations.Function_Declaration_Access;
       pragma Unreferenced (FD);

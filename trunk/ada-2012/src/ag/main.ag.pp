@@ -18,3 +18,20 @@ Rules for root_type_definition.dummy_token :
 (.
       ${root_type_definition.type_kind} := 0;
 .)
+
+Synthesized attributes
+  function_declaration,
+  procedure_declaration
+   : Gela.Elements.Element_Access : corresponding_type ;
+
+Rules for function_declaration. :
+(.
+      --  This attribute is custom code
+      ${function_declaration.corresponding_type} := null;
+.)
+
+Rules for procedure_declaration. :
+(.
+      --  This attribute is custom code
+      ${procedure_declaration.corresponding_type} := null;
+.)
