@@ -35,10 +35,11 @@ package Gela.Plain_Contexts is
      and Gela.Compilation_Unit_Factories.Compilation_Unit_Factory with private;
 
    not overriding procedure Initialize
-     (Self : in out Context;
-      Env  : League.Strings.Universal_String;
-      Path : League.Strings.Universal_String;
-      Comp : League.Strings.Universal_String);
+     (Self  : in out Context;
+      Env   : League.Strings.Universal_String;
+      Path  : League.Strings.Universal_String;
+      Comp  : League.Strings.Universal_String;
+      Debug : League.Strings.Universal_String);
 
 private
 

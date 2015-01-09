@@ -20,6 +20,10 @@ package Gela.Plain_Compilation_Managers is
 
    type Compilation_Manager_Access is access all Compilation_Manager;
 
+   not overriding procedure Initialize
+     (Self  : in out Compilation_Manager;
+      Debug : League.Strings.Universal_String);
+
 private
 
    function Hash
@@ -61,14 +65,16 @@ private
         Compilation_Unit_Factory_Access) is
      limited new Gela.Compilation_Managers.Compilation_Manager with
    record
-         Packages  : Package_Maps.Map;
-         --  Map of packages placed in Order list
-         Bodies    : Body_Maps.Map;
-         --  Map of unit bodies placed in Order list
-         Specs     : Spec_Maps.Map;
-         --  Map of unit declarations placed in Order list
-         Subunits  : Subunit_Maps.Map;
-         --  Map of subunits placed in Order list
+      Packages  : Package_Maps.Map;
+      --  Map of packages placed in Order list
+      Bodies    : Body_Maps.Map;
+      --  Map of unit bodies placed in Order list
+      Specs     : Spec_Maps.Map;
+      --  Map of unit declarations placed in Order list
+      Subunits  : Subunit_Maps.Map;
+      --  Map of subunits placed in Order list
+      Debug : League.Strings.Universal_String;
+      --  Flags for dump data from debugging
    end record;
 
    overriding function Context

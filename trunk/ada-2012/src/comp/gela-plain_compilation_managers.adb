@@ -45,6 +45,8 @@ with Gela.Elements.Proper_Bodies;
 with Gela.Elements.Task_Bodies;
 with Gela.Elements.Protected_Bodies;
 
+with Gela.Debug_Properties;
+
 package body Gela.Plain_Compilation_Managers is
 
    procedure Read
@@ -61,9 +63,20 @@ package body Gela.Plain_Compilation_Managers is
       Unit   : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
       Value  : out Gela.Dependency_Lists.Unit_Data);
 
-   ----------------------
-   -- Add_Depend_Units --
-   ----------------------
+   ----------------
+   -- Initialize --
+   ----------------
+
+   not overriding procedure Initialize
+     (Self : in out Compilation_Manager;
+      Debug   : League.Strings.Universal_String) is
+   begin
+      Self.Debug := Debug;
+   end Initialize;
+
+   --------------------
+   -- Look_Into_Unit --
+   --------------------
 
    procedure Look_Into_Unit
      (Comp   : Gela.Compilations.Compilation_Access;
@@ -970,6 +983,13 @@ package body Gela.Plain_Compilation_Managers is
                             (Action.Unit.Unit_Body.Enclosing_Compilation);
                      begin
                         PL.Compilation_Unit_Body_1 (Action.Unit.Unit_Body);
+
+                        if not Self.Debug.Is_Empty then
+                           Gela.Debug_Properties.Dump
+                             (Gela.Elements.Element_Access
+                                (Action.Unit.Unit_Body),
+                              Self.Debug);
+                        end if;
                      end;
                   when Gela.Dependency_Lists.Unit_Declaration =>
                      declare

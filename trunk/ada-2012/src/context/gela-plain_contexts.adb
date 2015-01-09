@@ -179,10 +179,11 @@ package body Gela.Plain_Contexts is
    ----------------
 
    not overriding procedure Initialize
-     (Self : in out Context;
-      Env  : League.Strings.Universal_String;
-      Path : League.Strings.Universal_String;
-      Comp : League.Strings.Universal_String)
+     (Self  : in out Context;
+      Env   : League.Strings.Universal_String;
+      Path  : League.Strings.Universal_String;
+      Comp  : League.Strings.Universal_String;
+      Debug : League.Strings.Universal_String)
    is
       Deps    : constant Gela.Plain_Dependency_Lists.Dependency_List_Access :=
         new Gela.Plain_Dependency_Lists.Dependency_List
@@ -224,6 +225,8 @@ package body Gela.Plain_Contexts is
       Self.Manager :=
         Gela.Compilation_Managers.Compilation_Manager_Access (Manager);
       Self.Values := Gela.Value_Sets.Value_Set_Access (Values);
+
+      Manager.Initialize (Debug);
 
       if not Comp.Is_Empty then
          Manager.Read_Compilation (Comp);
