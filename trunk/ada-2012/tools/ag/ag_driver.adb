@@ -19,6 +19,7 @@ with AG_Tools.Writers; use AG_Tools.Writers;
 --  with Gela.Grammars_Debug;
 with AG_Tools.Input;
 with AG_Tools.Element_Generators;
+with AG_Tools.Prop_Visiters;
 
 procedure AG_Driver is
    use AG_Tools.Input;
@@ -262,6 +263,7 @@ begin
 --   Generate_Factory;
    Generate_2;
    Generate_Visiter;
+   AG_Tools.Prop_Visiters.Generate (G);
    AG_Tools.Element_Generators.Generate_Elements (G);
    AG_Tools.Element_Generators.Generate_Factory (G);
 end AG_Driver;

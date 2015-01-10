@@ -1,8 +1,10 @@
 with Ada.Tags;
 with Gela.Compilations;
 with Gela.Elements.Defining_Names;
+with Gela.Environments;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
+with Gela.Plain_Environments.Debug;
 with Gela.Property_Visiters;
 with Gela.Semantic_Types;
 
@@ -13,7 +15,7 @@ package body Gela.Debug_Properties is
    package Dump_Property is
 
       type Property is (Up, Down, Env_In, Env_Out);
-      pragma Unreferenced (Env_In, Env_Out);
+      pragma Unreferenced (Env_Out);
 
       type Property_Flags is array (Property) of Boolean;
 
@@ -26,6 +28,11 @@ package body Gela.Debug_Properties is
         (Self    : in out Property_Visiter;
          Element : Gela.Elements.Element_Access;
          Value   : Gela.Interpretations.Interpretation_Index);
+
+      overriding procedure On_Env_In
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Semantic_Types.Env_Index);
 
       overriding procedure On_Up
         (Self    : in out Property_Visiter;
@@ -82,6 +89,29 @@ package body Gela.Debug_Properties is
               Gela.Interpretations.Interpretation_Index'Image (Value));
          IM.Visit (Value, IV);
       end On_Down;
+
+      overriding procedure On_Env_In
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Semantic_Types.Env_Index)
+      is
+         Comp : constant Gela.Compilations.Compilation_Access :=
+           Element.Enclosing_Compilation;
+         Env : constant Gela.Environments.Environment_Set_Access :=
+           Comp.Context.Environment_Set;
+      begin
+         if Self.Flags (Env_In) = False then
+            return;
+         end if;
+
+         Put_Line
+           ("env_in:" &
+              Gela.Semantic_Types.Env_Index'Image (Value));
+
+         Gela.Plain_Environments.Debug
+           (Gela.Plain_Environments.Plain_Environment_Set_Access (Env),
+            Value);
+      end On_Env_In;
 
       overriding procedure On_Up
         (Self    : in out Property_Visiter;
