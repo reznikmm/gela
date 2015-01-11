@@ -499,6 +499,15 @@ package Asis.Extensions.Flat_Kinds is
    subtype A_Representation_Clause is Element_Flat_Kind range
      An_Attribute_Definition_Clause .. An_At_Clause;
 
+   subtype A_Root_Type_Definition is Element_Flat_Kind range
+      A_Root_Integer_Definition .. A_Universal_Access_Definition;
+
+   subtype An_Interface_Type_Definition is Element_Flat_Kind range
+     An_Ordinary_Interface .. A_Synchronized_Interface;
+
+   subtype An_Access_Type_Definition is Element_Flat_Kind range
+      A_Pool_Specific_Access_To_Variable .. An_Access_To_Protected_Function;
+
    function Flat_Kind (Element : Asis.Element) return Element_Flat_Kind;
 
 end Asis.Extensions.Flat_Kinds;

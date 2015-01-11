@@ -1099,10 +1099,20 @@ package body Asis.Elements is
    ---------------
 
    function Path_Kind (Path : in Asis.Path) return Asis.Path_Kinds is
+      Map : constant array (F.A_Path) of Asis.Path_Kinds
+        := (F.An_If_Path => Asis.An_If_Path,
+            F.An_Elsif_Path => Asis.An_Elsif_Path,
+            F.An_Else_Path => Asis.An_Else_Path,
+            F.A_Case_Path => Asis.A_Case_Path,
+            F.A_Select_Path => Asis.A_Select_Path,
+            F.An_Or_Path => Asis.An_Or_Path,
+            F.A_Then_Abort_Path => Asis.A_Then_Abort_Path);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Path);
    begin
-      if Assigned (Path) then
-         Raise_Not_Implemented ("");
-         return Not_A_Path;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Path;
       end if;
@@ -1277,12 +1287,40 @@ package body Asis.Elements is
       return Asis.Type_Kinds
    is
    begin
-      if Assigned (Definition) then
-         Raise_Not_Implemented ("");
-         return Not_A_Type_Definition;
-      else
-         return Not_A_Type_Definition;
-      end if;
+      case F.Flat_Kind (Definition) is
+         when F.A_Derived_Type_Definition =>
+            return Asis.A_Derived_Type_Definition;
+         when F.A_Derived_Record_Extension_Definition =>
+            return Asis.A_Derived_Record_Extension_Definition;
+         when F.An_Enumeration_Type_Definition =>
+            return Asis.An_Enumeration_Type_Definition;
+         when F.A_Signed_Integer_Type_Definition =>
+            return Asis.A_Signed_Integer_Type_Definition;
+         when F.A_Modular_Type_Definition =>
+            return Asis.A_Modular_Type_Definition;
+         when F.A_Root_Type_Definition =>
+            return Asis.A_Root_Type_Definition;
+         when F.A_Floating_Point_Definition =>
+            return A_Floating_Point_Definition;
+         when F.An_Ordinary_Fixed_Point_Definition =>
+            return An_Ordinary_Fixed_Point_Definition;
+         when F.A_Decimal_Fixed_Point_Definition =>
+            return A_Decimal_Fixed_Point_Definition;
+         when F.An_Unconstrained_Array_Definition =>
+            return An_Unconstrained_Array_Definition;
+         when F.A_Constrained_Array_Definition =>
+            return A_Constrained_Array_Definition;
+         when F.A_Record_Type_Definition =>
+            return A_Record_Type_Definition;
+         when F.A_Tagged_Record_Type_Definition =>
+            return A_Tagged_Record_Type_Definition;
+         when F.An_Interface_Type_Definition =>
+            return Asis.An_Interface_Type_Definition;
+         when F.An_Access_Type_Definition =>
+            return Asis.An_Access_Type_Definition;
+         when others =>
+            return Not_A_Type_Definition;
+      end case;
    end Type_Kind;
 
    ----------------------
