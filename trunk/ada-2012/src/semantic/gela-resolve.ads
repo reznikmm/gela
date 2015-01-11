@@ -103,4 +103,12 @@ package Gela.Resolve is
       Constr     : Gela.Interpretations.Interpretation_Set_Index;
       Result     : out Gela.Interpretations.Interpretation_Index);
 
+   procedure Variant_Part
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Name_Up  : Gela.Interpretations.Interpretation_Set_Index;
+      Variants : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index);
+   --  Resolve variant_part using Name_Up as interpretations of discriminant,
+   --  Variants is putle of tuples of discrete_choice interpretations
+
 end Gela.Resolve;

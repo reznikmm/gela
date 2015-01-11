@@ -997,4 +997,122 @@ package body Gela.Resolve is
       end if;
    end To_Type_Or_The_Same_Type;
 
+   procedure Variant_Part
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Name_Up  : Gela.Interpretations.Interpretation_Set_Index;
+      Variants : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index)
+   is
+      pragma Unreferenced (Name_Up);
+
+      package Each_Variant is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            null;
+         end record;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each_Variant;
+
+      package Each_Choice is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            Index  : Gela.Interpretations.Interpretation_Index := 0;
+         end record;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each_Choice;
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      package body Each_Variant is
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down, Self);
+
+            Chosen : Gela.Interpretations.Interpretation_Index;
+            List   : Gela.Interpretations.Interpretation_Index_Array
+              (Value'Range);
+         begin
+            for J in Value'Range loop
+               declare
+                  V      : aliased Each_Choice.Visiter;
+                  Cursor : constant Gela.Interpretations.Cursor'Class :=
+                    IM.Get_Cursor (Value (J));
+               begin
+                  Cursor.Visit (V'Access);
+                  List (J) := V.Index;
+               end;
+            end loop;
+
+            Chosen := 0;
+
+            for J in reverse List'Range loop
+               IM.Get_Tuple_Index (List (J), Chosen, Chosen);
+            end loop;
+
+            Result := Chosen;
+         end On_Tuple;
+
+      end Each_Variant;
+
+      package body Each_Choice is
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
+            Down  : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down);
+
+            Chosen : Gela.Interpretations.Interpretation_Index;
+            List   : Gela.Interpretations.Interpretation_Index_Array
+              (Value'Range);
+         begin
+            for J in Value'Range loop
+               declare
+                  Cursor : Gela.Interpretations.Cursor'Class :=
+                    IM.Get_Cursor (Value (J));
+               begin
+                  List (J) := 0;
+                  while Cursor.Has_Element loop
+                     List (J) := Cursor.Get_Index;
+                     Cursor.Next;
+                  end loop;
+               end;
+            end loop;
+
+            Chosen := 0;
+
+            for J in reverse List'Range loop
+               IM.Get_Tuple_Index (List (J), Chosen, Chosen);
+            end loop;
+
+            Self.Index := Chosen;
+         end On_Tuple;
+
+      end Each_Choice;
+
+      Visiter : aliased Each_Variant.Visiter;
+      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Variants);
+   begin
+      Result := 0;
+
+      while Cursor.Has_Element loop
+         Cursor.Visit (Visiter'Access);
+         Cursor.Next;
+      end loop;
+   end Variant_Part;
+
 end Gela.Resolve;

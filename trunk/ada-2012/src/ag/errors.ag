@@ -90,12 +90,16 @@ Synthesized attributes
   terminate_alternative_statement,
   unconstrained_array_definition,
   while_loop_statement,
+  variant,
+  variant_part,
   Array_Component_Choices,
   Associations,
   Discrete_Subtype_Definitions,
   Index_Subtype_Definitions,
   Body_Statements,
-  Record_Component_Associations
+  Record_Component_Associations,
+  Variant_Choices,
+  Variants
 
    : Gela.Semantic_Types.Error_Set_Index : Errors;
 
@@ -280,6 +284,22 @@ Rules for Record_Component_Associations.association :
 (.
       ${Record_Component_Associations.Errors} := ${association.Errors};
 .)
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${Variant_Choices.Errors} := 0;
+.)
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${Variant_Choices.Errors} := ${discrete_choice.Errors}; --  FIXME
+.)
+Rules for Variants.variant :
+(.
+      ${Variants.Errors} := 0;
+.)
+Rules for Variants.variant :
+(.
+      ${Variants.Errors} := ${variant.Errors}; --  FIXME
+.)
 
 
 Rules for unconstrained_array_definition. :
@@ -438,4 +458,13 @@ Rules for box.box_token :
 Rules for others_choice.others_token :
 (.
       ${others_choice.Errors} := 0;  --  FIXME
+.)
+
+Rules for variant. :
+(.
+      ${variant.Errors} := ${Variant_Choices.Errors};  --  FIXME
+.)
+Rules for variant_part. :
+(.
+      ${variant_part.Errors} := ${Variants.Errors};  --  FIXME
 .)

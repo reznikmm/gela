@@ -77,10 +77,13 @@ Inherited attributes
   subtype_mark_or_access_definition,
   type_definition,
   unconstrained_array_definition,
+  variant,
 
   Array_Component_Choices,
   Associations,
-  Record_Component_Associations
+  Record_Component_Associations,
+  Variant_Choices,
+  Variants
    : Gela.Interpretations.Interpretation_Index : Down;
 
 Rules for Array_Component_Choices.discrete_choice :
@@ -243,7 +246,12 @@ Rules for case_expression_path. :
 
 Rules for case_statement. :
 (.
-      ${Case_Expression.Down} := 0;  --  FIXME
+      --  8.6 (9)
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${case_statement.env_in},
+         ${Case_Expression.Up},
+         ${Case_Expression.Down});
 .)
 
 Rules for component_clause. :
@@ -298,7 +306,14 @@ Rules for Case_Statement_Alternative_Choices.discrete_choice :
 
 Rules for Variant_Choices.discrete_choice :
 (.
-      ${discrete_choice.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Variant_Choices.Down}, 1, ${discrete_choice.Down});
+.)
+
+Rules for Variant_Choices.discrete_choice :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Variant_Choices.Down}, 2, ${tail.Down});
 .)
 
 Rules for discrete_simple_expression_range. :
@@ -313,7 +328,13 @@ Rules for discrete_simple_expression_range. :
 
 Rules for discriminant_specification. :
 (.
-      ${Initialization_Expression.Down} := 0;  --  FIXME
+      -- 3.7 (7)
+      Gela.Pass_Utils.Resolve.To_Type
+        (Self.Compilation,
+         ${discriminant_specification.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Initialization_Expression.Up:0},
+         ${Initialization_Expression.Down});
 .)
 
 Rules for element_iterator_specification. :
@@ -570,7 +591,9 @@ Rules for defining_expanded_unit_name. :
 
 Rules for Exception_Choices.exception_choice :
 (.
-      ${exception_choice.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${Exception_Choices.env_in}, ${exception_choice.Up}, ${exception_choice.Down});
 .)
 
 Rules for exit_statement. :
@@ -746,7 +769,11 @@ Rules for subunit. :
 
 Rules for variant_part. :
 (.
-      ${Discriminant_Direct_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${variant_part.env_in},
+         ${Discriminant_Direct_Name.Up},
+         ${Discriminant_Direct_Name.Down});
 .)
 
 Rules for while_loop_statement. :
@@ -823,7 +850,11 @@ Rules for discrete_subtype_indication_dr. :
 
 Rules for discriminant_specification. :
 (.
-      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${discriminant_specification.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Object_Declaration_Subtype.Down});
 .)
 
 Rules for formal_access_to_function_definition. :
@@ -1039,4 +1070,31 @@ Rules for return_object_specification. :
 Rules for subtype_declaration. :
 (.
       ${Type_Declaration_View.Down} := 0;  --  FIXME
+.)
+
+Rules for Variants.variant :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Variants.Down}, 1, ${variant.Down});
+.)
+
+Rules for Variants.variant :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Variants.Down}, 2, ${tail.Down});
+.)
+
+Rules for variant. :
+(.
+      ${Variant_Choices.Down} := ${variant.Down};
+.)
+
+Rules for variant_part. :
+(.
+      --  Depends on ${Variants.env_out}
+      Gela.Pass_Utils.Resolve.Variant_Part
+        (Self.Compilation,
+         ${Discriminant_Direct_Name.Up},
+         ${Variants.Up},
+         ${Variants.Down});
 .)

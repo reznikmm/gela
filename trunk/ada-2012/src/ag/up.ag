@@ -19,6 +19,7 @@ Synthesized attributes
   discrete_choice,
   discrete_range,
   discrete_subtype_indication_dr,
+  exception_choice,
   explicit_dereference,
   expression,
   expression_or_box,
@@ -55,10 +56,13 @@ Synthesized attributes
   subtype_mark,
   subtype_mark_or_access_definition,
   unconstrained_array_definition,
+  variant,
   
   Array_Component_Choices,
   Associations,
-  Record_Component_Associations
+  Record_Component_Associations,
+  Variant_Choices,
+  Variants
    : Gela.Interpretations.Interpretation_Set_Index : Up;
 
 Rules for Array_Component_Choices.discrete_choice :
@@ -97,6 +101,34 @@ Rules for Record_Component_Associations.association :
       ${Record_Component_Associations.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${association.Up}, ${tail.Up}, ${Record_Component_Associations.Up});
+.)
+
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${Variant_Choices.Up} := 0;
+.)
+
+Rules for Variant_Choices.discrete_choice :
+(.
+      ${Variant_Choices.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${discrete_choice.Up},
+         ${tail.Up},
+         ${Variant_Choices.Up});
+.)
+
+Rules for Variants.variant :
+(.
+      ${Variants.Up} := 0;
+.)
+
+Rules for Variants.variant :
+(.
+      ${Variants.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${variant.Up},
+         ${tail.Up},
+         ${Variants.Up});
 .)
 
 Rules for identifier.identifier_token :
@@ -337,5 +369,10 @@ Rules for box.box_token :
 
 Rules for others_choice.others_token :
 (.
-      ${others_choice.Up} := 0;  --  FIXME
+      ${others_choice.Up} := Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation);
+.)
+
+Rules for variant. :
+(.
+      ${variant.Up} := ${Variant_Choices.Up};
 .)

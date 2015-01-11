@@ -951,8 +951,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Pragma_Node
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Pragma_Nodes.Pragma_Node_Access)
-   is null;
+      Node : not null Gela.Elements.Pragma_Nodes.Pragma_Node_Access);
 
    overriding procedure Private_Extension_Declaration
      (Self : in out Visiter;
@@ -1490,6 +1489,81 @@ package body Asis.Extensions.Flat_Kinds is
          Self.Result := Map (Token.Symbol);
       end if;
    end Operator_Symbol;
+
+   overriding procedure Pragma_Node
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Pragma_Nodes.Pragma_Node_Access)
+   is
+      package X renames Gela.Lexical_Types.Predefined_Symbols;
+
+      Comp    : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+      Token : constant Gela.Lexical_Types.Token :=
+        Comp.Get_Token (Node.Pragma_Token);
+      Map : constant array
+        (Gela.Lexical_Types.Symbol range
+           X.All_Calls_Remote .. X.Storage_Size) of Element_Flat_Kind :=
+          (X.All_Calls_Remote => An_All_Calls_Remote_Pragma,
+           X.Assert => An_Assert_Pragma,
+           X.Assertion_Policy => An_Assertion_Policy_Pragma,
+           X.Asynchronous => An_Asynchronous_Pragma,
+           X.Atomic => An_Atomic_Pragma,
+           X.Atomic_Components => An_Atomic_Components_Pragma,
+           X.Attach_Handler => An_Attach_Handler_Pragma,
+           X.Controlled => A_Controlled_Pragma,
+           X.Convention => A_Convention_Pragma,
+           X.Detect_Blocking => A_Detect_Blocking_Pragma,
+           X.Discard_Names => A_Discard_Names_Pragma,
+           X.Elaborate => An_Elaborate_Pragma,
+           X.Elaborate_All => An_Elaborate_All_Pragma,
+           X.Elaborate_Body => An_Elaborate_Body_Pragma,
+           X.Export => An_Export_Pragma,
+           X.Import => An_Import_Pragma,
+           X.Inline => An_Inline_Pragma,
+           X.Inspection_Point => An_Inspection_Point_Pragma,
+           X.Interrupt_Handler => An_Interrupt_Handler_Pragma,
+           X.Interrupt_Priority => An_Interrupt_Priority_Pragma,
+           X.Linker_Options => A_Linker_Options_Pragma,
+           X.List => A_List_Pragma,
+           X.Locking_Policy => A_Locking_Policy_Pragma,
+           X.No_Return => A_No_Return_Pragma,
+           X.Normalize_Scalars => A_Normalize_Scalars_Pragma,
+           X.Optimize => An_Optimize_Pragma,
+           X.Pack => A_Pack_Pragma,
+           X.Page => A_Page_Pragma,
+           X.Partition_Elaboration_Policy =>
+             A_Partition_Elaboration_Policy_Pragma,
+           X.Preelaborable_Initialization =>
+             A_Preelaborable_Initialization_Pragma,
+           X.Preelaborate => A_Preelaborate_Pragma,
+           X.Priority => A_Priority_Pragma,
+           X.Priority_Specific_Dispatching =>
+             A_Priority_Specific_Dispatching_Pragma,
+           X.Profile => A_Profile_Pragma,
+           X.Pure => A_Pure_Pragma,
+           X.Queuing_Policy => A_Queuing_Policy_Pragma,
+           X.Relative_Deadline => A_Relative_Deadline_Pragma,
+           X.Remote_Call_Interface => A_Remote_Call_Interface_Pragma,
+           X.Remote_Types => A_Remote_Types_Pragma,
+           X.Restrictions => A_Restrictions_Pragma,
+           X.Reviewable => A_Reviewable_Pragma,
+           X.Shared_Passive => A_Shared_Passive_Pragma,
+           X.Storage_Size => A_Storage_Size_Pragma,
+           X.Suppress => A_Suppress_Pragma,
+           X.Task_Dispatching_Policy => A_Task_Dispatching_Policy_Pragma,
+           X.Unchecked_Union => An_Unchecked_Union_Pragma,
+           X.Unsuppress => An_Unsuppress_Pragma,
+           X.Volatile => A_Volatile_Pragma,
+           X.Volatile_Components => A_Volatile_Components_Pragma,
+           others => An_Unknown_Pragma);
+
+   begin
+      if Token.Symbol in Map'Range then
+         Self.Result := Map (Token.Symbol);
+      else
+         Self.Result := An_Unknown_Pragma;
+      end if;
+   end Pragma_Node;
 
    --------------------
    -- Procedure_Body --

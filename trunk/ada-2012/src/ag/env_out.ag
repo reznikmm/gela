@@ -432,7 +432,12 @@ Rules for derived_type_definition. :
 
 Rules for discriminant_specification. :
 (.
-      ${discriminant_specification.env_out} := ${discriminant_specification.env_in};
+      ${discriminant_specification.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${discriminant_specification.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for element_iterator_specification. :
@@ -661,7 +666,7 @@ Rules for interface_type_definition. :
 
 Rules for known_discriminant_part. :
 (.
-      ${known_discriminant_part.env_out} := ${known_discriminant_part.env_in};
+      ${known_discriminant_part.env_out} := ${Discriminants.env_out};
 .)
 
 Rules for loop_parameter_specification. :
@@ -905,12 +910,12 @@ Rules for use_type_clause. :
 
 Rules for variant. :
 (.
-      ${variant.env_out} := ${variant.env_in};
+      ${variant.env_out} := ${Record_Components.env_out};
 .)
 
 Rules for variant_part. :
 (.
-      ${variant_part.env_out} := ${variant_part.env_in};
+      ${variant_part.env_out} := ${Variants.env_out};
 .)
 
 Rules for with_clause. :
