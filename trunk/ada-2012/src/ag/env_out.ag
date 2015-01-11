@@ -162,7 +162,7 @@ Rules for Accept_Parameters.parameter_specification :
 
 Rules for Accept_Parameters.parameter_specification :
 (.
-      ${Accept_Parameters.env_out} := ${parameter_specification.env_out};
+      ${Accept_Parameters.env_out} := ${tail.env_out};
 .)
 
 Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
@@ -172,7 +172,7 @@ Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
 
 Rules for Access_To_Subprogram_Parameter_Profile.parameter_specification :
 (.
-      ${Access_To_Subprogram_Parameter_Profile.env_out} := ${parameter_specification.env_out};
+      ${Access_To_Subprogram_Parameter_Profile.env_out} := ${tail.env_out};
 .)
 
 Rules for Block_Declarative_Items.declarative_item :
@@ -182,7 +182,7 @@ Rules for Block_Declarative_Items.declarative_item :
 
 Rules for Block_Declarative_Items.declarative_item :
 (.
-      ${Block_Declarative_Items.env_out} := ${declarative_item.env_out};
+      ${Block_Declarative_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Body_Declarative_Items.declarative_item :
@@ -192,7 +192,7 @@ Rules for Body_Declarative_Items.declarative_item :
 
 Rules for Body_Declarative_Items.declarative_item :
 (.
-      ${Body_Declarative_Items.env_out} := ${declarative_item.env_out};
+      ${Body_Declarative_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Compilation_Pragmas.context_item :
@@ -202,7 +202,7 @@ Rules for Compilation_Pragmas.context_item :
 
 Rules for Compilation_Pragmas.context_item :
 (.
-      ${Compilation_Pragmas.env_out} := ${context_item.env_out};
+      ${Compilation_Pragmas.env_out} := ${tail.env_out};
 .)
 
 Rules for Context_Clause_Elements.context_item :
@@ -212,7 +212,7 @@ Rules for Context_Clause_Elements.context_item :
 
 Rules for Context_Clause_Elements.context_item :
 (.
-      ${Context_Clause_Elements.env_out} := ${context_item.env_out};
+      ${Context_Clause_Elements.env_out} := ${tail.env_out};
 .)
 
 Rules for Discriminants.discriminant_specification :
@@ -222,7 +222,7 @@ Rules for Discriminants.discriminant_specification :
 
 Rules for Discriminants.discriminant_specification :
 (.
-      ${Discriminants.env_out} := ${discriminant_specification.env_out};
+      ${Discriminants.env_out} := ${tail.env_out};
 .)
 
 Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
@@ -232,7 +232,7 @@ Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
 
 Rules for Enumeration_Literal_Declarations.enumeration_literal_specification :
 (.
-      ${Enumeration_Literal_Declarations.env_out} := ${enumeration_literal_specification.env_out};
+      ${Enumeration_Literal_Declarations.env_out} := ${tail.env_out};
 .)
 
 Rules for Generic_Formal_Part.generic_formal :
@@ -242,7 +242,7 @@ Rules for Generic_Formal_Part.generic_formal :
 
 Rules for Generic_Formal_Part.generic_formal :
 (.
-      ${Generic_Formal_Part.env_out} := ${generic_formal.env_out};
+      ${Generic_Formal_Part.env_out} := ${tail.env_out};
 .)
 
 Rules for Parameter_Profile.parameter_specification :
@@ -252,7 +252,7 @@ Rules for Parameter_Profile.parameter_specification :
 
 Rules for Parameter_Profile.parameter_specification :
 (.
-      ${Parameter_Profile.env_out} := ${parameter_specification.env_out};
+      ${Parameter_Profile.env_out} := ${tail.env_out};
 .)
 
 Rules for Private_Part_Declarative_Items.basic_declarative_item :
@@ -262,7 +262,7 @@ Rules for Private_Part_Declarative_Items.basic_declarative_item :
 
 Rules for Private_Part_Declarative_Items.basic_declarative_item :
 (.
-      ${Private_Part_Declarative_Items.env_out} := ${basic_declarative_item.env_out};
+      ${Private_Part_Declarative_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Private_Protected_Items.protected_element_declaration :
@@ -272,7 +272,7 @@ Rules for Private_Protected_Items.protected_element_declaration :
 
 Rules for Private_Protected_Items.protected_element_declaration :
 (.
-      ${Private_Protected_Items.env_out} := ${protected_element_declaration.env_out};
+      ${Private_Protected_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Private_Task_Items.task_item :
@@ -282,7 +282,7 @@ Rules for Private_Task_Items.task_item :
 
 Rules for Private_Task_Items.task_item :
 (.
-      ${Private_Task_Items.env_out} := ${task_item.env_out};
+      ${Private_Task_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Protected_Operation_Items.protected_operation_item :
@@ -292,7 +292,7 @@ Rules for Protected_Operation_Items.protected_operation_item :
 
 Rules for Protected_Operation_Items.protected_operation_item :
 (.
-      ${Protected_Operation_Items.env_out} := ${protected_operation_item.env_out};
+      ${Protected_Operation_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Record_Components.component_item :
@@ -302,7 +302,7 @@ Rules for Record_Components.component_item :
 
 Rules for Record_Components.component_item :
 (.
-      ${Record_Components.env_out} := ${component_item.env_out};
+      ${Record_Components.env_out} := ${tail.env_out};
 .)
 
 Rules for Variants.variant :
@@ -312,7 +312,7 @@ Rules for Variants.variant :
 
 Rules for Variants.variant :
 (.
-      ${Variants.env_out} := ${variant.env_out};
+      ${Variants.env_out} := ${tail.env_out};
 .)
 
 Rules for Visible_Part_Declarative_Items.basic_declarative_item :
@@ -322,7 +322,7 @@ Rules for Visible_Part_Declarative_Items.basic_declarative_item :
 
 Rules for Visible_Part_Declarative_Items.basic_declarative_item :
 (.
-      ${Visible_Part_Declarative_Items.env_out} := ${basic_declarative_item.env_out};
+      ${Visible_Part_Declarative_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Visible_Protected_Items.protected_operation_declaration :
@@ -332,7 +332,7 @@ Rules for Visible_Protected_Items.protected_operation_declaration :
 
 Rules for Visible_Protected_Items.protected_operation_declaration :
 (.
-      ${Visible_Protected_Items.env_out} := ${protected_operation_declaration.env_out};
+      ${Visible_Protected_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for Visible_Task_Items.task_item :
@@ -342,7 +342,7 @@ Rules for Visible_Task_Items.task_item :
 
 Rules for Visible_Task_Items.task_item :
 (.
-      ${Visible_Task_Items.env_out} := ${task_item.env_out};
+      ${Visible_Task_Items.env_out} := ${tail.env_out};
 .)
 
 Rules for With_Clause_Names.program_unit_name :
