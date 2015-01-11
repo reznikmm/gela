@@ -1165,8 +1165,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Subtype_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Subtype_Declarations.
-        Subtype_Declaration_Access)
-   is null;
+        Subtype_Declaration_Access);
 
    overriding procedure Subtype_Indication
      (Self : in out Visiter;
@@ -1480,6 +1479,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_String_Literal;
    end String_Literal;
+
+   overriding procedure Subtype_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Subtype_Declarations.
+        Subtype_Declaration_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Subtype_Declaration;
+   end Subtype_Declaration;
 
    overriding procedure Subtype_Indication
      (Self : in out Visiter;

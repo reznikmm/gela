@@ -72,6 +72,36 @@ package body Gela.Plain_Value_Sets is
                   Self.Put_Value
                     ((Integer_Value, Left.Integer - Right.Integer), Value);
                end if;
+            when Gela.Semantic_Types.Plus_Operator =>
+               if Left.Kind = Integer_Value and then
+                 Right.Kind = Integer_Value
+               then
+                  Self.Put_Value
+                    ((Integer_Value, Left.Integer + Right.Integer), Value);
+               end if;
+            when Gela.Semantic_Types.Star_Operator =>
+               if Left.Kind = Integer_Value and then
+                 Right.Kind = Integer_Value
+               then
+                  Self.Put_Value
+                    ((Integer_Value, Left.Integer * Right.Integer), Value);
+               end if;
+            when Gela.Semantic_Types.Slash_Operator =>
+               if Left.Kind = Integer_Value and then
+                 Right.Kind = Integer_Value and then
+                 Right.Integer /= Gela.Arithmetic.Integers.Zero  --  FIXME
+               then
+                  Self.Put_Value
+                    ((Integer_Value, Left.Integer / Right.Integer), Value);
+               end if;
+            when Gela.Semantic_Types.Rem_Operator =>
+               if Left.Kind = Integer_Value and then
+                 Right.Kind = Integer_Value and then
+                 Right.Integer /= Gela.Arithmetic.Integers.Zero  --  FIXME
+               then
+                  Self.Put_Value
+                    ((Integer_Value, Left.Integer rem Right.Integer), Value);
+               end if;
             when others =>
                raise Constraint_Error with "unimplemeneted";
          end case;

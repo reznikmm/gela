@@ -605,7 +605,8 @@ Rules for function_body. :
 
 Rules for function_declaration. :
 (.
-      ${function_declaration.env_out} := ${function_declaration.env_in};
+      ${function_declaration.env_out} := Self.Compilation.Context.Environment_Set.
+        Leave_Declarative_Region (${Parameter_Profile.env_out});
 .)
 
 Rules for function_instantiation. :

@@ -12,11 +12,13 @@
 with Gela.Compilations;
 with Gela.Element_Visiters;
 with Gela.Elements.Associations;
+with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Expression_Or_Boxes;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Numeric_Literals;
 with Gela.Elements.Operator_Symbols;
+with Gela.Elements.Record_Aggregates;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
@@ -436,10 +438,55 @@ package body Asis.Expressions is
      (Expression : in Asis.Expression)
       return Boolean
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Boolean := False;
+         end record;
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
+
+         overriding procedure Record_Aggregate
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
+         is
+            Args : constant Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access := Node.Function_Call_Parameters;
+         begin
+            if Args.Assigned then
+               Args.Visit (Self);
+            else
+               Self.Result := True;
+            end if;
+         end Auxiliary_Apply;
+
+         overriding procedure Record_Aggregate
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access)
+         is
+            use type Gela.Lexical_Types.Token_Count;
+         begin
+            Self.Result := Node.Left_Token /= 0;
+         end Record_Aggregate;
+      end Get;
+
+      V       : Get.Visiter;
    begin
       Check_Nil_Element (Expression, "Is_Prefix_Call");
---      Raise_Not_Implemented ("");
-      return False;
+      Expression.Data.Visit (V);
+      return V.Result;
    end Is_Prefix_Call;
 
    -------------------
