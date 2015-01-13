@@ -296,6 +296,6 @@ package body Gela.Test_Cases.Valgrind is
    function Valgrind_Report
      (Self : Test_Case) return League.Strings.Universal_String is
    begin
-      return Self.Run_Test.Build & "/valgrind.xml";
+      return Self.Run_Test.Build & "/" & Self.Run_Test.Name & "-valgrind.xml";
    end Valgrind_Report;
 end Gela.Test_Cases.Valgrind;
