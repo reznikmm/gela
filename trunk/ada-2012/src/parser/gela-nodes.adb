@@ -1,3 +1,5 @@
+with System.Storage_Elements;
+
 package body Gela.Nodes is
 
    ---------------------------
@@ -93,6 +95,19 @@ package body Gela.Nodes is
 
       return 0;
    end First_Token;
+
+   ----------
+   -- Hash --
+   ----------
+
+   overriding function Hash (Self  : Node) return Ada.Containers.Hash_Type is
+      subtype Integer_Address is System.Storage_Elements.Integer_Address;
+      use type Integer_Address;
+      X : Integer_Address;
+   begin
+      X := System.Storage_Elements.To_Integer (Self'Address);
+      return Ada.Containers.Hash_Type (X mod Ada.Containers.Hash_Type'Modulus);
+   end Hash;
 
    -------------------------
    -- Is_Part_Of_Implicit --

@@ -2,6 +2,7 @@ with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Placeholders;
+with Gela.Int.Symbols;
 with Gela.Int.Tuples;
 
 package Gela.Int.Visiters is
@@ -28,6 +29,10 @@ package Gela.Int.Visiters is
    not overriding procedure Placeholder
      (Self  : access Visiter;
       Value : Gela.Int.Placeholders.Placeholder) is abstract;
+
+   not overriding procedure Symbol
+     (Self  : access Visiter;
+      Value : Gela.Int.Symbols.Symbol) is abstract;
 
    not overriding procedure Tuple
      (Self  : access Visiter;

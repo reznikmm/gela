@@ -24,6 +24,13 @@ package Gela.Interpretations is
      access all Interpretation_Manager'Class;
    for Interpretation_Manager_Access'Storage_Size use 0;
 
+   not overriding procedure Add_Symbol
+     (Self   : in out Interpretation_Manager;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with new interpretation as symbol
+
    not overriding procedure Add_Defining_Name
      (Self   : in out Interpretation_Manager;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -61,9 +68,14 @@ package Gela.Interpretations is
      (Self   : in out Interpretation_Manager;
       Left   : Gela.Interpretations.Interpretation_Index;
       Right  : Gela.Interpretations.Interpretation_Index;
-      Result : out Gela.Interpretations.Interpretation_Index)
-        is abstract;
+      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
    --  Register chosen tuple interpretation
+
+   not overriding procedure Get_Defining_Name_Index
+     (Self   : in out Interpretation_Manager;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  Register chosen defining_name interpretation
 
    type Placeholder_Kind is (Absent);
 
@@ -100,6 +112,12 @@ package Gela.Interpretations is
       Kind   : Gela.Interpretations.Placeholder_Kind;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each placeholder
+
+   not overriding procedure On_Symbol
+     (Self   : in out Visiter;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+   --  Called for each symbol
 
    not overriding procedure On_Tuple
      (Self  : in out Visiter;

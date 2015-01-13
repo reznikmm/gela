@@ -1,9 +1,11 @@
 --  Type manager keeps types found in all compilation units.
 
 with Ada.Containers.Ordered_Maps;
+with Ada.Containers.Hashed_Maps;
 
 with Gela.Contexts;
 with Gela.Elements.Defining_Names;
+with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Subtype_Marks;
 with Gela.Semantic_Types;
 with Gela.Type_Managers;
@@ -29,11 +31,34 @@ private
          "<"          => Gela.Semantic_Types."<",
          "="          => Gela.Type_Views."=");
 
+   type Back_Key is record
+      Category : Gela.Type_Views.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+        .Full_Type_Declaration_Access;
+   end record;
+
+   function Hash (Key : Back_Key) return Ada.Containers.Hash_Type;
+
+   package Back_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Back_Key,
+      Element_Type    => Gela.Semantic_Types.Type_Index,
+      Hash            => Hash,
+      Equivalent_Keys => "=",
+      "="             => Gela.Semantic_Types."=");
+
    type Type_Manager (Context : Gela.Contexts.Context_Access) is
      new Gela.Type_Managers.Type_Manager with
    record
-      Map : Type_View_Maps.Map;
+       Map  : Type_View_Maps.Map;
+       Back : Back_Maps.Map;
    end record;
+
+   not overriding function Get
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Views.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access)
+        return Gela.Semantic_Types.Type_Index;
 
    overriding function Get
      (Self  : access Type_Manager;

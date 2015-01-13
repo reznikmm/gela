@@ -127,4 +127,6 @@ private
      (Self  : in out Node;
       Value : Gela.Elements.Element_Access);
 
+   overriding function Hash (Self  : Node) return Ada.Containers.Hash_Type;
+
 end Gela.Nodes;

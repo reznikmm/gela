@@ -77,11 +77,21 @@ private
       Kind   : Gela.Interpretations.Placeholder_Kind;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 
+   overriding procedure Add_Symbol
+     (Self   : in out Interpretation_Manager;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
    overriding procedure Add_Tuple
      (Self   : in out Interpretation_Manager;
       Left   : Gela.Interpretations.Interpretation_Set_Index;
       Right  : Gela.Interpretations.Interpretation_Set_Index;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding procedure Get_Defining_Name_Index
+     (Self   : in out Interpretation_Manager;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Result : out Gela.Interpretations.Interpretation_Index);
 
    overriding procedure Get_Tuple_Index
      (Self   : in out Interpretation_Manager;

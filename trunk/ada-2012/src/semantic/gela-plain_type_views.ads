@@ -1,5 +1,7 @@
-with Gela.Type_Views;
+with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Lexical_Types;
+with Gela.Type_Views;
 
 package Gela.Plain_Type_Views is
    pragma Preelaborate;
@@ -23,5 +25,10 @@ private
 
    overriding function Category
      (Self : Type_View) return Gela.Type_Views.Category_Kinds;
+
+   overriding function Get_Discriminant
+     (Self   : Type_View;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
 
 end Gela.Plain_Type_Views;

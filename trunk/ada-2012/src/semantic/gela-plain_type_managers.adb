@@ -2,16 +2,47 @@ with Gela.Compilations;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
 with Gela.Elements.Defining_Identifiers;
-with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Views;
+with Gela.Elements.Record_Type_Definitions;
 
 package body Gela.Plain_Type_Managers is
 
    Universal_Access_Index  : constant Gela.Semantic_Types.Type_Index := 1;
    Universal_Integer_Index : constant Gela.Semantic_Types.Type_Index := 2;
    Universal_Real_Index    : constant Gela.Semantic_Types.Type_Index := 3;
+
+   ---------
+   -- Get --
+   ---------
+
+   not overriding function Get
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Views.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access)
+      return Gela.Semantic_Types.Type_Index
+   is
+      use type Gela.Semantic_Types.Type_Index;
+
+      Key : constant Back_Key := (Category, Decl);
+      Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
+      Result : constant Gela.Semantic_Types.Type_Index :=
+        Self.Map.Last_Key + 1;
+   begin
+      if Back_Maps.Has_Element (Pos) then
+         return Back_Maps.Element (Pos);
+      end if;
+
+      Self.Map.Insert
+        (Result,
+         Gela.Plain_Type_Views.Create_Full_Type (Category, Decl));
+
+      Self.Back.Insert (Key, Result);
+
+      return Result;
+   end Get;
 
    ---------
    -- Get --
@@ -30,6 +61,16 @@ package body Gela.Plain_Type_Managers is
          return Self.Map.Element (Index);
       end if;
    end Get;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Key : Back_Key) return Ada.Containers.Hash_Type is
+      use type Ada.Containers.Hash_Type;
+   begin
+      return Key.Decl.Hash + Gela.Type_Views.Category_Kinds'Pos (Key.Category);
+   end Hash;
 
    ----------------
    -- Initialize --
@@ -107,7 +148,6 @@ package body Gela.Plain_Type_Managers is
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index
    is
-      pragma Unreferenced (Self);
 
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
@@ -118,6 +158,11 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Full_Type_Declarations.
               Full_Type_Declaration_Access);
+
+         overriding procedure Record_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Type_Definitions.
+              Record_Type_Definition_Access);
 
          overriding procedure Root_Type_Definition
            (Self : in out Visiter;
@@ -146,6 +191,21 @@ package body Gela.Plain_Type_Managers is
          begin
             View.Visit (Self);
          end Full_Type_Declaration;
+
+         ----------------------------
+         -- Record_Type_Definition --
+         ----------------------------
+
+         overriding procedure Record_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Type_Definitions.
+              Record_Type_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.A_Untagged_Record,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Record_Type_Definition;
 
          --------------------------
          -- Root_Type_Definition --

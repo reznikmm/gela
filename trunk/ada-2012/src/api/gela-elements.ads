@@ -1,4 +1,7 @@
 --  This package provides Element interface and their methods.
+
+with Ada.Containers;
+
 with Gela.Lexical_Types;
 
 limited with Gela.Compilation_Units;
@@ -46,6 +49,10 @@ package Gela.Elements is
    not overriding function Last_Token
      (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;
    --  Return last token index of given element.
+
+   not overriding function Hash
+     (Self  : Element) return Ada.Containers.Hash_Type is abstract;
+   --  Return hash of given element.
 
    not overriding procedure Visit
      (Self    : access Element;

@@ -1,5 +1,8 @@
 --  This package provides representation of types and their categories.
 
+with Gela.Elements.Defining_Names;
+with Gela.Lexical_Types;
+
 package Gela.Type_Views is
    pragma Preelaborate;
 
@@ -36,6 +39,11 @@ package Gela.Type_Views is
 
    not overriding function Category
      (Self : Type_View) return Category_Kinds is abstract;
+
+   not overriding function Get_Discriminant
+     (Self   : Type_View;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
 
 --     function Is_Elementary           (Self : Abstract_Type) return Boolean;
 --     function Is_Scalar               (Self : Abstract_Type) return Boolean;

@@ -9,7 +9,7 @@
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
-with System.Storage_Elements;
+with Ada.Containers;
 
 with Gela.Compilations;
 with Gela.Compilation_Unit_Sets;
@@ -893,13 +893,13 @@ package body Asis.Elements is
    ----------
 
    function Hash (Element : in Asis.Element) return Asis.ASIS_Integer is
-      subtype Integer_Address is System.Storage_Elements.Integer_Address;
-      use type Integer_Address;
-      X : Integer_Address;
+      use type Ada.Containers.Hash_Type;
+
+      X : Ada.Containers.Hash_Type;
    begin
       if Assigned (Element) then
-         X := System.Storage_Elements.To_Integer (Element.Data.all'Address);
-         X := X and Integer_Address (ASIS_Integer'Last);
+         X := Element.Data.Hash;
+         X := X and Ada.Containers.Hash_Type (ASIS_Integer'Last);
          return ASIS_Integer (X);
       else
          return 0;

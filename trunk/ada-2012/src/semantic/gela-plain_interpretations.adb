@@ -2,6 +2,7 @@ with Gela.Int.Attr_Functions;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Placeholders;
+with Gela.Int.Symbols;
 with Gela.Int.Tuples;
 with Gela.Int.Visiters;
 
@@ -115,6 +116,24 @@ package body Gela.Plain_Interpretations is
    begin
       Self.Plian_Int_Set.Add (Result, Item);
    end Add_Placeholder;
+
+   ----------------
+   -- Add_Symbol --
+   ----------------
+
+   overriding procedure Add_Symbol
+     (Self   : in out Interpretation_Manager;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Symbols.Symbol'
+          (Gela.Int.Symbols.Create
+             (Down  => (1 .. 0 => 0),
+              Value => Symbol));
+   begin
+      Self.Plian_Int_Set.Add (Result, Item);
+   end Add_Symbol;
 
    ---------------
    -- Add_Tuple --
@@ -263,6 +282,23 @@ package body Gela.Plain_Interpretations is
       end if;
    end Get_Cursor;
 
+   -----------------------------
+   -- Get_Defining_Name_Index --
+   -----------------------------
+
+   overriding procedure Get_Defining_Name_Index
+     (Self   : in out Interpretation_Manager;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Result : out Gela.Interpretations.Interpretation_Index)
+   is
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Defining_Names.Defining_Name'
+          (Gela.Int.Defining_Names.Create
+             (Down => (1 .. 0 => 0), Name => Name));
+   begin
+      Self.Plian_Int_Set.Add (Result, Item);
+   end Get_Defining_Name_Index;
+
    ---------------------
    -- Get_Tuple_Index --
    ---------------------
@@ -346,6 +382,10 @@ package body Gela.Plain_Interpretations is
            (Self  : access Visiter;
             Value : Gela.Int.Placeholders.Placeholder);
 
+         overriding procedure Symbol
+           (Self  : access Visiter;
+            Value : Gela.Int.Symbols.Symbol);
+
          overriding procedure Tuple
            (Self  : access Visiter;
             Value : Gela.Int.Tuples.Tuple);
@@ -417,6 +457,21 @@ package body Gela.Plain_Interpretations is
               (Kind => Value.Placeholder_Kind,
                Down => Value.Down);
          end Placeholder;
+
+         ------------
+         -- Symbol --
+         ------------
+
+         overriding procedure Symbol
+           (Self  : access Visiter;
+            Value : Gela.Int.Symbols.Symbol)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Symbol
+              (Symbol => Value.Get_Symbol,
+               Down   => Value.Down);
+         end Symbol;
 
          -----------
          -- Tuple --
