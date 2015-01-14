@@ -35,6 +35,8 @@ Synthesized attributes
   discrete_simple_expression_range,
   discrete_subtype_definition,
   discrete_subtype_indication,
+  exception_choice,
+  exception_handler,
   exit_statement,
   explicit_dereference,
   expression,
@@ -62,6 +64,7 @@ Synthesized attributes
   parameter_specification,
   pragma_node,
   prefix,
+  procedure_body,
   procedure_call_statement,
   program_unit_name,
   qualified_expression,
@@ -96,6 +99,8 @@ Synthesized attributes
   Array_Component_Choices,
   Associations,
   Case_Statement_Paths,
+  Exception_Choices,
+  Exception_Handlers,
   Discrete_Subtype_Definitions,
   Index_Subtype_Definitions,
   Body_Statements,
@@ -311,7 +316,22 @@ Rules for Variants.variant :
 (.
       ${Variants.Errors} := ${variant.Errors}; --  FIXME
 .)
-
+Rules for Exception_Choices.exception_choice :
+(.
+      ${Exception_Choices.Errors} := 0;
+.)
+Rules for Exception_Choices.exception_choice :
+(.
+      ${Exception_Choices.Errors} := ${exception_choice.Errors}; --  FIXME
+.)
+Rules for Exception_Handlers.exception_handler :
+(.
+      ${Exception_Handlers.Errors} := 0;
+.)
+Rules for Exception_Handlers.exception_handler :
+(.
+      ${Exception_Handlers.Errors} := ${exception_handler.Errors}; --  FIXME
+.)
 
 Rules for unconstrained_array_definition. :
 (.
@@ -483,3 +503,12 @@ Rules for case_path. :
 (.
       ${case_path.Errors} := ${Variant_Choices.Errors};  --  FIXME
 .)
+Rules for procedure_body. :
+(.
+      ${procedure_body.Errors} := ${Exception_Handlers.Errors};  --  FIXME
+.)
+Rules for exception_handler. :
+(.
+      ${exception_handler.Errors} := ${Exception_Choices.Errors};  --  FIXME
+.)
+

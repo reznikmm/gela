@@ -22,7 +22,7 @@ accept_statement ::=
   token                     <do_token>
   {statement}               <Accept_Body_Statements>
   token                     <exception_token>
-  {exception_handler}       <Accept_Body_Exception_Handlers>
+  {exception_handler}       <Exception_Handlers>
   token                     <end_token>
   token                     <identifier_token>
   token                     <semicolon_token>;
@@ -209,7 +209,7 @@ block_statement ::=
   token               <begin_token>
   {statement}         <Block_Statements>
   token               <exception_token>
-  {exception_handler} <Block_Exception_Handlers>
+  {exception_handler} <Exception_Handlers>
   token               <end_token>
   token               <identifier_token>
   token               <semicolon_token>;
@@ -482,7 +482,7 @@ entry_body ::=
   token                       <begin_token>
   {statement}                 <Body_Statements>
   token                       <exception_token>
-  {exception_handler}         <Body_Exception_Handlers>
+  {exception_handler}         <Exception_Handlers>
   token                       <end_token>
   token                       <identifier_token>
   token                       <semicolon_token>
@@ -569,7 +569,7 @@ extended_return_statement ::=
   token                       <do_token>
   {statement}                 <Extended_Return_Statements>
   token                       <exception_token>
-  {exception_handler}         <Extended_Return_Exception_Handlers>
+  {exception_handler}         <Exception_Handlers>
   token                       <end_token>
   token                       <endreturn>
   token                       <semicolon_token>;
@@ -831,7 +831,7 @@ function_body ::=
   token                      <begin_token>
   {statement}                <Body_Statements>
   token                      <exception_token>
-  {exception_handler}        <Body_Exception_Handlers>
+  {exception_handler}        <Exception_Handlers>
   token                      <end_token>
   [designator                <end_name>]
   token                      <semicolon_token>
@@ -1236,7 +1236,7 @@ package_body ::=
   token                      <begin_token>
   {statement}                <Body_Statements>
   token                      <exception_token>
-  {exception_handler}        <Body_Exception_Handlers>
+  {exception_handler}        <Exception_Handlers>
   token                      <end_token>
   [program_unit_name         <end_name>]
   token                      <semicolon_token>
@@ -1373,7 +1373,7 @@ procedure_body ::=
   token                      <begin_token>
   {statement}                <Body_Statements>
   token                      <exception_token>
-  {exception_handler}        <Body_Exception_Handlers>
+  {exception_handler}        <Exception_Handlers>
   token                      <end_token>
   [program_unit_name         <end_name>]
   token                      <semicolon_token>
@@ -1702,7 +1702,7 @@ task_body ::=
   token                      <begin_token>
   {statement}                <Body_Statements>
   token                      <exception_token>
-  {exception_handler}        <Body_Exception_Handlers>
+  {exception_handler}        <Exception_Handlers>
   token                      <end_token>
   token                      <identifier_token>
   token                      <semicolon_token>

@@ -6,7 +6,6 @@ Rules for Compilation. :
 
 Inherited attributes
   Aborted_Tasks,
-  Accept_Body_Exception_Handlers,
   Accept_Body_Statements,
   Accept_Parameters,
   Access_To_Subprogram_Parameter_Profile,
@@ -15,10 +14,9 @@ Inherited attributes
   Associations,
   Asynchronous_Statement_Paths,
   Block_Declarative_Items,
-  Block_Exception_Handlers,
+  Exception_Handlers,
   Block_Statements,
   Body_Declarative_Items,
-  Body_Exception_Handlers,
   Body_Statements,
   Case_Expression_Paths,
   Case_Path_Alternative_Choices,
@@ -32,7 +30,6 @@ Inherited attributes
   Enumeration_Literal_Declarations,
   Exception_Choices,
   Expression_Paths,
-  Extended_Return_Exception_Handlers,
   Extended_Return_Statements,
   Generic_Actual_Part,
   Generic_Formal_Part,
@@ -310,9 +307,9 @@ Rules for Aborted_Tasks.name :
 (.
       ${name.env_in} := ${Aborted_Tasks.env_in};
 .)
-Rules for Accept_Body_Exception_Handlers.exception_handler :
+Rules for Exception_Handlers.exception_handler :
 (.
-      ${exception_handler.env_in} := ${Accept_Body_Exception_Handlers.env_in};
+      ${exception_handler.env_in} := ${Exception_Handlers.env_in};
 .)
 Rules for Accept_Body_Statements.statement :
 (.
@@ -346,10 +343,6 @@ Rules for Block_Declarative_Items.declarative_item :
 (.
       ${declarative_item.env_in} := ${Block_Declarative_Items.env_in};
 .)
-Rules for Block_Exception_Handlers.exception_handler :
-(.
-      ${exception_handler.env_in} := ${Block_Exception_Handlers.env_in};
-.)
 Rules for Block_Statements.statement :
 (.
       ${statement.env_in} := ${Block_Statements.env_in};
@@ -357,10 +350,6 @@ Rules for Block_Statements.statement :
 Rules for Body_Declarative_Items.declarative_item :
 (.
       ${declarative_item.env_in} := ${Body_Declarative_Items.env_in};
-.)
-Rules for Body_Exception_Handlers.exception_handler :
-(.
-      ${exception_handler.env_in} := ${Body_Exception_Handlers.env_in};
 .)
 Rules for Body_Statements.statement :
 (.
@@ -413,10 +402,6 @@ Rules for Exception_Choices.exception_choice :
 Rules for Expression_Paths.if_else_expression_path :
 (.
       ${if_else_expression_path.env_in} := ${Expression_Paths.env_in};
-.)
-Rules for Extended_Return_Exception_Handlers.exception_handler :
-(.
-      ${exception_handler.env_in} := ${Extended_Return_Exception_Handlers.env_in};
 .)
 Rules for Extended_Return_Statements.statement :
 (.
@@ -536,9 +521,9 @@ Rules for Aborted_Tasks.name :
       ${tail.env_in} := ${Aborted_Tasks.env_in};
 .)
 
-Rules for Accept_Body_Exception_Handlers.exception_handler :
+Rules for Exception_Handlers.exception_handler :
 (.
-      ${tail.env_in} := ${Accept_Body_Exception_Handlers.env_in};
+      ${tail.env_in} := ${Exception_Handlers.env_in};
 .)
 
 Rules for Accept_Body_Statements.statement :
@@ -581,11 +566,6 @@ Rules for Block_Declarative_Items.declarative_item :
       ${tail.env_in} := ${declarative_item.env_out};
 .)
 
-Rules for Block_Exception_Handlers.exception_handler :
-(.
-      ${tail.env_in} := ${Block_Exception_Handlers.env_in};
-.)
-
 Rules for Block_Statements.statement :
 (.
       ${tail.env_in} := ${Block_Statements.env_in};
@@ -594,11 +574,6 @@ Rules for Block_Statements.statement :
 Rules for Body_Declarative_Items.declarative_item :
 (.
       ${tail.env_in} := ${declarative_item.env_out};
-.)
-
-Rules for Body_Exception_Handlers.exception_handler :
-(.
-      ${tail.env_in} := ${Body_Exception_Handlers.env_in};
 .)
 
 Rules for Body_Statements.statement :
@@ -664,11 +639,6 @@ Rules for Exception_Choices.exception_choice :
 Rules for Expression_Paths.if_else_expression_path :
 (.
       ${tail.env_in} := ${Expression_Paths.env_in};
-.)
-
-Rules for Extended_Return_Exception_Handlers.exception_handler :
-(.
-      ${tail.env_in} := ${Extended_Return_Exception_Handlers.env_in};
 .)
 
 Rules for Extended_Return_Statements.statement :
@@ -838,7 +808,7 @@ Rules for accept_statement. :
 
 Rules for accept_statement. :
 (.
-      ${Accept_Body_Exception_Handlers.env_in} := ${accept_statement.env_in};
+      ${Exception_Handlers.env_in} := ${accept_statement.env_in};
 .)
 
 Rules for access_to_function_definition. :
@@ -973,7 +943,7 @@ Rules for block_statement. :
 
 Rules for block_statement. :
 (.
-      ${Block_Exception_Handlers.env_in} := ${block_statement.env_in};
+      ${Exception_Handlers.env_in} := ${block_statement.env_in};
 .)
 
 Rules for case_expression. :
@@ -1302,7 +1272,7 @@ Rules for entry_body. :
 
 Rules for entry_body. :
 (.
-      ${Body_Exception_Handlers.env_in} := ${entry_body.env_in};
+      ${Exception_Handlers.env_in} := ${entry_body.env_in};
 .)
 
 Rules for entry_declaration. :
@@ -1417,7 +1387,7 @@ Rules for extended_return_statement. :
 
 Rules for extended_return_statement. :
 (.
-      ${Extended_Return_Exception_Handlers.env_in} := ${extended_return_statement.env_in};
+      ${Exception_Handlers.env_in} := ${extended_return_statement.env_in};
 .)
 
 Rules for extension_aggregate. :
@@ -1684,7 +1654,7 @@ Rules for function_body. :
 
 Rules for function_body. :
 (.
-      ${Body_Exception_Handlers.env_in} := ${function_body.env_in};
+      ${Exception_Handlers.env_in} := ${function_body.env_in};
 .)
 
 Rules for function_body. :
@@ -2091,7 +2061,7 @@ Rules for package_body. :
 
 Rules for package_body. :
 (.
-      ${Body_Exception_Handlers.env_in} := ${package_body.env_in};
+      ${Exception_Handlers.env_in} := ${package_body.env_in};
 .)
 
 Rules for package_body. :
@@ -2312,7 +2282,7 @@ Rules for procedure_body. :
 Rules for procedure_body. :
 (.
       --  ${Body_Statements.Errors}
-      ${Body_Exception_Handlers.env_in} := ${Body_Declarative_Items.env_out};
+      ${Exception_Handlers.env_in} := ${Body_Declarative_Items.env_out};
 .)
 
 Rules for procedure_body. :
@@ -2709,7 +2679,7 @@ Rules for task_body. :
 
 Rules for task_body. :
 (.
-      ${Body_Exception_Handlers.env_in} := ${task_body.env_in};
+      ${Exception_Handlers.env_in} := ${task_body.env_in};
 .)
 
 Rules for task_body_stub. :

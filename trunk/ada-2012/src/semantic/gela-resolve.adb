@@ -311,17 +311,22 @@ package body Gela.Resolve is
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Down);
+            use type Gela.Type_Views.Type_View_Access;
+
             TM : constant Gela.Type_Managers.Type_Manager_Access :=
               Comp.Context.Types;
             Type_View : constant Gela.Type_Views.Type_View_Access :=
               TM.Get (Type_Index);
-            Name : constant Gela.Elements.Defining_Names.Defining_Name_Access
-              := Type_View.Get_Discriminant (Symbol);
+            Name : Gela.Elements.Defining_Names.Defining_Name_Access;
          begin
-            if Name.Assigned then
-               IM.Get_Defining_Name_Index (Name, Self.Index);
-            else
-               Self.Index := 0;
+            Self.Index := 0;
+
+            if Type_View /= null then
+               Name := Type_View.Get_Discriminant (Symbol);
+
+               if Name.Assigned then
+                  IM.Get_Defining_Name_Index (Name, Self.Index);
+               end if;
             end if;
          end On_Symbol;
 
