@@ -13,6 +13,7 @@ Synthesized attributes
   block_statement,
   box,
   case_expression,
+  case_path,
   case_statement,
   character_literal,
   clause_name,
@@ -94,6 +95,7 @@ Synthesized attributes
   variant_part,
   Array_Component_Choices,
   Associations,
+  Case_Statement_Paths,
   Discrete_Subtype_Definitions,
   Index_Subtype_Definitions,
   Body_Statements,
@@ -276,6 +278,15 @@ Rules for Body_Statements.statement :
 (.
       ${Body_Statements.Errors} := ${statement.Errors};
 .)
+Rules for Case_Statement_Paths.case_path :
+(.
+      ${Case_Statement_Paths.Errors} := 0;
+.)
+Rules for Case_Statement_Paths.case_path :
+(.
+      ${Case_Statement_Paths.Errors} := ${case_path.Errors}; --  FIXME
+.)
+
 Rules for Record_Component_Associations.association :
 (.
       ${Record_Component_Associations.Errors} := 0;
@@ -377,7 +388,7 @@ Rules for block_statement. :
 .)
 Rules for case_statement. :
 (.
-      ${case_statement.Errors} := 0;  --  FIXME
+      ${case_statement.Errors} := ${Case_Statement_Paths.Errors};  --  FIXME
 .)
 Rules for delay_statement. :
 (.
@@ -467,4 +478,8 @@ Rules for variant. :
 Rules for variant_part. :
 (.
       ${variant_part.Errors} := ${Variants.Errors};  --  FIXME
+.)
+Rules for case_path. :
+(.
+      ${case_path.Errors} := ${Variant_Choices.Errors};  --  FIXME
 .)

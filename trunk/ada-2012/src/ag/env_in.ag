@@ -22,7 +22,6 @@ Inherited attributes
   Body_Statements,
   Case_Expression_Paths,
   Case_Path_Alternative_Choices,
-  Case_Statement_Alternative_Choices,
   Case_Statement_Paths,
   Clause_Names,
   Compilation_Pragmas,
@@ -375,10 +374,6 @@ Rules for Case_Path_Alternative_Choices.discrete_choice :
 (.
       ${discrete_choice.env_in} := ${Case_Path_Alternative_Choices.env_in};
 .)
-Rules for Case_Statement_Alternative_Choices.discrete_choice :
-(.
-      ${discrete_choice.env_in} := ${Case_Statement_Alternative_Choices.env_in};
-.)
 Rules for Case_Statement_Paths.case_path :
 (.
       ${case_path.env_in} := ${Case_Statement_Paths.env_in};
@@ -619,11 +614,6 @@ Rules for Case_Expression_Paths.case_expression_path :
 Rules for Case_Path_Alternative_Choices.discrete_choice :
 (.
       ${tail.env_in} := ${Case_Path_Alternative_Choices.env_in};
-.)
-
-Rules for Case_Statement_Alternative_Choices.discrete_choice :
-(.
-      ${tail.env_in} := ${Case_Statement_Alternative_Choices.env_in};
 .)
 
 Rules for Case_Statement_Paths.case_path :
@@ -1008,7 +998,7 @@ Rules for case_expression_path. :
 
 Rules for case_path. :
 (.
-      ${Case_Statement_Alternative_Choices.env_in} := ${case_path.env_in};
+      ${Variant_Choices.env_in} := ${case_path.env_in};
 .)
 
 Rules for case_path. :

@@ -72,6 +72,14 @@ package Gela.Resolve is
    --  Resolve Type_Up to be an expression of some type, then resolve Expr_Up
    --  to have this type.
 
+   procedure Case_Statement
+     (Comp    : Gela.Compilations.Compilation_Access;
+      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Tuple   : Gela.Interpretations.Interpretation_Set_Index;
+      Result  : out Gela.Interpretations.Interpretation_Index);
+   --  Resolve Type_Up to be an expression of some type, then resolve each item
+   --  of Tuple to have this type.
+
    procedure To_Type_Or_The_Same_Type
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;

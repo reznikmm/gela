@@ -11,6 +11,7 @@ Inherited attributes
   attribute_reference,
   box,
   case_expression,
+  case_path,
   character_literal,
   clause_name,
   composite_constraint,
@@ -81,6 +82,7 @@ Inherited attributes
 
   Array_Component_Choices,
   Associations,
+  Case_Statement_Paths,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -295,11 +297,6 @@ Rules for digits_constraint. :
 .)
 
 Rules for Case_Path_Alternative_Choices.discrete_choice :
-(.
-      ${discrete_choice.Down} := 0;  --  FIXME
-.)
-
-Rules for Case_Statement_Alternative_Choices.discrete_choice :
 (.
       ${discrete_choice.Down} := 0;  --  FIXME
 .)
@@ -1084,6 +1081,18 @@ Rules for Variants.variant :
         (${Variants.Down}, 2, ${tail.Down});
 .)
 
+Rules for Case_Statement_Paths.case_path :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Case_Statement_Paths.Down}, 1, ${case_path.Down});
+.)
+
+Rules for Case_Statement_Paths.case_path :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Case_Statement_Paths.Down}, 2, ${tail.Down});
+.)
+
 Rules for variant. :
 (.
       ${Variant_Choices.Down} := ${variant.Down};
@@ -1097,4 +1106,18 @@ Rules for variant_part. :
          ${Discriminant_Direct_Name.Up},
          ${Variants.Up},
          ${Variants.Down});
+.)
+
+Rules for case_path. :
+(.
+      ${Variant_Choices.Down} := ${case_path.Down};
+.)
+
+Rules for case_statement. :
+(.
+      Gela.Pass_Utils.Resolve.Case_Statement
+        (Self.Compilation,
+         ${Case_Expression.Up},
+         ${Case_Statement_Paths.Up},
+         ${Case_Statement_Paths.Down});
 .)

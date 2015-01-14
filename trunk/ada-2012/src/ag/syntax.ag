@@ -238,7 +238,7 @@ case_expression_path ::=
 
 case_path ::=
     token             <when_token>
-    {discrete_choice} <Case_Statement_Alternative_Choices>
+    {discrete_choice} <Variant_Choices>
     token             <arrow_token>
     {statement}       <Sequence_Of_Statements>
 ;

@@ -8,6 +8,7 @@ Synthesized attributes
   attribute_reference,
   box,
   case_expression,
+  case_path,
   character_literal,
   clause_name,
   composite_constraint,
@@ -60,6 +61,7 @@ Synthesized attributes
   
   Array_Component_Choices,
   Associations,
+  Case_Statement_Paths,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -129,6 +131,20 @@ Rules for Variants.variant :
         (${variant.Up},
          ${tail.Up},
          ${Variants.Up});
+.)
+
+Rules for Case_Statement_Paths.case_path :
+(.
+      ${Case_Statement_Paths.Up} := 0;
+.)
+
+Rules for Case_Statement_Paths.case_path :
+(.
+      ${Case_Statement_Paths.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${case_path.Up},
+         ${tail.Up},
+         ${Case_Statement_Paths.Up});
 .)
 
 Rules for identifier.identifier_token :
@@ -266,6 +282,11 @@ Rules for allocator. :
 Rules for case_expression. :
 (.
       ${case_expression.Up} := 0;  --  FIXME
+.)
+
+Rules for case_path. :
+(.
+      ${case_path.Up} := ${Variant_Choices.Up};
 .)
 
 Rules for extension_aggregate. :
