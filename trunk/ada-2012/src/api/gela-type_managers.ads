@@ -25,6 +25,12 @@ package Gela.Type_Managers is
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Return type corresponding to Node of type declaration
 
+   not overriding function Type_Of_Object_Declaration
+     (Self  : access Type_Manager;
+      Node  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Return type corresponding to Node of object declaration
+
    not overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
       Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)

@@ -119,4 +119,11 @@ package Gela.Resolve is
    --  Resolve variant_part using Name_Up as interpretations of discriminant,
    --  Variants is putle of tuples of discrete_choice interpretations
 
+   procedure Assignment_Right
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left     : Gela.Interpretations.Interpretation_Set_Index;
+      Right    : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index);
+
 end Gela.Resolve;

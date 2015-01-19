@@ -2,10 +2,14 @@ with Gela.Compilations;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Object_Declarations;
+with Gela.Elements.Object_Definitions;
+with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Root_Type_Definitions;
+with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Views;
-with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Identifiers;
 
 package body Gela.Plain_Type_Managers is
 
@@ -151,7 +155,7 @@ package body Gela.Plain_Type_Managers is
 
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Type_Index;
+            Result : Gela.Semantic_Types.Type_Index := 0;
          end record;
 
          overriding procedure Full_Type_Declaration
@@ -220,9 +224,8 @@ package body Gela.Plain_Type_Managers is
          end Root_Type_Definition;
       end Visiters;
 
-      V    : Visiters.Visiter;
+      V : Visiters.Visiter;
    begin
-      V.Result := 0;
       Node.Visit (V);
 
       return V.Result;
@@ -237,11 +240,98 @@ package body Gela.Plain_Type_Managers is
       Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)
       return Gela.Semantic_Types.Type_Index
    is
-      pragma Unreferenced (Node);
-      pragma Unreferenced (Self);
+      package Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Semantic_Types.Type_Index := 0;
+         end record;
+
+         overriding procedure Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Identifiers.Identifier_Access);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure Identifier
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Identifiers.Identifier_Access)
+         is
+            Defining_Name : constant Gela.Elements.Defining_Names.
+              Defining_Name_Access := Node.Defining_Name;
+         begin
+            if Defining_Name.Assigned then
+               Self.Result :=
+                 Type_From_Subtype_Mark.Self.Type_From_Declaration
+                   (Defining_Name.Enclosing_Element);
+            end if;
+         end Identifier;
+
+      end Visiters;
+
+      V    : Visiters.Visiter;
    begin
-      return 0;
+      Node.Visit (V);
+
+      return V.Result;
    end Type_From_Subtype_Mark;
+
+   --------------------------------
+   -- Type_Of_Object_Declaration --
+   --------------------------------
+
+   overriding function Type_Of_Object_Declaration
+     (Self  : access Type_Manager;
+      Node  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Type_Index
+   is
+      package Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Semantic_Types.Type_Index := 0;
+         end record;
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access);
+
+         overriding procedure Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Object_Declarations.
+              Object_Declaration_Access)
+         is
+            X : constant Gela.Elements.Object_Definitions.
+              Object_Definition_Access := Node.Object_Declaration_Subtype;
+         begin
+            X.Visit (Self);
+         end Object_Declaration;
+
+         overriding procedure Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access) is
+         begin
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark
+                (Node.Subtype_Mark);
+         end Subtype_Indication;
+      end Visiters;
+
+      V    : Visiters.Visiter;
+   begin
+      Node.Visit (V);
+
+      return V.Result;
+   end Type_Of_Object_Declaration;
 
    ----------------------
    -- Universal_Access --

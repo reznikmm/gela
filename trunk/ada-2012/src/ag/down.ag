@@ -217,9 +217,10 @@ Rules for assignment_statement. :
 Rules for assignment_statement. :
 (.
       --  FIXME
-      Gela.Pass_Utils.Resolve.Interpretation
+      Gela.Pass_Utils.Resolve.Assignment_Right
         (Self.Compilation,
          ${assignment_statement.env_in},
+         ${Assignment_Variable_Name.Up},
          ${Assignment_Expression.Up},
          ${Assignment_Expression.Down});
 .)

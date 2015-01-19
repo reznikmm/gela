@@ -42,6 +42,57 @@ package body Gela.Resolve is
    --  down interpretation, then return its index as Chosen
    --  When Found = Use_This_Interretation use index of current interpretation.
 
+   ----------------------
+   -- Assignment_Right --
+   ----------------------
+
+   procedure Assignment_Right
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left     : Gela.Interpretations.Interpretation_Set_Index;
+      Right    : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index)
+   is
+      pragma Unreferenced (Env);
+      package Each is
+         type Visiter is new Gela.Interpretations.Visiter with record
+            Result : Gela.Interpretations.Interpretation_Index := 0;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each;
+
+      package body Each is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down);
+         begin
+            To_Type (Comp    => Comp,
+                     Type_Up => Tipe,
+                     Expr_Up => Right,
+                     Result  => Self.Result);
+         end On_Expression;
+
+      end Each;
+
+      Visiter : aliased Each.Visiter;
+   begin
+      --  ARM 5.2 (4/2)
+      Each_Expression (Comp   => Comp,
+                       Set    => Left,
+                       Target => Visiter);
+
+      Result := Visiter.Result;
+   end Assignment_Right;
+
    -------------------------
    -- Attribute_Reference --
    -------------------------
@@ -526,6 +577,11 @@ package body Gela.Resolve is
             null;
          end record;
 
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
@@ -533,11 +589,29 @@ package body Gela.Resolve is
 
       end Each;
 
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
       ----------
       -- Each --
       ----------
 
       package body Each is
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Self);
+
+            Decl : constant Gela.Elements.Element_Access :=
+              Name.Enclosing_Element;
+            Type_Index : constant Gela.Semantic_Types.Type_Index :=
+              TM.Type_Of_Object_Declaration (Decl);
+         begin
+            Target.On_Expression (Type_Index, Down);
+         end On_Defining_Name;
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
@@ -813,7 +887,7 @@ package body Gela.Resolve is
          is
             pragma Unreferenced (Symbol, Down);
          begin
-            --  Skip symbos
+            --  Skip symbols
             Self.Result := Self.Prev;
          end On_Symbol;
 
