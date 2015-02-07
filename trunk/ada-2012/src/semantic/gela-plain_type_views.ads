@@ -31,4 +31,9 @@ private
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access;
 
+   overriding function Get_Component
+     (Self   : Type_View;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
 end Gela.Plain_Type_Views;

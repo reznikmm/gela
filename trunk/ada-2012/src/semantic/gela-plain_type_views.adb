@@ -1,8 +1,16 @@
 with Gela.Element_Visiters;
-with Gela.Elements.Discriminant_Parts;
-with Gela.Elements.Known_Discriminant_Parts;
-with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Discriminant_Parts;
+with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Known_Discriminant_Parts;
+with Gela.Elements.Type_Definitions;
+with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Alt_Record_Definitions;
+with Gela.Elements.Record_Definitions;
+with Gela.Elements.Component_Items;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Variant_Parts;
+with Gela.Elements.Variants;
 
 package body Gela.Plain_Type_Views is
 
@@ -33,6 +41,142 @@ package body Gela.Plain_Type_Views is
    begin
       return Gela.Type_Views.Type_View_Access (Value);
    end Create_Full_Type;
+
+   -------------------
+   -- Get_Component --
+   -------------------
+
+   overriding function Get_Component
+     (Self   : Type_View;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+   is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Access;
+         end record;
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access);
+
+         overriding procedure Record_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Definitions.
+              Record_Definition_Access);
+
+         overriding procedure Record_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Type_Definitions.
+              Record_Type_Definition_Access);
+
+         overriding procedure Variant
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variants.Variant_Access);
+
+         overriding procedure Variant_Part
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variant_Parts.Variant_Part_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access)
+         is
+            use type Gela.Lexical_Types.Symbol;
+            Names : constant Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Sequence_Access := Node.Names;
+            Pos : Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Sequence_Cursor := Names.First;
+         begin
+            while Pos.Has_Element loop
+               if Pos.Element.Full_Name = Symbol then
+                  Self.Result := Pos.Element;
+
+                  return;
+               end if;
+
+               Pos.Next;
+            end loop;
+         end Component_Declaration;
+
+         overriding procedure Record_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Type_Definitions.
+              Record_Type_Definition_Access)
+         is
+            X : constant Gela.Elements.Alt_Record_Definitions.
+              Alt_Record_Definition_Access := Node.Record_Definition;
+         begin
+            X.Visit (Self);
+         end Record_Type_Definition;
+
+         overriding procedure Record_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Definitions.
+              Record_Definition_Access)
+         is
+            List : constant Gela.Elements.Component_Items.
+              Component_Item_Sequence_Access := Node.Record_Components;
+            Cursor : Gela.Elements.Component_Items.
+              Component_Item_Sequence_Cursor := List.First;
+         begin
+            while Cursor.Has_Element loop
+               Cursor.Element.Visit (Self);
+               Cursor.Next;
+            end loop;
+         end Record_Definition;
+
+         overriding procedure Variant
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variants.Variant_Access)
+         is
+            List : constant Gela.Elements.Component_Items.
+              Component_Item_Sequence_Access := Node.Record_Components;
+            Cursor : Gela.Elements.Component_Items.
+              Component_Item_Sequence_Cursor := List.First;
+         begin
+            while Cursor.Has_Element loop
+               Cursor.Element.Visit (Self);
+               Cursor.Next;
+            end loop;
+         end Variant;
+
+         overriding procedure Variant_Part
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Variant_Parts.Variant_Part_Access)
+         is
+            List : constant Gela.Elements.Variants.Variant_Sequence_Access :=
+              Node.Variants;
+            Cursor : Gela.Elements.Variants.Variant_Sequence_Cursor :=
+              List.First;
+         begin
+            while Cursor.Has_Element loop
+               Cursor.Element.Visit (Self);
+               Cursor.Next;
+            end loop;
+         end Variant_Part;
+      end Get;
+
+      V : Get.Visiter;
+      View : Gela.Elements.Type_Definitions.Type_Definition_Access;
+      D : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Self.Get_Discriminant (Symbol);
+   begin
+      if D.Assigned then
+         return D;
+      else
+         View := Self.Decl.Type_Declaration_View;
+         View.Visit (V);
+         return Gela.Elements.Defining_Names.Defining_Name_Access (V.Result);
+      end if;
+   end Get_Component;
 
    ----------------------
    -- Get_Discriminant --

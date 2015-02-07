@@ -10,6 +10,11 @@ with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Type_Definitions;
 with Gela.Plain_Type_Views;
 with Gela.Elements.Identifiers;
+with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Component_Definitions;
+with Gela.Elements.Subtype_Indication_Or_Access_Definitions;
 
 package body Gela.Plain_Type_Managers is
 
@@ -290,6 +295,21 @@ package body Gela.Plain_Type_Managers is
             Result : Gela.Semantic_Types.Type_Index := 0;
          end record;
 
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access);
+
+         overriding procedure Component_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Definitions.
+              Component_Definition_Access);
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access);
+
          overriding procedure Object_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Object_Declarations.
@@ -303,6 +323,42 @@ package body Gela.Plain_Type_Managers is
       end Visiters;
 
       package body Visiters is
+
+         overriding procedure Component_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Declarations.
+              Component_Declaration_Access)
+         is
+            X : constant Gela.Elements.Component_Definitions.
+              Component_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            X.Visit (Self);
+         end Component_Declaration;
+
+         overriding procedure Component_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Component_Definitions.
+              Component_Definition_Access)
+         is
+            X : constant Gela.Elements.Subtype_Indication_Or_Access_Definitions
+              .Subtype_Indication_Or_Access_Definition_Access :=
+                Node.Component_Subtype_Indication;
+         begin
+            X.Visit (Self);
+         end Component_Definition;
+
+         overriding procedure Discriminant_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discriminant_Specifications.
+              Discriminant_Specification_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            X.Visit (Self);
+         end Discriminant_Specification;
 
          overriding procedure Object_Declaration
            (Self : in out Visiter;

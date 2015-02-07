@@ -45,6 +45,11 @@ package Gela.Type_Views is
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
 
+   not overriding function Get_Component
+     (Self   : Type_View;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+
 --     function Is_Elementary           (Self : Abstract_Type) return Boolean;
 --     function Is_Scalar               (Self : Abstract_Type) return Boolean;
 --     function Is_Discrete             (Self : Abstract_Type) return Boolean;

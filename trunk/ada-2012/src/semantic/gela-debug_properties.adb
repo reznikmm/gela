@@ -14,7 +14,7 @@ package body Gela.Debug_Properties is
 
    package Dump_Property is
 
-      type Property is (Up, Down, Env_In, Env_Out);
+      type Property is (Up, Down, Env_In, Env_Out, Full_Name);
       pragma Unreferenced (Env_Out);
 
       type Property_Flags is array (Property) of Boolean;
@@ -33,6 +33,11 @@ package body Gela.Debug_Properties is
         (Self    : in out Property_Visiter;
          Element : Gela.Elements.Element_Access;
          Value   : Gela.Semantic_Types.Env_Index);
+
+      overriding procedure On_Full_Name
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Lexical_Types.Symbol);
 
       overriding procedure On_Up
         (Self    : in out Property_Visiter;
@@ -117,6 +122,22 @@ package body Gela.Debug_Properties is
            (Gela.Plain_Environments.Plain_Environment_Set_Access (Env),
             Value);
       end On_Env_In;
+
+      overriding procedure On_Full_Name
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Lexical_Types.Symbol)
+      is
+         pragma Unreferenced (Element);
+      begin
+         if Self.Flags (Full_Name) = False then
+            return;
+         end if;
+
+         Put_Line
+           ("full_name:" &
+              Gela.Lexical_Types.Symbol'Image (Value));
+      end On_Full_Name;
 
       overriding procedure On_Up
         (Self    : in out Property_Visiter;
