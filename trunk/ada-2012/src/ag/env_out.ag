@@ -656,7 +656,11 @@ Rules for generic_procedure_renaming. :
 
 Rules for incomplete_type_declaration. :
 (.
-      ${incomplete_type_declaration.env_out} := ${incomplete_type_declaration.env_in};
+      ${incomplete_type_declaration.env_out} :=
+        Gela.Pass_Utils.Leave_Declarative_Region
+          (Self.Compilation,
+           ${Discriminant_Part.env_out:Discriminant_Part_Env_In},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for interface_type_definition. :

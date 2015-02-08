@@ -774,14 +774,12 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Incomplete_Type_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Incomplete_Type_Declarations.
-        Incomplete_Type_Declaration_Access)
-   is null;
+        Incomplete_Type_Declaration_Access);
 
    overriding procedure Incomplete_Type_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Incomplete_Type_Definitions.
-        Incomplete_Type_Definition_Access)
-   is null;
+        Incomplete_Type_Definition_Access);
 
    overriding procedure Interface_Type_Definition
      (Self : in out Visiter;
@@ -1754,6 +1752,26 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := An_If_Statement;
    end If_Statement;
+
+   overriding procedure Incomplete_Type_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Incomplete_Type_Declarations.
+        Incomplete_Type_Declaration_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Incomplete_Type_Declaration;
+   end Incomplete_Type_Declaration;
+
+   overriding procedure Incomplete_Type_Definition
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Incomplete_Type_Definitions.
+        Incomplete_Type_Definition_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Incomplete_Type_Definition;
+   end Incomplete_Type_Definition;
 
    overriding procedure Known_Discriminant_Part
      (Self : in out Visiter;

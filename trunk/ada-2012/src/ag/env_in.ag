@@ -1926,7 +1926,13 @@ Rules for incomplete_type_declaration. :
 
 Rules for incomplete_type_declaration. :
 (.
-      ${Discriminant_Part.env_in} := ${incomplete_type_declaration.env_in};
+      ${Discriminant_Part.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${incomplete_type_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for interface_type_definition. :

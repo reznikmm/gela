@@ -1012,7 +1012,12 @@ Rules for signed_integer_type_definition. :
 
 Rules for access_to_object_definition. :
 (.
-      ${subtype_indication.Down} := 0;  --  FIXME
+      --  3.2.2 (8)
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${access_to_object_definition.env_in},
+         ${subtype_indication.Up},
+         ${subtype_indication.Down});
 .)
 
 Rules for component_definition. :
