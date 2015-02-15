@@ -118,6 +118,7 @@ with Gela.Elements.Loop_Parameter_Specifications;
 with Gela.Elements.Loop_Statements;
 with Gela.Elements.Membership_Tests;
 with Gela.Elements.Modular_Type_Definitions;
+with Gela.Elements.Names;
 with Gela.Elements.Null_Components;
 with Gela.Elements.Null_Literals;
 with Gela.Elements.Null_Record_Definitions;
@@ -230,8 +231,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Allocator
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Allocators.Allocator_Access)
-   is null;
+      Node : not null Gela.Elements.Allocators.Allocator_Access);
 
    overriding procedure Anonymous_Access_To_Function_Definition
      (Self : in out Visiter;
@@ -809,8 +809,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Membership_Test
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Membership_Tests.Membership_Test_Access)
-   is null;
+      Node : not null Gela.Elements.Membership_Tests.Membership_Test_Access);
 
    overriding procedure Modular_Type_Definition
      (Self : in out Visiter;
@@ -877,8 +876,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Package_Body_Stub
      (Self : in out Visiter;
       Node : not null Gela.Elements.Package_Body_Stubs.
-        Package_Body_Stub_Access)
-   is null;
+        Package_Body_Stub_Access);
 
    overriding procedure Package_Declaration
      (Self : in out Visiter;
@@ -982,8 +980,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Qualified_Expression
      (Self : in out Visiter;
       Node : not null Gela.Elements.Qualified_Expressions.
-        Qualified_Expression_Access)
-   is null;
+        Qualified_Expression_Access);
 
    overriding procedure Quantified_Expression
      (Self : in out Visiter;
@@ -999,8 +996,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Range_Attribute_Reference
      (Self : in out Visiter;
       Node : not null Gela.Elements.Range_Attribute_References.
-        Range_Attribute_Reference_Access)
-   is null;
+        Range_Attribute_Reference_Access);
 
    overriding procedure Range_Attribute_Reference_Dr
      (Self : in out Visiter;
@@ -1118,8 +1114,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Task_Body_Stub
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Task_Body_Stubs.Task_Body_Stub_Access)
-   is null;
+      Node : not null Gela.Elements.Task_Body_Stubs.Task_Body_Stub_Access);
 
    overriding procedure Task_Definition
      (Self : in out Visiter;
@@ -1202,6 +1197,23 @@ package body Asis.Extensions.Flat_Kinds is
       end if;
    end Access_To_Object_Definition;
 
+   overriding procedure Allocator
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Allocators.Allocator_Access)
+   is
+      Name : constant Gela.Elements.Names.Name_Access :=
+        Node.Subtype_Or_Expression;
+   begin
+      Name.Visit (Self);
+
+      case Self.Result is
+         when A_Qualified_Expression =>
+            Self.Result := An_Allocation_From_Qualified_Expression;
+         when others =>
+            Self.Result := An_Allocation_From_Subtype;
+      end case;
+   end Allocator;
+
    overriding procedure Anonymous_Access_To_Object_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Anonymous_Access_To_Object_Definitions.
@@ -1241,14 +1253,14 @@ package body Asis.Extensions.Flat_Kinds is
         Attribute_Reference_Access)
    is
       package X renames Gela.Lexical_Types.Predefined_Symbols;
+      use type Gela.Lexical_Types.Token_Count;
 
-      Id : constant Gela.Elements.Identifiers.Identifier_Access :=
+      Id    : constant Gela.Elements.Identifiers.Identifier_Access :=
         Node.Attribute_Designator_Identifier;
-      Comp    : constant Gela.Compilations.Compilation_Access :=
+      Comp  : constant Gela.Compilations.Compilation_Access :=
         Node.Enclosing_Compilation;
-      Token : constant Gela.Lexical_Types.Token :=
-        Comp.Get_Token (Id.Identifier_Token);
-      Map : constant array (Gela.Lexical_Types.Symbol range
+      Token : Gela.Lexical_Types.Token;
+      Map   : constant array (Gela.Lexical_Types.Symbol range
                               X.Access_Symbol .. X.Write) of Element_Flat_Kind
         :=
           (
@@ -1346,6 +1358,14 @@ package body Asis.Extensions.Flat_Kinds is
            X.Width => A_Width_Attribute,
            X.Write => A_Write_Attribute);
    begin
+      if Node.Range_Token /= 0 then
+         Self.Result := A_Range_Attribute;
+
+         return;
+      end if;
+
+      Token := Comp.Get_Token (Id.Identifier_Token);
+
       if Token.Symbol in Map'Range then
          Self.Result := Map (Token.Symbol);
       end if;
@@ -1792,6 +1812,19 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Loop_Statement;
    end Loop_Statement;
 
+   overriding procedure Membership_Test
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Membership_Tests.Membership_Test_Access)
+   is
+      use type Gela.Lexical_Types.Token_Count;
+   begin
+      if Node.Not_Token = 0 then
+         Self.Result := An_In_Range_Membership_Test;
+      else
+         Self.Result := A_Not_In_Range_Membership_Test;
+      end if;
+   end Membership_Test;
+
    overriding procedure Null_Component
      (Self : in out Visiter;
       Node : not null Gela.Elements.Null_Components.Null_Component_Access)
@@ -1895,6 +1928,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Package_Body_Declaration;
    end Package_Body;
+
+   overriding procedure Package_Body_Stub
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Package_Body_Stubs.
+        Package_Body_Stub_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Package_Body_Stub;
+   end Package_Body_Stub;
 
    overriding procedure Package_Declaration
      (Self : in out Visiter;
@@ -2087,6 +2130,26 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Protected_Definition;
    end Protected_Definition;
 
+   overriding procedure Qualified_Expression
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Qualified_Expressions.
+        Qualified_Expression_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Qualified_Expression;
+   end Qualified_Expression;
+
+   overriding procedure Range_Attribute_Reference
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Range_Attribute_References.
+        Range_Attribute_Reference_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Range_Attribute_Reference;
+   end Range_Attribute_Reference;
+
    overriding procedure Record_Aggregate
      (Self : in out Visiter;
       Node : not null Gela.Elements.Record_Aggregates.Record_Aggregate_Access)
@@ -2277,6 +2340,15 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Task_Body_Declaration;
    end Task_Body;
+
+   overriding procedure Task_Body_Stub
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Task_Body_Stubs.Task_Body_Stub_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Task_Body_Stub;
+   end Task_Body_Stub;
 
    overriding procedure Task_Definition
      (Self : in out Visiter;

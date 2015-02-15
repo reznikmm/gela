@@ -661,6 +661,20 @@ package body Gela.Library_Environments is
       return 0;
    end Empty_Environment;
 
+   -----------------------------
+   -- Enter_Completion_Region --
+   -----------------------------
+
+   overriding function Enter_Completion_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return Self.Enter_Completion_Region (Index, Region);
+   end Enter_Completion_Region;
+
    ------------------------------
    -- Enter_Declarative_Region --
    ------------------------------
@@ -767,7 +781,7 @@ package body Gela.Library_Environments is
       Name   : Gela.Lexical_Types.Symbol;
       Set    : Gela.Symbol_Sets.Symbol_Set_Access;
    begin
-      if Index /= Library_Env then
+      if Index /= Library_Env or not Region.Assigned then
          return Library_Cursor.Defining_Name_Cursor'(Name => null);
       end if;
 

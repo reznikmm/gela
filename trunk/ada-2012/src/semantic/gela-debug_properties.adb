@@ -15,7 +15,6 @@ package body Gela.Debug_Properties is
    package Dump_Property is
 
       type Property is (Up, Down, Env_In, Env_Out, Full_Name);
-      pragma Unreferenced (Env_Out);
 
       type Property_Flags is array (Property) of Boolean;
 
@@ -30,6 +29,11 @@ package body Gela.Debug_Properties is
          Value   : Gela.Interpretations.Interpretation_Index);
 
       overriding procedure On_Env_In
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Semantic_Types.Env_Index);
+
+      overriding procedure On_Env_Out
         (Self    : in out Property_Visiter;
          Element : Gela.Elements.Element_Access;
          Value   : Gela.Semantic_Types.Env_Index);
@@ -122,6 +126,29 @@ package body Gela.Debug_Properties is
            (Gela.Plain_Environments.Plain_Environment_Set_Access (Env),
             Value);
       end On_Env_In;
+
+      overriding procedure On_Env_Out
+        (Self    : in out Property_Visiter;
+         Element : Gela.Elements.Element_Access;
+         Value   : Gela.Semantic_Types.Env_Index)
+      is
+         Comp : constant Gela.Compilations.Compilation_Access :=
+           Element.Enclosing_Compilation;
+         Env : constant Gela.Environments.Environment_Set_Access :=
+           Comp.Context.Environment_Set;
+      begin
+         if Self.Flags (Env_Out) = False then
+            return;
+         end if;
+
+         Put_Line
+           ("env_out:" &
+              Gela.Semantic_Types.Env_Index'Image (Value));
+
+         Gela.Plain_Environments.Debug
+           (Gela.Plain_Environments.Plain_Environment_Set_Access (Env),
+            Value);
+      end On_Env_Out;
 
       overriding procedure On_Full_Name
         (Self    : in out Property_Visiter;

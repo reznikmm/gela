@@ -71,6 +71,7 @@ package Gela.Environments is
    --  Return list of defining names from the environment pointed by Index
    --  with given Symbol which visible inside declarative region corresponding
    --  to given Region name. Return Found = False if no such region found.
+   --  If Region is null, use current (top) region to search in.
 
    not overriding function Add_Defining_Name
      (Self   : in out Environment_Set;
@@ -95,6 +96,15 @@ package Gela.Environments is
       Region : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index is abstract;
    --  Create new environment by extending provided env with new empty
+   --  declarative region named by Region defining name.
+   --  Return index of created environment
+
+   not overriding function Enter_Completion_Region
+     (Self   : access Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by extending provided env with completion of
    --  declarative region named by Region defining name.
    --  Return index of created environment
 

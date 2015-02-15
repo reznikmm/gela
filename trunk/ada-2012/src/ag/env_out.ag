@@ -904,7 +904,10 @@ Rules for unknown_discriminant_part. :
 
 Rules for use_package_clause. :
 (.
-      ${use_package_clause.env_out} := ${use_package_clause.env_in};
+      ${use_package_clause.env_out} := Gela.Pass_Utils.Add_Use_Package
+        (Self.Compilation,
+         ${use_package_clause.env_in},
+         Node);
 .)
 
 Rules for use_type_clause. :

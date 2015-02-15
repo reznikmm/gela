@@ -26,7 +26,6 @@ with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Elements.Type_Definitions;
-with Gela.Elements.Use_Package_Clauses;
 with Gela.Elements.With_Clauses;
 with Gela.Environments;
 with Gela.Nodes;
@@ -55,6 +54,71 @@ package body Gela.Pass_Utils is
       Decl   : Gela.Elements.Element_Access;
       Env    : in out Gela.Semantic_Types.Env_Index);
 
+   package Each_Use_Package is
+      --  Iterate over each name in use package clause and add it to Env
+
+      type Visiter is new Gela.Element_Visiters.Visiter with record
+         Set  : Gela.Environments.Environment_Set_Access;
+         Env  : Gela.Semantic_Types.Env_Index;
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      end record;
+
+      overriding procedure Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Identifiers.Identifier_Access);
+
+      overriding procedure Selected_Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Selected_Identifiers.
+           Selected_Identifier_Access);
+
+      overriding procedure Use_Package_Clause
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Use_Package_Clauses.
+           Use_Package_Clause_Access);
+   end Each_Use_Package;
+
+   package body Each_Use_Package is
+      overriding procedure Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Identifiers.Identifier_Access) is
+      begin
+         Self.Name := Node.Defining_Name;
+      end Identifier;
+
+      overriding procedure Selected_Identifier
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Selected_Identifiers.
+           Selected_Identifier_Access)
+      is
+         Selector : constant Gela.Elements.Selector_Names.
+           Selector_Name_Access := Node.Selector;
+      begin
+         Selector.Visit (Self);
+      end Selected_Identifier;
+
+      overriding procedure Use_Package_Clause
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Use_Package_Clauses.
+           Use_Package_Clause_Access)
+      is
+         List : constant Gela.Elements.Program_Unit_Names.
+           Program_Unit_Name_Sequence_Access := Node.Clause_Names;
+         Cursor : Gela.Elements.Element_Sequence_Cursor'Class := List.First;
+      begin
+         while Cursor.Has_Element loop
+            Cursor.Element.Visit (Self);
+
+            Self.Env := Self.Set.Add_Use_Package
+              (Index => Self.Env,
+               Name  => Self.Name);
+
+            Cursor.Next;
+         end loop;
+      end Use_Package_Clause;
+
+   end Each_Use_Package;
+
    procedure Add_Library_Level_Use_Clauses
      (Comp   : Gela.Compilations.Compilation_Access;
       Decl   : Gela.Elements.Element_Access;
@@ -63,9 +127,7 @@ package body Gela.Pass_Utils is
 
       package Get is
 
-         type Visiter is new Gela.Element_Visiters.Visiter with record
-            Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-         end record;
+         type Visiter is new Each_Use_Package.Visiter with null record;
 
          overriding procedure Compilation_Unit_Body
            (Self : in out Visiter;
@@ -77,10 +139,6 @@ package body Gela.Pass_Utils is
             Node : not null Gela.Elements.Compilation_Unit_Declarations.
               Compilation_Unit_Declaration_Access);
 
-         overriding procedure Identifier
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Identifiers.Identifier_Access);
-
          overriding procedure Package_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Package_Declarations.
@@ -90,16 +148,6 @@ package body Gela.Pass_Utils is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Procedure_Bodies.
               Procedure_Body_Access);
-
-         overriding procedure Selected_Identifier
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Selected_Identifiers.
-              Selected_Identifier_Access);
-
-         overriding procedure Use_Package_Clause
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Use_Package_Clauses.
-              Use_Package_Clause_Access);
 
          overriding procedure With_Clause  --  Use env.out instead
            (Self : in out Visiter;
@@ -140,13 +188,6 @@ package body Gela.Pass_Utils is
             end loop;
          end Compilation_Unit_Declaration;
 
-         overriding procedure Identifier
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Identifiers.Identifier_Access) is
-         begin
-            Self.Name := Node.Defining_Name;
-         end Identifier;
-
          overriding procedure Package_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Package_Declarations.
@@ -163,53 +204,17 @@ package body Gela.Pass_Utils is
             Node.Enclosing_Element.Visit (Self);
          end Procedure_Body;
 
-         overriding procedure Selected_Identifier
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Selected_Identifiers.
-              Selected_Identifier_Access)
-         is
-            Selector : constant Gela.Elements.Selector_Names.
-              Selector_Name_Access := Node.Selector;
-         begin
-            Selector.Visit (Self);
-         end Selected_Identifier;
-
-         overriding procedure Use_Package_Clause
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Use_Package_Clauses.
-              Use_Package_Clause_Access)
-         is
-            Set : constant Gela.Environments.Environment_Set_Access :=
-              Comp.Context.Environment_Set;
-            List : constant Gela.Elements.Program_Unit_Names.
-              Program_Unit_Name_Sequence_Access := Node.Clause_Names;
-            Cursor : Gela.Elements.Element_Sequence_Cursor'Class := List.First;
-         begin
-            while Cursor.Has_Element loop
-               Cursor.Element.Visit (Self);
-
-               Env := Set.Add_Use_Package
-                 (Index => Env,
-                  Name  => Self.Name);
-
-               Cursor.Next;
-            end loop;
-         end Use_Package_Clause;
-
          overriding procedure With_Clause  --  Use env.out instead
            (Self : in out Visiter;
             Node : not null Gela.Elements.With_Clauses.With_Clause_Access)
          is
-            pragma Unreferenced (Self);
             use type Gela.Lexical_Types.Symbol_List;
 
             List : Gela.Lexical_Types.Symbol_List := Node.With_List;
-            Set : constant Gela.Environments.Environment_Set_Access :=
-              Comp.Context.Environment_Set;
          begin
             while List /= Gela.Lexical_Types.Empty_Symbol_List loop
-               Env := Set.Add_With_Clause
-                 (Index  => Env,
+               Self.Env := Self.Set.Add_With_Clause
+                 (Index  => Self.Env,
                   Symbol => Comp.Context.Symbols.Head (List));
                List := Comp.Context.Symbols.Tail (List);
             end loop;
@@ -217,9 +222,12 @@ package body Gela.Pass_Utils is
 
       end Get;
 
-      V : Get.Visiter;
+      Set : constant Gela.Environments.Environment_Set_Access :=
+        Comp.Context.Environment_Set;
+      Visiter : Get.Visiter := (Set, Env, null);
    begin
-      Decl.Visit (V);
+      Decl.Visit (Visiter);
+      Env := Visiter.Env;
    end Add_Library_Level_Use_Clauses;
 
    ----------------------------
@@ -339,6 +347,51 @@ package body Gela.Pass_Utils is
 
       return Env_2;
    end Add_Names_Create_Region;
+
+   ---------------------
+   -- Add_Use_Package --
+   ---------------------
+
+   function Add_Use_Package
+     (Comp : Gela.Compilations.Compilation_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Node : not null Gela.Elements.Use_Package_Clauses.
+        Use_Package_Clause_Access)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Set : constant Gela.Environments.Environment_Set_Access :=
+        Comp.Context.Environment_Set;
+      Visiter : Each_Use_Package.Visiter := (Set, Env, null);
+   begin
+      Node.Visit (Visiter);
+
+      return Visiter.Env;
+   end Add_Use_Package;
+
+   ------------------------------
+   -- Create_Completion_Region --
+   ------------------------------
+
+   function Create_Completion_Region
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Set   : constant Gela.Environments.Environment_Set_Access :=
+        Comp.Context.Environment_Set;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Found : aliased Boolean := False;
+      Pos   : constant Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
+        Set.Visible (Env, null, Symbol, Found'Access);
+   begin
+      if Pos.Has_Element then
+         Name := Pos.Element;
+         return Set.Enter_Completion_Region (Env, Name);
+      else
+         return Env;
+      end if;
+   end Create_Completion_Region;
 
    --------------------------------
    -- Create_Function_Call_Value --

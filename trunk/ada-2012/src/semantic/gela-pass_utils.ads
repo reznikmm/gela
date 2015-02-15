@@ -11,6 +11,7 @@ with Gela.Compilations;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Use_Package_Clauses;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Resolve;
@@ -37,6 +38,12 @@ package Gela.Pass_Utils is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
 
+   function Create_Completion_Region
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol)
+      return Gela.Semantic_Types.Env_Index;
+
    function Add_Names
      (Comp         : Gela.Compilations.Compilation_Access;
       Env          : Gela.Semantic_Types.Env_Index;
@@ -45,6 +52,14 @@ package Gela.Pass_Utils is
                        .Defining_Identifier_Sequence_Access)
       return Gela.Semantic_Types.Env_Index;
    --  Add (Symbol, Name) from List and Names to Env
+
+   function Add_Use_Package
+     (Comp : Gela.Compilations.Compilation_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Node : not null Gela.Elements.Use_Package_Clauses.
+        Use_Package_Clause_Access)
+      return Gela.Semantic_Types.Env_Index;
+   --  Add "use {Symbol};" to Env
 
    function Add_Names_Create_Region
      (Comp         : Gela.Compilations.Compilation_Access;
