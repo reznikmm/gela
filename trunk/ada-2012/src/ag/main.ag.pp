@@ -35,3 +35,13 @@ Rules for procedure_declaration. :
       --  This attribute is custom code
       ${procedure_declaration.corresponding_type} := null;
 .)
+
+Synthesized attributes
+  subtype_indication
+   : Gela.Semantic_Types.Type_Index : type_index;
+
+Rules for subtype_indication. :
+(.
+      ${subtype_indication.type_index} :=
+        Self.Compilation.Context.Types.Type_From_Subtype_Mark (Subtype_Mark);
+.)

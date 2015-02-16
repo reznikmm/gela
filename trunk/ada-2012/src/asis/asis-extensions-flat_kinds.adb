@@ -191,6 +191,10 @@ with Gela.Elements.Variant_Parts;
 with Gela.Elements.Variants;
 with Gela.Elements.While_Loop_Statements;
 with Gela.Elements.With_Clauses;
+with Gela.Elements.Defining_Names;
+with Gela.Type_Managers;
+with Gela.Semantic_Types;
+with Gela.Type_Views;
 
 package body Asis.Extensions.Flat_Kinds is
 
@@ -1242,9 +1246,22 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Associations.Association_Access)
    is
-      pragma Unreferenced (Node);
+      Parent : Gela.Elements.Element_Access := Node.Enclosing_Element;
    begin
-      Self.Result := A_Parameter_Association;
+      while Auxilary ((Data => Parent)) loop
+         Parent := Parent.Enclosing_Element;
+      end loop;
+
+      Parent.Visit (Self);
+
+      case Self.Result is
+         when A_Record_Aggregate =>
+            Self.Result := A_Record_Component_Association;
+         when A_Discriminant_Constraint =>
+            Self.Result := A_Discriminant_Association;
+         when others =>
+            Self.Result := A_Parameter_Association;
+      end case;
    end Association;
 
    overriding procedure Attribute_Reference
@@ -1432,9 +1449,32 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Composite_Constraints.
         Composite_Constraint_Access)
    is
-      pragma Unreferenced (Node);
+      use type Gela.Type_Views.Type_View_Access;
+
+      Comp : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      Subtype_Indication : constant Gela.Elements.Subtype_Indications.
+        Subtype_Indication_Access :=
+          Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+            (Node.Enclosing_Element);
+
+      Type_Index : constant Gela.Semantic_Types.Type_Index :=
+        Subtype_Indication.Type_Index;
+
+      Type_View : constant Gela.Type_Views.Type_View_Access :=
+        TM.Get (Type_Index);
    begin
-      Self.Result := An_Index_Constraint;  --  FIXME
+      if Type_View /= null and then Type_View.Category in
+        Gela.Type_Views.A_String .. Gela.Type_Views.An_Other_Array
+      then
+         Self.Result := An_Index_Constraint;
+      else
+         Self.Result := A_Discriminant_Constraint;
+      end if;
    end Composite_Constraint;
 
    overriding procedure Constrained_Array_Definition
@@ -1750,8 +1790,19 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Identifiers.Identifier_Access)
    is
-      pragma Unreferenced (Node);
+      Name : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Node.Defining_Name;
    begin
+      if Name.Assigned then
+         Name.Visit (Self);
+
+         if Self.Result = A_Defining_Enumeration_Literal then
+            Self.Result := An_Enumeration_Literal;
+
+            return;
+         end if;
+      end if;
+
       Self.Result := An_Identifier;
    end Identifier;
 

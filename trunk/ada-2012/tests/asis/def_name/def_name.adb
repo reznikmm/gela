@@ -90,6 +90,8 @@ procedure Def_Name is
               (Asis.Expressions.Selector (Item));
          when Asis.An_Operator_Symbol =>
             On_Identifier (Item);
+         when Asis.An_Enumeration_Literal =>
+            On_Identifier (Item);
          when others =>
             null;
       end case;

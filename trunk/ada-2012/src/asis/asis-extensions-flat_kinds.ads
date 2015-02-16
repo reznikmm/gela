@@ -1,4 +1,5 @@
 package Asis.Extensions.Flat_Kinds is
+   pragma Preelaborate;
 
    type Element_Flat_Kind is
      (Not_An_Element,

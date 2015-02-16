@@ -1,4 +1,4 @@
-GELA_BUILD=$(abspath build)
+export GELA_BUILD=$(abspath build)
 AG_DRIVER=$(GELA_BUILD)/ag/ag_driver
 YACC_DRIVER=$(GELA_BUILD)/ag/yacc_driver
 UAFLEX=$(GELA_BUILD)/tools/uaflex-driver

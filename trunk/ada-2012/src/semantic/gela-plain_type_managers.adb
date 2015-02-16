@@ -1,20 +1,21 @@
 with Gela.Compilations;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Component_Definitions;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Identifiers;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Root_Type_Definitions;
-with Gela.Elements.Subtype_Indications;
-with Gela.Elements.Type_Definitions;
-with Gela.Plain_Type_Views;
-with Gela.Elements.Identifiers;
-with Gela.Elements.Discriminant_Specifications;
-with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
-with Gela.Elements.Component_Declarations;
-with Gela.Elements.Component_Definitions;
 with Gela.Elements.Subtype_Indication_Or_Access_Definitions;
+with Gela.Elements.Subtype_Indications;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Elements.Type_Definitions;
+with Gela.Elements.Unconstrained_Array_Definitions;
+with Gela.Plain_Type_Views;
 
 package body Gela.Plain_Type_Managers is
 
@@ -178,6 +179,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Root_Type_Definitions.
               Root_Type_Definition_Access);
 
+         overriding procedure Unconstrained_Array_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Unconstrained_Array_Definitions.
+              Unconstrained_Array_Definition_Access);
+
       end Visiters;
 
       --------------
@@ -227,6 +233,18 @@ package body Gela.Plain_Type_Managers is
          begin
             Self.Result := Node.Type_Kind;
          end Root_Type_Definition;
+
+         overriding procedure Unconstrained_Array_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Unconstrained_Array_Definitions.
+              Unconstrained_Array_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.An_Other_Array,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Unconstrained_Array_Definition;
+
       end Visiters;
 
       V : Visiters.Visiter;

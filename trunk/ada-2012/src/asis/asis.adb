@@ -1,6 +1,7 @@
 with Asis.Errors;
 with Asis.Exceptions;
 with Asis.Implementation;
+with Asis.Extensions.Flat_Kinds;
 
 with Gela.Element_Visiters;
 with Gela.Elements.Associations;
@@ -115,9 +116,17 @@ package body Asis is
             Node : not null Gela.Elements.Composite_Constraints.
               Composite_Constraint_Access)
          is
-            pragma Unreferenced (Node);
+            use type Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+
+            Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+              Asis.Extensions.Flat_Kinds.Flat_Kind
+                ((Data => Gela.Elements.Element_Access (Node)));
          begin
-            Self.Result := Self.Flags (Is_Association);
+            if Kind = Asis.Extensions.Flat_Kinds.An_Index_Constraint then
+               Self.Result := Self.Flags (Is_Association);
+            else
+               Self.Result := False;
+            end if;
          end Composite_Constraint;
 
          overriding procedure Procedure_Call_Statement
