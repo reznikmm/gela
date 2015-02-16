@@ -70,10 +70,28 @@ package body Asis.Elements is
      (Definition : in Asis.Access_Type_Definition)
       return Asis.Access_Type_Kinds
    is
+      Map : constant array (F.An_Access_Type_Definition)
+        of Asis.Access_Type_Kinds :=
+          (F.A_Pool_Specific_Access_To_Variable =>
+             Asis.A_Pool_Specific_Access_To_Variable,
+           F.An_Access_To_Variable =>
+             Asis.An_Access_To_Variable,
+           F.An_Access_To_Constant =>
+             Asis.An_Access_To_Constant,
+           F.An_Access_To_Procedure =>
+             Asis.An_Access_To_Procedure,
+           F.An_Access_To_Protected_Procedure =>
+             Asis.An_Access_To_Protected_Procedure,
+           F.An_Access_To_Function =>
+             Asis.An_Access_To_Function,
+           F.An_Access_To_Protected_Function =>
+             Asis.An_Access_To_Protected_Function);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Definition);
    begin
-      if Assigned (Definition) then
-         Raise_Not_Implemented ("");
-         return Not_An_Access_Type_Definition;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_An_Access_Type_Definition;
       end if;

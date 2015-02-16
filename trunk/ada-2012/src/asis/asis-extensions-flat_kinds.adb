@@ -1193,11 +1193,23 @@ package body Asis.Extensions.Flat_Kinds is
         Access_To_Object_Definition_Access)
    is
       use type Gela.Lexical_Types.Token_Count;
+      use type Gela.Lexical_Types.Token_Kind;
+
+      Comp  : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+      Token : Gela.Lexical_Types.Token;
    begin
       if Node.Constant_Token = 0 then
-         Self.Result := An_Anonymous_Access_To_Variable;
+         Self.Result := A_Pool_Specific_Access_To_Variable;
+         return;
+      end if;
+
+      Token := Comp.Get_Token (Node.Constant_Token);
+
+      if Token.Kind = Gela.Lexical_Types.All_Token then
+         Self.Result := An_Access_To_Variable;
       else
-         Self.Result := An_Anonymous_Access_To_Constant;
+         Self.Result := An_Access_To_Constant;
       end if;
    end Access_To_Object_Definition;
 
