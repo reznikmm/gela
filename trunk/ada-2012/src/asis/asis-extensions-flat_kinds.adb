@@ -2319,7 +2319,7 @@ package body Asis.Extensions.Flat_Kinds is
    is
       pragma Unreferenced (Node);
    begin
-      Self.Result := A_Discrete_Simple_Expression_Range;
+      Self.Result := A_Simple_Expression_Range;
    end Simple_Expression_Range;
 
    overriding procedure Simple_Expression_Range_Dr

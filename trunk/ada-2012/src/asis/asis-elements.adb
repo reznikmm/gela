@@ -557,11 +557,22 @@ package body Asis.Elements is
             F.A_Discrete_Simple_Expression_Range_DR =>
               A_Discrete_Simple_Expression_Range);
 
+      Map_2 : constant array (F.A_Discrete_Subtype_Definition)
+        of Asis.Discrete_Range_Kinds
+        := (F.A_Discrete_Subtype_Indication =>
+              A_Discrete_Subtype_Indication,
+            F.A_Discrete_Range_Attribute_Reference =>
+              A_Discrete_Range_Attribute_Reference,
+            F.A_Discrete_Simple_Expression_Range =>
+              A_Discrete_Simple_Expression_Range);
+
       Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
         Asis.Extensions.Flat_Kinds.Flat_Kind (Definition);
    begin
       if Kind in Map'Range then
          return Map (Kind);
+      elsif Kind in Map_2'Range then
+         return Map_2 (Kind);
       else
          return Not_A_Discrete_Range;
       end if;

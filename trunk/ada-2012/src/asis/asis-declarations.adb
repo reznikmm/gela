@@ -14,10 +14,13 @@ with Asis.Compilation_Units;
 
 with Gela.Compilations;
 with Gela.Element_Visiters;
+with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Declarative_Items;
+with Gela.Elements.Defining_Enumeration_Literals;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Defining_Operator_Symbols;
 with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Entry_Bodies;
@@ -29,6 +32,7 @@ with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Object_Renaming_Declarations;
 with Gela.Elements.Package_Bodies;
+with Gela.Elements.Package_Declarations;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Procedure_Declarations;
@@ -41,8 +45,6 @@ with Gela.Elements.Task_Bodies;
 with Gela.Elements.Task_Definitions;
 with Gela.Elements.Type_Definitions;
 with Gela.Lexical_Types;
-with Gela.Elements.Defining_Enumeration_Literals;
-with Gela.Elements.Defining_Operator_Symbols;
 
 package body Asis.Declarations is
 
@@ -1410,10 +1412,40 @@ package body Asis.Declarations is
       return Asis.Declarative_Item_List
    is
       pragma Unreferenced (Include_Pragmas);
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            List : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access)
+         is
+            List : constant Gela.Elements.Basic_Declarative_Items.
+              Basic_Declarative_Item_Sequence_Access :=
+                Node.Private_Part_Declarative_Items;
+         begin
+            Self.List := Gela.Elements.Element_Sequence_Access (List);
+         end Package_Declaration;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Private_Part_Declarative_Items");
-      Raise_Not_Implemented ("");
-      return Nil_Element_List;
+      Declaration.Data.Visit (V);
+
+      return Asis.To_List (V.List);
    end Private_Part_Declarative_Items;
 
    ---------------------
@@ -1578,10 +1610,41 @@ package body Asis.Declarations is
       return Asis.Declarative_Item_List
    is
       pragma Unreferenced (Include_Pragmas);
+
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            List : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Package_Declarations.
+              Package_Declaration_Access)
+         is
+            List : constant Gela.Elements.Basic_Declarative_Items.
+              Basic_Declarative_Item_Sequence_Access :=
+                Node.Visible_Part_Declarative_Items;
+         begin
+            Self.List := Gela.Elements.Element_Sequence_Access (List);
+         end Package_Declaration;
+
+      end Get;
+
+      V : Get.Visiter;
    begin
       Check_Nil_Element (Declaration, "Visible_Part_Declarative_Items");
-      Raise_Not_Implemented ("");
-      return Nil_Element_List;
+      Declaration.Data.Visit (V);
+
+      return Asis.To_List (V.List);
    end Visible_Part_Declarative_Items;
 
 end Asis.Declarations;
