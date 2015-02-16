@@ -18,6 +18,7 @@ with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Declarative_Items;
+with Gela.Elements.Defining_Character_Literals;
 with Gela.Elements.Defining_Enumeration_Literals;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Operator_Symbols;
@@ -740,6 +741,11 @@ package body Asis.Declarations is
             Symbol : Gela.Lexical_Types.Symbol := 0;
          end record;
 
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access);
+
          overriding procedure Defining_Enumeration_Literal
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Enumeration_Literals.
@@ -757,6 +763,19 @@ package body Asis.Declarations is
       end Get;
 
       package body Get is
+
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.Character_Literal;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end Defining_Character_Literal;
 
          overriding procedure Defining_Enumeration_Literal
            (Self : in out Visiter;

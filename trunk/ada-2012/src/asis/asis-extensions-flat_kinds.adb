@@ -381,8 +381,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Defining_Character_Literal
      (Self : in out Visiter;
       Node : not null Gela.Elements.Defining_Character_Literals.
-        Defining_Character_Literal_Access)
-   is null;
+        Defining_Character_Literal_Access);
 
    overriding procedure Defining_Enumeration_Literal
      (Self : in out Visiter;
@@ -1498,6 +1497,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Constrained_Array_Definition;
    end Constrained_Array_Definition;
+
+   overriding procedure Defining_Character_Literal
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Defining_Character_Literals.
+        Defining_Character_Literal_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Defining_Character_Literal;
+   end Defining_Character_Literal;
 
    overriding procedure Defining_Enumeration_Literal
      (Self : in out Visiter;
