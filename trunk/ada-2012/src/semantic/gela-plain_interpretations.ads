@@ -2,13 +2,14 @@
 
 with Ada.Containers.Vectors;
 
-with Gela.Elements.Defining_Names;
 with Gela.Contexts;
+with Gela.Elements.Defining_Names;
+with Gela.Int_Sets;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
-with Gela.Semantic_Types;
 with Gela.Plian_Int_Sets;
-with Gela.Int_Sets;
+with Gela.Semantic_Types;
+with Gela.Type_Views;
 
 package Gela.Plain_Interpretations is
    pragma Preelaborate;
@@ -63,6 +64,12 @@ private
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding procedure Add_Expression_Category
+     (Self   : in out Interpretation_Manager;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 

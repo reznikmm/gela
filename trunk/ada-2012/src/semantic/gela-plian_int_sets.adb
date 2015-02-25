@@ -1,4 +1,5 @@
 with Gela.Int.Attr_Functions;
+with Gela.Int.Categories;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Placeholders;
@@ -226,6 +227,10 @@ package body Gela.Plian_Int_Sets is
            (Self  : access Visiter;
             Value : Gela.Int.Expressions.Expression);
 
+         overriding procedure Expression_Category
+           (Self  : access Visiter;
+            Value : Gela.Int.Categories.Category);
+
          overriding procedure Placeholder
            (Self  : access Visiter;
             Value : Gela.Int.Placeholders.Placeholder);
@@ -263,6 +268,17 @@ package body Gela.Plian_Int_Sets is
               (Tipe => Value.Expression_Type,
                Down => Value.Down);
          end Expression;
+
+         overriding procedure Expression_Category
+           (Self  : access Visiter;
+            Value : Gela.Int.Categories.Category)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Expression_Category
+              (Kinds => Value.Kinds,
+               Down  => Value.Down);
+         end Expression_Category;
 
          overriding procedure Attr_Function
            (Self  : access Visiter;

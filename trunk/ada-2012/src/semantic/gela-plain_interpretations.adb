@@ -1,4 +1,5 @@
 with Gela.Int.Attr_Functions;
+with Gela.Int.Categories;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Placeholders;
@@ -98,6 +99,25 @@ package body Gela.Plain_Interpretations is
    begin
       Self.Plian_Int_Set.Add (Result, Item);
    end Add_Expression;
+
+   -----------------------------
+   -- Add_Expression_Category --
+   -----------------------------
+
+   overriding procedure Add_Expression_Category
+     (Self   : in out Interpretation_Manager;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      Item : constant Gela.Int.Interpretation_Access :=
+        new Gela.Int.Categories.Category'
+          (Gela.Int.Categories.Create
+             (Down  => Down,
+              Kinds => Kinds));
+   begin
+      Self.Plian_Int_Set.Add (Result, Item);
+   end Add_Expression_Category;
 
    ---------------------
    -- Add_Placeholder --
@@ -378,6 +398,10 @@ package body Gela.Plain_Interpretations is
            (Self  : access Visiter;
             Value : Gela.Int.Expressions.Expression);
 
+         overriding procedure Expression_Category
+           (Self  : access Visiter;
+            Value : Gela.Int.Categories.Category);
+
          overriding procedure Placeholder
            (Self  : access Visiter;
             Value : Gela.Int.Placeholders.Placeholder);
@@ -442,6 +466,21 @@ package body Gela.Plain_Interpretations is
               (Tipe  => Value.Expression_Type,
                Down  => Value.Down);
          end Expression;
+
+         -------------------------
+         -- Expression_Category --
+         -------------------------
+
+         overriding procedure Expression_Category
+           (Self  : access Visiter;
+            Value : Gela.Int.Categories.Category)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Expression_Category
+              (Kinds  => Value.Kinds,
+               Down   => Value.Down);
+         end Expression_Category;
 
          -----------------
          -- Placeholder --

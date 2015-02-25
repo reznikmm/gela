@@ -37,6 +37,8 @@ package Gela.Type_Views is
       A_Private,
       An_Incomplete);
 
+   type Category_Kind_Set is array (Category_Kinds) of Boolean;
+
    not overriding function Category
      (Self : Type_View) return Category_Kinds is abstract;
 

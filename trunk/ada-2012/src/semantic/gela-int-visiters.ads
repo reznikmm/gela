@@ -1,4 +1,5 @@
 with Gela.Int.Attr_Functions;
+with Gela.Int.Categories;
 with Gela.Int.Defining_Names;
 with Gela.Int.Expressions;
 with Gela.Int.Placeholders;
@@ -25,6 +26,10 @@ package Gela.Int.Visiters is
    not overriding procedure Expression
      (Self  : access Visiter;
       Value : Gela.Int.Expressions.Expression) is abstract;
+
+   not overriding procedure Expression_Category
+     (Self  : access Visiter;
+      Value : Gela.Int.Categories.Category) is abstract;
 
    not overriding procedure Placeholder
      (Self  : access Visiter;

@@ -2,6 +2,7 @@
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
+with Gela.Type_Views;
 
 package Gela.Interpretations is
    pragma Preelaborate;
@@ -34,7 +35,7 @@ package Gela.Interpretations is
    not overriding procedure Add_Defining_Name
      (Self   : in out Interpretation_Manager;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Down   : Interpretation_Index_Array;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
         is abstract;
    --  Extend Result with new interpretation of defining Name
@@ -42,10 +43,18 @@ package Gela.Interpretations is
    not overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
-      Down   : Interpretation_Index_Array;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
         is abstract;
    --  Extend Result with new interpretation of expression with given Type
+
+   not overriding procedure Add_Expression_Category
+     (Self   : in out Interpretation_Manager;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Down   : Gela.Interpretations.Interpretation_Index_Array;
+      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+        is abstract;
+   --  Extend Result with new interpretation of expression in given categories
 
    not overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
@@ -100,6 +109,12 @@ package Gela.Interpretations is
       Tipe   : Gela.Semantic_Types.Type_Index;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each expression interpretation
+
+   not overriding procedure On_Expression_Category
+     (Self   : in out Visiter;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+   --  Called for each category of expression interpretation
 
    not overriding procedure On_Attr_Function
      (Self   : in out Visiter;
