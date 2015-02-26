@@ -206,7 +206,7 @@ package body Gela.Plian_Int_Sets is
 
    overriding procedure Visit
      (Self   : Cursor;
-      Target : access Gela.Interpretations.Visiter'Class)
+      Target : access Gela.Interpretations.Up_Visiter'Class)
    is
       package Each is
          type Visiter is new Gela.Int.Visiters.Visiter with null record;
@@ -254,8 +254,8 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Defining_Name
-              (Name => Value.Name,
-               Down => Value.Down);
+              (Name   => Value.Name,
+               Cursor => Visit.Self);
          end Defining_Name;
 
          overriding procedure Expression
@@ -265,8 +265,8 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Expression
-              (Tipe => Value.Expression_Type,
-               Down => Value.Down);
+              (Tipe   => Value.Expression_Type,
+               Cursor => Visit.Self);
          end Expression;
 
          overriding procedure Expression_Category
@@ -276,8 +276,8 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Expression_Category
-              (Kinds => Value.Kinds,
-               Down  => Value.Down);
+              (Kinds  => Value.Kinds,
+               Cursor => Visit.Self);
          end Expression_Category;
 
          overriding procedure Attr_Function
@@ -287,8 +287,8 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Attr_Function
-              (Kind => Value.Kind,
-               Down => Value.Down);
+              (Kind   => Value.Kind,
+               Cursor => Visit.Self);
          end Attr_Function;
 
          overriding procedure Placeholder
@@ -298,8 +298,8 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Placeholder
-              (Kind => Value.Placeholder_Kind,
-               Down => Value.Down);
+              (Kind   => Value.Placeholder_Kind,
+               Cursor => Visit.Self);
          end Placeholder;
 
          overriding procedure Symbol
@@ -310,7 +310,7 @@ package body Gela.Plian_Int_Sets is
          begin
             Target.On_Symbol
               (Symbol => Value.Get_Symbol,
-               Down   => Value.Down);
+               Cursor => Visit.Self);
          end Symbol;
 
          overriding procedure Tuple
@@ -319,20 +319,16 @@ package body Gela.Plian_Int_Sets is
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Tuple
-              (Value => Value.Value,
-               Down  => (1 .. 0 => 0));
+            Target.On_Tuple (Value.Value);
          end Tuple;
 
          overriding procedure Chosen_Tuple
            (Self  : access Visiter;
             Value : Gela.Int.Tuples.Chosen_Tuple)
          is
-            pragma Unreferenced (Self);
+            pragma Unreferenced (Self, Value);
          begin
-            Target.On_Tuple
-              (Value => (1 .. 0 => 0),
-               Down  => Value.Down);
+            raise Constraint_Error with "Unexpected down interpretation in up";
          end Chosen_Tuple;
 
       end Each;

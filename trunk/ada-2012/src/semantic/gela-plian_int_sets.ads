@@ -81,7 +81,7 @@ private
 
    overriding procedure Visit
      (Self   : Cursor;
-      Target : access Gela.Interpretations.Visiter'Class);
+      Target : access Gela.Interpretations.Up_Visiter'Class);
 
    overriding function Get_Index
      (Self : Cursor) return Gela.Interpretations.Interpretation_Index;

@@ -51,7 +51,7 @@ package body Gela.Debug_Properties is
    end Dump_Property;
 
    package Dump_Interpretation is
-      type Visiter is new Gela.Interpretations.Visiter with record
+      type Visiter is new Gela.Interpretations.Down_Visiter with record
          Comp : not null Gela.Compilations.Compilation_Access;
       end record;
 
@@ -70,17 +70,42 @@ package body Gela.Debug_Properties is
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
-      overriding procedure On_Symbol
-        (Self   : in out Visiter;
-         Symbol : Gela.Lexical_Types.Symbol;
-         Down   : Gela.Interpretations.Interpretation_Index_Array);
-
       overriding procedure On_Tuple
         (Self  : in out Visiter;
-         Value : Gela.Interpretations.Interpretation_Set_Index_Array;
          Down  : Gela.Interpretations.Interpretation_Index_Array);
 
    end Dump_Interpretation;
+
+   package Dump_Up_Interpretation is
+      type Visiter is new Gela.Interpretations.Up_Visiter with record
+         Comp : not null Gela.Compilations.Compilation_Access;
+      end record;
+
+      overriding procedure On_Defining_Name
+        (Self   : in out Visiter;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Cursor : Gela.Interpretations.Cursor'Class);
+
+      overriding procedure On_Expression
+        (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
+         Cursor : Gela.Interpretations.Cursor'Class);
+
+      overriding procedure On_Attr_Function
+        (Self   : in out Visiter;
+         Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+         Cursor : Gela.Interpretations.Cursor'Class);
+
+      overriding procedure On_Tuple
+        (Self  : in out Visiter;
+         Value : Gela.Interpretations.Interpretation_Set_Index_Array);
+
+      overriding procedure On_Symbol
+        (Self   : in out Visiter;
+         Symbol : Gela.Lexical_Types.Symbol;
+         Cursor : Gela.Interpretations.Cursor'Class);
+
+   end Dump_Up_Interpretation;
 
    package body Dump_Property is
       overriding procedure On_Down
@@ -175,7 +200,7 @@ package body Gela.Debug_Properties is
            Element.Enclosing_Compilation;
          IM  : constant Gela.Interpretations.Interpretation_Manager_Access :=
            Comp.Context.Interpretation_Manager;
-         IV  : aliased Dump_Interpretation.Visiter := (Comp => Comp);
+         IV  : aliased Dump_Up_Interpretation.Visiter := (Comp => Comp);
          Pos : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Value);
       begin
          if Self.Flags (Up) = False then
@@ -240,12 +265,64 @@ package body Gela.Debug_Properties is
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
+      overriding procedure On_Tuple
+        (Self  : in out Visiter;
+         Down  : Gela.Interpretations.Interpretation_Index_Array)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Put_Line ("   Tuple");
+
+         for J of Down loop
+            Put_Line
+              ("     DOWN" &
+                 Gela.Interpretations.Interpretation_Index'Image (J));
+         end loop;
+      end On_Tuple;
+
+   end Dump_Interpretation;
+
+   package body Dump_Up_Interpretation is
+
+      overriding procedure On_Defining_Name
+        (Self   : in out Visiter;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Cursor : Gela.Interpretations.Cursor'Class)
+      is
+         pragma Unreferenced (Cursor);
+         Symbol : constant Gela.Lexical_Types.Symbol := Name.Full_Name;
+      begin
+         Put_Line
+           ("   Defining_Name " &
+              Self.Comp.Context.Symbols.Image (Symbol).To_UTF_8_String);
+      end On_Defining_Name;
+
+      overriding procedure On_Expression
+        (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
+         Cursor : Gela.Interpretations.Cursor'Class)
+      is
+         pragma Unreferenced (Self, Tipe, Cursor);
+      begin
+         Put_Line ("   Expression ");
+      end On_Expression;
+
+      overriding procedure On_Attr_Function
+        (Self   : in out Visiter;
+         Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+         Cursor : Gela.Interpretations.Cursor'Class)
+      is
+         pragma Unreferenced (Self, Kind, Cursor);
+      begin
+         Put_Line ("   Attr_Function ");
+      end On_Attr_Function;
+
       overriding procedure On_Symbol
         (Self   : in out Visiter;
          Symbol : Gela.Lexical_Types.Symbol;
-         Down   : Gela.Interpretations.Interpretation_Index_Array)
+         Cursor : Gela.Interpretations.Cursor'Class)
       is
-         pragma Unreferenced (Down);
+         pragma Unreferenced (Cursor);
       begin
          Put_Line
            ("   Symbol " &
@@ -254,8 +331,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Tuple
         (Self  : in out Visiter;
-         Value : Gela.Interpretations.Interpretation_Set_Index_Array;
-         Down  : Gela.Interpretations.Interpretation_Index_Array)
+         Value : Gela.Interpretations.Interpretation_Set_Index_Array)
       is
          pragma Unreferenced (Self);
       begin
@@ -266,15 +342,10 @@ package body Gela.Debug_Properties is
               ("     " &
                  Gela.Interpretations.Interpretation_Set_Index'Image (J));
          end loop;
-
-         for J of Down loop
-            Put_Line
-              ("     DOWN" &
-                 Gela.Interpretations.Interpretation_Index'Image (J));
-         end loop;
       end On_Tuple;
 
-   end Dump_Interpretation;
+   end Dump_Up_Interpretation;
+
 
    procedure Dump
      (Element : Gela.Elements.Element_Access;

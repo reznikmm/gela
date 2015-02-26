@@ -115,7 +115,7 @@ private
    overriding procedure Visit
      (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Index;
-      Target : in out Gela.Interpretations.Visiter'Class);
+      Target : in out Gela.Interpretations.Down_Visiter'Class);
    --  For given interpretations call Target visiter
 
    overriding procedure Get_Down_Interpretation

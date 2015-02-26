@@ -18,7 +18,7 @@ package body Gela.Plain_Interpretations is
 
       overriding procedure Visit
         (Self   : Cursor;
-         Target : access Gela.Interpretations.Visiter'Class) is null;
+         Target : access Gela.Interpretations.Up_Visiter'Class) is null;
 
       overriding function Get_Index
         (Self : Cursor) return Gela.Interpretations.Interpretation_Index;
@@ -166,13 +166,12 @@ package body Gela.Plain_Interpretations is
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
       package Each is
-         type Visiter is new Gela.Interpretations.Visiter with null record;
+         type Visiter is new Gela.Interpretations.Up_Visiter with null record;
          --  Only tuples are expected here
 
          overriding procedure On_Tuple
            (V     : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
-            Down  : Gela.Interpretations.Interpretation_Index_Array);
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
 
       end Each;
 
@@ -180,10 +179,9 @@ package body Gela.Plain_Interpretations is
 
          overriding procedure On_Tuple
            (V     : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array;
-            Down  : Gela.Interpretations.Interpretation_Index_Array)
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
          is
-            pragma Unreferenced (V, Down);
+            pragma Unreferenced (V);
             use type Gela.Interpretations.Interpretation_Set_Index_Array;
 
             Item : constant Gela.Int.Interpretation_Access :=
@@ -226,7 +224,7 @@ package body Gela.Plain_Interpretations is
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access)
    is
       package Each is
-         type Visiter is new Gela.Interpretations.Visiter with record
+         type Visiter is new Gela.Interpretations.Down_Visiter with record
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
          end record;
 
@@ -377,7 +375,7 @@ package body Gela.Plain_Interpretations is
    overriding procedure Visit
      (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Index;
-      Target : in out Gela.Interpretations.Visiter'Class)
+      Target : in out Gela.Interpretations.Down_Visiter'Class)
    is
       package Switch is
          type Visiter is new Gela.Int.Visiters.Visiter with null record;
@@ -477,9 +475,7 @@ package body Gela.Plain_Interpretations is
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Expression_Category
-              (Kinds  => Value.Kinds,
-               Down   => Value.Down);
+            raise Program_Error with "Unexpected up interpretation in down";
          end Expression_Category;
 
          -----------------
@@ -507,9 +503,8 @@ package body Gela.Plain_Interpretations is
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Symbol
-              (Symbol => Value.Get_Symbol,
-               Down   => Value.Down);
+            null;
+            --  raise Program_Er with "Unexpected up interpretation in down";
          end Symbol;
 
          -----------
@@ -522,7 +517,7 @@ package body Gela.Plain_Interpretations is
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Tuple (Value.Value, (1 .. 0 => 0));
+            raise Program_Error with "Unexpected up interpretation in down";
          end Tuple;
 
          ------------------
@@ -535,7 +530,7 @@ package body Gela.Plain_Interpretations is
          is
             pragma Unreferenced (Self);
          begin
-            Target.On_Tuple ((1 .. 0 => 0), Value.Down);
+            Target.On_Tuple (Value.Down);
          end Chosen_Tuple;
 
       end Switch;

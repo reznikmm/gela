@@ -96,57 +96,45 @@ package Gela.Interpretations is
    --  Placeholder interpretation represents some syntax construct.
    --  This eliminates need to traverse syntax tree in some situation
 
-   type Visiter is limited interface;
+   type Down_Visiter is limited interface;
 
    not overriding procedure On_Defining_Name
-     (Self   : in out Visiter;
+     (Self   : in out Down_Visiter;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each defining name interpretation
 
    not overriding procedure On_Expression
-     (Self   : in out Visiter;
+     (Self   : in out Down_Visiter;
       Tipe   : Gela.Semantic_Types.Type_Index;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each expression interpretation
 
-   not overriding procedure On_Expression_Category
-     (Self   : in out Visiter;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
-      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-   --  Called for each category of expression interpretation
-
    not overriding procedure On_Attr_Function
-     (Self   : in out Visiter;
+     (Self   : in out Down_Visiter;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each attribute denoting function
 
    not overriding procedure On_Placeholder
-     (Self   : in out Visiter;
+     (Self   : in out Down_Visiter;
       Kind   : Gela.Interpretations.Placeholder_Kind;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each placeholder
 
-   not overriding procedure On_Symbol
-     (Self   : in out Visiter;
-      Symbol : Gela.Lexical_Types.Symbol;
-      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
-   --  Called for each symbol
-
    not overriding procedure On_Tuple
-     (Self  : in out Visiter;
-      Value : Gela.Interpretations.Interpretation_Set_Index_Array;
-      Down  : Gela.Interpretations.Interpretation_Index_Array) is null;
-   --  Called for each tuple
+     (Self   : in out Down_Visiter;
+      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+   --  Called for each tuple. FIXME: replace with (head, tail) ???
 
    not overriding procedure Visit
      (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Index;
-      Target : in out Visiter'Class) is abstract;
+      Target : in out Down_Visiter'Class) is abstract;
    --  For interpretation with given persistent Index apply Target visiter
 
    type Cursor is limited interface;
+   type Up_Visiter is tagged;
 
    not overriding function Has_Element (Self : Cursor) return Boolean is
      abstract;
@@ -157,13 +145,56 @@ package Gela.Interpretations is
 
    not overriding procedure Visit
      (Self   : Cursor;
-      Target : access Visiter'Class) is abstract;
+      Target : access Up_Visiter'Class) is abstract;
    --  For current interpretation for cursor apply Target visiter
 
    not overriding function Get_Index
      (Self : Cursor) return Gela.Interpretations.Interpretation_Index
         is abstract;
    --  Request persistent index for current interpretation
+
+   type Up_Visiter is limited interface;
+
+   not overriding procedure On_Defining_Name
+     (Self   : in out Up_Visiter;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each defining name interpretation
+
+   not overriding procedure On_Expression
+     (Self   : in out Up_Visiter;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each expression interpretation
+
+   not overriding procedure On_Expression_Category
+     (Self   : in out Up_Visiter;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each category of expression interpretation
+
+   not overriding procedure On_Attr_Function
+     (Self   : in out Up_Visiter;
+      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each attribute denoting function
+
+   not overriding procedure On_Placeholder
+     (Self   : in out Up_Visiter;
+      Kind   : Gela.Interpretations.Placeholder_Kind;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each placeholder
+
+   not overriding procedure On_Symbol
+     (Self   : in out Up_Visiter;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Cursor : Gela.Interpretations.Cursor'Class) is null;
+   --  Called for each symbol
+
+   not overriding procedure On_Tuple
+     (Self   : in out Up_Visiter;
+      Value  : Gela.Interpretations.Interpretation_Set_Index_Array) is null;
+   --  Called for each tuple
 
    not overriding function Get_Cursor
      (Self   : in out Interpretation_Manager;
