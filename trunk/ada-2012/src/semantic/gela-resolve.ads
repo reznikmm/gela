@@ -121,9 +121,14 @@ package Gela.Resolve is
 
    procedure Assignment_Right
      (Comp     : Gela.Compilations.Compilation_Access;
-      Env        : Gela.Semantic_Types.Env_Index;
+      Env      : Gela.Semantic_Types.Env_Index;
       Left     : Gela.Interpretations.Interpretation_Set_Index;
       Right    : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index);
+
+   procedure Signed_Integer_Type
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Up       : Gela.Interpretations.Interpretation_Set_Index;
       Result   : out Gela.Interpretations.Interpretation_Index);
 
 end Gela.Resolve;

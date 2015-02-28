@@ -110,6 +110,12 @@ package Gela.Interpretations is
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each expression interpretation
 
+   not overriding procedure On_Expression_Category
+     (Self   : in out Down_Visiter;
+      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
+   --  Called for each category of expression interpretation
+
    not overriding procedure On_Attr_Function
      (Self   : in out Down_Visiter;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;

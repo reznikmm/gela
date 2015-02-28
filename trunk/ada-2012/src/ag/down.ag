@@ -1007,7 +1007,10 @@ Rules for ordinary_fixed_point_definition. :
 
 Rules for signed_integer_type_definition. :
 (.
-      ${Integer_Constraint.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Signed_Integer_Type
+        (Self.Compilation,
+         ${Integer_Constraint.Up},
+         ${Integer_Constraint.Down});
 .)
 
 Rules for access_to_object_definition. :

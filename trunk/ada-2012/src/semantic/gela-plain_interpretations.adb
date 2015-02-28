@@ -475,7 +475,9 @@ package body Gela.Plain_Interpretations is
          is
             pragma Unreferenced (Self);
          begin
-            raise Program_Error with "Unexpected up interpretation in down";
+            Target.On_Expression_Category
+              (Kinds => Value.Kinds,
+               Down  => Value.Down);
          end Expression_Category;
 
          -----------------

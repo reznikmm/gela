@@ -7,6 +7,7 @@ with Gela.Lexical_Types;
 with Gela.Plain_Environments.Debug;
 with Gela.Property_Visiters;
 with Gela.Semantic_Types;
+with Gela.Type_Views;
 
 package body Gela.Debug_Properties is
 
@@ -89,6 +90,11 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
+         Cursor : Gela.Interpretations.Cursor'Class);
+
+      overriding procedure On_Expression_Category
+        (Self   : in out Visiter;
+         Kinds  : Gela.Type_Views.Category_Kind_Set;
          Cursor : Gela.Interpretations.Cursor'Class);
 
       overriding procedure On_Attr_Function
@@ -306,6 +312,21 @@ package body Gela.Debug_Properties is
       begin
          Put_Line ("   Expression ");
       end On_Expression;
+
+      overriding procedure On_Expression_Category
+        (Self   : in out Visiter;
+         Kinds  : Gela.Type_Views.Category_Kind_Set;
+         Cursor : Gela.Interpretations.Cursor'Class)
+      is
+         pragma Unreferenced (Self, Cursor);
+      begin
+         Put_Line ("   Expression_Category: ");
+         for J in Kinds'Range loop
+            if Kinds (J) then
+               Put_Line ("      " & Gela.Type_Views.Category_Kinds'Image (J));
+            end if;
+         end loop;
+      end On_Expression_Category;
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;

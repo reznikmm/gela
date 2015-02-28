@@ -10,6 +10,9 @@ package Gela.Type_Views is
    type Type_View_Access is access all Type_View'Class;
    for Type_View_Access'Storage_Size use 0;
 
+   function Assigned (Self : access Type_View'Class) return Boolean
+     is (Self /= null);
+
    type Category_Kinds is
      (A_Character,
       A_Boolean,
@@ -37,7 +40,10 @@ package Gela.Type_Views is
       A_Private,
       An_Incomplete);
 
-   type Category_Kind_Set is array (Category_Kinds) of Boolean;
+   type Category_Kind_Set is array (Category_Kinds) of Boolean with Pack;
+
+   subtype An_Integer is Category_Kinds
+     range An_Universal_Integer .. A_Modular_Integer;
 
    not overriding function Category
      (Self : Type_View) return Category_Kinds is abstract;
