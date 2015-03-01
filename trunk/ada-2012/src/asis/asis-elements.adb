@@ -133,12 +133,115 @@ package body Asis.Elements is
      (Expression : in Asis.Expression)
       return Asis.Attribute_Kinds
    is
+      Map : constant array (F.An_Attribute_Reference)
+        of Asis.Attribute_Kinds :=
+          (F.An_Access_Attribute => Asis.An_Access_Attribute,
+           F.An_Address_Attribute => Asis.An_Address_Attribute,
+           F.An_Adjacent_Attribute => Asis.An_Adjacent_Attribute,
+           F.An_Aft_Attribute => Asis.An_Aft_Attribute,
+           F.An_Alignment_Attribute => Asis.An_Alignment_Attribute,
+           F.A_Base_Attribute => Asis.A_Base_Attribute,
+           F.A_Bit_Order_Attribute => Asis.A_Bit_Order_Attribute,
+           F.A_Body_Version_Attribute => Asis.A_Body_Version_Attribute,
+           F.A_Callable_Attribute => Asis.A_Callable_Attribute,
+           F.A_Caller_Attribute => Asis.A_Caller_Attribute,
+           F.A_Ceiling_Attribute => Asis.A_Ceiling_Attribute,
+           F.A_Class_Attribute => Asis.A_Class_Attribute,
+           F.A_Component_Size_Attribute => Asis.A_Component_Size_Attribute,
+           F.A_Compose_Attribute => Asis.A_Compose_Attribute,
+           F.A_Constrained_Attribute => Asis.A_Constrained_Attribute,
+           F.A_Copy_Sign_Attribute => Asis.A_Copy_Sign_Attribute,
+           F.A_Count_Attribute => Asis.A_Count_Attribute,
+           F.A_Definite_Attribute => Asis.A_Definite_Attribute,
+           F.A_Delta_Attribute => Asis.A_Delta_Attribute,
+           F.A_Denorm_Attribute => Asis.A_Denorm_Attribute,
+           F.A_Digits_Attribute => Asis.A_Digits_Attribute,
+           F.An_Exponent_Attribute => Asis.An_Exponent_Attribute,
+           F.An_External_Tag_Attribute => Asis.An_External_Tag_Attribute,
+           F.A_First_Attribute => Asis.A_First_Attribute,
+           F.A_First_Bit_Attribute => Asis.A_First_Bit_Attribute,
+           F.A_Floor_Attribute => Asis.A_Floor_Attribute,
+           F.A_Fore_Attribute => Asis.A_Fore_Attribute,
+           F.A_Fraction_Attribute => Asis.A_Fraction_Attribute,
+           F.An_Identity_Attribute => Asis.An_Identity_Attribute,
+           F.An_Image_Attribute => Asis.An_Image_Attribute,
+           F.An_Input_Attribute => Asis.An_Input_Attribute,
+           F.A_Last_Attribute => Asis.A_Last_Attribute,
+           F.A_Last_Bit_Attribute => Asis.A_Last_Bit_Attribute,
+           F.A_Leading_Part_Attribute => Asis.A_Leading_Part_Attribute,
+           F.A_Length_Attribute => Asis.A_Length_Attribute,
+           F.A_Machine_Attribute => Asis.A_Machine_Attribute,
+           F.A_Machine_Emax_Attribute => Asis.A_Machine_Emax_Attribute,
+           F.A_Machine_Emin_Attribute => Asis.A_Machine_Emin_Attribute,
+           F.A_Machine_Mantissa_Attribute => Asis.A_Machine_Mantissa_Attribute,
+           F.A_Machine_Overflows_Attribute =>
+             Asis.A_Machine_Overflows_Attribute,
+           F.A_Machine_Radix_Attribute => Asis.A_Machine_Radix_Attribute,
+           F.A_Machine_Rounding_Attribute => Asis.A_Machine_Rounding_Attribute,
+           F.A_Machine_Rounds_Attribute => Asis.A_Machine_Rounds_Attribute,
+           F.A_Max_Attribute => Asis.A_Max_Attribute,
+           F.A_Max_Size_In_Storage_Elements_Attribute =>
+             Asis.A_Max_Size_In_Storage_Elements_Attribute,
+           F.A_Min_Attribute => Asis.A_Min_Attribute,
+           F.A_Mod_Attribute => Asis.A_Mod_Attribute,
+           F.A_Model_Attribute => Asis.A_Model_Attribute,
+           F.A_Model_Emin_Attribute => Asis.A_Model_Emin_Attribute,
+           F.A_Model_Epsilon_Attribute => Asis.A_Model_Epsilon_Attribute,
+           F.A_Model_Mantissa_Attribute => Asis.A_Model_Mantissa_Attribute,
+           F.A_Model_Small_Attribute => Asis.A_Model_Small_Attribute,
+           F.A_Modulus_Attribute => Asis.A_Modulus_Attribute,
+           F.An_Output_Attribute => Asis.An_Output_Attribute,
+           F.A_Partition_ID_Attribute => Asis.A_Partition_ID_Attribute,
+           F.A_Pos_Attribute => Asis.A_Pos_Attribute,
+           F.A_Position_Attribute => Asis.A_Position_Attribute,
+           F.A_Pred_Attribute => Asis.A_Pred_Attribute,
+           F.A_Priority_Attribute => Asis.A_Priority_Attribute,
+           F.A_Range_Attribute => Asis.A_Range_Attribute,
+           F.A_Read_Attribute => Asis.A_Read_Attribute,
+           F.A_Remainder_Attribute => Asis.A_Remainder_Attribute,
+           F.A_Round_Attribute => Asis.A_Round_Attribute,
+           F.A_Rounding_Attribute => Asis.A_Rounding_Attribute,
+           F.A_Safe_First_Attribute => Asis.A_Safe_First_Attribute,
+           F.A_Safe_Last_Attribute => Asis.A_Safe_Last_Attribute,
+           F.A_Scale_Attribute => Asis.A_Scale_Attribute,
+           F.A_Scaling_Attribute => Asis.A_Scaling_Attribute,
+           F.A_Signed_Zeros_Attribute => Asis.A_Signed_Zeros_Attribute,
+           F.A_Size_Attribute => Asis.A_Size_Attribute,
+           F.A_Small_Attribute => Asis.A_Small_Attribute,
+           F.A_Storage_Pool_Attribute => Asis.A_Storage_Pool_Attribute,
+           F.A_Storage_Size_Attribute => Asis.A_Storage_Size_Attribute,
+           F.A_Stream_Size_Attribute => Asis.A_Stream_Size_Attribute,
+           F.A_Succ_Attribute => Asis.A_Succ_Attribute,
+           F.A_Tag_Attribute => Asis.A_Tag_Attribute,
+           F.A_Terminated_Attribute => Asis.A_Terminated_Attribute,
+           F.A_Truncation_Attribute => Asis.A_Truncation_Attribute,
+           F.An_Unbiased_Rounding_Attribute =>
+             Asis.An_Unbiased_Rounding_Attribute,
+           F.An_Unchecked_Access_Attribute =>
+             Asis.An_Unchecked_Access_Attribute,
+           F.A_Val_Attribute => Asis.A_Val_Attribute,
+           F.A_Valid_Attribute => Asis.A_Valid_Attribute,
+           F.A_Value_Attribute => Asis.A_Value_Attribute,
+           F.A_Version_Attribute => Asis.A_Version_Attribute,
+           F.A_Wide_Image_Attribute => Asis.A_Wide_Image_Attribute,
+           F.A_Wide_Value_Attribute => Asis.A_Wide_Value_Attribute,
+           F.A_Wide_Wide_Image_Attribute => Asis.A_Wide_Wide_Image_Attribute,
+           F.A_Wide_Wide_Value_Attribute => Asis.A_Wide_Wide_Value_Attribute,
+           F.A_Wide_Wide_Width_Attribute => Asis.A_Wide_Wide_Width_Attribute,
+           F.A_Wide_Width_Attribute => Asis.A_Wide_Width_Attribute,
+           F.A_Width_Attribute => Asis.A_Width_Attribute,
+           F.A_Write_Attribute => Asis.A_Write_Attribute,
+           F.An_Implementation_Defined_Attribute =>
+             Asis.An_Implementation_Defined_Attribute,
+           F.An_Unknown_Attribute => Asis.An_Unknown_Attribute);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Expression);
    begin
-      if Assigned (Expression) then
-         Raise_Not_Implemented ("");
-         return Not_An_Attribute;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
-         return Not_An_Attribute;
+            return Not_An_Attribute;
       end if;
    end Attribute_Kind;
 
@@ -286,18 +389,7 @@ package body Asis.Elements is
       Tree := Compilation_Unit.Data.Tree;
       Tree.Visit (V);
 
-      declare
-         Result : Asis.Element_List (1 .. Asis.ASIS_Natural (V.Result.Length));
-         C : Gela.Elements.Context_Items.Context_Item_Sequence_Cursor :=
-           V.Result.First;
-      begin
-         for J in Result'Range loop
-            Result (J) := (Data => Gela.Elements.Element_Access (C.Element));
-            C.Next;
-         end loop;
-
-         return Result;
-      end;
+      return Asis.To_List (Gela.Elements.Element_Sequence_Access (V.Result));
    end Context_Clause_Elements;
 
    ---------------------------

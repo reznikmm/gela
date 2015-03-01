@@ -438,6 +438,8 @@ procedure YACC_Driver is
 
    Piece : Writer;
 begin
+   Resolver.Resolve (AG, Table.all);
+
    Output.P ("with Gela.Grammars;");
    Output.P ("with Gela.Grammars.LR_Parsers;");
    Output.P;
@@ -523,7 +525,6 @@ begin
    Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
    Ada.Text_IO.Put_Line (Piece.Text.To_UTF_8_String);
 
-   Resolver.Resolve (AG, Table.all);
    Gela.Grammars_Debug.Print_Conflicts (AG, Table.all);
 
    if Ada.Command_Line.Argument_Count > 1 then

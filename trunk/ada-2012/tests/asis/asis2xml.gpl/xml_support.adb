@@ -215,7 +215,6 @@ package body XML_Support is
    procedure Pre (Element : in Asis.Element;
                   Control : in out Asis.Traverse_Control;
                   State : in out Info) is
-      pragma Unreferenced (Control);
 
       --  If this is the kind of element that has visible/private
       --  parts, we find and traverse the visible and private parts
@@ -557,6 +556,26 @@ package body XML_Support is
                        (State.Current,
                         "prefixed",
                         "false");
+
+                     --  Gela traverse function call in AST order instead of
+                     --  text order. Force this order to match gela.
+                     declare
+                        Prefix : constant Asis.Expression :=
+                          Asis.Expressions.Prefix (Element);
+
+                        Args : constant Asis.Association_List :=
+                          Asis.Expressions.Function_Call_Parameters
+                            (Element);
+                     begin
+                        Traverse_Tree_For_XML
+                          (Prefix, Control, State);
+                        for J in Args'Range loop
+                           Traverse_Tree_For_XML
+                             (Args (J), Control, State);
+                        end loop;
+
+                        Control := Abandon_Children;
+                     end;
                   end if;
                when others => null;
             end case;

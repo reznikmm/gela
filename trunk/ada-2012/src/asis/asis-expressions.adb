@@ -18,6 +18,7 @@ with Gela.Elements.Expression_Or_Boxes;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Numeric_Literals;
 with Gela.Elements.Operator_Symbols;
+with Gela.Elements.Prefixes;
 with Gela.Elements.Record_Aggregates;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
@@ -382,10 +383,42 @@ package body Asis.Expressions is
       return Asis.Association_List
    is
       pragma Unreferenced (Normalized);
+
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Sequence_Access;
+         end record;
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
+         is
+            Agg : constant Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access :=
+                Node.Function_Call_Parameters;
+            Seq : constant Gela.Elements.Associations.
+              Association_Sequence_Access :=
+                Agg.Record_Component_Associations;
+         begin
+            Self.Result := Gela.Elements.Element_Sequence_Access (Seq);
+         end Auxiliary_Apply;
+
+      end Get;
+
+      V       : Get.Visiter;
    begin
       Check_Nil_Element (Expression, "Function_Call_Parameters");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element_List;
+      Expression.Data.Visit (V);
+      return Asis.To_List (V.Result);
    end Function_Call_Parameters;
 
    -----------------------
@@ -623,10 +656,37 @@ package body Asis.Expressions is
      (Expression : in Asis.Expression)
       return Asis.Expression
    is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Element_Access;
+         end record;
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access);
+      end Get;
+
+      package body Get is
+
+         overriding procedure Auxiliary_Apply
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Auxiliary_Applies.
+              Auxiliary_Apply_Access)
+         is
+            Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
+              Node.Prefix;
+         begin
+            Self.Result := Gela.Elements.Element_Access (Prefix);
+         end Auxiliary_Apply;
+
+      end Get;
+
+      V       : Get.Visiter;
    begin
       Check_Nil_Element (Expression, "Prefix");
-      Raise_Not_Implemented ("");
-      return Asis.Nil_Element;
+      Expression.Data.Visit (V);
+      return (Data => V.Result);
    end Prefix;
 
    -----------------------------------

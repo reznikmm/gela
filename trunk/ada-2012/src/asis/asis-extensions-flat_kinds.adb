@@ -553,8 +553,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Floating_Point_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Floating_Point_Definitions.
-        Floating_Point_Definition_Access)
-   is null;
+        Floating_Point_Definition_Access);
 
    overriding procedure For_Loop_Statement
      (Self : in out Visiter;
@@ -1738,6 +1737,16 @@ package body Asis.Extensions.Flat_Kinds is
       return V.Result;
    end Flat_Kind;
 
+   overriding procedure Floating_Point_Definition
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Floating_Point_Definitions.
+        Floating_Point_Definition_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Floating_Point_Definition;
+   end Floating_Point_Definition;
+
    overriding procedure Formal_Derived_Type_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Formal_Derived_Type_Definitions.
@@ -1929,9 +1938,18 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Numeric_Literals.Numeric_Literal_Access)
    is
-      pragma Unreferenced (Node);
+      Comp    : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+      Source  : constant League.Strings.Universal_String := Comp.Source;
+      Token   : constant Gela.Lexical_Types.Token :=
+        Comp.Get_Token (Node.Numeric_Literal_Token);
+      Point : constant Natural := Source.Index (Token.First, Token.Last, '.');
    begin
-      Self.Result := An_Integer_Literal;
+      if Point > 0 then
+         Self.Result := A_Real_Literal;
+      else
+         Self.Result := An_Integer_Literal;
+      end if;
    end Numeric_Literal;
 
    overriding procedure Object_Declaration
