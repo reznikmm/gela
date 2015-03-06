@@ -15,7 +15,7 @@ project Gela_Build is
 
    package Compiler is
       for Default_Switches ("ada") use Check_Ada_Switches;
---      for Local_Configuration_Pragmas use "./gnat.adc";
+      for Local_Configuration_Pragmas use "./gnat.adc";
    end Compiler;
 
 end Gela_Build;

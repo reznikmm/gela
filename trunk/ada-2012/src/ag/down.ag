@@ -994,7 +994,7 @@ Rules for decimal_fixed_point_definition. :
 (.
       Gela.Pass_Utils.Resolve.Real_Type
         (Self.Compilation,
-         ${Real_Range_Constraint.Up},
+         ${Real_Range_Constraint.Up:0},
          ${Real_Range_Constraint.Down});
 .)
 
@@ -1010,7 +1010,7 @@ Rules for ordinary_fixed_point_definition. :
 (.
       Gela.Pass_Utils.Resolve.Real_Type
         (Self.Compilation,
-         ${Real_Range_Constraint.Up},
+         ${Real_Range_Constraint.Up:0},
          ${Real_Range_Constraint.Down});
 .)
 

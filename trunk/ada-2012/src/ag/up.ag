@@ -234,12 +234,12 @@ Rules for qualified_expression. :
 
 Rules for delta_constraint. :
 (.
-      ${delta_constraint.Up} := ${Real_Range_Constraint.Up};
+      ${delta_constraint.Up} := ${Real_Range_Constraint.Up:0};
 .)
 
 Rules for digits_constraint. :
 (.
-      ${digits_constraint.Up} := ${Real_Range_Constraint.Up};
+      ${digits_constraint.Up} := ${Real_Range_Constraint.Up:0};
 .)
 
 Rules for range_attribute_reference.Range_Attribute :
