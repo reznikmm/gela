@@ -231,7 +231,7 @@ Rules for qualified_expression. :
 .)
 Rules for object_declaration. :
 (.
-      ${object_declaration.Errors} := ${Initialization_Expression.Errors};
+      ${object_declaration.Errors} := ${Initialization_Expression.Errors:0};
       --  ${Object_Declaration_Subtype.Errors};
 .)
 Rules for parameter_specification. :

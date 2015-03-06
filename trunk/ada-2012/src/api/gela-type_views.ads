@@ -42,8 +42,11 @@ package Gela.Type_Views is
 
    type Category_Kind_Set is array (Category_Kinds) of Boolean with Pack;
 
-   subtype An_Integer is Category_Kinds
+   subtype Any_Integer_Type is Category_Kinds
      range An_Universal_Integer .. A_Modular_Integer;
+
+   subtype Any_Real_Type is Category_Kinds
+     range An_Universal_Real .. A_Decimal_Fixed_Point;
 
    not overriding function Category
      (Self : Type_View) return Category_Kinds is abstract;

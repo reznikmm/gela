@@ -3,7 +3,8 @@
 with Gela.Type_Views;
 with Gela.Semantic_Types;
 with Gela.Elements.Defining_Names;
-with Gela.Elements.Subtype_Marks;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Profiles;
 
 package Gela.Type_Managers is
 
@@ -33,7 +34,8 @@ package Gela.Type_Managers is
 
    not overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
-      Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)
+      Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+                Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view from given subtype mark
 
@@ -57,5 +59,11 @@ package Gela.Type_Managers is
      (Self  : access Type_Manager)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view of predefined universal_access
+
+   not overriding function Get_Profile
+     (Self  : access Type_Manager;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Profiles.Profile_Access is abstract;
+   --  If Name if callable entity return corresponding profile
 
 end Gela.Type_Managers;

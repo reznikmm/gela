@@ -8,6 +8,7 @@ with Gela.Plain_Environments.Debug;
 with Gela.Property_Visiters;
 with Gela.Semantic_Types;
 with Gela.Type_Views;
+with Gela.Type_Managers;
 
 package body Gela.Debug_Properties is
 
@@ -64,6 +65,11 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
+         Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      overriding procedure On_Expression_Category
+        (Self   : in out Visiter;
+         Kinds  : Gela.Type_Views.Category_Kind_Set;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       overriding procedure On_Attr_Function
@@ -254,10 +260,24 @@ package body Gela.Debug_Properties is
          Tipe   : Gela.Semantic_Types.Type_Index;
          Down   : Gela.Interpretations.Interpretation_Index_Array)
       is
-         pragma Unreferenced (Self, Tipe);
+         use type Gela.Semantic_Types.Type_Index;
+         use type Gela.Type_Views.Type_View_Access;
+
+         TM : constant Gela.Type_Managers.Type_Manager_Access :=
+           Self.Comp.Context.Types;
+         View : Gela.Type_Views.Type_View_Access;
       begin
-         Put_Line
-           ("   Expression ");
+         if Tipe /= 0 then
+            View := TM.Get (Tipe);
+         end if;
+
+         if View = null then
+            Put_Line ("   Expression NULL");
+         else
+            Put_Line
+              ("   Expression " &
+                 Gela.Type_Views.Category_Kinds'Image (View.Category));
+         end if;
 
          for J of Down loop
             Put_Line
@@ -265,6 +285,28 @@ package body Gela.Debug_Properties is
                  Gela.Interpretations.Interpretation_Index'Image (J));
          end loop;
       end On_Expression;
+
+      overriding procedure On_Expression_Category
+        (Self   : in out Visiter;
+         Kinds  : Gela.Type_Views.Category_Kind_Set;
+         Down   : Gela.Interpretations.Interpretation_Index_Array)
+      is
+         pragma Unreferenced (Self);
+      begin
+         Put_Line ("   Expression_Category: ");
+
+         for J in Kinds'Range loop
+            if Kinds (J) then
+               Put_Line ("      " & Gela.Type_Views.Category_Kinds'Image (J));
+            end if;
+         end loop;
+
+         for J of Down loop
+            Put_Line
+              ("     DOWN" &
+                 Gela.Interpretations.Interpretation_Index'Image (J));
+         end loop;
+      end On_Expression_Category;
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
@@ -308,9 +350,25 @@ package body Gela.Debug_Properties is
          Tipe   : Gela.Semantic_Types.Type_Index;
          Cursor : Gela.Interpretations.Cursor'Class)
       is
-         pragma Unreferenced (Self, Tipe, Cursor);
+         pragma Unreferenced (Cursor);
+         use type Gela.Semantic_Types.Type_Index;
+         use type Gela.Type_Views.Type_View_Access;
+
+         TM : constant Gela.Type_Managers.Type_Manager_Access :=
+           Self.Comp.Context.Types;
+         View : Gela.Type_Views.Type_View_Access;
       begin
-         Put_Line ("   Expression ");
+         if Tipe /= 0 then
+            View := TM.Get (Tipe);
+         end if;
+
+         if View = null then
+            Put_Line ("   Expression NULL");
+         else
+            Put_Line
+              ("   Expression " &
+                 Gela.Type_Views.Category_Kinds'Image (View.Category));
+         end if;
       end On_Expression;
 
       overriding procedure On_Expression_Category
@@ -321,6 +379,7 @@ package body Gela.Debug_Properties is
          pragma Unreferenced (Self, Cursor);
       begin
          Put_Line ("   Expression_Category: ");
+
          for J in Kinds'Range loop
             if Kinds (J) then
                Put_Line ("      " & Gela.Type_Views.Category_Kinds'Image (J));

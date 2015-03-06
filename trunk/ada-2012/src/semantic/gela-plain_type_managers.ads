@@ -6,7 +6,8 @@ with Ada.Containers.Hashed_Maps;
 with Gela.Contexts;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
-with Gela.Elements.Subtype_Marks;
+with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Profiles;
 with Gela.Semantic_Types;
 with Gela.Type_Managers;
 with Gela.Type_Views;
@@ -46,11 +47,24 @@ private
       Equivalent_Keys => "=",
       "="             => Gela.Semantic_Types."=");
 
+   function Hash
+     (Self : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Ada.Containers.Hash_Type;
+
+   type Profile_Access is access all Gela.Profiles.Profile'Class;
+
+   package Profile_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Gela.Elements.Defining_Names.Defining_Name_Access,
+      Element_Type    => Profile_Access,
+      Hash            => Hash,
+      Equivalent_Keys => Gela.Elements.Defining_Names."=");
+
    type Type_Manager (Context : Gela.Contexts.Context_Access) is
      new Gela.Type_Managers.Type_Manager with
    record
-       Map  : Type_View_Maps.Map;
-       Back : Back_Maps.Map;
+       Map      : Type_View_Maps.Map;
+       Back     : Back_Maps.Map;
+       Profiles : Profile_Maps.Map;
    end record;
 
    not overriding function Get
@@ -77,7 +91,8 @@ private
 
    overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
-      Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)
+      Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+                Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_By_Name
@@ -93,5 +108,10 @@ private
 
    overriding function Universal_Access
      (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
+
+   overriding function Get_Profile
+     (Self  : access Type_Manager;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Profiles.Profile_Access;
 
 end Gela.Plain_Type_Managers;

@@ -580,7 +580,8 @@ package body Gela.Pass_Utils is
 
       function Create_Operator
         (Operator_Symbol : Gela.Lexical_Types.Symbol;
-         Type_Symbol     : Gela.Lexical_Types.Symbol)
+         Type_Symbol     : Gela.Lexical_Types.Symbol;
+         Arity           : Positive := 2)
          return Gela.Elements.Function_Declarations.
                   Function_Declaration_Access;
 
@@ -608,7 +609,8 @@ package body Gela.Pass_Utils is
 
       function Create_Operator
         (Operator_Symbol : Gela.Lexical_Types.Symbol;
-         Type_Symbol     : Gela.Lexical_Types.Symbol)
+         Type_Symbol     : Gela.Lexical_Types.Symbol;
+         Arity           : Positive := 2)
          return Gela.Elements.Function_Declarations.
                   Function_Declaration_Access
       is
@@ -637,7 +639,7 @@ package body Gela.Pass_Utils is
          Name := Gela.Elements.Defining_Designators.Defining_Designator_Access
            (Oper);
 
-         for J in 1 .. 2 loop
+         for J in 1 .. Arity loop
             Mark := Create_Subtype (Type_Symbol);
 
             Param := Factory.Parameter_Specification
@@ -758,6 +760,11 @@ package body Gela.Pass_Utils is
       FD := Create_Operator
         (Operator_Symbol => Gela.Lexical_Types.Operators.Ampersand_Operator,
          Type_Symbol     => Gela.Lexical_Types.Predefined_Symbols.String);
+
+      FD := Create_Operator
+        (Operator_Symbol => Gela.Lexical_Types.Operators.Hyphen_Operator,
+         Type_Symbol     => Gela.Lexical_Types.Predefined_Symbols.Float,
+         Arity           => 1);
    end Postprocess_Standard;
 
    -------------------------

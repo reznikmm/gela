@@ -4,18 +4,23 @@ with Gela.Element_Visiters;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Derived_Type_Definitions;
 with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Floating_Point_Definitions;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
+with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Root_Type_Definitions;
+with Gela.Elements.Signed_Integer_Type_Definitions;
 with Gela.Elements.Subtype_Indication_Or_Access_Definitions;
 with Gela.Elements.Subtype_Indications;
-with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Unconstrained_Array_Definitions;
 with Gela.Plain_Type_Views;
+with Gela.Profiles.Names;
 
 package body Gela.Plain_Type_Managers is
 
@@ -72,6 +77,29 @@ package body Gela.Plain_Type_Managers is
       end if;
    end Get;
 
+   -----------------
+   -- Get_Profile --
+   -----------------
+
+   overriding function Get_Profile
+     (Self  : access Type_Manager;
+      Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Profiles.Profile_Access
+   is
+      Result : Profile_Access;
+      Cursor : constant Profile_Maps.Cursor := Self.Profiles.Find (Name);
+   begin
+      if Profile_Maps.Has_Element (Cursor) then
+         Result := Profile_Maps.Element (Cursor);
+      else
+         Result := new Gela.Profiles.Profile'Class'
+           (Gela.Profiles.Names.Create (Name));
+         Self.Profiles.Insert (Name, Result);
+      end if;
+
+      return Gela.Profiles.Profile_Access (Result);
+   end Get_Profile;
+
    ----------
    -- Hash --
    ----------
@@ -80,6 +108,17 @@ package body Gela.Plain_Type_Managers is
       use type Ada.Containers.Hash_Type;
    begin
       return Key.Decl.Hash + Gela.Type_Views.Category_Kinds'Pos (Key.Category);
+   end Hash;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (Self : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Ada.Containers.Hash_Type is
+   begin
+      return Self.Hash;
    end Hash;
 
    ----------------
@@ -164,6 +203,16 @@ package body Gela.Plain_Type_Managers is
             Result : Gela.Semantic_Types.Type_Index := 0;
          end record;
 
+         overriding procedure Derived_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Derived_Type_Definitions.
+              Derived_Type_Definition_Access);
+
+         overriding procedure Floating_Point_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Floating_Point_Definitions.
+              Floating_Point_Definition_Access);
+
          overriding procedure Full_Type_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Full_Type_Declarations.
@@ -179,6 +228,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Root_Type_Definitions.
               Root_Type_Definition_Access);
 
+         overriding procedure Signed_Integer_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Signed_Integer_Type_Definitions.
+              Signed_Integer_Type_Definition_Access);
+
          overriding procedure Unconstrained_Array_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Unconstrained_Array_Definitions.
@@ -191,6 +245,42 @@ package body Gela.Plain_Type_Managers is
       --------------
 
       package body Visiters is
+
+         overriding procedure Derived_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Derived_Type_Definitions.
+              Derived_Type_Definition_Access)
+         is
+            use type Gela.Semantic_Types.Type_Index;
+
+            Parent : constant Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access := Node.Parent_Subtype_Indication;
+            Subtype_Mark : constant Gela.Elements.Subtype_Marks
+              .Subtype_Mark_Access  := Parent.Subtype_Mark;
+            Tipe : constant Gela.Semantic_Types.Type_Index :=
+              Type_From_Declaration.Self.Type_From_Subtype_Mark (Subtype_Mark);
+            Type_View : Gela.Type_Views.Type_View_Access;
+         begin
+            if Tipe /= 0 then
+               Type_View := Type_From_Declaration.Self.Get (Tipe);
+
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Type_View.Category,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+            end if;
+         end Derived_Type_Definition;
+
+         overriding procedure Floating_Point_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Floating_Point_Definitions.
+              Floating_Point_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.A_Float_Point,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Floating_Point_Definition;
 
          ---------------------------
          -- Full_Type_Declaration --
@@ -234,6 +324,17 @@ package body Gela.Plain_Type_Managers is
             Self.Result := Node.Type_Kind;
          end Root_Type_Definition;
 
+         overriding procedure Signed_Integer_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Signed_Integer_Type_Definitions.
+              Signed_Integer_Type_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.A_Signed_Integer,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Signed_Integer_Type_Definition;
+
          overriding procedure Unconstrained_Array_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Unconstrained_Array_Definitions.
@@ -260,7 +361,8 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
-      Node  : Gela.Elements.Subtype_Marks.Subtype_Mark_Access)
+      Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+                Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index
    is
       package Visiters is
@@ -333,6 +435,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Object_Declarations.
               Object_Declaration_Access);
 
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access);
+
          overriding procedure Subtype_Indication
            (Self : in out Visiter;
             Node : not null Gela.Elements.Subtype_Indications.
@@ -375,7 +482,8 @@ package body Gela.Plain_Type_Managers is
               Subtype_Mark_Or_Access_Definition_Access :=
                 Node.Object_Declaration_Subtype;
          begin
-            X.Visit (Self);
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
          end Discriminant_Specification;
 
          overriding procedure Object_Declaration
@@ -389,14 +497,29 @@ package body Gela.Plain_Type_Managers is
             X.Visit (Self);
          end Object_Declaration;
 
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
+         end Parameter_Specification;
+
          overriding procedure Subtype_Indication
            (Self : in out Visiter;
             Node : not null Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access) is
+              Subtype_Indication_Access)
+         is
+            X : constant Gela.Elements.Subtype_Marks.Subtype_Mark_Access  :=
+              Node.Subtype_Mark;
          begin
             Self.Result :=
-              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark
-                (Node.Subtype_Mark);
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
          end Subtype_Indication;
       end Visiters;
 
