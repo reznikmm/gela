@@ -61,6 +61,12 @@ package Gela.Type_Views is
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
 
+   not overriding function Is_Expected_Type
+     (Self     : Type_View;
+      Expected : not null Type_View_Access) return Boolean is abstract;
+   --  Given Self as type of construct, Expected type as specific type T
+   --  return True if type of construct is expected type T. See ARM 8.6 (22)
+
 --     function Is_Elementary           (Self : Abstract_Type) return Boolean;
 --     function Is_Scalar               (Self : Abstract_Type) return Boolean;
 --     function Is_Discrete             (Self : Abstract_Type) return Boolean;

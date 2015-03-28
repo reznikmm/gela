@@ -532,13 +532,16 @@ package body Gela.Pass_Utils is
      (Comp   : Gela.Compilations.Compilation_Access;
       Index  : Gela.Semantic_Types.Env_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Semantic_Types.Env_Index is
+      return Gela.Semantic_Types.Env_Index
+   is
+      Result : Gela.Semantic_Types.Env_Index := Index;
    begin
-      if Is_Enumeration (Name.Enclosing_Element) then
-         return Index;
-      else
-         return Comp.Context.Environment_Set.Leave_Declarative_Region (Index);
+      if not Is_Enumeration (Name.Enclosing_Element) then
+         Result :=
+           Comp.Context.Environment_Set.Leave_Declarative_Region (Index);
       end if;
+
+      return Result;
    end Leave_Declarative_Region;
 
    --------------------------------

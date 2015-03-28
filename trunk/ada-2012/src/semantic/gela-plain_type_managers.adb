@@ -6,6 +6,7 @@ with Gela.Elements.Component_Definitions;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Derived_Type_Definitions;
 with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Floating_Point_Definitions;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Object_Declarations;
@@ -14,6 +15,7 @@ with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Signed_Integer_Type_Definitions;
+with Gela.Elements.Subtype_Declarations;
 with Gela.Elements.Subtype_Indication_Or_Access_Definitions;
 with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subtype_Marks;
@@ -208,6 +210,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Derived_Type_Definitions.
               Derived_Type_Definition_Access);
 
+         overriding procedure Enumeration_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Enumeration_Type_Definitions.
+              Enumeration_Type_Definition_Access);
+
          overriding procedure Floating_Point_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Floating_Point_Definitions.
@@ -232,6 +239,11 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Signed_Integer_Type_Definitions.
               Signed_Integer_Type_Definition_Access);
+
+         overriding procedure Subtype_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Declarations.
+              Subtype_Declaration_Access);
 
          overriding procedure Unconstrained_Array_Definition
            (Self : in out Visiter;
@@ -270,6 +282,17 @@ package body Gela.Plain_Type_Managers is
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             end if;
          end Derived_Type_Definition;
+
+         overriding procedure Enumeration_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Enumeration_Type_Definitions.
+              Enumeration_Type_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.An_Other_Enum,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Enumeration_Type_Definition;
 
          overriding procedure Floating_Point_Definition
            (Self : in out Visiter;
@@ -334,6 +357,20 @@ package body Gela.Plain_Type_Managers is
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Signed_Integer_Type_Definition;
+
+         overriding procedure Subtype_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Subtype_Declarations.
+              Subtype_Declaration_Access)
+         is
+            Indication : constant Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access := Node.Type_Declaration_View;
+            Subtype_Mark : constant Gela.Elements.Subtype_Marks
+              .Subtype_Mark_Access  := Indication.Subtype_Mark;
+         begin
+            Self.Result := Type_From_Declaration.Self.Type_From_Subtype_Mark
+              (Subtype_Mark);
+         end Subtype_Declaration;
 
          overriding procedure Unconstrained_Array_Definition
            (Self : in out Visiter;

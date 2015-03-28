@@ -1454,9 +1454,14 @@ package body Gela.Resolve is
             Tipe   : Gela.Semantic_Types.Type_Index;
             Cursor : Gela.Interpretations.Cursor'Class)
          is
-            pragma Unreferenced (Tipe);
+            This_Type : constant Gela.Type_Views.Type_View_Access :=
+              TM.Get (Tipe);
          begin
-            Self.Index := Cursor.Get_Index;
+            if This_Type.Assigned and then
+              This_Type.Is_Expected_Type (View)
+            then
+               Self.Index := Cursor.Get_Index;
+            end if;
          end On_Expression;
 
          overriding procedure On_Tuple
@@ -1542,13 +1547,14 @@ package body Gela.Resolve is
       Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Expr_Up);
       Visiter : aliased Each.Visiter;
    begin
-      Result := 0;
       Visiter.Type_Index := Type_Up;
 
-      while Cursor.Has_Element loop
-         Cursor.Visit (Visiter'Access);
-         Cursor.Next;
-      end loop;
+      if View.Assigned then
+         while Cursor.Has_Element loop
+            Cursor.Visit (Visiter'Access);
+            Cursor.Next;
+         end loop;
+      end if;
 
       Result := Visiter.Index;
    end To_Type;

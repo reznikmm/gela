@@ -36,4 +36,8 @@ private
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access;
 
+   overriding function Is_Expected_Type
+     (Self     : Type_View;
+      Expected : not null Gela.Type_Views.Type_View_Access) return Boolean;
+
 end Gela.Plain_Type_Views;

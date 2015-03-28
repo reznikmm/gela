@@ -248,4 +248,43 @@ package body Gela.Plain_Type_Views is
       end if;
    end Get_Discriminant;
 
+   ----------------------
+   -- Is_Expected_Type --
+   ----------------------
+
+   overriding function Is_Expected_Type
+     (Self     : Type_View;
+      Expected : not null Gela.Type_Views.Type_View_Access) return Boolean
+   is
+      use type Gela.Elements.Full_Type_Declarations
+        .Full_Type_Declaration_Access;
+
+      Expected_Category : constant Gela.Type_Views.Category_Kinds :=
+        Expected.Category;
+   begin
+      if Self.Decl = Type_View (Expected.all).Decl then
+         return True;
+      end if;
+
+      case Expected_Category is
+         when Gela.Type_Views.An_Universal_Integer =>
+            return Self.Category in Gela.Type_Views.Any_Integer_Type;
+         when Gela.Type_Views.An_Universal_Real =>
+            return Self.Category in Gela.Type_Views.Any_Real_Type;
+         when others =>
+            null;
+      end case;
+
+      case Self.Category is
+         when Gela.Type_Views.An_Universal_Integer =>
+            return Expected_Category in Gela.Type_Views.Any_Integer_Type;
+         when Gela.Type_Views.An_Universal_Real =>
+            return Expected_Category in Gela.Type_Views.Any_Real_Type;
+         when others =>
+            null;
+      end case;
+
+      return False;
+   end Is_Expected_Type;
+
 end Gela.Plain_Type_Views;
