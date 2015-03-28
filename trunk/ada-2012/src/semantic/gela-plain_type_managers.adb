@@ -3,9 +3,12 @@ with Gela.Element_Factories;
 with Gela.Element_Visiters;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
+with Gela.Elements.Defining_Character_Literals;
+with Gela.Elements.Defining_Enumeration_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Derived_Type_Definitions;
 with Gela.Elements.Discriminant_Specifications;
+with Gela.Elements.Enumeration_Literal_Specifications;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Floating_Point_Definitions;
 with Gela.Elements.Identifiers;
@@ -252,6 +255,36 @@ package body Gela.Plain_Type_Managers is
 
       end Visiters;
 
+      package Is_Char_Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Found : Boolean := False;
+         end record;
+
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access);
+
+      end Is_Char_Visiters;
+
+      ----------------------
+      -- Is_Char_Visiters --
+      ----------------------
+
+      package body Is_Char_Visiters is
+
+         overriding procedure Defining_Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Defining_Character_Literals.
+              Defining_Character_Literal_Access)
+         is
+            pragma Unreferenced (Node);
+         begin
+            Self.Found := True;
+         end Defining_Character_Literal;
+
+      end Is_Char_Visiters;
+
       --------------
       -- Visiters --
       --------------
@@ -286,12 +319,37 @@ package body Gela.Plain_Type_Managers is
          overriding procedure Enumeration_Type_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Enumeration_Type_Definitions.
-              Enumeration_Type_Definition_Access) is
+              Enumeration_Type_Definition_Access)
+         is
+            Enum : Gela.Elements.Defining_Enumeration_Names.
+              Defining_Enumeration_Name_Access;
+            Enums : constant Gela.Elements.Enumeration_Literal_Specifications.
+              Enumeration_Literal_Specification_Sequence_Access :=
+                Node.Enumeration_Literal_Declarations;
+            Cursor : Gela.Elements.Enumeration_Literal_Specifications.
+              Enumeration_Literal_Specification_Sequence_Cursor := Enums.First;
+
+            V : Is_Char_Visiters.Visiter;
          begin
-            Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.An_Other_Enum,
-               Decl     => Gela.Elements.Full_Type_Declarations.
-                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+            while Cursor.Has_Element loop
+               Enum := Cursor.Element.Names;
+               Enum.Visit (V);
+               exit when V.Found;
+
+               Cursor.Next;
+            end loop;
+
+            if V.Found then
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Gela.Type_Views.A_Character,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+            else
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Gela.Type_Views.An_Other_Enum,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+            end if;
          end Enumeration_Type_Definition;
 
          overriding procedure Floating_Point_Definition
@@ -375,12 +433,33 @@ package body Gela.Plain_Type_Managers is
          overriding procedure Unconstrained_Array_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Unconstrained_Array_Definitions.
-              Unconstrained_Array_Definition_Access) is
+              Unconstrained_Array_Definition_Access)
+         is
+            use type Gela.Type_Views.Category_Kinds;
+
+            Component : constant Gela.Elements.Component_Definitions.
+              Component_Definition_Access := Node.Array_Component_Definition;
+
+            Component_Type : constant Gela.Semantic_Types.Type_Index :=
+              Type_From_Declaration.Self.Type_Of_Object_Declaration
+                (Gela.Elements.Element_Access (Component));
+
+            Component_Type_View : constant Gela.Type_Views.Type_View_Access :=
+              Type_From_Declaration.Self.Get (Component_Type);
          begin
-            Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.An_Other_Array,
-               Decl     => Gela.Elements.Full_Type_Declarations.
-                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+            if Component_Type_View.Assigned and then
+              Component_Type_View.Category = Gela.Type_Views.A_Character
+            then
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Gela.Type_Views.A_String,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+            else
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Gela.Type_Views.An_Other_Array,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+            end if;
          end Unconstrained_Array_Definition;
 
       end Visiters;

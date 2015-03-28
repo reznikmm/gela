@@ -95,6 +95,11 @@ package Gela.Resolve is
       Token  : Gela.Lexical_Types.Token_Count;
       Result : out Gela.Interpretations.Interpretation_Set_Index);
 
+   procedure String_Literal
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Token  : Gela.Lexical_Types.Token_Count;
+      Result : out Gela.Interpretations.Interpretation_Set_Index);
+
    procedure Interpretation
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;

@@ -316,7 +316,7 @@ Rules for string_literal.string_literal_token :
 (.
       --  LARL syntax has only operator_symbol
       --  TEMPORARY {string_literal.Up} := 0;
-      Gela.Pass_Utils.Resolve.Numeric_Literal
+      Gela.Pass_Utils.Resolve.String_Literal
         (Self.Compilation,
          ${string_literal_token.Index}, ${string_literal.Up});
 .)

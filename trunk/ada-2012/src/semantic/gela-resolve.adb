@@ -735,6 +735,7 @@ package body Gela.Resolve is
            (Self  : in out Visiter;
             Value : Gela.Interpretations.Interpretation_Set_Index_Array)
          is
+            use type Gela.Interpretations.Interpretation_Index;
 
             Tipe   : Gela.Semantic_Types.Type_Index;
             Chosen : Gela.Interpretations.Interpretation_Index;
@@ -745,7 +746,14 @@ package body Gela.Resolve is
                if Self.Count < Self.Profile.Length then
                   Self.Count := Self.Count + 1;
                   Tipe := Self.Profile.Get_Type (Self.Count);
-                  To_Type (Comp, Tipe, Value (Value'First), List (List'First));
+                  To_Type (Comp, Tipe, Value (Value'First), Chosen);
+
+                  if Chosen = 0 then
+                     Self.Index := 0;
+                     return;
+                  else
+                     List (List'First) := Chosen;
+                  end if;
                else
                   Self.Index := 0;
                   return;
@@ -1279,6 +1287,27 @@ package body Gela.Resolve is
       end if;
    end Simple_Expression_Range;
 
+   --------------------
+   -- String_Literal --
+   --------------------
+
+   procedure String_Literal
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Token  : Gela.Lexical_Types.Token_Count;
+      Result : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      pragma Unreferenced (Token);
+   begin
+      Result := 0;
+
+      Comp.Context.Interpretation_Manager.Add_Expression_Category
+        (Kinds  =>
+           (Gela.Type_Views.A_String => True, others => False),
+         Down   => (1 .. 0 => 0),
+         Result => Result);
+
+   end String_Literal;
+
    ----------------------
    -- To_The_Same_Type --
    ----------------------
@@ -1390,6 +1419,11 @@ package body Gela.Resolve is
             Tipe   : Gela.Semantic_Types.Type_Index;
             Cursor : Gela.Interpretations.Cursor'Class);
 
+         overriding procedure On_Expression_Category
+           (Self   : in out Visiter;
+            Kinds  : Gela.Type_Views.Category_Kind_Set;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
          overriding procedure On_Tuple
            (Self  : in out Visiter;
             Value : Gela.Interpretations.Interpretation_Set_Index_Array);
@@ -1463,6 +1497,16 @@ package body Gela.Resolve is
                Self.Index := Cursor.Get_Index;
             end if;
          end On_Expression;
+
+         overriding procedure On_Expression_Category
+           (Self   : in out Visiter;
+            Kinds  : Gela.Type_Views.Category_Kind_Set;
+            Cursor : Gela.Interpretations.Cursor'Class) is
+         begin
+            if Kinds (View.Category) then
+               Self.Index := Cursor.Get_Index;
+            end if;
+         end On_Expression_Category;
 
          overriding procedure On_Tuple
            (Self  : in out Visiter;
@@ -1768,6 +1812,8 @@ package body Gela.Resolve is
       List   : Gela.Interpretations.Interpretation_Index_Array (Value'Range) :=
         (others => 0);
    begin
+      Chosen := 0;
+
       for J in Value'Range loop
          declare
             use type Gela.Interpretations.Interpretation_Index;
@@ -1786,10 +1832,11 @@ package body Gela.Resolve is
                Cursor.Next;
             end loop;
 
+            if List (J) = 0 then
+               return;
+            end if;
          end;
       end loop;
-
-      Chosen := 0;
 
       for J in reverse List'Range loop
          IM.Get_Tuple_Index (List (J), Chosen, Chosen);
