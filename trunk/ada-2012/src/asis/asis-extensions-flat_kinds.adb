@@ -864,8 +864,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Ordinary_Fixed_Point_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Ordinary_Fixed_Point_Definitions.
-        Ordinary_Fixed_Point_Definition_Access)
-   is null;
+        Ordinary_Fixed_Point_Definition_Access);
 
    overriding procedure Others_Choice
      (Self : in out Visiter;
@@ -2000,6 +1999,16 @@ package body Asis.Extensions.Flat_Kinds is
          Self.Result := Operator_Map (Token.Symbol);
       end if;
    end Operator_Symbol;
+
+   overriding procedure Ordinary_Fixed_Point_Definition
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Ordinary_Fixed_Point_Definitions.
+        Ordinary_Fixed_Point_Definition_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := An_Ordinary_Fixed_Point_Definition;
+   end Ordinary_Fixed_Point_Definition;
 
    overriding procedure Others_Choice
      (Self : in out Visiter;

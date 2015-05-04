@@ -120,7 +120,9 @@ package body Gela.Resolve is
       end if;
 
       case Attr is
-         when Gela.Lexical_Types.Predefined_Symbols.Last =>
+         when Gela.Lexical_Types.Predefined_Symbols.First |
+              Gela.Lexical_Types.Predefined_Symbols.Last =>
+
             Get_Subtype
               (Comp,
                Env    => Env,
