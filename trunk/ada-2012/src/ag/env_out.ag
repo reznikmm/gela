@@ -601,6 +601,12 @@ Rules for full_type_declaration. :
           (Self.Compilation,
            ${Type_Declaration_View.env_out},
            Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+           
+      Gela.Pass_Utils.Add_Implicit_Declarations
+          (Self.Compilation,
+           Gela.Elements.Element_Access (Node),
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           ${full_type_declaration.env_out});
 .)
 
 Rules for function_body. :

@@ -13,8 +13,22 @@ is
 
    procedure Print (Item : Region_Item) is
       use type Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      procedure Print_Item
+        (Symbol : Gela.Lexical_Types.Symbol;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access);
+
       Set    : Gela.Symbol_Sets.Symbol_Set_Access;
       Symbol : Gela.Lexical_Types.Symbol;
+
+      procedure Print_Item
+        (Symbol : Gela.Lexical_Types.Symbol;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      is
+         pragma Unreferenced (Name);
+      begin
+         Puts ("   " & Set.Image (Symbol).To_UTF_8_String & ASCII.NUL);
+      end Print_Item;
    begin
       Set := Self.Context.Symbols;
       if Item.Name = null then
@@ -25,6 +39,7 @@ is
 
       Puts ("  begin region " &
               Set.Image (Symbol).To_UTF_8_String & ASCII.NUL);
+      Self.Names.For_Each (Item.Local, Print_Item'Access);
       Puts ("  end region" & ASCII.NUL);
    end Print;
 

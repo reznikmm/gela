@@ -33,6 +33,13 @@ package Gela.Name_List_Managers is
       Symbol : Gela.Lexical_Types.Symbol) return Defining_Name_Cursor;
    --  Find names in a Input list with given Symbol
 
+   procedure For_Each
+     (Self   : access Name_List_Manager;
+      Input  : List;
+      Proc   : access procedure
+        (Symbol : Gela.Lexical_Types.Symbol;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access));
+
    type Map is private;
    --  Map is mapping Name -> List
    function Empty_Map (Self : Name_List_Manager) return Map;

@@ -71,6 +71,26 @@ package body Gela.Name_List_Managers is
       end return;
    end Find;
 
+   procedure For_Each
+     (Self   : access Name_List_Manager;
+      Input  : List;
+      Proc   : access procedure
+        (Symbol : Gela.Lexical_Types.Symbol;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access))
+   is
+      use type Pair_Peristent_Lists.Count_Type;
+
+      Name   : Pair_Peristent_Lists.Count_Type := Input.Index;
+   begin
+      while Name > 0 loop
+         Proc
+           (Self.Pair_List.Head (Name).Symbol,
+            Self.Pair_List.Head (Name).Name);
+
+         Name := Self.Pair_List.Tail (Name);
+      end loop;
+   end For_Each;
+
    ---------------
    -- Empty_Map --
    ---------------

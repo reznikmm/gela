@@ -1156,6 +1156,7 @@ package body Gela.Resolve is
             package Each_Right is
                type Visiter is new Gela.Interpretations.Up_Visiter with record
                   Tipe      : Gela.Semantic_Types.Type_Index;
+                  Type_View : Gela.Type_Views.Type_View_Access;
                   Counters  : Counter_By_Type;
                end record;
 
@@ -1173,11 +1174,12 @@ package body Gela.Resolve is
                   Tipe   : Gela.Semantic_Types.Type_Index;
                   Cursor : Gela.Interpretations.Cursor'Class)
                is
+                  Chosen : Gela.Semantic_Types.Type_Index;
                   Type_View : constant Gela.Type_Views.Type_View_Access :=
                     TM.Get (Tipe);
                begin
                   if not Type_View.Assigned then
-                     null;
+                     return;
                   elsif Type_View.Category in
                     Gela.Type_Views.Any_Integer_Type
                   then
@@ -1186,38 +1188,53 @@ package body Gela.Resolve is
                     Gela.Type_Views.Any_Real_Type
                   then
                      Increment (Self.Counters, Cursor.Get_Index, Float);
-                  else  --  FIXME Drop after implementation of types
+                  else  --  FIXME Return after implementation of types
                      null;
                   end if;
 
-                  Comp.Context.Interpretation_Manager.Add_Expression
-                    (Tipe   => Tipe,
-                     Down   => (Left_Cursor.Get_Index, Cursor.Get_Index),
-                     Result => Set);
+                  if Type_View.Is_Expected_Type (Self.Type_View) then
+                     if Type_View.Category in
+                           Gela.Type_Views.An_Universal_Integer |
+                           Gela.Type_Views.An_Universal_Real |
+                           Gela.Type_Views.An_Universal_Fixed
+                     then
+                        Chosen := Self.Tipe;
+                     else
+                        Chosen := Tipe;
+                     end if;
+
+                     Comp.Context.Interpretation_Manager.Add_Expression
+                       (Tipe   => Chosen,
+                        Down   => (Left_Cursor.Get_Index, Cursor.Get_Index),
+                        Result => Set);
+                  end if;
                end On_Expression;
 
             end Each_Right;
 
-            Type_View : constant Gela.Type_Views.Type_View_Access :=
-              TM.Get (Tipe);
-
             Visiter_Right : aliased Each_Right.Visiter :=
-              (Tipe => Tipe, others => <>);
+              (Tipe => Tipe, Type_View => TM.Get (Tipe), others => <>);
          begin
+            if not Visiter_Right.Type_View.Assigned then
+               return;
+            end if;
+
             Each_Expression
               (Comp   => Comp,
                Set    => Right,
                Target => Visiter_Right);
 
-            if not Type_View.Assigned then
-               null;
-            elsif Type_View.Category in Gela.Type_Views.Any_Integer_Type then
+            if Visiter_Right.Type_View.Category in
+                 Gela.Type_Views.Any_Integer_Type
+            then
                Increment
                  (Self.Counters,
                   Cursor.Get_Index,
                   Visiter_Right.Counters,
                   Integer);
-            elsif Type_View.Category in Gela.Type_Views.Any_Real_Type then
+            elsif Visiter_Right.Type_View.Category in
+              Gela.Type_Views.Any_Real_Type
+            then
                Increment
                  (Self.Counters,
                   Cursor.Get_Index,

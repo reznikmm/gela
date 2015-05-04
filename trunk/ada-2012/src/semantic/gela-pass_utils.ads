@@ -100,6 +100,12 @@ package Gela.Pass_Utils is
       Unit   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access;
       Symbol : Gela.Lexical_Types.Symbol;
-      Env    : in out Gela.Semantic_Types.Env_Index);
+      Env    : Gela.Semantic_Types.Env_Index);
+
+   procedure Add_Implicit_Declarations
+     (Comp : Gela.Compilations.Compilation_Access;
+      Tipe : Gela.Elements.Element_Access;
+      Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Env  : in out Gela.Semantic_Types.Env_Index);
 
 end Gela.Pass_Utils;
