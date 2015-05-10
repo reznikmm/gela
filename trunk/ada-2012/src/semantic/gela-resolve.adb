@@ -1026,6 +1026,11 @@ package body Gela.Resolve is
       ES : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
 
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      Is_Expanded_Name : Boolean := False;
+
       ----------
       -- Each --
       ----------
@@ -1038,21 +1043,64 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
-            Found : aliased Boolean;
+            Found : aliased Boolean := False;
             NC : Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
               ES.Visible (Env, Name, Symbol, Found'Access);
          begin
-            while NC.Has_Element loop
-               IM.Add_Defining_Name
-                 (Name   => NC.Element,
-                  Down   => (1 => Cursor.Get_Index),
-                  Result => Set);
+            if Found then
+               --  ARM 4.1.3(4)
+               Is_Expanded_Name := True;
 
-               NC.Next;
-            end loop;
+               while NC.Has_Element loop
+                  IM.Add_Defining_Name
+                    (Name   => NC.Element,
+                     Down   => (1 => Cursor.Get_Index),
+                     Result => Set);
+
+                  NC.Next;
+               end loop;
+            end if;
          end On_Defining_Name;
 
       end Each;
+
+      package Each_Expr is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Result : Gela.Interpretations.Interpretation_Index := 0;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
+      end Each_Expr;
+
+      package body Each_Expr is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+            Type_View : constant Gela.Type_Views.Type_View_Access :=
+              TM.Get (Tipe);
+            Correspond : Gela.Elements.Defining_Names.Defining_Name_Access;
+         begin
+            if Type_View.Assigned then
+               Correspond := Type_View.Get_Component (Symbol);
+
+               if Correspond.Assigned then
+                  IM.Add_Defining_Name
+                    (Name   => Correspond,
+                     Down   => (1 => Cursor.Get_Index),
+                     Result => Set);
+               end if;
+            end if;
+         end On_Expression;
+
+      end Each_Expr;
 
       Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Prefix);
       Visiter : aliased Each.Visiter;
@@ -1062,6 +1110,14 @@ package body Gela.Resolve is
          Cursor.Visit (Visiter'Access);
          Cursor.Next;
       end loop;
+
+      if not Is_Expanded_Name then
+         declare
+            Expr : Each_Expr.Visiter;
+         begin
+            Each_Expression (Comp, Prefix, Expr);
+         end;
+      end if;
    end Selected_Component;
 
    ----------------------

@@ -730,6 +730,8 @@ package body Gela.Plain_Environments is
 
       Item : Region_Item_Count;
    begin
+      Found.all := False;
+
       if Index = Gela.Library_Environments.Library_Env then
          return Self.Lib.Visible (Index, Region, Symbol, Found);
       elsif Index not in Env_Item_Index then
@@ -751,6 +753,8 @@ package body Gela.Plain_Environments is
          return None : constant Visible_Cursors.Defining_Name_Cursor :=
            (others => <>);
       end if;
+
+      Found.all := True;
 
       return Result : Visible_Cursors.Defining_Name_Cursor :=
         (Set    => Plain_Environment_Set_Access (Self),

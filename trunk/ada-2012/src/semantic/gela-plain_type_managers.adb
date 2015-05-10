@@ -1,6 +1,7 @@
 with Gela.Compilations;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
+with Gela.Elements.Access_To_Object_Definitions;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Defining_Character_Literals;
@@ -17,6 +18,8 @@ with Gela.Elements.Object_Definitions;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Root_Type_Definitions;
+with Gela.Elements.Selected_Components;
+with Gela.Elements.Selector_Names;
 with Gela.Elements.Signed_Integer_Type_Definitions;
 with Gela.Elements.Subtype_Declarations;
 with Gela.Elements.Subtype_Indication_Or_Access_Definitions;
@@ -208,6 +211,11 @@ package body Gela.Plain_Type_Managers is
             Result : Gela.Semantic_Types.Type_Index := 0;
          end record;
 
+         overriding procedure Access_To_Object_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Access_To_Object_Definitions.
+              Access_To_Object_Definition_Access);
+
          overriding procedure Derived_Type_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Derived_Type_Definitions.
@@ -290,6 +298,17 @@ package body Gela.Plain_Type_Managers is
       --------------
 
       package body Visiters is
+
+         overriding procedure Access_To_Object_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Access_To_Object_Definitions.
+              Access_To_Object_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Views.A_Variable_Access,
+               Decl     => Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access (Node.Enclosing_Element));
+         end Access_To_Object_Definition;
 
          overriding procedure Derived_Type_Definition
            (Self : in out Visiter;
@@ -490,6 +509,11 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Identifiers.Identifier_Access);
 
+         overriding procedure Selected_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Components.
+              Selected_Component_Access);
+
       end Visiters;
 
       package body Visiters is
@@ -507,6 +531,17 @@ package body Gela.Plain_Type_Managers is
                    (Defining_Name.Enclosing_Element);
             end if;
          end Identifier;
+
+         overriding procedure Selected_Component
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Selected_Components.
+              Selected_Component_Access)
+         is
+            Selector : constant Gela.Elements.Selector_Names.
+              Selector_Name_Access := Node.Selector;
+         begin
+            Selector.Visit (Self);
+         end Selected_Component;
 
       end Visiters;
 
