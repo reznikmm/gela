@@ -1135,6 +1135,7 @@ Rules for case_statement. :
 (.
       Gela.Pass_Utils.Resolve.Case_Statement
         (Self.Compilation,
+         ${case_statement.env_in},
          ${Case_Expression.Up},
          ${Case_Statement_Paths.Up},
          ${Case_Statement_Paths.Down});

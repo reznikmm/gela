@@ -36,6 +36,8 @@ private
       --  List of Direct_Visible_Item.
       Use_Package : Defining_Name_Item_Count;
       --  List of use_package_clauses in the region
+      Completion : Defining_Name_Item_Count;
+      --  List of <Completion, Name> pairs
    end record;
 
    package Region_Item_Lists is new Gela.Peristent_Lists
@@ -52,6 +54,7 @@ private
    --  Withed - List of regions available over with clauses
 
    type Region_List_Array is array (Region_Enum) of Region_Item_Count;
+
    type Env_Item is record
       Region_List : Region_List_Array;
    end record;
@@ -122,6 +125,19 @@ private
       Index  : Gela.Semantic_Types.Env_Index;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
+
+   overriding function Add_Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Completion : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding function Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
 
    overriding function Direct_Visible
      (Self   : access Environment_Set;

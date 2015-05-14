@@ -41,8 +41,11 @@ package Gela.Pass_Utils is
    function Create_Completion_Region
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;
-      Symbol : Gela.Lexical_Types.Symbol)
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Decl   : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Env_Index;
+   --  If corresponding declaration is not found, call Add_Name_Create_Region
 
    function Add_Names
      (Comp         : Gela.Compilations.Compilation_Access;

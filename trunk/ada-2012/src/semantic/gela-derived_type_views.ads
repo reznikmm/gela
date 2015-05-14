@@ -4,14 +4,14 @@ with Gela.Elements.Subtype_Indications;
 with Gela.Lexical_Types;
 with Gela.Type_Views;
 
-package Gela.Plain_Type_Views is
+package Gela.Derived_Type_Views is
    pragma Preelaborate;
 
    type Type_View is new Gela.Type_Views.Type_View with private;
    type Type_View_Access is access all Type_View'Class;
 
-   function Create_Full_Type
-     (Category : Gela.Type_Views.Category_Kinds;
+   function Create_Derived_Type
+     (Parent   : not null Gela.Type_Views.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Views.Type_View_Access;
@@ -19,7 +19,7 @@ package Gela.Plain_Type_Views is
 private
 
    type Type_View is new Gela.Type_Views.Type_View with record
-      Category : Gela.Type_Views.Category_Kinds;
+      Parent   : not null Gela.Type_Views.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
    end record;
@@ -45,4 +45,4 @@ private
      (Self     : Type_View;
       Expected : not null Gela.Type_Views.Type_View_Access) return Boolean;
 
-end Gela.Plain_Type_Views;
+end Gela.Derived_Type_Views;

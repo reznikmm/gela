@@ -1,6 +1,7 @@
 --  This package provides representation of types and their categories.
 
 with Gela.Elements.Defining_Names;
+limited with Gela.Elements.Subtype_Indications;
 with Gela.Lexical_Types;
 
 package Gela.Type_Views is
@@ -60,6 +61,11 @@ package Gela.Type_Views is
      (Self   : Type_View;
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+
+   not overriding function Get_Designated
+     (Self   : Type_View)
+      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+        is abstract;
 
    not overriding function Is_Expected_Type
      (Self     : Type_View;

@@ -22,18 +22,21 @@ package Gela.Type_Managers is
 
    not overriding function Type_From_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Return type corresponding to Node of type declaration
 
    not overriding function Type_Of_Object_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Return type corresponding to Node of object declaration
 
    not overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
                 Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index is abstract;
@@ -41,6 +44,7 @@ package Gela.Type_Managers is
 
    not overriding function Type_By_Name
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view from given type's defining name
@@ -62,6 +66,7 @@ package Gela.Type_Managers is
 
    not overriding function Get_Profile
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access is abstract;
    --  If Name if callable entity return corresponding profile

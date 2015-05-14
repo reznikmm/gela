@@ -28,7 +28,9 @@ with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Unconstrained_Array_Definitions;
 with Gela.Plain_Type_Views;
+with Gela.Derived_Type_Views;
 with Gela.Profiles.Names;
+with Gela.Environments;
 
 package body Gela.Plain_Type_Managers is
 
@@ -86,11 +88,44 @@ package body Gela.Plain_Type_Managers is
    end Get;
 
    -----------------
+   -- Get_Derived --
+   -----------------
+
+   not overriding function Get_Derived
+     (Self     : access Type_Manager;
+      Parent   : Gela.Type_Views.Type_View_Access;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access)
+        return Gela.Semantic_Types.Type_Index
+   is
+      --  FIXME: Use separate maps for derived types
+      use type Gela.Semantic_Types.Type_Index;
+
+      Key : constant Back_Key := (Parent.Category, Decl);
+      Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
+      Result : constant Gela.Semantic_Types.Type_Index :=
+        Self.Map.Last_Key + 1;
+   begin
+      if Back_Maps.Has_Element (Pos) then
+         return Back_Maps.Element (Pos);
+      end if;
+
+      Self.Map.Insert
+        (Result,
+         Gela.Derived_Type_Views.Create_Derived_Type (Parent, Decl));
+
+      Self.Back.Insert (Key, Result);
+
+      return Result;
+   end Get_Derived;
+
+   -----------------
    -- Get_Profile --
    -----------------
 
    overriding function Get_Profile
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access
    is
@@ -101,7 +136,7 @@ package body Gela.Plain_Type_Managers is
          Result := Profile_Maps.Element (Cursor);
       else
          Result := new Gela.Profiles.Profile'Class'
-           (Gela.Profiles.Names.Create (Name));
+           (Gela.Profiles.Names.Create (Env, Name));
          Self.Profiles.Insert (Name, Result);
       end if;
 
@@ -188,12 +223,24 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Type_By_Name
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
         return Gela.Semantic_Types.Type_Index
    is
-      Decl : constant Gela.Elements.Element_Access := Node.Enclosing_Element;
+      ES : constant Gela.Environments.Environment_Set_Access :=
+        Self.Context.Environment_Set;
+      Completion : constant Gela.Elements.Defining_Names.Defining_Name_Access
+        := ES.Completion (Env, Node);
+
+      Decl : Gela.Elements.Element_Access;
    begin
-      return Self.Type_From_Declaration (Decl);
+      if Completion.Assigned then
+         Decl := Completion.Enclosing_Element;
+      else
+         Decl := Node.Enclosing_Element;
+      end if;
+
+      return Self.Type_From_Declaration (Env, Decl);
    end Type_By_Name;
 
    ---------------------------
@@ -202,6 +249,7 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Type_From_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index
    is
@@ -322,14 +370,15 @@ package body Gela.Plain_Type_Managers is
             Subtype_Mark : constant Gela.Elements.Subtype_Marks
               .Subtype_Mark_Access  := Parent.Subtype_Mark;
             Tipe : constant Gela.Semantic_Types.Type_Index :=
-              Type_From_Declaration.Self.Type_From_Subtype_Mark (Subtype_Mark);
+              Type_From_Declaration.Self.Type_From_Subtype_Mark
+                (Env, Subtype_Mark);
             Type_View : Gela.Type_Views.Type_View_Access;
          begin
             if Tipe /= 0 then
                Type_View := Type_From_Declaration.Self.Get (Tipe);
 
-               Self.Result := Type_From_Declaration.Self.Get
-                 (Category => Type_View.Category,
+               Self.Result := Type_From_Declaration.Self.Get_Derived
+                 (Parent   => Type_View,
                   Decl     => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             end if;
@@ -446,7 +495,7 @@ package body Gela.Plain_Type_Managers is
               .Subtype_Mark_Access  := Indication.Subtype_Mark;
          begin
             Self.Result := Type_From_Declaration.Self.Type_From_Subtype_Mark
-              (Subtype_Mark);
+              (Env, Subtype_Mark);
          end Subtype_Declaration;
 
          overriding procedure Unconstrained_Array_Definition
@@ -461,7 +510,7 @@ package body Gela.Plain_Type_Managers is
 
             Component_Type : constant Gela.Semantic_Types.Type_Index :=
               Type_From_Declaration.Self.Type_Of_Object_Declaration
-                (Gela.Elements.Element_Access (Component));
+                (Env, Gela.Elements.Element_Access (Component));
 
             Component_Type_View : constant Gela.Type_Views.Type_View_Access :=
               Type_From_Declaration.Self.Get (Component_Type);
@@ -496,6 +545,7 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
                 Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index
@@ -527,8 +577,7 @@ package body Gela.Plain_Type_Managers is
          begin
             if Defining_Name.Assigned then
                Self.Result :=
-                 Type_From_Subtype_Mark.Self.Type_From_Declaration
-                   (Defining_Name.Enclosing_Element);
+                 Type_From_Subtype_Mark.Self.Type_By_Name (Env, Defining_Name);
             end if;
          end Identifier;
 
@@ -558,6 +607,7 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Type_Of_Object_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index
    is
@@ -634,7 +684,7 @@ package body Gela.Plain_Type_Managers is
                 Node.Object_Declaration_Subtype;
          begin
             Self.Result :=
-              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Discriminant_Specification;
 
          overriding procedure Object_Declaration
@@ -658,7 +708,7 @@ package body Gela.Plain_Type_Managers is
                 Node.Object_Declaration_Subtype;
          begin
             Self.Result :=
-              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Parameter_Specification;
 
          overriding procedure Subtype_Indication
@@ -670,7 +720,7 @@ package body Gela.Plain_Type_Managers is
               Node.Subtype_Mark;
          begin
             Self.Result :=
-              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (X);
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Subtype_Indication;
       end Visiters;
 

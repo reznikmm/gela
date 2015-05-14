@@ -74,6 +74,13 @@ private
       .Full_Type_Declaration_Access)
         return Gela.Semantic_Types.Type_Index;
 
+   not overriding function Get_Derived
+     (Self     : access Type_Manager;
+      Parent   : Gela.Type_Views.Type_View_Access;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access)
+        return Gela.Semantic_Types.Type_Index;
+
    overriding function Get
      (Self  : access Type_Manager;
       Index : Gela.Semantic_Types.Type_Index)
@@ -81,22 +88,26 @@ private
 
    overriding function Type_From_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_Of_Object_Declaration
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_From_Subtype_Mark
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
                 Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_By_Name
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Type_Index;
 
@@ -111,6 +122,7 @@ private
 
    overriding function Get_Profile
      (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access;
 

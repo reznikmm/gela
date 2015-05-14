@@ -23,7 +23,8 @@ package body Gela.Profiles.Names is
    ------------
 
    function Create
-     (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+     (Env  : Gela.Semantic_Types.Env_Index;
+      Name : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile'Class
    is
       package Get_Length is
@@ -146,7 +147,7 @@ package body Gela.Profiles.Names is
                     Parameter_Specification_Access := Cursor.Element;
                   Tipe : constant Gela.Semantic_Types.Type_Index :=
                     TM.Type_Of_Object_Declaration
-                      (Gela.Elements.Element_Access (Param));
+                      (Env, Gela.Elements.Element_Access (Param));
                   Names : constant Gela.Elements.Defining_Identifiers.
                     Defining_Identifier_Sequence_Access := Param.Names;
                   Pos : Gela.Elements.Defining_Identifiers.
@@ -183,7 +184,7 @@ package body Gela.Profiles.Names is
 
             Self.Result.Funct := True;
             Self.Result.Result :=
-              TM.Type_From_Subtype_Mark (Node.Result_Subtype);
+              TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype);
          end Function_Declaration;
 
          overriding procedure Procedure_Declaration

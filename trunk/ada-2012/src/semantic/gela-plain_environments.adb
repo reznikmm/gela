@@ -248,6 +248,110 @@ package body Gela.Plain_Environments is
 
    end Use_Package_Cursors;
 
+   overriding function Add_Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Completion : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index
+   is
+      Env_Index : Gela.Semantic_Types.Env_Index;
+      Env : Env_Item;
+      Reg : Region_Item;
+   begin
+      if Index in 0 | Self.Library_Level_Environment then
+         --  Fix constraint_error because library_bodies doesn have env yet
+         return Index;
+      end if;
+
+      Env := Self.Env.Element (Index);
+      Reg := Self.Region.Head (Env.Region_List (Nested));
+
+      Self.Use_Package.Prepend
+        (Value  => Name,
+         Input  => Reg.Completion,
+         Output => Reg.Completion);
+
+      Self.Use_Package.Prepend
+        (Value  => Completion,
+         Input  => Reg.Completion,
+         Output => Reg.Completion);
+
+      --  Replace head of Nested_Region_List with Reg
+      Self.Region.Prepend
+        (Value  => Reg,
+         Input  => Self.Region.Tail (Env.Region_List (Nested)),
+         Output => Env.Region_List (Nested));
+
+      Env_Index := Self.Env.Find_Index (Env);
+
+      if Env_Index = 0 then
+         Self.Env.Append (Env);
+         Env_Index := Self.Env.Last_Index;
+      end if;
+
+      return Env_Index;
+   end Add_Completion;
+
+   overriding function Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+   is
+      use type Region_Item_Count;
+      use type Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      function Find_Completion
+        (List : Defining_Name_Item_Count)
+         return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      ---------------------
+      -- Find_Completion --
+      ---------------------
+
+      function Find_Completion
+        (List : Defining_Name_Item_Count)
+         return Gela.Elements.Defining_Names.Defining_Name_Access
+      is
+         use type Defining_Name_Item_Count;
+         Next   : Defining_Name_Item_Count := List;
+         Result : Gela.Elements.Defining_Names.Defining_Name_Access;
+      begin
+         while Next /= 0 loop
+            Result := Self.Use_Package.Head (Next);
+            Next := Self.Use_Package.Tail (Next);
+
+            if Self.Use_Package.Head (Next) = Name then
+               return Result;
+            end if;
+
+            Next := Self.Use_Package.Tail (Next);
+         end loop;
+
+         return null;
+      end Find_Completion;
+
+      Env  : constant Env_Item := Self.Env.Element (Index);
+      Next : Region_Item_Count;
+      Result : Gela.Elements.Defining_Names.Defining_Name_Access;
+   begin
+      for J of Env.Region_List loop
+         Next := J;
+         while Next /= 0 loop
+            Result := Find_Completion (Self.Region.Head (Next).Completion);
+
+            if Result.Assigned then
+               return Result;
+            end if;
+
+            Next := Self.Region.Tail (Next);
+         end loop;
+      end loop;
+
+      return null;
+   end Completion;
+
    -----------------------
    -- Add_Defining_Name --
    -----------------------
@@ -297,7 +401,7 @@ package body Gela.Plain_Environments is
       if Env.Region_List (Nested) = 0 then
          Reg := (Name => null,
                  Local => Self.Names.Empty_List,
-                 Use_Package => 0);
+                 Use_Package | Completion => 0);
       else
          Reg := Self.Region.Head (Env.Region_List (Nested));
       end if;
@@ -491,7 +595,8 @@ package body Gela.Plain_Environments is
       Next  : Region_Item :=
         (Name        => Region,
          Local       => Self.Names.Empty_List,
-         Use_Package => 0);
+         Use_Package => 0,
+         Completion  => 0);
    begin
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);
@@ -535,7 +640,8 @@ package body Gela.Plain_Environments is
       Next  : constant Region_Item :=
         (Name        => Region,
          Local       => Self.Names.Empty_List,
-         Use_Package => 0);
+         Use_Package => 0,
+         Completion  => 0);
    begin
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);

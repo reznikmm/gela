@@ -43,5 +43,6 @@ Synthesized attributes
 Rules for subtype_indication. :
 (.
       ${subtype_indication.type_index} :=
-        Self.Compilation.Context.Types.Type_From_Subtype_Mark (Subtype_Mark);
+        Self.Compilation.Context.Types.Type_From_Subtype_Mark
+         (${subtype_indication.env_in}, Subtype_Mark);
 .)

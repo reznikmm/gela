@@ -569,6 +569,17 @@ package body Gela.Library_Environments is
 
    end Library_Cursor;
 
+   overriding function Add_Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Completion : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return Index;
+   end Add_Completion;
+
    -----------------------
    -- Add_Defining_Name --
    -----------------------
@@ -609,6 +620,21 @@ package body Gela.Library_Environments is
    begin
       return Index;
    end Add_With_Clause;
+
+   ----------------
+   -- Completion --
+   ----------------
+
+   overriding function Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+   is
+      pragma Unreferenced (Self, Index, Name);
+   begin
+      return null;
+   end Completion;
 
    --------------------
    -- Direct_Visible --

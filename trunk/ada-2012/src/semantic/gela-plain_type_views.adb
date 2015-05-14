@@ -1,14 +1,15 @@
 with Gela.Element_Visiters;
+with Gela.Elements.Access_To_Object_Definitions;
+with Gela.Elements.Alt_Record_Definitions;
+with Gela.Elements.Component_Declarations;
+with Gela.Elements.Component_Items;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Discriminant_Parts;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Known_Discriminant_Parts;
-with Gela.Elements.Type_Definitions;
-with Gela.Elements.Record_Type_Definitions;
-with Gela.Elements.Alt_Record_Definitions;
 with Gela.Elements.Record_Definitions;
-with Gela.Elements.Component_Items;
-with Gela.Elements.Component_Declarations;
+with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Type_Definitions;
 with Gela.Elements.Variant_Parts;
 with Gela.Elements.Variants;
 
@@ -178,6 +179,47 @@ package body Gela.Plain_Type_Views is
       end if;
    end Get_Component;
 
+   --------------------
+   -- Get_Designated --
+   --------------------
+
+   overriding function Get_Designated
+     (Self   : Type_View)
+      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+   is
+      package Get is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Elements.Subtype_Indications.
+              Subtype_Indication_Access;
+         end record;
+
+         overriding procedure Access_To_Object_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Access_To_Object_Definitions.
+              Access_To_Object_Definition_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Access_To_Object_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Access_To_Object_Definitions.
+              Access_To_Object_Definition_Access) is
+         begin
+            Self.Result := Node.Subtype_Indication;
+         end Access_To_Object_Definition;
+
+      end Get;
+
+      V : Get.Visiter;
+      View : Gela.Elements.Type_Definitions.Type_Definition_Access;
+   begin
+      View := Self.Decl.Type_Declaration_View;
+      View.Visit (V);
+      return V.Result;
+   end Get_Designated;
+
    ----------------------
    -- Get_Discriminant --
    ----------------------
@@ -262,7 +304,9 @@ package body Gela.Plain_Type_Views is
       Expected_Category : constant Gela.Type_Views.Category_Kinds :=
         Expected.Category;
    begin
-      if Self.Decl = Type_View (Expected.all).Decl then
+      if Expected.all in Type_View and then
+        Self.Decl = Type_View (Expected.all).Decl
+      then
          return True;
       end if;
 

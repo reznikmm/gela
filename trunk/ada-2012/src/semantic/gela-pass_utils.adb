@@ -166,7 +166,7 @@ package body Gela.Pass_Utils is
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
       Type_Index : constant Gela.Semantic_Types.Type_Index :=
-        TM.Type_From_Declaration (Tipe);
+        TM.Type_From_Declaration (Env, Tipe);
       Type_View : constant Gela.Type_Views.Type_View_Access :=
         TM.Get (Type_Index);
       Category : Gela.Type_Views.Category_Kinds;
@@ -470,21 +470,27 @@ package body Gela.Pass_Utils is
    function Create_Completion_Region
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;
-      Symbol : Gela.Lexical_Types.Symbol)
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Decl   : Gela.Elements.Element_Access)
       return Gela.Semantic_Types.Env_Index
    is
       Set   : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
-      Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
       Found : aliased Boolean := False;
+      Env_1 : Gela.Semantic_Types.Env_Index;
       Pos   : constant Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
         Set.Visible (Env, null, Symbol, Found'Access);
    begin
       if Pos.Has_Element then
-         Name := Pos.Element;
-         return Set.Enter_Completion_Region (Env, Name);
+         Env_1 := Set.Add_Completion
+           (Index      => Env,
+            Name       => Pos.Element,
+            Completion => Name);
+
+         return Set.Enter_Completion_Region (Env_1, Pos.Element);
       else
-         return Env;
+         return Add_Name_Create_Region (Comp, Env, Symbol, Name, Decl);
       end if;
    end Create_Completion_Region;
 

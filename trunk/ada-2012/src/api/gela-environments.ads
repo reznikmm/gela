@@ -90,6 +90,23 @@ package Gela.Environments is
    --  Create new environment by adding use package <Name> to provided env
    --  with given Index. Return index of created environment
 
+   not overriding function Add_Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Completion : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is abstract;
+   --  Create new environment by adding (Name -> Completion) mapping to
+   --  provided env with given Index. Return index of created environment
+
+   not overriding function Completion
+     (Self       : in out Environment_Set;
+      Index      : Gela.Semantic_Types.Env_Index;
+      Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+   --  Find completion for given Name in provided env with given Index.
+   --  Return null if none was found
+
    not overriding function Enter_Declarative_Region
      (Self   : access Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;

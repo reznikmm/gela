@@ -4,7 +4,9 @@ package Gela.Profiles.Names is
    type Profile (<>) is limited new Gela.Profiles.Profile with private;
    type Profile_Access is access all Profile'Class;
 
-   function Create (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+   function Create
+     (Env  : Gela.Semantic_Types.Env_Index;
+      Name : Gela.Elements.Defining_Names.Defining_Name_Access)
      return Gela.Profiles.Profile'Class;
 
    overriding function Is_Function

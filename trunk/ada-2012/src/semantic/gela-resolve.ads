@@ -75,6 +75,7 @@ package Gela.Resolve is
 
    procedure Case_Statement
      (Comp    : Gela.Compilations.Compilation_Access;
+      Env     : Gela.Semantic_Types.Env_Index;
       Type_Up : Gela.Interpretations.Interpretation_Set_Index;
       Tuple   : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index);
