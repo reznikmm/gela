@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2445 $ $Date: 2012-01-15 15:40:24 +0200 (Вс., 15 янв. 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 
 %token Name Name_List_End Start Excl_Start Section_End Regexp Action

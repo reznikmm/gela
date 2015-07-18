@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 3627 $ $Date: 2012-12-29 11:26:15 +0200 (Сб., 29 дек. 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 with Matreshka.Internals.Finite_Automatons;
 with League.Strings;

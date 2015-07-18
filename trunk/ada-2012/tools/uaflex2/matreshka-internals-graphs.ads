@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2374 $ $Date: 2012-01-05 09:18:57 +0200 (Чт., 05 янв. 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 
 package Matreshka.Internals.Graphs is

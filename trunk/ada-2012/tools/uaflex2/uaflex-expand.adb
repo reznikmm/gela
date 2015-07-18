@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2447 $ $Date: 2012-01-15 17:39:53 +0200 (Вс., 15 янв. 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 with Ada.Wide_Wide_Text_IO;
 with UAFLEX.Nodes;

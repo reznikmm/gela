@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2997 $ $Date: 2012-05-16 22:31:50 +0300 (Ср., 16 мая 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 with League.String_Vectors;
 with League.Strings;

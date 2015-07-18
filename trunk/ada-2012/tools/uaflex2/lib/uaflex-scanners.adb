@@ -40,7 +40,7 @@ with Matreshka.Internals.Unicode;
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2374 $ $Date: 2012-01-05 09:18:57 +0200 (Чтв, 05 Янв 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 
 package body UAFLEX.Scanners is

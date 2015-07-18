@@ -39,7 +39,7 @@
 -- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.             --
 --                                                                          --
 ------------------------------------------------------------------------------
---  $Revision: 2505 $ $Date: 2012-02-22 00:36:44 +0200 (Ср., 22 февр. 2012) $
+--  $Revision$ $Date$
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Generic_Array_Sort;
