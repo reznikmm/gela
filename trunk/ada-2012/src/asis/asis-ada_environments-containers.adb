@@ -5,7 +5,6 @@
 --                     - - - - - - - - - - - - - - -                        --
 --            Read copyright and license at the end of this file            --
 ------------------------------------------------------------------------------
---  $TenDRA: asis-ada_environments-containers.adb 2678 2009-01-10 11:54:22Z maxr $:
 --  Purpose:
 --  Trivial implementation of ASIS Ada_Environments.Containers
 

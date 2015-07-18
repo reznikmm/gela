@@ -66,8 +66,8 @@ package Asis is
 --  the ASIS specification compile, the following types and constants are
 --  provided:
 
-   type Implementation_Defined_Integer_Type is range -(2**31-1) .. 2**31-1;
-   Implementation_Defined_Integer_Constant : constant := 2**31-1;
+   type Implementation_Defined_Integer_Type is range -(2**31 - 1) .. 2**31 - 1;
+   Implementation_Defined_Integer_Constant : constant := 2**31 - 1;
 
 --  In addition, there are several implementation-defined private types.
 --  For compilation convenience these types have been represented as

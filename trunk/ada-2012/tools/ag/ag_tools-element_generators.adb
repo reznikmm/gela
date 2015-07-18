@@ -471,8 +471,32 @@ package body AG_Tools.Element_Generators is
       Nodes.P;
       Impl.P (" is");
       Impl.P ("   begin");
+
+      for Part of G.Part (Prod.First .. Prod.Last) loop
+         if Part.Is_Non_Terminal_Reference or Part.Is_List_Reference then
+            Index := Index + 1;
+         end if;
+      end loop;
+
       Impl.N ("      return Result : aliased ");
+
+      if Index = 1 then
+         Impl.N ("constant");
+         if Name.Length >= 38 then
+            Impl.P;
+            Impl.N ("        ");
+         else
+            Impl.N (" ");
+         end if;
+      end if;
+
       Impl.N (Name);
+
+      if Index = 1 and Name.Length >= 38 then
+         Impl.P;
+         Impl.N ("       ");
+      end if;
+
       Impl.P (" :=");
       Impl.N ("        (Length                => ");
       Impl.N (Natural (Prod.Last - Prod.First + 1));
@@ -484,6 +508,8 @@ package body AG_Tools.Element_Generators is
       Impl.P ("         Is_Part_Of_Instance   => False,");
       Impl.P ("         Children              =>");
       Impl.N ("           (");
+
+      Index := 1;
 
       for Part of G.Part (Prod.First .. Prod.Last) loop
          Part_Type := Return_Type_Image (G, Part);
