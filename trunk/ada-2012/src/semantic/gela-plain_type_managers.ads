@@ -6,6 +6,7 @@ with Ada.Containers.Hashed_Maps;
 with Gela.Contexts;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Profiles;
 with Gela.Semantic_Types;
@@ -59,12 +60,26 @@ private
       Hash            => Hash,
       Equivalent_Keys => Gela.Elements.Defining_Names."=");
 
+   function Hash
+     (Self : Gela.Elements.Root_Type_Definitions.
+        Root_Type_Definition_Access)
+      return Ada.Containers.Hash_Type;
+
+   package Root_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Gela.Elements.Root_Type_Definitions.
+        Root_Type_Definition_Access,
+      Element_Type    => Gela.Semantic_Types.Type_Index,
+      Hash            => Hash,
+      Equivalent_Keys => Gela.Elements.Root_Type_Definitions."=",
+      "="             => Gela.Semantic_Types."=");
+
    type Type_Manager (Context : Gela.Contexts.Context_Access) is
      new Gela.Type_Managers.Type_Manager with
    record
        Map      : Type_View_Maps.Map;
        Back     : Back_Maps.Map;
        Profiles : Profile_Maps.Map;
+       Roots    : Root_Maps.Map;
    end record;
 
    not overriding function Get

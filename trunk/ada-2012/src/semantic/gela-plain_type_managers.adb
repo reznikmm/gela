@@ -17,7 +17,6 @@ with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
-with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selector_Names;
 with Gela.Elements.Signed_Integer_Type_Definitions;
@@ -164,6 +163,18 @@ package body Gela.Plain_Type_Managers is
       return Self.Hash;
    end Hash;
 
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (Self : Gela.Elements.Root_Type_Definitions.
+        Root_Type_Definition_Access)
+      return Ada.Containers.Hash_Type is
+   begin
+      return Self.Hash;
+   end Hash;
+
    ----------------
    -- Initialize --
    ----------------
@@ -194,7 +205,7 @@ package body Gela.Plain_Type_Managers is
          Id := Factory.Defining_Identifier (Identifier_Token => 0);
 
          Def := Factory.Root_Type_Definition (0);
-         Def.Set_Type_Kind (Index);
+         Self.Roots.Insert (Def, Index);
 
          Node := Factory.Full_Type_Declaration
            (Type_Token            => 0,
@@ -470,7 +481,7 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Root_Type_Definitions.
               Root_Type_Definition_Access) is
          begin
-            Self.Result := Node.Type_Kind;
+            Self.Result := Type_From_Declaration.Self.Roots.Element (Node);
          end Root_Type_Definition;
 
          overriding procedure Signed_Integer_Type_Definition

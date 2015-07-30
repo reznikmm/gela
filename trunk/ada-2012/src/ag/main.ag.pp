@@ -11,15 +11,6 @@
 #include "static_value.ag"
 
 Synthesized attributes
-  root_type_definition
-   : Gela.Semantic_Types.Type_Index : type_kind;
-
-Rules for root_type_definition.dummy_token :
-(.
-      ${root_type_definition.type_kind} := 0;
-.)
-
-Synthesized attributes
   function_declaration,
   procedure_declaration
    : Gela.Elements.Element_Access : corresponding_type ;
@@ -34,15 +25,4 @@ Rules for procedure_declaration. :
 (.
       --  This attribute is custom code
       ${procedure_declaration.corresponding_type} := null;
-.)
-
-Synthesized attributes
-  subtype_indication
-   : Gela.Semantic_Types.Type_Index : type_index;
-
-Rules for subtype_indication. :
-(.
-      ${subtype_indication.type_index} :=
-        Self.Compilation.Context.Types.Type_From_Subtype_Mark
-         (${subtype_indication.env_in}, Subtype_Mark);
 .)

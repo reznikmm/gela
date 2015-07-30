@@ -1472,7 +1472,8 @@ package body Asis.Extensions.Flat_Kinds is
             (Node.Enclosing_Element);
 
       Type_Index : constant Gela.Semantic_Types.Type_Index :=
-        Subtype_Indication.Type_Index;
+        TM.Type_From_Subtype_Mark
+          (Subtype_Indication.Env_In, Subtype_Indication.Subtype_Mark);
 
       Type_View : constant Gela.Type_Views.Type_View_Access :=
         TM.Get (Type_Index);
