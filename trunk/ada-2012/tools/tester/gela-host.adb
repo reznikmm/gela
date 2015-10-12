@@ -10,6 +10,7 @@
 with Ada.Command_Line;
 with Ada.Directories;
 with Ada.Streams;
+with Ada.Wide_Wide_Text_IO;
 with GNAT.OS_Lib;
 with GNAT.Source_Info;
 with Interfaces.C.Strings;
@@ -36,6 +37,10 @@ package body Gela.Host is
 
    Exe_Suffix : constant League.Strings.Universal_String :=
      Suffixes (Is_Windows);
+
+   Verbose : constant Boolean :=
+     not League.Application.Arguments.Is_Empty and then
+       League.Application.Arguments.Element (1).Starts_With ("-v");
 
    Build_Root_Value  : League.Strings.Universal_String;
    Source_Root_Value : League.Strings.Universal_String;
@@ -152,6 +157,10 @@ package body Gela.Host is
          Text.Append (" [ in ");
          Text.Append (Directory);
          Text.Append ("]");
+      end if;
+
+      if Verbose then
+         Ada.Wide_Wide_Text_IO.Put_Line (Text.To_Wide_Wide_String);
       end if;
 
       if pipe2 (FD => Output1, Flags => O_CLOEXEC) = -1 then
