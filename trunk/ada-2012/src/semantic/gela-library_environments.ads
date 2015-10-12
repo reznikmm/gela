@@ -66,11 +66,11 @@ private
       Completion : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
 
-   overriding function Completion
+   overriding function Completions
      (Self       : in out Environment_Set;
       Index      : Gela.Semantic_Types.Env_Index;
       Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Elements.Defining_Names.Defining_Name_Access;
+      return Gela.Environments.Completion_List;
 
    overriding function Enter_Completion_Region
      (Self   : access Environment_Set;

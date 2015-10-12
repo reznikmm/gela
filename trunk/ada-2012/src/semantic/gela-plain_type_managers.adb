@@ -240,13 +240,13 @@ package body Gela.Plain_Type_Managers is
    is
       ES : constant Gela.Environments.Environment_Set_Access :=
         Self.Context.Environment_Set;
-      Completion : constant Gela.Elements.Defining_Names.Defining_Name_Access
-        := ES.Completion (Env, Node);
+      Completions : constant Gela.Environments.Completion_List
+        := ES.Completions (Env, Node);
 
       Decl : Gela.Elements.Element_Access;
    begin
-      if Completion.Assigned then
-         Decl := Completion.Enclosing_Element;
+      if Completions.Length > 0 then
+         Decl := Completions.Data (1).Enclosing_Element;
       else
          Decl := Node.Enclosing_Element;
       end if;

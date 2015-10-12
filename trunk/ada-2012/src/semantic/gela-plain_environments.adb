@@ -293,64 +293,82 @@ package body Gela.Plain_Environments is
       return Env_Index;
    end Add_Completion;
 
-   overriding function Completion
+   -----------------
+   -- Completions --
+   -----------------
+
+   overriding function Completions
      (Self       : in out Environment_Set;
       Index      : Gela.Semantic_Types.Env_Index;
       Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Elements.Defining_Names.Defining_Name_Access
+      return Gela.Environments.Completion_List
    is
       use type Region_Item_Count;
       use type Gela.Elements.Defining_Names.Defining_Name_Access;
 
-      function Find_Completion
-        (List : Defining_Name_Item_Count)
-         return Gela.Elements.Defining_Names.Defining_Name_Access;
+      procedure Find_Completion
+        (List    : Defining_Name_Item_Count;
+         Result  : out Gela.Elements.Defining_Names.Defining_Name_Access;
+         Restart : in out Boolean);
 
       ---------------------
       -- Find_Completion --
       ---------------------
 
-      function Find_Completion
-        (List : Defining_Name_Item_Count)
-         return Gela.Elements.Defining_Names.Defining_Name_Access
+      procedure Find_Completion
+        (List    : Defining_Name_Item_Count;
+         Result  : out Gela.Elements.Defining_Names.Defining_Name_Access;
+         Restart : in out Boolean)
       is
          use type Defining_Name_Item_Count;
          Next   : Defining_Name_Item_Count := List;
-         Result : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Completion : Gela.Elements.Defining_Names.Defining_Name_Access;
       begin
          while Next /= 0 loop
             Result := Self.Use_Package.Head (Next);
             Next := Self.Use_Package.Tail (Next);
+            Completion := Self.Use_Package.Head (Next);
 
-            if Self.Use_Package.Head (Next) = Name then
-               return Result;
+            if Completion = Name then
+               return;
+            elsif Result = Name then
+               Result := Completion;
+               Restart := True;
             end if;
 
             Next := Self.Use_Package.Tail (Next);
          end loop;
 
-         return null;
+         Result := null;
       end Find_Completion;
 
-      Env  : constant Env_Item := Self.Env.Element (Index);
-      Next : Region_Item_Count;
-      Result : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Env     : constant Env_Item := Self.Env.Element (Index);
+      Next    : Region_Item_Count;
+      Result  : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Data    : Gela.Environments.Completion_Array
+        (1 .. Gela.Environments.Completion_Index'Last);
+      Last    : Gela.Environments.Completion_Index := 0;
+      Restart : Boolean := False;
    begin
       for J of Env.Region_List loop
          Next := J;
          while Next /= 0 loop
-            Result := Find_Completion (Self.Region.Head (Next).Completion);
+            Find_Completion
+              (Self.Region.Head (Next).Completion, Result, Restart);
 
-            if Result.Assigned then
-               return Result;
+            if Restart then
+               return Completions (Self, Index, Result);
+            elsif Result.Assigned then
+               Last := Last + 1;
+               Data (Last) := Result;
             end if;
 
             Next := Self.Region.Tail (Next);
          end loop;
       end loop;
 
-      return null;
-   end Completion;
+      return (Last, Data (1 .. Last));
+   end Completions;
 
    -----------------------
    -- Add_Defining_Name --

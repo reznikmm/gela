@@ -99,13 +99,21 @@ package Gela.Environments is
    --  Create new environment by adding (Name -> Completion) mapping to
    --  provided env with given Index. Return index of created environment
 
-   not overriding function Completion
+   subtype Completion_Index is Natural range 0 .. 6;
+
+   type Completion_Array is array (Completion_Index range <>) of
+     Gela.Elements.Defining_Names.Defining_Name_Access;
+
+   type Completion_List (Length : Completion_Index := 0) is record
+      Data : Completion_Array (1 .. Length);
+   end record;
+
+   not overriding function Completions
      (Self       : in out Environment_Set;
       Index      : Gela.Semantic_Types.Env_Index;
       Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
-      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
-   --  Find completion for given Name in provided env with given Index.
-   --  Return null if none was found
+      return Completion_List is abstract;
+   --  Find completions for given Name in provided env with given Index.
 
    not overriding function Enter_Declarative_Region
      (Self   : access Environment_Set;
