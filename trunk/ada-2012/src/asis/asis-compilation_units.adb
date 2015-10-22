@@ -153,7 +153,7 @@ package body Asis.Compilation_Units is
      (Library_Item : in Asis.Compilation_Unit)
       return Asis.Compilation_Unit
    is
-      Result : U.Body_Unit_Access;
+      Result : U.Library_Unit_Body_Access;
    begin
       Check_Nil_Unit (Library_Item, "Corresponding_Body");
 
@@ -207,9 +207,9 @@ package body Asis.Compilation_Units is
    begin
       if Asis.Ada_Environments.Is_Open (The_Context) then
          if Assigned (Library_Unit) and then
-           Library_Unit.Data.all in U.Package_Unit'Class
+           Library_Unit.Data.all in U.Library_Package_Declaration'Class
          then
-            Set := U.Package_Unit'Class (Library_Unit.Data.all).
+            Set := U.Library_Package_Declaration'Class (Library_Unit.Data.all).
               Corresponding_Childern;
 
             return To_List (Set);
@@ -231,8 +231,8 @@ package body Asis.Compilation_Units is
    begin
       Check_Nil_Unit (Library_Item, "Corresponding_Declaration");
 
-      if Library_Item.Data.all in U.Body_Unit'Class then
-         Result := U.Body_Unit'Class
+      if Library_Item.Data.all in U.Library_Unit_Body'Class then
+         Result := U.Library_Unit_Body'Class
            (Library_Item.Data.all).Corresponding_Declaration;
 
          return (Data => U.Compilation_Unit_Access (Result));
@@ -263,7 +263,7 @@ package body Asis.Compilation_Units is
      (Library_Unit : in Asis.Compilation_Unit)
       return Asis.Compilation_Unit
    is
-      Result : U.Package_Unit_Access;
+      Result : U.Library_Package_Declaration_Access;
    begin
       Check_Nil_Unit (Library_Unit, "Corresponding_Parent_Declaration");
 
@@ -583,8 +583,9 @@ package body Asis.Compilation_Units is
    begin
       if Asis.Ada_Environments.Is_Open (The_Context) then
          if Assigned (Parent_Body) then
-            if Parent_Body.Data.all in U.Body_Unit'Class then
-               Set := U.Body_Unit'Class (Parent_Body.Data.all).Subunits;
+            if Parent_Body.Data.all in U.Library_Unit_Body'Class then
+               Set := U.Library_Unit_Body'Class
+                 (Parent_Body.Data.all).Subunits;
 
                return To_List (Set);
 

@@ -3,7 +3,6 @@ with Gela.Path_Source_Finders;
 with Gela.Plain_Dependency_Lists;
 with Gela.Plain_Compilation_Managers;
 with Gela.Plain_Compilation_Units;
-with Gela.Plain_Compilation_Unit_Sets;
 with Gela.Plain_Value_Sets;
 
 package body Gela.Plain_Contexts is
@@ -27,20 +26,21 @@ package body Gela.Plain_Contexts is
      (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access is
    begin
-      return Self.Bodies;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
+        (Self.Bodies);
    end Compilation_Unit_Bodies;
 
    ----------------------
    -- Create_Body_Unit --
    ----------------------
 
-   overriding function Create_Body_Unit
+   overriding function Create_Library_Unit_Body
      (Self        : in out Context;
       Declaration : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Name        : Gela.Lexical_Types.Symbol;
       Node        : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access
+      return Gela.Compilation_Units.Library_Unit_Body_Access
    is
       Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
         Gela.Plain_Compilation_Units.Create_Body
@@ -50,20 +50,20 @@ package body Gela.Plain_Contexts is
            Decl   => Declaration);
    begin
       Self.Bodies.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
-      return Gela.Compilation_Units.Body_Unit_Access (Unit);
-   end Create_Body_Unit;
+      return Gela.Compilation_Units.Library_Unit_Body_Access (Unit);
+   end Create_Library_Unit_Body;
 
    ------------------------------------------
    -- Create_Body_Unit_Without_Declaration --
    ------------------------------------------
 
-   overriding function Create_Body_Unit_Without_Declaration
+   overriding function Create_Subprogram_Without_Declaration
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access
+      return Gela.Compilation_Units.Library_Unit_Body_Access
    is
       Unit : constant Gela.Plain_Compilation_Units.Compilation_Unit_Access :=
         Gela.Plain_Compilation_Units.Create_Body
@@ -73,8 +73,8 @@ package body Gela.Plain_Contexts is
            Decl   => null);
    begin
       Self.Specs.Add (Gela.Compilation_Units.Compilation_Unit_Access (Unit));
-      return Gela.Compilation_Units.Body_Unit_Access (Unit);
-   end Create_Body_Unit_Without_Declaration;
+      return Gela.Compilation_Units.Library_Unit_Body_Access (Unit);
+   end Create_Subprogram_Without_Declaration;
 
    -------------------------------------
    -- Create_Library_Unit_Declaration --
@@ -82,7 +82,7 @@ package body Gela.Plain_Contexts is
 
    overriding function Create_Library_Unit_Declaration
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access)
@@ -104,7 +104,7 @@ package body Gela.Plain_Contexts is
 
    overriding function Create_Subunit
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Body_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Unit_Body_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access
@@ -262,7 +262,8 @@ package body Gela.Plain_Contexts is
      (Self  : access Context)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access is
    begin
-      return Self.Specs;
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
+        (Self.Specs);
    end Library_Unit_Declarations;
 
    -------------------

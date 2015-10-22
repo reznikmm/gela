@@ -33,11 +33,6 @@ package Gela.Compilation_Unit_Sets is
    --  Find compilation unit with given name (Symbol).
    --  Return null if not found.
 
-   not overriding procedure Add
-     (Self : in out Compilation_Unit_Set;
-      Item : Gela.Compilation_Units.Compilation_Unit_Access) is abstract;
-   --  Add compilation unit into set.
-
    not overriding function First
      (Self : Compilation_Unit_Set)
       return Compilation_Unit_Cursor'Class is abstract;

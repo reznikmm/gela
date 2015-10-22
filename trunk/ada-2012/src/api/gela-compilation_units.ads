@@ -10,6 +10,14 @@ with Gela.Elements.Compilation_Units;
 package Gela.Compilation_Units is
    pragma Preelaborate;
 
+   --  Compilation Unit hierarchy is:
+   --  Compilation_Unit
+   --    Subunit
+   --    Library_Item
+   --      Library_Unit_Body
+   --      Library_Unit_Declaration
+   --        Library_Package_Declaration
+
    type Compilation_Unit is limited interface;
    --  Compilation unit of some context
    type Compilation_Unit_Access is access all Compilation_Unit'Class;
@@ -39,53 +47,56 @@ package Gela.Compilation_Units is
      (Self : access Compilation_Unit)
       return Gela.Elements.Compilation_Units.Compilation_Unit_Access
         is abstract;
-   --  Return compilation of compilation unit
+   --  Return abstract syntax tree of compilation unit
 
    type Library_Item is limited interface and Compilation_Unit;
    --  Library item subclass of compilation unit
 
-   type Package_Unit is tagged;
-   type Package_Unit_Access is access all Package_Unit'Class;
-   for Package_Unit_Access'Storage_Size use 0;
+   type Library_Package_Declaration is tagged;
+   type Library_Package_Declaration_Access is
+     access all Library_Package_Declaration'Class;
+   for Library_Package_Declaration_Access'Storage_Size use 0;
 
    not overriding function Parent
      (Self : access Library_Item)
-      return Package_Unit_Access is abstract;
+      return Library_Package_Declaration_Access is abstract;
 
-   type Body_Unit is limited interface and Library_Item;
+   type Library_Unit_Body is limited interface and Library_Item;
    --  Compilation unit body
 
-   type Body_Unit_Access is access all Body_Unit'Class;
-   for Body_Unit_Access'Storage_Size use 0;
+   type Library_Unit_Body_Access is access all Library_Unit_Body'Class;
+   --  Compilation library unit body
+   for Library_Unit_Body_Access'Storage_Size use 0;
 
    type Library_Unit_Declaration is limited interface and Library_Item;
-   --  Compilation unit library declaration
+   --  Compilation library unit declaration
 
    type Library_Unit_Declaration_Access is
      access all Library_Unit_Declaration'Class;
    for Library_Unit_Declaration_Access'Storage_Size use 0;
 
    not overriding function Corresponding_Declaration
-     (Self : access Body_Unit) return Library_Unit_Declaration_Access
+     (Self : access Library_Unit_Body) return Library_Unit_Declaration_Access
        is abstract;
    --  Return declaration for given body
 
    not overriding function Subunits
-     (Self : access Body_Unit)
+     (Self : access Library_Unit_Body)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
         is abstract;
    --  Return set of subunits of given body
 
    not overriding function Corresponding_Body
-     (Self : access Library_Unit_Declaration) return Body_Unit_Access
+     (Self : access Library_Unit_Declaration) return Library_Unit_Body_Access
        is abstract;
    --  Return body of library declaration
 
-   type Package_Unit is limited interface and Library_Unit_Declaration;
+   type Library_Package_Declaration is limited interface
+     and Library_Unit_Declaration;
    --  Package compilation units
 
    not overriding function Corresponding_Childern
-     (Self : access Package_Unit)
+     (Self : access Library_Package_Declaration)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
         is abstract;
    --  Return library unit declarations for children and subprogram bodies

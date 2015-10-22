@@ -32,14 +32,15 @@ private
 
    package Package_Maps is new Ada.Containers.Hashed_Maps
      (Key_Type        => Gela.Lexical_Types.Symbol,
-      Element_Type    => Gela.Compilation_Units.Package_Unit_Access,
+      Element_Type    => Gela.Compilation_Units.
+                           Library_Package_Declaration_Access,
       Hash            => Hash,
       Equivalent_Keys => Gela.Lexical_Types."=",
       "="             => Gela.Compilation_Units."=");
 
    package Body_Maps is new Ada.Containers.Hashed_Maps
      (Key_Type        => Gela.Lexical_Types.Symbol,
-      Element_Type    => Gela.Compilation_Units.Body_Unit_Access,
+      Element_Type    => Gela.Compilation_Units.Library_Unit_Body_Access,
       Hash            => Hash,
       Equivalent_Keys => Gela.Lexical_Types."=",
       "="             => Gela.Compilation_Units."=");

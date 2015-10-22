@@ -16,6 +16,7 @@ with Gela.Interpretations;
 with Gela.Lexers;
 with Gela.Lexical_Types;
 with Gela.Naming_Schemas;
+with Gela.Plain_Compilation_Unit_Sets;
 with Gela.Plain_Environments;
 with Gela.Plain_Error_Sets;
 with Gela.Plain_Interpretations;
@@ -46,8 +47,8 @@ private
    type Context is limited new Gela.Contexts.Context
      and Gela.Compilation_Unit_Factories.Compilation_Unit_Factory
    with record
-      Specs   : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
-      Bodies  : Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+      Specs   : Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+      Bodies  : Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set_Access;
       Symbols : aliased Gela.Plain_Symbol_Sets.Symbol_Set;
       Lexer   : aliased Gela.Plain_Lexers.Lexer (Context'Unchecked_Access);
       Finder  : Gela.Source_Finders.Source_Finder_Access;
@@ -108,31 +109,31 @@ private
 
    overriding function Create_Library_Unit_Declaration
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access)
       return Gela.Compilation_Units.Library_Unit_Declaration_Access;
 
-   overriding function Create_Body_Unit_Without_Declaration
+   overriding function Create_Subprogram_Without_Declaration
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access;
+      return Gela.Compilation_Units.Library_Unit_Body_Access;
 
-   overriding function Create_Body_Unit
+   overriding function Create_Library_Unit_Body
      (Self        : in out Context;
       Declaration : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Name        : Gela.Lexical_Types.Symbol;
       Node        : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access;
+      return Gela.Compilation_Units.Library_Unit_Body_Access;
 
    overriding function Create_Subunit
      (Self   : in out Context;
-      Parent : Gela.Compilation_Units.Body_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Unit_Body_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access;

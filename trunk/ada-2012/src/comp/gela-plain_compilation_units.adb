@@ -41,7 +41,7 @@ package body Gela.Plain_Compilation_Units is
 
    overriding function Corresponding_Body
      (Self : access Compilation_Unit)
-      return Gela.Compilation_Units.Body_Unit_Access
+      return Gela.Compilation_Units.Library_Unit_Body_Access
    is
    begin
       return Self.Corresponding_Body;
@@ -93,11 +93,11 @@ package body Gela.Plain_Compilation_Units is
      (Node   : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access)
       return Compilation_Unit_Access
    is
-      use type Gela.Compilation_Units.Package_Unit_Access;
+      use type Gela.Compilation_Units.Library_Package_Declaration_Access;
       use type Gela.Compilation_Units.Library_Unit_Declaration_Access;
 
       Tree : constant Gela.Elements.Compilation_Units.Compilation_Unit_Access
@@ -123,7 +123,7 @@ package body Gela.Plain_Compilation_Units is
 
          if Decl /= null then
             Compilation_Unit (Decl.all).Corresponding_Body :=
-              Gela.Compilation_Units.Body_Unit_Access (Result);
+              Gela.Compilation_Units.Library_Unit_Body_Access (Result);
          end if;
       end return;
    end Create_Body;
@@ -136,10 +136,10 @@ package body Gela.Plain_Compilation_Units is
      (Node   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Parent : Gela.Compilation_Units.Package_Unit_Access)
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access)
       return Compilation_Unit_Access
    is
-      use type Gela.Compilation_Units.Package_Unit_Access;
+      use type Gela.Compilation_Units.Library_Package_Declaration_Access;
 
       Tree : constant Gela.Elements.Compilation_Units.Compilation_Unit_Access
         := Gela.Elements.Compilation_Units.Compilation_Unit_Access (Node);
@@ -215,7 +215,7 @@ package body Gela.Plain_Compilation_Units is
 
    overriding function Parent
      (Self : access Compilation_Unit)
-      return Gela.Compilation_Units.Package_Unit_Access
+      return Gela.Compilation_Units.Library_Package_Declaration_Access
    is
    begin
       return Self.Parent;

@@ -4,7 +4,7 @@ package body Gela.Plain_Compilation_Unit_Sets is
    -- Add --
    ---------
 
-   overriding procedure Add
+   not overriding procedure Add
      (Self : in out Compilation_Unit_Set;
       Item : Gela.Compilation_Units.Compilation_Unit_Access) is
    begin

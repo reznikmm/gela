@@ -733,9 +733,9 @@ package body Gela.Plain_Compilation_Managers is
       Up     : Gela.Lexical_Types.Symbol;
       Set    : constant Gela.Symbol_Sets.Symbol_Set_Access :=
         Self.Context.Symbols;
-      Upper  : Gela.Compilation_Units.Package_Unit_Access;
+      Upper  : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access;
-      Parent : Gela.Compilation_Units.Body_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Unit_Body_Access;
       Sub    : Gela.Compilation_Units.Subunit_Access;
       Symbol : Gela.Lexical_Types.Symbol;
    begin
@@ -755,7 +755,8 @@ package body Gela.Plain_Compilation_Managers is
             Self.Specs.Insert (Item.Name, Decl);
 
             if Item.Is_Package then
-               Upper := Gela.Compilation_Units.Package_Unit_Access (Decl);
+               Upper := Gela.Compilation_Units.
+                 Library_Package_Declaration_Access (Decl);
                Self.Packages.Insert (Item.Name, Upper);
             end if;
 
@@ -763,7 +764,7 @@ package body Gela.Plain_Compilation_Managers is
             if Self.Specs.Contains (Item.Name) then
                Decl := Self.Specs.Element (Item.Name);
 
-               Parent := Self.Factory.Create_Body_Unit
+               Parent := Self.Factory.Create_Library_Unit_Body
                  (Declaration => Decl,
                   Name   => Item.Name,
                   Node   => Item.Unit_Body);
@@ -774,7 +775,7 @@ package body Gela.Plain_Compilation_Managers is
                   Upper := Self.Packages.Element (Up);
                end if;
 
-               Parent := Self.Factory.Create_Body_Unit_Without_Declaration
+               Parent := Self.Factory.Create_Subprogram_Without_Declaration
                  (Parent => Upper,
                   Name   => Item.Name,
                   Node   => Item.Unit_Body);

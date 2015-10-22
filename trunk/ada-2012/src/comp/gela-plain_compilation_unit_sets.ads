@@ -11,6 +11,11 @@ package Gela.Plain_Compilation_Unit_Sets is
      limited new Gela.Compilation_Unit_Sets.Compilation_Unit_Set with private;
    type Compilation_Unit_Set_Access is access all Compilation_Unit_Set'Class;
 
+   not overriding procedure Add
+     (Self : in out Compilation_Unit_Set;
+      Item : Gela.Compilation_Units.Compilation_Unit_Access);
+   --  Add compilation unit into set.
+
 private
 
    function Hash
@@ -48,10 +53,6 @@ private
      (Self   : Compilation_Unit_Set;
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Compilation_Units.Compilation_Unit_Access;
-
-   overriding procedure Add
-     (Self : in out Compilation_Unit_Set;
-      Item : Gela.Compilation_Units.Compilation_Unit_Access);
 
    overriding function First
      (Self : Compilation_Unit_Set)

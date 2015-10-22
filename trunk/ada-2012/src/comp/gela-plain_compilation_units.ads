@@ -16,9 +16,9 @@ package Gela.Plain_Compilation_Units is
    type Compilation_Unit is limited new
      Gela.Compilation_Units.Compilation_Unit
      and Gela.Compilation_Units.Library_Item
-     and Gela.Compilation_Units.Body_Unit
+     and Gela.Compilation_Units.Library_Unit_Body
      and Gela.Compilation_Units.Library_Unit_Declaration
-     and Gela.Compilation_Units.Package_Unit
+     and Gela.Compilation_Units.Library_Package_Declaration
      and Gela.Compilation_Units.Subunit
    with private;
    type Compilation_Unit_Access is access all Compilation_Unit'Class;
@@ -27,7 +27,7 @@ package Gela.Plain_Compilation_Units is
      (Node   : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Decl   : Gela.Compilation_Units.Library_Unit_Declaration_Access)
       return Compilation_Unit_Access;
 
@@ -35,7 +35,7 @@ package Gela.Plain_Compilation_Units is
      (Node   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
-      Parent : Gela.Compilation_Units.Package_Unit_Access)
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access)
       return Compilation_Unit_Access;
 
    function Create_Subunit
@@ -49,15 +49,15 @@ private
    type Compilation_Unit is limited new
      Gela.Compilation_Units.Compilation_Unit
      and Gela.Compilation_Units.Library_Item
-     and Gela.Compilation_Units.Body_Unit
+     and Gela.Compilation_Units.Library_Unit_Body
      and Gela.Compilation_Units.Library_Unit_Declaration
-     and Gela.Compilation_Units.Package_Unit
+     and Gela.Compilation_Units.Library_Package_Declaration
      and Gela.Compilation_Units.Subunit
    with record
       Name        : Gela.Lexical_Types.Symbol;
       Container   : Gela.Unit_Containers.Unit_Container_Access;
       Compilation : Gela.Compilations.Compilation_Access;
-      Parent      : Gela.Compilation_Units.Package_Unit_Access;
+      Parent      : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Tree        : Gela.Elements.Compilation_Units.Compilation_Unit_Access;
 
       Corresponding_Declaration :
@@ -66,7 +66,7 @@ private
       Subunits : aliased
         Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
 
-      Corresponding_Body : Gela.Compilation_Units.Body_Unit_Access;
+      Corresponding_Body : Gela.Compilation_Units.Library_Unit_Body_Access;
 
       Corresponding_Childern : aliased
         Gela.Plain_Compilation_Unit_Sets.Compilation_Unit_Set;
@@ -91,7 +91,7 @@ private
 
    overriding function Parent
      (Self : access Compilation_Unit)
-      return Gela.Compilation_Units.Package_Unit_Access;
+      return Gela.Compilation_Units.Library_Package_Declaration_Access;
 
    overriding function Corresponding_Declaration
      (Self : access Compilation_Unit)
@@ -103,7 +103,7 @@ private
 
    overriding function Corresponding_Body
      (Self : access Compilation_Unit)
-      return Gela.Compilation_Units.Body_Unit_Access;
+      return Gela.Compilation_Units.Library_Unit_Body_Access;
 
    overriding function Corresponding_Childern
      (Self : access Compilation_Unit)

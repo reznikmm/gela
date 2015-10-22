@@ -17,7 +17,7 @@ package Gela.Compilation_Unit_Factories is
 
    not overriding function Create_Library_Unit_Declaration
      (Self   : in out Compilation_Unit_Factory;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Declarations.
         Compilation_Unit_Declaration_Access)
@@ -26,28 +26,28 @@ package Gela.Compilation_Unit_Factories is
    --  Create library unit declaration with given Name and Parent.
    --  Parent is null for Standard package only.
 
-   not overriding function Create_Body_Unit_Without_Declaration
+   not overriding function Create_Subprogram_Without_Declaration
      (Self   : in out Compilation_Unit_Factory;
-      Parent : Gela.Compilation_Units.Package_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Package_Declaration_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access is abstract;
+      return Gela.Compilation_Units.Library_Unit_Body_Access is abstract;
    --  Create library unit body without declaration with given Name/Parent.
    --  Parent is null for Standard package only.
 
-   not overriding function Create_Body_Unit
+   not overriding function Create_Library_Unit_Body
      (Self        : in out Compilation_Unit_Factory;
       Declaration : Gela.Compilation_Units.Library_Unit_Declaration_Access;
       Name        : Gela.Lexical_Types.Symbol;
       Node        : Gela.Elements.Compilation_Unit_Bodies.
         Compilation_Unit_Body_Access)
-      return Gela.Compilation_Units.Body_Unit_Access is abstract;
+      return Gela.Compilation_Units.Library_Unit_Body_Access is abstract;
    --  Create library unit body with Declaration and given Name.
 
    not overriding function Create_Subunit
      (Self   : in out Compilation_Unit_Factory;
-      Parent : Gela.Compilation_Units.Body_Unit_Access;
+      Parent : Gela.Compilation_Units.Library_Unit_Body_Access;
       Name   : Gela.Lexical_Types.Symbol;
       Node   : Gela.Elements.Subunits.Subunit_Access)
       return Gela.Compilation_Units.Subunit_Access is abstract;
