@@ -8,6 +8,17 @@ package Gela.Types.Simple is
    type Discrete_Type_Array is
      array (Positive range <>) of Discrete_Type_Access;
 
+   ----------------------
+   -- Enumeration_Type --
+   ----------------------
+
+   type Enumeration_Type is limited interface
+     and Type_View
+     and Discrete_Type;
+
+   type Enumeration_Type_Access is access all Enumeration_Type'Class;
+   for Enumeration_Type_Access'Storage_Size use 0;
+
    -------------------------
    -- Signed_Integer_Type --
    -------------------------
@@ -29,5 +40,26 @@ package Gela.Types.Simple is
 
    type Floating_Point_Type_Access is access all Floating_Point_Type'Class;
    for Floating_Point_Type_Access'Storage_Size use 0;
+
+   ------------------------
+   -- Object_Access_Type --
+   ------------------------
+
+   type Object_Access_Type is limited interface
+     and Type_View;
+
+   type Object_Access_Type_Access is access all Object_Access_Type'Class;
+   for Object_Access_Type_Access'Storage_Size use 0;
+
+   ----------------------------
+   -- Subprogram_Access_Type --
+   ----------------------------
+
+   type Subprogram_Access_Type is limited interface
+     and Type_View;
+
+   type Subprogram_Access_Type_Access is
+     access all Subprogram_Access_Type'Class;
+   for Subprogram_Access_Type_Access'Storage_Size use 0;
 
 end Gela.Types.Simple;

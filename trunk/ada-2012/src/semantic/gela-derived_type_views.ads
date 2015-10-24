@@ -4,14 +4,19 @@ with Gela.Elements.Subtype_Indications;
 with Gela.Lexical_Types;
 with Gela.Types.Arrays;
 with Gela.Types.Simple;
+with Gela.Types.Untagged_Records;
 with Gela.Types.Visitors;
 
 package Gela.Derived_Type_Views is
    pragma Preelaborate;
 
    type Type_View is new Gela.Types.Type_View
+     and Gela.Types.Simple.Enumeration_Type
      and Gela.Types.Simple.Signed_Integer_Type
      and Gela.Types.Simple.Floating_Point_Type
+     and Gela.Types.Simple.Object_Access_Type
+     and Gela.Types.Simple.Subprogram_Access_Type
+     and Gela.Types.Untagged_Records.Untagged_Record_Type
      and Gela.Types.Arrays.Array_Type with private;
 
    type Type_View_Access is access all Type_View'Class;
@@ -25,8 +30,12 @@ package Gela.Derived_Type_Views is
 private
 
    type Type_View is new Gela.Types.Type_View
+     and Gela.Types.Simple.Enumeration_Type
      and Gela.Types.Simple.Signed_Integer_Type
      and Gela.Types.Simple.Floating_Point_Type
+     and Gela.Types.Simple.Object_Access_Type
+     and Gela.Types.Simple.Subprogram_Access_Type
+     and Gela.Types.Untagged_Records.Untagged_Record_Type
      and Gela.Types.Arrays.Array_Type with
    record
       Parent   : not null Gela.Types.Type_View_Access;

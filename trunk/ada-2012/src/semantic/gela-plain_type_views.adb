@@ -349,6 +349,12 @@ package body Gela.Plain_Type_Views is
       Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is
    begin
       case Self.Category is
+         when Gela.Types.A_Character |
+              Gela.Types.A_Boolean |
+              Gela.Types.An_Other_Enum =>
+
+            Visiter.Enumeration_Type
+              (Gela.Types.Simple.Enumeration_Type_Access (Self));
          when Gela.Types.A_Signed_Integer =>
             Visiter.Signed_Integer_Type
               (Gela.Types.Simple.Signed_Integer_Type_Access (Self));
@@ -358,25 +364,26 @@ package body Gela.Plain_Type_Views is
          when Gela.Types.A_String | Gela.Types.An_Other_Array =>
             Visiter.Array_Type
               (Gela.Types.Arrays.Array_Type_Access (Self));
+         when Gela.Types.A_Untagged_Record =>
+            Visiter.Untagged_Record
+              (Gela.Types.Untagged_Records.Untagged_Record_Type_Access (Self));
+         when Gela.Types.A_Constant_Access |
+              Gela.Types.A_Variable_Access =>
+            Visiter.Object_Access_Type
+              (Gela.Types.Simple.Object_Access_Type_Access (Self));
          when others =>
             raise Constraint_Error;
 
---                A_Character,
---              A_Boolean,
---              An_Other_Enum,
 --              An_Universal_Integer,
 --              A_Modular_Integer,
 --              An_Universal_Real,
 --              An_Universal_Fixed,
 --              A_Ordinary_Fixed_Point,
 --              A_Decimal_Fixed_Point,
---              A_Constant_Access,
---              A_Variable_Access,
 --              A_Pool_Access,
 --              A_Procedure_Access,
 --              A_Function_Access,
 --              An_Universal_Access,
---              A_Untagged_Record,
 --              A_Tagged,
 --              A_Task,
 --              A_Protected,
