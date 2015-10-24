@@ -194,7 +194,7 @@ with Gela.Elements.With_Clauses;
 with Gela.Elements.Defining_Names;
 with Gela.Type_Managers;
 with Gela.Semantic_Types;
-with Gela.Type_Views;
+with Gela.Types;
 
 package body Asis.Extensions.Flat_Kinds is
 
@@ -1458,7 +1458,7 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Composite_Constraints.
         Composite_Constraint_Access)
    is
-      use type Gela.Type_Views.Type_View_Access;
+      use type Gela.Types.Type_View_Access;
 
       Comp : constant Gela.Compilations.Compilation_Access :=
         Node.Enclosing_Compilation;
@@ -1475,12 +1475,10 @@ package body Asis.Extensions.Flat_Kinds is
         TM.Type_From_Subtype_Mark
           (Subtype_Indication.Env_In, Subtype_Indication.Subtype_Mark);
 
-      Type_View : constant Gela.Type_Views.Type_View_Access :=
+      Type_View : constant Gela.Types.Type_View_Access :=
         TM.Get (Type_Index);
    begin
-      if Type_View /= null and then Type_View.Category in
-        Gela.Type_Views.A_String .. Gela.Type_Views.An_Other_Array
-      then
+      if Type_View /= null and then Type_View.Is_Array then
          Self.Result := An_Index_Constraint;
       else
          Self.Result := A_Discriminant_Constraint;

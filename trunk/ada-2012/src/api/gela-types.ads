@@ -3,8 +3,9 @@
 with Gela.Elements.Defining_Names;
 limited with Gela.Elements.Subtype_Indications;
 with Gela.Lexical_Types;
+limited with Gela.Types.Visitors;
 
-package Gela.Type_Views is
+package Gela.Types is
    pragma Preelaborate;
 
    type Type_View is limited interface;
@@ -110,4 +111,11 @@ package Gela.Type_Views is
 --       (Self   : Abstract_Type;
 --        Length : Positive) return Boolean;
 
-end Gela.Type_Views;
+   not overriding function Is_Array (Self : Type_View) return Boolean
+     is abstract;
+
+   not overriding procedure Visit
+     (Self    : not null access Type_View;
+      Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is abstract;
+
+end Gela.Types;

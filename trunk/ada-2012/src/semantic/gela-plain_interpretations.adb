@@ -106,7 +106,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Add_Expression_Category
      (Self   : in out Interpretation_Manager;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Kinds  : Gela.Types.Category_Kind_Set;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is

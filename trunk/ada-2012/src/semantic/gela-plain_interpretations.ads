@@ -9,7 +9,7 @@ with Gela.Interpretations;
 with Gela.Lexical_Types;
 with Gela.Plian_Int_Sets;
 with Gela.Semantic_Types;
-with Gela.Type_Views;
+with Gela.Types;
 
 package Gela.Plain_Interpretations is
    pragma Preelaborate;
@@ -69,7 +69,7 @@ private
 
    overriding procedure Add_Expression_Category
      (Self   : in out Interpretation_Manager;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Kinds  : Gela.Types.Category_Kind_Set;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 

@@ -1,6 +1,6 @@
 --  Type manager keeps types found in all compilation units.
 
-with Gela.Type_Views;
+with Gela.Types;
 with Gela.Semantic_Types;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
@@ -17,7 +17,7 @@ package Gela.Type_Managers is
    not overriding function Get
      (Self  : access Type_Manager;
       Index : Gela.Semantic_Types.Type_Index)
-      return Gela.Type_Views.Type_View_Access is abstract;
+      return Gela.Types.Type_View_Access is abstract;
    --  Get type view by given Index
 
    not overriding function Type_From_Declaration

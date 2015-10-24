@@ -34,7 +34,9 @@ with Gela.Symbol_Sets;
 with Gela.Elements.Defining_Operator_Symbols;
 with Gela.Defining_Name_Cursors;
 with Gela.Type_Managers;
-with Gela.Type_Views;
+with Gela.Types.Arrays;
+with Gela.Types.Visitors;
+with Gela.Types.Simple;
 
 package body Gela.Pass_Utils is
 
@@ -144,70 +146,109 @@ package body Gela.Pass_Utils is
       Name : Gela.Elements.Defining_Names.Defining_Name_Access;
       Env  : in out Gela.Semantic_Types.Env_Index)
    is
-      procedure Add
-        (Name     : Gela.Elements.Defining_Names.Defining_Name_Access);
+      package Visitors is
+         type Type_Visitor is new Gela.Types.Visitors.Type_Visitor with record
+            Set : Gela.Environments.Environment_Set_Access :=
+              Comp.Context.Environment_Set;
+            Factory : Gela.Element_Factories.Element_Factory_Access :=
+              Comp.Factory;
+         end record;
 
-      Set : constant Gela.Environments.Environment_Set_Access :=
-        Comp.Context.Environment_Set;
+         procedure Add
+           (Self : in out Type_Visitor'Class;
+            Name : Gela.Elements.Defining_Names.Defining_Name_Access);
 
-      ---------
-      -- Add --
-      ---------
+         overriding procedure Signed_Integer_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Signed_Integer_Type_Access);
 
-      procedure Add
-        (Name     : Gela.Elements.Defining_Names.Defining_Name_Access) is
-      begin
-         Env := Set.Add_Defining_Name
-           (Index  => Env,
-            Symbol => Name.Full_Name,
-            Name   => Name);
-      end Add;
+         overriding procedure Floating_Point_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Floating_Point_Type_Access);
+
+         overriding procedure Array_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+      end Visitors;
+
+      package body Visitors is
+
+         ---------
+         -- Add --
+         ---------
+
+         procedure Add
+           (Self : in out Type_Visitor'Class;
+            Name : Gela.Elements.Defining_Names.Defining_Name_Access) is
+         begin
+            Env := Self.Set.Add_Defining_Name
+              (Index  => Env,
+               Symbol => Name.Full_Name,
+               Name   => Name);
+         end Add;
+
+         overriding procedure Array_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Arrays.Array_Type_Access)
+         is
+            pragma Unreferenced (Value);
+         begin
+            Self.Add
+              (Implicits.Create_Operator
+                 (Self.Factory,
+                  Gela.Lexical_Types.Operators.Ampersand_Operator,
+                  Name,
+                  Arity => 2));
+         end Array_Type;
+
+         overriding procedure Floating_Point_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Floating_Point_Type_Access)
+         is
+            pragma Unreferenced (Value);
+         begin
+            Self.Add
+              (Implicits.Create_Operator
+                 (Self.Factory,
+                  Gela.Lexical_Types.Operators.Hyphen_Operator,
+                  Name,
+                  Arity => 1));
+         end Floating_Point_Type;
+
+         overriding procedure Signed_Integer_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Signed_Integer_Type_Access)
+         is
+            pragma Unreferenced (Value);
+         begin
+            Self.Add
+              (Implicits.Create_Operator
+                 (Self.Factory,
+                  Gela.Lexical_Types.Operators.Hyphen_Operator,
+                  Name,
+                  Arity => 2));
+         end Signed_Integer_Type;
+
+      end Visitors;
 
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
       Type_Index : constant Gela.Semantic_Types.Type_Index :=
         TM.Type_From_Declaration (Env, Tipe);
-      Type_View : constant Gela.Type_Views.Type_View_Access :=
+      Type_View : constant Gela.Types.Type_View_Access :=
         TM.Get (Type_Index);
-      Category : Gela.Type_Views.Category_Kinds;
 
-      Factory : constant Gela.Element_Factories.Element_Factory_Access :=
-        Comp.Factory;
    begin
       if not Type_View.Assigned then
          return;
       end if;
 
-      Category := Type_View.Category;
-
-      case Category is
-         when Gela.Type_Views.A_Signed_Integer =>
-            Add
-              (Implicits.Create_Operator
-                 (Factory,
-                  Gela.Lexical_Types.Operators.Hyphen_Operator,
-                  Name,
-                  Arity => 2));
-
-         when Gela.Type_Views.A_Float_Point =>
-            Add
-              (Implicits.Create_Operator
-                 (Factory,
-                  Gela.Lexical_Types.Operators.Hyphen_Operator,
-                  Name,
-                  Arity => 1));
-
-         when Gela.Type_Views.A_String =>
-            Add
-              (Implicits.Create_Operator
-                 (Factory,
-                  Gela.Lexical_Types.Operators.Ampersand_Operator,
-                  Name,
-                  Arity => 2));
-
-         when others =>
-            null;
-      end case;
+      declare
+         Visitor : Visitors.Type_Visitor;
+      begin
+         Type_View.Visit (Visitor);
+      end;
    end Add_Implicit_Declarations;
 
    -----------------------------------

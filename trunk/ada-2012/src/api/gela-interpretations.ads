@@ -2,7 +2,7 @@
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
-with Gela.Type_Views;
+with Gela.Types;
 
 package Gela.Interpretations is
    pragma Preelaborate;
@@ -50,7 +50,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Expression_Category
      (Self   : in out Interpretation_Manager;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Kinds  : Gela.Types.Category_Kind_Set;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
         is abstract;
@@ -112,7 +112,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression_Category
      (Self   : in out Down_Visiter;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Kinds  : Gela.Types.Category_Kind_Set;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each category of expression interpretation
 
@@ -175,7 +175,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression_Category
      (Self   : in out Up_Visiter;
-      Kinds  : Gela.Type_Views.Category_Kind_Set;
+      Kinds  : Gela.Types.Category_Kind_Set;
       Cursor : Gela.Interpretations.Cursor'Class) is null;
    --  Called for each category of expression interpretation
 

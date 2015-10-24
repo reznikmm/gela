@@ -8,7 +8,7 @@ package body Gela.Int.Categories is
 
    function Create
      (Down  : Gela.Interpretations.Interpretation_Index_Array;
-      Kinds : Gela.Type_Views.Category_Kind_Set)
+      Kinds : Gela.Types.Category_Kind_Set)
       return Category is
    begin
       return (Index  => 0,
@@ -23,7 +23,7 @@ package body Gela.Int.Categories is
 
    function Kinds
      (Self : Category)
-      return Gela.Type_Views.Category_Kind_Set is
+      return Gela.Types.Category_Kind_Set is
    begin
       return Self.Kinds;
    end Kinds;

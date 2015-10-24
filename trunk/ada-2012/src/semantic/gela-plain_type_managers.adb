@@ -43,7 +43,7 @@ package body Gela.Plain_Type_Managers is
 
    not overriding function Get
      (Self     : access Type_Manager;
-      Category : Gela.Type_Views.Category_Kinds;
+      Category : Gela.Types.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
       return Gela.Semantic_Types.Type_Index
@@ -75,7 +75,7 @@ package body Gela.Plain_Type_Managers is
    overriding function Get
      (Self  : access Type_Manager;
       Index : Gela.Semantic_Types.Type_Index)
-      return Gela.Type_Views.Type_View_Access
+      return Gela.Types.Type_View_Access
    is
       use type Gela.Semantic_Types.Type_Index;
    begin
@@ -92,7 +92,7 @@ package body Gela.Plain_Type_Managers is
 
    not overriding function Get_Derived
      (Self     : access Type_Manager;
-      Parent   : Gela.Type_Views.Type_View_Access;
+      Parent   : Gela.Types.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
         return Gela.Semantic_Types.Type_Index
@@ -149,7 +149,7 @@ package body Gela.Plain_Type_Managers is
    function Hash (Key : Back_Key) return Ada.Containers.Hash_Type is
       use type Ada.Containers.Hash_Type;
    begin
-      return Key.Decl.Hash + Gela.Type_Views.Category_Kinds'Pos (Key.Category);
+      return Key.Decl.Hash + Gela.Types.Category_Kinds'Pos (Key.Category);
    end Hash;
 
    ----------
@@ -184,7 +184,7 @@ package body Gela.Plain_Type_Managers is
       Standard : Gela.Elements.Element_Access)
    is
       procedure Create
-        (Category : Gela.Type_Views.Category_Kinds;
+        (Category : Gela.Types.Category_Kinds;
          Index    : Gela.Semantic_Types.Type_Index);
 
       Comp : constant Gela.Compilations.Compilation_Access :=
@@ -193,7 +193,7 @@ package body Gela.Plain_Type_Managers is
         Comp.Factory;
 
       procedure Create
-        (Category : Gela.Type_Views.Category_Kinds;
+        (Category : Gela.Types.Category_Kinds;
          Index    : Gela.Semantic_Types.Type_Index)
       is
          Id   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
@@ -223,9 +223,9 @@ package body Gela.Plain_Type_Managers is
       end Create;
 
    begin
-      Create (Gela.Type_Views.An_Universal_Access, Universal_Access_Index);
-      Create (Gela.Type_Views.An_Universal_Integer, Universal_Integer_Index);
-      Create (Gela.Type_Views.An_Universal_Real, Universal_Real_Index);
+      Create (Gela.Types.An_Universal_Access, Universal_Access_Index);
+      Create (Gela.Types.An_Universal_Integer, Universal_Integer_Index);
+      Create (Gela.Types.An_Universal_Real, Universal_Real_Index);
    end Initialize;
 
    ------------------
@@ -364,7 +364,7 @@ package body Gela.Plain_Type_Managers is
               Access_To_Object_Definition_Access) is
          begin
             Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.A_Variable_Access,
+              (Category => Gela.Types.A_Variable_Access,
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Access_To_Object_Definition;
@@ -383,7 +383,7 @@ package body Gela.Plain_Type_Managers is
             Tipe : constant Gela.Semantic_Types.Type_Index :=
               Type_From_Declaration.Self.Type_From_Subtype_Mark
                 (Env, Subtype_Mark);
-            Type_View : Gela.Type_Views.Type_View_Access;
+            Type_View : Gela.Types.Type_View_Access;
          begin
             if Tipe /= 0 then
                Type_View := Type_From_Declaration.Self.Get (Tipe);
@@ -420,12 +420,12 @@ package body Gela.Plain_Type_Managers is
 
             if V.Found then
                Self.Result := Type_From_Declaration.Self.Get
-                 (Category => Gela.Type_Views.A_Character,
+                 (Category => Gela.Types.A_Character,
                   Decl     => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             else
                Self.Result := Type_From_Declaration.Self.Get
-                 (Category => Gela.Type_Views.An_Other_Enum,
+                 (Category => Gela.Types.An_Other_Enum,
                   Decl     => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             end if;
@@ -437,7 +437,7 @@ package body Gela.Plain_Type_Managers is
               Floating_Point_Definition_Access) is
          begin
             Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.A_Float_Point,
+              (Category => Gela.Types.A_Float_Point,
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Floating_Point_Definition;
@@ -467,7 +467,7 @@ package body Gela.Plain_Type_Managers is
               Record_Type_Definition_Access) is
          begin
             Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.A_Untagged_Record,
+              (Category => Gela.Types.A_Untagged_Record,
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Record_Type_Definition;
@@ -490,7 +490,7 @@ package body Gela.Plain_Type_Managers is
               Signed_Integer_Type_Definition_Access) is
          begin
             Self.Result := Type_From_Declaration.Self.Get
-              (Category => Gela.Type_Views.A_Signed_Integer,
+              (Category => Gela.Types.A_Signed_Integer,
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Signed_Integer_Type_Definition;
@@ -514,7 +514,7 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Unconstrained_Array_Definitions.
               Unconstrained_Array_Definition_Access)
          is
-            use type Gela.Type_Views.Category_Kinds;
+            use type Gela.Types.Category_Kinds;
 
             Component : constant Gela.Elements.Component_Definitions.
               Component_Definition_Access := Node.Array_Component_Definition;
@@ -523,19 +523,19 @@ package body Gela.Plain_Type_Managers is
               Type_From_Declaration.Self.Type_Of_Object_Declaration
                 (Env, Gela.Elements.Element_Access (Component));
 
-            Component_Type_View : constant Gela.Type_Views.Type_View_Access :=
+            Component_Type_View : constant Gela.Types.Type_View_Access :=
               Type_From_Declaration.Self.Get (Component_Type);
          begin
             if Component_Type_View.Assigned and then
-              Component_Type_View.Category = Gela.Type_Views.A_Character
+              Component_Type_View.Category = Gela.Types.A_Character
             then
                Self.Result := Type_From_Declaration.Self.Get
-                 (Category => Gela.Type_Views.A_String,
+                 (Category => Gela.Types.A_String,
                   Decl     => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             else
                Self.Result := Type_From_Declaration.Self.Get
-                 (Category => Gela.Type_Views.An_Other_Array,
+                 (Category => Gela.Types.An_Other_Array,
                   Decl     => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element));
             end if;

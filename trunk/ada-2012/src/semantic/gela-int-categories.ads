@@ -1,4 +1,4 @@
-with Gela.Type_Views;
+with Gela.Types;
 
 package Gela.Int.Categories is
    pragma Preelaborate;
@@ -7,17 +7,17 @@ package Gela.Int.Categories is
 
    function Create
      (Down  : Gela.Interpretations.Interpretation_Index_Array;
-      Kinds : Gela.Type_Views.Category_Kind_Set)
+      Kinds : Gela.Types.Category_Kind_Set)
       return Category;
 
    function Kinds
      (Self : Category)
-      return Gela.Type_Views.Category_Kind_Set;
+      return Gela.Types.Category_Kind_Set;
 
 private
 
    type Category is new Interpretation with record
-      Kinds : Gela.Type_Views.Category_Kind_Set;
+      Kinds : Gela.Types.Category_Kind_Set;
    end record;
 
    overriding procedure Visit

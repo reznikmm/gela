@@ -21,7 +21,7 @@ package body Gela.Plain_Type_Views is
 
    overriding function Category
      (Self : Type_View)
-      return Gela.Type_Views.Category_Kinds
+      return Gela.Types.Category_Kinds
    is
    begin
       return Self.Category;
@@ -32,15 +32,15 @@ package body Gela.Plain_Type_Views is
    ------------
 
    function Create_Full_Type
-     (Category : Gela.Type_Views.Category_Kinds;
+     (Category : Gela.Types.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
-      return Gela.Type_Views.Type_View_Access
+      return Gela.Types.Type_View_Access
    is
       Value : constant Type_View_Access :=
         new Type_View'(Category => Category, Decl => Decl);
    begin
-      return Gela.Type_Views.Type_View_Access (Value);
+      return Gela.Types.Type_View_Access (Value);
    end Create_Full_Type;
 
    -------------------
@@ -290,18 +290,27 @@ package body Gela.Plain_Type_Views is
       end if;
    end Get_Discriminant;
 
+   --------------
+   -- Is_Array --
+   --------------
+
+   overriding function Is_Array (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Types.A_String | Gela.Types.An_Other_Array;
+   end Is_Array;
+
    ----------------------
    -- Is_Expected_Type --
    ----------------------
 
    overriding function Is_Expected_Type
      (Self     : Type_View;
-      Expected : not null Gela.Type_Views.Type_View_Access) return Boolean
+      Expected : not null Gela.Types.Type_View_Access) return Boolean
    is
       use type Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
 
-      Expected_Category : constant Gela.Type_Views.Category_Kinds :=
+      Expected_Category : constant Gela.Types.Category_Kinds :=
         Expected.Category;
    begin
       if Expected.all in Type_View and then
@@ -311,19 +320,19 @@ package body Gela.Plain_Type_Views is
       end if;
 
       case Expected_Category is
-         when Gela.Type_Views.An_Universal_Integer =>
-            return Self.Category in Gela.Type_Views.Any_Integer_Type;
-         when Gela.Type_Views.An_Universal_Real =>
-            return Self.Category in Gela.Type_Views.Any_Real_Type;
+         when Gela.Types.An_Universal_Integer =>
+            return Self.Category in Gela.Types.Any_Integer_Type;
+         when Gela.Types.An_Universal_Real =>
+            return Self.Category in Gela.Types.Any_Real_Type;
          when others =>
             null;
       end case;
 
       case Self.Category is
-         when Gela.Type_Views.An_Universal_Integer =>
-            return Expected_Category in Gela.Type_Views.Any_Integer_Type;
-         when Gela.Type_Views.An_Universal_Real =>
-            return Expected_Category in Gela.Type_Views.Any_Real_Type;
+         when Gela.Types.An_Universal_Integer =>
+            return Expected_Category in Gela.Types.Any_Integer_Type;
+         when Gela.Types.An_Universal_Real =>
+            return Expected_Category in Gela.Types.Any_Real_Type;
          when others =>
             null;
       end case;
@@ -331,4 +340,49 @@ package body Gela.Plain_Type_Views is
       return False;
    end Is_Expected_Type;
 
+   -----------
+   -- Visit --
+   -----------
+
+   overriding procedure Visit
+     (Self    : not null access Type_View;
+      Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is
+   begin
+      case Self.Category is
+         when Gela.Types.A_Signed_Integer =>
+            Visiter.Signed_Integer_Type
+              (Gela.Types.Simple.Signed_Integer_Type_Access (Self));
+         when Gela.Types.A_Float_Point =>
+            Visiter.Floating_Point_Type
+              (Gela.Types.Simple.Floating_Point_Type_Access (Self));
+         when Gela.Types.A_String | Gela.Types.An_Other_Array =>
+            Visiter.Array_Type
+              (Gela.Types.Arrays.Array_Type_Access (Self));
+         when others =>
+            raise Constraint_Error;
+
+--                A_Character,
+--              A_Boolean,
+--              An_Other_Enum,
+--              An_Universal_Integer,
+--              A_Modular_Integer,
+--              An_Universal_Real,
+--              An_Universal_Fixed,
+--              A_Ordinary_Fixed_Point,
+--              A_Decimal_Fixed_Point,
+--              A_Constant_Access,
+--              A_Variable_Access,
+--              A_Pool_Access,
+--              A_Procedure_Access,
+--              A_Function_Access,
+--              An_Universal_Access,
+--              A_Untagged_Record,
+--              A_Tagged,
+--              A_Task,
+--              A_Protected,
+--              A_Private,
+--              An_Incomplete);
+      end case;
+   end Visit;
 end Gela.Plain_Type_Views;
+
