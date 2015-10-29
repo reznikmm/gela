@@ -2,7 +2,7 @@
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
-with Gela.Types;
+with Gela.Types.Visitors;
 
 package Gela.Interpretations is
    pragma Preelaborate;
@@ -24,6 +24,13 @@ package Gela.Interpretations is
    type Interpretation_Manager_Access is
      access all Interpretation_Manager'Class;
    for Interpretation_Manager_Access'Storage_Size use 0;
+
+   type Type_Matcher is limited interface and Gela.Types.Visitors.Type_Visitor;
+   type Type_Matcher_Access is access all Type_Matcher'Class;
+   for Type_Matcher_Access'Storage_Size use 0;
+
+   not overriding function Is_Matched
+     (Self : Type_Matcher) return Boolean is abstract;
 
    not overriding procedure Add_Symbol
      (Self   : in out Interpretation_Manager;
@@ -50,7 +57,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Expression_Category
      (Self   : in out Interpretation_Manager;
-      Kinds  : Gela.Types.Category_Kind_Set;
+      Match  : not null Gela.Interpretations.Type_Matcher_Access;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
         is abstract;
@@ -112,7 +119,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression_Category
      (Self   : in out Down_Visiter;
-      Kinds  : Gela.Types.Category_Kind_Set;
+      Match  : not null Gela.Interpretations.Type_Matcher_Access;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each category of expression interpretation
 
@@ -175,7 +182,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression_Category
      (Self   : in out Up_Visiter;
-      Kinds  : Gela.Types.Category_Kind_Set;
+      Match  : not null Gela.Interpretations.Type_Matcher_Access;
       Cursor : Gela.Interpretations.Cursor'Class) is null;
    --  Called for each category of expression interpretation
 

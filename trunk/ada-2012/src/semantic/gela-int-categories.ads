@@ -1,5 +1,3 @@
-with Gela.Types;
-
 package Gela.Int.Categories is
    pragma Preelaborate;
 
@@ -7,17 +5,17 @@ package Gela.Int.Categories is
 
    function Create
      (Down  : Gela.Interpretations.Interpretation_Index_Array;
-      Kinds : Gela.Types.Category_Kind_Set)
+      Match  : not null Gela.Interpretations.Type_Matcher_Access)
       return Category;
 
-   function Kinds
+   function Match
      (Self : Category)
-      return Gela.Types.Category_Kind_Set;
+      return not null Gela.Interpretations.Type_Matcher_Access;
 
 private
 
    type Category is new Interpretation with record
-      Kinds : Gela.Types.Category_Kind_Set;
+      Match  : not null Gela.Interpretations.Type_Matcher_Access;
    end record;
 
    overriding procedure Visit

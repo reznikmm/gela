@@ -12,6 +12,7 @@ with Gela.Profiles;
 with Gela.Semantic_Types;
 with Gela.Type_Managers;
 with Gela.Types;
+with Gela.Type_Categories;
 
 package Gela.Plain_Type_Managers is
    pragma Preelaborate;
@@ -29,12 +30,12 @@ private
 
    package Type_View_Maps is new Ada.Containers.Ordered_Maps
         (Key_Type     => Gela.Semantic_Types.Type_Index,
-         Element_Type => Gela.Types.Type_View_Access,
+         Element_Type => Gela.Type_Categories.Type_View_Access,
          "<"          => Gela.Semantic_Types."<",
-         "="          => Gela.Types."=");
+         "="          => Gela.Type_Categories."=");
 
    type Back_Key is record
-      Category : Gela.Types.Category_Kinds;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
    end record;
@@ -84,17 +85,17 @@ private
 
    not overriding function Get
      (Self     : access Type_Manager;
-      Category : Gela.Types.Category_Kinds;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
         return Gela.Semantic_Types.Type_Index;
 
    not overriding function Get_Derived
      (Self     : access Type_Manager;
-      Parent   : Gela.Types.Type_View_Access;
+      Parent   : Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
-        return Gela.Semantic_Types.Type_Index;
+      return Gela.Semantic_Types.Type_Index;
 
    overriding function Get
      (Self  : access Type_Manager;

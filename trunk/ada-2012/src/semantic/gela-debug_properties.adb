@@ -9,10 +9,51 @@ with Gela.Property_Visiters;
 with Gela.Semantic_Types;
 with Gela.Types;
 with Gela.Type_Managers;
+with Gela.Types.Visitors;
+with Gela.Types.Simple;
+with Gela.Types.Arrays;
+with Gela.Types.Untagged_Records;
 
 package body Gela.Debug_Properties is
 
    procedure Put_Line (Text : String);
+
+   procedure Put_Expression (Text : String);
+
+   package Dump_Type is
+      type Type_Visitor (Put_Line : access procedure (Text : String)) is
+        new Gela.Types.Visitors.Type_Visitor with null record;
+
+      overriding procedure Enumeration_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Enumeration_Type_Access);
+
+      overriding procedure Signed_Integer_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access);
+
+      overriding procedure Floating_Point_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Floating_Point_Type_Access);
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+      overriding procedure Untagged_Record
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Untagged_Records
+         .Untagged_Record_Type_Access);
+
+      overriding procedure Object_Access_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Object_Access_Type_Access);
+
+      overriding procedure Subprogram_Access_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Subprogram_Access_Type_Access);
+
+   end Dump_Type;
 
    package Dump_Property is
 
@@ -69,7 +110,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Expression_Category
         (Self   : in out Visiter;
-         Kinds  : Gela.Types.Category_Kind_Set;
+         Match  : not null Gela.Interpretations.Type_Matcher_Access;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       overriding procedure On_Attr_Function
@@ -100,7 +141,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Expression_Category
         (Self   : in out Visiter;
-         Kinds  : Gela.Types.Category_Kind_Set;
+         Match  : not null Gela.Interpretations.Type_Matcher_Access;
          Cursor : Gela.Interpretations.Cursor'Class);
 
       overriding procedure On_Attr_Function
@@ -266,6 +307,7 @@ package body Gela.Debug_Properties is
          TM : constant Gela.Type_Managers.Type_Manager_Access :=
            Self.Comp.Context.Types;
          View : Gela.Types.Type_View_Access;
+         DT   : Dump_Type.Type_Visitor (Put_Expression'Access);
       begin
          if Tipe /= 0 then
             View := TM.Get (Tipe);
@@ -274,9 +316,7 @@ package body Gela.Debug_Properties is
          if View = null then
             Put_Line ("   Expression NULL");
          else
-            Put_Line
-              ("   Expression " &
-                 Gela.Types.Category_Kinds'Image (View.Category));
+            View.Visit (DT);
          end if;
 
          for J of Down loop
@@ -288,18 +328,12 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Expression_Category
         (Self   : in out Visiter;
-         Kinds  : Gela.Types.Category_Kind_Set;
+         Match  : not null Gela.Interpretations.Type_Matcher_Access;
          Down   : Gela.Interpretations.Interpretation_Index_Array)
       is
-         pragma Unreferenced (Self);
+         pragma Unreferenced (Self, Match);
       begin
          Put_Line ("   Expression_Category: ");
-
-         for J in Kinds'Range loop
-            if Kinds (J) then
-               Put_Line ("      " & Gela.Types.Category_Kinds'Image (J));
-            end if;
-         end loop;
 
          for J of Down loop
             Put_Line
@@ -357,6 +391,7 @@ package body Gela.Debug_Properties is
          TM : constant Gela.Type_Managers.Type_Manager_Access :=
            Self.Comp.Context.Types;
          View : Gela.Types.Type_View_Access;
+         DT   : Dump_Type.Type_Visitor (Put_Expression'Access);
       begin
          if Tipe /= 0 then
             View := TM.Get (Tipe);
@@ -365,26 +400,18 @@ package body Gela.Debug_Properties is
          if View = null then
             Put_Line ("   Expression NULL");
          else
-            Put_Line
-              ("   Expression " &
-                 Gela.Types.Category_Kinds'Image (View.Category));
+            View.Visit (DT);
          end if;
       end On_Expression;
 
       overriding procedure On_Expression_Category
         (Self   : in out Visiter;
-         Kinds  : Gela.Types.Category_Kind_Set;
+         Match  : not null Gela.Interpretations.Type_Matcher_Access;
          Cursor : Gela.Interpretations.Cursor'Class)
       is
-         pragma Unreferenced (Self, Cursor);
+         pragma Unreferenced (Self, Cursor, Match);
       begin
          Put_Line ("   Expression_Category: ");
-
-         for J in Kinds'Range loop
-            if Kinds (J) then
-               Put_Line ("      " & Gela.Types.Category_Kinds'Image (J));
-            end if;
-         end loop;
       end On_Expression_Category;
 
       overriding procedure On_Attr_Function
@@ -425,6 +452,81 @@ package body Gela.Debug_Properties is
       end On_Tuple;
 
    end Dump_Up_Interpretation;
+
+   package body Dump_Type is
+
+      overriding procedure Enumeration_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Enumeration_Type_Access)
+      is
+      begin
+         if Value.Is_Character then
+            Self.Put_Line ("Character");
+         else
+            Self.Put_Line ("Enumeration");
+         end if;
+      end Enumeration_Type;
+
+      overriding procedure Signed_Integer_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access) is
+      begin
+         if Value.Is_Universal then
+            Self.Put_Line ("Universal_Integer");
+         else
+            Self.Put_Line ("Signed_Integer");
+         end if;
+      end Signed_Integer_Type;
+
+      overriding procedure Floating_Point_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Floating_Point_Type_Access) is
+      begin
+         if Value.Is_Universal then
+            Self.Put_Line ("Universal_Real");
+         else
+            Self.Put_Line ("Floating_Point");
+         end if;
+      end Floating_Point_Type;
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Arrays.Array_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Put_Line ("Array");
+      end Array_Type;
+
+      overriding procedure Untagged_Record
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Untagged_Records
+         .Untagged_Record_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Put_Line ("Untagged_Record");
+      end Untagged_Record;
+
+      overriding procedure Object_Access_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Object_Access_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Put_Line ("Object_Access");
+      end Object_Access_Type;
+
+      overriding procedure Subprogram_Access_Type
+        (Self  : in out Type_Visitor;
+         Value : not null Gela.Types.Simple.Subprogram_Access_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Put_Line ("Subprogram_Access");
+      end Subprogram_Access_Type;
+
+   end Dump_Type;
 
 
    procedure Dump
@@ -491,6 +593,15 @@ package body Gela.Debug_Properties is
 
       Dump (Element, PV'Access, EV);
    end Dump;
+
+   --------------------
+   -- Put_Expression --
+   --------------------
+
+   procedure Put_Expression (Text : String) is
+   begin
+      Put_Line ("   Expression " & Text);
+   end Put_Expression;
 
    --------------
    -- Put_Line --

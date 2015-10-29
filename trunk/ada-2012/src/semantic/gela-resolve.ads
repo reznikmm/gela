@@ -3,7 +3,6 @@ with Gela.Elements.Constraints;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
-with Gela.Types;
 
 package Gela.Resolve is
    pragma Preelaborate;
@@ -141,12 +140,6 @@ package Gela.Resolve is
    procedure Real_Type
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Result   : out Gela.Interpretations.Interpretation_Index);
-
-   procedure To_Type_Category
-     (Comp     : Gela.Compilations.Compilation_Access;
-      Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Category : Gela.Types.Category_Kinds;
       Result   : out Gela.Interpretations.Interpretation_Index);
 
 end Gela.Resolve;

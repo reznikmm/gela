@@ -20,8 +20,7 @@ package body Gela.Plain_Type_Views is
    --------------
 
    overriding function Category
-     (Self : Type_View)
-      return Gela.Types.Category_Kinds
+     (Self : Type_View) return Gela.Type_Categories.Category_Kinds
    is
    begin
       return Self.Category;
@@ -32,15 +31,15 @@ package body Gela.Plain_Type_Views is
    ------------
 
    function Create_Full_Type
-     (Category : Gela.Types.Category_Kinds;
+     (Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
-      .Full_Type_Declaration_Access)
-      return Gela.Types.Type_View_Access
+                   .Full_Type_Declaration_Access)
+      return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access :=
         new Type_View'(Category => Category, Decl => Decl);
    begin
-      return Gela.Types.Type_View_Access (Value);
+      return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
 
    -------------------
@@ -296,8 +295,18 @@ package body Gela.Plain_Type_Views is
 
    overriding function Is_Array (Self : Type_View) return Boolean is
    begin
-      return Self.Category in Gela.Types.A_String | Gela.Types.An_Other_Array;
+      return Self.Category in Gela.Type_Categories.A_String
+        | Gela.Type_Categories.An_Other_Array;
    end Is_Array;
+
+   ------------------
+   -- Is_Character --
+   ------------------
+
+   overriding function Is_Character (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Character;
+   end Is_Character;
 
    ----------------------
    -- Is_Expected_Type --
@@ -310,8 +319,45 @@ package body Gela.Plain_Type_Views is
       use type Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
 
-      Expected_Category : constant Gela.Types.Category_Kinds :=
-        Expected.Category;
+      package Visitors is
+         type Type_Visitor is new Gela.Types.Visitors.Type_Visitor with record
+            Match_Integer : Boolean := False;
+            Match_Real    : Boolean := False;
+         end record;
+
+         overriding procedure Signed_Integer_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Signed_Integer_Type_Access);
+
+         overriding procedure Floating_Point_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Floating_Point_Type_Access);
+
+      end Visitors;
+
+      package body Visitors is
+
+         overriding procedure Signed_Integer_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Signed_Integer_Type_Access)
+         is
+            pragma Unreferenced (Value);
+         begin
+            Self.Match_Integer := True;
+         end Signed_Integer_Type;
+
+         overriding procedure Floating_Point_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple.Floating_Point_Type_Access)
+         is
+            pragma Unreferenced (Value);
+         begin
+            Self.Match_Real := True;
+         end Floating_Point_Type;
+
+      end Visitors;
+
+      Matcher : Visitors.Type_Visitor;
    begin
       if Expected.all in Type_View and then
         Self.Decl = Type_View (Expected.all).Decl
@@ -319,26 +365,91 @@ package body Gela.Plain_Type_Views is
          return True;
       end if;
 
-      case Expected_Category is
-         when Gela.Types.An_Universal_Integer =>
-            return Self.Category in Gela.Types.Any_Integer_Type;
-         when Gela.Types.An_Universal_Real =>
-            return Self.Category in Gela.Types.Any_Real_Type;
-         when others =>
-            null;
-      end case;
+      if Expected.Is_Universal then
+         Expected.Visit (Matcher);
+
+         if Matcher.Match_Integer then
+            return Self.Category in Gela.Type_Categories.Any_Integer_Type;
+         elsif Matcher.Match_Real then
+            return Self.Category in Gela.Type_Categories.Any_Real_Type;
+         end if;
+      end if;
 
       case Self.Category is
-         when Gela.Types.An_Universal_Integer =>
-            return Expected_Category in Gela.Types.Any_Integer_Type;
-         when Gela.Types.An_Universal_Real =>
-            return Expected_Category in Gela.Types.Any_Real_Type;
+         when Gela.Type_Categories.An_Universal_Integer =>
+            Expected.Visit (Matcher);
+            return Matcher.Match_Integer;
+         when Gela.Type_Categories.An_Universal_Real =>
+            Expected.Visit (Matcher);
+            return Matcher.Match_Real;
          when others =>
             null;
       end case;
 
       return False;
    end Is_Expected_Type;
+
+   -----------------------
+   -- Is_Floating_Point --
+   -----------------------
+
+   overriding function Is_Floating_Point (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Float_Point
+        | Gela.Type_Categories.An_Universal_Real;
+   end Is_Floating_Point;
+
+   ------------------------
+   -- Is_Modular_Integer --
+   ------------------------
+
+   overriding function Is_Modular_Integer (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Modular_Integer
+        | Gela.Type_Categories.An_Universal_Integer;
+   end Is_Modular_Integer;
+
+   ----------------------
+   -- Is_Object_Access --
+   ----------------------
+
+   overriding function Is_Object_Access (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Constant_Access
+        | Gela.Type_Categories.A_Variable_Access;
+   end Is_Object_Access;
+
+   ---------------
+   -- Is_Record --
+   ---------------
+
+   overriding function Is_Record (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Untagged_Record
+       | Gela.Type_Categories.A_Tagged;
+   end Is_Record;
+
+   -----------------------
+   -- Is_Signed_Integer --
+   -----------------------
+
+   overriding function Is_Signed_Integer (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Signed_Integer
+        | Gela.Type_Categories.An_Universal_Integer;
+   end Is_Signed_Integer;
+
+   ------------------
+   -- Is_Universal --
+   ------------------
+
+   overriding function Is_Universal (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.An_Universal_Integer
+        | Gela.Type_Categories.An_Universal_Real
+        | Gela.Type_Categories.An_Universal_Fixed
+        | Gela.Type_Categories.An_Universal_Access;
+   end Is_Universal;
 
    -----------
    -- Visit --
@@ -349,26 +460,29 @@ package body Gela.Plain_Type_Views is
       Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is
    begin
       case Self.Category is
-         when Gela.Types.A_Character |
-              Gela.Types.A_Boolean |
-              Gela.Types.An_Other_Enum =>
+         when Gela.Type_Categories.A_Character |
+              Gela.Type_Categories.A_Boolean |
+              Gela.Type_Categories.An_Other_Enum =>
 
             Visiter.Enumeration_Type
               (Gela.Types.Simple.Enumeration_Type_Access (Self));
-         when Gela.Types.A_Signed_Integer =>
+         when Gela.Type_Categories.A_Signed_Integer |
+              Gela.Type_Categories.An_Universal_Integer =>
             Visiter.Signed_Integer_Type
               (Gela.Types.Simple.Signed_Integer_Type_Access (Self));
-         when Gela.Types.A_Float_Point =>
+         when Gela.Type_Categories.A_Float_Point |
+              Gela.Type_Categories.An_Universal_Real =>
             Visiter.Floating_Point_Type
               (Gela.Types.Simple.Floating_Point_Type_Access (Self));
-         when Gela.Types.A_String | Gela.Types.An_Other_Array =>
+         when Gela.Type_Categories.A_String |
+              Gela.Type_Categories.An_Other_Array =>
             Visiter.Array_Type
               (Gela.Types.Arrays.Array_Type_Access (Self));
-         when Gela.Types.A_Untagged_Record =>
+         when Gela.Type_Categories.A_Untagged_Record =>
             Visiter.Untagged_Record
               (Gela.Types.Untagged_Records.Untagged_Record_Type_Access (Self));
-         when Gela.Types.A_Constant_Access |
-              Gela.Types.A_Variable_Access =>
+         when Gela.Type_Categories.A_Constant_Access |
+              Gela.Type_Categories.A_Variable_Access =>
             Visiter.Object_Access_Type
               (Gela.Types.Simple.Object_Access_Type_Access (Self));
          when others =>

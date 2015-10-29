@@ -106,7 +106,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Add_Expression_Category
      (Self   : in out Interpretation_Manager;
-      Kinds  : Gela.Types.Category_Kind_Set;
+      Match  : not null Gela.Interpretations.Type_Matcher_Access;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
@@ -114,7 +114,7 @@ package body Gela.Plain_Interpretations is
         new Gela.Int.Categories.Category'
           (Gela.Int.Categories.Create
              (Down  => Down,
-              Kinds => Kinds));
+              Match => Match));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
    end Add_Expression_Category;
@@ -476,7 +476,7 @@ package body Gela.Plain_Interpretations is
             pragma Unreferenced (Self);
          begin
             Target.On_Expression_Category
-              (Kinds => Value.Kinds,
+              (Match => Value.Match,
                Down  => Value.Down);
          end Expression_Category;
 

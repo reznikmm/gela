@@ -5,14 +5,14 @@ package body Gela.Derived_Type_Views is
    -------------------------
 
    function Create_Derived_Type
-     (Parent   : not null Gela.Types.Type_View_Access;
+     (Parent   : not null Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
-      return Gela.Types.Type_View_Access
+      return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access := new Type_View'(Parent, Decl);
    begin
-      return Gela.Types.Type_View_Access (Value);
+      return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Derived_Type;
 
    --------------
@@ -20,7 +20,7 @@ package body Gela.Derived_Type_Views is
    --------------
 
    overriding function Category
-     (Self : Type_View) return Gela.Types.Category_Kinds is
+     (Self : Type_View) return Gela.Type_Categories.Category_Kinds is
    begin
       return Self.Parent.Category;
    end Category;
@@ -71,6 +71,15 @@ package body Gela.Derived_Type_Views is
       return Self.Parent.Is_Array;
    end Is_Array;
 
+   ------------------
+   -- Is_Character --
+   ------------------
+
+   overriding function Is_Character (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Character;
+   end Is_Character;
+
    ----------------------
    -- Is_Expected_Type --
    ----------------------
@@ -83,9 +92,6 @@ package body Gela.Derived_Type_Views is
       use type Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
 
-      Expected_Category : constant Gela.Types.Category_Kinds :=
-        Expected.Category;
-
    begin
       if Expected.all in Type_View and then
         Self.Decl = Type_View (Expected.all).Decl
@@ -93,17 +99,71 @@ package body Gela.Derived_Type_Views is
          return True;
       end if;
 
-      case Expected_Category is
-         when Gela.Types.An_Universal_Integer =>
-            return Self.Category in Gela.Types.Any_Integer_Type;
-         when Gela.Types.An_Universal_Real =>
-            return Self.Category in Gela.Types.Any_Real_Type;
-         when others =>
-            null;
-      end case;
+      if Expected.Is_Universal then
+         if Expected.Is_Integer then
+            return Self.Category in Gela.Type_Categories.Any_Integer_Type;
+         elsif Expected.Is_Real then
+            return Self.Category in Gela.Type_Categories.Any_Real_Type;
+         end if;
+      end if;
 
       return False;
    end Is_Expected_Type;
+
+   -----------------------
+   -- Is_Floating_Point --
+   -----------------------
+
+   overriding function Is_Floating_Point (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Floating_Point;
+   end Is_Floating_Point;
+
+   ------------------------
+   -- Is_Modular_Integer --
+   ------------------------
+
+   overriding function Is_Modular_Integer (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Modular_Integer;
+   end Is_Modular_Integer;
+
+   ----------------------
+   -- Is_Object_Access --
+   ----------------------
+
+   overriding function Is_Object_Access (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Modular_Integer;
+   end Is_Object_Access;
+
+   ---------------
+   -- Is_Record --
+   ---------------
+
+   overriding function Is_Record (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Record;
+   end Is_Record;
+
+   -----------------------
+   -- Is_Signed_Integer --
+   -----------------------
+
+   overriding function Is_Signed_Integer (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Signed_Integer;
+   end Is_Signed_Integer;
+
+   ------------------
+   -- Is_Universal --
+   ------------------
+
+   overriding function Is_Universal (Self : Type_View) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Universal;
 
    -----------
    -- Visit --

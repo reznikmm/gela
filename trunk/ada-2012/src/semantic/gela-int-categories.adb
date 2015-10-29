@@ -8,25 +8,25 @@ package body Gela.Int.Categories is
 
    function Create
      (Down  : Gela.Interpretations.Interpretation_Index_Array;
-      Kinds : Gela.Types.Category_Kind_Set)
+      Match  : not null Gela.Interpretations.Type_Matcher_Access)
       return Category is
    begin
       return (Index  => 0,
               Length => Down'Length,
-              Kinds  => Kinds,
+              Match  => Match,
               Down   => Down);
    end Create;
 
    -----------
-   -- Kinds --
+   -- Match --
    -----------
 
-   function Kinds
+   function Match
      (Self : Category)
-      return Gela.Types.Category_Kind_Set is
+      return not null Gela.Interpretations.Type_Matcher_Access is
    begin
-      return Self.Kinds;
-   end Kinds;
+      return Self.Match;
+   end Match;
 
    -----------
    -- Visit --

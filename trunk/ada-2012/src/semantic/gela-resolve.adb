@@ -8,8 +8,17 @@ with Gela.Elements.Subtype_Indications;
 with Gela.Environments;
 with Gela.Profiles;
 with Gela.Type_Managers;
+with Gela.Types.Arrays;
+with Gela.Types.Simple;
 
 package body Gela.Resolve is
+
+   procedure To_Type_Category
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Up       : Gela.Interpretations.Interpretation_Set_Index;
+      Tipe     : Gela.Semantic_Types.Type_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index);
+   --  Fetch Type_Category interpretation from Up that match given Tipe.
 
    procedure Get_Subtype
      (Comp   : Gela.Compilations.Compilation_Access;
@@ -51,6 +60,109 @@ package body Gela.Resolve is
    --  For each Value (J), iterate over its interpretation set and call Self to
    --  resolve. Read resolved value from Found. Wrap each resolved value in
    --  down interpretation, then return its index as Chosen
+
+   package String_Type_Matcher is
+      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
+         Match : Boolean := False;
+      end record;
+
+      type Type_Matcher_Access is access all Type_Matcher'Class;
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean;
+   end String_Type_Matcher;
+
+   package body String_Type_Matcher is
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Arrays.Array_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Match := True;  --  Value.Is_String;  FIXME
+      end Array_Type;
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean is
+      begin
+         return Self.Match;
+      end Is_Matched;
+
+   end String_Type_Matcher;
+
+   package Integer_Type_Matcher is
+      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
+         Match : Boolean := False;
+      end record;
+
+      type Type_Matcher_Access is access all Type_Matcher'Class;
+
+      overriding procedure Signed_Integer_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access);
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean;
+   end Integer_Type_Matcher;
+
+   package body Integer_Type_Matcher is
+
+      overriding procedure Signed_Integer_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Match := True;
+      end Signed_Integer_Type;
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean is
+      begin
+         return Self.Match;
+      end Is_Matched;
+
+   end Integer_Type_Matcher;
+
+   package Float_Type_Matcher is
+      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
+         Match : Boolean := False;
+      end record;
+
+      type Type_Matcher_Access is access all Type_Matcher'Class;
+
+      overriding procedure Floating_Point_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Simple.Floating_Point_Type_Access);
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean;
+   end Float_Type_Matcher;
+
+   package body Float_Type_Matcher is
+
+      overriding procedure Floating_Point_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Simple.Floating_Point_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Match := True;
+      end Floating_Point_Type;
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean is
+      begin
+         return Self.Match;
+      end Is_Matched;
+
+   end Float_Type_Matcher;
+
 
    ----------------------
    -- Assignment_Right --
@@ -705,10 +817,7 @@ package body Gela.Resolve is
          begin
             Target.On_Expression (Tipe, Cursor);
 
-            if View.Assigned and then View.Category in
-                Gela.Types.A_Variable_Access |
-                Gela.Types.A_Constant_Access
-            then
+            if View.Assigned and then View.Is_Object_Access then
                declare
                   SI : constant Gela.Elements.Subtype_Indications
                     .Subtype_Indication_Access := View.Get_Designated;
@@ -1076,9 +1185,12 @@ package body Gela.Resolve is
    procedure Real_Type
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Result   : out Gela.Interpretations.Interpretation_Index) is
+      Result   : out Gela.Interpretations.Interpretation_Index)
+   is
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
    begin
-      To_Type_Category (Comp, Up, Gela.Types.A_Float_Point, Result);
+      To_Type_Category (Comp, Up, TM.Universal_Real, Result);
    end Real_Type;
 
    ------------------------
@@ -1229,9 +1341,12 @@ package body Gela.Resolve is
    procedure Signed_Integer_Type
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Result   : out Gela.Interpretations.Interpretation_Index) is
+      Result   : out Gela.Interpretations.Interpretation_Index)
+   is
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
    begin
-      To_Type_Category (Comp, Up, Gela.Types.A_Signed_Integer, Result);
+      To_Type_Category (Comp, Up, TM.Universal_Integer, Result);
    end Signed_Integer_Type;
 
    -----------------------------
@@ -1319,23 +1434,17 @@ package body Gela.Resolve is
                begin
                   if not Type_View.Assigned then
                      return;
-                  elsif Type_View.Category in
-                    Gela.Types.Any_Integer_Type
-                  then
+                  elsif Type_View.Is_Integer then
                      Increment (Self.Counters, Cursor.Get_Index, Integer);
-                  elsif Type_View.Category in
-                    Gela.Types.Any_Real_Type
-                  then
+                  elsif Type_View.Is_Real then
                      Increment (Self.Counters, Cursor.Get_Index, Float);
                   else  --  FIXME Return after implementation of types
                      null;
                   end if;
 
                   if Type_View.Is_Expected_Type (Self.Type_View) then
-                     if Type_View.Category in
-                           Gela.Types.An_Universal_Integer |
-                           Gela.Types.An_Universal_Real |
-                           Gela.Types.An_Universal_Fixed
+                     if Type_View.Is_Universal
+                       and then Type_View.Is_Numeric
                      then
                         Chosen := Self.Tipe;
                      else
@@ -1364,17 +1473,13 @@ package body Gela.Resolve is
                Set    => Right,
                Target => Visiter_Right);
 
-            if Visiter_Right.Type_View.Category in
-                 Gela.Types.Any_Integer_Type
-            then
+            if Visiter_Right.Type_View.Is_Integer then
                Increment
                  (Self.Counters,
                   Cursor.Get_Index,
                   Visiter_Right.Counters,
                   Integer);
-            elsif Visiter_Right.Type_View.Category in
-              Gela.Types.Any_Real_Type
-            then
+            elsif Visiter_Right.Type_View.Is_Real then
                Increment
                  (Self.Counters,
                   Cursor.Get_Index,
@@ -1420,6 +1525,9 @@ package body Gela.Resolve is
       Visiter : aliased Each_Left.Visiter;
       L_Val : Counter_By_Type renames Visiter.Counters (Left_Side);
       R_Val : Counter_By_Type renames Visiter.Counters (Right_Side);
+
+      Int_Matcher   : Integer_Type_Matcher.Type_Matcher_Access;
+      Float_Matcher : Float_Type_Matcher.Type_Matcher_Access;
    begin
       Set := 0;
       Each_Expression
@@ -1429,17 +1537,19 @@ package body Gela.Resolve is
          Target => Visiter);
 
       if L_Val (Integer).Count = 1 and R_Val (Integer).Count = 1 then
+         Int_Matcher := new Integer_Type_Matcher.Type_Matcher;
+
          Comp.Context.Interpretation_Manager.Add_Expression_Category
-           (Kinds  =>
-              (Gela.Types.A_Signed_Integer => True, others => False),
+           (Match  => Gela.Interpretations.Type_Matcher_Access (Int_Matcher),
             Down   => (L_Val (Integer).Index, R_Val (Integer).Index),
             Result => Set);
       end if;
 
       if L_Val (Float).Count = 1 and R_Val (Float).Count = 1 then
+         Float_Matcher := new Float_Type_Matcher.Type_Matcher;
+
          Comp.Context.Interpretation_Manager.Add_Expression_Category
-           (Kinds  =>
-              (Gela.Types.A_Float_Point => True, others => False),
+           (Match  => Gela.Interpretations.Type_Matcher_Access (Float_Matcher),
             Down   => (L_Val (Float).Index, R_Val (Float).Index),
             Result => Set);
       end if;
@@ -1455,12 +1565,13 @@ package body Gela.Resolve is
       Result : out Gela.Interpretations.Interpretation_Set_Index)
    is
       pragma Unreferenced (Token);
+      Matcher : constant String_Type_Matcher.Type_Matcher_Access :=
+        new String_Type_Matcher.Type_Matcher;
    begin
       Result := 0;
 
       Comp.Context.Interpretation_Manager.Add_Expression_Category
-        (Kinds  =>
-           (Gela.Types.A_String => True, others => False),
+        (Match => Gela.Interpretations.Type_Matcher_Access (Matcher),
          Down   => (1 .. 0 => 0),
          Result => Result);
 
@@ -1582,7 +1693,7 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression_Category
            (Self   : in out Visiter;
-            Kinds  : Gela.Types.Category_Kind_Set;
+            Match  : not null Gela.Interpretations.Type_Matcher_Access;
             Cursor : Gela.Interpretations.Cursor'Class);
 
          overriding procedure On_Tuple
@@ -1661,10 +1772,12 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression_Category
            (Self   : in out Visiter;
-            Kinds  : Gela.Types.Category_Kind_Set;
+            Match  : not null Gela.Interpretations.Type_Matcher_Access;
             Cursor : Gela.Interpretations.Cursor'Class) is
          begin
-            if Kinds (View.Category) then
+            View.Visit (Match.all);
+
+            if Match.Is_Matched then
                Self.Index := Cursor.Get_Index;
             end if;
          end On_Expression_Category;
@@ -1678,9 +1791,7 @@ package body Gela.Resolve is
             V      : aliased Each_Association.Visiter;
             Chosen : Gela.Interpretations.Interpretation_Index;
          begin
-            if View /= null and then
-              View.Category in Gela.Types.A_Untagged_Record
-            then
+            if View /= null and then View.Is_Record then
                Wrap_Tuple
                  (Self   => V'Access,
                   IM     => IM,
@@ -1772,7 +1883,7 @@ package body Gela.Resolve is
    procedure To_Type_Category
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Category : Gela.Types.Category_Kinds;
+      Tipe     : Gela.Semantic_Types.Type_Index;
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
 
@@ -1781,10 +1892,15 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression_Category
            (Self   : in out Visiter;
-            Kinds  : Gela.Types.Category_Kind_Set;
+            Match  : not null Gela.Interpretations.Type_Matcher_Access;
             Cursor : Gela.Interpretations.Cursor'Class);
 
       end Each;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
 
       ----------
       -- Each --
@@ -1794,12 +1910,14 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression_Category
            (Self   : in out Visiter;
-            Kinds  : Gela.Types.Category_Kind_Set;
+            Match  : not null Gela.Interpretations.Type_Matcher_Access;
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
          begin
-            if Kinds (Category) then
+            View.Visit (Match.all);
+
+            if Match.Is_Matched then
                Result := Cursor.Get_Index;
             end if;
          end On_Expression_Category;

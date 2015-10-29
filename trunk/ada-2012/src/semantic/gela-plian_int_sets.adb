@@ -276,7 +276,7 @@ package body Gela.Plian_Int_Sets is
             pragma Unreferenced (Self);
          begin
             Target.On_Expression_Category
-              (Kinds  => Value.Kinds,
+              (Match  => Value.Match,
                Cursor => Visit.Self);
          end Expression_Category;
 
