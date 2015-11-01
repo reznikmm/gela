@@ -1,3 +1,5 @@
+limited with Gela.Elements.Subtype_Indications;
+
 package Gela.Types.Simple is
    pragma Preelaborate;
 
@@ -50,6 +52,11 @@ package Gela.Types.Simple is
 
    type Object_Access_Type_Access is access all Object_Access_Type'Class;
    for Object_Access_Type_Access'Storage_Size use 0;
+
+   not overriding function Get_Designated
+     (Self   : Object_Access_Type)
+      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+        is abstract;
 
    ----------------------------
    -- Subprogram_Access_Type --

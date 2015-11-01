@@ -1,3 +1,4 @@
+with Gela.Types.Discriminated;
 package body Gela.Derived_Type_Views is
 
    -------------------------
@@ -34,7 +35,8 @@ package body Gela.Derived_Type_Views is
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Elements.Defining_Names.Defining_Name_Access is
    begin
-      return Self.Parent.Get_Discriminant (Symbol);
+      return Gela.Types.Discriminated.Discriminated_Type_Access
+        (Self.Parent).Get_Discriminant (Symbol);
    end Get_Discriminant;
 
    -------------------
@@ -47,7 +49,8 @@ package body Gela.Derived_Type_Views is
       return Gela.Elements.Defining_Names.Defining_Name_Access
    is
    begin
-      return Self.Parent.Get_Component (Symbol);
+      return Gela.Types.Untagged_Records.Untagged_Record_Type_Access
+        (Self.Parent).Get_Component (Symbol);
    end Get_Component;
 
    --------------------
@@ -59,7 +62,8 @@ package body Gela.Derived_Type_Views is
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
    is
    begin
-      return Self.Parent.Get_Designated;
+      return Gela.Types.Simple.Object_Access_Type_Access
+        (Self.Parent).Get_Designated;
    end Get_Designated;
 
    --------------

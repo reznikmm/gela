@@ -10,6 +10,8 @@ with Gela.Profiles;
 with Gela.Type_Managers;
 with Gela.Types.Arrays;
 with Gela.Types.Simple;
+with Gela.Types.Visitors;
+with Gela.Types.Untagged_Records;
 
 package body Gela.Resolve is
 
@@ -508,21 +510,44 @@ package body Gela.Resolve is
             pragma Unreferenced (Cursor);
             use type Gela.Types.Type_View_Access;
 
+            package Type_Visiters is
+               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+                 with null record;
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access);
+
+            end Type_Visiters;
+
+            package body Type_Visiters is
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                  .Untagged_Record_Type_Access)
+               is
+                  pragma Unreferenced (Self);
+                  Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+               begin
+                  Name := Value.Get_Discriminant (Symbol);
+
+                  if Name.Assigned then
+                     IM.Get_Defining_Name_Index (Name, On_Symbol.Self.Index);
+                  end if;
+               end Untagged_Record;
+
+            end Type_Visiters;
+
             TM : constant Gela.Type_Managers.Type_Manager_Access :=
               Comp.Context.Types;
             Type_View : constant Gela.Types.Type_View_Access :=
               TM.Get (Type_Index);
-            Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Visiter : Type_Visiters.Type_Visitor;
          begin
             Self.Index := 0;
-
-            if Type_View /= null then
-               Name := Type_View.Get_Discriminant (Symbol);
-
-               if Name.Assigned then
-                  IM.Get_Defining_Name_Index (Name, Self.Index);
-               end if;
-            end if;
+            Type_View.Visit_If_Assigned (Visiter);
          end On_Symbol;
 
          overriding procedure On_Tuple
@@ -812,21 +837,42 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
-            View : constant Gela.Types.Type_View_Access :=
-              TM.Get (Tipe);
-         begin
-            Target.On_Expression (Tipe, Cursor);
 
-            if View.Assigned and then View.Is_Object_Access then
-               declare
+            package Type_Visiters is
+               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+                 with null record;
+
+               overriding procedure Object_Access_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Simple
+                    .Object_Access_Type_Access);
+
+            end Type_Visiters;
+
+            package body Type_Visiters is
+
+               overriding procedure Object_Access_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Simple
+                    .Object_Access_Type_Access)
+               is
+                  pragma Unreferenced (Self);
                   SI : constant Gela.Elements.Subtype_Indications
-                    .Subtype_Indication_Access := View.Get_Designated;
+                    .Subtype_Indication_Access := Value.Get_Designated;
                   Index : constant Gela.Semantic_Types.Type_Index :=
                     TM.Type_From_Subtype_Mark (Env, SI.Subtype_Mark);
                begin
                   Target.On_Expression (Index, Cursor);
-               end;
-            end if;
+               end Object_Access_Type;
+
+            end Type_Visiters;
+
+            View : constant Gela.Types.Type_View_Access :=
+              TM.Get (Tipe);
+            Visiter : Type_Visiters.Type_Visitor;
+         begin
+            Target.On_Expression (Tipe, Cursor);
+            View.Visit_If_Assigned (Visiter);
          end On_Expression;
 
       end Each;
@@ -1278,20 +1324,45 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
+
+            package Type_Visiters is
+               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+                 with null record;
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access);
+
+            end Type_Visiters;
+
+            package body Type_Visiters is
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access)
+               is
+                  pragma Unreferenced (Self);
+                  Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+               begin
+                  Name := Value.Get_Component (Symbol);
+
+                  if Name.Assigned then
+                     IM.Add_Defining_Name
+                       (Name   => Name,
+                        Down   => (1 => Cursor.Get_Index),
+                        Result => Set);
+                  end if;
+               end Untagged_Record;
+
+            end Type_Visiters;
+
             Type_View : constant Gela.Types.Type_View_Access :=
               TM.Get (Tipe);
-            Correspond : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Visiter : Type_Visiters.Type_Visitor;
          begin
-            if Type_View.Assigned then
-               Correspond := Type_View.Get_Component (Symbol);
-
-               if Correspond.Assigned then
-                  IM.Add_Defining_Name
-                    (Name   => Correspond,
-                     Down   => (1 => Cursor.Get_Index),
-                     Result => Set);
-               end if;
-            end if;
+            Type_View.Visit_If_Assigned (Visiter);
          end On_Expression;
 
       end Each_Expr;
@@ -1846,17 +1917,45 @@ package body Gela.Resolve is
          is
             pragma Unreferenced (Cursor);
 
-            Name : constant Gela.Elements.Defining_Names.Defining_Name_Access
-              := View.Get_Component (Symbol);
-         begin
-            if Name.Assigned then
-               IM.Get_Defining_Name_Index
-                 (Name   => Name,
-                  Result => Self.Index);
+            package Type_Visiters is
+               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+                 with null record;
 
-               Self.Component_Type :=
-                 TM.Type_Of_Object_Declaration (Env, Name.Enclosing_Element);
-            end if;
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access);
+
+            end Type_Visiters;
+
+            package body Type_Visiters is
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access)
+               is
+                  pragma Unreferenced (Self);
+                  Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+               begin
+                  Name := Value.Get_Component (Symbol);
+
+                  if Name.Assigned then
+                     IM.Get_Defining_Name_Index
+                       (Name   => Name,
+                        Result => On_Symbol.Self.Index);
+
+                     On_Symbol.Self.Component_Type :=
+                       TM.Type_Of_Object_Declaration
+                         (Env, Name.Enclosing_Element);
+                  end if;
+               end Untagged_Record;
+
+            end Type_Visiters;
+
+            Visiter : Type_Visiters.Type_Visitor;
+         begin
+            View.Visit (Visiter);
          end On_Symbol;
 
       end Each_Symbol;

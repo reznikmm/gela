@@ -1,8 +1,5 @@
 --  This package provides representation of types and their categories.
 
-with Gela.Elements.Defining_Names;
-limited with Gela.Elements.Subtype_Indications;
-with Gela.Lexical_Types;
 limited with Gela.Types.Visitors;
 
 package Gela.Types is
@@ -15,20 +12,9 @@ package Gela.Types is
    function Assigned (Self : access Type_View'Class) return Boolean
      is (Self /= null);
 
-   not overriding function Get_Discriminant
-     (Self   : Type_View;
-      Symbol : Gela.Lexical_Types.Symbol)
-      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
-
-   not overriding function Get_Component
-     (Self   : Type_View;
-      Symbol : Gela.Lexical_Types.Symbol)
-      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
-
-   not overriding function Get_Designated
-     (Self   : Type_View)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
-        is abstract;
+   procedure Visit_If_Assigned
+     (Self    : access Type_View'Class;
+      Visiter : in out Gela.Types.Visitors.Type_Visitor'Class);
 
    not overriding function Is_Expected_Type
      (Self     : Type_View;
