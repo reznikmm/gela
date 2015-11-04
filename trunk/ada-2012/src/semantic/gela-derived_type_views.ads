@@ -7,6 +7,7 @@ with Gela.Types.Simple;
 with Gela.Types.Untagged_Records;
 with Gela.Types.Visitors;
 with Gela.Type_Categories;
+with Gela.Semantic_Types;
 
 package Gela.Derived_Type_Views is
    pragma Preelaborate;
@@ -60,6 +61,14 @@ private
    overriding function Get_Designated
      (Self   : Type_View)
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access;
+
+   overriding function Index_Types
+     (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array;
+
+   overriding function Index_Types
+     (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array;
+
+   overriding function Dimension (Self : Type_View) return Positive;
 
    overriding function Is_Expected_Type
      (Self     : Type_View;

@@ -2,7 +2,6 @@ with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Subtype_Indications;
 with Gela.Lexical_Types;
-with Gela.Types.Arrays;
 with Gela.Types.Simple;
 with Gela.Types.Untagged_Records;
 with Gela.Types.Visitors;
@@ -17,8 +16,7 @@ package Gela.Plain_Type_Views is
      and Gela.Types.Simple.Floating_Point_Type
      and Gela.Types.Simple.Object_Access_Type
      and Gela.Types.Simple.Subprogram_Access_Type
-     and Gela.Types.Untagged_Records.Untagged_Record_Type
-     and Gela.Types.Arrays.Array_Type with private;
+     and Gela.Types.Untagged_Records.Untagged_Record_Type with private;
 
    type Type_View_Access is access all Type_View'Class;
 
@@ -36,8 +34,7 @@ private
      and Gela.Types.Simple.Floating_Point_Type
      and Gela.Types.Simple.Object_Access_Type
      and Gela.Types.Simple.Subprogram_Access_Type
-     and Gela.Types.Untagged_Records.Untagged_Record_Type
-     and Gela.Types.Arrays.Array_Type with
+     and Gela.Types.Untagged_Records.Untagged_Record_Type with
    record
       Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations

@@ -4,10 +4,12 @@ with Gela.Element_Visiters;
 with Gela.Elements.Access_To_Object_Definitions;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
+with Gela.Elements.Constrained_Array_Definitions;
 with Gela.Elements.Defining_Character_Literals;
 with Gela.Elements.Defining_Enumeration_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Derived_Type_Definitions;
+with Gela.Elements.Discrete_Simple_Expression_Ranges;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Enumeration_Literal_Specifications;
 with Gela.Elements.Enumeration_Type_Definitions;
@@ -28,6 +30,7 @@ with Gela.Elements.Type_Definitions;
 with Gela.Elements.Unconstrained_Array_Definitions;
 with Gela.Plain_Type_Views;
 with Gela.Derived_Type_Views;
+with Gela.Array_Type_Views;
 with Gela.Profiles.Names;
 with Gela.Environments;
 
@@ -85,6 +88,34 @@ package body Gela.Plain_Type_Managers is
          return Gela.Types.Type_View_Access (Self.Map.Element (Index));
       end if;
    end Get;
+
+   not overriding function Get_Array
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access;
+      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+      return Gela.Semantic_Types.Type_Index
+   is
+      use type Gela.Semantic_Types.Type_Index;
+
+      Key : constant Back_Key := (Category, Decl);
+      Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
+      Result : constant Gela.Semantic_Types.Type_Index :=
+        Self.Map.Last_Key + 1;
+   begin
+      if Back_Maps.Has_Element (Pos) then
+         return Back_Maps.Element (Pos);
+      end if;
+
+      Self.Map.Insert
+        (Result,
+         Gela.Array_Type_Views.Create_Full_Type (Category, Decl, Indexes));
+
+      Self.Back.Insert (Key, Result);
+
+      return Result;
+   end Get_Array;
 
    -----------------
    -- Get_Derived --
@@ -276,6 +307,11 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Access_To_Object_Definitions.
               Access_To_Object_Definition_Access);
+
+         overriding procedure Constrained_Array_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Constrained_Array_Definitions.
+              Constrained_Array_Definition_Access);
 
          overriding procedure Derived_Type_Definition
            (Self : in out Visiter;
@@ -528,21 +564,104 @@ package body Gela.Plain_Type_Managers is
 
             Component_Type_View : constant Gela.Types.Type_View_Access :=
               Type_From_Declaration.Self.Get (Component_Type);
+
+            Index_Seq : constant Gela.Elements.Subtype_Marks.
+              Subtype_Mark_Sequence_Access := Node.Index_Subtype_Definitions;
+
+            Indexes  : Gela.Semantic_Types.Type_Index_Array
+              (1 .. Index_Seq.Length);
          begin
+            declare
+               Index  : Positive := 1;
+               Cursor : Gela.Elements.Subtype_Marks
+                 .Subtype_Mark_Sequence_Cursor := Index_Seq.First;
+            begin
+               while Cursor.Has_Element loop
+                  Indexes (Index) :=
+                    Type_From_Declaration.Self.Type_From_Subtype_Mark
+                      (Env, Cursor.Element);
+
+                  Index := Index + 1;
+                  Cursor.Next;
+               end loop;
+            end;
+
             if Component_Type_View.Assigned and then
               Component_Type_View.Is_Character
             then
-               Self.Result := Type_From_Declaration.Self.Get
+               Self.Result := Type_From_Declaration.Self.Get_Array
                  (Category => Gela.Type_Categories.A_String,
                   Decl     => Gela.Elements.Full_Type_Declarations.
-                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+                    Full_Type_Declaration_Access (Node.Enclosing_Element),
+                  Indexes  => Indexes);
             else
-               Self.Result := Type_From_Declaration.Self.Get
+               Self.Result := Type_From_Declaration.Self.Get_Array
                  (Category => Gela.Type_Categories.An_Other_Array,
                   Decl     => Gela.Elements.Full_Type_Declarations.
-                    Full_Type_Declaration_Access (Node.Enclosing_Element));
+                    Full_Type_Declaration_Access (Node.Enclosing_Element),
+                  Indexes  => Indexes);
             end if;
          end Unconstrained_Array_Definition;
+
+         overriding procedure Constrained_Array_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Constrained_Array_Definitions.
+              Constrained_Array_Definition_Access)
+         is
+            use type Gela.Type_Categories.Category_Kinds;
+
+            Component : constant Gela.Elements.Component_Definitions.
+              Component_Definition_Access := Node.Array_Component_Definition;
+
+            Component_Type : constant Gela.Semantic_Types.Type_Index :=
+              Type_From_Declaration.Self.Type_Of_Object_Declaration
+                (Env, Gela.Elements.Element_Access (Component));
+
+            Component_Type_View : constant Gela.Types.Type_View_Access :=
+              Type_From_Declaration.Self.Get (Component_Type);
+
+            Index_Seq : constant Gela.Elements.Discrete_Subtype_Definitions.
+              Discrete_Subtype_Definition_Sequence_Access :=
+                Node.Discrete_Subtype_Definitions;
+
+            Indexes  : Gela.Semantic_Types.Type_Index_Array
+              (1 .. Index_Seq.Length);
+         begin
+            declare
+               Index  : Positive := 1;
+               Element : Gela.Elements.Discrete_Subtype_Definitions
+                 .Discrete_Subtype_Definition_Access;
+               Cursor : Gela.Elements.Discrete_Subtype_Definitions
+                 .Discrete_Subtype_Definition_Sequence_Cursor :=
+                   Index_Seq.First;
+            begin
+               while Cursor.Has_Element loop
+                  Element := Cursor.Element;
+                  Indexes (Index) :=
+                    Type_From_Declaration.Self.Type_From_Discrete_Subtype
+                      (Element.Env_In, Element);
+
+                  Index := Index + 1;
+                  Cursor.Next;
+               end loop;
+            end;
+
+            if Component_Type_View.Assigned and then
+              Component_Type_View.Is_Character
+            then
+               Self.Result := Type_From_Declaration.Self.Get_Array
+                 (Category => Gela.Type_Categories.A_String,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element),
+                  Indexes  => Indexes);
+            else
+               Self.Result := Type_From_Declaration.Self.Get_Array
+                 (Category => Gela.Type_Categories.An_Other_Array,
+                  Decl     => Gela.Elements.Full_Type_Declarations.
+                    Full_Type_Declaration_Access (Node.Enclosing_Element),
+                  Indexes  => Indexes);
+            end if;
+         end Constrained_Array_Definition;
 
       end Visiters;
 
@@ -552,6 +671,49 @@ package body Gela.Plain_Type_Managers is
 
       return V.Result;
    end Type_From_Declaration;
+
+   --------------------------------
+   -- Type_From_Discrete_Subtype --
+   --------------------------------
+
+   overriding function Type_From_Discrete_Subtype
+     (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
+      Node  : access Gela.Elements.Discrete_Subtype_Definitions.
+                Discrete_Subtype_Definition'Class)
+        return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self, Env);
+      package Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result : Gela.Semantic_Types.Type_Index := 0;
+         end record;
+
+         overriding procedure Discrete_Simple_Expression_Range
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discrete_Simple_Expression_Ranges.
+              Discrete_Simple_Expression_Range_Access);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure Discrete_Simple_Expression_Range
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discrete_Simple_Expression_Ranges.
+              Discrete_Simple_Expression_Range_Access) is
+         begin
+            Self.Result := Node.Type_Index;
+         end Discrete_Simple_Expression_Range;
+
+      end Visiters;
+
+      V : Visiters.Visiter;
+   begin
+      Node.Visit (V);
+
+      return V.Result;
+   end Type_From_Discrete_Subtype;
 
    ----------------------------
    -- Type_From_Subtype_Mark --

@@ -316,12 +316,22 @@ Rules for Variant_Choices.discrete_choice :
 
 Rules for discrete_simple_expression_range. :
 (.
-      ${Lower_Bound.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Discrete_Range_Lower
+        (Self.Compilation,
+         ${discrete_simple_expression_range.env_in},
+         ${Lower_Bound.Up},
+         ${Upper_Bound.Up},
+         ${Lower_Bound.Down});
 .)
 
 Rules for discrete_simple_expression_range. :
 (.
-      ${Upper_Bound.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Discrete_Range_Upper
+        (Self.Compilation,
+         ${discrete_simple_expression_range.env_in},
+         ${Lower_Bound.Up},
+         ${Upper_Bound.Up},
+         ${Upper_Bound.Down});
 .)
 
 Rules for discriminant_specification. :

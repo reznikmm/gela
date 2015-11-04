@@ -476,8 +476,7 @@ package body Gela.Plain_Type_Views is
               (Gela.Types.Simple.Floating_Point_Type_Access (Self));
          when Gela.Type_Categories.A_String |
               Gela.Type_Categories.An_Other_Array =>
-            Visiter.Array_Type
-              (Gela.Types.Arrays.Array_Type_Access (Self));
+            raise Constraint_Error with "Unexpected array";
          when Gela.Type_Categories.A_Untagged_Record =>
             Visiter.Untagged_Record
               (Gela.Types.Untagged_Records.Untagged_Record_Type_Access (Self));

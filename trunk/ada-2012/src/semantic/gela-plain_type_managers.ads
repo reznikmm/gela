@@ -5,6 +5,7 @@ with Ada.Containers.Hashed_Maps;
 
 with Gela.Contexts;
 with Gela.Elements.Defining_Names;
+with Gela.Elements.Discrete_Subtype_Definitions;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
@@ -97,6 +98,14 @@ private
       .Full_Type_Declaration_Access)
       return Gela.Semantic_Types.Type_Index;
 
+   not overriding function Get_Array
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+      .Full_Type_Declaration_Access;
+      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+      return Gela.Semantic_Types.Type_Index;
+
    overriding function Get
      (Self  : access Type_Manager;
       Index : Gela.Semantic_Types.Type_Index)
@@ -120,6 +129,13 @@ private
       Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
                 Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index;
+
+   overriding function Type_From_Discrete_Subtype
+     (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
+      Node  : access Gela.Elements.Discrete_Subtype_Definitions.
+                Discrete_Subtype_Definition'Class)
+        return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_By_Name
      (Self  : access Type_Manager;

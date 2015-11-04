@@ -43,7 +43,8 @@ package body Gela.Resolve is
       Target : in out Gela.Interpretations.Up_Visiter'Class);
    --  Resolve given interpretation set as expression. So ingnore symbol and
    --  others non-expression interpretations. Translate defining name into
-   --  expression.
+   --  expression. On_Defining_Name called when Name doen't have a type
+   --  (like subprogram name)
 
    procedure Each_Prefix
      (Comp   : Gela.Compilations.Compilation_Access;
@@ -62,6 +63,15 @@ package body Gela.Resolve is
    --  For each Value (J), iterate over its interpretation set and call Self to
    --  resolve. Read resolved value from Found. Wrap each resolved value in
    --  down interpretation, then return its index as Chosen
+
+   procedure Discrete_Range
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Down_Left  : out Gela.Interpretations.Interpretation_Index;
+      Down_Right : out Gela.Interpretations.Interpretation_Index;
+      Tipe       : out Gela.Semantic_Types.Type_Index);
 
    package String_Type_Matcher is
       type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
@@ -771,13 +781,18 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
+            use type Gela.Semantic_Types.Type_Index;
 
             Decl : constant Gela.Elements.Element_Access :=
               Name.Enclosing_Element;
             Type_Index : constant Gela.Semantic_Types.Type_Index :=
               TM.Type_Of_Object_Declaration (Env, Decl);
          begin
-            Target.On_Expression (Type_Index, Cursor);
+            if Type_Index = 0 then
+               Target.On_Defining_Name (Name, Cursor);
+            else
+               Target.On_Expression (Type_Index, Cursor);
+            end if;
          end On_Defining_Name;
 
          overriding procedure On_Expression
@@ -819,6 +834,11 @@ package body Gela.Resolve is
             null;
          end record;
 
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
@@ -830,6 +850,16 @@ package body Gela.Resolve is
         Comp.Context.Types;
 
       package body Each is
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Defining_Name (Name, Cursor);
+         end On_Defining_Name;
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
@@ -907,6 +937,10 @@ package body Gela.Resolve is
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
             Cursor : Gela.Interpretations.Cursor'Class);
 
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
       end Each_Prefix;
 
       package Each_Arg is
@@ -921,6 +955,19 @@ package body Gela.Resolve is
 
       end Each_Arg;
 
+      package Each_Array_Arg is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Index      : Gela.Interpretations.Interpretation_Index := 0;
+            Tipe       : Gela.Semantic_Types.Type_Index;
+            View       : Gela.Types.Arrays.Array_Type_Access;
+         end record;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
+
+      end Each_Array_Arg;
+
       package Each_Association is
          type Visiter is new Gela.Interpretations.Up_Visiter with record
             Index   : aliased Gela.Interpretations.Interpretation_Index := 0;
@@ -933,6 +980,19 @@ package body Gela.Resolve is
             Value : Gela.Interpretations.Interpretation_Set_Index_Array);
 
       end Each_Association;
+
+      package Each_Array_Association is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Index : aliased Gela.Interpretations.Interpretation_Index := 0;
+            View       : Gela.Types.Arrays.Array_Type_Access;
+            Count      : Natural := 0;
+         end record;
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
+
+      end Each_Array_Association;
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
@@ -968,6 +1028,40 @@ package body Gela.Resolve is
             end if;
          end On_Tuple;
       end Each_Arg;
+
+      package body Each_Array_Arg is
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
+         is
+            use type Gela.Interpretations.Interpretation_Index;
+
+            V      : aliased Each_Array_Association.Visiter :=
+              (Index => 0,
+               View  => Self.View,
+               Count => 0);
+            Chosen : Gela.Interpretations.Interpretation_Index := 0;
+         begin
+            if V.View.Dimension = Value'Length then
+               Wrap_Tuple
+                 (Self   => V'Access,
+                  IM     => IM,
+                  Value  => Value,
+                  Found  => V.Index'Access,
+                  Chosen => Chosen);
+            end if;
+
+            if Chosen /= 0 then
+               Comp.Context.Interpretation_Manager.Add_Expression
+                 (Tipe   => Self.Tipe,
+                  Down   => Self.Index & Chosen,
+                  Result => Set);
+            end if;
+         end On_Tuple;
+
+      end Each_Array_Arg;
+
 
       package body Each_Association is
 
@@ -1019,6 +1113,35 @@ package body Gela.Resolve is
 
       end Each_Association;
 
+      package body Each_Array_Association is
+
+         overriding procedure On_Tuple
+           (Self  : in out Visiter;
+            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
+         is
+            use type Gela.Interpretations.Interpretation_Index;
+            Chosen : Gela.Interpretations.Interpretation_Index;
+            Tipe   : Gela.Semantic_Types.Type_Index := 0;
+         begin
+            --  Check if this is positional association
+            if Value'Length = 1 then
+               Self.Count := Self.Count + 1;
+               Tipe := Self.View.all.Index_Types (Self.Count);
+               To_Type
+                 (Comp, Env, Tipe, Value (Value'First), Chosen);
+
+               if Chosen = 0 then
+                  Self.Index := 0;
+               else
+                  IM.Get_Tuple_Index (Chosen, 0, Self.Index);
+               end if;
+            else
+               Self.Index := 0;
+            end if;
+         end On_Tuple;
+
+      end Each_Array_Association;
+
       package body Each_Prefix is
 
          overriding procedure On_Defining_Name
@@ -1049,20 +1172,40 @@ package body Gela.Resolve is
             end if;
          end On_Defining_Name;
 
+         -------------------
+         -- On_Expression --
+         -------------------
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+            View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+         begin
+            if View.Assigned and then View.Is_Array then
+               declare
+                  Visiter : aliased Each_Array_Arg.Visiter :=
+                    (Index => Cursor.Get_Index,
+                     View  => Gela.Types.Arrays.Array_Type_Access (View),
+                     Tipe  => Tipe);
+                  Arg : Gela.Interpretations.Cursor'Class :=
+                    IM.Get_Cursor (Args);
+               begin
+                  while Arg.Has_Element loop
+                     Arg.Visit (Visiter'Access);
+                     Arg.Next;
+                  end loop;
+               end;
+            end if;
+         end On_Expression;
       end Each_Prefix;
 
-      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Prefix);
+      Visiter : aliased Each_Prefix.Visiter;
    begin
       Set := 0;
-
-      while Cursor.Has_Element loop
-         declare
-            Visiter : aliased Each_Prefix.Visiter;
-         begin
-            Cursor.Visit (Visiter'Access);
-            Cursor.Next;
-         end;
-      end loop;
+      Resolve.Each_Prefix (Comp, Env, Prefix, Visiter);
    end Function_Call;
 
    -----------------
@@ -1625,6 +1768,214 @@ package body Gela.Resolve is
             Result => Set);
       end if;
    end Simple_Expression_Range;
+
+   --------------------
+   -- Discrete_Range --
+   --------------------
+
+   procedure Discrete_Range
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Down_Left  : out Gela.Interpretations.Interpretation_Index;
+      Down_Right : out Gela.Interpretations.Interpretation_Index;
+      Tipe       : out Gela.Semantic_Types.Type_Index)
+   is
+
+      package Each_Left is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Result    : Gela.Semantic_Types.Type_Index := 0;
+            Count     : Natural := 0;
+            Left      : Gela.Interpretations.Interpretation_Index;
+            Right     : Gela.Interpretations.Interpretation_Index;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
+      end Each_Left;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      package body Each_Left is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+
+            package Each_Right is
+               type Visiter is new Gela.Interpretations.Up_Visiter with record
+                  Tipe      : Gela.Semantic_Types.Type_Index;
+                  Type_View : Gela.Types.Type_View_Access;
+                  Result    : Gela.Semantic_Types.Type_Index;
+                  Count     : Natural;
+                  Right     : Gela.Interpretations.Interpretation_Index;
+               end record;
+
+               overriding procedure On_Expression
+                 (Self   : in out Visiter;
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+                  Cursor : Gela.Interpretations.Cursor'Class);
+
+            end Each_Right;
+
+            package body Each_Right is
+
+               overriding procedure On_Expression
+                 (Self   : in out Visiter;
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+                  Cursor : Gela.Interpretations.Cursor'Class)
+               is
+                  use type Gela.Semantic_Types.Type_Index;
+
+                  Type_View : constant Gela.Types.Type_View_Access :=
+                    TM.Get (Tipe);
+               begin
+                  if not Type_View.Assigned or else
+                    not Type_View.Is_Integer
+                  then
+                     null;
+                  elsif not Type_View.Is_Universal then
+                     if Self.Type_View.Is_Expected_Type (Type_View) then
+                        Self.Result := Tipe;
+                        Self.Count := Self.Count + 1;
+                        Self.Right := Cursor.Get_Index;
+                     end if;
+                  elsif Self.Type_View.Is_Universal then
+                     if Type_View.Is_Expected_Type (Self.Type_View) then
+                        Self.Result := Self.Tipe;
+                        Self.Count := Self.Count + 1;
+                        Self.Right := Cursor.Get_Index;
+                     end if;
+                  elsif Tipe = Self.Tipe then
+                     Self.Result := TM.Universal_Integer; --  FIXME Root_Int
+                     Self.Count := Self.Count + 1;
+                     Self.Right := Cursor.Get_Index;
+                  end if;
+               end On_Expression;
+
+            end Each_Right;
+
+            Type_View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+            Visiter_Right : aliased Each_Right.Visiter :=
+              (Tipe => Tipe, Type_View => Type_View,
+               Result => 0, Count => 0, Right => 0);
+         begin
+            if Type_View.Assigned and then Type_View.Is_Integer then
+               --  FIXME .Is_Discrete
+               Each_Expression
+                 (Comp   => Comp,
+                  Env    => Env,
+                  Set    => Right,
+                  Target => Visiter_Right);
+
+               if Visiter_Right.Count > 0 then
+                  Self.Count := Self.Count + Visiter_Right.Count;
+                  Self.Result := Visiter_Right.Result;
+                  Self.Right := Visiter_Right.Right;
+                  Self.Left := Cursor.Get_Index;
+               end if;
+            end if;
+         end On_Expression;
+
+      end Each_Left;
+
+      Visiter : Each_Left.Visiter;
+   begin
+      Each_Expression
+        (Comp   => Comp,
+         Env    => Env,
+         Set    => Left,
+         Target => Visiter);
+
+      if Visiter.Count = 1 then
+         Down_Left := Visiter.Left;
+         Down_Right := Visiter.Right;
+         Tipe := Visiter.Result;
+      else
+         Down_Left := 0;
+         Down_Right := 0;
+         Tipe := 0;
+      end if;
+   end Discrete_Range;
+
+   --------------------
+   -- Discrete_Range --
+   --------------------
+
+   procedure Discrete_Range
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Tipe       : out Gela.Semantic_Types.Type_Index)
+   is
+      Ignore_Left  : Gela.Interpretations.Interpretation_Index;
+      Ignore_Right : Gela.Interpretations.Interpretation_Index;
+   begin
+      Discrete_Range
+        (Comp       => Comp,
+         Env        => Env,
+         Left       => Left,
+         Right      => Right,
+         Tipe       => Tipe,
+         Down_Left  => Ignore_Left,
+         Down_Right => Ignore_Right);
+   end Discrete_Range;
+
+   --------------------------
+   -- Discrete_Range_Lower --
+   --------------------------
+
+   procedure Discrete_Range_Lower
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index)
+   is
+      Ignore_Tipe  : Gela.Semantic_Types.Type_Index;
+      Ignore_Right : Gela.Interpretations.Interpretation_Index;
+   begin
+      Discrete_Range
+        (Comp       => Comp,
+         Env        => Env,
+         Left       => Left,
+         Right      => Right,
+         Tipe       => Ignore_Tipe,
+         Down_Left  => Result,
+         Down_Right => Ignore_Right);
+   end Discrete_Range_Lower;
+
+   --------------------------
+   -- Discrete_Range_Upper --
+   --------------------------
+
+   procedure Discrete_Range_Upper
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index)
+   is
+      Ignore_Tipe  : Gela.Semantic_Types.Type_Index;
+      Ignore_Left  : Gela.Interpretations.Interpretation_Index;
+   begin
+      Discrete_Range
+        (Comp       => Comp,
+         Env        => Env,
+         Left       => Left,
+         Right      => Right,
+         Tipe       => Ignore_Tipe,
+         Down_Left  => Ignore_Left,
+         Down_Right => Result);
+   end Discrete_Range_Upper;
 
    --------------------
    -- String_Literal --

@@ -41,6 +41,27 @@ package Gela.Resolve is
       Right  : Gela.Interpretations.Interpretation_Set_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
 
+   procedure Discrete_Range
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Tipe       : out Gela.Semantic_Types.Type_Index);
+
+   procedure Discrete_Range_Lower
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index);
+
+   procedure Discrete_Range_Upper
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Left       : Gela.Interpretations.Interpretation_Set_Index;
+      Right      : Gela.Interpretations.Interpretation_Set_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index);
+
    procedure Function_Call
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;

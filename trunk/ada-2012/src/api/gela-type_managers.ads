@@ -3,6 +3,7 @@
 with Gela.Types;
 with Gela.Semantic_Types;
 with Gela.Elements.Defining_Names;
+with Gela.Elements.Discrete_Subtype_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Profiles;
 
@@ -41,6 +42,15 @@ package Gela.Type_Managers is
                 Subtype_Mark_Or_Access_Definition'Class)
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view from given subtype mark
+
+   not overriding function Type_From_Discrete_Subtype
+     (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
+      Node  : access Gela.Elements.Discrete_Subtype_Definitions.
+                Discrete_Subtype_Definition'Class)
+        return Gela.Semantic_Types.Type_Index is abstract;
+   --  Get type view from given discrete subtype definition
+
 
    not overriding function Type_By_Name
      (Self  : access Type_Manager;
