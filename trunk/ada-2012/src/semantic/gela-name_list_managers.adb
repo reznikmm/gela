@@ -53,7 +53,7 @@ package body Gela.Name_List_Managers is
    function Empty_List (Self : Name_List_Manager) return List is
       pragma Unreferenced (Self);
    begin
-      return (Index => 0);
+      return (Index => Pair_Peristent_Lists.Empty);
    end Empty_List;
 
    ----------
@@ -78,11 +78,11 @@ package body Gela.Name_List_Managers is
         (Symbol : Gela.Lexical_Types.Symbol;
          Name   : Gela.Elements.Defining_Names.Defining_Name_Access))
    is
-      use type Pair_Peristent_Lists.Count_Type;
+      use type Pair_Peristent_Lists.List;
 
-      Name   : Pair_Peristent_Lists.Count_Type := Input.Index;
+      Name   : Pair_Peristent_Lists.List := Input.Index;
    begin
-      while Name > 0 loop
+      while Name /= Pair_Peristent_Lists.Empty loop
          Proc
            (Self.Pair_List.Head (Name).Symbol,
             Self.Pair_List.Head (Name).Name);
@@ -108,9 +108,9 @@ package body Gela.Name_List_Managers is
    overriding function Has_Element
      (Self : Defining_Name_Cursor) return Boolean
    is
-      use type Pair_Peristent_Lists.Count_Type;
+      use type Pair_Peristent_Lists.List;
    begin
-      return Self.Name > 0;
+      return Self.Name /= Pair_Peristent_Lists.Empty;
    end Has_Element;
 
    -------------------
@@ -122,9 +122,9 @@ package body Gela.Name_List_Managers is
       Symbol : Gela.Lexical_Types.Symbol)
    is
       use type Gela.Lexical_Types.Symbol;
-      use type Pair_Peristent_Lists.Count_Type;
+      use type Pair_Peristent_Lists.List;
    begin
-      while Self.Name > 0
+      while Self.Name /= Pair_Peristent_Lists.Empty
         and then Self.Set.Pair_List.Head (Self.Name).Symbol /= Symbol
       loop
          Self.Name := Self.Set.Pair_List.Tail (Self.Name);

@@ -62,7 +62,7 @@ private
    package Pair_Peristent_Lists is new Gela.Peristent_Lists (Pair);
 
    type List is record
-      Index : Pair_Peristent_Lists.Count_Type;
+      Index : Pair_Peristent_Lists.List;
    end record;
 
    type Map is null record;
@@ -75,7 +75,7 @@ private
      new Gela.Defining_Name_Cursors.Defining_Name_Cursor with
       record
          Set    : access Name_List_Manager'Class;
-         Name   : Pair_Peristent_Lists.Count_Type := 0;
+         Name   : Pair_Peristent_Lists.List := Pair_Peristent_Lists.Empty;
       end record;
 
    overriding function Has_Element

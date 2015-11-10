@@ -6,7 +6,7 @@ package body Gela.Plain_Environments is
      (Self  : access Environment_Set'Class;
       Index : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
-         return Region_Item_Count;
+         return Region_Item_List;
 
    package Visible_Cursors is
       --  Cursor over names in Local
@@ -30,7 +30,7 @@ package body Gela.Plain_Environments is
       procedure Initialize
         (Self   : in out Defining_Name_Cursor'Class;
          Symbol : Gela.Lexical_Types.Symbol;
-         Region : Region_Item_Index);
+         Region : Region_Item_List);
    end Visible_Cursors;
 
    package body Visible_Cursors is
@@ -56,7 +56,7 @@ package body Gela.Plain_Environments is
       procedure Initialize
         (Self   : in out Defining_Name_Cursor'Class;
          Symbol : Gela.Lexical_Types.Symbol;
-         Region : Region_Item_Index)
+         Region : Region_Item_List)
       is
          Local  : constant Gela.Name_List_Managers.List :=
            Self.Set.Region.Head (Region).Local;
@@ -71,7 +71,7 @@ package body Gela.Plain_Environments is
       type Defining_Name_Cursor is
         new Visible_Cursors.Defining_Name_Cursor with
          record
-            Region  : Region_Item_Index;
+            Region  : Region_Item_List;
          end record;
 
       overriding procedure Next
@@ -89,15 +89,16 @@ package body Gela.Plain_Environments is
    package body Direct_Visible_Cursors is
 
       overriding procedure Next (Self : in out Defining_Name_Cursor) is
+         use type Region_Item_List;
          Symbol : constant Gela.Lexical_Types.Symbol := Self.Current.Symbol;
-         Region : Region_Item_Count;
+         Region : Region_Item_List;
       begin
          Visible_Cursors.Defining_Name_Cursor (Self).Next;
 
          while not Self.Has_Element loop
             Region := Self.Set.Region.Tail (Self.Region);
 
-            if Region in Region_Item_Index then
+            if Region /= Region_Item_Lists.Empty then
                Self.Region := Region;
                Visible_Cursors.Initialize (Self, Symbol, Region);
             else
@@ -114,9 +115,10 @@ package body Gela.Plain_Environments is
         (Self   : in out Defining_Name_Cursor;
          Symbol : Gela.Lexical_Types.Symbol)
       is
-         Region : Region_Item_Count := Self.Region;
+         use type Region_Item_List;
+         Region : Region_Item_List := Self.Region;
       begin
-         while Region in Region_Item_Index loop
+         while Region /= Region_Item_Lists.Empty loop
             Self.Region := Region;
             Visible_Cursors.Initialize (Self, Symbol, Region);
 
@@ -133,9 +135,9 @@ package body Gela.Plain_Environments is
         new Visible_Cursors.Defining_Name_Cursor with
          record
             Env      : Env_Item_Index;
-            Region   : Region_Item_Count;
+            Region   : Region_Item_List;
             --  Position in Env_Item.Nested_Region_List list
-            Use_Name : Defining_Name_Item_Count;
+            Use_Name : Defining_Name_List;
             --  Position in Region.Use_Package list
          end record;
 
@@ -145,7 +147,7 @@ package body Gela.Plain_Environments is
       function Name_To_Region
         (Self : Defining_Name_Cursor;
          Name : Gela.Elements.Defining_Names.Defining_Name_Access)
-         return Region_Item_Count;
+         return Region_Item_List;
 
       procedure Initialize
         (Self   : in out Defining_Name_Cursor;
@@ -160,25 +162,25 @@ package body Gela.Plain_Environments is
    package body Use_Package_Cursors is
 
       overriding procedure Next (Self : in out Defining_Name_Cursor) is
-         use type Region_Item_Count;
-         use type Defining_Name_Item_Count;
+         use type Region_Item_List;
+         use type Defining_Name_List;
 
          Symbol : constant Gela.Lexical_Types.Symbol := Self.Current.Symbol;
-         Region : Region_Item_Count;
+         Region : Region_Item_List;
       begin
          Visible_Cursors.Defining_Name_Cursor (Self).Next;
 
          while not Self.Current.Has_Element loop
-            Region := 0;
+            Region := Region_Item_Lists.Empty;
 
-            while Region = 0 loop
+            while Region = Region_Item_Lists.Empty loop
                --  Next name in use clauses of Region
                Self.Use_Name := Self.Set.Use_Package.Tail (Self.Use_Name);
 
-               while Self.Use_Name = 0 loop
+               while Self.Use_Name = Defining_Name_Lists.Empty loop
                   Self.Region := Self.Set.Region.Tail (Self.Region);
 
-                  if Self.Region = 0 then
+                  if Self.Region = Region_Item_Lists.Empty then
                      return;
                   end if;
 
@@ -201,7 +203,7 @@ package body Gela.Plain_Environments is
       function Name_To_Region
         (Self : Defining_Name_Cursor;
          Name : Gela.Elements.Defining_Names.Defining_Name_Access)
-         return Region_Item_Count is
+         return Region_Item_List is
       begin
          return Name_To_Region (Self.Set, Self.Env, Name);
       end Name_To_Region;
@@ -214,23 +216,23 @@ package body Gela.Plain_Environments is
         (Self   : in out Defining_Name_Cursor;
          Symbol : Gela.Lexical_Types.Symbol)
       is
-         use type Region_Item_Count;
-         use type Defining_Name_Item_Count;
+         use type Region_Item_List;
+         use type Defining_Name_List;
 
          Env    : constant Env_Item := Self.Set.Env.Element (Self.Env);
-         Target : Region_Item_Count;
+         Target : Region_Item_List;
          Local  : Gela.Name_List_Managers.List;
       begin
          Self.Region := Env.Region_List (Nested);
 
-         while Self.Region /= 0 loop
+         while Self.Region /= Region_Item_Lists.Empty loop
             Self.Use_Name := Self.Set.Region.Head (Self.Region).Use_Package;
 
-            while Self.Use_Name /= 0 loop
+            while Self.Use_Name /= Defining_Name_Lists.Empty loop
                Target := Self.Name_To_Region
                  (Self.Set.Use_Package.Head (Self.Use_Name));
 
-               if Target /= 0 then
+               if Target /= Region_Item_Lists.Empty then
                   Local := Self.Set.Region.Head (Target).Local;
                   Self.Current := Self.Set.Names.Find (Local, Symbol);
 
@@ -303,11 +305,11 @@ package body Gela.Plain_Environments is
       Name       : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Environments.Completion_List
    is
-      use type Region_Item_Count;
+      use type Region_Item_List;
       use type Gela.Elements.Defining_Names.Defining_Name_Access;
 
       procedure Find_Completion
-        (List    : Defining_Name_Item_Count;
+        (List    : Defining_Name_List;
          Result  : out Gela.Elements.Defining_Names.Defining_Name_Access;
          Restart : in out Boolean);
 
@@ -316,15 +318,15 @@ package body Gela.Plain_Environments is
       ---------------------
 
       procedure Find_Completion
-        (List    : Defining_Name_Item_Count;
+        (List    : Defining_Name_List;
          Result  : out Gela.Elements.Defining_Names.Defining_Name_Access;
          Restart : in out Boolean)
       is
-         use type Defining_Name_Item_Count;
-         Next   : Defining_Name_Item_Count := List;
+         use type Defining_Name_List;
+         Next   : Defining_Name_List := List;
          Completion : Gela.Elements.Defining_Names.Defining_Name_Access;
       begin
-         while Next /= 0 loop
+         while Next /= Defining_Name_Lists.Empty loop
             Result := Self.Use_Package.Head (Next);
             Next := Self.Use_Package.Tail (Next);
             Completion := Self.Use_Package.Head (Next);
@@ -343,7 +345,7 @@ package body Gela.Plain_Environments is
       end Find_Completion;
 
       Env     : constant Env_Item := Self.Env.Element (Index);
-      Next    : Region_Item_Count;
+      Next    : Region_Item_List;
       Result  : Gela.Elements.Defining_Names.Defining_Name_Access;
       Data    : Gela.Environments.Completion_Array
         (1 .. Gela.Environments.Completion_Index'Last);
@@ -352,7 +354,7 @@ package body Gela.Plain_Environments is
    begin
       for J of Env.Region_List loop
          Next := J;
-         while Next /= 0 loop
+         while Next /= Region_Item_Lists.Empty loop
             Find_Completion
               (Self.Region.Head (Next).Completion, Result, Restart);
 
@@ -381,7 +383,7 @@ package body Gela.Plain_Environments is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
-      use type Region_Item_Count;
+      use type Region_Item_List;
 
       procedure Update_Lib_Unit_Env
         (Old_Env : Gela.Semantic_Types.Env_Index;
@@ -413,13 +415,14 @@ package body Gela.Plain_Environments is
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);
       else
-         Env := (Region_List => (Nested => 0, Other => 0, Withed => 0));
+         Env := (Region_List =>
+                   (Nested | Other | Withed => Region_Item_Lists.Empty));
       end if;
 
-      if Env.Region_List (Nested) = 0 then
+      if Env.Region_List (Nested) = Region_Item_Lists.Empty then
          Reg := (Name => null,
                  Local => Self.Names.Empty_List,
-                 Use_Package | Completion => 0);
+                 Use_Package | Completion => Defining_Name_Lists.Empty);
       else
          Reg := Self.Region.Head (Env.Region_List (Nested));
       end if;
@@ -430,11 +433,11 @@ package body Gela.Plain_Environments is
          Input  => Reg.Local,
          Output => Reg.Local);
 
-      if Env.Region_List (Nested) = 0 then
+      if Env.Region_List (Nested) = Region_Item_Lists.Empty then
          --  Create Nested_Region_List as (Reg)
          Self.Region.Prepend
            (Value  => Reg,
-            Input  => 0,
+            Input  => Region_Item_Lists.Empty,
             Output => Env.Region_List (Nested));
       else
          --  Replace head of Nested_Region_List with Reg
@@ -517,7 +520,7 @@ package body Gela.Plain_Environments is
       Target : Gela.Semantic_Types.Env_Index :=
         Self.Library_Unit_Environment (Symbol);
       Target_Env : Env_Item;
-      List   : Region_Item_Count;
+      List   : Region_Item_List;
 
       procedure Append (Item : Region_Item) is
       begin
@@ -606,23 +609,25 @@ package body Gela.Plain_Environments is
       Region : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index
    is
+      use type Region_Item_List;
       Env   : Env_Item;
       Found : Gela.Semantic_Types.Env_Index;
-      Spec  : constant Region_Item_Count :=
+      Spec  : constant Region_Item_List :=
         Name_To_Region (Self, Index, Region);
       Next  : Region_Item :=
         (Name        => Region,
          Local       => Self.Names.Empty_List,
-         Use_Package => 0,
-         Completion  => 0);
+         Use_Package => Defining_Name_Lists.Empty,
+         Completion  => Defining_Name_Lists.Empty);
    begin
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);
       else
-         Env := (Region_List => (Nested => 0, Other => 0, Withed => 0));
+         Env := (Region_List =>
+                   (Nested | Other | Withed => Region_Item_Lists.Empty));
       end if;
 
-      if Spec in Region_Item_Index then
+      if Spec /= Region_Item_Lists.Empty then
          Next := Self.Region.Head (Spec);
       end if;
 
@@ -658,13 +663,14 @@ package body Gela.Plain_Environments is
       Next  : constant Region_Item :=
         (Name        => Region,
          Local       => Self.Names.Empty_List,
-         Use_Package => 0,
-         Completion  => 0);
+         Use_Package => Defining_Name_Lists.Empty,
+         Completion  => Defining_Name_Lists.Empty);
    begin
       if Index in Env_Item_Index then
          Env := Self.Env.Element (Index);
       else
-         Env := (Region_List => (Nested => 0, Other => 0, Withed => 0));
+         Env := (Region_List =>
+                   (Nested | Other | Withed => Region_Item_Lists.Empty));
       end if;
 
       Self.Region.Prepend
@@ -778,17 +784,17 @@ package body Gela.Plain_Environments is
      (Self  : access Environment_Set'Class;
       Index : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
-         return Region_Item_Count
+         return Region_Item_List
    is
-      use type Region_Item_Count;
+      use type Region_Item_List;
       use type Gela.Elements.Defining_Names.Defining_Name_Access;
 
       Env  : constant Env_Item := Self.Env.Element (Index);
-      Next : Region_Item_Count;
+      Next : Region_Item_List;
    begin
       for J of Env.Region_List loop
          Next := J;
-         while Next /= 0 loop
+         while Next /= Region_Item_Lists.Empty loop
             if Self.Region.Head (Next).Name = Name then
                return Next;
             end if;
@@ -797,7 +803,7 @@ package body Gela.Plain_Environments is
          end loop;
       end loop;
 
-      return 0;
+      return Region_Item_Lists.Empty;
    end Name_To_Region;
 
    ----------------------------------
@@ -830,8 +836,8 @@ package body Gela.Plain_Environments is
       return Result : Use_Package_Cursors.Defining_Name_Cursor :=
         (Set      => Plain_Environment_Set_Access (Self),
          Env      => Index,
-         Region   => 0,
-         Use_Name => 0,
+         Region   => Region_Item_Lists.Empty,
+         Use_Name => Defining_Name_Lists.Empty,
          others   => <>)
       do
          Result.Initialize (Symbol);
@@ -851,8 +857,9 @@ package body Gela.Plain_Environments is
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
       use type Gela.Lexical_Types.Symbol;
+      use type Region_Item_List;
 
-      Item : Region_Item_Count;
+      Item : Region_Item_List;
    begin
       Found.all := False;
 
@@ -873,7 +880,7 @@ package body Gela.Plain_Environments is
          end;
       end if;
 
-      if Item not in Region_Item_Index then
+      if Item = Region_Item_Lists.Empty then
          return None : constant Visible_Cursors.Defining_Name_Cursor :=
            (others => <>);
       end if;

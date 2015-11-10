@@ -7,7 +7,7 @@ is
    pragma Import (C, Puts, "puts");
 
    procedure Print_Region
-     (Index : Region_Enum; List : Region_Item_Count);
+     (Index : Region_Enum; List : Region_Item_List);
 
    procedure Print (Item : Region_Item);
 
@@ -47,7 +47,7 @@ is
    -- Print_Region --
    ------------------
 
-   procedure Print_Region (Index : Region_Enum; List : Region_Item_Count) is
+   procedure Print_Region (Index : Region_Enum; List : Region_Item_List) is
    begin
       Puts (Region_Enum'Image (Index) & ASCII.NUL);
       Self.Region.For_Each (List, Print'Access);

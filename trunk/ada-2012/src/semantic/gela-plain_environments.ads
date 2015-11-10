@@ -24,8 +24,7 @@ private
    package Defining_Name_Lists is new Gela.Peristent_Lists
      (Element_Type => Gela.Elements.Defining_Names.Defining_Name_Access);
 
-   subtype Defining_Name_Item_Count is Defining_Name_Lists.Count_Type;
-   subtype Defining_Name_Item_Index is Defining_Name_Lists.Index_Type;
+   subtype Defining_Name_List is Defining_Name_Lists.List;
 
    --  Region_Item  --
 
@@ -34,17 +33,16 @@ private
       --  Defining name corresponding to given region, if any
       Local : Gela.Name_List_Managers.List;
       --  List of Direct_Visible_Item.
-      Use_Package : Defining_Name_Item_Count;
+      Use_Package : Defining_Name_List;
       --  List of use_package_clauses in the region
-      Completion : Defining_Name_Item_Count;
+      Completion : Defining_Name_List;
       --  List of <Completion, Name> pairs
    end record;
 
    package Region_Item_Lists is new Gela.Peristent_Lists
      (Element_Type => Region_Item);
 
-   subtype Region_Item_Count is Region_Item_Lists.Count_Type;
-   subtype Region_Item_Index is Region_Item_Lists.Index_Type;
+   subtype Region_Item_List is Region_Item_Lists.List;
 
    --  Env_Item  --
 
@@ -53,7 +51,7 @@ private
    --  Other  - List of all visible regions except Nested_Region_List
    --  Withed - List of regions available over with clauses
 
-   type Region_List_Array is array (Region_Enum) of Region_Item_Count;
+   type Region_List_Array is array (Region_Enum) of Region_Item_List;
 
    type Env_Item is record
       Region_List : Region_List_Array;

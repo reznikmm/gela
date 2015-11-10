@@ -9,45 +9,53 @@ package Gela.Peristent_Lists is
    type Container is tagged private;
    --  Store actual values of Element_Type
 
-   type Count_Type is new Natural;
-   --  Represent persistent list (empty for 0 or not otherwise)
-   subtype Index_Type is Count_Type range 1 .. Count_Type'Last;
-   --  Represent non-empty persistent list
+   type List is private;
+   --  Represent persistent list
+
+   Empty : constant List;  --  Represent empty persistent list
 
    procedure Prepend
      (Self   : in out Container;
       Value  : Element_Type;
-      Input  : Count_Type := 0;
-      Output : out Index_Type);
+      Input  : List := Empty;
+      Output : out List);
 
    function Head
      (Self   : Container;
-      Index  : Index_Type) return Element_Type;
+      Index  : List) return Element_Type;
 
    function Tail
      (Self   : Container;
-      Index  : Index_Type) return Count_Type;
+      Index  : List) return List;
 
    procedure Delete
      (Self   : in out Container;
-      Input  : Count_Type;
+      Input  : List;
       Value  : Element_Type;
-      Output : out Count_Type);
+      Output : out List);
 
    procedure For_Each
      (Self   : Container;
-      Input  : Count_Type;
+      Input  : List;
       Action : access procedure (Value : Element_Type));
 
 private
+
+   type List is new Natural;
+   --  Represent persistent list (empty for 0 or not otherwise)
+
+   Empty : constant List := 0;
 
    package Element_Vectors is new
      Ada.Containers.Vectors (Positive, Element_Type);
 
    type Link is record
       Value : Positive;
-      Next  : Count_Type;
+      Next  : List;
    end record;
+
+   subtype Index_Type is List range 1 .. List'Last;
+   --  Represent non-empty persistent list
 
    package Link_Vectors is new
      Ada.Containers.Vectors (Index_Type, Link);

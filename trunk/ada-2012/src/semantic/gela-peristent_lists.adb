@@ -6,9 +6,9 @@ package body Gela.Peristent_Lists is
 
    procedure Delete
      (Self   : in out Container;
-      Input  : Count_Type;
+      Input  : List;
       Value  : Element_Type;
-      Output : out Count_Type)
+      Output : out List)
    is
       procedure Count_Each (Item : Element_Type);
 
@@ -60,10 +60,10 @@ package body Gela.Peristent_Lists is
 
    procedure For_Each
      (Self   : Container;
-      Input  : Count_Type;
+      Input  : List;
       Action : access procedure (Value : Element_Type))
    is
-      Index : Count_Type := Input;
+      Index : List := Input;
    begin
       while Index /= 0 loop
          declare
@@ -81,8 +81,7 @@ package body Gela.Peristent_Lists is
 
    function Head
      (Self   : Container;
-      Index  : Index_Type)
-      return Element_Type
+      Index  : List) return Element_Type
    is
       X : constant Link := Self.Links.Element (Index);
    begin
@@ -96,12 +95,12 @@ package body Gela.Peristent_Lists is
    procedure Prepend
      (Self   : in out Container;
       Value  : Element_Type;
-      Input  : Count_Type := 0;
-      Output : out Index_Type)
+      Input  : List := Empty;
+      Output : out List)
    is
       Value_Index : Natural := Self.Elements.Find_Index (Value);
       New_Link    : Link;
-      Result      : Count_Type;
+      Result      : List;
    begin
       if Value_Index = 0 then
          Self.Elements.Append (Value);
@@ -125,7 +124,7 @@ package body Gela.Peristent_Lists is
 
    function Tail
      (Self   : Container;
-      Index  : Index_Type) return Count_Type is
+      Index  : List) return List is
    begin
       return Self.Links.Element (Index).Next;
    end Tail;
