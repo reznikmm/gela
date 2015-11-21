@@ -1,0 +1,14 @@
+with "matreshka/league";
+with "asis";
+
+project Design is
+   for Object_Dir use "/tmp";
+   for Source_Dirs use (".", "api", "a4g");
+
+   package Compiler is
+     for Default_Switches ("ada") use
+      ("-gnatwea", "-gnaty", "-gnata");
+   end Compiler;
+
+end Design;
+

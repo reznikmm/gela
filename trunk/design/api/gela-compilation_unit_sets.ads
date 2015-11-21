@@ -1,0 +1,62 @@
+--  This package provides Compilation_Unit_Set interface and its methods.
+
+with Ada.Iterator_Interfaces;
+
+with Gela.Compilation_Units;
+with Gela.Symbols;
+
+package Gela.Compilation_Unit_Sets is
+   pragma Preelaborate;
+
+   type Compilation_Unit_Set is limited interface
+     with
+       Variable_Indexing => Variable_Indexing,
+       Default_Iterator  => Iterate,
+       Iterator_Element  => Gela.Compilation_Units.Compilation_Unit'Class;
+   --  Set of compilation unit. Only one unit with particular Name cound be
+   --  stored in set.
+   type Compilation_Unit_Set_Access is access all Compilation_Unit_Set'Class;
+   for Compilation_Unit_Set_Access'Storage_Size use 0;
+
+   not overriding function Is_Empty
+     (Self : Compilation_Unit_Set) return Boolean is abstract;
+   --  Check is set is empty
+
+   not overriding function Length
+     (Self : Compilation_Unit_Set) return Natural is abstract;
+   --  Return length of set
+
+   not overriding function Find
+     (Self   : Compilation_Unit_Set;
+      Symbol : not null Gela.Symbols.Symbol_Access)
+    return Gela.Compilation_Units.Compilation_Unit_Access is abstract;
+   --  Find compilation unit with given name (Symbol).
+   --  Return null if not found.
+
+   --  Iterator related syntactic sugar below
+
+   function Assigned
+     (Self : Gela.Compilation_Units.Compilation_Unit_Access) return Boolean;
+   pragma Inline (Assigned);
+
+   package Iterator_Interfaces is new Ada.Iterator_Interfaces
+     (Cursor       => Gela.Compilation_Units.Compilation_Unit_Access,
+      Has_Element  => Assigned);
+
+   not overriding function Iterate
+     (Self : Compilation_Unit_Set)
+      return Iterator_Interfaces.Forward_Iterator'Class is abstract;
+   --  Return iterator over the set.
+
+   type Reference_Type
+     (Unit : not null access
+        Gela.Compilation_Units.Compilation_Unit'Class) is null record
+          with Implicit_Dereference => Unit;
+
+   function Variable_Indexing
+     (Self   : Compilation_Unit_Set'Class;
+      Cursor : not null Gela.Compilation_Units.Compilation_Unit_Access)
+      return Reference_Type;
+   pragma Inline (Variable_Indexing);
+
+end Gela.Compilation_Unit_Sets;
