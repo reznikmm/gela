@@ -2,6 +2,8 @@ with Ada.Containers.Hashed_Maps;
 
 with League.Strings.Hash;
 
+with Gela.A4G.Compilation_Units;
+with Gela.Compilation_Unit_Sets;
 with Gela.Compilation_Units;
 with Gela.Contexts;
 with Gela.Symbols;
@@ -10,20 +12,24 @@ with Asis.Compilation_Units;
 
 package Gela.A4G.Contexts is
 
-   type Context is new Gela.Contexts.Context with private;
+   type Context is limited new Gela.Contexts.Context with private;
 
    type Context_Access is access all Context'Class;
    for Context_Access'Storage_Size use 0;
 
-   overriding function Symbol
+   not overriding function Create_Compilation_Unit
+     (Self : access Context;
+      Unit : Asis.Compilation_Unit)
+      return Gela.A4G.Compilation_Units.Compilation_Unit_Access;
+
+   not overriding function Create_Symbol
      (Self  : access Context;
       Image : League.Strings.Universal_String)
       return Gela.Symbols.Symbol_Access;
 
-   not overriding function Get_Compilation_Unit
-     (Self : access Context;
-      Unit : Asis.Compilation_Unit)
-      return Gela.Compilation_Units.Compilation_Unit_Access;
+   procedure Initialize
+     (Self       : in out Context;
+      Parameters : Wide_String);
 
 private
 
@@ -39,14 +45,60 @@ private
 
    package Unit_Maps is new Ada.Containers.Hashed_Maps
      (Key_Type        => Asis.Compilation_Unit,
-      Element_Type    => Gela.Compilation_Units.Compilation_Unit_Access,
+      Element_Type    => Gela.A4G.Compilation_Units.Compilation_Unit_Access,
       Hash            => Hash,
       Equivalent_Keys => Asis.Compilation_Units.Is_Identical,
-      "="             => Gela.Compilation_Units."=");
+      "="             => Gela.A4G.Compilation_Units."=");
 
-   type Context is new Gela.Contexts.Context with record
-      Symbols : Symbol_Maps.Map;
-      Units   : Unit_Maps.Map;
+   package Unit_Sets is
+
+      type Compilation_Unit_Set
+        (Context   : not null access Gela.A4G.Contexts.Context;
+         Need_Body : Boolean)
+      is
+        new Gela.Compilation_Unit_Sets.Compilation_Unit_Set
+      with null record;
+
+      overriding function Is_Empty
+        (Self : Compilation_Unit_Set) return Boolean;
+
+      overriding function Length
+        (Self : Compilation_Unit_Set) return Natural;
+
+      overriding function Find
+        (Self   : Compilation_Unit_Set;
+         Symbol : not null Gela.Symbols.Symbol_Access)
+         return Gela.Compilation_Units.Compilation_Unit_Access;
+
+      overriding function Iterate
+        (Self : Compilation_Unit_Set)
+         return Gela.Compilation_Unit_Sets.Iterator_Interfaces
+        .Forward_Iterator'Class;
+
+   end Unit_Sets;
+
+   type Context is limited new Gela.Contexts.Context with record
+      Specs      : aliased Unit_Sets.Compilation_Unit_Set
+        (Context'Unchecked_Access, False);
+      Bodies     : aliased Unit_Sets.Compilation_Unit_Set
+        (Context'Unchecked_Access, True);
+      Context    : Asis.Context;
+      Symbols    : Symbol_Maps.Map;
+      Units      : Unit_Maps.Map;
+      Body_Count : Natural := 0;
    end record;
+
+   overriding function Library_Unit_Declarations
+     (Self  : aliased Context)
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+
+   overriding function Compilation_Unit_Bodies
+     (Self  : aliased Context)
+      return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access;
+
+   overriding function Symbol
+     (Self  : aliased Context;
+      Image : League.Strings.Universal_String)
+      return Gela.Symbols.Symbol_Access;
 
 end Gela.A4G.Contexts;

@@ -7,17 +7,17 @@ package Gela.Compilation_Units.Visiters is
 
    not overriding procedure Library_Unit_Declaration
      (Self : access Visiter;
-      Unit : not null Gela.Compilation_Units.Library_Unit_Declaration_Access)
+      Unit : aliased Gela.Compilation_Units.Library_Unit_Declaration'Class)
         is abstract;
 
    not overriding procedure Library_Unit_Body
      (Self : access Visiter;
-      Unit : not null Gela.Compilation_Units.Library_Unit_Body_Access)
+      Unit : aliased Gela.Compilation_Units.Library_Unit_Body'Class)
         is abstract;
 
    not overriding procedure Subunit
      (Self : access Visiter;
-      Unit : not null Gela.Compilation_Units.Subunit_Access)
+      Unit : aliased Gela.Compilation_Units.Subunit'Class)
         is abstract;
 
 end Gela.Compilation_Units.Visiters;

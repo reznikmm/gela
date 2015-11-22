@@ -101,7 +101,7 @@ package body Gela.A4G.Compilation_Units is
       is
          pragma Unreferenced (Self);
       begin
-         return Compilation_Unit_Access (Position).Next_Child;
+         return Compilation_Unit (Position.all).Next_Child;
       end Next;
 
    end Children_Sets;
@@ -149,7 +149,7 @@ package body Gela.A4G.Compilation_Units is
       is
          pragma Unreferenced (Self);
       begin
-         return Compilation_Unit_Access (Position).Next_Subunit;
+         return Compilation_Unit (Position.all).Next_Subunit;
       end Next;
 
       overriding function Iterate
@@ -167,11 +167,11 @@ package body Gela.A4G.Compilation_Units is
    --------------
 
    overriding function Children
-     (Self : access Compilation_Unit)
+     (Self : aliased Compilation_Unit)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
    is
    begin
-      return Self.Children'Access;
+      return Self.Children'Unchecked_Access;
    end Children;
 
    -------------
@@ -179,9 +179,10 @@ package body Gela.A4G.Compilation_Units is
    -------------
 
    overriding function Context
-     (Self : access Compilation_Unit) return Gela.Contexts.Context_Access is
+     (Self : aliased Compilation_Unit)
+      return Gela.Contexts.Context_Access is
    begin
-      return Self.Context;
+      return Gela.Contexts.Context_Access (Self.Context);
    end Context;
 
    ------------------------
@@ -189,13 +190,11 @@ package body Gela.A4G.Compilation_Units is
    ------------------------
 
    overriding function Corresponding_Body
-     (Self : access Compilation_Unit)
+     (Self : aliased Compilation_Unit)
       return Gela.Compilation_Units.Library_Unit_Body_Access
    is
-      Context : constant Gela.A4G.Contexts.Context_Access :=
-        Gela.A4G.Contexts.Context_Access (Self.Context);
-      Result : constant Gela.Compilation_Units.Compilation_Unit_Access :=
-        Context.Get_Compilation_Unit
+      Result : constant Compilation_Unit_Access :=
+        Self.Context.Create_Compilation_Unit
           (Asis.Compilation_Units.Corresponding_Body (Self.Unit));
    begin
       return Gela.Compilation_Units.Library_Unit_Body_Access (Result);
@@ -206,13 +205,11 @@ package body Gela.A4G.Compilation_Units is
    -------------------------------
 
    overriding function Corresponding_Declaration
-     (Self : access Compilation_Unit)
+     (Self : aliased Compilation_Unit)
       return Gela.Compilation_Units.Library_Unit_Declaration_Access
    is
-      Context : constant Gela.A4G.Contexts.Context_Access :=
-        Gela.A4G.Contexts.Context_Access (Self.Context);
-      Result : constant Gela.Compilation_Units.Compilation_Unit_Access :=
-        Context.Get_Compilation_Unit
+      Result : constant Compilation_Unit_Access :=
+        Self.Context.Create_Compilation_Unit
           (Asis.Compilation_Units.Corresponding_Declaration (Self.Unit));
    begin
       return Gela.Compilation_Units.Library_Unit_Declaration_Access (Result);
@@ -224,55 +221,71 @@ package body Gela.A4G.Compilation_Units is
 
    function Create
      (Unit    : Asis.Compilation_Unit;
-      Context : Gela.Contexts.Context_Access)
-      return Gela.Compilation_Units.Compilation_Unit_Access
+      Context : access Gela.A4G.Contexts.Context'Class)
+      return Compilation_Unit_Access
    is
-      C : constant Gela.A4G.Contexts.Context_Access :=
-        Gela.A4G.Contexts.Context_Access (Context);
+      C : constant Context_Access := Context.all'Unchecked_Access;
 
       Name : constant League.Strings.Universal_String :=
         League.Strings.From_UTF_16_Wide_String
           (Asis.Compilation_Units.Unit_Full_Name (Unit));
 
+      Kind : constant Asis.Unit_Kinds :=
+        Asis.Compilation_Units.Unit_Kind (Unit);
+
       Result : constant Compilation_Unit_Access := new Compilation_Unit'
         (Unit         => Unit,
-         Name         => Context.Symbol (Name),
-         Context      => Context,
+         Name         => C.Create_Symbol (Name),
+         Context      => C,
          Next_Child   => null,
          Next_Subunit => null,
          Children     => <>,
          Subunits     => <>);
    begin
-      --  Add children to list
-      declare
-         Next : Gela.Compilation_Units.Compilation_Unit_Access;
-         List : constant Asis.Compilation_Unit_List :=
-           Asis.Compilation_Units.Corresponding_Children (Unit);
-      begin
-         for J in List'Range loop
-            Next := C.Get_Compilation_Unit (List (J));
-            Compilation_Unit_Access (Next).Next_Child := Result.Children.First;
-            Result.Children.First := Next;
-            Result.Children.Length := Result.Children.Length + 1;
-         end loop;
-      end;
+      if Kind in
+        Asis.A_Package | Asis.A_Generic_Package | Asis.A_Package_Instance
+      then
+         --  Add children to list
+         declare
+            Next : Compilation_Unit_Access;
+            List : constant Asis.Compilation_Unit_List :=
+              Asis.Compilation_Units.Corresponding_Children (Unit);
+         begin
+            for J in List'Range loop
+               Next := C.Create_Compilation_Unit (List (J));
+               Next.Next_Child := Result.Children.First;
+               Result.Children.First :=
+                 Gela.Compilation_Units.Compilation_Unit_Access (Next);
+               Result.Children.Length := Result.Children.Length + 1;
+            end loop;
+         end;
+      elsif Asis.Compilation_Units.Unit_Kind (Unit) in
+        Asis.A_Procedure_Body |
+        Asis.A_Function_Body |
+        Asis.A_Package_Body |
+        Asis.A_Procedure_Body_Subunit |
+        Asis.A_Function_Body_Subunit |
+        Asis.A_Package_Body_Subunit |
+        Asis.A_Task_Body_Subunit |
+        Asis.A_Protected_Body_Subunit
+      then
+         --  Add subunits to list
+         declare
+            Next : Compilation_Unit_Access;
+            List : constant Asis.Compilation_Unit_List :=
+              Asis.Compilation_Units.Subunits (Unit);
+         begin
+            for J in List'Range loop
+               Next := C.Create_Compilation_Unit (List (J));
+               Next.Next_Subunit := Result.Subunits.First;
+               Result.Subunits.First :=
+                 Gela.Compilation_Units.Compilation_Unit_Access (Next);
+               Result.Subunits.Length := Result.Subunits.Length + 1;
+            end loop;
+         end;
+      end if;
 
-      --  Add subunits to list
-      declare
-         Next : Gela.Compilation_Units.Compilation_Unit_Access;
-         List : constant Asis.Compilation_Unit_List :=
-           Asis.Compilation_Units.Subunits (Unit);
-      begin
-         for J in List'Range loop
-            Next := C.Get_Compilation_Unit (List (J));
-            Compilation_Unit_Access (Next).Next_Subunit :=
-              Result.Subunits.First;
-            Result.Subunits.First := Next;
-            Result.Subunits.Length := Result.Subunits.Length + 1;
-         end loop;
-      end;
-
-      return Gela.Compilation_Units.Compilation_Unit_Access (Result);
+      return Result;
    end Create;
 
    --------------------------
@@ -280,8 +293,7 @@ package body Gela.A4G.Compilation_Units is
    --------------------------
 
    overriding function Is_Library_Unit_Body
-     (Self : access Compilation_Unit)
-      return Boolean
+     (Self : aliased Compilation_Unit) return Boolean
    is
    begin
       case Asis.Compilation_Units.Unit_Kind (Self.Unit) is
@@ -334,8 +346,7 @@ package body Gela.A4G.Compilation_Units is
    ---------------------------------
 
    overriding function Is_Library_Unit_Declaration
-     (Self : access Compilation_Unit)
-      return Boolean
+     (Self : aliased Compilation_Unit) return Boolean
    is
    begin
       case Asis.Compilation_Units.Unit_Kind (Self.Unit) is
@@ -387,8 +398,7 @@ package body Gela.A4G.Compilation_Units is
    ----------------
 
    overriding function Is_Subunit
-     (Self : access Compilation_Unit)
-      return Boolean
+     (Self : aliased Compilation_Unit) return Boolean
    is
    begin
       case Asis.Compilation_Units.Unit_Kind (Self.Unit) is
@@ -440,7 +450,8 @@ package body Gela.A4G.Compilation_Units is
    ----------
 
    overriding function Name
-     (Self : access Compilation_Unit) return Gela.Symbols.Symbol_Access is
+     (Self : aliased Compilation_Unit)
+      return Gela.Symbols.Symbol_Access is
    begin
       return Self.Name;
    end Name;
@@ -451,21 +462,24 @@ package body Gela.A4G.Compilation_Units is
    ------------
 
    overriding function Parent
-     (Self : access Compilation_Unit)
+     (Self : aliased Compilation_Unit)
       return Gela.Compilation_Units.Compilation_Unit_Access
    is
+      Result  : Compilation_Unit_Access;
       Context : constant Gela.A4G.Contexts.Context_Access :=
         Gela.A4G.Contexts.Context_Access (Self.Context);
    begin
       if Self.Is_Subunit then
-         return Context.Get_Compilation_Unit
+         Result := Context.Create_Compilation_Unit
            (Asis.Compilation_Units.Corresponding_Subunit_Parent_Body
               (Self.Unit));
       else
-         return Context.Get_Compilation_Unit
+         Result := Context.Create_Compilation_Unit
            (Asis.Compilation_Units.Corresponding_Parent_Declaration
               (Self.Unit));
       end if;
+
+      return Gela.Compilation_Units.Compilation_Unit_Access (Result);
    end Parent;
 
    --------------
@@ -473,19 +487,29 @@ package body Gela.A4G.Compilation_Units is
    --------------
 
    overriding function Subunits
-     (Self : access Compilation_Unit)
+     (Self : aliased Compilation_Unit)
       return Gela.Compilation_Unit_Sets.Compilation_Unit_Set_Access
    is
    begin
-      return Self.Subunits'Access;
+      return Self.Subunits'Unchecked_Access;
    end Subunits;
+
+   ----------
+   -- Unit --
+   ----------
+
+   not overriding function Unit
+     (Self : Compilation_Unit) return Asis.Compilation_Unit is
+   begin
+      return Self.Unit;
+   end Unit;
 
    -----------
    -- Visit --
    -----------
 
    overriding procedure Visit
-     (Self    : access Compilation_Unit;
+     (Self    : aliased Compilation_Unit;
       Visiter : in out Gela.Compilation_Units.Visiters.Visiter'Class)
    is
    begin

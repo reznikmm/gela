@@ -10,12 +10,13 @@ package Gela.Compilation_Unit_Sets is
 
    type Compilation_Unit_Set is limited interface
      with
-       Variable_Indexing => Variable_Indexing,
+       Constant_Indexing => Constant_Indexing,
        Default_Iterator  => Iterate,
        Iterator_Element  => Gela.Compilation_Units.Compilation_Unit'Class;
    --  Set of compilation unit. Only one unit with particular Name cound be
    --  stored in set.
-   type Compilation_Unit_Set_Access is access all Compilation_Unit_Set'Class;
+   type Compilation_Unit_Set_Access is
+     access constant Compilation_Unit_Set'Class;
    for Compilation_Unit_Set_Access'Storage_Size use 0;
 
    not overriding function Is_Empty
@@ -49,14 +50,14 @@ package Gela.Compilation_Unit_Sets is
    --  Return iterator over the set.
 
    type Reference_Type
-     (Unit : not null access
+     (Unit : not null access constant
         Gela.Compilation_Units.Compilation_Unit'Class) is null record
           with Implicit_Dereference => Unit;
 
-   function Variable_Indexing
+   function Constant_Indexing
      (Self   : Compilation_Unit_Set'Class;
       Cursor : not null Gela.Compilation_Units.Compilation_Unit_Access)
       return Reference_Type;
-   pragma Inline (Variable_Indexing);
+   pragma Inline (Constant_Indexing);
 
 end Gela.Compilation_Unit_Sets;

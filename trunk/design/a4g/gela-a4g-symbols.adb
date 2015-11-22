@@ -1,50 +1,50 @@
 with Gela.A4G.Contexts;
 
-with System.Address_To_Access_Conversions;
+--  with System.Address_To_Access_Conversions;
 
 package body Gela.A4G.Symbols is
 
-   package Conv is new System.Address_To_Access_Conversions
-     (Object => Gela.Symbols.Symbol_List'Class);
+--     package Conv is new System.Address_To_Access_Conversions
+--       (Object => Gela.Symbols.Symbol_List'Class);
 
    ------------
    -- Append --
    ------------
 
-   overriding function Append
-     (Left  : access Symbol;
-      Right : Gela.Symbols.Symbol_Access)
-      return Gela.Symbols.Symbol_Access
-   is
-      Image   : League.Strings.Universal_String := Left.Image;
-   begin
-      Image.Append ('.');
-      Image.Append (Right.Image);
-
-      return Left.Context.Symbol (Image);
-   end Append;
+--     overriding function Append
+--       (Left  : aliased Symbol;
+--        Right : Gela.Symbols.Symbol_Access)
+--        return Gela.Symbols.Symbol_Access
+--     is
+--        Image   : League.Strings.Universal_String := Left.Image;
+--     begin
+--        Image.Append ('.');
+--        Image.Append (Right.Image);
+--
+--        return Left.Context.Symbol (Image);
+--     end Append;
 
    ------------
    -- Append --
    ------------
 
-   overriding function Append
-     (Head  : access Symbol_List;
-      Tail  : Gela.Symbols.Symbol_List_Access)
-      return Gela.Symbols.Symbol_List_Access
-   is
-      A : constant Gela.Symbols.Symbol_Access := Head.Head;
-      B : constant Gela.Symbols.Symbol_List_Access := Head.Tail;
-      C : Gela.Symbols.Symbol_List_Access;
-   begin
-      if B.Assigned then
-         C := B.Append (Tail);
-      else
-         C := Tail;
-      end if;
-
-      return A.Create_List (C);
-   end Append;
+--     overriding function Append
+--       (Head  : aliased Symbol_List;
+--        Tail  : Gela.Symbols.Symbol_List_Access)
+--        return Gela.Symbols.Symbol_List_Access
+--     is
+--        A : constant Gela.Symbols.Symbol_Access := Head.Head;
+--        B : constant Gela.Symbols.Symbol_List_Access := Head.Tail;
+--        C : Gela.Symbols.Symbol_List_Access;
+--     begin
+--        if B.Assigned then
+--           C := B.Append (Tail);
+--        else
+--           C := Tail;
+--        end if;
+--
+--        return A.Create_List (C);
+--     end Append;
 
    ------------
    -- Create --
@@ -83,34 +83,35 @@ package body Gela.A4G.Symbols is
    -- Create_List --
    -----------------
 
-   overriding function Create_List
-     (Head  : access Symbol;
-      Tail  : Gela.Symbols.Symbol_List_Access := null)
-      return Gela.Symbols.Symbol_List_Access
-   is
-      Addr : constant System.Address :=
-        Conv.To_Address (Conv.Object_Pointer (Tail));
-      Pos  : constant List_Maps.Cursor := Head.Lists.Find (Addr);
-   begin
-      if List_Maps.Has_Element (Pos) then
-         return List_Maps.Element (Pos);
-      end if;
-
-      declare
-         Result : constant Symbol_List_Access := new Symbol_List'(Head, Tail);
-      begin
-         Head.Lists.Insert (Addr, Gela.Symbols.Symbol_List_Access (Result));
-
-         return Gela.Symbols.Symbol_List_Access (Result);
-      end;
-   end Create_List;
+--     overriding function Create_List
+--       (Head  : aliased Symbol;
+--        Tail  : Gela.Symbols.Symbol_List_Access := null)
+--        return Gela.Symbols.Symbol_List_Access
+--     is
+--        Addr : constant System.Address :=
+--          Conv.To_Address (Conv.Object_Pointer (Tail));
+--        Pos  : constant List_Maps.Cursor := Head.Lists.Find (Addr);
+--     begin
+--        if List_Maps.Has_Element (Pos) then
+--           return List_Maps.Element (Pos);
+--        end if;
+--
+--        declare
+--           Result : constant Symbol_List_Access :=
+--             new Symbol_List'(Head'Access, Tail);
+--        begin
+--         Head.Lists.Insert (Addr, Gela.Symbols.Symbol_List_Access (Result));
+--
+--           return Gela.Symbols.Symbol_List_Access (Result);
+--        end;
+--     end Create_List;
 
    ------------
    -- Folded --
    ------------
 
    overriding function Folded
-     (Self  : access Symbol) return League.Strings.Universal_String is
+     (Self  : aliased Symbol) return League.Strings.Universal_String is
    begin
       return Self.Folded;
    end Folded;
@@ -120,7 +121,7 @@ package body Gela.A4G.Symbols is
    ----------
 
    overriding function Head
-     (Self  : access Symbol_List) return Gela.Symbols.Symbol_Access is
+     (Self  : aliased Symbol_List) return Gela.Symbols.Symbol_Access is
    begin
       return Self.Head;
    end Head;
@@ -130,7 +131,7 @@ package body Gela.A4G.Symbols is
    -----------
 
    overriding function Image
-     (Self  : access Symbol)
+     (Self  : aliased Symbol)
       return League.Strings.Universal_String
    is
    begin
@@ -142,7 +143,7 @@ package body Gela.A4G.Symbols is
    ------------
 
    overriding function Prefix
-     (Self  : access Symbol)
+     (Self  : aliased Symbol)
       return Gela.Symbols.Symbol_Access
    is
       pragma Unreferenced (Self);
@@ -155,7 +156,7 @@ package body Gela.A4G.Symbols is
    ------------
 
    overriding function Prefix
-     (Self  : access Compound_Symbol) return Gela.Symbols.Symbol_Access is
+     (Self  : aliased Compound_Symbol) return Gela.Symbols.Symbol_Access is
    begin
       return Self.Prefix;
    end Prefix;
@@ -165,11 +166,11 @@ package body Gela.A4G.Symbols is
    --------------
 
    overriding function Selector
-     (Self  : access Symbol)
+     (Self  : aliased Symbol)
       return Gela.Symbols.Symbol_Access
    is
    begin
-      return Gela.Symbols.Symbol_Access (Self);
+      return Self'Access;
    end Selector;
 
    --------------
@@ -177,7 +178,7 @@ package body Gela.A4G.Symbols is
    --------------
 
    overriding function Selector
-     (Self  : access Compound_Symbol) return Gela.Symbols.Symbol_Access is
+     (Self  : aliased Compound_Symbol) return Gela.Symbols.Symbol_Access is
    begin
       return Self.Selector;
    end Selector;
@@ -187,7 +188,7 @@ package body Gela.A4G.Symbols is
    ----------
 
    overriding function Tail
-     (Self  : access Symbol_List) return Gela.Symbols.Symbol_List_Access is
+     (Self  : aliased Symbol_List) return Gela.Symbols.Symbol_List_Access is
    begin
       return Self.Tail;
    end Tail;

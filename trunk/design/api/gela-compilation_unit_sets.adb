@@ -12,10 +12,10 @@ package body Gela.Compilation_Unit_Sets is
    end Assigned;
 
    -----------------------
-   -- Variable_Indexing --
+   -- Constant_Indexing --
    -----------------------
 
-   function Variable_Indexing
+   function Constant_Indexing
      (Self   : Compilation_Unit_Set'Class;
       Cursor : not null Gela.Compilation_Units.Compilation_Unit_Access)
       return Reference_Type
@@ -23,6 +23,6 @@ package body Gela.Compilation_Unit_Sets is
       pragma Unreferenced (Self);
    begin
       return (Unit => Cursor);
-   end Variable_Indexing;
+   end Constant_Indexing;
 
 end Gela.Compilation_Unit_Sets;
