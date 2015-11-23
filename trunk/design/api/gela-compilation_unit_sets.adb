@@ -25,4 +25,27 @@ package body Gela.Compilation_Unit_Sets is
       return (Unit => Cursor);
    end Constant_Indexing;
 
+   -----------------------
+   -- Constant_Indexing --
+   -----------------------
+
+   function Constant_Indexing
+     (Self  : Compilation_Unit_Set'Class;
+      Value : Wide_Wide_String) return Reference_Type is
+   begin
+      return Self.Constant_Indexing
+        (League.Strings.To_Universal_String (Value));
+   end Constant_Indexing;
+
+   -----------------------
+   -- Constant_Indexing --
+   -----------------------
+
+   function Constant_Indexing
+     (Self  : Compilation_Unit_Set'Class;
+      Value : League.Strings.Universal_String) return Reference_Type is
+   begin
+      return Self.Constant_Indexing (Self.Find (Self.Context.Symbol (Value)));
+   end Constant_Indexing;
+
 end Gela.Compilation_Unit_Sets;

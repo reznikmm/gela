@@ -154,6 +154,16 @@ package body Gela.A4G.Contexts is
          return Forward_Iterator'(Self.Context, Self.Need_Body);
       end Iterate;
 
+      -------------
+      -- Context --
+      -------------
+
+      overriding function Context
+        (Self : Compilation_Unit_Set) return Gela.Contexts.Context_Access is
+      begin
+         return Self.Context;
+      end Context;
+
    end Unit_Sets;
 
    -----------------------------

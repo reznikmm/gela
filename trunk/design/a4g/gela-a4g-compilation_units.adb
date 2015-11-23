@@ -104,6 +104,15 @@ package body Gela.A4G.Compilation_Units is
          return Compilation_Unit (Position.all).Next_Child;
       end Next;
 
+      -------------
+      -- Context --
+      -------------
+
+      overriding function Context
+        (Self : Compilation_Unit_Set) return Gela.Contexts.Context_Access is
+      begin
+         return Self.First.Context;
+      end Context;
    end Children_Sets;
 
    ------------------

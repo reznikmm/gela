@@ -75,6 +75,9 @@ private
          return Gela.Compilation_Unit_Sets.Iterator_Interfaces
         .Forward_Iterator'Class;
 
+      overriding function Context
+        (Self : Compilation_Unit_Set) return Gela.Contexts.Context_Access;
+
    end Unit_Sets;
 
    type Context is limited new Gela.Contexts.Context with record

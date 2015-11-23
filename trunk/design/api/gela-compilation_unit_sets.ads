@@ -2,6 +2,9 @@
 
 with Ada.Iterator_Interfaces;
 
+with League.Strings;
+
+with Gela.Contexts;
 with Gela.Compilation_Units;
 with Gela.Symbols;
 
@@ -34,6 +37,11 @@ package Gela.Compilation_Unit_Sets is
    --  Find compilation unit with given name (Symbol).
    --  Return null if not found.
 
+   not overriding function Context
+     (Self : Compilation_Unit_Set)
+      return Gela.Contexts.Context_Access is abstract;
+   --  Return corresponding context
+
    --  Iterator related syntactic sugar below
 
    function Assigned
@@ -57,6 +65,16 @@ package Gela.Compilation_Unit_Sets is
    function Constant_Indexing
      (Self   : Compilation_Unit_Set'Class;
       Cursor : not null Gela.Compilation_Units.Compilation_Unit_Access)
+      return Reference_Type;
+
+   function Constant_Indexing
+     (Self  : Compilation_Unit_Set'Class;
+      Value : Wide_Wide_String)
+      return Reference_Type;
+
+   function Constant_Indexing
+     (Self  : Compilation_Unit_Set'Class;
+      Value : League.Strings.Universal_String)
       return Reference_Type;
    pragma Inline (Constant_Indexing);
 

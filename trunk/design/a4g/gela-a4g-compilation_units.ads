@@ -92,6 +92,9 @@ private
          return Gela.Compilation_Unit_Sets.Iterator_Interfaces
         .Forward_Iterator'Class;
 
+      overriding function Context
+        (Self : Compilation_Unit_Set) return Gela.Contexts.Context_Access;
+
    end Children_Sets;
 
    package Subunit_Sets is

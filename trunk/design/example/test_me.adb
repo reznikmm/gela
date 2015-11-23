@@ -19,5 +19,9 @@ begin
          Ada.Wide_Wide_Text_IO.Put_Line
            (J.Name.Image.To_Wide_Wide_String);
       end loop;
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        ("Got by name: " & Set.all ("system").Name.Image.To_Wide_Wide_String);
+
    end;
 end Test_Me;
