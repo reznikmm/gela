@@ -5,6 +5,7 @@ with Gela.Declarations;
 with Gela.Elements.Defining_Names;
 
 package Gela.Element_Sequences is
+   pragma Preelaborate;
 
    type Element_Sequence is tagged;
    --  Sequence of Elements

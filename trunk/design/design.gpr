@@ -4,7 +4,7 @@ with "asis";
 project Design is
    for Object_Dir use "/tmp";
    for Source_Dirs use (".", "api", "a4g", "example");
-   for Main use ("test_me");
+--   for Main use ("test_me");
 
    package Compiler is
      for Default_Switches ("ada") use

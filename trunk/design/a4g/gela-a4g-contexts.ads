@@ -2,6 +2,7 @@ with Ada.Containers.Hashed_Maps;
 
 with League.Strings.Hash;
 
+with Gela.A4G.Elements;
 with Gela.A4G.Compilation_Units;
 with Gela.Compilation_Unit_Sets;
 with Gela.Compilation_Units;
@@ -9,6 +10,7 @@ with Gela.Contexts;
 with Gela.Symbols;
 
 with Asis.Compilation_Units;
+with Asis.Elements;
 
 package Gela.A4G.Contexts is
 
@@ -26,6 +28,16 @@ package Gela.A4G.Contexts is
      (Self  : access Context;
       Image : League.Strings.Universal_String)
       return Gela.Symbols.Symbol_Access;
+
+   not overriding function Create_Element
+     (Self    : access Context;
+      Element : Asis.Element)
+      return Gela.A4G.Elements.Element_Access;
+
+   not overriding function Create_Element_List
+     (Self : access Context;
+      List : Asis.Element_List)
+      return Gela.A4G.Elements.Element_Sequence_Access;
 
    procedure Initialize
      (Self       : in out Context;
@@ -49,6 +61,23 @@ private
       Hash            => Hash,
       Equivalent_Keys => Asis.Compilation_Units.Is_Identical,
       "="             => Gela.A4G.Compilation_Units."=");
+
+   function Hash
+     (Element : Asis.Element) return Ada.Containers.Hash_Type;
+
+   package Element_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Asis.Element,
+      Element_Type    => Gela.A4G.Elements.Element_Access,
+      Hash            => Hash,
+      Equivalent_Keys => Asis.Elements.Is_Identical,
+      "="             => Gela.A4G.Elements."=");
+
+   package Element_List_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Asis.Element,
+      Element_Type    => Gela.A4G.Elements.Element_Sequence_Access,
+      Hash            => Hash,
+      Equivalent_Keys => Asis.Elements.Is_Identical,
+      "="             => Gela.A4G.Elements."=");
 
    package Unit_Sets is
 
@@ -88,6 +117,8 @@ private
       Context    : Asis.Context;
       Symbols    : Symbol_Maps.Map;
       Units      : Unit_Maps.Map;
+      Elements   : Element_Maps.Map;
+      Lists      : Element_List_Maps.Map;
       Body_Count : Natural := 0;
    end record;
 

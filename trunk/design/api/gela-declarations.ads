@@ -1,6 +1,7 @@
 with Gela.Elements;
 
 limited with Gela.Element_Sequences;
+limited with Gela.Elements.Defining_Names;
 
 package Gela.Declarations is
    pragma Preelaborate;
@@ -17,6 +18,11 @@ package Gela.Declarations is
    --  Returns a list of names defined by the declaration, in their order of
    --  appearance.  Declarations that define a single name will return a list
    --  of length one.
+
+   function Name
+     (Self : aliased Declaration'Class)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
+   --  Shortcut for getting first name from Names
 
    not overriding function Aspects
      (Self : aliased Declaration)

@@ -205,6 +205,66 @@ package body Gela.A4G.Contexts is
       return Result;
    end Create_Compilation_Unit;
 
+   --------------------
+   -- Create_Element --
+   --------------------
+
+   not overriding function Create_Element
+     (Self    : access Context;
+      Element : Asis.Element)
+      return Gela.A4G.Elements.Element_Access
+   is
+      Pos    : constant Element_Maps.Cursor := Self.Elements.Find (Element);
+
+      Result : Gela.A4G.Elements.Element_Access;
+   begin
+      if Asis.Elements.Is_Nil (Element) then
+         return null;
+      elsif Element_Maps.Has_Element (Pos) then
+         Result := Element_Maps.Element (Pos);
+      else
+         Result := Gela.A4G.Elements.Create
+           (Node    => Element,
+            Context => Self);
+
+         Self.Elements.Insert (Element, Result);
+      end if;
+
+      return Result;
+   end Create_Element;
+
+   -------------------------
+   -- Create_Element_List --
+   -------------------------
+
+   not overriding function Create_Element_List
+     (Self : access Context;
+      List : Asis.Element_List)
+      return Gela.A4G.Elements.Element_Sequence_Access
+   is
+      Pos    : Element_List_Maps.Cursor;
+
+      Result : Gela.A4G.Elements.Element_Sequence_Access;
+   begin
+      if List'Length = 0 then
+         return null;
+      end if;
+
+      Pos := Self.Lists.Find (List (List'First));
+
+      if Element_List_Maps.Has_Element (Pos) then
+         Result := Element_List_Maps.Element (Pos);
+      else
+         Result := Gela.A4G.Elements.Create_List
+           (Node    => List,
+            Context => Self);
+
+         Self.Lists.Insert (List (List'First), Result);
+      end if;
+
+      return Result;
+   end Create_Element_List;
+
    -------------------
    -- Create_Symbol --
    -------------------
@@ -238,6 +298,16 @@ package body Gela.A4G.Contexts is
    begin
       return Ada.Strings.Wide_Hash
         (Asis.Compilation_Units.Unique_Name (Unit));
+   end Hash;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Element : Asis.Element) return Ada.Containers.Hash_Type is
+      Image : constant Wide_String := Asis.Elements.Debug_Image (Element);
+   begin
+      return Ada.Strings.Wide_Hash (Image);
    end Hash;
 
    ----------------

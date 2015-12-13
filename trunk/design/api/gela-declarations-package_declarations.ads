@@ -20,7 +20,4 @@ package Gela.Declarations.Package_Declarations is
       return Gela.Element_Sequences.Defining_Name_Sequence_Access
         is abstract;
 
-   function Assigned (Self : access Package_Declaration'Class) return Boolean
-     is (Self /= null);
-
 end Gela.Declarations.Package_Declarations;
