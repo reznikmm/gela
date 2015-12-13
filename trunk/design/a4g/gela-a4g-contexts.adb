@@ -247,7 +247,7 @@ package body Gela.A4G.Contexts is
       Result : Gela.A4G.Elements.Element_Sequence_Access;
    begin
       if List'Length = 0 then
-         return null;
+         return Self.Empty_List;
       end if;
 
       Pos := Self.Lists.Find (List (List'First));
@@ -321,6 +321,9 @@ package body Gela.A4G.Contexts is
    begin
       Asis.Ada_Environments.Associate (Self.Context, Parameters);
       Asis.Ada_Environments.Open (Self.Context);
+
+      Self.Empty_List := Gela.A4G.Elements.Create_List
+        (Self'Access, Asis.Nil_Element_List);
 
       declare
          Ignore : Gela.A4G.Compilation_Units.Compilation_Unit_Access;

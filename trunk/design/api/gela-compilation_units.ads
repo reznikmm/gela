@@ -5,7 +5,7 @@ limited with Gela.Compilation_Unit_Sets;
 limited with Gela.Contexts;
 --  limited with Gela.Unit_Containers;
 --  with Gela.Lexical_Types;
---  with Gela.Elements.Compilation_Units;
+limited with Gela.Elements;
 with Gela.Symbols;
 limited with Gela.Compilation_Units.Visiters;
 
@@ -67,11 +67,10 @@ package Gela.Compilation_Units is
 --        return Gela.Compilations.Compilation_Access is abstract;
 --     --  Return compilation of compilation unit
 --
---     not overriding function Tree
---       (Self : aliased Compilation_Unit)
---        return Gela.Elements.Compilation_Units.Compilation_Unit_Access
---          is abstract;
---     --  Return abstract syntax tree of compilation unit
+   not overriding function Unit_Declaration
+     (Self : aliased Compilation_Unit) return Gela.Elements.Element_Access
+        is abstract;
+   --  Return abstract syntax tree of elements from given compilation unit
 
    type Library_Unit_Declaration is limited interface and Compilation_Unit;
    --  Compilation library unit declaration. This includes rename declarations

@@ -1,5 +1,6 @@
 with Gela.Compilation_Unit_Sets;
 with Gela.Contexts;
+with Gela.Elements;
 with Gela.Symbols;
 with Gela.Compilation_Units.Visiters;
 limited with Gela.A4G.Contexts;
@@ -48,6 +49,9 @@ package Gela.A4G.Compilation_Units is
    overriding procedure Visit
      (Self    : aliased Compilation_Unit;
       Visiter : in out Gela.Compilation_Units.Visiters.Visiter'Class);
+
+   overriding function Unit_Declaration
+     (Self : aliased Compilation_Unit) return Gela.Elements.Element_Access;
 
    overriding function Children
      (Self : aliased Compilation_Unit)

@@ -1,8 +1,10 @@
 with Asis.Compilation_Units;
+with Asis.Elements;
 
 with League.Strings;
 
 with Gela.A4G.Contexts;
+with Gela.A4G.Elements;
 
 package body Gela.A4G.Compilation_Units is
 
@@ -512,6 +514,21 @@ package body Gela.A4G.Compilation_Units is
    begin
       return Self.Unit;
    end Unit;
+
+   ----------------------
+   -- Unit_Declaration --
+   ----------------------
+
+   overriding function Unit_Declaration
+     (Self : aliased Compilation_Unit) return Gela.Elements.Element_Access
+   is
+      Element : constant Asis.Element :=
+        Asis.Elements.Unit_Declaration (Self.Unit);
+      Result  : constant Gela.A4G.Elements.Element_Access :=
+        Self.Context.Create_Element (Element);
+   begin
+      return Gela.Elements.Element_Access (Result);
+   end Unit_Declaration;
 
    -----------
    -- Visit --

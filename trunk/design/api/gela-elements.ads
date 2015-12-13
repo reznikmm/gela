@@ -24,7 +24,8 @@ package Gela.Elements is
 
    not overriding procedure Visit
      (Self    : aliased Element;
-      Visiter : in out Gela.Element_Visiters.Visiter'Class) is abstract;
+      Visiter : in out Gela.Element_Visiters.Abstract_Visiter'Class)
+       is abstract;
    --  Visit corresponding method of given Visiter
 
 end Gela.Elements;

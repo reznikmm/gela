@@ -119,6 +119,7 @@ private
       Units      : Unit_Maps.Map;
       Elements   : Element_Maps.Map;
       Lists      : Element_List_Maps.Map;
+      Empty_List : Gela.A4G.Elements.Element_Sequence_Access;
       Body_Count : Natural := 0;
    end record;
 

@@ -12,12 +12,12 @@ package Gela.Declarations.Package_Declarations is
 
    not overriding function Visible_Part
      (Self : aliased Package_Declaration)
-      return Gela.Element_Sequences.Defining_Name_Sequence_Access
+      return Gela.Element_Sequences.Element_Sequence_Access
         is abstract;
 
    not overriding function Private_Part
      (Self : aliased Package_Declaration)
-      return Gela.Element_Sequences.Defining_Name_Sequence_Access
+      return Gela.Element_Sequences.Element_Sequence_Access
         is abstract;
 
 end Gela.Declarations.Package_Declarations;
