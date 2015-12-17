@@ -51,6 +51,7 @@ Synthesized attributes
   if_statement,
   label_decorator,
   loop_statement,
+  membership_choice,
   membership_test,
   name,
   null_literal,
@@ -98,12 +99,13 @@ Synthesized attributes
   variant_part,
   Array_Component_Choices,
   Associations,
+  Body_Statements,
   Case_Statement_Paths,
   Exception_Choices,
   Exception_Handlers,
   Discrete_Subtype_Definitions,
   Index_Subtype_Definitions,
-  Body_Statements,
+  Membership_Test_Choices,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -242,6 +244,7 @@ Rules for parameter_specification. :
 Rules for membership_test. :
 (.
       ${membership_test.Errors} := 0; --  FIXME
+      --  ${Membership_Test_Choices.Errors}
 .)
 Rules for short_circuit. :
 (.
@@ -315,6 +318,14 @@ Rules for Variants.variant :
 Rules for Variants.variant :
 (.
       ${Variants.Errors} := ${variant.Errors}; --  FIXME
+.)
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${Membership_Test_Choices.Errors} := 0;
+.)
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${Membership_Test_Choices.Errors} := ${membership_choice.Errors};
 .)
 Rules for Exception_Choices.exception_choice :
 (.

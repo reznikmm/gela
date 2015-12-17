@@ -28,6 +28,7 @@ Synthesized attributes
   auxiliary_apply,
   identifier,
   if_expression,
+  membership_choice,
   membership_test,
   name,
   null_literal,
@@ -62,6 +63,7 @@ Synthesized attributes
   Array_Component_Choices,
   Associations,
   Case_Statement_Paths,
+  Membership_Test_Choices,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -91,6 +93,17 @@ Rules for Associations.association :
       ${Associations.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${association.Up}, ${tail.Up}, ${Associations.Up});
+.)
+
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${Membership_Test_Choices.Up} := 0;
+.)
+
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${Membership_Test_Choices.Up} := ${membership_choice.Up};
+      --   ${tail.Up}  FIXME
 .)
 
 Rules for Record_Component_Associations.association :
@@ -334,7 +347,12 @@ Rules for record_aggregate. :
 
 Rules for membership_test. :
 (.
-      ${membership_test.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Membership_Test
+        (Self.Compilation,
+         ${membership_test.env_in},
+         ${Membership_Test_Expression.Up},
+         ${Membership_Test_Choices.Up},
+         ${membership_test.Up});
 .)
 
 Rules for short_circuit. :

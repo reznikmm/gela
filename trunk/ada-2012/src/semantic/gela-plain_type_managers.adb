@@ -1,7 +1,10 @@
+with Gela.Array_Type_Views;
 with Gela.Compilations;
+with Gela.Derived_Type_Views;
 with Gela.Element_Factories;
 with Gela.Element_Visiters;
 with Gela.Elements.Access_To_Object_Definitions;
+with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Constrained_Array_Definitions;
@@ -17,6 +20,7 @@ with Gela.Elements.Floating_Point_Definitions;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
+with Gela.Elements.Package_Declarations;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Selected_Components;
@@ -28,17 +32,29 @@ with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Unconstrained_Array_Definitions;
-with Gela.Plain_Type_Views;
-with Gela.Derived_Type_Views;
-with Gela.Array_Type_Views;
-with Gela.Profiles.Names;
 with Gela.Environments;
+with Gela.Lexical_Types;
+with Gela.Plain_Type_Views;
+with Gela.Profiles.Names;
 
 package body Gela.Plain_Type_Managers is
 
    Universal_Access_Index  : constant Gela.Semantic_Types.Type_Index := 1;
    Universal_Integer_Index : constant Gela.Semantic_Types.Type_Index := 2;
    Universal_Real_Index    : constant Gela.Semantic_Types.Type_Index := 3;
+   Boolean_Index           : constant Gela.Semantic_Types.Type_Index := 4;
+
+   -------------
+   -- Boolean --
+   -------------
+
+   overriding function Boolean
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return Boolean_Index;
+   end Boolean;
 
    ---------
    -- Get --
@@ -90,11 +106,12 @@ package body Gela.Plain_Type_Managers is
    end Get;
 
    not overriding function Get_Array
-     (Self     : access Type_Manager;
-      Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-      .Full_Type_Declaration_Access;
-      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+     (Self      : access Type_Manager;
+      Category  : Gela.Type_Categories.Category_Kinds;
+      Decl      : Gela.Elements.Full_Type_Declarations
+                    .Full_Type_Declaration_Access;
+      Component : Gela.Semantic_Types.Type_Index;
+      Indexes   : Gela.Semantic_Types.Type_Index_Array)
       return Gela.Semantic_Types.Type_Index
    is
       use type Gela.Semantic_Types.Type_Index;
@@ -110,7 +127,8 @@ package body Gela.Plain_Type_Managers is
 
       Self.Map.Insert
         (Result,
-         Gela.Array_Type_Views.Create_Full_Type (Category, Decl, Indexes));
+         Gela.Array_Type_Views.Create_Full_Type
+           (Category, Decl, Component, Indexes));
 
       Self.Back.Insert (Key, Result);
 
@@ -211,6 +229,8 @@ package body Gela.Plain_Type_Managers is
    -- Initialize --
    ----------------
 
+   package S renames Standard;
+
    procedure Initialize
      (Self     : access Type_Manager;
       Standard : Gela.Elements.Element_Access)
@@ -218,6 +238,8 @@ package body Gela.Plain_Type_Managers is
       procedure Create
         (Category : Gela.Type_Categories.Category_Kinds;
          Index    : Gela.Semantic_Types.Type_Index);
+
+      procedure Find_Boolean;
 
       Comp : constant Gela.Compilations.Compilation_Access :=
         Standard.Enclosing_Compilation;
@@ -254,11 +276,64 @@ package body Gela.Plain_Type_Managers is
             Gela.Plain_Type_Views.Create_Full_Type (Category, Node));
       end Create;
 
+      procedure Find_Boolean is
+         package Visiters is
+            type Visiter is new Gela.Element_Visiters.Visiter with record
+               Stop : S.Boolean := False;
+            end record;
+
+            overriding procedure Full_Type_Declaration
+              (Self : in out Visiter;
+               Node : not null Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access);
+         end Visiters;
+
+         package body Visiters is
+
+            overriding procedure Full_Type_Declaration
+              (Self : in out Visiter;
+               Node : not null Gela.Elements.Full_Type_Declarations.
+                 Full_Type_Declaration_Access)
+            is
+               use type Gela.Lexical_Types.Symbol;
+               use type Gela.Semantic_Types.Type_Index;
+               Name   : constant Gela.Elements.Defining_Identifiers
+                 .Defining_Identifier_Access := Node.Names;
+               Ignore : Gela.Semantic_Types.Type_Index;
+            begin
+               if Name.Full_Name = Gela.Lexical_Types.Predefined_Symbols
+                 .Boolean
+               then
+                  Self.Stop := True;
+                  Ignore := Initialize.Self.Get
+                    (Category => Gela.Type_Categories.A_Boolean,
+                     Decl     => Node);
+                  pragma Assert (Ignore = Boolean_Index);
+               end if;
+            end Full_Type_Declaration;
+         end Visiters;
+
+         Seq : constant Gela.Elements.Basic_Declarative_Items
+           .Basic_Declarative_Item_Sequence_Access
+             := Gela.Elements.Package_Declarations
+                 .Package_Declaration_Access (Standard)
+                   .Visible_Part_Declarative_Items;
+         Cursor : Gela.Elements.Basic_Declarative_Items
+           .Basic_Declarative_Item_Sequence_Cursor := Seq.First;
+         Visiter : aliased Visiters.Visiter;
+      begin
+         while Cursor.Has_Element and not Visiter.Stop loop
+            Cursor.Element.Visit (Visiter);
+            Cursor.Next;
+         end loop;
+      end Find_Boolean;
+
       use Gela.Type_Categories;
    begin
       Create (An_Universal_Access, Universal_Access_Index);
       Create (An_Universal_Integer, Universal_Integer_Index);
       Create (An_Universal_Real, Universal_Real_Index);
+      Find_Boolean;
    end Initialize;
 
    ------------------
@@ -362,7 +437,7 @@ package body Gela.Plain_Type_Managers is
 
       package Is_Char_Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Found : Boolean := False;
+            Found : Standard.Boolean := False;
          end record;
 
          overriding procedure Defining_Character_Literal
@@ -590,16 +665,18 @@ package body Gela.Plain_Type_Managers is
               Component_Type_View.Is_Character
             then
                Self.Result := Type_From_Declaration.Self.Get_Array
-                 (Category => Gela.Type_Categories.A_String,
-                  Decl     => Gela.Elements.Full_Type_Declarations.
+                 (Category  => Gela.Type_Categories.A_String,
+                  Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Indexes  => Indexes);
+                  Component => Component_Type,
+                  Indexes   => Indexes);
             else
                Self.Result := Type_From_Declaration.Self.Get_Array
-                 (Category => Gela.Type_Categories.An_Other_Array,
-                  Decl     => Gela.Elements.Full_Type_Declarations.
+                 (Category  => Gela.Type_Categories.An_Other_Array,
+                  Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Indexes  => Indexes);
+                  Component => Component_Type,
+                  Indexes   => Indexes);
             end if;
          end Unconstrained_Array_Definition;
 
@@ -650,16 +727,18 @@ package body Gela.Plain_Type_Managers is
               Component_Type_View.Is_Character
             then
                Self.Result := Type_From_Declaration.Self.Get_Array
-                 (Category => Gela.Type_Categories.A_String,
-                  Decl     => Gela.Elements.Full_Type_Declarations.
+                 (Category  => Gela.Type_Categories.A_String,
+                  Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Indexes  => Indexes);
+                  Component => Component_Type,
+                  Indexes   => Indexes);
             else
                Self.Result := Type_From_Declaration.Self.Get_Array
-                 (Category => Gela.Type_Categories.An_Other_Array,
-                  Decl     => Gela.Elements.Full_Type_Declarations.
+                 (Category  => Gela.Type_Categories.An_Other_Array,
+                  Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Indexes  => Indexes);
+                  Component => Component_Type,
+                  Indexes   => Indexes);
             end if;
          end Constrained_Array_Definition;
 

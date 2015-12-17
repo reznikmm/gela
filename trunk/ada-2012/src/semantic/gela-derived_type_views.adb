@@ -26,6 +26,20 @@ package body Gela.Derived_Type_Views is
       return Self.Parent.Category;
    end Category;
 
+   --------------------
+   -- Component_Type --
+   --------------------
+
+   overriding function Component_Type
+     (Self : Type_View) return Gela.Semantic_Types.Type_Index is
+   begin
+      return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Component_Type;
+   end Component_Type;
+
+   ---------------
+   -- Dimension --
+   ---------------
+
    overriding function Dimension (Self : Type_View) return Positive is
    begin
       return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Dimension;

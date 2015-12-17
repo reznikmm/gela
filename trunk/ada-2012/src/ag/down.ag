@@ -83,6 +83,7 @@ Inherited attributes
   Array_Component_Choices,
   Associations,
   Case_Statement_Paths,
+  Membership_Test_Choices,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -477,12 +478,24 @@ Rules for if_path. :
 
 Rules for Membership_Test_Choices.membership_choice :
 (.
-      ${membership_choice.Down} := 0;  --  FIXME
+      ${membership_choice.Down} := ${Membership_Test_Choices.Down};  --  FIXME
+.)
+
+Rules for Membership_Test_Choices.membership_choice :
+(.
+      ${tail.Down} := ${Membership_Test_Choices.Down};  --  FIXME
 .)
 
 Rules for membership_test. :
 (.
-      ${Membership_Test_Expression.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${membership_test.Down}, 1, ${Membership_Test_Expression.Down});
+.)
+
+Rules for membership_test. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${membership_test.Down}, 2, ${Membership_Test_Choices.Down});
 .)
 
 Rules for modular_type_definition. :
@@ -956,12 +969,12 @@ Rules for discrete_range_attribute_reference.Range_Attribute :
 
 Rules for range_attribute_reference.Range_Attribute :
 (.
-      ${Range_Attribute.Down} := 0;  --  FIXME
+      ${Range_Attribute.Down} := ${range_attribute_reference.Down};
 .)
 
 Rules for range_attribute_reference_dr.Range_Attribute :
 (.
-      ${Range_Attribute.Down} := 0;  --  FIXME
+      ${Range_Attribute.Down} := ${range_attribute_reference_dr.Down};
 .)
 
 Rules for delta_constraint. :

@@ -13,19 +13,31 @@ package body Gela.Array_Type_Views is
       return Self.Category;
    end Category;
 
+   --------------------
+   -- Component_Type --
+   --------------------
+
+   overriding function Component_Type
+     (Self : Type_View) return Gela.Semantic_Types.Type_Index is
+   begin
+      return Self.Component;
+   end Component_Type;
+
    ----------------------
    -- Create_Full_Type --
    ----------------------
 
    function Create_Full_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-                   .Full_Type_Declaration_Access;
-      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+     (Category  : Gela.Type_Categories.Category_Kinds;
+      Decl      : Gela.Elements.Full_Type_Declarations
+                    .Full_Type_Declaration_Access;
+      Component : Gela.Semantic_Types.Type_Index;
+      Indexes   : Gela.Semantic_Types.Type_Index_Array)
       return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access :=
         new Type_View'(Category => Category, Decl => Decl,
+                       Component => Component,
                        Length => Indexes'Length, Indexes => Indexes);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);

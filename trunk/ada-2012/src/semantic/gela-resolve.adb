@@ -243,13 +243,56 @@ package body Gela.Resolve is
    is
       use type Gela.Lexical_Types.Symbol;
       use type Gela.Lexical_Types.Token_Count;
+      use type Gela.Semantic_Types.Type_Index;
 
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
-      Attr       : Gela.Lexical_Types.Predefined_Symbols.Symbol;
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      package Each is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Length : Boolean;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
+      end Each;
+
       Index      : Gela.Interpretations.Interpretation_Index;
+
+      package body Each is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Cursor);
+            View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+            Arr  : Gela.Types.Arrays.Array_Type_Access;
+         begin
+            if View.Assigned and then View.Is_Array then
+               Arr  := Gela.Types.Arrays.Array_Type_Access (View);
+
+               if Self.Length then
+                  Comp.Context.Interpretation_Manager.Add_Expression
+                    (Tipe   => TM.Universal_Integer,
+                     Down   => (1 => Index),
+                     Result => Set);
+               else
+                  Comp.Context.Interpretation_Manager.Add_Expression
+                    (Tipe   => Arr.all.Index_Types (1),
+                     Down   => (1 => Index),
+                     Result => Set);
+               end if;
+            end if;
+         end On_Expression;
+      end Each;
+
+      Arr_Visiter : Each.Visiter;
+      Attr        : Gela.Lexical_Types.Predefined_Symbols.Symbol;
+      Type_Index  : Gela.Semantic_Types.Type_Index;
    begin
       Set := 0;
 
@@ -259,8 +302,13 @@ package body Gela.Resolve is
          Attr := Gela.Lexical_Types.Predefined_Symbols.Range_Symbol;
       end if;
 
+      Arr_Visiter.Length :=
+        Attr = Gela.Lexical_Types.Predefined_Symbols.Length;
+
       case Attr is
-         when Gela.Lexical_Types.Predefined_Symbols.First |
+         when Gela.Lexical_Types.Predefined_Symbols.Length |
+              Gela.Lexical_Types.Predefined_Symbols.First |
+              Gela.Lexical_Types.Predefined_Symbols.Range_Symbol |
               Gela.Lexical_Types.Predefined_Symbols.Last =>
 
             Get_Subtype
@@ -270,10 +318,19 @@ package body Gela.Resolve is
                Index  => Index,
                Result => Type_Index);
 
-            Comp.Context.Interpretation_Manager.Add_Expression
-              (Tipe   => Type_Index,
-               Down   => (1 => Index),
-               Result => Set);
+            if Type_Index = 0 then
+               Resolve.Each_Prefix (Comp, Env, Prefix, Arr_Visiter);
+            elsif Arr_Visiter.Length then
+               Comp.Context.Interpretation_Manager.Add_Expression
+                 (Tipe   => TM.Universal_Integer,
+                  Down   => (1 => Index),
+                  Result => Set);
+            else
+               Comp.Context.Interpretation_Manager.Add_Expression
+                 (Tipe   => Type_Index,
+                  Down   => (1 => Index),
+                  Result => Set);
+            end if;
          when Gela.Lexical_Types.Predefined_Symbols.Val =>
             Get_Subtype
               (Comp,
@@ -1054,7 +1111,7 @@ package body Gela.Resolve is
 
             if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
-                 (Tipe   => Self.Tipe,
+                 (Tipe   => Self.View.Component_Type,
                   Down   => Self.Index & Chosen,
                   Result => Set);
             end if;
@@ -1323,6 +1380,94 @@ package body Gela.Resolve is
 
       Result := Visiter.Result;
    end Interpretation;
+
+   ---------------------
+   -- Membership_Test --
+   ---------------------
+
+   procedure Membership_Test
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Left   : Gela.Interpretations.Interpretation_Set_Index;
+      Right  : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      package Each_Right is
+         type Visiter is new Gela.Interpretations.Up_Visiter with null record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
+      end Each_Right;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      package body Each_Right is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            package Each_Left is
+               type Visiter is new Gela.Interpretations.Up_Visiter with record
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+               end record;
+
+               overriding procedure On_Expression
+                 (Self   : in out Visiter;
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+                  Cursor : Gela.Interpretations.Cursor'Class);
+
+            end Each_Left;
+
+            package body Each_Left is
+
+               overriding procedure On_Expression
+                 (Self   : in out Visiter;
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+                  Cursor : Gela.Interpretations.Cursor'Class)
+               is
+                  use type Gela.Interpretations.Interpretation_Index_Array;
+
+                  Left_Type : constant Gela.Types.Type_View_Access :=
+                    TM.Get (Tipe);
+                  Right_Type : constant Gela.Types.Type_View_Access :=
+                    TM.Get (Self.Tipe);
+               begin
+                  if Left_Type.Is_Expected_Type (Expected => Right_Type) then
+                     Comp.Context.Interpretation_Manager.Add_Expression
+                       (Tipe   => TM.Boolean,
+                        Down   => Cursor.Get_Index &
+                          Each_Right.On_Expression.Cursor.Get_Index,
+                        Result => Set);
+                  end if;
+               end On_Expression;
+
+            end Each_Left;
+
+            pragma Unreferenced (Cursor, Self);
+            ELV : Each_Left.Visiter := (Tipe => Tipe);
+         begin
+            Each_Expression (Comp   => Comp,
+                             Env    => Env,
+                             Set    => Left,
+                             Target => ELV);
+         end On_Expression;
+
+      end Each_Right;
+
+      Visiter : aliased Each_Right.Visiter;
+   begin
+      Set := 0;
+      Each_Expression (Comp   => Comp,
+                       Env    => Env,
+                       Set    => Right,
+                       Target => Visiter);
+   end Membership_Test;
 
    ---------------------
    -- Numeric_Literal --

@@ -99,11 +99,12 @@ private
       return Gela.Semantic_Types.Type_Index;
 
    not overriding function Get_Array
-     (Self     : access Type_Manager;
-      Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-      .Full_Type_Declaration_Access;
-      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+     (Self      : access Type_Manager;
+      Category  : Gela.Type_Categories.Category_Kinds;
+      Decl      : Gela.Elements.Full_Type_Declarations
+                    .Full_Type_Declaration_Access;
+      Component : Gela.Semantic_Types.Type_Index;
+      Indexes   : Gela.Semantic_Types.Type_Index_Array)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Get
@@ -157,5 +158,8 @@ private
       Env   : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access;
+
+   overriding function Boolean
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
 
 end Gela.Plain_Type_Managers;

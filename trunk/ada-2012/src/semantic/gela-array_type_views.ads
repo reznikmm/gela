@@ -14,10 +14,11 @@ package Gela.Array_Type_Views is
    type Type_View_Access is access all Type_View'Class;
 
    function Create_Full_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-                   .Full_Type_Declaration_Access;
-      Indexes  : Gela.Semantic_Types.Type_Index_Array)
+     (Category  : Gela.Type_Categories.Category_Kinds;
+      Decl      : Gela.Elements.Full_Type_Declarations
+                    .Full_Type_Declaration_Access;
+      Component : Gela.Semantic_Types.Type_Index;
+      Indexes   : Gela.Semantic_Types.Type_Index_Array)
         return Gela.Type_Categories.Type_View_Access;
 
 private
@@ -25,9 +26,10 @@ private
    type Type_View (Length : Positive) is new Gela.Type_Categories.Type_View
      and Gela.Types.Arrays.Array_Type with
    record
-      Category : Gela.Type_Categories.Category_Kinds;
-      Indexes  : Gela.Semantic_Types.Type_Index_Array (1 .. Length);
-      Decl     : Gela.Elements.Full_Type_Declarations
+      Category  : Gela.Type_Categories.Category_Kinds;
+      Indexes   : Gela.Semantic_Types.Type_Index_Array (1 .. Length);
+      Component : Gela.Semantic_Types.Type_Index;
+      Decl      : Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
    end record;
 
@@ -65,5 +67,8 @@ private
      (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array;
 
    overriding function Dimension (Self : Type_View) return Positive;
+
+   overriding function Component_Type
+     (Self : Type_View) return Gela.Semantic_Types.Type_Index;
 
 end Gela.Array_Type_Views;

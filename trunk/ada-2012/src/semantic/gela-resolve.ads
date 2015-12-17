@@ -41,6 +41,13 @@ package Gela.Resolve is
       Right  : Gela.Interpretations.Interpretation_Set_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
 
+   procedure Membership_Test
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Left   : Gela.Interpretations.Interpretation_Set_Index;
+      Right  : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index);
+
    procedure Discrete_Range
      (Comp       : Gela.Compilations.Compilation_Access;
       Env        : Gela.Semantic_Types.Env_Index;
