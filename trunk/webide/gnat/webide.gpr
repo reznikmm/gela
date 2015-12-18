@@ -1,0 +1,11 @@
+with "matreshka/league.gpr";
+
+with "../../webgui/gnat/core.gpr";
+with "../../webgui/gnat/ui.gpr";
+
+project WebIDE is
+
+   for Object_Dir use "../.objs";
+   for Source_Dirs use ("../source");
+
+end WebIDE;
