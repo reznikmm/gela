@@ -41,9 +41,16 @@
 ------------------------------------------------------------------------------
 --  $Revision$ $Date$
 ------------------------------------------------------------------------------
+with League.Strings;
 
 package WebIDE is
 
-   pragma Pure;
+   pragma Preelaborate;
+
+   use type League.Strings.Universal_String;
+
+   function "+"
+    (Item : Wide_Wide_String) return League.Strings.Universal_String
+       renames League.Strings.To_Universal_String;
 
 end WebIDE;

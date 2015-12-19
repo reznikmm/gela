@@ -41,8 +41,13 @@
 ------------------------------------------------------------------------------
 --  $Revision$ $Date$
 ------------------------------------------------------------------------------
+with WebAPI.HTML.Globals; use WebAPI.HTML.Globals;
+
+with Widgets.Text_Editors;
 
 procedure WebIDE.Driver is
+   E : Widgets.Text_Editors.Text_Editor;
+
 begin
-   null;
+   Widgets.Text_Editors.Constructors.Initialize (E, +"SourceEditor");
 end WebIDE.Driver;
