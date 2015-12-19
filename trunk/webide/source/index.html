@@ -2,9 +2,88 @@
 <html>
   <head>
     <title>WebIDE for Ada Development</title>
+    <link rel='stylesheet' href='css/style.css'/>
     <script data-main='js/webide-driver-adainit.js' src='js/require.js'></script>
   </head>
   <body>
     <h1>Hello, WebIDE</h1>
+    <div id='SourceEditor'>
+      <div class='sourceEditor'>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNoNumber' contenteditable='false'>&nbsp;</div>
+          <div class='sourceEditorAnnotation'>--  Some annotation from some tool</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>------------------------------------------------------------------------------</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>--                                                                          --</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>--                     WebIDE Subproject of Gela Project                    --</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>--                                                                          --</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>------------------------------------------------------------------------------</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNoNumber' contenteditable='false'>&nbsp;</div>
+          <div class='sourceEditorAnnotation'>--  Special annotations lines can be used to provide additional information</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNoNumber' contenteditable='false'>&nbsp;</div>
+          <div class='sourceEditorAnnotation'>--  provided by special tools</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>with Ada.Text_IO;</div>
+        </div>
+        <div class='sourceEditorLine'>
+         <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'></div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>procedure Hello is</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber' contenteditable='false'></div>
+          <div class='sourceEditorText' contenteditable='true'>   Ada.Text_IO.Put_Line ("Hello, world!");</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'></div>
+          <div class='sourceEditorText' contenteditable='true'>end Hello;</div>
+        </div>
+	      <!--
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'>1</div>
+          <div class='sourceEditorText'>with Ada.Text_IO;</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'>2</div>
+          <div class='sourceEditorText'>&nbsp;</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'>3</div>
+          <div class='sourceEditorText'>procedure Hello is</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'>4</div>
+          <div class='sourceEditorText'>   Ada.Text_IO.Put_Line ("Hello, world!");</div>
+        </div>
+        <div class='sourceEditorLine'>
+          <div class='sourceEditorNumber'>5</div>
+          <div class='sourceEditorText'>end Hello;</div>
+        </div>
+	      -->
+      </div>
+    </div>
   </body>
 </html>

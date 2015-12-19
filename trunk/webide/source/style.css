@@ -1,0 +1,67 @@
+
+.sourceEditor
+{
+	display: table;
+	counter-reset: line;
+}
+
+.sourceEditorLine
+{
+	display: table-row;
+}
+
+.sourceEditorNumber
+{
+	display: table-cell;
+	padding-right: 5px;
+	counter-increment: line;
+}
+
+.sourceEditorNumber:before
+{
+	content: counter(line);
+	text-align: right;
+}
+
+.sourceEditorNoNumber
+{
+	display: table-cell;
+	padding-right: 5px;
+}
+
+.sourceEditorAnnotation
+{
+	display: table-cell;
+	white-space: pre;
+	font-family: monospace;
+}
+
+.sourceEditorText
+{
+	display: table-cell;
+	white-space: pre;
+	font-family: monospace;
+/*	counter-increment: line; */
+}
+
+/*
+.sourceEditorText:before
+{
+	content: counter(line);
+	padding-right: 5px;
+}
+*/
+
+/*
+.sourceEditorNumber
+{
+	display: table-cell;
+	padding-right: 5px;
+}
+
+.sourceEditorText
+{
+	display: table-cell;
+	white-space: pre;
+}
+*/
