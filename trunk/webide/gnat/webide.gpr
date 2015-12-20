@@ -42,9 +42,11 @@
 --  $Revision$ $Date$
 ------------------------------------------------------------------------------
 with "matreshka/league.gpr";
+with "matreshka/webapi.gpr";
 
 with "../../webgui/gnat/core.gpr";
 with "../../webgui/gnat/ui.gpr";
+with "../../webgui/gnat/widgets.gpr";
 
 project WebIDE is
 
