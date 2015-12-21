@@ -15,12 +15,12 @@
 	display: table-cell;
 	padding-right: 5px;
 	counter-increment: line;
+	text-align: right;
 }
 
-.sourceEditorNumber:before
+.sourceEditorNumber::after
 {
 	content: counter(line);
-	text-align: right;
 }
 
 .sourceEditorNoNumber
