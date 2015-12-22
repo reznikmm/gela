@@ -2,7 +2,7 @@
 .sourceEditor
 {
 	display: table;
-	counter-reset: line;
+/*	counter-reset: line; */
 }
 
 .sourceEditorLine
@@ -14,13 +14,14 @@
 {
 	display: table-cell;
 	padding-right: 5px;
-	counter-increment: line;
+/*	counter-increment: line;  */
 	text-align: right;
 }
 
 .sourceEditorNumber::after
 {
-	content: counter(line);
+/*	content: counter(line); */
+	content: attr(data-line-number);
 }
 
 .sourceEditorNoNumber
