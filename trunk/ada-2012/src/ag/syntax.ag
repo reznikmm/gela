@@ -131,6 +131,11 @@ association ::=
   token              <arrow_token>
   [expression_or_box <Component_Expression>];
 
+association_list ::=
+  token         <left_token>
+  {association} <Record_Component_Associations>
+  token         <right_token>;
+
 asynchronous_select ::=
   token                    <select_token>
   {select_then_abort_path} <Asynchronous_Statement_Paths>
@@ -837,7 +842,7 @@ function_body ::=
   token                      <semicolon_token>
 ;
 
-auxiliary_apply ::= prefix record_aggregate <Function_Call_Parameters>;
+auxiliary_apply ::= prefix association_list <Function_Call_Parameters>;
 
 function_declaration ::=
   token                      <not_token>
@@ -1501,10 +1506,7 @@ range_constraint ::= range_attribute_reference | simple_expression_range;
 range_attribute_reference ::=
   attribute_reference <Range_Attribute>;
 
-record_aggregate ::=
-  token         <left_token>
-  {association} <Record_Component_Associations>
-  token         <right_token>;
+record_aggregate ::= association_list <Associations>;
 
 record_definition ::=
   token <record_token>
@@ -1601,7 +1603,7 @@ simple_expression ::=
     numeric_literal |
     null_literal |
     string_literal |
-    record_aggregate |
+    association_list |
     extension_aggregate |
     name |
     allocator |

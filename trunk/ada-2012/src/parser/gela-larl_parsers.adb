@@ -9,7 +9,7 @@ with Gela.Elements.Selector_Names;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Constraints;
-with Gela.Elements.Record_Aggregates;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Composite_Constraints;
 
 package body Gela.LARL_Parsers is
@@ -179,7 +179,7 @@ package body Gela.LARL_Parsers is
 
       return Self.Factory.Auxiliary_Apply
         (Prefix                   => P,
-         Function_Call_Parameters => Self.Factory.Record_Aggregate
+         Function_Call_Parameters => Self.Factory.Association_List
            (Left_Token                    => 0,
             Record_Component_Associations => Args,
             Right_Token                   => 0));
@@ -298,8 +298,8 @@ package body Gela.LARL_Parsers is
                   (Mark);
             Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
               Call.Prefix;
-            Args   : constant Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access := Call.Function_Call_Parameters;
+            Args   : constant Gela.Elements.Association_Lists.
+              Association_List_Access := Call.Function_Call_Parameters;
             Ass : constant Gela.Elements.Associations.
               Association_Sequence_Access :=
                 Args.Record_Component_Associations;

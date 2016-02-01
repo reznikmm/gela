@@ -2,7 +2,7 @@ with Gela.Nodes.Fixed_Operator_Symbols;
 with Gela.Element_Visiters;
 with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Associations;
-with Gela.Elements.Record_Aggregates;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Prefixes;
 
 package body Gela.Fix_Node_Factories is
@@ -74,9 +74,9 @@ package body Gela.Fix_Node_Factories is
            Gela.Elements.Prefixes.Prefix_Access (Function_Call);
          Args : constant Gela.Elements.Associations.Association_Sequence_Access
            := Self.Association_Sequence;
-         RA   : constant Gela.Elements.Record_Aggregates.
-           Record_Aggregate_Access :=
-             Self.Record_Aggregate
+         RA   : constant Gela.Elements.Association_Lists.
+           Association_List_Access :=
+             Self.Association_List
                (Left_Token                    => 0,
                 Record_Component_Associations => Args,
                 Right_Token                   => 0);

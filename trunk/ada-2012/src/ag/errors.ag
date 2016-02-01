@@ -75,7 +75,7 @@ Synthesized attributes
   range_attribute_reference_dr,
   range_constraint,
   range_dr,
-  record_aggregate,
+  association_list,
   requeue_statement,
   scalar_constraint,
   selected_component,
@@ -210,9 +210,9 @@ Rules for quantified_expression. :
 (.
       ${quantified_expression.Errors} := 0;  --  FIXME
 .)
-Rules for record_aggregate. :
+Rules for association_list. :
 (.
-      ${record_aggregate.Errors} := ${Record_Component_Associations.Errors};
+      ${association_list.Errors} := ${Record_Component_Associations.Errors};
 .)
 
 Rules for character_literal.character_literal_token :

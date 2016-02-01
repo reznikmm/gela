@@ -2111,11 +2111,11 @@ Rules for function_body.function_access :
           -${semicolon_token.ast});
 .)
 
-function_call ::= prefix record_aggregate;
+function_call ::= prefix association_list;
 
 Rules for function_call. :
 (.  ${function_call.ast} := +Self.Factory.Auxiliary_Apply
-     (-${prefix.ast}, -${record_aggregate.ast});
+     (-${prefix.ast}, -${association_list.ast});
 .)
 
 function_declaration ::= 
@@ -2126,7 +2126,7 @@ function_declaration ::=
   return_token
   [not_token <not_null> null_token] subtype_mark
   [(abs) is_token abstract_token |
-   (expr) is_token record_aggregate |
+   (expr) is_token association_list |
    (ren)  renames_token name |
    (sep) is_token separate_token]
   [aspect_specification] semicolon_token
@@ -2137,7 +2137,7 @@ function_declaration ::=
    [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
   return_token access_definition
   [(abs) is_token abstract_token |
-   (expr) is_token record_aggregate |
+   (expr) is_token association_list |
    (ren)  renames_token name |
    (sep) is_token separate_token]
   [aspect_specification] semicolon_token
@@ -2159,7 +2159,7 @@ Rules for function_declaration.function_subtype :
           -${subtype_mark.ast},
           -${is_token.ast:No_Token},
           -${abstract_token.ast:No_Token},
-          -${record_aggregate.ast:None},
+          -${association_list.ast:None},
           -${renames_token.ast:No_Token},
           -${name.ast:None},
           -${separate_token.ast:No_Token},
@@ -2183,7 +2183,7 @@ Rules for function_declaration.function_access :
           -${access_definition.ast},
           -${is_token.ast:No_Token},
           -${abstract_token.ast:No_Token},
-          -${record_aggregate.ast:None},
+          -${association_list.ast:None},
           -${renames_token.ast:No_Token},
           -${name.ast:None},
           -${separate_token.ast:No_Token},
@@ -3502,15 +3502,17 @@ Rules for real_range_specification. :
      (-${left.ast}, -${double_dot_token.ast}, -${right.ast});
 .)
 
-record_aggregate ::=
+record_aggregate ::= association_list;
+
+association_list ::=
   left_parenthesis_token
   record_component_association_list
   right_parenthesis_token;
 
-Rules for record_aggregate. :
+Rules for association_list. :
 (.
-   ${record_aggregate.ast} :=
-     +Self.Factory.Record_Aggregate
+   ${association_list.ast} :=
+     +Self.Factory.Association_List
        (-${left_parenthesis_token.ast},
         -${record_component_association_list.ast},
         -${right_parenthesis_token.ast});
@@ -4880,6 +4882,7 @@ Synthesized attributes
   aspect_list,
   aspect_specification,
   assignment_statement,
+  association_list,
   asynchronous_select,
   at_clause,
   attribute_definition_clause,

@@ -44,7 +44,7 @@ Synthesized attributes
   range_attribute_reference_dr,
   range_constraint,
   range_dr,
-  record_aggregate,
+  association_list,
   scalar_constraint,
   selected_component,
   selected_identifier,
@@ -340,9 +340,9 @@ Rules for quantified_expression. :
       ${quantified_expression.Up} := 0;  --  FIXME
 .)
 
-Rules for record_aggregate. :
+Rules for association_list. :
 (.
-      ${record_aggregate.Up} := ${Record_Component_Associations.Up};
+      ${association_list.Up} := ${Record_Component_Associations.Up};
 .)
 
 Rules for membership_test. :

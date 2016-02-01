@@ -156,7 +156,7 @@ with Gela.Elements.Quantified_Expressions;
 with Gela.Elements.Raise_Statements;
 with Gela.Elements.Range_Attribute_Reference_Drs;
 with Gela.Elements.Range_Attribute_References;
-with Gela.Elements.Record_Aggregates;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Record_Definitions;
 with Gela.Elements.Record_Representation_Clauses;
 with Gela.Elements.Record_Type_Definitions;
@@ -1005,10 +1005,10 @@ package body Asis.Extensions.Flat_Kinds is
         Range_Attribute_Reference_Dr_Access)
    is null;
 
-   overriding procedure Record_Aggregate
+   overriding procedure Association_List
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Record_Aggregates.
-        Record_Aggregate_Access);
+      Node : not null Gela.Elements.Association_Lists.
+        Association_List_Access);
 
    overriding procedure Record_Definition
      (Self : in out Visiter;
@@ -2248,14 +2248,14 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Range_Attribute_Reference;
    end Range_Attribute_Reference;
 
-   overriding procedure Record_Aggregate
+   overriding procedure Association_List
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Record_Aggregates.Record_Aggregate_Access)
+      Node : not null Gela.Elements.Association_Lists.Association_List_Access)
    is
       pragma Unreferenced (Node);
    begin
       Self.Result := A_Record_Aggregate;
-   end Record_Aggregate;
+   end Association_List;
 
    overriding procedure Record_Definition
      (Self : in out Visiter;

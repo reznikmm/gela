@@ -8,6 +8,7 @@ Inherited attributes
   anonymous_access_to_object_definition,
   anonymous_access_to_procedure_definition,
   association,
+  association_list,
   attribute_reference,
   box,
   case_expression,
@@ -236,6 +237,11 @@ Rules for association. :
 (.
       Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
         (${association.Down}, 2, ${Array_Component_Choices.Down});
+.)
+
+Rules for association_list. :
+(.
+      ${Record_Component_Associations.Down} := ${association_list.Down};
 .)
 
 Rules for case_expression. :
@@ -692,6 +698,11 @@ Rules for raise_statement. :
       ${Raise_Statement_Message.Down} := 0;  --  FIXME
 .)
 
+Rules for record_aggregate.Associations :
+(.
+      ${Associations.Down} := ${record_aggregate.Down};
+.)
+
 Rules for record_representation_clause. :
 (.
       ${Representation_Clause_Name.Down} := 0;  --  FIXME
@@ -1006,11 +1017,6 @@ Rules for auxiliary_apply. :
 Rules for extension_aggregate. :
 (.
       ${Record_Component_Associations.Down} := ${extension_aggregate.Down};
-.)
-
-Rules for record_aggregate. :
-(.
-      ${Record_Component_Associations.Down} := ${record_aggregate.Down};
 .)
 
 Rules for decimal_fixed_point_definition. :

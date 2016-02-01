@@ -22,7 +22,7 @@ Synthesized attributes
   prefix,
   qualified_expression,
   quantified_expression,
-  record_aggregate,
+  association_list,
   selected_component,
   short_circuit,
   simple_expression,
@@ -110,9 +110,9 @@ Rules for null_literal.null_literal_token :
 (.
       ${null_literal.static_value} := 0;  --  FIXME
 .)
-Rules for record_aggregate. :
+Rules for association_list. :
 (.
-      ${record_aggregate.static_value} := ${Record_Component_Associations.static_value};
+      ${association_list.static_value} := ${Record_Component_Associations.static_value};
 .)
 Rules for extension_aggregate. :
 (.

@@ -8,7 +8,7 @@ with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Procedure_Call_Statements;
-with Gela.Elements.Record_Aggregates;
+with Gela.Elements.Association_Lists;
 
 package body Asis is
 
@@ -79,10 +79,10 @@ package body Asis is
             Node : not null Gela.Elements.Procedure_Call_Statements.
               Procedure_Call_Statement_Access);
 
-         overriding procedure Record_Aggregate
+         overriding procedure Association_List
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access);
+            Node : not null Gela.Elements.Association_Lists.
+              Association_List_Access);
 
       end Get;
 
@@ -139,16 +139,16 @@ package body Asis is
             Self.Result := Self.Flags (Is_Function_Call);
          end Procedure_Call_Statement;
 
-         overriding procedure Record_Aggregate
+         overriding procedure Association_List
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access) is
+            Node : not null Gela.Elements.Association_Lists.
+              Association_List_Access) is
          begin
             if Self.Flags = None then
                Self.Flags (Is_Record_Aggregate) := True;
                Node.Enclosing_Element.Visit (Self);
             end if;
-         end Record_Aggregate;
+         end Association_List;
 
       end Get;
 

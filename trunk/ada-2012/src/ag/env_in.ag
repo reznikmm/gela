@@ -73,6 +73,7 @@ Inherited attributes
   aspect_specification,
   assignment_statement,
   association,
+  association_list,
   asynchronous_select,
   at_clause,
   attribute_definition_clause,
@@ -2454,9 +2455,14 @@ Rules for range_attribute_reference_dr.Range_Attribute :
       ${Range_Attribute.env_in} := ${range_attribute_reference_dr.env_in};
 .)
 
-Rules for record_aggregate. :
+Rules for association_list. :
 (.
-      ${Record_Component_Associations.env_in} := ${record_aggregate.env_in};
+      ${Record_Component_Associations.env_in} := ${association_list.env_in};
+.)
+
+Rules for record_aggregate.Associations :
+(.
+      ${Associations.env_in} := ${record_aggregate.env_in};
 .)
 
 Rules for record_definition. :

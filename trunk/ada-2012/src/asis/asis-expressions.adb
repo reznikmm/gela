@@ -19,7 +19,7 @@ with Gela.Elements.Identifiers;
 with Gela.Elements.Numeric_Literals;
 with Gela.Elements.Operator_Symbols;
 with Gela.Elements.Prefixes;
-with Gela.Elements.Record_Aggregates;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
@@ -402,8 +402,8 @@ package body Asis.Expressions is
             Node : not null Gela.Elements.Auxiliary_Applies.
               Auxiliary_Apply_Access)
          is
-            Agg : constant Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access :=
+            Agg : constant Gela.Elements.Association_Lists.
+              Association_List_Access :=
                 Node.Function_Call_Parameters;
             Seq : constant Gela.Elements.Associations.
               Association_Sequence_Access :=
@@ -481,10 +481,10 @@ package body Asis.Expressions is
             Node : not null Gela.Elements.Auxiliary_Applies.
               Auxiliary_Apply_Access);
 
-         overriding procedure Record_Aggregate
+         overriding procedure Association_List
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access);
+            Node : not null Gela.Elements.Association_Lists.
+              Association_List_Access);
       end Get;
 
       package body Get is
@@ -494,8 +494,8 @@ package body Asis.Expressions is
             Node : not null Gela.Elements.Auxiliary_Applies.
               Auxiliary_Apply_Access)
          is
-            Args : constant Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access := Node.Function_Call_Parameters;
+            Args : constant Gela.Elements.Association_Lists.
+              Association_List_Access := Node.Function_Call_Parameters;
          begin
             if Args.Assigned then
                Args.Visit (Self);
@@ -504,15 +504,15 @@ package body Asis.Expressions is
             end if;
          end Auxiliary_Apply;
 
-         overriding procedure Record_Aggregate
+         overriding procedure Association_List
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access)
+            Node : not null Gela.Elements.Association_Lists.
+              Association_List_Access)
          is
             use type Gela.Lexical_Types.Token_Count;
          begin
             Self.Result := Node.Left_Token /= 0;
-         end Record_Aggregate;
+         end Association_List;
       end Get;
 
       V       : Get.Visiter;
