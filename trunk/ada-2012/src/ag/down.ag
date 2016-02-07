@@ -254,16 +254,6 @@ Rules for case_expression_path. :
       ${Dependent_Expression.Down} := 0;  --  FIXME
 .)
 
-Rules for case_statement. :
-(.
-      --  8.6 (9)
-      Gela.Pass_Utils.Resolve.Interpretation
-        (Self.Compilation,
-         ${case_statement.env_in},
-         ${Case_Expression.Up},
-         ${Case_Expression.Down});
-.)
-
 Rules for component_clause. :
 (.
       ${Component_Clause_Position.Down} := 0;  --  FIXME
@@ -700,7 +690,12 @@ Rules for raise_statement. :
 
 Rules for record_aggregate.Associations :
 (.
-      ${Associations.Down} := ${record_aggregate.Down};
+      Gela.Pass_Utils.Resolve.Record_Aggregate
+        (Self.Compilation,
+         ${record_aggregate.env_in},
+         ${record_aggregate.Down},
+         ${Associations.Up},
+         ${Associations.Down});
 .)
 
 Rules for record_representation_clause. :
@@ -1147,9 +1142,9 @@ Rules for variant. :
 
 Rules for variant_part. :
 (.
-      --  Depends on ${Variants.env_out}
       Gela.Pass_Utils.Resolve.Variant_Part
         (Self.Compilation,
+         ${Variants.env_out},
          ${Discriminant_Direct_Name.Up},
          ${Variants.Up},
          ${Variants.Down});
@@ -1168,4 +1163,14 @@ Rules for case_statement. :
          ${Case_Expression.Up},
          ${Case_Statement_Paths.Up},
          ${Case_Statement_Paths.Down});
+.)
+
+Rules for case_statement. :
+(.
+      --  8.6 (9)
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${case_statement.env_in},
+         ${Case_Expression.Up},
+         ${Case_Expression.Down});
 .)

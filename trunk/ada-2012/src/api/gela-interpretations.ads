@@ -7,17 +7,26 @@ with Gela.Types.Visitors;
 package Gela.Interpretations is
    pragma Preelaborate;
 
+   type Interpretation_Index is new Natural;
+   --  Index of interpretation inside an instance of manager
+
    type Interpretation_Set_Index is new Natural;
    --  Index of set of interpretation inside an instance of manager
 
-   type Interpretation_Index is new Natural;
-   --  Index of interpretation inside an instance of manager
+   type Interpretation_Tuple_Index is new Natural;
+   --  Index of tuple of interpretation inside an instance of manager
+
+   type Interpretation_Tuple_List_Index is new Natural;
+   --  Index of interpretation tuple list (tuple of tuples) inside an instance
 
    type Interpretation_Index_Array is array (Positive range <>) of
       Interpretation_Index;
 
    type Interpretation_Set_Index_Array is array (Positive range <>) of
       Interpretation_Set_Index;
+
+   type Interpretation_Tuple_Index_Array is array (Positive range <>) of
+      Interpretation_Tuple_Index;
 
    type Interpretation_Manager is limited interface;
    --  This object keeps sets of possible interpretations
@@ -74,11 +83,20 @@ package Gela.Interpretations is
    not overriding procedure Add_Tuple
      (Self   : in out Interpretation_Manager;
       Left   : Gela.Interpretations.Interpretation_Set_Index;
-      Right  : Gela.Interpretations.Interpretation_Set_Index;
-      Result : in out Gela.Interpretations.Interpretation_Set_Index)
+      Right  : Gela.Interpretations.Interpretation_Tuple_Index;
+      Result : out Gela.Interpretations.Interpretation_Tuple_Index)
         is abstract;
-   --  Extend Result with (Left, Right) tuple aka cartesian product.
-   --  Left = 0 or else index got by another Add_Tuple call
+   --  If Right = 0 then create new tuple with single element <Left>.
+   --  Otherwise create new interpretation tuple as <Left, Right-tuple>
+
+   not overriding procedure Add_Tuple_List
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Tuple_Index;
+      Right  : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Result : out Gela.Interpretations.Interpretation_Tuple_List_Index)
+        is abstract;
+   --  If Right = 0 then create new tuple with single element <Left>.
+   --  Otherwise create new interpretation tuple as <Left, Right-tuple>
 
    not overriding procedure Get_Tuple_Index
      (Self   : in out Interpretation_Manager;
@@ -92,6 +110,12 @@ package Gela.Interpretations is
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
       Result : out Gela.Interpretations.Interpretation_Index) is abstract;
    --  Register chosen defining_name interpretation
+
+   not overriding procedure Get_Expression_Index
+     (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
+      Result : out Gela.Interpretations.Interpretation_Index) is abstract;
+   --  Register chosen expression interpretation
 
    type Placeholder_Kind is (Absent);
 
@@ -204,10 +228,17 @@ package Gela.Interpretations is
       Cursor : Gela.Interpretations.Cursor'Class) is null;
    --  Called for each symbol
 
-   not overriding procedure On_Tuple
-     (Self   : in out Up_Visiter;
-      Value  : Gela.Interpretations.Interpretation_Set_Index_Array) is null;
-   --  Called for each tuple
+   not overriding function Get_Tuple
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Tuple_Index)
+      return Gela.Interpretations.Interpretation_Set_Index_Array is abstract;
+   --  Get tuple elements
+
+   not overriding function Get_Tuple_List
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Tuple_List_Index)
+      return Gela.Interpretations.Interpretation_Tuple_Index_Array is abstract;
+   --  Get tuple list elements
 
    not overriding function Get_Cursor
      (Self   : in out Interpretation_Manager;

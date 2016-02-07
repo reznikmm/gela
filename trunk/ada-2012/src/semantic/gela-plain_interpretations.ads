@@ -91,12 +91,23 @@ private
    overriding procedure Add_Tuple
      (Self   : in out Interpretation_Manager;
       Left   : Gela.Interpretations.Interpretation_Set_Index;
-      Right  : Gela.Interpretations.Interpretation_Set_Index;
-      Result : in out Gela.Interpretations.Interpretation_Set_Index);
+      Right  : Gela.Interpretations.Interpretation_Tuple_Index;
+      Result : out Gela.Interpretations.Interpretation_Tuple_Index);
+
+   overriding procedure Add_Tuple_List
+     (Self   : in out Interpretation_Manager;
+      Left   : Gela.Interpretations.Interpretation_Tuple_Index;
+      Right  : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Result : out Gela.Interpretations.Interpretation_Tuple_List_Index);
 
    overriding procedure Get_Defining_Name_Index
      (Self   : in out Interpretation_Manager;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Result : out Gela.Interpretations.Interpretation_Index);
+
+   overriding procedure Get_Expression_Index
+     (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Result : out Gela.Interpretations.Interpretation_Index);
 
    overriding procedure Get_Tuple_Index
@@ -104,6 +115,16 @@ private
       Left   : Gela.Interpretations.Interpretation_Index;
       Right  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Interpretations.Interpretation_Index);
+
+   overriding function Get_Tuple
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Tuple_Index)
+      return Gela.Interpretations.Interpretation_Set_Index_Array;
+
+   overriding function Get_Tuple_List
+     (Self   : in out Interpretation_Manager;
+      Index  : Gela.Interpretations.Interpretation_Tuple_List_Index)
+      return Gela.Interpretations.Interpretation_Tuple_Index_Array;
 
    overriding function Get_Cursor
      (Self   : in out Interpretation_Manager;

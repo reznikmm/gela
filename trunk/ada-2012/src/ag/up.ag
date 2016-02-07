@@ -4,11 +4,9 @@ Synthesized attributes
   anonymous_access_to_object_definition,
   anonymous_access_to_function_definition,
   anonymous_access_to_procedure_definition,
-  association,
   attribute_reference,
   box,
   case_expression,
-  case_path,
   character_literal,
   clause_name,
   composite_constraint,
@@ -44,7 +42,7 @@ Synthesized attributes
   range_attribute_reference_dr,
   range_constraint,
   range_dr,
-  association_list,
+  record_aggregate,
   scalar_constraint,
   selected_component,
   selected_identifier,
@@ -58,16 +56,25 @@ Synthesized attributes
   subtype_mark,
   subtype_mark_or_access_definition,
   unconstrained_array_definition,
-  variant,
   
+  Membership_Test_Choices
+   : Gela.Interpretations.Interpretation_Set_Index : Up;
+
+Synthesized attributes
   Array_Component_Choices,
+  Variant_Choices,
+  association,
+  case_path,
+  variant
+   : Gela.Interpretations.Interpretation_Tuple_Index : Up;
+
+Synthesized attributes
   Associations,
   Case_Statement_Paths,
-  Membership_Test_Choices,
   Record_Component_Associations,
-  Variant_Choices,
-  Variants
-   : Gela.Interpretations.Interpretation_Set_Index : Up;
+  Variants,
+  association_list
+   : Gela.Interpretations.Interpretation_Tuple_List_Index : Up;
 
 Rules for Array_Component_Choices.discrete_choice :
 (.
@@ -91,7 +98,7 @@ Rules for Associations.association :
 Rules for Associations.association :
 (.
       ${Associations.Up} := 0;
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${association.Up}, ${tail.Up}, ${Associations.Up});
 .)
 
@@ -114,7 +121,7 @@ Rules for Record_Component_Associations.association :
 Rules for Record_Component_Associations.association :
 (.
       ${Record_Component_Associations.Up} := 0;
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${association.Up}, ${tail.Up}, ${Record_Component_Associations.Up});
 .)
 
@@ -140,7 +147,7 @@ Rules for Variants.variant :
 Rules for Variants.variant :
 (.
       ${Variants.Up} := 0;
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${variant.Up},
          ${tail.Up},
          ${Variants.Up});
@@ -154,7 +161,7 @@ Rules for Case_Statement_Paths.case_path :
 Rules for Case_Statement_Paths.case_path :
 (.
       ${Case_Statement_Paths.Up} := 0;
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${case_path.Up},
          ${tail.Up},
          ${Case_Statement_Paths.Up});
@@ -211,7 +218,8 @@ Rules for attribute_reference. :
 
 Rules for composite_constraint. :
 (.
-      ${composite_constraint.Up} := ${Associations.Up};
+      ${composite_constraint.Up} :=
+        Gela.Interpretations.Interpretation_Set_Index (${Associations.Up});
 .)
 
 Rules for auxiliary_apply. :
@@ -343,6 +351,15 @@ Rules for quantified_expression. :
 Rules for association_list. :
 (.
       ${association_list.Up} := ${Record_Component_Associations.Up};
+.)
+
+Rules for record_aggregate.Associations :
+(.
+      ${record_aggregate.Up} := 0;
+      Self.Compilation.Context.Interpretation_Manager.Add_Expression_Category
+        (Match  => Gela.Pass_Utils.Resolve.Record_Matcher,
+         Down   => (1 .. 0 => 0),
+         Result => ${record_aggregate.Up});
 .)
 
 Rules for membership_test. :

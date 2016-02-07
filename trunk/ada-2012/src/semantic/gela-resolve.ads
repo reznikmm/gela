@@ -73,7 +73,7 @@ package Gela.Resolve is
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;
       Prefix : Gela.Interpretations.Interpretation_Set_Index;
-      Args   : Gela.Interpretations.Interpretation_Set_Index;
+      Args   : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
 
    procedure Shall_Be_Subtype
@@ -103,8 +103,8 @@ package Gela.Resolve is
    procedure Case_Statement
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
-      Tuple   : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Tuple   : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result  : out Gela.Interpretations.Interpretation_Index);
    --  Resolve Type_Up to be an expression of some type, then resolve each item
    --  of Tuple to have this type.
@@ -147,8 +147,9 @@ package Gela.Resolve is
 
    procedure Variant_Part
      (Comp     : Gela.Compilations.Compilation_Access;
+      Env      : Gela.Semantic_Types.Env_Index;
       Name_Up  : Gela.Interpretations.Interpretation_Set_Index;
-      Variants : Gela.Interpretations.Interpretation_Set_Index;
+      Variants : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result   : out Gela.Interpretations.Interpretation_Index);
    --  Resolve variant_part using Name_Up as interpretations of discriminant,
    --  Variants is putle of tuples of discrete_choice interpretations
@@ -168,6 +169,16 @@ package Gela.Resolve is
    procedure Real_Type
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index);
+
+   function Record_Matcher
+     return not null Gela.Interpretations.Type_Matcher_Access;
+
+   procedure Record_Aggregate
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Env      : Gela.Semantic_Types.Env_Index;
+      Up       : Gela.Interpretations.Interpretation_Index;
+      Tuple    : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result   : out Gela.Interpretations.Interpretation_Index);
 
 end Gela.Resolve;

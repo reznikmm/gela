@@ -3504,6 +3504,11 @@ Rules for real_range_specification. :
 
 record_aggregate ::= association_list;
 
+Rules for record_aggregate.association_list :
+(. ${record_aggregate.ast} := +Self.Factory.Record_Aggregate
+     (-${association_list.ast});
+.)
+
 association_list ::=
   left_parenthesis_token
   record_component_association_list

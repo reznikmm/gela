@@ -1603,7 +1603,7 @@ simple_expression ::=
     numeric_literal |
     null_literal |
     string_literal |
-    association_list |
+    record_aggregate |
     extension_aggregate |
     name |
     allocator |

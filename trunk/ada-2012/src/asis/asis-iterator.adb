@@ -32,17 +32,17 @@ package body Asis.Iterator is
       declare
          use type Gela.Elements.Element_Sequence_Access;
 
-         Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind;
+         Kind     : Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+           Asis.Extensions.Flat_Kinds.Not_An_Element;
          Children : constant Gela.Elements.Nested_Array :=
            Element.Data.Nested_Items;
       begin
          if not Auxilary (Element) then
             Pre_Operation (Element, Control, State);
+            Kind := Asis.Extensions.Flat_Kinds.Flat_Kind (Element);
          end if;
 
          if Control = Continue then
-            Kind := Asis.Extensions.Flat_Kinds.Flat_Kind (Element);
-
             for J in Children'Range loop
                case Children (J).Kind is
                   when Gela.Elements.Nested_Token =>

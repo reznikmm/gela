@@ -315,11 +315,9 @@ package body Gela.Plian_Int_Sets is
 
          overriding procedure Tuple
            (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Tuple)
-         is
-            pragma Unreferenced (Self);
+            Value : Gela.Int.Tuples.Tuple) is
          begin
-            Target.On_Tuple (Value.Value);
+            null;
          end Tuple;
 
          overriding procedure Chosen_Tuple

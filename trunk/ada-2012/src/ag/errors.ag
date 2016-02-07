@@ -8,6 +8,7 @@ Synthesized attributes
   anonymous_access_to_procedure_definition,
   assignment_statement,
   association,
+  association_list,
   asynchronous_select,
   attribute_reference,
   block_statement,
@@ -75,7 +76,7 @@ Synthesized attributes
   range_attribute_reference_dr,
   range_constraint,
   range_dr,
-  association_list,
+  record_aggregate,
   requeue_statement,
   scalar_constraint,
   selected_component,
@@ -501,7 +502,10 @@ Rules for others_choice.others_token :
 (.
       ${others_choice.Errors} := 0;  --  FIXME
 .)
-
+Rules for record_aggregate.Associations :
+(.
+      ${record_aggregate.Errors} := ${Associations.Errors};
+.)
 Rules for variant. :
 (.
       ${variant.Errors} := ${Variant_Choices.Errors};  --  FIXME

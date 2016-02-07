@@ -41,9 +41,9 @@ package body Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Target : in out Gela.Interpretations.Up_Visiter'Class);
-   --  Resolve given interpretation set as expression. So ingnore symbol and
+   --  Resolve given interpretation set as expression. So ignore symbol and
    --  others non-expression interpretations. Translate defining name into
-   --  expression. On_Defining_Name called when Name doen't have a type
+   --  expression. But On_Defining_Name is called when Name doen't have a type
    --  (like subprogram name)
 
    procedure Each_Prefix
@@ -106,6 +106,42 @@ package body Gela.Resolve is
       end Is_Matched;
 
    end String_Type_Matcher;
+
+   package Record_Type_Matcher is
+      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
+         Match : Boolean := False;
+      end record;
+
+      type Type_Matcher_Access is not null access all Type_Matcher'Class;
+
+      overriding procedure Untagged_Record
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Untagged_Records.
+           Untagged_Record_Type_Access);
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean;
+   end Record_Type_Matcher;
+
+   package body Record_Type_Matcher is
+
+      overriding procedure Untagged_Record
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Untagged_Records.
+           Untagged_Record_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Match := True;
+      end Untagged_Record;
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean is
+      begin
+         return Self.Match;
+      end Is_Matched;
+
+   end Record_Type_Matcher;
 
    package Integer_Type_Matcher is
       type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
@@ -174,7 +210,6 @@ package body Gela.Resolve is
       end Is_Matched;
 
    end Float_Type_Matcher;
-
 
    ----------------------
    -- Assignment_Right --
@@ -369,33 +404,10 @@ package body Gela.Resolve is
    procedure Case_Statement
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Interpretations.Interpretation_Set_Index;
-      Tuple   : Gela.Interpretations.Interpretation_Set_Index;
+      Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
+      Tuple   : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
-      package Each_Tuple is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Type_Index : Gela.Semantic_Types.Type_Index;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Tuple;
-
-      package Each_Choice is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Type_Index : Gela.Semantic_Types.Type_Index;
-            Index      : aliased Gela.Interpretations.Interpretation_Index;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Choice;
-
       package Each_Expr is
          type Visiter is new Gela.Interpretations.Up_Visiter with record
             Result : Gela.Interpretations.Interpretation_Index := 0;
@@ -411,59 +423,6 @@ package body Gela.Resolve is
       IM   : constant Gela.Interpretations.Interpretation_Manager_Access
         := Comp.Context.Interpretation_Manager;
 
-      package body Each_Choice is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-
-            Chosen : Gela.Interpretations.Interpretation_Index;
-            List   : Gela.Interpretations.Interpretation_Index_Array
-              (Value'Range);
-         begin
-            for J in Value'Range loop
-               To_Type
-                 (Comp    => Comp,
-                  Env     => Env,
-                  Type_Up => Self.Type_Index,
-                  Expr_Up => Value (J),
-                  Result  => List (J));
-            end loop;
-
-            Chosen := 0;
-
-            for J in reverse List'Range loop
-               IM.Get_Tuple_Index (List (J), Chosen, Chosen);
-            end loop;
-
-            Self.Index := Chosen;
-         end On_Tuple;
-
-      end Each_Choice;
-
-      package body Each_Tuple is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            V  : aliased Each_Choice.Visiter :=
-              (Type_Index => Self.Type_Index, Index => 0);
-            Chosen : Gela.Interpretations.Interpretation_Index;
-         begin
-            Wrap_Tuple
-              (Self   => V'Access,
-               IM     => IM,
-               Value  => Value,
-               Found  => V.Index'Access,
-               Chosen => Chosen);
-
-            Result := Chosen;
-         end On_Tuple;
-
-      end Each_Tuple;
-
       package body Each_Expr is
 
          overriding procedure On_Expression
@@ -472,12 +431,42 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Cursor, Self);
-            Tuple_Visiter : aliased Each_Tuple.Visiter := (Type_Index => Tipe);
-            Pos  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Tuple);
+            Tuples : constant Gela.Interpretations
+              .Interpretation_Tuple_Index_Array :=
+                IM.Get_Tuple_List (Tuple);
+            Output : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
          begin
-            while Pos.Has_Element loop
-               Pos.Visit (Tuple_Visiter'Access);
-               Pos.Next;
+            for J in Tuples'Range loop
+               declare
+                  Chosen : Gela.Interpretations.Interpretation_Index := 0;
+                  Value  : constant Gela.Interpretations
+                    .Interpretation_Set_Index_Array :=
+                      IM.Get_Tuple (Tuples (J));
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Value'Range);
+               begin
+                  for K in Value'Range loop
+                     To_Type
+                       (Comp    => Comp,
+                        Env     => Env,
+                        Type_Up => Tipe,
+                        Expr_Up => Value (K),
+                        Result  => List (K));
+                  end loop;
+
+                  Chosen := 0;
+
+                  for K in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (K), Chosen, Chosen);
+                  end loop;
+
+                  Output (J) := Chosen;
+               end;
+            end loop;
+
+            for J in reverse Output'Range loop
+               IM.Get_Tuple_Index (Output (J), Result, Result);
             end loop;
          end On_Expression;
 
@@ -488,7 +477,7 @@ package body Gela.Resolve is
       Result := 0;
       Each_Expression (Comp   => Comp,
                        Env    => Env,
-                       Set    => Type_Up,
+                       Set    => Expr_Up,
                        Target => Expr_Visiter);
    end Case_Statement;
 
@@ -523,131 +512,9 @@ package body Gela.Resolve is
 
       end Each_Constraint;
 
-      package Each_Choice is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index : aliased Gela.Interpretations.Interpretation_Index := 0;
-         end record;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each_Choice;
-
-      package Each_Tuple is
-         type Visiter is new Gela.Interpretations.Up_Visiter with null record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Tuple;
-
       Comp       : Gela.Compilations.Compilation_Access;
       IM         : Gela.Interpretations.Interpretation_Manager_Access;
       Type_Index : Gela.Semantic_Types.Type_Index;
-
-      package body Each_Choice is
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Tipe);
-         begin
-            Self.Index := Cursor.Get_Index;
-         end On_Expression;
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Cursor);
-            use type Gela.Types.Type_View_Access;
-
-            package Type_Visiters is
-               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
-                 with null record;
-
-               overriding procedure Untagged_Record
-                 (Self  : in out Type_Visitor;
-                  Value : not null Gela.Types.Untagged_Records
-                    .Untagged_Record_Type_Access);
-
-            end Type_Visiters;
-
-            package body Type_Visiters is
-
-               overriding procedure Untagged_Record
-                 (Self  : in out Type_Visitor;
-                  Value : not null Gela.Types.Untagged_Records
-                  .Untagged_Record_Type_Access)
-               is
-                  pragma Unreferenced (Self);
-                  Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-               begin
-                  Name := Value.Get_Discriminant (Symbol);
-
-                  if Name.Assigned then
-                     IM.Get_Defining_Name_Index (Name, On_Symbol.Self.Index);
-                  end if;
-               end Untagged_Record;
-
-            end Type_Visiters;
-
-            TM : constant Gela.Type_Managers.Type_Manager_Access :=
-              Comp.Context.Types;
-            Type_View : constant Gela.Types.Type_View_Access :=
-              TM.Get (Type_Index);
-            Visiter : Type_Visiters.Type_Visitor;
-         begin
-            Self.Index := 0;
-            Type_View.Visit_If_Assigned (Visiter);
-         end On_Symbol;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            use type Gela.Semantic_Types.Type_Index;
-
-            Chosen : Gela.Interpretations.Interpretation_Index := 0;
-            List   : Gela.Interpretations.Interpretation_Index_Array
-              (Value'Range);
-         begin
-            --  Resolve expression of association
-            Interpretation
-              (Comp   => Comp,
-               Env    => Env,
-               Set    => Value (Value'First),
-               Result => List (Value'First));
-
---            if Type_Index /= 0 then
-            Wrap_Tuple
-              (Self   => Self'Access,
-               IM     => IM,
-               Value  => Value (Value'First + 1 .. Value'Last),
-               Found  => Self.Index'Access,
-               Chosen => Chosen);
-
-            IM.Get_Tuple_Index (List (Value'First), Chosen, Chosen);
-
-            Self.Index := Chosen;
-         end On_Tuple;
-
-      end Each_Choice;
 
       package body Each_Constraint is
 
@@ -658,22 +525,185 @@ package body Gela.Resolve is
          is
             pragma Unreferenced (Node, Self);
 
-            Index         : Gela.Interpretations.Interpretation_Index;
-            Tuple_Visiter : aliased Each_Tuple.Visiter;
-            Cursor        : Gela.Interpretations.Cursor'Class :=
-              IM.Get_Cursor (Constr);
+            X : constant Gela.Interpretations.Interpretation_Tuple_List_Index
+              := Gela.Interpretations.Interpretation_Tuple_List_Index (Constr);
+
+            Tuples : constant Gela.Interpretations
+              .Interpretation_Tuple_Index_Array := IM.Get_Tuple_List (X);
+
+            Output : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
+
+            TM : constant Gela.Type_Managers.Type_Manager_Access :=
+              Comp.Context.Types;
+
+            package Type_Visiters is
+               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+                 with null record;
+
+               overriding procedure Array_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                    .Untagged_Record_Type_Access);
+
+            end Type_Visiters;
+
+            package body Type_Visiters is
+
+               overriding procedure Array_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Arrays.Array_Type_Access)
+               is
+                  pragma Unreferenced (Self);
+
+                  IT : constant Gela.Semantic_Types.Type_Index_Array :=
+                    Value.Index_Types;
+                  Count : Natural := 0;
+
+                  Chosen : Gela.Interpretations.Interpretation_Index;
+               begin
+                  for K in Tuples'Range loop
+                     declare
+                        Tuple  : constant Gela.Interpretations
+                          .Interpretation_Set_Index_Array :=
+                            IM.Get_Tuple (Tuples (K));
+                     begin
+                        Count := Count + 1;
+
+                        To_Type
+                          (Comp    => Comp,
+                           Env     => Env,
+                           Type_Up => IT (Count),
+                           Expr_Up => Tuple (Tuple'Last),
+                           Result  => Chosen);
+
+                        IM.Get_Tuple_Index (Chosen, 0, Chosen);
+
+                        if Tuple'Length = 2 then
+                           --  Put some interpretation to placeholder item
+                           IM.Get_Tuple_Index (0, Chosen, Chosen);
+                        end if;
+
+                        Output (K) := Chosen;
+                     end;
+                  end loop;
+
+                  Chosen := 0;
+
+                  for J in reverse Output'Range loop
+                     IM.Get_Tuple_Index (Output (J), Chosen, Chosen);
+                  end loop;
+
+                  Result := Chosen;
+               end Array_Type;
+
+               overriding procedure Untagged_Record
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Untagged_Records
+                  .Untagged_Record_Type_Access)
+               is
+                  pragma Unreferenced (Self);
+
+                  package Each_Choice is
+                     type Visiter is new Gela.Interpretations.Up_Visiter with
+                     record
+                        Index    : aliased Gela.Interpretations.
+                          Interpretation_Index := 0;
+                        Exp_Type : Gela.Semantic_Types.Type_Index := 0;
+                     end record;
+
+                     overriding procedure On_Symbol
+                       (Self   : in out Visiter;
+                        Symbol : Gela.Lexical_Types.Symbol;
+                        Cursor : Gela.Interpretations.Cursor'Class);
+
+                  end Each_Choice;
+
+                  package body Each_Choice is
+
+                     overriding procedure On_Symbol
+                       (Self   : in out Visiter;
+                        Symbol : Gela.Lexical_Types.Symbol;
+                        Cursor : Gela.Interpretations.Cursor'Class)
+                     is
+                        pragma Unreferenced (Cursor);
+                        use type Gela.Semantic_Types.Type_Index;
+
+                        Name : Gela.Elements.Defining_Names
+                          .Defining_Name_Access;
+                     begin
+                        Name := Value.Get_Discriminant (Symbol);
+
+                        if Name.Assigned then
+                           IM.Get_Defining_Name_Index (Name, Self.Index);
+
+                           if Self.Exp_Type = 0 then
+                              Self.Exp_Type := TM.Type_Of_Object_Declaration
+                                (Env, Name.Enclosing_Element);
+                           end if;
+                        end if;
+                     end On_Symbol;
+
+                  end Each_Choice;
+
+                  Chosen : Gela.Interpretations.Interpretation_Index;
+               begin
+                  for K in Tuples'Range loop
+                     declare
+                        V      : aliased Each_Choice.Visiter;
+                        Tuple  : constant Gela.Interpretations
+                          .Interpretation_Set_Index_Array :=
+                            IM.Get_Tuple (Tuples (K));
+                     begin
+                        --  Resolve choices of association
+                        Wrap_Tuple
+                          (Self   => V'Access,
+                           IM     => IM,
+                           Value  => Tuple (Tuple'First + 1 .. Tuple'Last),
+                           Found  => V.Index'Access,
+                           Chosen => Output (K));
+
+                        --  Resolve expression of association
+                        To_Type
+                          (Comp    => Comp,
+                           Env     => Env,
+                           Type_Up => V.Exp_Type,
+                           Expr_Up => Tuple (Tuple'First),
+                           Result  => Chosen);
+
+                        IM.Get_Tuple_Index (Chosen, Output (K), Output (K));
+                     end;
+                  end loop;
+
+                  Chosen := 0;
+
+                  for J in reverse Output'Range loop
+                     IM.Get_Tuple_Index (Output (J), Chosen, Chosen);
+                  end loop;
+
+                  Result := Chosen;
+               end Untagged_Record;
+
+            end Type_Visiters;
+
+            Type_View : Gela.Types.Type_View_Access;
+            Visiter   : Type_Visiters.Type_Visitor;
+            Ignore    : Gela.Interpretations.Interpretation_Index;
          begin
             Get_Subtype
               (Comp,
                Env    => Env,
                Set    => Type_Up,
-               Index  => Index,
+               Index  => Ignore,
                Result => Type_Index);
 
-            while Cursor.Has_Element loop
-               Cursor.Visit (Tuple_Visiter'Access);
-               Cursor.Next;
-            end loop;
+            Type_View := TM.Get (Type_Index);
+
+            Type_View.Visit_If_Assigned (Visiter);
          end Composite_Constraint;
 
          overriding procedure Range_Attribute_Reference
@@ -709,28 +739,6 @@ package body Gela.Resolve is
          end Simple_Expression_Range;
 
       end Each_Constraint;
-
-      package body Each_Tuple is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            pragma Unreferenced (Self);
-            Chosen : Gela.Interpretations.Interpretation_Index;
-            V      : aliased Each_Choice.Visiter;
-         begin
-            Wrap_Tuple
-              (Self   => V'Access,
-               IM     => IM,
-               Value  => Value,
-               Found  => V.Index'Access,
-               Chosen => Chosen);
-
-            Result := Chosen;
-         end On_Tuple;
-
-      end Each_Tuple;
 
       V : Each_Constraint.Visiter;
 
@@ -980,10 +988,11 @@ package body Gela.Resolve is
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;
       Prefix : Gela.Interpretations.Interpretation_Set_Index;
-      Args   : Gela.Interpretations.Interpretation_Set_Index;
+      Args   : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
 
+      use type Gela.Interpretations.Interpretation_Index;
       use type Gela.Interpretations.Interpretation_Index_Array;
 
       package Each_Prefix is
@@ -1000,204 +1009,14 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class);
       end Each_Prefix;
 
-      package Each_Arg is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index   : Gela.Interpretations.Interpretation_Index := 0;
-            Profile : Gela.Profiles.Profile_Access;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Arg;
-
-      package Each_Array_Arg is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index      : Gela.Interpretations.Interpretation_Index := 0;
-            Tipe       : Gela.Semantic_Types.Type_Index;
-            View       : Gela.Types.Arrays.Array_Type_Access;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Array_Arg;
-
-      package Each_Association is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index   : aliased Gela.Interpretations.Interpretation_Index := 0;
-            Profile : Gela.Profiles.Profile_Access;
-            Count   : Natural := 0;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Association;
-
-      package Each_Array_Association is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index : aliased Gela.Interpretations.Interpretation_Index := 0;
-            View       : Gela.Types.Arrays.Array_Type_Access;
-            Count      : Natural := 0;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Array_Association;
-
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
-      package body Each_Arg is
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            use type Gela.Interpretations.Interpretation_Index;
-
-            V      : aliased Each_Association.Visiter :=
-              (Index   => 0,
-               Profile => Self.Profile,
-               Count   => 0);
-            Chosen : Gela.Interpretations.Interpretation_Index;
-         begin
-            Wrap_Tuple
-              (Self   => V'Access,
-               IM     => IM,
-               Value  => Value,
-               Found  => V.Index'Access,
-               Chosen => Chosen);
-
-            if Chosen /= 0 then
-               Comp.Context.Interpretation_Manager.Add_Expression
-                 (Tipe   => V.Profile.Return_Type,
-                  Down   => Self.Index & Chosen,
-                  Result => Set);
-            end if;
-         end On_Tuple;
-      end Each_Arg;
-
-      package body Each_Array_Arg is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            use type Gela.Interpretations.Interpretation_Index;
-
-            V      : aliased Each_Array_Association.Visiter :=
-              (Index => 0,
-               View  => Self.View,
-               Count => 0);
-            Chosen : Gela.Interpretations.Interpretation_Index := 0;
-         begin
-            if V.View.Dimension = Value'Length then
-               Wrap_Tuple
-                 (Self   => V'Access,
-                  IM     => IM,
-                  Value  => Value,
-                  Found  => V.Index'Access,
-                  Chosen => Chosen);
-            end if;
-
-            if Chosen /= 0 then
-               Comp.Context.Interpretation_Manager.Add_Expression
-                 (Tipe   => Self.View.Component_Type,
-                  Down   => Self.Index & Chosen,
-                  Result => Set);
-            end if;
-         end On_Tuple;
-
-      end Each_Array_Arg;
-
-
-      package body Each_Association is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            use type Gela.Interpretations.Interpretation_Index;
-
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Chosen : Gela.Interpretations.Interpretation_Index;
-            List   : Gela.Interpretations.Interpretation_Index_Array
-              (Value'Range);
-         begin
-            if Value'Length = 1 then
-               if Self.Count < Self.Profile.Length then
-                  Self.Count := Self.Count + 1;
-                  Tipe := Self.Profile.Get_Type (Self.Count);
-                  To_Type (Comp, Env, Tipe, Value (Value'First), Chosen);
-
-                  if Chosen = 0 then
-                     Self.Index := 0;
-                     return;
-                  else
-                     List (List'First) := Chosen;
-                  end if;
-               else
-                  Self.Index := 0;
-                  return;
-               end if;
-            else
-               for J in Value'Range loop
-                  Interpretation
-                    (Comp   => Comp,
-                     Env    => Env,
-                     Set    => Value (J),
-                     Result => List (J));
-               end loop;
-            end if;
-
-            Chosen := 0;
-
-            for J in reverse List'Range loop
-               IM.Get_Tuple_Index (List (J), Chosen, Chosen);
-            end loop;
-
-            Self.Index := Chosen;
-         end On_Tuple;
-
-      end Each_Association;
-
-      package body Each_Array_Association is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            use type Gela.Interpretations.Interpretation_Index;
-            Chosen : Gela.Interpretations.Interpretation_Index;
-            Tipe   : Gela.Semantic_Types.Type_Index := 0;
-         begin
-            --  Check if this is positional association
-            if Value'Length = 1 then
-               Self.Count := Self.Count + 1;
-               Tipe := Self.View.all.Index_Types (Self.Count);
-               To_Type
-                 (Comp, Env, Tipe, Value (Value'First), Chosen);
-
-               if Chosen = 0 then
-                  Self.Index := 0;
-               else
-                  IM.Get_Tuple_Index (Chosen, 0, Self.Index);
-               end if;
-            else
-               Self.Index := 0;
-            end if;
-         end On_Tuple;
-
-      end Each_Array_Association;
+      Tuples : constant Gela.Interpretations.Interpretation_Tuple_Index_Array
+        := IM.Get_Tuple_List (Args);
 
       package body Each_Prefix is
 
@@ -1207,25 +1026,84 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
-            Visiter : aliased Each_Arg.Visiter :=
-              (Index   => Cursor.Get_Index,
-               Profile => TM.Get_Profile (Env, Name));
-            Arg : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Args);
+            Chosen : Gela.Interpretations.Interpretation_Index := 0;
+            Count  : Natural := 0;
+            Output : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
+
+            Profile : constant Gela.Profiles.Profile_Access :=
+              TM.Get_Profile (Env, Name);
+
          begin
-            if not Visiter.Profile.Assigned then
+            if not Profile.Assigned then
                return;
             end if;
 
-            if Arg.Has_Element then
-               while Arg.Has_Element loop
-                  Arg.Visit (Visiter'Access);
-                  Arg.Next;
-               end loop;
-            elsif Visiter.Profile.Allow_Empty_Argument_List then
+            for J in Tuples'Range loop
+               declare
+                  Tuple : constant Gela.Interpretations
+                    .Interpretation_Set_Index_Array
+                      := IM.Get_Tuple (Tuples (J));
+
+                  Tipe   : Gela.Semantic_Types.Type_Index;
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Tuple'Range);
+               begin
+                  --  Check if this is positional association
+                  if Tuple'Length = 1 then
+                     if Count < Profile.Length then
+                        Count := Count + 1;
+                        Tipe := Profile.Get_Type (Count);
+                        To_Type (Comp, Env, Tipe, Tuple (Tuple'First), Chosen);
+
+                        if Chosen = 0 then
+                           return;
+                        else
+                           List (List'First) := Chosen;
+                        end if;
+                     else
+                        return;
+                     end if;
+                  else
+                     for J in Tuple'Range loop
+                        Interpretation
+                          (Comp   => Comp,
+                           Env    => Env,
+                           Set    => Tuple (J),
+                           Result => List (J));
+                     end loop;
+                  end if;
+
+                  Chosen := 0;
+
+                  for K in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (K), Chosen, Chosen);
+                  end loop;
+
+                  Output (J) := Chosen;
+               end;
+            end loop;
+
+            Chosen := 0;
+
+            for K in reverse Output'Range loop
+               IM.Get_Tuple_Index (Output (K), Chosen, Chosen);
+            end loop;
+
+            if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
-                 (Tipe   => Visiter.Profile.Return_Type,
-                  Down   => Visiter.Index & 0,
+                 (Tipe   => Profile.Return_Type,
+                  Down   => Cursor.Get_Index & Chosen,
                   Result => Set);
+
+            elsif Tuples'Length = 0
+              and then Profile.Allow_Empty_Argument_List
+            then
+               Comp.Context.Interpretation_Manager.Add_Expression
+                 (Tipe   => Profile.Return_Type,
+                  Down   => Cursor.Get_Index & 0,
+                  Result => Set);
+
             end if;
          end On_Defining_Name;
 
@@ -1239,22 +1117,58 @@ package body Gela.Resolve is
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Self);
-            View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+            View   : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+            Arr    : Gela.Types.Arrays.Array_Type_Access;
+            Chosen : Gela.Interpretations.Interpretation_Index := 0;
+            Count  : Natural := 0;
+            Output : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
          begin
-            if View.Assigned and then View.Is_Array then
+            if not View.Assigned or else not View.Is_Array then
+               return;
+            end if;
+
+            Arr := Gela.Types.Arrays.Array_Type_Access (View);
+
+            for J in Tuples'Range loop
                declare
-                  Visiter : aliased Each_Array_Arg.Visiter :=
-                    (Index => Cursor.Get_Index,
-                     View  => Gela.Types.Arrays.Array_Type_Access (View),
-                     Tipe  => Tipe);
-                  Arg : Gela.Interpretations.Cursor'Class :=
-                    IM.Get_Cursor (Args);
+                  Tuple : constant Gela.Interpretations
+                    .Interpretation_Set_Index_Array
+                      := IM.Get_Tuple (Tuples (J));
+
+                  Index_Type : Gela.Semantic_Types.Type_Index := 0;
                begin
-                  while Arg.Has_Element loop
-                     Arg.Visit (Visiter'Access);
-                     Arg.Next;
-                  end loop;
+                  --  Check if this is positional association
+                  if Tuple'Length = 1 then
+                     Count := Count + 1;
+                     Index_Type := Arr.all.Index_Types (Count);
+                     To_Type
+                       (Comp, Env, Index_Type, Tuple (Tuple'First), Chosen);
+
+                     if Chosen = 0 then
+                        return;
+                     else
+                        IM.Get_Tuple_Index (Chosen, 0, Chosen);
+                     end if;
+                  else
+                     return;
+                  end if;
+
+                  Output (J) := Chosen;
                end;
+            end loop;
+
+            Chosen := 0;
+
+            for K in reverse Output'Range loop
+               IM.Get_Tuple_Index (Output (K), Chosen, Chosen);
+            end loop;
+
+            if Chosen /= 0 then
+               Comp.Context.Interpretation_Manager.Add_Expression
+                 (Tipe   => Arr.Component_Type,
+                  Down   => Cursor.Get_Index & Chosen,
+                  Result => Set);
             end if;
          end On_Expression;
       end Each_Prefix;
@@ -1526,6 +1440,160 @@ package body Gela.Resolve is
    begin
       To_Type_Category (Comp, Up, TM.Universal_Real, Result);
    end Real_Type;
+
+   ----------------------
+   -- Record_Aggregate --
+   ----------------------
+
+   procedure Record_Aggregate
+     (Comp     : Gela.Compilations.Compilation_Access;
+      Env      : Gela.Semantic_Types.Env_Index;
+      Up       : Gela.Interpretations.Interpretation_Index;
+      Tuple    : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Result   : out Gela.Interpretations.Interpretation_Index)
+   is
+
+      package Each is
+         type Visiter is new Gela.Interpretations.Down_Visiter with record
+            Result : Gela.Interpretations.Interpretation_Index := 0;
+         end record;
+
+         overriding procedure On_Expression
+           (Self : in out Visiter;
+            Tipe : Gela.Semantic_Types.Type_Index;
+            Down : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Each;
+
+      package Each_Choice is
+         type Visiter is new Gela.Interpretations.Up_Visiter with record
+            Exp    : Gela.Semantic_Types.Type_Index := 0;
+            Name   : Gela.Interpretations.Interpretation_Index := 0;
+            View   : Gela.Types.Type_View_Access;
+         end record;
+
+         overriding procedure On_Symbol
+           (Self   : in out Visiter;
+            Symbol : Gela.Lexical_Types.Symbol;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
+      end Each_Choice;
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      package body Each is
+
+         overriding procedure On_Expression
+           (Self : in out Visiter;
+            Tipe : Gela.Semantic_Types.Type_Index;
+            Down : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down);
+
+            View   : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+            Tuples : constant Gela.Interpretations
+              .Interpretation_Tuple_Index_Array :=
+                IM.Get_Tuple_List (Tuple);
+            Output : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
+         begin
+            if not View.Is_Record then
+               return;
+            end if;
+
+            for J in Tuples'Range loop
+               declare
+                  Chosen : Gela.Interpretations.Interpretation_Index := 0;
+                  Value  : constant Gela.Interpretations
+                    .Interpretation_Set_Index_Array :=
+                      IM.Get_Tuple (Tuples (J));
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Value'Range);
+                  V : aliased Each_Choice.Visiter := (0, 0, View);
+               begin
+                  for K in 2 .. Value'Last loop
+                     declare
+                        Cursor : Gela.Interpretations.Cursor'Class :=
+                          IM.Get_Cursor (Value (K));
+                     begin
+                        while Cursor.Has_Element loop
+                           Cursor.Visit (V'Access);
+                           Cursor.Next;
+                        end loop;
+
+                        List (K) := V.Name;
+                     end;
+                  end loop;
+
+                  To_Type
+                    (Comp    => Comp,
+                     Env     => Env,
+                     Type_Up => V.Exp,
+                     Expr_Up => Value (Value'First),
+                     Result  => List (List'First));
+
+                  Chosen := 0;
+
+                  for K in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (K), Chosen, Chosen);
+                  end loop;
+
+                  Output (J) := Chosen;
+               end;
+            end loop;
+
+            for J in reverse Output'Range loop
+               IM.Get_Tuple_Index (Output (J), Self.Result, Self.Result);
+            end loop;
+         end On_Expression;
+
+      end Each;
+
+      package body Each_Choice is
+
+         overriding procedure On_Symbol
+           (Self   : in out Visiter;
+            Symbol : Gela.Lexical_Types.Symbol;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Cursor);
+
+            Name : constant Gela.Elements.Defining_Names.Defining_Name_Access
+              := Gela.Types.Untagged_Records.Untagged_Record_Type_Access
+                   (Self.View).Get_Component (Symbol);
+         begin
+            if Name.Assigned then
+               IM.Get_Defining_Name_Index (Name, Self.Name);
+
+               Self.Exp :=
+                 TM.Type_Of_Object_Declaration (Env, Name.Enclosing_Element);
+            end if;
+         end On_Symbol;
+
+      end Each_Choice;
+
+      V : Each.Visiter;
+   begin
+      IM.Visit (Up, V);
+      Result := V.Result;
+   end Record_Aggregate;
+
+   --------------------
+   -- Record_Matcher --
+   --------------------
+
+   function Record_Matcher
+     return not null Gela.Interpretations.Type_Matcher_Access
+   is
+      Result : constant Record_Type_Matcher.Type_Matcher_Access :=
+        new Record_Type_Matcher.Type_Matcher;
+   begin
+      return Gela.Interpretations.Type_Matcher_Access (Result);
+   end Record_Matcher;
 
    ------------------------
    -- Selected_Component --
@@ -2224,7 +2292,7 @@ package body Gela.Resolve is
 
       To_Type
         (Comp    => Comp,
-         Env    => Env,
+         Env     => Env,
          Type_Up => Type_Index,
          Expr_Up => Expr_Up,
          Result  => Result);
@@ -2241,6 +2309,7 @@ package body Gela.Resolve is
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
+      pragma Unreferenced (Env);
 
       package Each is
          type Visiter is new Gela.Interpretations.Up_Visiter with record
@@ -2263,40 +2332,7 @@ package body Gela.Resolve is
             Match  : not null Gela.Interpretations.Type_Matcher_Access;
             Cursor : Gela.Interpretations.Cursor'Class);
 
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-         --  Tuple is interpretation of aggregate
-
       end Each;
-
-      package Each_Association is
-         --  Visiter for interpretation of an association of aggregate
-
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index : aliased Gela.Interpretations.Interpretation_Index;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Association;
-
-      package Each_Symbol is
-         --  Visiter for interpretation of an symbol of association
-
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index          : aliased Gela.Interpretations.Interpretation_Index;
-            Component_Type : Gela.Semantic_Types.Type_Index;
-         end record;
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each_Symbol;
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
@@ -2340,121 +2376,21 @@ package body Gela.Resolve is
          overriding procedure On_Expression_Category
            (Self   : in out Visiter;
             Match  : not null Gela.Interpretations.Type_Matcher_Access;
-            Cursor : Gela.Interpretations.Cursor'Class) is
-         begin
-            View.Visit (Match.all);
-
-            if Match.Is_Matched then
-               Self.Index := Cursor.Get_Index;
-            end if;
-         end On_Expression_Category;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            pragma Unreferenced (Self);
-            use type Gela.Types.Type_View_Access;
-            V      : aliased Each_Association.Visiter;
-            Chosen : Gela.Interpretations.Interpretation_Index;
-         begin
-            if View /= null and then View.Is_Record then
-               Wrap_Tuple
-                 (Self   => V'Access,
-                  IM     => IM,
-                  Value  => Value,
-                  Found  => V.Index'Access,
-                  Chosen => Chosen);
-
-               Self.Index := Chosen;
-            end if;
-         end On_Tuple;
-      end Each;
-
-      package body Each_Association is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-
-            V      : aliased Each_Symbol.Visiter := (0, 0);
-            Expr   : Gela.Interpretations.Interpretation_Index;
-            Chosen : Gela.Interpretations.Interpretation_Index;
-         begin
-            Wrap_Tuple
-              (Self   => V'Access,
-               IM     => IM,
-               Value  => Value (Value'First + 1 .. Value'Last),
-               Found  => V.Index'Access,
-               Chosen => Chosen);
-
-            --  Resolve expression of association
-            To_Type
-              (Comp    => Comp,
-               Env     => Env,
-               Type_Up => V.Component_Type,
-               Expr_Up => Value (Value'First),
-               Result  => Expr);
-
-            IM.Get_Tuple_Index (Expr, Chosen, Chosen);
-
-            Self.Index := Chosen;
-         end On_Tuple;
-
-      end Each_Association;
-
-      package body Each_Symbol is
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
             Cursor : Gela.Interpretations.Cursor'Class)
          is
             pragma Unreferenced (Cursor);
-
-            package Type_Visiters is
-               type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
-                 with null record;
-
-               overriding procedure Untagged_Record
-                 (Self  : in out Type_Visitor;
-                  Value : not null Gela.Types.Untagged_Records
-                    .Untagged_Record_Type_Access);
-
-            end Type_Visiters;
-
-            package body Type_Visiters is
-
-               overriding procedure Untagged_Record
-                 (Self  : in out Type_Visitor;
-                  Value : not null Gela.Types.Untagged_Records
-                    .Untagged_Record_Type_Access)
-               is
-                  pragma Unreferenced (Self);
-                  Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-               begin
-                  Name := Value.Get_Component (Symbol);
-
-                  if Name.Assigned then
-                     IM.Get_Defining_Name_Index
-                       (Name   => Name,
-                        Result => On_Symbol.Self.Index);
-
-                     On_Symbol.Self.Component_Type :=
-                       TM.Type_Of_Object_Declaration
-                         (Env, Name.Enclosing_Element);
-                  end if;
-               end Untagged_Record;
-
-            end Type_Visiters;
-
-            Visiter : Type_Visiters.Type_Visitor;
+            use type Gela.Interpretations.Interpretation_Index;
          begin
-            View.Visit (Visiter);
-         end On_Symbol;
+            View.Visit (Match.all);
 
-      end Each_Symbol;
+            if Match.Is_Matched and Self.Index = 0 then
+               IM.Get_Expression_Index
+                 (Tipe   => Self.Type_Index,
+                  Result => Self.Index);
+            end if;
+         end On_Expression_Category;
+
+      end Each;
 
       Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Expr_Up);
       Visiter : aliased Each.Visiter;
@@ -2575,103 +2511,88 @@ package body Gela.Resolve is
 
    procedure Variant_Part
      (Comp     : Gela.Compilations.Compilation_Access;
+      Env      : Gela.Semantic_Types.Env_Index;
       Name_Up  : Gela.Interpretations.Interpretation_Set_Index;
-      Variants : Gela.Interpretations.Interpretation_Set_Index;
+      Variants : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
-      pragma Unreferenced (Name_Up);
-
-      package Each_Variant is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            null;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Variant;
-
-      package Each_Choice is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Index  : aliased Gela.Interpretations.Interpretation_Index := 0;
-         end record;
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
-      end Each_Choice;
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
-      package body Each_Variant is
+      Tuples : constant Gela.Interpretations.Interpretation_Tuple_Index_Array
+        := IM.Get_Tuple_List (Variants);
 
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
+      package Each_Name is
+         type Visiter is new Gela.Interpretations.Up_Visiter with null record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
+      end Each_Name;
+
+      package body Each_Name is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Cursor : Gela.Interpretations.Cursor'Class)
          is
-            pragma Unreferenced (Self);
-
-            V      : aliased Each_Choice.Visiter;
-            Chosen : Gela.Interpretations.Interpretation_Index;
+            pragma Unreferenced (Self, Cursor);
+            Chosen  : Gela.Interpretations.Interpretation_Index := 0;
+            Output  : Gela.Interpretations.Interpretation_Index_Array
+              (Tuples'Range);
          begin
-            Wrap_Tuple
-              (Self   => V'Access,
-               IM     => IM,
-               Value  => Value,
-               Found  => V.Index'Access,
-               Chosen => Chosen);
-
-            Result := Chosen;
-         end On_Tuple;
-
-      end Each_Variant;
-
-      package body Each_Choice is
-
-         overriding procedure On_Tuple
-           (Self  : in out Visiter;
-            Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-         is
-            Chosen : Gela.Interpretations.Interpretation_Index;
-            List   : Gela.Interpretations.Interpretation_Index_Array
-              (Value'Range);
-         begin
-            for J in Value'Range loop
+            for J in Tuples'Range loop
                declare
-                  Cursor : Gela.Interpretations.Cursor'Class :=
-                    IM.Get_Cursor (Value (J));
+                  Tuple : constant Gela.Interpretations
+                    .Interpretation_Set_Index_Array
+                      := IM.Get_Tuple (Tuples (J));
+                  List   : Gela.Interpretations.Interpretation_Index_Array
+                    (Tuple'Range);
                begin
-                  List (J) := 0;
-                  while Cursor.Has_Element loop
-                     List (J) := Cursor.Get_Index;
-                     Cursor.Next;
+                  for K in Tuple'Range loop
+                     To_Type
+                       (Comp    => Comp,
+                        Env     => Env,
+                        Type_Up => Tipe,
+                        Expr_Up => Tuple (K),
+                        Result  => List (K));
                   end loop;
+
+                  Chosen := 0;
+
+                  for K in reverse List'Range loop
+                     IM.Get_Tuple_Index (List (K), Chosen, Chosen);
+                  end loop;
+
+                  Output (J) := Chosen;
                end;
             end loop;
 
             Chosen := 0;
 
-            for J in reverse List'Range loop
-               IM.Get_Tuple_Index (List (J), Chosen, Chosen);
+            for J in reverse Output'Range loop
+               IM.Get_Tuple_Index (Output (J), Chosen, Chosen);
             end loop;
 
-            Self.Index := Chosen;
-         end On_Tuple;
+            Result := Chosen;
+         end On_Expression;
 
-      end Each_Choice;
+      end Each_Name;
 
-      Visiter : aliased Each_Variant.Visiter;
-      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Variants);
+      Visiter : aliased Each_Name.Visiter;
    begin
       Result := 0;
 
-      while Cursor.Has_Element loop
-         Cursor.Visit (Visiter'Access);
-         Cursor.Next;
-      end loop;
+      Each_Expression
+        (Comp   => Comp,
+         Env    => Env,
+         Set    => Name_Up,
+         Target => Visiter);
+
    end Variant_Part;
 
    ----------------

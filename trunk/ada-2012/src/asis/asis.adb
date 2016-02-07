@@ -4,11 +4,12 @@ with Asis.Implementation;
 with Asis.Extensions.Flat_Kinds;
 
 with Gela.Element_Visiters;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Procedure_Call_Statements;
-with Gela.Elements.Association_Lists;
+with Gela.Elements.Record_Aggregates;
 
 package body Asis is
 
@@ -64,6 +65,11 @@ package body Asis is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Associations.Association_Access);
 
+         overriding procedure Association_List
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Association_Lists.
+              Association_List_Access);
+
          overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
             Node : not null Gela.Elements.Auxiliary_Applies.
@@ -79,11 +85,10 @@ package body Asis is
             Node : not null Gela.Elements.Procedure_Call_Statements.
               Procedure_Call_Statement_Access);
 
-         overriding procedure Association_List
+         overriding procedure Record_Aggregate
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Association_Lists.
-              Association_List_Access);
-
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access);
       end Get;
 
       package body Get is
@@ -149,6 +154,18 @@ package body Asis is
                Node.Enclosing_Element.Visit (Self);
             end if;
          end Association_List;
+
+         overriding procedure Record_Aggregate
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Record_Aggregates.
+              Record_Aggregate_Access) is
+         begin
+            if Self.Flags = None then
+               Node.Enclosing_Element.Visit (Self);
+            else
+               Self.Result := Self.Flags (Is_Record_Aggregate);
+            end if;
+         end Record_Aggregate;
 
       end Get;
 

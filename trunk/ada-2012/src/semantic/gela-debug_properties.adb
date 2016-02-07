@@ -149,10 +149,6 @@ package body Gela.Debug_Properties is
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Cursor : Gela.Interpretations.Cursor'Class);
 
-      overriding procedure On_Tuple
-        (Self  : in out Visiter;
-         Value : Gela.Interpretations.Interpretation_Set_Index_Array);
-
       overriding procedure On_Symbol
         (Self   : in out Visiter;
          Symbol : Gela.Lexical_Types.Symbol;
@@ -436,20 +432,20 @@ package body Gela.Debug_Properties is
               Self.Comp.Context.Symbols.Image (Symbol).To_UTF_8_String);
       end On_Symbol;
 
-      overriding procedure On_Tuple
-        (Self  : in out Visiter;
-         Value : Gela.Interpretations.Interpretation_Set_Index_Array)
-      is
-         pragma Unreferenced (Self);
-      begin
-         Put_Line ("   Tuple");
-
-         for J of Value loop
-            Put_Line
-              ("     " &
-                 Gela.Interpretations.Interpretation_Set_Index'Image (J));
-         end loop;
-      end On_Tuple;
+--        overriding procedure On_Tuple
+--          (Self  : in out Visiter;
+--           Value : Gela.Interpretations.Interpretation_Set_Index_Array)
+--        is
+--           pragma Unreferenced (Self);
+--        begin
+--           Put_Line ("   Tuple");
+--
+--           for J of Value loop
+--              Put_Line
+--                ("     " &
+--                   Gela.Interpretations.Interpretation_Set_Index'Image (J));
+--           end loop;
+--        end On_Tuple;
 
    end Dump_Up_Interpretation;
 

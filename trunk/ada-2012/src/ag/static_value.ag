@@ -2,6 +2,7 @@ Synthesized attributes
   Record_Component_Associations,
   allocator,
   association,
+  association_list,
   attribute_reference,
   box,
   case_expression,
@@ -22,7 +23,7 @@ Synthesized attributes
   prefix,
   qualified_expression,
   quantified_expression,
-  association_list,
+  record_aggregate,
   selected_component,
   short_circuit,
   simple_expression,
@@ -113,6 +114,10 @@ Rules for null_literal.null_literal_token :
 Rules for association_list. :
 (.
       ${association_list.static_value} := ${Record_Component_Associations.static_value};
+.)
+Rules for record_aggregate.Associations :
+(.
+      ${record_aggregate.static_value} := ${Associations.static_value};  --  FIXME
 .)
 Rules for extension_aggregate. :
 (.

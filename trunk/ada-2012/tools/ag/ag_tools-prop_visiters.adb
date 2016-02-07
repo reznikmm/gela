@@ -32,7 +32,9 @@ package body AG_Tools.Prop_Visiters is
       Spec.P;
 
       for J of G.Declaration loop
-         if Done.Index (J.Name) = 0 then
+         Name := J.Name & "#" & J.Type_Name;
+
+         if Done.Index (Name) = 0 then
             Context.Add_With
               (Package_Name (J.Type_Name), AG_Tools.Contexts.Spec_Unit);
             Spec.N ("   not overriding procedure On_");
@@ -44,7 +46,7 @@ package body AG_Tools.Prop_Visiters is
             Spec.P (") is null;");
             Spec.P;
 
-            Done.Append (J.Name);
+            Done.Append (Name);
          end if;
       end loop;
 
