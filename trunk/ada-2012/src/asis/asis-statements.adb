@@ -11,13 +11,13 @@
 
 with Gela.Element_Visiters;
 with Gela.Elements.Assignment_Statements;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
 with Gela.Elements.Expressions;
 with Gela.Elements.Names;
 with Gela.Elements.Prefixes;
 with Gela.Elements.Procedure_Call_Statements;
-with Gela.Elements.Record_Aggregates;
 
 package body Asis.Statements is
 
@@ -281,8 +281,8 @@ package body Asis.Statements is
             Node : not null Gela.Elements.Auxiliary_Applies.
               Auxiliary_Apply_Access)
          is
-            RA : constant Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access := Node.Function_Call_Parameters;
+            RA : constant Gela.Elements.Association_Lists.
+              Association_List_Access := Node.Function_Call_Parameters;
             List  : constant Gela.Elements.Associations.
               Association_Sequence_Access :=
                 RA.Record_Component_Associations;

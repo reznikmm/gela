@@ -222,46 +222,14 @@ package body Gela.Resolve is
       Right    : Gela.Interpretations.Interpretation_Set_Index;
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
-
-      package Each is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Result : Gela.Interpretations.Interpretation_Index := 0;
-         end record;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each;
-
-      package body Each is
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Cursor);
-         begin
-            To_Type (Comp    => Comp,
-                     Env     => Env,
-                     Type_Up => Tipe,
-                     Expr_Up => Right,
-                     Result  => Self.Result);
-         end On_Expression;
-
-      end Each;
-
-      Visiter : aliased Each.Visiter;
    begin
       --  ARM 5.2 (4/2)
-      Each_Expression (Comp   => Comp,
-                       Env    => Env,
-                       Set    => Left,
-                       Target => Visiter);
-
-      Result := Visiter.Result;
+      To_Type_Or_The_Same_Type
+        (Comp    => Comp,
+         Env     => Env,
+         Type_Up => Left,
+         Expr_Up => Right,
+         Result  => Result);
    end Assignment_Right;
 
    -------------------------
