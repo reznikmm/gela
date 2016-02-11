@@ -285,7 +285,6 @@ package body Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Prefix : Gela.Interpretations.Interpretation_Set_Index;
       Symbol : Gela.Lexical_Types.Symbol;
-      Token  : Gela.Lexical_Types.Token_Count;
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Lexical_Types.Symbol;
@@ -338,21 +337,14 @@ package body Gela.Resolve is
       end Each;
 
       Arr_Visiter : Each.Visiter;
-      Attr        : Gela.Lexical_Types.Predefined_Symbols.Symbol;
       Type_Index  : Gela.Semantic_Types.Type_Index;
    begin
       Set := 0;
 
-      if Token = 0 then
-         Attr := Symbol;
-      else
-         Attr := Gela.Lexical_Types.Predefined_Symbols.Range_Symbol;
-      end if;
-
       Arr_Visiter.Length :=
-        Attr = Gela.Lexical_Types.Predefined_Symbols.Length;
+        Symbol = Gela.Lexical_Types.Predefined_Symbols.Length;
 
-      case Attr is
+      case Symbol is
          when Gela.Lexical_Types.Predefined_Symbols.Length |
               Gela.Lexical_Types.Predefined_Symbols.First |
               Gela.Lexical_Types.Predefined_Symbols.Range_Symbol |
@@ -387,7 +379,7 @@ package body Gela.Resolve is
                Result => Type_Index);
 
             Comp.Context.Interpretation_Manager.Add_Attr_Function
-              (Kind   => Attr,
+              (Kind   => Symbol,
                Down   => (1 => Index),
                Result => Set);
 

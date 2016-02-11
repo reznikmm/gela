@@ -166,8 +166,7 @@ clause_name ::= attribute_reference | identifier;
 attribute_reference ::=
   prefix
   token <apostrophe_token>
-  [identifier <Attribute_Designator_Identifier>]
-  token <range_token>
+  identifier <Attribute_Designator_Identifier>
   [expression <Attribute_Designator_Expressions>]
 ;
 

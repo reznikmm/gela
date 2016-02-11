@@ -474,9 +474,7 @@ attribute_reference ::=
 
 Rules for attribute_reference. :
 (.  ${attribute_reference.ast} := +Self.Factory.Attribute_Reference
-   (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast},
-    No_Token_Index,
-    null);
+   (-${prefix.ast}, -${apostrophe_token.ast}, -${identifier.ast}, null);
 .)
 
 basic_declaration ::=
@@ -3482,8 +3480,7 @@ Rules for range_attribute_reference. :
 (.  ${range_attribute_reference.ast} := +Self.Factory.Attribute_Reference
      (-${prefix.ast},
       -${apostrophe_token.ast},
-      null,
-      -${range_token.ast},
+      Self.Factory.Identifier (-${range_token.ast}),
       -${expression.ast:None});
 .)
 

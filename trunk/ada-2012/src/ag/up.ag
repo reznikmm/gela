@@ -212,7 +212,6 @@ Rules for attribute_reference. :
          ${attribute_reference.env_in},
          ${prefix.Up},
          ${Attribute_Designator_Identifier.full_name:0},
-         ${range_token.Index},
          ${attribute_reference.Up});
 .)
 

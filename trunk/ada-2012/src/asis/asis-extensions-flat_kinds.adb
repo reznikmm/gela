@@ -1392,16 +1392,12 @@ package body Asis.Extensions.Flat_Kinds is
            X.Width => A_Width_Attribute,
            X.Write => A_Write_Attribute);
    begin
-      if Node.Range_Token /= 0 then
-         Self.Result := A_Range_Attribute;
-
-         return;
-      end if;
-
       Token := Comp.Get_Token (Id.Identifier_Token);
 
       if Token.Symbol in Map'Range then
          Self.Result := Map (Token.Symbol);
+      else
+         Self.Result := A_Range_Attribute;
       end if;
    end Attribute_Reference;
 

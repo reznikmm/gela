@@ -29,7 +29,6 @@ package Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Prefix : Gela.Interpretations.Interpretation_Set_Index;
       Symbol : Gela.Lexical_Types.Symbol;
-      Token  : Gela.Lexical_Types.Token_Count;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
    --  Resolve Symbol as attr. reference designator and populate interpretation
    --  set with interpretations
