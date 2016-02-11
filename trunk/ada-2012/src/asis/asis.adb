@@ -52,7 +52,7 @@ package body Asis is
 
    function Auxilary (Element : in Asis.Element) return Boolean is
       package Get is
-         type Flag is (Is_Association, Is_Function_Call, Is_Record_Aggregate);
+         type Flag is (Is_Association, Is_Function_Call, Is_Association_List);
          type Flag_Array is array (Flag) of Boolean;
          None : constant Flag_Array := (others => False);
 
@@ -106,13 +106,20 @@ package body Asis is
          overriding procedure Auxiliary_Apply
            (Self : in out Visiter;
             Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access) is
+              Auxiliary_Apply_Access)
+         is
+            Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+              Asis.Extensions.Flat_Kinds.Flat_Kind
+                ((Data => Gela.Elements.Element_Access (Node)));
          begin
             if Self.Flags = None then
                Self.Flags (Is_Function_Call) := True;
                Node.Enclosing_Element.Visit (Self);
+            elsif Self.Flags (Is_Association) then
+               Self.Result := Kind in
+                 Asis.Extensions.Flat_Kinds.An_Indexed_Component;
             else
-               Self.Result := Self.Flags (Is_Record_Aggregate);
+               Self.Result := Self.Flags (Is_Association_List);
             end if;
          end Auxiliary_Apply;
 
@@ -149,10 +156,8 @@ package body Asis is
             Node : not null Gela.Elements.Association_Lists.
               Association_List_Access) is
          begin
-            if Self.Flags = None then
-               Self.Flags (Is_Record_Aggregate) := True;
-               Node.Enclosing_Element.Visit (Self);
-            end if;
+            Self.Flags (Is_Association_List) := True;
+            Node.Enclosing_Element.Visit (Self);
          end Association_List;
 
          overriding procedure Record_Aggregate
@@ -163,7 +168,8 @@ package body Asis is
             if Self.Flags = None then
                Node.Enclosing_Element.Visit (Self);
             else
-               Self.Result := Self.Flags (Is_Record_Aggregate);
+               Self.Result := Self.Flags (Is_Association_List)
+                 and not Self.Flags (Is_Association);
             end if;
          end Record_Aggregate;
 

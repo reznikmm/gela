@@ -63,6 +63,8 @@ private
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Flag   : Gela.Interpretations.Expression_Flags :=
+        Gela.Interpretations.No_Flag;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);
 

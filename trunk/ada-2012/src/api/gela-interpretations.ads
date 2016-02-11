@@ -28,6 +28,8 @@ package Gela.Interpretations is
    type Interpretation_Tuple_Index_Array is array (Positive range <>) of
       Interpretation_Tuple_Index;
 
+   type Expression_Flags is (No_Flag, Function_Call, Indexed_Component);
+
    type Interpretation_Manager is limited interface;
    --  This object keeps sets of possible interpretations
    type Interpretation_Manager_Access is
@@ -59,6 +61,8 @@ package Gela.Interpretations is
    not overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Flag   : Gela.Interpretations.Expression_Flags :=
+        Gela.Interpretations.No_Flag;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
         is abstract;
@@ -138,6 +142,7 @@ package Gela.Interpretations is
    not overriding procedure On_Expression
      (Self   : in out Down_Visiter;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Flag   : Gela.Interpretations.Expression_Flags;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each expression interpretation
 

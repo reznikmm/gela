@@ -1105,6 +1105,7 @@ package body Gela.Resolve is
             if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Profile.Return_Type,
+                  Flag   => Gela.Interpretations.Function_Call,
                   Down   => Cursor.Get_Index & Chosen,
                   Result => Set);
 
@@ -1113,6 +1114,7 @@ package body Gela.Resolve is
             then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Profile.Return_Type,
+                  Flag   => Gela.Interpretations.Function_Call,
                   Down   => Cursor.Get_Index & 0,
                   Result => Set);
 
@@ -1179,6 +1181,7 @@ package body Gela.Resolve is
             if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Arr.Component_Type,
+                  Flag   => Gela.Interpretations.Indexed_Component,
                   Down   => Cursor.Get_Index & Chosen,
                   Result => Set);
             end if;
@@ -1473,6 +1476,7 @@ package body Gela.Resolve is
          overriding procedure On_Expression
            (Self : in out Visiter;
             Tipe : Gela.Semantic_Types.Type_Index;
+            Flag : Gela.Interpretations.Expression_Flags;
             Down : Gela.Interpretations.Interpretation_Index_Array);
 
       end Each;
@@ -1502,9 +1506,10 @@ package body Gela.Resolve is
          overriding procedure On_Expression
            (Self : in out Visiter;
             Tipe : Gela.Semantic_Types.Type_Index;
+            Flag : Gela.Interpretations.Expression_Flags;
             Down : Gela.Interpretations.Interpretation_Index_Array)
          is
-            pragma Unreferenced (Down);
+            pragma Unreferenced (Down, Flag);
 
             View   : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
             Tuples : constant Gela.Interpretations

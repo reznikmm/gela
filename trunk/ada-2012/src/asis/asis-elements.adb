@@ -853,14 +853,10 @@ package body Asis.Elements is
             return Asis.An_And_Then_Short_Circuit;
          when F.An_Or_Else_Short_Circuit =>
             return Asis.An_Or_Else_Short_Circuit;
-         when F.An_In_Range_Membership_Test =>
-            return Asis.An_In_Range_Membership_Test;
-         when F.A_Not_In_Range_Membership_Test =>
-            return Asis.A_Not_In_Range_Membership_Test;
-         when F.An_In_Type_Membership_Test =>
-            return Asis.An_In_Type_Membership_Test;
-         when F.A_Not_In_Type_Membership_Test =>
-            return Asis.A_Not_In_Type_Membership_Test;
+         when F.An_In_Membership_Test =>
+            return Asis.An_In_Membership_Test;
+         when F.A_Not_In_Membership_Test =>
+            return Asis.A_Not_In_Membership_Test;
          when F.A_Null_Literal =>
             return Asis.A_Null_Literal;
          when F.A_Parenthesized_Expression =>

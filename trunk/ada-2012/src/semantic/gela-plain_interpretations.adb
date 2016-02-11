@@ -88,6 +88,8 @@ package body Gela.Plain_Interpretations is
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
+      Flag   : Gela.Interpretations.Expression_Flags :=
+        Gela.Interpretations.No_Flag;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
    is
@@ -95,7 +97,8 @@ package body Gela.Plain_Interpretations is
         new Gela.Int.Expressions.Expression'
           (Gela.Int.Expressions.Create
              (Down            => Down,
-              Expression_Type => Tipe));
+              Expression_Type => Tipe,
+              Expression_Flag => Flag));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
    end Add_Expression;
@@ -323,7 +326,8 @@ package body Gela.Plain_Interpretations is
         new Gela.Int.Expressions.Expression'
           (Gela.Int.Expressions.Create
              (Down            => (1 .. 0 => 0),
-              Expression_Type => Tipe));
+              Expression_Type => Tipe,
+              Expression_Flag => Gela.Interpretations.No_Flag));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
    end Get_Expression_Index;
@@ -519,6 +523,7 @@ package body Gela.Plain_Interpretations is
          begin
             Target.On_Expression
               (Tipe  => Value.Expression_Type,
+               Flag  => Value.Expression_Flag,
                Down  => Value.Down);
          end Expression;
 

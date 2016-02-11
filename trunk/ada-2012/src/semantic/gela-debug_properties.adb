@@ -106,6 +106,7 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
+         Flag   : Gela.Interpretations.Expression_Flags;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       overriding procedure On_Expression_Category
@@ -295,6 +296,7 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
+         Flag   : Gela.Interpretations.Expression_Flags;
          Down   : Gela.Interpretations.Interpretation_Index_Array)
       is
          use type Gela.Semantic_Types.Type_Index;
@@ -314,6 +316,9 @@ package body Gela.Debug_Properties is
          else
             View.Visit (DT);
          end if;
+
+         Put_Line
+           ("   Flag:" & Gela.Interpretations.Expression_Flags'Image (Flag));
 
          for J of Down loop
             Put_Line

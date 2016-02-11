@@ -1042,10 +1042,13 @@ package Asis is
       An_And_Then_Short_Circuit,                 --  4.4
       An_Or_Else_Short_Circuit,                  --  4.4
 
-      An_In_Range_Membership_Test,               --  4.4
-      A_Not_In_Range_Membership_Test,            --  4.4
-      An_In_Type_Membership_Test,                --  4.4
-      A_Not_In_Type_Membership_Test,             --  4.4
+      An_In_Membership_Test,               --  4.4
+      A_Not_In_Membership_Test,            --  4.4
+      --  These kinds were deleted to match Ada 2012 syntax
+      --  An_In_Range_Membership_Test,               --  4.4
+      --  A_Not_In_Range_Membership_Test,            --  4.4
+      --  An_In_Type_Membership_Test,                --  4.4
+      --  A_Not_In_Type_Membership_Test,             --  4.4
 
       A_Null_Literal,                            --  4.4
       A_Parenthesized_Expression,                --  4.4
