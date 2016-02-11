@@ -107,6 +107,41 @@ package body Gela.Resolve is
 
    end String_Type_Matcher;
 
+   package Array_Type_Matcher is
+      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
+         Match : Boolean := False;
+      end record;
+
+      type Type_Matcher_Access is not null access all Type_Matcher'Class;
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean;
+   end Array_Type_Matcher;
+
+   package body Array_Type_Matcher is
+
+      overriding procedure Array_Type
+        (Self  : in out Type_Matcher;
+         Value : not null Gela.Types.Arrays.Array_Type_Access)
+      is
+         pragma Unreferenced (Value);
+      begin
+         Self.Match := True;
+      end Array_Type;
+
+      overriding function Is_Matched
+        (Self : Type_Matcher) return Boolean is
+      begin
+         return Self.Match;
+      end Is_Matched;
+
+   end Array_Type_Matcher;
+
+
    package Record_Type_Matcher is
       type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
          Match : Boolean := False;
@@ -210,6 +245,15 @@ package body Gela.Resolve is
       end Is_Matched;
 
    end Float_Type_Matcher;
+
+   function Array_Matcher
+     return not null Gela.Interpretations.Type_Matcher_Access
+   is
+      Result : constant Array_Type_Matcher.Type_Matcher_Access :=
+        new Array_Type_Matcher.Type_Matcher;
+   begin
+      return Gela.Interpretations.Type_Matcher_Access (Result);
+   end Array_Matcher;
 
    ----------------------
    -- Assignment_Right --
@@ -1468,8 +1512,17 @@ package body Gela.Resolve is
                 IM.Get_Tuple_List (Tuple);
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
+
+            Comp_Type : Gela.Semantic_Types.Type_Index := 0;
          begin
-            if not View.Is_Record then
+            if View.Is_Array then
+               declare
+                  Arr : constant Gela.Types.Arrays.Array_Type_Access :=
+                    Gela.Types.Arrays.Array_Type_Access (View);
+               begin
+                  Comp_Type := Arr.Component_Type;
+               end;
+            elsif not View.Is_Record then
                return;
             end if;
 
@@ -1497,10 +1550,14 @@ package body Gela.Resolve is
                      end;
                   end loop;
 
+                  if View.Is_Record then
+                     Comp_Type := V.Exp;
+                  end if;
+
                   To_Type
                     (Comp    => Comp,
                      Env     => Env,
-                     Type_Up => V.Exp,
+                     Type_Up => Comp_Type,
                      Expr_Up => Value (Value'First),
                      Result  => List (List'First));
 
@@ -1530,10 +1587,13 @@ package body Gela.Resolve is
          is
             pragma Unreferenced (Cursor);
 
-            Name : constant Gela.Elements.Defining_Names.Defining_Name_Access
-              := Gela.Types.Untagged_Records.Untagged_Record_Type_Access
-                   (Self.View).Get_Component (Symbol);
+            Name : Gela.Elements.Defining_Names.Defining_Name_Access;
          begin
+            if Self.View.Is_Record then
+               Name := Gela.Types.Untagged_Records.Untagged_Record_Type_Access
+                 (Self.View).Get_Component (Symbol);
+            end if;
+
             if Name.Assigned then
                IM.Get_Defining_Name_Index (Name, Self.Name);
 

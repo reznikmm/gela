@@ -670,7 +670,12 @@ Rules for procedure_instantiation. :
 
 Rules for qualified_expression. :
 (.
-      ${Converted_Or_Qualified_Expression.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.To_Type
+        (Self.Compilation,
+         ${qualified_expression.env_in},
+         ${Converted_Or_Qualified_Subtype_Mark.Up},
+         ${Converted_Or_Qualified_Expression.Up},
+         ${Converted_Or_Qualified_Expression.Down});
 .)
 
 Rules for quantified_expression. :

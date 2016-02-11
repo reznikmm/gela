@@ -174,6 +174,9 @@ package Gela.Resolve is
    function Record_Matcher
      return not null Gela.Interpretations.Type_Matcher_Access;
 
+   function Array_Matcher
+     return not null Gela.Interpretations.Type_Matcher_Access;
+
    procedure Record_Aggregate
      (Comp     : Gela.Compilations.Compilation_Access;
       Env      : Gela.Semantic_Types.Env_Index;

@@ -360,6 +360,10 @@ Rules for record_aggregate.Associations :
         (Match  => Gela.Pass_Utils.Resolve.Record_Matcher,
          Down   => (1 .. 0 => 0),
          Result => ${record_aggregate.Up});
+      Self.Compilation.Context.Interpretation_Manager.Add_Expression_Category
+        (Match  => Gela.Pass_Utils.Resolve.Array_Matcher,
+         Down   => (1 .. 0 => 0),
+         Result => ${record_aggregate.Up});
 .)
 
 Rules for membership_test. :

@@ -193,6 +193,7 @@ with Gela.Elements.Variants;
 with Gela.Elements.While_Loop_Statements;
 with Gela.Elements.With_Clauses;
 with Gela.Elements.Defining_Names;
+with Gela.Interpretations;
 with Gela.Type_Managers;
 with Gela.Semantic_Types;
 with Gela.Types;
@@ -1271,6 +1272,8 @@ package body Asis.Extensions.Flat_Kinds is
       case Self.Result is
          when A_Record_Aggregate =>
             Self.Result := A_Record_Component_Association;
+         when A_Positional_Array_Aggregate | A_Named_Array_Aggregate =>
+            Self.Result := An_Array_Component_Association;
          when A_Discriminant_Constraint =>
             Self.Result := A_Discriminant_Association;
          when others =>
@@ -2257,9 +2260,48 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Record_Aggregates.Record_Aggregate_Access)
    is
-      pragma Unreferenced (Node);
+      Comp  : constant Gela.Compilations.Compilation_Access :=
+        Node.Enclosing_Compilation;
+
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      package Visiters is
+         type Visiter is new Gela.Interpretations.Down_Visiter with record
+            Result : Element_Flat_Kind := A_Record_Aggregate;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down);
+            View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+         begin
+            if View.Assigned and then View.Is_Array then
+               Self.Result := A_Positional_Array_Aggregate;
+            end if;
+         end On_Expression;
+
+      end Visiters;
+
+      V : Visiters.Visiter;
    begin
-      Self.Result := A_Record_Aggregate;
+      IM.Visit (Node.Down, V);
+      Self.Result := V.Result;
    end Record_Aggregate;
 
    overriding procedure Record_Definition
