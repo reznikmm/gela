@@ -667,8 +667,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Formal_Signed_Integer_Type_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Formal_Signed_Integer_Type_Definitions.
-        Formal_Signed_Integer_Type_Definition_Access)
-   is null;
+        Formal_Signed_Integer_Type_Definition_Access);
 
    overriding procedure Formal_Type_Declaration
      (Self : in out Visiter;
@@ -1796,6 +1795,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Formal_Derived_Type_Definition;
    end Formal_Derived_Type_Definition;
+
+   overriding procedure Formal_Signed_Integer_Type_Definition
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Formal_Signed_Integer_Type_Definitions.
+        Formal_Signed_Integer_Type_Definition_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Formal_Signed_Integer_Type_Definition;
+   end Formal_Signed_Integer_Type_Definition;
 
    overriding procedure Formal_Type_Declaration
      (Self : in out Visiter;
