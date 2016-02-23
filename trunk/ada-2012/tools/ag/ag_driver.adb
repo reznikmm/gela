@@ -20,6 +20,7 @@ with AG_Tools.Writers; use AG_Tools.Writers;
 with AG_Tools.Input;
 with AG_Tools.Element_Generators;
 with AG_Tools.Prop_Visiters;
+with AG_Tools.Clone_Generator;
 
 procedure AG_Driver is
    use AG_Tools.Input;
@@ -219,7 +220,7 @@ procedure AG_Driver is
    procedure Generate_Visiter is
       Withes : Writer;
       Spec   : Writer;
-      Name : League.Strings.Universal_String;
+      Name   : League.Strings.Universal_String;
    begin
       Spec.P ("package Gela.Element_Visiters is");
       Spec.P ("   pragma Preelaborate;");
@@ -266,4 +267,5 @@ begin
    AG_Tools.Prop_Visiters.Generate (G);
    AG_Tools.Element_Generators.Generate_Elements (G);
    AG_Tools.Element_Generators.Generate_Factory (G);
+   AG_Tools.Clone_Generator.Run (G);
 end AG_Driver;
