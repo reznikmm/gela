@@ -1,5 +1,5 @@
-with "matreshka/league";
-with "matreshka/xml";
+with "matreshka_league";
+with "matreshka_xml";
 with "gela_common";
 
 --with "../../gnat/gela_uaflex";
