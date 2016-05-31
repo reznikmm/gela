@@ -586,7 +586,11 @@ Rules for formal_signed_integer_type_definition. :
 
 Rules for formal_type_declaration. :
 (.
-      ${formal_type_declaration.env_out} := ${formal_type_declaration.env_in};
+      ${formal_type_declaration.env_out} :=
+        Gela.Pass_Utils.Leave_Declarative_Region
+          (Self.Compilation,
+           ${Type_Declaration_View.env_out},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for formal_unconstrained_array_definition. :

@@ -1573,17 +1573,23 @@ Rules for formal_type_declaration. :
 
 Rules for formal_type_declaration. :
 (.
-      ${Discriminant_Part.env_in} := ${formal_type_declaration.env_in};
+      ${Discriminant_Part.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${formal_type_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for formal_type_declaration. :
 (.
-      ${Type_Declaration_View.env_in} := ${formal_type_declaration.env_in};
+      ${Type_Declaration_View.env_in} := ${Discriminant_Part.env_out:Discriminant_Part_Env_In};
 .)
 
 Rules for formal_type_declaration. :
 (.
-      ${Aspect_Specifications.env_in} := ${formal_type_declaration.env_in};
+      ${Aspect_Specifications.env_in} := ${Type_Declaration_View.env_out};
 .)
 
 Rules for formal_unconstrained_array_definition. :
