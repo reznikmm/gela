@@ -646,7 +646,8 @@ Rules for generic_function_renaming. :
 
 Rules for generic_package_declaration. :
 (.
-      ${generic_package_declaration.env_out} := ${generic_package_declaration.env_in};
+      ${generic_package_declaration.env_out} := Self.Compilation.Context.Environment_Set.Leave_Declarative_Region
+        (${Private_Part_Declarative_Items.env_out});
 .)
 
 Rules for generic_package_renaming. :

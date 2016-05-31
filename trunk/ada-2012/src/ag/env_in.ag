@@ -1803,7 +1803,13 @@ Rules for generic_function_renaming. :
 
 Rules for generic_package_declaration. :
 (.
-      ${Generic_Formal_Part.env_in} := ${generic_package_declaration.env_in};
+      ${Generic_Formal_Part.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${generic_package_declaration.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for generic_package_declaration. :
@@ -1818,12 +1824,12 @@ Rules for generic_package_declaration. :
 
 Rules for generic_package_declaration. :
 (.
-      ${Visible_Part_Declarative_Items.env_in} := ${generic_package_declaration.env_in};
+      ${Visible_Part_Declarative_Items.env_in} := ${Generic_Formal_Part.env_out};
 .)
 
 Rules for generic_package_declaration. :
 (.
-      ${Private_Part_Declarative_Items.env_in} := ${generic_package_declaration.env_in};
+      ${Private_Part_Declarative_Items.env_in} := ${Visible_Part_Declarative_Items.env_out};
 .)
 
 Rules for generic_package_declaration. :
