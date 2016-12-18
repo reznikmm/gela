@@ -934,6 +934,11 @@ Rules for attribute_reference. :
 
 Rules for block_statement. :
 (.
+      ${Statement_Identifier.env_in} := ${block_statement.env_in};
+.)
+
+Rules for block_statement. :
+(.
       ${Block_Declarative_Items.env_in} := ${block_statement.env_in};
 .)
 
@@ -1409,6 +1414,11 @@ Rules for floating_point_definition. :
 Rules for floating_point_definition. :
 (.
       ${Real_Range_Constraint.env_in} := ${floating_point_definition.env_in};
+.)
+
+Rules for for_loop_statement. :
+(.
+      ${Statement_Identifier.env_in} := ${for_loop_statement.env_in};
 .)
 
 Rules for for_loop_statement. :
@@ -1976,6 +1986,11 @@ Rules for loop_parameter_specification. :
 Rules for loop_parameter_specification. :
 (.
       ${Specification_Subtype_Definition.env_in} := ${loop_parameter_specification.env_in};
+.)
+
+Rules for loop_statement. :
+(.
+      ${Statement_Identifier.env_in} := ${loop_statement.env_in};
 .)
 
 Rules for loop_statement. :
@@ -2800,6 +2815,11 @@ Rules for variant_part. :
 Rules for variant_part. :
 (.
       ${Variants.env_in} := ${variant_part.env_in};
+.)
+
+Rules for while_loop_statement. :
+(.
+      ${Statement_Identifier.env_in} := ${while_loop_statement.env_in};
 .)
 
 Rules for while_loop_statement. :

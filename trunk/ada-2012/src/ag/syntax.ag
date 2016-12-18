@@ -206,7 +206,7 @@ basic_declaration ::=
 ;
 
 block_statement ::= 
-  token               <Statement_Identifier>
+  [defining_identifier <Statement_Identifier>]
   token               <colon_token>
   token               <declare_token>
   {declarative_item}  <Block_Declarative_Items>
@@ -592,7 +592,7 @@ floating_point_definition ::=
 ;
 
 for_loop_statement ::= 
-  token                  <Statement_Identifier>
+  [defining_identifier    <Statement_Identifier>]
   token                  <colon_token>
   token                  <for_token>
   iterator_specification <Loop_Parameter_Specification>
@@ -1120,27 +1120,27 @@ loop_parameter_specification ::=
 ;
 
 loop_statement ::= 
-  token        <Statement_Identifier>
-  token        <colon_token>
-  token        <loop_token>
-  {statement}  <Loop_Statements>
-  token        <end_token>
-  token        <end_loop>
-  token        <identifier_token>
-  token        <semicolon_token>
+  [defining_identifier <Statement_Identifier>]
+  token               <colon_token>
+  token               <loop_token>
+  {statement}         <Loop_Statements>
+  token               <end_token>
+  token               <end_loop>
+  token               <identifier_token>
+  token               <semicolon_token>
 ;
 
 while_loop_statement ::= 
-  token        <Statement_Identifier>
-  token        <colon_token>
-  token        <while_token>
-  expression   <While_Condition>
-  token        <loop_token>
-  {statement}  <Loop_Statements>
-  token        <end_token>
-  token        <end_loop>
-  token        <identifier_token>
-  token        <semicolon_token>
+  [defining_identifier <Statement_Identifier>]
+  token               <colon_token>
+  token               <while_token>
+  expression          <While_Condition>
+  token               <loop_token>
+  {statement}         <Loop_Statements>
+  token               <end_token>
+  token               <end_loop>
+  token               <identifier_token>
+  token               <semicolon_token>
 ;
 
 known_discriminant_part ::= 

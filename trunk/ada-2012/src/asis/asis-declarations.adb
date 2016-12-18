@@ -29,6 +29,7 @@ with Gela.Elements.Formal_Object_Declarations;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Function_Bodies;
 with Gela.Elements.Function_Declarations;
+with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Object_Renaming_Declarations;
@@ -1441,9 +1442,26 @@ package body Asis.Declarations is
             Node : not null Gela.Elements.Package_Declarations.
               Package_Declaration_Access);
 
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access);
+
       end Get;
 
       package body Get is
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access)
+         is
+            List : constant Gela.Elements.Basic_Declarative_Items.
+              Basic_Declarative_Item_Sequence_Access :=
+                Node.Private_Part_Declarative_Items;
+         begin
+            Self.List := Gela.Elements.Element_Sequence_Access (List);
+         end Generic_Package_Declaration;
 
          overriding procedure Package_Declaration
            (Self : in out Visiter;
@@ -1640,9 +1658,26 @@ package body Asis.Declarations is
             Node : not null Gela.Elements.Package_Declarations.
               Package_Declaration_Access);
 
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access);
+
       end Get;
 
       package body Get is
+
+         overriding procedure Generic_Package_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Generic_Package_Declarations.
+              Generic_Package_Declaration_Access)
+         is
+            List : constant Gela.Elements.Basic_Declarative_Items.
+              Basic_Declarative_Item_Sequence_Access :=
+                Node.Visible_Part_Declarative_Items;
+         begin
+            Self.List := Gela.Elements.Element_Sequence_Access (List);
+         end Generic_Package_Declaration;
 
          overriding procedure Package_Declaration
            (Self : in out Visiter;

@@ -522,7 +522,7 @@ Rules for basic_declarative_item_list. :
 .)
 
 block_statement ::= 
-  [identifier_token colon_token]
+  [defining_identifier colon_token]
   [(declare) declare_token [declarative_part]]
   begin_token sequence_of_statements
    [exception_token sequence_of_exception_handlers]
@@ -533,7 +533,7 @@ Rules for block_statement. :
 (.
    ${block_statement.ast} :=
       +Self.Factory.Block_Statement
-         (-${identifier_token.ast:No_Token},
+         (-${defining_identifier.ast:None},
           -${colon_token.ast:No_Token},
           -${declare_token.ast:No_Token},
           -${declarative_part.ast:(+Self.Factory.Declarative_Item_Sequence)},
@@ -2745,7 +2745,7 @@ Rules for loop_parameter_specification. :
 .)
 
 loop_statement ::= 
-  [identifier_token colon_token]
+  [defining_identifier colon_token]
   [(while) while_token expression |
    (loop)  for_token loop_parameter_specification |
    (iter)  for_token iterator_specification ]
@@ -2758,7 +2758,7 @@ Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
       +Self.Factory.Loop_Statement
-         (-${identifier_token.ast:No_Token},
+         (-${defining_identifier.ast:None},
           -${colon_token.ast:No_Token},
           -${loop_token.ast},
           -${sequence_of_statements.ast},
@@ -2771,7 +2771,7 @@ Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
       +Self.Factory.While_Loop_Statement
-         (-${identifier_token.ast:No_Token},
+         (-${defining_identifier.ast:None},
           -${colon_token.ast:No_Token},
           -${while_token.ast},
           -${expression.ast},
@@ -2786,7 +2786,7 @@ Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
       +Self.Factory.For_Loop_Statement
-         (-${identifier_token.ast:No_Token},
+         (-${defining_identifier.ast:None},
           -${colon_token.ast:No_Token},
           -${for_token.ast},
           -${loop_parameter_specification.ast},
@@ -2801,7 +2801,7 @@ Rules for loop_statement. :
 (.
    ${loop_statement.ast} :=
       +Self.Factory.For_Loop_Statement
-         (-${identifier_token.ast:No_Token},
+         (-${defining_identifier.ast:None},
           -${colon_token.ast:No_Token},
           -${for_token.ast},
           -${iterator_specification.ast},
