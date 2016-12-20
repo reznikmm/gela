@@ -3,6 +3,8 @@ Synthesized attributes
   enumeration_literal,
   identifier,
   operator_symbol,
+  program_unit_name,
+  selected_identifier,
   selector_name
    : Gela.Elements.Defining_Names.Defining_Name_Access : Defining_Name;
 
@@ -30,3 +32,7 @@ Rules for operator_symbol.operator_symbol_token :
          ${operator_symbol.Defining_Name});
 .)
 
+Rules for selected_identifier. :
+(.
+      ${selected_identifier.Defining_Name} := ${Selector.Defining_Name};
+.)

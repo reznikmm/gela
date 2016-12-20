@@ -132,6 +132,7 @@ package Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Result : out Gela.Interpretations.Interpretation_Index);
+   --  Get any interpretation from the Set excluding Symbol
 
    function Placeholder
      (Comp : Gela.Compilations.Compilation_Access)

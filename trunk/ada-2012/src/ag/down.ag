@@ -630,7 +630,11 @@ Rules for function_body. :
 
 Rules for function_instantiation. :
 (.
-      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${function_instantiation.env_in},
+         ${Generic_Unit_Name.Up},
+         ${Generic_Unit_Name.Down});
 .)
 
 Rules for generic_package_declaration. :
@@ -655,7 +659,11 @@ Rules for package_declaration. :
 
 Rules for package_instantiation. :
 (.
-      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${package_instantiation.env_in},
+         ${Generic_Unit_Name.Up},
+         ${Generic_Unit_Name.Down});
 .)
 
 Rules for procedure_body. :
@@ -665,7 +673,11 @@ Rules for procedure_body. :
 
 Rules for procedure_instantiation. :
 (.
-      ${Generic_Unit_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${procedure_instantiation.env_in},
+         ${Generic_Unit_Name.Up},
+         ${Generic_Unit_Name.Down});
 .)
 
 Rules for qualified_expression. :
