@@ -1338,8 +1338,7 @@ package body Gela.Resolve is
          end loop;
       end Resolve_Formal;
 
-      Generic_Declaration : constant Gela.Elements.Element_Access :=
-        Generic_Name.Enclosing_Element;
+      Generic_Declaration : Gela.Elements.Element_Access;
 
       Tuples : constant Gela.Interpretations.Interpretation_Tuple_Index_Array
         := IM.Get_Tuple_List (Associations);
@@ -1348,6 +1347,12 @@ package body Gela.Resolve is
       Chosen  : Gela.Interpretations.Interpretation_Index;
       Visiter : Visiters.Visiter;
    begin
+      if not Generic_Name.Assigned then
+         Result := 0;
+         return;
+      end if;
+
+      Generic_Declaration := Generic_Name.Enclosing_Element;
       Generic_Declaration.Visit (Visiter);
 
       for J in Tuples'Range loop

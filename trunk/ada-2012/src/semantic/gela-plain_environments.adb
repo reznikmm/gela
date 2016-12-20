@@ -344,7 +344,7 @@ package body Gela.Plain_Environments is
          Result := null;
       end Find_Completion;
 
-      Env     : constant Env_Item := Self.Env.Element (Index);
+      Env     : Env_Item;
       Next    : Region_Item_List;
       Result  : Gela.Elements.Defining_Names.Defining_Name_Access;
       Data    : Gela.Environments.Completion_Array
@@ -352,6 +352,12 @@ package body Gela.Plain_Environments is
       Last    : Gela.Environments.Completion_Index := 0;
       Restart : Boolean := False;
    begin
+      if Index = Gela.Library_Environments.Library_Env then
+         return Self.Lib.Completions (Index, Name);
+      else
+         Env := Self.Env.Element (Index);
+      end if;
+
       for J of Env.Region_List loop
          Next := J;
          while Next /= Region_Item_Lists.Empty loop

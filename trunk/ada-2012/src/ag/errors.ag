@@ -540,5 +540,5 @@ Rules for exception_handler. :
 .)
 Rules for generic_association. :
 (.
-      ${generic_association.Errors} := ${Formal_Parameter.Errors};
+      ${generic_association.Errors} := ${Formal_Parameter.Errors:0};
 .)
