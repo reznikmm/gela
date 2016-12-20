@@ -3,6 +3,7 @@ with Gela.Elements.Constraints;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
+with Gela.Elements.Defining_Names;
 
 package Gela.Resolve is
    pragma Preelaborate;
@@ -183,5 +184,12 @@ package Gela.Resolve is
       Up       : Gela.Interpretations.Interpretation_Index;
       Tuple    : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Result   : out Gela.Interpretations.Interpretation_Index);
+
+   procedure Generic_Association_List
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+      Generic_Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Associations : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Result       : out Gela.Interpretations.Interpretation_Index);
 
 end Gela.Resolve;

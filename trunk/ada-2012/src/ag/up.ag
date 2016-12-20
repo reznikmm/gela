@@ -24,6 +24,7 @@ Synthesized attributes
   expression_or_box,
   extension_aggregate,
   auxiliary_apply,
+  generic_formal_parameter,
   identifier,
   if_expression,
   membership_choice,
@@ -46,6 +47,7 @@ Synthesized attributes
   scalar_constraint,
   selected_component,
   selected_identifier,
+  selector_name,
   short_circuit,
   simple_expression,
   simple_expression_range,
@@ -64,6 +66,7 @@ Synthesized attributes
   Array_Component_Choices,
   Variant_Choices,
   association,
+  generic_association,
   case_path,
   variant
    : Gela.Interpretations.Interpretation_Tuple_Index : Up;
@@ -71,6 +74,7 @@ Synthesized attributes
 Synthesized attributes
   Associations,
   Case_Statement_Paths,
+  Generic_Actual_Part,
   Record_Component_Associations,
   Variants,
   association_list
@@ -83,7 +87,6 @@ Rules for Array_Component_Choices.discrete_choice :
 
 Rules for Array_Component_Choices.discrete_choice :
 (.
-      ${Array_Component_Choices.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${discrete_choice.Up},
          ${tail.Up},
@@ -97,9 +100,19 @@ Rules for Associations.association :
 
 Rules for Associations.association :
 (.
-      ${Associations.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${association.Up}, ${tail.Up}, ${Associations.Up});
+.)
+
+Rules for Generic_Actual_Part.generic_association :
+(.
+      ${Generic_Actual_Part.Up} := 0;
+.)
+
+Rules for Generic_Actual_Part.generic_association :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
+        (${generic_association.Up}, ${tail.Up}, ${Generic_Actual_Part.Up});
 .)
 
 Rules for Membership_Test_Choices.membership_choice :
@@ -120,7 +133,6 @@ Rules for Record_Component_Associations.association :
 
 Rules for Record_Component_Associations.association :
 (.
-      ${Record_Component_Associations.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${association.Up}, ${tail.Up}, ${Record_Component_Associations.Up});
 .)
@@ -132,7 +144,6 @@ Rules for Variant_Choices.discrete_choice :
 
 Rules for Variant_Choices.discrete_choice :
 (.
-      ${Variant_Choices.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${discrete_choice.Up},
          ${tail.Up},
@@ -146,7 +157,6 @@ Rules for Variants.variant :
 
 Rules for Variants.variant :
 (.
-      ${Variants.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${variant.Up},
          ${tail.Up},
@@ -160,7 +170,6 @@ Rules for Case_Statement_Paths.case_path :
 
 Rules for Case_Statement_Paths.case_path :
 (.
-      ${Case_Statement_Paths.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
         (${case_path.Up},
          ${tail.Up},
@@ -198,11 +207,23 @@ Rules for selected_component. :
 
 Rules for association. :
 (.
-      ${association.Up} := 0;
       Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${Component_Expression.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
          ${Array_Component_Choices.Up},
          ${association.Up});
+.)
+
+Rules for generic_association. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${Formal_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
+         0,
+         ${generic_association.Up});
+
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
+        (${Actual_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
+         ${generic_association.Up},
+         ${generic_association.Up});
 .)
 
 Rules for attribute_reference. :

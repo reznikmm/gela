@@ -36,6 +36,7 @@ Inherited attributes
   extension_aggregate,
   floating_point_definition,
   auxiliary_apply,
+  generic_association,
   generic_formal_parameter,
   identifier,
   if_expression,
@@ -83,6 +84,7 @@ Inherited attributes
   Array_Component_Choices,
   Associations,
   Case_Statement_Paths,
+  Generic_Actual_Part,
   Membership_Test_Choices,
   Record_Component_Associations,
   Variant_Choices,
@@ -111,6 +113,18 @@ Rules for Associations.association :
 (.
       Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
         (${Associations.Down}, 2, ${tail.Down});
+.)
+
+Rules for Generic_Actual_Part.generic_association :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Generic_Actual_Part.Down}, 1, ${generic_association.Down});
+.)
+
+Rules for Generic_Actual_Part.generic_association :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${Generic_Actual_Part.Down}, 2, ${tail.Down});
 .)
 
 Rules for Record_Component_Associations.association :
@@ -438,7 +452,14 @@ Rules for generalized_iterator_specification. :
 
 Rules for generic_association. :
 (.
-      ${Actual_Parameter.Down} := 0;  --  FIXME
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${generic_association.Down}, 1, ${Actual_Parameter.Down});
+.)
+
+Rules for generic_association. :
+(.
+      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
+        (${generic_association.Down}, 2, ${Formal_Parameter.Down});
 .)
 
 Rules for generic_function_renaming. :
@@ -622,6 +643,11 @@ Rules for formal_package_declaration. :
       ${Generic_Unit_Name.Down} := 0;  --  FIXME
 .)
 
+Rules for formal_package_declaration. :
+(.
+      ${Generic_Actual_Part.Down} := 0;  --  FIXME
+.)
+
 Rules for function_body. :
 (.
       ${end_name.Down} := 0;  --  FIXME
@@ -634,6 +660,16 @@ Rules for function_instantiation. :
          ${function_instantiation.env_in},
          ${Generic_Unit_Name.Up},
          ${Generic_Unit_Name.Down});
+.)
+
+Rules for function_instantiation. :
+(.
+      Gela.Pass_Utils.Resolve.Generic_Association_List
+        (Self.Compilation,
+         ${function_instantiation.env_in},
+         ${Generic_Unit_Name.Defining_Name},
+         ${Generic_Actual_Part.Up},
+         ${Generic_Actual_Part.Down});
 .)
 
 Rules for generic_package_declaration. :
@@ -665,6 +701,16 @@ Rules for package_instantiation. :
          ${Generic_Unit_Name.Down});
 .)
 
+Rules for package_instantiation. :
+(.
+      Gela.Pass_Utils.Resolve.Generic_Association_List
+        (Self.Compilation,
+         ${package_instantiation.env_in},
+         ${Generic_Unit_Name.Defining_Name},
+         ${Generic_Actual_Part.Up},
+         ${Generic_Actual_Part.Down});
+.)
+
 Rules for procedure_body. :
 (.
       ${end_name.Down} := 0;  --  FIXME
@@ -677,6 +723,16 @@ Rules for procedure_instantiation. :
          ${procedure_instantiation.env_in},
          ${Generic_Unit_Name.Up},
          ${Generic_Unit_Name.Down});
+.)
+
+Rules for procedure_instantiation. :
+(.
+      Gela.Pass_Utils.Resolve.Generic_Association_List
+        (Self.Compilation,
+         ${procedure_instantiation.env_in},
+         ${Generic_Unit_Name.Defining_Name},
+         ${Generic_Actual_Part.Up},
+         ${Generic_Actual_Part.Down});
 .)
 
 Rules for qualified_expression. :
@@ -754,11 +810,6 @@ Rules for selected_identifier. :
 Rules for selected_identifier. :
 (.
       ${Selector.Down} := ${selected_identifier.Down};
-.)
-
-Rules for generic_association. :
-(.
-      ${Formal_Parameter.Down} := 0;  --  FIXME
 .)
 
 Rules for selected_component. :

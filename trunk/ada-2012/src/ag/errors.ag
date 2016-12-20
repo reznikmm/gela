@@ -46,6 +46,8 @@ Synthesized attributes
   extension_aggregate,
   for_loop_statement,
   auxiliary_apply,
+  generic_association,
+  generic_formal_parameter,
   goto_statement,
   identifier,
   if_expression,
@@ -82,6 +84,7 @@ Synthesized attributes
   selected_component,
   selected_identifier,
   selective_accept,
+  selector_name,
   short_circuit,
   simple_expression,
   simple_expression_range,
@@ -105,6 +108,7 @@ Synthesized attributes
   Exception_Choices,
   Exception_Handlers,
   Discrete_Subtype_Definitions,
+  Generic_Actual_Part,
   Index_Subtype_Definitions,
   Membership_Test_Choices,
   Record_Component_Associations,
@@ -344,6 +348,14 @@ Rules for Exception_Handlers.exception_handler :
 (.
       ${Exception_Handlers.Errors} := ${exception_handler.Errors}; --  FIXME
 .)
+Rules for Generic_Actual_Part.generic_association :
+(.
+      ${Generic_Actual_Part.Errors} := 0;
+.)
+Rules for Generic_Actual_Part.generic_association :
+(.
+      ${Generic_Actual_Part.Errors} := ${generic_association.Errors}; --  FIXME
+.)
 
 Rules for unconstrained_array_definition. :
 (.
@@ -526,4 +538,7 @@ Rules for exception_handler. :
 (.
       ${exception_handler.Errors} := ${Exception_Choices.Errors};  --  FIXME
 .)
-
+Rules for generic_association. :
+(.
+      ${generic_association.Errors} := ${Formal_Parameter.Errors};
+.)
