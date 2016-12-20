@@ -136,7 +136,6 @@ Inherited attributes
   entry_body,
   entry_declaration,
   entry_index_specification,
-  enumeration_literal,
   enumeration_literal_specification,
   enumeration_type_definition,
   exception_choice,

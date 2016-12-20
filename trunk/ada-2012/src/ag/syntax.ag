@@ -514,8 +514,6 @@ entry_index_specification ::=
   discrete_subtype_definition <Specification_Subtype_Definition>
 ;
 
-enumeration_literal ::= token <enumeration_literal_token>;
-
 enumeration_literal_specification ::= defining_enumeration_name <Names>;
 
 enumeration_type_definition ::=
@@ -1583,7 +1581,6 @@ selective_accept ::=
 
 selector_name ::=
   identifier |
-  enumeration_literal |
   character_literal |
   operator_symbol;
 
@@ -1862,8 +1859,7 @@ declarative_region ::=
 simple_name ::=
   identifier |
   operator_symbol |
-  character_literal |
-  enumeration_literal;
+  character_literal;
 
 Synthesized attributes
   token  : Gela.Lexical_Types.Token_Count : Index;

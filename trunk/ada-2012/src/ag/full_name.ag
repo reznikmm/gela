@@ -1,6 +1,5 @@
 Synthesized attributes
   character_literal,
-  enumeration_literal,
   defining_character_literal,
   defining_designator,
   defining_enumeration_literal,
@@ -72,12 +71,6 @@ Rules for operator_symbol.operator_symbol_token :
 (.
       ${operator_symbol.full_name} :=
         Self.Compilation.Get_Token (${operator_symbol_token.Index}).Symbol;
-.)
-
-Rules for enumeration_literal.enumeration_literal_token :
-(.
-      ${enumeration_literal.full_name} :=
-        Self.Compilation.Get_Token (${enumeration_literal_token.Index}).Symbol;
 .)
 
 Rules for character_literal.character_literal_token :

@@ -1,6 +1,5 @@
 Synthesized attributes
   character_literal,
-  enumeration_literal,
   identifier,
   operator_symbol,
   program_unit_name,
@@ -18,11 +17,6 @@ Rules for identifier.identifier_token :
 Rules for character_literal.character_literal_token :
 (.
         ${character_literal.Defining_Name} := null;
-.)
-
-Rules for enumeration_literal.enumeration_literal_token :
-(.
-        ${enumeration_literal.Defining_Name} := null;
 .)
 
 Rules for operator_symbol.operator_symbol_token :

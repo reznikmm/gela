@@ -28,7 +28,6 @@ Inherited attributes
   discrete_choice,
   discrete_range,
   discrete_subtype_indication_dr,
-  enumeration_literal,
   enumeration_type_definition,
   exception_choice,
   explicit_dereference,

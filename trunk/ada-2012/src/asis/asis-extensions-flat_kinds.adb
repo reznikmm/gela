@@ -60,7 +60,6 @@ with Gela.Elements.Entry_Bodies;
 with Gela.Elements.Entry_Declarations;
 with Gela.Elements.Entry_Index_Specifications;
 with Gela.Elements.Enumeration_Literal_Specifications;
-with Gela.Elements.Enumeration_Literals;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Exception_Declarations;
 with Gela.Elements.Exception_Handlers;
@@ -498,12 +497,6 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Entry_Index_Specifications.
         Entry_Index_Specification_Access)
-   is null;
-
-   overriding procedure Enumeration_Literal
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Enumeration_Literals.
-        Enumeration_Literal_Access)
    is null;
 
    overriding procedure Enumeration_Literal_Specification
