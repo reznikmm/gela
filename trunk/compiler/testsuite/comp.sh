@@ -12,6 +12,11 @@ basename="${file%.*}"
 testsuite=`dirname $0`
 build=${GELA_BUILD:-build}
 
+if ! type clang; then
+  echo "No clang found. Unable to continue"
+  exit
+fi
+
 $build/gela-compiler $args > $build/${basename}.ll
 
 clang -S -emit-llvm -DTEST=${basename} \
