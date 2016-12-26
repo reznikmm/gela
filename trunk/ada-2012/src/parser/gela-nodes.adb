@@ -389,7 +389,7 @@ package body Gela.Nodes is
    -- Set_Part_Of_Implicit --
    --------------------------
 
-   not overriding procedure Set_Part_Of_Implicit (Self : in out Node) is
+   overriding procedure Set_Part_Of_Implicit (Self : in out Node) is
    begin
       Self.Is_Part_Of_Implicit := True;
    end Set_Part_Of_Implicit;
@@ -398,7 +398,7 @@ package body Gela.Nodes is
    -- Set_Part_Of_Inherited --
    ---------------------------
 
-   not overriding procedure Set_Part_Of_Inherited (Self : in out Node) is
+   overriding procedure Set_Part_Of_Inherited (Self : in out Node) is
    begin
       Self.Is_Part_Of_Inherited := True;
    end Set_Part_Of_Inherited;
@@ -407,7 +407,7 @@ package body Gela.Nodes is
    -- Set_Part_Of_Instance --
    --------------------------
 
-   not overriding procedure Set_Part_Of_Instance (Self : in out Node) is
+   overriding procedure Set_Part_Of_Instance (Self : in out Node) is
    begin
       Self.Is_Part_Of_Instance := True;
    end Set_Part_Of_Instance;

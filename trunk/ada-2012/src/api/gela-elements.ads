@@ -36,11 +36,20 @@ package Gela.Elements is
    not overriding function Is_Part_Of_Implicit
      (Self  : Element) return Boolean is abstract;
 
+   not overriding procedure Set_Part_Of_Implicit
+     (Self  : in out Element) is abstract;
+
    not overriding function Is_Part_Of_Inherited
      (Self  : Element) return Boolean is abstract;
 
+   not overriding procedure Set_Part_Of_Inherited
+     (Self : in out Element) is abstract;
+
    not overriding function Is_Part_Of_Instance
      (Self  : Element) return Boolean is abstract;
+
+   not overriding procedure Set_Part_Of_Instance
+     (Self  : in out Element) is abstract;
 
    not overriding function First_Token
      (Self  : Element) return Gela.Lexical_Types.Token_Count is abstract;

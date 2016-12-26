@@ -20,9 +20,9 @@ package Gela.Nodes is
    not overriding function Nested
      (Self : Node) return Nested_Kind_Array is abstract;
 
-   not overriding procedure Set_Part_Of_Implicit (Self  : in out Node);
-   not overriding procedure Set_Part_Of_Inherited (Self : in out Node);
-   not overriding procedure Set_Part_Of_Instance (Self  : in out Node);
+   overriding procedure Set_Part_Of_Implicit (Self  : in out Node);
+   overriding procedure Set_Part_Of_Inherited (Self : in out Node);
+   overriding procedure Set_Part_Of_Instance (Self  : in out Node);
 
    generic
       with package Generic_Element_Sequences is new
