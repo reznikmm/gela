@@ -1,0 +1,11 @@
+Synthesized attributes
+  package_instantiation
+   : Gela.Elements.Element_Access : Expanded;
+
+Rules for package_instantiation. :
+(.
+        Gela.Pass_Utils.Instantiation.Expand
+          (Self.Compilation,
+           Node,
+           ${package_instantiation.Expanded});
+.)

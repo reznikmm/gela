@@ -2169,6 +2169,31 @@ Rules for package_instantiation. :
       ${Aspect_Specifications.env_in} := ${package_instantiation.env_in};
 .)
 
+Rules for Formal_Part_Copy.basic_declaration :
+(.
+      ${basic_declaration.env_in} := 0;
+.)
+
+Rules for package_instance. :
+(.
+      ${Names.env_in} := 0;
+.)
+
+Rules for package_instance. :
+(.
+      ${Aspect_Specifications.env_in} := 0;
+.)
+
+Rules for package_instance. :
+(.
+      ${Visible_Part_Declarative_Items.env_in} := 0;
+.)
+
+Rules for package_instance. :
+(.
+      ${Private_Part_Declarative_Items.env_in} := 0;
+.)
+
 Rules for package_renaming_declaration. :
 (.
       ${Names.env_in} := ${package_renaming_declaration.env_in};

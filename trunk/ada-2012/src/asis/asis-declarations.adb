@@ -9,10 +9,13 @@
 --  Purpose:
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
-with Asis.Elements;
 with Asis.Compilation_Units;
+with Asis.Elements;
 
 with Gela.Compilations;
+with Gela.Lexical_Types;
+with Gela.Property_Visiters;
+
 with Gela.Element_Visiters;
 with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Component_Declarations;
@@ -46,7 +49,6 @@ with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Elements.Task_Bodies;
 with Gela.Elements.Task_Definitions;
 with Gela.Elements.Type_Definitions;
-with Gela.Lexical_Types;
 
 package body Asis.Declarations is
 
@@ -387,6 +389,35 @@ package body Asis.Declarations is
      (Declaration : in Asis.Declaration)
       return Asis.Declaration
    is
+      package Get is
+         type Property_Visiter is new Gela.Property_Visiters.Property_Visiter
+           with record
+              Result : Gela.Elements.Element_Access;
+           end record;
+
+         overriding procedure On_Expanded
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Elements.Element_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure On_Expanded
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Elements.Element_Access)
+         is
+            pragma Unreferenced (Element);
+         begin
+            Self.Result := Value;
+         end On_Expanded;
+
+      end Get;
+
+      Getter  : aliased Get.Property_Visiter;
+      Visiter : Gela.Property_Visiters.Visiter (Getter'Access);
    begin
       case Asis.Elements.Declaration_Kind (Declaration) is
          when
@@ -406,6 +437,10 @@ package body Asis.Declarations is
            | A_Generic_Function_Renaming_Declaration
            | An_Entry_Declaration =>
             return Declaration;
+         when A_Package_Instantiation =>
+            Declaration.Data.Visit (Visiter);
+
+            return (Data => Getter.Result);
          when others =>
             null;
       end case;

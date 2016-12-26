@@ -7,6 +7,7 @@
 #include "up.ag"
 #include "down.ag"
 #include "def_name.ag"
+#include "inst.ag"
 #include "errors.ag"
 #include "static_value.ag"
 

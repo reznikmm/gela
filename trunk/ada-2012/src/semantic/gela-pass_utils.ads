@@ -15,11 +15,13 @@ with Gela.Elements.Use_Package_Clauses;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Resolve;
+with Gela.Instantiation;
 
 package Gela.Pass_Utils is
    pragma Preelaborate;
 
    package Resolve renames Gela.Resolve;
+   package Instantiation renames Gela.Instantiation;
 
    function Add_Name_Create_Region
      (Comp   : Gela.Compilations.Compilation_Access;

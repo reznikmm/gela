@@ -195,10 +195,17 @@ procedure Def_Name is
       Control : in out Asis.Traverse_Control;
       State   : in out League.Strings.Universal_String)
    is
-      pragma Unreferenced (Control);
-      pragma Unreferenced (State);
    begin
       On_Element (Element);
+
+      if Asis.Elements.Declaration_Kind (Element)
+           in Asis.A_Generic_Instantiation
+      then
+         Iterate
+           (Asis.Declarations.Corresponding_Declaration (Element),
+            Control,
+            State);
+      end if;
    end Pre_Operation;
 
    use type League.Hash_Type;
