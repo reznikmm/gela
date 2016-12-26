@@ -609,27 +609,17 @@ package body Asis.Expressions is
 
          overriding procedure Identifier
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Identifiers.Identifier_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Identifier_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+            Node : not null Gela.Elements.Identifiers.Identifier_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Identifier;
 
          overriding procedure Operator_Symbol
            (Self : in out Visiter;
             Node : not null Gela.Elements.Operator_Symbols.
-              Operator_Symbol_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Operator_Symbol_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+              Operator_Symbol_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Operator_Symbol;
 
       end Get;

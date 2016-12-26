@@ -768,53 +768,33 @@ package body Asis.Declarations is
          overriding procedure Defining_Character_Literal
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Character_Literals.
-              Defining_Character_Literal_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Character_Literal;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+              Defining_Character_Literal_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Defining_Character_Literal;
 
          overriding procedure Defining_Enumeration_Literal
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Enumeration_Literals.
-              Defining_Enumeration_Literal_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Identifier;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+              Defining_Enumeration_Literal_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Defining_Enumeration_Literal;
 
          overriding procedure Defining_Identifier
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Identifiers.
-              Defining_Identifier_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Identifier_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+              Defining_Identifier_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Defining_Identifier;
 
          overriding procedure Defining_Operator_Symbol
            (Self : in out Visiter;
             Node : not null Gela.Elements.Defining_Operator_Symbols.
-              Defining_Operator_Symbol_Access)
-         is
-            Token : constant Gela.Lexical_Types.Token_Count :=
-              Node.Operator_Symbol_Token;
-            Comp  : constant Gela.Compilations.Compilation_Access :=
-              Node.Enclosing_Compilation;
+              Defining_Operator_Symbol_Access) is
          begin
-            Self.Symbol := Comp.Get_Token (Token).Symbol;
+            Self.Symbol := Node.Full_Name;
          end Defining_Operator_Symbol;
       end Get;
 
