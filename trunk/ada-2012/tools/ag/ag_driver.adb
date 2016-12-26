@@ -20,6 +20,7 @@ with AG_Tools.Writers; use AG_Tools.Writers;
 with AG_Tools.Input;
 with AG_Tools.Element_Generators;
 with AG_Tools.Prop_Visiters;
+with AG_Tools.Prop_Setter;
 with AG_Tools.Clone_Generator;
 
 procedure AG_Driver is
@@ -265,6 +266,7 @@ begin
    Generate_2;
    Generate_Visiter;
    AG_Tools.Prop_Visiters.Generate (G);
+   AG_Tools.Prop_Setter.Generate (G);
    AG_Tools.Element_Generators.Generate_Elements (G);
    AG_Tools.Element_Generators.Generate_Factory (G);
    AG_Tools.Clone_Generator.Run (G);
