@@ -102,7 +102,8 @@ package body AG_Tools.Clone_Generator is
             Assign.N ("               Item := ");
             Assign.N (Item);
             Assign.P ("_Access");
-            Assign.P ("                  (Self.Clone (Cursor.Element));");
+            Assign.P ("                  " &
+                        "(Cloner'Class (Self).Clone (Cursor.Element));");
             Assign.N ("               ");
             Assign.N (Name);
             Assign.P (".Append (Item);");
@@ -128,7 +129,7 @@ package body AG_Tools.Clone_Generator is
             Assign.N (" := ");
             Assign.N (Mark);
             Assign.P ("_Access");
-            Assign.N ("        (Self.Clone (Node.");
+            Assign.N ("        (Cloner'Class (Self).Clone (Node.");
             Assign.N (Name);
             Assign.P ("));");
             Assign.P;
