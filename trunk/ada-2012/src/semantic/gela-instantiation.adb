@@ -14,6 +14,8 @@ with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Package_Instances;
+with Gela.Semantic_Types;
+with Gela.Interpretations;
 
 package body Gela.Instantiation is
 
@@ -67,15 +69,99 @@ package body Gela.Instantiation is
          Cloner : access Cloners.Cloner)
           is new Gela.Property_Setters.Property_Setter with null record;
 
-      overriding procedure On_Full_Name
+      overriding procedure On_Index
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
-         Value   : in out Gela.Lexical_Types.Symbol);
+         Value   : out Gela.Lexical_Types.Token_Count);
+
+      overriding procedure On_Env_In
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index);
+
+      overriding procedure On_Env_Out
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index);
+
+      overriding procedure On_Down
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.Interpretation_Index);
+
+      overriding procedure On_Errors
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Error_Set_Index);
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Tuple_Index);
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Tuple_List_Index);
+
+      overriding procedure On_Name_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List);
+
+      overriding procedure On_Limited_With_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List);
+
+      overriding procedure On_With_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List);
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Set_Index);
+
+      overriding procedure On_Static_Value
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Value_Index);
 
       overriding procedure On_Defining_Name
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
-         Value   : in out Gela.Elements.Defining_Names.Defining_Name_Access);
+         Value   : out Gela.Elements.Defining_Names.
+           Defining_Name_Access);
+
+      overriding procedure On_Full_Name
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol);
+
+      overriding procedure On_Declarative_Region
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index);
+
+      overriding procedure On_Type_Index
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Type_Index);
+
+      overriding procedure On_Corresponding_Type
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access);
+
+      overriding procedure On_Expanded
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access);
 
    end Setters;
 
@@ -85,6 +171,129 @@ package body Gela.Instantiation is
 
    package body Setters is
 
+      overriding procedure On_Index
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Token_Count)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Index;
+
+      overriding procedure On_Env_In
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Env_In;
+
+      overriding procedure On_Env_Out
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Env_Out;
+
+      overriding procedure On_Down
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.Interpretation_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Down;
+
+      overriding procedure On_Errors
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Error_Set_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Errors;
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Tuple_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Up;
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Tuple_List_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Up;
+
+      overriding procedure On_Name_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Name_List;
+
+      overriding procedure On_Limited_With_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Limited_With_List;
+
+      overriding procedure On_With_List
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Lexical_Types.Symbol_List)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_With_List;
+
+      overriding procedure On_Up
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.
+           Interpretation_Set_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Up;
+
+      overriding procedure On_Static_Value
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Value_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Static_Value;
+
       ------------------
       -- On_Full_Name --
       ------------------
@@ -92,7 +301,7 @@ package body Gela.Instantiation is
       overriding procedure On_Full_Name
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
-         Value   : in out Gela.Lexical_Types.Symbol)
+         Value   : out Gela.Lexical_Types.Symbol)
       is
          pragma Unreferenced (Element);
          type Property_Visiter is new Gela.Property_Visiters.Property_Visiter
@@ -126,7 +335,7 @@ package body Gela.Instantiation is
       overriding procedure On_Defining_Name
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
-         Value   : in out Gela.Elements.Defining_Names.Defining_Name_Access)
+         Value   : out Gela.Elements.Defining_Names.Defining_Name_Access)
       is
          pragma Unreferenced (Element);
          type Property_Visiter is new Gela.Property_Visiters.Property_Visiter
@@ -161,6 +370,46 @@ package body Gela.Instantiation is
             end if;
          end if;
       end On_Defining_Name;
+
+      overriding procedure On_Declarative_Region
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Env_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Declarative_Region;
+
+      overriding procedure On_Type_Index
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Semantic_Types.Type_Index)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := 0;
+      end On_Type_Index;
+
+      overriding procedure On_Corresponding_Type
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := null;
+      end On_Corresponding_Type;
+
+      overriding procedure On_Expanded
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := null;
+      end On_Expanded;
 
    end Setters;
 

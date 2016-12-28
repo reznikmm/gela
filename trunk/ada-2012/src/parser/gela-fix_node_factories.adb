@@ -23,6 +23,8 @@ package body Gela.Fix_Node_Factories is
               (Self.Comp,
                Operator_Symbol_Token));
    begin
+      Result.Set_Full_Name (Gela.Lexical_Types.No_Symbol);
+
       return Gela.Elements.Operator_Symbols.Operator_Symbol_Access (Result);
    end Operator_Symbol;
 

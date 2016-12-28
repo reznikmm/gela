@@ -41,9 +41,9 @@ package body AG_Tools.Prop_Setter is
             Spec.P (To_Ada (J.Name));
             Spec.P ("     (Self    : in out Property_Setter;");
             Spec.P ("      Element : Gela.Elements.Element_Access;");
-            Spec.N ("      Value   : in out ");
+            Spec.N ("      Value   : out ");
             Spec.N (J.Type_Name);
-            Spec.P (") is null;");
+            Spec.P (") is abstract;");
             Spec.P;
 
             Done.Append (Name);
@@ -82,8 +82,6 @@ package body AG_Tools.Prop_Setter is
                   Impl.N (To_Ada (Decl.Name));
                   Impl.N (" : ");
                   Impl.N (Decl.Type_Name);
-                  Impl.N (" := Node.");
-                  Impl.N (To_Ada (Decl.Name));
                   Impl.P (";");
                end loop;
 
