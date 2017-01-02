@@ -4,12 +4,10 @@ with Gela.Elements.Alt_Record_Definitions;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Items;
 with Gela.Elements.Defining_Identifiers;
-with Gela.Elements.Discriminant_Parts;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Known_Discriminant_Parts;
 with Gela.Elements.Record_Definitions;
 with Gela.Elements.Record_Type_Definitions;
-with Gela.Elements.Type_Definitions;
 with Gela.Elements.Variant_Parts;
 with Gela.Elements.Variants;
 
@@ -26,9 +24,27 @@ package body Gela.Plain_Type_Views is
       return Self.Category;
    end Category;
 
-   ------------
-   -- Create --
-   ------------
+   ------------------------
+   -- Create_Formal_Type --
+   ------------------------
+
+   function Create_Formal_Type
+     (Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Formal_Type_Declarations
+                   .Formal_Type_Declaration_Access)
+      return Gela.Type_Categories.Type_View_Access
+   is
+      Value : constant Type_View_Access :=
+        new Type_View'(Category => Category,
+                       Def      => Decl.Type_Declaration_View,
+                       Discr    => Decl.Discriminant_Part);
+   begin
+      return Gela.Type_Categories.Type_View_Access (Value);
+   end Create_Formal_Type;
+
+   ----------------------
+   -- Create_Full_Type --
+   ----------------------
 
    function Create_Full_Type
      (Category : Gela.Type_Categories.Category_Kinds;
@@ -37,7 +53,9 @@ package body Gela.Plain_Type_Views is
       return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access :=
-        new Type_View'(Category => Category, Decl => Decl);
+        new Type_View'(Category => Category,
+                       Def      => Decl.Type_Declaration_View,
+                       Discr    => Decl.Discriminant_Part);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
@@ -165,15 +183,13 @@ package body Gela.Plain_Type_Views is
       end Get;
 
       V : Get.Visiter;
-      View : Gela.Elements.Type_Definitions.Type_Definition_Access;
       D : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
         Self.Get_Discriminant (Symbol);
    begin
       if D.Assigned then
          return D;
       else
-         View := Self.Decl.Type_Declaration_View;
-         View.Visit (V);
+         Self.Def.Visit (V);
          return Gela.Elements.Defining_Names.Defining_Name_Access (V.Result);
       end if;
    end Get_Component;
@@ -212,10 +228,8 @@ package body Gela.Plain_Type_Views is
       end Get;
 
       V : Get.Visiter;
-      View : Gela.Elements.Type_Definitions.Type_Definition_Access;
    begin
-      View := Self.Decl.Type_Declaration_View;
-      View.Visit (V);
+      Self.Def.Visit (V);
       return V.Result;
    end Get_Designated;
 
@@ -277,12 +291,10 @@ package body Gela.Plain_Type_Views is
          end Known_Discriminant_Part;
       end Get;
 
-      X : constant Gela.Elements.Discriminant_Parts.
-        Discriminant_Part_Access := Self.Decl.Discriminant_Part;
       V : Get.Visiter;
    begin
-      if X.Assigned then
-         X.Visit (V);
+      if Self.Discr.Assigned then
+         Self.Discr.Visit (V);
          return Gela.Elements.Defining_Names.Defining_Name_Access (V.Result);
       else
          return null;
@@ -360,7 +372,7 @@ package body Gela.Plain_Type_Views is
       Matcher : Visitors.Type_Visitor;
    begin
       if Expected.all in Type_View and then
-        Self.Decl = Type_View (Expected.all).Decl
+        Self.Def = Type_View (Expected.all).Def
       then
          return True;
       end if;

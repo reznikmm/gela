@@ -1,6 +1,8 @@
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Subtype_Indications;
+with Gela.Elements.Discriminant_Parts;
 with Gela.Lexical_Types;
 with Gela.Types.Simple;
 with Gela.Types.Untagged_Records;
@@ -26,6 +28,12 @@ package Gela.Plain_Type_Views is
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
 
+   function Create_Formal_Type
+     (Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Formal_Type_Declarations
+                   .Formal_Type_Declaration_Access)
+      return Gela.Type_Categories.Type_View_Access;
+
 private
 
    type Type_View is new Gela.Type_Categories.Type_View
@@ -37,8 +45,8 @@ private
      and Gela.Types.Untagged_Records.Untagged_Record_Type with
    record
       Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-        .Full_Type_Declaration_Access;
+      Def      : access Gela.Elements.Element'Class;
+      Discr    : Gela.Elements.Discriminant_Parts.Discriminant_Part_Access;
    end record;
 
    overriding function Category
