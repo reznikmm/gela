@@ -6,6 +6,7 @@ with Ada.Containers.Hashed_Maps;
 with Gela.Contexts;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Discrete_Subtype_Definitions;
+with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
@@ -37,8 +38,7 @@ private
 
    type Back_Key is record
       Category : Gela.Type_Categories.Category_Kinds;
-      Decl     : Gela.Elements.Full_Type_Declarations
-        .Full_Type_Declaration_Access;
+      Decl     : access Gela.Elements.Element'Class;
    end record;
 
    function Hash (Key : Back_Key) return Ada.Containers.Hash_Type;
@@ -89,6 +89,13 @@ private
       Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
+        return Gela.Semantic_Types.Type_Index;
+
+   not overriding function Get
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Formal_Type_Declarations
+      .Formal_Type_Declaration_Access)
         return Gela.Semantic_Types.Type_Index;
 
    not overriding function Get_Derived

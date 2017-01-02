@@ -17,6 +17,8 @@ with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Enumeration_Literal_Specifications;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Floating_Point_Definitions;
+with Gela.Elements.Formal_Signed_Integer_Type_Definitions;
+with Gela.Elements.Formal_Type_Definitions;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
@@ -55,6 +57,33 @@ package body Gela.Plain_Type_Managers is
    begin
       return Boolean_Index;
    end Boolean;
+
+   not overriding function Get
+     (Self     : access Type_Manager;
+      Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Formal_Type_Declarations
+      .Formal_Type_Declaration_Access)
+        return Gela.Semantic_Types.Type_Index
+   is
+      use type Gela.Semantic_Types.Type_Index;
+
+      Key : constant Back_Key := (Category, Decl);
+      Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
+      Result : constant Gela.Semantic_Types.Type_Index :=
+        Self.Map.Last_Key + 1;
+   begin
+      if Back_Maps.Has_Element (Pos) then
+         return Back_Maps.Element (Pos);
+      end if;
+
+      Self.Map.Insert
+        (Result,
+         Gela.Plain_Type_Views.Create_Formal_Type (Category, Decl));
+
+      Self.Back.Insert (Key, Result);
+
+      return Result;
+   end Get;
 
    ---------
    -- Get --
@@ -403,6 +432,17 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Floating_Point_Definitions.
               Floating_Point_Definition_Access);
 
+         overriding procedure Formal_Signed_Integer_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.
+              Formal_Signed_Integer_Type_Definitions.
+                Formal_Signed_Integer_Type_Definition_Access);
+
+         overriding procedure Formal_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Type_Declarations.
+              Formal_Type_Declaration_Access);
+
          overriding procedure Full_Type_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Full_Type_Declarations.
@@ -555,6 +595,29 @@ package body Gela.Plain_Type_Managers is
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Floating_Point_Definition;
+
+         overriding procedure Formal_Signed_Integer_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.
+              Formal_Signed_Integer_Type_Definitions.
+                Formal_Signed_Integer_Type_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Categories.A_Signed_Integer,
+               Decl     => Gela.Elements.Formal_Type_Declarations.
+                 Formal_Type_Declaration_Access (Node.Enclosing_Element));
+         end Formal_Signed_Integer_Type_Definition;
+
+         overriding procedure Formal_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Type_Declarations.
+              Formal_Type_Declaration_Access)
+         is
+            View : constant Gela.Elements.Formal_Type_Definitions.
+              Formal_Type_Definition_Access := Node.Type_Declaration_View;
+         begin
+            View.Visit (Self);
+         end Formal_Type_Declaration;
 
          ---------------------------
          -- Full_Type_Declaration --

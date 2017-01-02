@@ -1,6 +1,7 @@
 with Ada.Containers.Hashed_Maps;
 
 with Gela.Element_Cloners;
+with Gela.Element_Visiters;
 with Gela.Lexical_Types;
 with Gela.Property_Setters;
 with Gela.Property_Visiters;
@@ -10,11 +11,13 @@ with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Program_Unit_Names;
+with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Package_Instances;
-with Gela.Semantic_Types;
+with Gela.Elements.Subtype_Declarations;
 with Gela.Interpretations;
+with Gela.Environments;
 
 package body Gela.Instantiation is
 
@@ -163,6 +166,30 @@ package body Gela.Instantiation is
          Value   : out Gela.Elements.Element_Access);
 
    end Setters;
+
+   package Update_Env is
+      type Visiter is new Gela.Element_Visiters.Visiter with record
+         Set  : Gela.Environments.Environment_Set_Access;
+         Env  : Gela.Semantic_Types.Env_Index;
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      end record;
+
+      overriding procedure Full_Type_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Full_Type_Declarations.
+           Full_Type_Declaration_Access);
+
+      overriding procedure Package_Instance
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Instances.
+           Package_Instance_Access);
+
+      overriding procedure Subtype_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Subtype_Declarations.
+           Subtype_Declaration_Access);
+
+   end Update_Env;
 
    -------------
    -- Setters --
@@ -586,6 +613,75 @@ package body Gela.Instantiation is
 
    end Cloners;
 
+   ----------------
+   -- Update_Env --
+   ----------------
+
+   package body Update_Env is
+
+      overriding procedure Full_Type_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Full_Type_Declarations.
+           Full_Type_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+           Gela.Elements.Defining_Names.Defining_Name_Access (Node.Names);
+      begin
+         Self.Env := Self.Set.Add_Defining_Name
+           (Self.Env, Name.Full_Name, Name);
+      end Full_Type_Declaration;
+
+      overriding procedure Package_Instance
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Package_Instances.
+           Package_Instance_Access)
+      is
+         Name : Gela.Elements.Defining_Names.Defining_Name_Access;
+      begin
+         if Self.Name.Assigned then
+            Name := Self.Name;
+            Self.Name := null;
+         else
+            Name :=
+              Gela.Elements.Defining_Names.Defining_Name_Access (Node.Names);
+         end if;
+
+         Self.Env := Self.Set.Add_Defining_Name
+           (Self.Env, Name.Full_Name, Name);
+
+         Self.Env := Self.Set.Enter_Declarative_Region (Self.Env, Name);
+
+         declare
+            Item   : Gela.Elements.Basic_Declarative_Items
+              .Basic_Declarative_Item_Access;
+            Cursor : Gela.Elements.Basic_Declarative_Items
+              .Basic_Declarative_Item_Sequence_Cursor :=
+                Node.Visible_Part_Declarative_Items.First;
+         begin
+            while Cursor.Has_Element loop
+               Item := Cursor.Element;
+               Item.Visit (Self);
+               Cursor.Next;
+            end loop;
+         end;
+
+         Self.Env := Self.Set.Leave_Declarative_Region (Self.Env);
+      end Package_Instance;
+
+      overriding procedure Subtype_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Subtype_Declarations.
+           Subtype_Declaration_Access)
+      is
+         Name : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+           Gela.Elements.Defining_Names.Defining_Name_Access (Node.Names);
+      begin
+         Self.Env := Self.Set.Add_Defining_Name
+           (Self.Env, Name.Full_Name, Name);
+      end Subtype_Declaration;
+
+   end Update_Env;
+
    ------------
    -- Expand --
    ------------
@@ -601,11 +697,45 @@ package body Gela.Instantiation is
 
       Cloner : Cloners.Cloner (Comp.Factory);
    begin
-      if Defining_Name.Assigned then
+      Expanded := Node.Expanded;
+
+      if not Expanded.Assigned and Defining_Name.Assigned then
          Cloner.Template := Defining_Name.Enclosing_Element;
          Cloner.Instance_Name := Defining_Name;
          Expanded := Cloner.Clone (Cloner.Template);
       end if;
    end Expand;
+
+   -----------------
+   -- Environment --
+   -----------------
+
+   procedure Environment
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Node         : not null Gela.Elements.Package_Instantiations.
+        Package_Instantiation_Access;
+      Env_In       : Gela.Semantic_Types.Env_Index;
+      Env_Out      : out Gela.Semantic_Types.Env_Index)
+   is
+      Visiter  : Update_Env.Visiter;
+      Expanded : Gela.Elements.Element_Access := Node.Expanded;
+      Name     : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Gela.Elements.Defining_Names.Defining_Name_Access (Node.Names);
+   begin
+      if not Expanded.Assigned then
+         Expand (Comp, Node, Expanded);
+         Node.Set_Expanded (Expanded);
+      end if;
+
+      if Expanded.Assigned then
+         Visiter.Set := Comp.Context.Environment_Set;
+         Visiter.Name := Name;
+         Visiter.Env := Env_In;
+         Expanded.Visit (Visiter);
+         Env_Out := Visiter.Env;
+      else
+         Env_Out := Env_In;
+      end if;
+   end Environment;
 
 end Gela.Instantiation;

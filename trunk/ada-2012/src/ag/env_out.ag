@@ -747,7 +747,11 @@ Rules for package_declaration. :
 
 Rules for package_instantiation. :
 (.
-      ${package_instantiation.env_out} := ${package_instantiation.env_in};
+      Gela.Pass_Utils.Instantiation.Environment
+        (Self.Compilation,
+         Node,
+         ${package_instantiation.env_in},
+         ${package_instantiation.env_out});
 .)
 
 Rules for package_renaming_declaration. :
