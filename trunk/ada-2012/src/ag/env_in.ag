@@ -2169,9 +2169,9 @@ Rules for package_instantiation. :
       ${Aspect_Specifications.env_in} := ${package_instantiation.env_in};
 .)
 
-Rules for Formal_Part_Copy.basic_declaration :
+Rules for Formal_Part_Copy.generic_formal :
 (.
-      ${basic_declaration.env_in} := 0;
+      ${generic_formal.env_in} := 0;
 .)
 
 Rules for package_instance. :

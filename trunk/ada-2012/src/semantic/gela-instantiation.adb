@@ -6,7 +6,6 @@ with Gela.Property_Setters;
 with Gela.Property_Visiters;
 
 with Gela.Elements.Aspect_Specifications;
-with Gela.Elements.Basic_Declarations;
 with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Names;
@@ -470,8 +469,10 @@ package body Gela.Instantiation is
          Node : not null Gela.Elements.Generic_Package_Declarations.
            Generic_Package_Declaration_Access)
       is
-         Formal_Part_Copy               : Gela.Elements.Basic_Declarations.
-           Basic_Declaration_Sequence_Access;
+         Element : constant Gela.Elements.Element_Access :=
+           Gela.Elements.Element_Access (Node);
+         Formal_Part_Copy               : Gela.Elements.Generic_Formals.
+           Generic_Formal_Sequence_Access;
          Names                          : Gela.Elements.
            Defining_Program_Unit_Names.Defining_Program_Unit_Name_Access;
          Aspect_Specifications          : Gela.Elements.Aspect_Specifications.
@@ -483,20 +484,20 @@ package body Gela.Instantiation is
 
          Result : Gela.Elements.Package_Instances.Package_Instance_Access;
       begin
-         if Self.Template = Node then
+         if Self.Template = Element then
             if Node.Generic_Formal_Part not in null then
                declare
-                  Item   : Gela.Elements.Basic_Declarations.
-                    Basic_Declaration_Access;
+                  Item   : Gela.Elements.Generic_Formals.
+                    Generic_Formal_Access;
                   Cursor : Gela.Elements.Generic_Formals.
                     Generic_Formal_Sequence_Cursor :=
                       Node.Generic_Formal_Part.First;
                begin
-                  Formal_Part_Copy := Self.Factory.Basic_Declaration_Sequence;
+                  Formal_Part_Copy := Self.Factory.Generic_Formal_Sequence;
 
                   while Cursor.Has_Element loop
-                     Item := Gela.Elements.Basic_Declarations.
-                       Basic_Declaration_Access
+                     Item := Gela.Elements.Generic_Formals.
+                       Generic_Formal_Access
                          (Cloner'Class (Self).Clone (Cursor.Element));
                      Formal_Part_Copy.Append (Item);
                      Cursor.Next;

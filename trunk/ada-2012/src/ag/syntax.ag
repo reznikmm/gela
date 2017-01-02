@@ -1268,7 +1268,7 @@ package_declaration ::=
 ;
 
 package_instance ::=
-  {basic_declaration}        <Formal_Part_Copy>
+  {generic_formal}           <Formal_Part_Copy>
   defining_program_unit_name <Names>
   {aspect_specification}     <Aspect_Specifications>
   {basic_declarative_item}   <Visible_Part_Declarative_Items>
