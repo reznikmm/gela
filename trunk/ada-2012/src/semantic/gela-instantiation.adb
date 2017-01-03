@@ -692,17 +692,23 @@ package body Gela.Instantiation is
         Package_Instantiation_Access;
       Expanded     : out Gela.Elements.Element_Access)
    is
+      pragma Unreferenced (Comp);
+
       Defining_Name : constant Gela.Elements.Defining_Names
         .Defining_Name_Access := Node.Generic_Unit_Name.Defining_Name;
 
-      Cloner : Cloners.Cloner (Comp.Factory);
    begin
       Expanded := Node.Expanded;
 
       if not Expanded.Assigned and Defining_Name.Assigned then
-         Cloner.Template := Defining_Name.Enclosing_Element;
-         Cloner.Instance_Name := Defining_Name;
-         Expanded := Cloner.Clone (Cloner.Template);
+         declare
+            Cloner : Cloners.Cloner
+              (Defining_Name.Enclosing_Compilation.Factory);
+         begin
+            Cloner.Template := Defining_Name.Enclosing_Element;
+            Cloner.Instance_Name := Defining_Name;
+            Expanded := Cloner.Clone (Cloner.Template);
+         end;
       end if;
    end Expand;
 

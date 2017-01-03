@@ -139,7 +139,10 @@ package body Asis.Text is
       Comp      : constant Gela.Compilations.Compilation_Access :=
         Element.Data.Enclosing_Compilation;
    begin
-      if Element.Data.First_Token = 0 or Element.Data.Last_Token = 0 then
+      if Element.Data.First_Token = 0
+        or Element.Data.Last_Token = 0
+        or Element.Data.Is_Part_Of_Instance
+      then
          return Nil_Span;
       end if;
 

@@ -51,7 +51,8 @@ package body AG_Tools.Clone_Generator is
          end if;
 
          if Part.Is_Terminal_Reference then
-            List.N ("0");
+            List.N ("Node.");
+            List.N (Name);
             return;
          end if;
 
@@ -203,10 +204,6 @@ package body AG_Tools.Clone_Generator is
 
                   Impl.P;
                   Impl.P ("   is");
-
-                  if Assign.Text.Is_Empty then
-                     Impl.N ("pragma Unreferenced (Node);");
-                  end if;
 
                   Impl.P (Decl.Text);
                   Impl.N ("      Result : ");
