@@ -595,8 +595,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Formal_Discrete_Type_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Formal_Discrete_Type_Definitions.
-        Formal_Discrete_Type_Definition_Access)
-   is null;
+        Formal_Discrete_Type_Definition_Access);
 
    overriding procedure Formal_Floating_Point_Definition
      (Self : in out Visiter;
@@ -631,8 +630,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Formal_Object_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Formal_Object_Declarations.
-        Formal_Object_Declaration_Access)
-   is null;
+        Formal_Object_Declaration_Access);
 
    overriding procedure Formal_Ordinary_Fixed_Point_Definition
      (Self : in out Visiter;
@@ -1793,6 +1791,26 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Formal_Derived_Type_Definition;
    end Formal_Derived_Type_Definition;
+
+   overriding procedure Formal_Discrete_Type_Definition
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Formal_Discrete_Type_Definitions.
+        Formal_Discrete_Type_Definition_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Formal_Discrete_Type_Definition;
+   end Formal_Discrete_Type_Definition;
+
+   overriding procedure Formal_Object_Declaration
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Formal_Object_Declarations.
+        Formal_Object_Declaration_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Formal_Object_Declaration;
+   end Formal_Object_Declaration;
 
    overriding procedure Formal_Signed_Integer_Type_Definition
      (Self : in out Visiter;

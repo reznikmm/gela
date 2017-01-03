@@ -104,6 +104,7 @@ Synthesized attributes
   Array_Component_Choices,
   Associations,
   Body_Statements,
+  Block_Statements,
   Case_Statement_Paths,
   Exception_Choices,
   Exception_Handlers,
@@ -290,6 +291,14 @@ Rules for Body_Statements.statement :
 Rules for Body_Statements.statement :
 (.
       ${Body_Statements.Errors} := ${statement.Errors};
+.)
+Rules for Block_Statements.statement :
+(.
+      ${Block_Statements.Errors} := 0;
+.)
+Rules for Block_Statements.statement :
+(.
+      ${Block_Statements.Errors} := ${statement.Errors};
 .)
 Rules for Case_Statement_Paths.case_path :
 (.
