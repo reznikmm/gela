@@ -556,7 +556,12 @@ Rules for formal_modular_type_definition. :
 
 Rules for formal_object_declaration. :
 (.
-      ${formal_object_declaration.env_out} := ${formal_object_declaration.env_in};
+      ${formal_object_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${formal_object_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for formal_ordinary_fixed_point_definition. :

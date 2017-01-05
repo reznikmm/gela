@@ -5,6 +5,7 @@ with Gela.Defining_Name_Cursors;
 with Gela.Element_Visiters;
 with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Formal_Object_Declarations;
 with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
@@ -1235,6 +1236,11 @@ package body Gela.Resolve is
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with null record;
 
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access);
+
          overriding procedure Formal_Type_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Formal_Type_Declarations.
@@ -1248,6 +1254,28 @@ package body Gela.Resolve is
       end Visiters;
 
       package body Visiters is
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access)
+         is
+            pragma Unreferenced (Self);
+
+            List   : constant Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Sequence_Access := Node.Names;
+            Item   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Cursor : Gela.Elements.Defining_Identifiers.
+              Defining_Identifier_Sequence_Cursor := List.First;
+         begin
+            while Cursor.Has_Element loop
+               Item := Gela.Elements.Defining_Names.Defining_Name_Access
+                 (Cursor.Element);
+               Names.Append (Item);
+               Map.Include (Item.Full_Name, Names.Last_Index);
+               Cursor.Next;
+            end loop;
+         end Formal_Object_Declaration;
 
          -----------------------------
          -- Formal_Type_Declaration --

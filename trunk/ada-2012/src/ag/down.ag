@@ -972,7 +972,11 @@ Rules for formal_function_declaration. :
 
 Rules for formal_object_declaration. :
 (.
-      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${formal_object_declaration.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Object_Declaration_Subtype.Down});
 .)
 
 Rules for function_body. :
@@ -1175,7 +1179,11 @@ Rules for return_object_specification. :
 
 Rules for subtype_declaration. :
 (.
-      ${Type_Declaration_View.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${subtype_declaration.env_in},
+         ${Type_Declaration_View.Up},
+         ${Type_Declaration_View.Down});
 .)
 
 Rules for Variants.variant :

@@ -17,6 +17,8 @@ with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Enumeration_Literal_Specifications;
 with Gela.Elements.Enumeration_Type_Definitions;
 with Gela.Elements.Floating_Point_Definitions;
+with Gela.Elements.Formal_Discrete_Type_Definitions;
+with Gela.Elements.Formal_Object_Declarations;
 with Gela.Elements.Formal_Signed_Integer_Type_Definitions;
 with Gela.Elements.Formal_Type_Definitions;
 with Gela.Elements.Identifiers;
@@ -432,6 +434,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Floating_Point_Definitions.
               Floating_Point_Definition_Access);
 
+         overriding procedure Formal_Discrete_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Discrete_Type_Definitions.
+              Formal_Discrete_Type_Definition_Access);
+
          overriding procedure Formal_Signed_Integer_Type_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.
@@ -595,6 +602,17 @@ package body Gela.Plain_Type_Managers is
                Decl     => Gela.Elements.Full_Type_Declarations.
                  Full_Type_Declaration_Access (Node.Enclosing_Element));
          end Floating_Point_Definition;
+
+         overriding procedure Formal_Discrete_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Discrete_Type_Definitions.
+              Formal_Discrete_Type_Definition_Access) is
+         begin
+            Self.Result := Type_From_Declaration.Self.Get
+              (Category => Gela.Type_Categories.An_Other_Enum,
+               Decl     => Gela.Elements.Formal_Type_Declarations.
+                 Formal_Type_Declaration_Access (Node.Enclosing_Element));
+         end Formal_Discrete_Type_Definition;
 
          overriding procedure Formal_Signed_Integer_Type_Definition
            (Self : in out Visiter;
@@ -949,6 +967,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Discriminant_Specifications.
               Discriminant_Specification_Access);
 
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access);
+
          overriding procedure Object_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Object_Declarations.
@@ -1004,6 +1027,19 @@ package body Gela.Plain_Type_Managers is
             Self.Result :=
               Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Discriminant_Specification;
+
+         overriding procedure Formal_Object_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Formal_Object_Declarations.
+              Formal_Object_Declaration_Access)
+         is
+            X : constant Gela.Elements.Subtype_Mark_Or_Access_Definitions.
+              Subtype_Mark_Or_Access_Definition_Access :=
+                Node.Object_Declaration_Subtype;
+         begin
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
+         end Formal_Object_Declaration;
 
          overriding procedure Object_Declaration
            (Self : in out Visiter;
