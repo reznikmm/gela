@@ -42,3 +42,38 @@ Rules for discrete_simple_expression_range. :
          ${discrete_simple_expression_range.type_index});
       
 .)
+
+Synthesized attributes
+  defining_name,
+  defining_identifier,
+  defining_character_literal,
+  defining_operator_symbol,
+  defining_enumeration_literal,
+  defining_program_unit_name,
+  defining_expanded_unit_name
+   : Gela.Elements.Element_Access : Corresponding_Generic_Element;
+
+Rules for defining_identifier.identifier_token :
+(.
+         ${defining_identifier.Corresponding_Generic_Element} := null;
+.)
+
+Rules for defining_character_literal.character_literal :
+(.
+         ${defining_character_literal.Corresponding_Generic_Element} := null;
+.)
+
+Rules for defining_operator_symbol.operator_symbol_token :
+(.
+         ${defining_operator_symbol.Corresponding_Generic_Element} := null;
+.)
+
+Rules for defining_enumeration_literal.identifier :
+(.
+         ${defining_enumeration_literal.Corresponding_Generic_Element} := null;
+.)
+
+Rules for defining_expanded_unit_name. :
+(.
+         ${defining_expanded_unit_name.Corresponding_Generic_Element} := null;
+.)

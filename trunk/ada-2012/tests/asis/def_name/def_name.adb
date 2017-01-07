@@ -106,7 +106,7 @@ procedure Def_Name is
       Tipe  : Asis.Type_Definition;
       Decl  : Asis.Declaration;
       Unit  : Asis.Compilation_Unit;
-      Def   : constant Asis.Defining_Name :=
+      Def   : Asis.Defining_Name :=
         Asis.Expressions.Corresponding_Name_Definition (Item);
    begin
       Result.Append
@@ -117,6 +117,11 @@ procedure Def_Name is
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Line));
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
       Result.Append (" => ");
+
+      while Asis.Elements.Is_Part_Of_Instance (Def) loop
+         Result.Append ("@");
+         Def := Asis.Declarations.Corresponding_Generic_Element (Def);
+      end loop;
 
       if Asis.Elements.Is_Nil (Def) then
          null;

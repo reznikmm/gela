@@ -514,9 +514,51 @@ package body Asis.Declarations is
      (Reference : in Asis.Element)
       return Asis.Defining_Name
    is
+      package Get is
+         type Property_Visiter is new Gela.Property_Visiters.Property_Visiter
+           with record
+              Result : Gela.Elements.Element_Access;
+           end record;
+
+         overriding procedure On_Corresponding_Generic_Element
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Elements.Element_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure On_Corresponding_Generic_Element
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Elements.Element_Access)
+         is
+            pragma Unreferenced (Element);
+         begin
+            Self.Result := Value;
+         end On_Corresponding_Generic_Element;
+
+      end Get;
+
+      Getter  : aliased Get.Property_Visiter;
+      Visiter : Gela.Property_Visiters.Visiter (Getter'Access);
    begin
       Check_Nil_Element (Reference, "Corresponding_Generic_Element");
-      Raise_Not_Implemented ("");
+
+      case Asis.Elements.Element_Kind (Reference) is
+         when Asis.An_Expression =>
+            Raise_Not_Implemented ("");
+
+         when Asis.A_Defining_Name =>
+            Reference.Data.Visit (Visiter);
+            return (Data => Getter.Result);
+
+         when others =>
+            Assert_Inappropriate_Element
+              (False, "Corresponding_Generic_Element");
+      end case;
+
       return Nil_Element;
    end Corresponding_Generic_Element;
 

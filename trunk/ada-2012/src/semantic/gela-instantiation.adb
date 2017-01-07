@@ -69,7 +69,9 @@ package body Gela.Instantiation is
       type Property_Setter
         (Source : Gela.Elements.Element_Access;
          Cloner : access Cloners.Cloner)
-          is new Gela.Property_Setters.Property_Setter with null record;
+      is new Gela.Property_Setters.Property_Setter with record
+         Corresponding_Generic_Element : Gela.Elements.Element_Access;
+      end record;
 
       overriding procedure On_Index
         (Self    : in out Property_Setter;
@@ -156,6 +158,11 @@ package body Gela.Instantiation is
          Value   : out Gela.Semantic_Types.Type_Index);
 
       overriding procedure On_Corresponding_Type
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access);
+
+      overriding procedure On_Corresponding_Generic_Element
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
          Value   : out Gela.Elements.Element_Access);
@@ -427,6 +434,16 @@ package body Gela.Instantiation is
          Value := null;
       end On_Corresponding_Type;
 
+      overriding procedure On_Corresponding_Generic_Element
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access)
+      is
+         pragma Unreferenced (Element);
+      begin
+         Value := Self.Corresponding_Generic_Element;
+      end On_Corresponding_Generic_Element;
+
       overriding procedure On_Expanded
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
@@ -461,6 +478,7 @@ package body Gela.Instantiation is
          Visiter : Gela.Property_Setters.Visiter (Setter'Access);
       begin
          if Element.Assigned then
+            Setter.Corresponding_Generic_Element := Element;
             Result := Gela.Element_Cloners.Cloner (Self).Clone (Element);
             Result.Set_Part_Of_Instance;
             Result.Visit (Visiter);
@@ -483,7 +501,9 @@ package body Gela.Instantiation is
          Result : Gela.Elements.Defining_Names.Defining_Name_Access;
       begin
          Gela.Element_Cloners.Cloner (Self).Defining_Identifier (Node);
-         Result := Gela.Elements.Defining_Names.Defining_Name_Access (Node);
+         Result :=
+           Gela.Elements.Defining_Names.Defining_Name_Access (Self.Result);
+
          Self.Map.Insert (Source, Result);
       end Defining_Identifier;
 
