@@ -31,7 +31,7 @@ package Gela.Type_Managers is
    not overriding function Type_Of_Object_Declaration
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
-      Node  : Gela.Elements.Element_Access)
+      Node  : Gela.Elements.Element_Access)  --  FIXME access Element'Class?
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Return type corresponding to Node of object declaration
 

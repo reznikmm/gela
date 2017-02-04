@@ -6,15 +6,11 @@ with Gela.Lexical_Types;
 with Gela.Property_Setters;
 with Gela.Property_Visiters;
 
-with Gela.Elements.Aspect_Specifications;
 with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Names;
-with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Full_Type_Declarations;
-with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
-with Gela.Elements.Package_Instances;
 with Gela.Elements.Subtype_Declarations;
 with Gela.Interpretations;
 with Gela.Environments;
@@ -43,9 +39,9 @@ package body Gela.Instantiation is
 
    package Cloners is
       type Cloner is new Gela.Element_Cloners.Cloner with record
-         Map           : Name_Maps.Map;
-         Instance_Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-         Template      : access Gela.Elements.Element'Class;
+         Map              : Name_Maps.Map;
+         Instance_Name    : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Template         : access Gela.Elements.Element'Class;
       end record;
 
       overriding function Clone
@@ -57,11 +53,6 @@ package body Gela.Instantiation is
         (Self : in out Cloner;
          Node : not null Gela.Elements.Defining_Identifiers.
            Defining_Identifier_Access);
-
-      overriding procedure Generic_Package_Declaration
-        (Self : in out Cloner;
-         Node : not null Gela.Elements.Generic_Package_Declarations.
-           Generic_Package_Declaration_Access);
 
    end Cloners;
 
@@ -167,6 +158,11 @@ package body Gela.Instantiation is
          Element : Gela.Elements.Element_Access;
          Value   : out Gela.Elements.Element_Access);
 
+      overriding procedure On_Corresponding_View
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access);
+
       overriding procedure On_Expanded
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
@@ -186,10 +182,10 @@ package body Gela.Instantiation is
          Node : not null Gela.Elements.Full_Type_Declarations.
            Full_Type_Declaration_Access);
 
-      overriding procedure Package_Instance
+      overriding procedure Generic_Package_Declaration
         (Self : in out Visiter;
-         Node : not null Gela.Elements.Package_Instances.
-           Package_Instance_Access);
+         Node : not null Gela.Elements.Generic_Package_Declarations.
+           Generic_Package_Declaration_Access);
 
       overriding procedure Subtype_Declaration
         (Self : in out Visiter;
@@ -444,6 +440,16 @@ package body Gela.Instantiation is
          Value := Self.Corresponding_Generic_Element;
       end On_Corresponding_Generic_Element;
 
+      overriding procedure On_Corresponding_View
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Elements.Element_Access)
+      is
+         pragma Unreferenced (Self, Element);
+      begin
+         Value := null;
+      end On_Corresponding_View;
+
       overriding procedure On_Expanded
         (Self    : in out Property_Setter;
          Element : Gela.Elements.Element_Access;
@@ -507,130 +513,6 @@ package body Gela.Instantiation is
          Self.Map.Insert (Source, Result);
       end Defining_Identifier;
 
-      ---------------------------------
-      -- Generic_Package_Declaration --
-      ---------------------------------
-
-      overriding procedure Generic_Package_Declaration
-        (Self : in out Cloner;
-         Node : not null Gela.Elements.Generic_Package_Declarations.
-           Generic_Package_Declaration_Access)
-      is
-         Element : constant Gela.Elements.Element_Access :=
-           Gela.Elements.Element_Access (Node);
-         Formal_Part_Copy               : Gela.Elements.Generic_Formals.
-           Generic_Formal_Sequence_Access;
-         Names                          : Gela.Elements.
-           Defining_Program_Unit_Names.Defining_Program_Unit_Name_Access;
-         Aspect_Specifications          : Gela.Elements.Aspect_Specifications.
-           Aspect_Specification_Sequence_Access;
-         Visible_Part_Declarative_Items : Gela.Elements.Basic_Declarative_Items
-           .Basic_Declarative_Item_Sequence_Access;
-         Private_Part_Declarative_Items : Gela.Elements.Basic_Declarative_Items
-           .Basic_Declarative_Item_Sequence_Access;
-
-         Result : Gela.Elements.Package_Instances.Package_Instance_Access;
-      begin
-         if Self.Template = Element then
-            if Node.Generic_Formal_Part not in null then
-               declare
-                  Item   : Gela.Elements.Generic_Formals.
-                    Generic_Formal_Access;
-                  Cursor : Gela.Elements.Generic_Formals.
-                    Generic_Formal_Sequence_Cursor :=
-                      Node.Generic_Formal_Part.First;
-               begin
-                  Formal_Part_Copy := Self.Factory.Generic_Formal_Sequence;
-
-                  while Cursor.Has_Element loop
-                     Item := Gela.Elements.Generic_Formals.
-                       Generic_Formal_Access
-                         (Cloner'Class (Self).Clone (Cursor.Element));
-                     Formal_Part_Copy.Append (Item);
-                     Cursor.Next;
-                  end loop;
-               end;
-            end if;
-
-            Names := Gela.Elements.Defining_Program_Unit_Names.
-              Defining_Program_Unit_Name_Access
-                (Cloner'Class (Self).Clone (Self.Instance_Name));
-
-            if Node.Aspect_Specifications not in null then
-               declare
-                  Item   : Gela.Elements.Aspect_Specifications.
-                    Aspect_Specification_Access;
-                  Cursor : Gela.Elements.Aspect_Specifications.
-                    Aspect_Specification_Sequence_Cursor :=
-                      Node.Aspect_Specifications.First;
-               begin
-                  Aspect_Specifications := Self.Factory.
-                    Aspect_Specification_Sequence;
-
-                  while Cursor.Has_Element loop
-                     Item := Gela.Elements.Aspect_Specifications.
-                       Aspect_Specification_Access
-                         (Cloner'Class (Self).Clone (Cursor.Element));
-                     Aspect_Specifications.Append (Item);
-                     Cursor.Next;
-                  end loop;
-               end;
-            end if;
-
-            if Node.Visible_Part_Declarative_Items not in null then
-               declare
-                  Item  : Gela.Elements.Basic_Declarative_Items.
-                    Basic_Declarative_Item_Access;
-                  Cursor  : Gela.Elements.Basic_Declarative_Items.
-                    Basic_Declarative_Item_Sequence_Cursor :=
-                      Node.Visible_Part_Declarative_Items.First;
-               begin
-                  Visible_Part_Declarative_Items := Self.Factory.
-                    Basic_Declarative_Item_Sequence;
-
-                  while Cursor.Has_Element loop
-                     Item := Gela.Elements.Basic_Declarative_Items.
-                       Basic_Declarative_Item_Access
-                         (Cloner'Class (Self).Clone (Cursor.Element));
-                     Visible_Part_Declarative_Items.Append (Item);
-                     Cursor.Next;
-                  end loop;
-               end;
-            end if;
-
-            if Node.Private_Part_Declarative_Items not in null then
-               declare
-                  Item  : Gela.Elements.Basic_Declarative_Items.
-                    Basic_Declarative_Item_Access;
-                  Cursor : Gela.Elements.Basic_Declarative_Items.
-                    Basic_Declarative_Item_Sequence_Cursor :=
-                      Node.Private_Part_Declarative_Items.First;
-               begin
-                  Private_Part_Declarative_Items := Self.Factory.
-                    Basic_Declarative_Item_Sequence;
-
-                  while Cursor.Has_Element loop
-                     Item := Gela.Elements.Basic_Declarative_Items.
-                       Basic_Declarative_Item_Access
-                         (Cloner'Class (Self).Clone (Cursor.Element));
-                     Private_Part_Declarative_Items.Append (Item);
-                     Cursor.Next;
-                  end loop;
-               end;
-            end if;
-
-            Result := Self.Factory.Package_Instance
-              (Formal_Part_Copy, Names, Aspect_Specifications,
-               Visible_Part_Declarative_Items,
-               Private_Part_Declarative_Items);
-
-            Self.Result := Gela.Elements.Element_Access (Result);
-         else
-            Gela.Element_Cloners.Cloner (Self)
-              .Generic_Package_Declaration (Node);
-         end if;
-      end Generic_Package_Declaration;
-
    end Cloners;
 
    ----------------
@@ -651,10 +533,10 @@ package body Gela.Instantiation is
            (Self.Env, Name.Full_Name, Name);
       end Full_Type_Declaration;
 
-      overriding procedure Package_Instance
+      overriding procedure Generic_Package_Declaration
         (Self : in out Visiter;
-         Node : not null Gela.Elements.Package_Instances.
-           Package_Instance_Access)
+         Node : not null Gela.Elements.Generic_Package_Declarations.
+           Generic_Package_Declaration_Access)
       is
          Name : Gela.Elements.Defining_Names.Defining_Name_Access;
       begin
@@ -686,7 +568,7 @@ package body Gela.Instantiation is
          end;
 
          Self.Env := Self.Set.Leave_Declarative_Region (Self.Env);
-      end Package_Instance;
+      end Generic_Package_Declaration;
 
       overriding procedure Subtype_Declaration
         (Self : in out Visiter;

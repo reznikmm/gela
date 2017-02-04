@@ -24,6 +24,7 @@ Synthesized attributes
   expression_or_box,
   extension_aggregate,
   auxiliary_apply,
+  generic_association,
   generic_formal_parameter,
   identifier,
   if_expression,
@@ -64,9 +65,9 @@ Synthesized attributes
 
 Synthesized attributes
   Array_Component_Choices,
+  Generic_Actual_Part,
   Variant_Choices,
   association,
-  generic_association,
   case_path,
   variant
    : Gela.Interpretations.Interpretation_Tuple_Index : Up;
@@ -74,7 +75,6 @@ Synthesized attributes
 Synthesized attributes
   Associations,
   Case_Statement_Paths,
-  Generic_Actual_Part,
   Record_Component_Associations,
   Variants,
   association_list
@@ -111,7 +111,7 @@ Rules for Generic_Actual_Part.generic_association :
 
 Rules for Generic_Actual_Part.generic_association :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple_List
+      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
         (${generic_association.Up}, ${tail.Up}, ${Generic_Actual_Part.Up});
 .)
 
@@ -215,15 +215,8 @@ Rules for association. :
 
 Rules for generic_association. :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
-        (${Formal_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
-         0,
-         ${generic_association.Up});
-
-      Self.Compilation.Context.Interpretation_Manager.Add_Tuple
-        (${Actual_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
-         ${generic_association.Up},
-         ${generic_association.Up});
+      ${generic_association.Up} :=
+        ${Formal_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)};
 .)
 
 Rules for attribute_reference. :

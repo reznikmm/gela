@@ -77,3 +77,38 @@ Rules for defining_expanded_unit_name. :
 (.
          ${defining_expanded_unit_name.Corresponding_Generic_Element} := null;
 .)
+
+Synthesized attributes
+  defining_name,
+  defining_identifier,
+  defining_character_literal,
+  defining_operator_symbol,
+  defining_enumeration_literal,
+  defining_program_unit_name,
+  defining_expanded_unit_name
+   : Gela.Elements.Element_Access : Corresponding_View;
+
+Rules for defining_identifier.identifier_token :
+(.
+         ${defining_identifier.Corresponding_View} := null;
+.)
+
+Rules for defining_character_literal.character_literal :
+(.
+         ${defining_character_literal.Corresponding_View} := null;
+.)
+
+Rules for defining_operator_symbol.operator_symbol_token :
+(.
+         ${defining_operator_symbol.Corresponding_View} := null;
+.)
+
+Rules for defining_enumeration_literal.identifier :
+(.
+         ${defining_enumeration_literal.Corresponding_View} := null;
+.)
+
+Rules for defining_expanded_unit_name. :
+(.
+         ${defining_expanded_unit_name.Corresponding_View} := null;
+.)

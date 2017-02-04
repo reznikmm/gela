@@ -908,10 +908,21 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Identifiers.Identifier_Access)
          is
+            View          : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
             Defining_Name : constant Gela.Elements.Defining_Names.
               Defining_Name_Access := Node.Defining_Name;
          begin
-            if Defining_Name.Assigned then
+            if not Defining_Name.Assigned then
+               return;
+            end if;
+
+            View := Gela.Elements.Subtype_Marks.Subtype_Mark_Access
+              (Defining_Name.Corresponding_View);
+
+            if View.Assigned then
+               Self.Result := Type_From_Subtype_Mark.Self.
+                 Type_From_Subtype_Mark (Env, View);
+            else
                Self.Result :=
                  Type_From_Subtype_Mark.Self.Type_By_Name (Env, Defining_Name);
             end if;

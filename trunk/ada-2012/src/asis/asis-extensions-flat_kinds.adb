@@ -132,7 +132,6 @@ with Gela.Elements.Others_Choices;
 with Gela.Elements.Package_Bodies;
 with Gela.Elements.Package_Body_Stubs;
 with Gela.Elements.Package_Declarations;
-with Gela.Elements.Package_Instances;
 with Gela.Elements.Package_Instantiations;
 with Gela.Elements.Package_Renaming_Declarations;
 with Gela.Elements.Parameter_Associations;
@@ -876,10 +875,6 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Package_Declarations.
         Package_Declaration_Access);
-
-   overriding procedure Package_Instance
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Package_Instances.Package_Instance_Access);
 
    overriding procedure Package_Instantiation
      (Self : in out Visiter;
@@ -2113,15 +2108,6 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Package_Declaration;
    end Package_Declaration;
-
-   overriding procedure Package_Instance
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Package_Instances.Package_Instance_Access)
-   is
-      pragma Unreferenced (Node);
-   begin
-      Self.Result := A_Package_Declaration;
-   end Package_Instance;
 
    overriding procedure Package_Instantiation
      (Self : in out Visiter;

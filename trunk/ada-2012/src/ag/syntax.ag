@@ -1267,14 +1267,6 @@ package_declaration ::=
   token                      <semicolon_token>
 ;
 
-package_instance ::=
-  {generic_formal}           <Formal_Part_Copy>
-  defining_program_unit_name <Names>
-  {aspect_specification}     <Aspect_Specifications>
-  {basic_declarative_item}   <Visible_Part_Declarative_Items>
-  {basic_declarative_item}   <Private_Part_Declarative_Items>
-;
-
 package_instantiation ::=
   token                      <package_token>
   defining_program_unit_name <Names>

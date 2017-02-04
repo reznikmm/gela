@@ -28,6 +28,6 @@ package Gela.Lexers is
      (Self    : Lexer;
       Input   : League.Strings.Universal_String;
       Output  : not null access Lexer_Destination'Class) is abstract;
-   --  Analyse gigen Input and report events to Output
+   --  Analyse given Input and report events to Output
 
 end Gela.Lexers;

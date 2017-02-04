@@ -1193,6 +1193,21 @@ package body Gela.Resolve is
       Resolve.Each_Prefix (Comp, Env, Prefix, Visiter);
    end Function_Call;
 
+   procedure Generic_Association
+     (Comp         : Gela.Compilations.Compilation_Access;
+      Env          : Gela.Semantic_Types.Env_Index;
+--      Actual_Part  : Gela.Elements.Generic_Associations.
+--                       Generic_Association_Sequence_Access;
+      Up      : Gela.Interpretations.Interpretation_Set_Index;
+      Result       : out Gela.Interpretations.Interpretation_Index) is
+   begin
+      Interpretation
+        (Comp,
+         Env,
+         Up,
+         Result);
+   end Generic_Association;
+
    ------------------------------
    -- Generic_Association_List --
    ------------------------------
@@ -1200,14 +1215,14 @@ package body Gela.Resolve is
    procedure Generic_Association_List
      (Comp         : Gela.Compilations.Compilation_Access;
       Env          : Gela.Semantic_Types.Env_Index;
+      Instance     : Gela.Elements.Element_Access;
       Generic_Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Associations : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Actual_Part  : Gela.Elements.Generic_Associations.
+                       Generic_Association_Sequence_Access;
+      Associations : Gela.Interpretations.Interpretation_Tuple_Index;
       Result       : out Gela.Interpretations.Interpretation_Index)
    is
-
-      procedure Resolve_Formal
-        (Value  : Gela.Interpretations.Interpretation_Set_Index;
-         Result : out Gela.Interpretations.Interpretation_Index);
+      pragma Unreferenced (Env);
 
       function Hash
         (Value : Gela.Lexical_Types.Symbol)
@@ -1227,14 +1242,24 @@ package body Gela.Resolve is
          Element_Type => Gela.Elements.Defining_Names.Defining_Name_Access,
          "="          => Gela.Elements.Defining_Names."=");
 
-      Names : Name_Vectors.Vector;
-      Map   : Symbol_To_Name_Index_Maps.Map;
+      type Formal_Defining_Names is record
+         Names : Name_Vectors.Vector;
+         Map   : Symbol_To_Name_Index_Maps.Map;
+      end record;
+
+      procedure Resolve_Formal
+        (Formal : Formal_Defining_Names;
+         Value  : Gela.Interpretations.Interpretation_Set_Index;
+         Name   : out Gela.Elements.Defining_Names.Defining_Name_Access);
+
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
       package Visiters is
-         type Visiter is new Gela.Element_Visiters.Visiter with null record;
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Formal : Formal_Defining_Names;
+         end record;
 
          overriding procedure Formal_Object_Declaration
            (Self : in out Visiter;
@@ -1260,8 +1285,6 @@ package body Gela.Resolve is
             Node : not null Gela.Elements.Formal_Object_Declarations.
               Formal_Object_Declaration_Access)
          is
-            pragma Unreferenced (Self);
-
             List   : constant Gela.Elements.Defining_Identifiers.
               Defining_Identifier_Sequence_Access := Node.Names;
             Item   : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -1271,8 +1294,9 @@ package body Gela.Resolve is
             while Cursor.Has_Element loop
                Item := Gela.Elements.Defining_Names.Defining_Name_Access
                  (Cursor.Element);
-               Names.Append (Item);
-               Map.Include (Item.Full_Name, Names.Last_Index);
+               Self.Formal.Names.Append (Item);
+               Self.Formal.Map.Include
+                 (Item.Full_Name, Self.Formal.Names.Last_Index);
                Cursor.Next;
             end loop;
          end Formal_Object_Declaration;
@@ -1286,15 +1310,14 @@ package body Gela.Resolve is
             Node : not null Gela.Elements.Formal_Type_Declarations.
               Formal_Type_Declaration_Access)
          is
-            pragma Unreferenced (Self);
-
             Name : constant Gela.Elements.Defining_Identifiers.
               Defining_Identifier_Access := Node.Names;
             Item : constant Gela.Elements.Defining_Names.Defining_Name_Access
               := Gela.Elements.Defining_Names.Defining_Name_Access (Name);
          begin
-            Names.Append (Item);
-            Map.Include (Item.Full_Name, Names.Last_Index);
+            Self.Formal.Names.Append (Item);
+            Self.Formal.Map.Include
+              (Item.Full_Name, Self.Formal.Names.Last_Index);
          end Formal_Type_Declaration;
 
          ---------------------------------
@@ -1321,10 +1344,17 @@ package body Gela.Resolve is
 
       end Visiters;
 
+
+      --------------------
+      -- Resolve_Formal --
+      --------------------
+
       procedure Resolve_Formal
-        (Value  : Gela.Interpretations.Interpretation_Set_Index;
-         Result : out Gela.Interpretations.Interpretation_Index)
+        (Formal : Formal_Defining_Names;
+         Value  : Gela.Interpretations.Interpretation_Set_Index;
+         Name   : out Gela.Elements.Defining_Names.Defining_Name_Access)
       is
+
          package Each is
             type Visiter is new Gela.Interpretations.Up_Visiter with
               null record;
@@ -1345,12 +1375,11 @@ package body Gela.Resolve is
                pragma Unreferenced (Self, Cursor);
 
                Found : constant Symbol_To_Name_Index_Maps.Cursor :=
-                 Map.Find (Symbol);
-               Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+                 Formal.Map.Find (Symbol);
             begin
                if Symbol_To_Name_Index_Maps.Has_Element (Found) then
-                  Name := Names (Symbol_To_Name_Index_Maps.Element (Found));
-                  IM.Get_Defining_Name_Index (Name, Result);
+                  Name := Formal.Names
+                    (Symbol_To_Name_Index_Maps.Element (Found));
                end if;
             end On_Symbol;
          end Each;
@@ -1366,46 +1395,46 @@ package body Gela.Resolve is
          end loop;
       end Resolve_Formal;
 
-      Generic_Declaration : Gela.Elements.Element_Access;
+      Visitor  : Visiters.Visiter;
+      Tuples   : constant Gela.Interpretations.Interpretation_Set_Index_Array
+        := IM.Get_Tuple (Associations);
 
-      Tuples : constant Gela.Interpretations.Interpretation_Tuple_Index_Array
-        := IM.Get_Tuple_List (Associations);
-
-      Output  : Gela.Interpretations.Interpretation_Index_Array (Tuples'Range);
+      Name    : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Formal  : Gela.Interpretations.Interpretation_Index_Array (Tuples'Range)
+        := (others => 0);
       Chosen  : Gela.Interpretations.Interpretation_Index;
-      Visiter : Visiters.Visiter;
+      Element : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Cursor  : Gela.Elements.Generic_Associations
+        .Generic_Association_Sequence_Cursor := Actual_Part.First;
    begin
-      if not Generic_Name.Assigned then
+      if not Generic_Name.Assigned or not Instance.Assigned then
          Result := 0;
          return;
       end if;
-
-      Generic_Declaration := Generic_Name.Enclosing_Element;
-      Generic_Declaration.Visit (Visiter);
+      --  Collect defining names of formal declarations in the instance
+      Instance.Visit (Visitor);
 
       for J in Tuples'Range loop
-         declare
-            Value  : constant Gela.Interpretations
-              .Interpretation_Set_Index_Array :=
-                IM.Get_Tuple (Tuples (J));
-            List   : Gela.Interpretations.Interpretation_Index_Array
-              (Value'Range);
-         begin
-            Resolve_Formal (Value (Value'Last), List (List'Last));
+         Resolve_Formal (Visitor.Formal, Tuples (J), Name);
 
-            --  FIXME Shall depend on formal parameter declaration
-            Shall_Be_Subtype
-              (Comp, Env, Value (Value'First), List (List'First));
+         if Name.Assigned then
+            Name.Set_Corresponding_View
+              (Gela.Elements.Element_Access
+                 (Cursor.Element.Actual_Parameter));
 
-            IM.Get_Tuple_Index
-              (List (List'First), List (List'Last), Output (J));
-         end;
+            Element := Gela.Elements.Defining_Names.Defining_Name_Access
+              (Name.Corresponding_Generic_Element);
+
+            IM.Get_Defining_Name_Index (Element, Formal (J));
+         end if;
+
+         Cursor.Next;
       end loop;
 
       Chosen := 0;
 
-      for K in reverse Output'Range loop
-         IM.Get_Tuple_Index (Output (K), Chosen, Chosen);
+      for K in reverse Formal'Range loop
+         IM.Get_Tuple_Index (Formal (K), Chosen, Chosen);
       end loop;
 
       Result := Chosen;

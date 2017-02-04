@@ -452,14 +452,16 @@ Rules for generalized_iterator_specification. :
 
 Rules for generic_association. :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
-        (${generic_association.Down}, 1, ${Actual_Parameter.Down});
+      Gela.Pass_Utils.Resolve.Generic_Association
+        (Self.Compilation,
+         ${generic_association.env_in},
+         ${Actual_Parameter.Up:Gela.Pass_Utils.Resolve.Placeholder (Self.Compilation)},
+         ${Actual_Parameter.Down});
 .)
 
 Rules for generic_association. :
 (.
-      Self.Compilation.Context.Interpretation_Manager.Get_Down_Interpretation
-        (${generic_association.Down}, 2, ${Formal_Parameter.Down});
+      ${Formal_Parameter.Down} := ${generic_association.Down};
 .)
 
 Rules for generic_function_renaming. :
@@ -667,7 +669,9 @@ Rules for function_instantiation. :
       Gela.Pass_Utils.Resolve.Generic_Association_List
         (Self.Compilation,
          ${function_instantiation.env_in},
+         null,
          ${Generic_Unit_Name.Defining_Name},
+         Node.Generic_Actual_Part,
          ${Generic_Actual_Part.Up},
          ${Generic_Actual_Part.Down});
 .)
@@ -703,10 +707,16 @@ Rules for package_instantiation. :
 
 Rules for package_instantiation. :
 (.
+      Gela.Pass_Utils.Instantiation.Expand
+        (Self.Compilation,
+         Node,
+         This_Expanded);
       Gela.Pass_Utils.Resolve.Generic_Association_List
         (Self.Compilation,
          ${package_instantiation.env_in},
+         This_Expanded,
          ${Generic_Unit_Name.Defining_Name},
+         Node.Generic_Actual_Part,
          ${Generic_Actual_Part.Up},
          ${Generic_Actual_Part.Down});
 .)
@@ -730,7 +740,9 @@ Rules for procedure_instantiation. :
       Gela.Pass_Utils.Resolve.Generic_Association_List
         (Self.Compilation,
          ${procedure_instantiation.env_in},
+         null,
          ${Generic_Unit_Name.Defining_Name},
+         Node.Generic_Actual_Part,
          ${Generic_Actual_Part.Up},
          ${Generic_Actual_Part.Down});
 .)
