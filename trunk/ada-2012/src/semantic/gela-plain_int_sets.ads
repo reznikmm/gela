@@ -5,7 +5,7 @@ with Gela.Int;
 with Gela.Int_Sets;
 with Gela.Interpretations;
 
-package Gela.Plian_Int_Sets is
+package Gela.Plain_Int_Sets is
    pragma Preelaborate;
 
    type Interpretation_Set (Ids : access Gela.Int_Sets.Index_Provider'Class) is
@@ -86,4 +86,4 @@ private
    overriding function Get_Index
      (Self : Cursor) return Gela.Interpretations.Interpretation_Index;
 
-end Gela.Plian_Int_Sets;
+end Gela.Plain_Int_Sets;

@@ -7,7 +7,7 @@ with Gela.Elements.Defining_Names;
 with Gela.Int_Sets;
 with Gela.Interpretations;
 with Gela.Lexical_Types;
-with Gela.Plian_Int_Sets;
+with Gela.Plain_Int_Sets;
 with Gela.Semantic_Types;
 
 package Gela.Plain_Interpretations is
@@ -47,8 +47,8 @@ private
      limited new Gela.Interpretations.Interpretation_Manager
        and Gela.Int_Sets.Index_Provider with
    record
-      Plian_Int_Set : Gela.Plian_Int_Sets.Interpretation_Set_Access :=
-           new Gela.Plian_Int_Sets.Interpretation_Set
+      Plain_Int_Set : Gela.Plain_Int_Sets.Interpretation_Set_Access :=
+           new Gela.Plain_Int_Sets.Interpretation_Set
                  (Interpretation_Manager'Unchecked_Access);
       Set_Batches  : Set_Vectors.Vector;
       Item_Batches : Item_Vectors.Vector;

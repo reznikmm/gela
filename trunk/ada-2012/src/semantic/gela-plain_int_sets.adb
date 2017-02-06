@@ -7,7 +7,7 @@ with Gela.Int.Symbols;
 with Gela.Int.Tuples;
 with Gela.Int.Visiters;
 
-package body Gela.Plian_Int_Sets is
+package body Gela.Plain_Int_Sets is
 
    ---------
    -- Add --
@@ -337,4 +337,4 @@ package body Gela.Plian_Int_Sets is
       Int_Lists.Element (Self.Pos).Visit (V'Access);
    end Visit;
 
-end Gela.Plian_Int_Sets;
+end Gela.Plain_Int_Sets;

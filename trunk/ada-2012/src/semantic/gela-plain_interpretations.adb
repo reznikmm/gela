@@ -61,7 +61,7 @@ package body Gela.Plain_Interpretations is
               Tipe     => Tipe,
               Kind     => Kind));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Attr_Function;
 
    -----------------------
@@ -80,7 +80,7 @@ package body Gela.Plain_Interpretations is
              (Down     => Down,
               Name     => Name));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Defining_Name;
 
    --------------------
@@ -102,7 +102,7 @@ package body Gela.Plain_Interpretations is
               Expression_Type => Tipe,
               Expression_Flag => Flag));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Expression;
 
    -----------------------------
@@ -121,7 +121,7 @@ package body Gela.Plain_Interpretations is
              (Down  => Down,
               Match => Match));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Expression_Category;
 
    ---------------------
@@ -139,7 +139,7 @@ package body Gela.Plain_Interpretations is
              (Down => (1 .. 0 => 0),
               Kind => Kind));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Placeholder;
 
    ----------------
@@ -157,7 +157,7 @@ package body Gela.Plain_Interpretations is
              (Down  => (1 .. 0 => 0),
               Value => Symbol));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Add_Symbol;
 
    ---------------
@@ -190,7 +190,7 @@ package body Gela.Plain_Interpretations is
          end;
       end if;
 
-      Self.Plian_Int_Set.Add (Value, Item);
+      Self.Plain_Int_Set.Add (Value, Item);
 
       Result := Gela.Interpretations.Interpretation_Tuple_Index (Value);
    end Add_Tuple;
@@ -312,7 +312,7 @@ package body Gela.Plain_Interpretations is
           (Gela.Int.Defining_Names.Create
              (Down => (1 .. 0 => 0), Name => Name));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Get_Defining_Name_Index;
 
    --------------------------
@@ -331,7 +331,7 @@ package body Gela.Plain_Interpretations is
               Expression_Type => Tipe,
               Expression_Flag => Gela.Interpretations.No_Flag));
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Get_Expression_Index;
 
    ---------------
@@ -373,7 +373,7 @@ package body Gela.Plain_Interpretations is
         new Gela.Int.Tuples.Chosen_Tuple'
           (Length => 2, Index => 0, Down => Left & Right);
    begin
-      Self.Plian_Int_Set.Add (Result, Item);
+      Self.Plain_Int_Set.Add (Result, Item);
    end Get_Tuple_Index;
 
    --------------------
