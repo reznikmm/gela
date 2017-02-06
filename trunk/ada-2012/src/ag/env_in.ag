@@ -938,17 +938,19 @@ Rules for block_statement. :
 
 Rules for block_statement. :
 (.
-      ${Block_Declarative_Items.env_in} := ${block_statement.env_in};
+      ${Block_Declarative_Items.env_in} :=
+        Self.Compilation.Context.Environment_Set.Enter_Declarative_Region
+          (${block_statement.env_in}, null);
 .)
 
 Rules for block_statement. :
 (.
-      ${Block_Statements.env_in} := ${block_statement.env_in};
+      ${Block_Statements.env_in} := ${Block_Declarative_Items.env_out};
 .)
 
 Rules for block_statement. :
 (.
-      ${Exception_Handlers.env_in} := ${block_statement.env_in};
+      ${Exception_Handlers.env_in} := ${Block_Declarative_Items.env_out};
 .)
 
 Rules for case_expression. :

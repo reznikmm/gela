@@ -636,6 +636,7 @@ package body Gela.Instantiation is
             Cloner.Template := Defining_Name.Enclosing_Element;
             Cloner.Instance_Name := Defining_Name;
             Expanded := Cloner.Clone (Cloner.Template);
+            Node.Set_Expanded (Expanded);
          end;
       end if;
    end Expand;
