@@ -1,6 +1,7 @@
 --  Type manager keeps types found in all compilation units.
 
 with Gela.Types;
+with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Discrete_Subtype_Definitions;
@@ -85,5 +86,12 @@ package Gela.Type_Managers is
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access is abstract;
    --  If Name if callable entity return corresponding profile
+
+   not overriding function Get_Profile
+     (Self      : access Type_Manager;
+      Tipe      : Gela.Semantic_Types.Type_Index;
+      Attribute : Gela.Lexical_Types.Symbol)
+      return Gela.Profiles.Profile_Access is abstract;
+   --  If given attribute if callable entity return corresponding profile
 
 end Gela.Type_Managers;

@@ -76,6 +76,7 @@ private
 
    overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);

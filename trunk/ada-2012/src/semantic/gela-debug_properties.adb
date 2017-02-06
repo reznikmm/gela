@@ -116,6 +116,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -147,6 +148,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Cursor : Gela.Interpretations.Cursor'Class);
 
@@ -345,6 +347,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 
@@ -417,12 +420,15 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
+         Tipe   : Gela.Semantic_Types.Type_Index;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Cursor : Gela.Interpretations.Cursor'Class)
       is
-         pragma Unreferenced (Self, Kind, Cursor);
+         pragma Unreferenced (Cursor, Tipe);
       begin
-         Put_Line ("   Attr_Function ");
+         Put_Line
+           ("   Attr_Function " &
+              Self.Comp.Context.Symbols.Image (Kind).To_UTF_8_String);
       end On_Attr_Function;
 
       overriding procedure On_Symbol

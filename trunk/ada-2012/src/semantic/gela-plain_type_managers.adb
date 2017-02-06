@@ -37,8 +37,8 @@ with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.Unconstrained_Array_Definitions;
 with Gela.Environments;
-with Gela.Lexical_Types;
 with Gela.Plain_Type_Views;
+with Gela.Profiles.Attributes;
 with Gela.Profiles.Names;
 
 package body Gela.Plain_Type_Managers is
@@ -222,6 +222,63 @@ package body Gela.Plain_Type_Managers is
       return Gela.Profiles.Profile_Access (Result);
    end Get_Profile;
 
+   -----------------
+   -- Get_Profile --
+   -----------------
+
+   overriding function Get_Profile
+     (Self      : access Type_Manager;
+      Tipe      : Gela.Semantic_Types.Type_Index;
+      Attribute : Gela.Lexical_Types.Symbol)
+         return Gela.Profiles.Profile_Access
+   is
+      Result : Profile_Access;
+      Key    : constant Attribute_Key := (Tipe, Attribute);
+      Cursor : constant Attribute_Maps.Cursor := Self.Attributes.Find (Key);
+   begin
+      if Attribute_Maps.Has_Element (Cursor) then
+         Result := Attribute_Maps.Element (Cursor);
+      else
+         case Attribute is
+            when Gela.Lexical_Types.Predefined_Symbols.Ceiling |
+                 Gela.Lexical_Types.Predefined_Symbols.Floor |
+                 Gela.Lexical_Types.Predefined_Symbols.Fraction |
+                 Gela.Lexical_Types.Predefined_Symbols.Machine |
+                 Gela.Lexical_Types.Predefined_Symbols.Machine_Rounding |
+                 Gela.Lexical_Types.Predefined_Symbols.Model |
+                 Gela.Lexical_Types.Predefined_Symbols.Pred |
+                 Gela.Lexical_Types.Predefined_Symbols.Rounding |
+                 Gela.Lexical_Types.Predefined_Symbols.Succ |
+                 Gela.Lexical_Types.Predefined_Symbols.Truncation |
+                 Gela.Lexical_Types.Predefined_Symbols.Unbiased_Rounding =>
+
+               Result := new Gela.Profiles.Profile'Class'
+                 (Gela.Profiles.Attributes.Create
+                    ((1 => Tipe), Tipe));
+
+            when Gela.Lexical_Types.Predefined_Symbols.Pos =>
+
+               Result := new Gela.Profiles.Profile'Class'
+                 (Gela.Profiles.Attributes.Create
+                    ((1 => Tipe), Self.Universal_Integer));
+
+            when Gela.Lexical_Types.Predefined_Symbols.Mod_Symbol |
+                 Gela.Lexical_Types.Predefined_Symbols.Val =>
+
+               Result := new Gela.Profiles.Profile'Class'
+                 (Gela.Profiles.Attributes.Create
+                    ((1 => Self.Universal_Integer), Tipe));
+
+            when others =>
+               raise Constraint_Error;
+         end case;
+
+         Self.Attributes.Insert (Key, Result);
+      end if;
+
+      return Gela.Profiles.Profile_Access (Result);
+   end Get_Profile;
+
    ----------
    -- Hash --
    ----------
@@ -254,6 +311,17 @@ package body Gela.Plain_Type_Managers is
       return Ada.Containers.Hash_Type is
    begin
       return Self.Hash;
+   end Hash;
+
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash (Value : Attribute_Key) return Ada.Containers.Hash_Type is
+      use type Ada.Containers.Hash_Type;
+   begin
+      return Ada.Containers.Hash_Type (Value.Tipe) * 2017
+        + Gela.Lexical_Types.Symbol'Pos (Value.Attribute);
    end Hash;
 
    ----------------

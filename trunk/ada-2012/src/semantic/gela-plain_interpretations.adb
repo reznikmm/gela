@@ -49,6 +49,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
@@ -57,6 +58,7 @@ package body Gela.Plain_Interpretations is
         new Gela.Int.Attr_Functions.Attr_Function'
           (Gela.Int.Attr_Functions.Create
              (Down     => Down,
+              Tipe     => Tipe,
               Kind     => Kind));
    begin
       Self.Plian_Int_Set.Add (Result, Item);
@@ -493,6 +495,7 @@ package body Gela.Plain_Interpretations is
          begin
             Target.On_Attr_Function
               (Kind  => Value.Kind,
+               Tipe  => Value.Tipe,
                Down  => Value.Down);
          end Attr_Function;
 

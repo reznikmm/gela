@@ -34,6 +34,7 @@ package Gela.Profiles is
      (Self  : Profile;
       Index : Positive)
       return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+   --  Could be null when prefix is attribute_reference, like 'Pos (X).
 
    not overriding function Get_Index
      (Self   : Profile;

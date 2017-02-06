@@ -288,6 +288,7 @@ package body Gela.Plian_Int_Sets is
          begin
             Target.On_Attr_Function
               (Kind   => Value.Kind,
+               Tipe   => Value.Tipe,
                Cursor => Visit.Self);
          end Attr_Function;
 

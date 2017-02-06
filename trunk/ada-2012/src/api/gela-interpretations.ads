@@ -78,6 +78,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
@@ -154,6 +155,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Attr_Function
      (Self   : in out Down_Visiter;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each attribute denoting function
@@ -217,6 +219,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Attr_Function
      (Self   : in out Up_Visiter;
+      Tipe   : Gela.Semantic_Types.Type_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Cursor : Gela.Interpretations.Cursor'Class) is null;
    --  Called for each attribute denoting function

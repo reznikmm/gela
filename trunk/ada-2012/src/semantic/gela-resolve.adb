@@ -51,7 +51,7 @@ package body Gela.Resolve is
    --  Resolve given interpretation set as expression. So ignore symbol and
    --  others non-expression interpretations. Translate defining name into
    --  expression. But On_Defining_Name is called when Name doen't have a type
-   --  (like subprogram name)
+   --  (like subprogram name). On_Attr_Function is called for attributes.
 
    procedure Each_Prefix
      (Comp   : Gela.Compilations.Compilation_Access;
@@ -377,7 +377,39 @@ package body Gela.Resolve is
                   Down   => (1 => Index),
                   Result => Set);
             end if;
-         when Gela.Lexical_Types.Predefined_Symbols.Val =>
+         when
+--                Gela.Lexical_Types.Predefined_Symbols.Adjacent |
+              Gela.Lexical_Types.Predefined_Symbols.Ceiling |
+--                Gela.Lexical_Types.Predefined_Symbols.Compose |
+--                Gela.Lexical_Types.Predefined_Symbols.Copy_Sign |
+--                Gela.Lexical_Types.Predefined_Symbols.Exponent |
+              Gela.Lexical_Types.Predefined_Symbols.Floor |
+              Gela.Lexical_Types.Predefined_Symbols.Fraction |
+--                Gela.Lexical_Types.Predefined_Symbols.Image |
+--                Gela.Lexical_Types.Predefined_Symbols.Input |
+--                Gela.Lexical_Types.Predefined_Symbols.Leading_Part |
+              Gela.Lexical_Types.Predefined_Symbols.Machine |
+              Gela.Lexical_Types.Predefined_Symbols.Machine_Rounding |
+--                Gela.Lexical_Types.Predefined_Symbols.Max |
+--                Gela.Lexical_Types.Predefined_Symbols.Min |
+              Gela.Lexical_Types.Predefined_Symbols.Mod_Symbol |
+              Gela.Lexical_Types.Predefined_Symbols.Model |
+              Gela.Lexical_Types.Predefined_Symbols.Pos |
+              Gela.Lexical_Types.Predefined_Symbols.Pred |
+--                Gela.Lexical_Types.Predefined_Symbols.Remainder |
+--                Gela.Lexical_Types.Predefined_Symbols.Round |
+              Gela.Lexical_Types.Predefined_Symbols.Rounding |
+--                Gela.Lexical_Types.Predefined_Symbols.Scaling |
+              Gela.Lexical_Types.Predefined_Symbols.Succ |
+              Gela.Lexical_Types.Predefined_Symbols.Truncation |
+              Gela.Lexical_Types.Predefined_Symbols.Unbiased_Rounding |
+              Gela.Lexical_Types.Predefined_Symbols.Val =>
+--                Gela.Lexical_Types.Predefined_Symbols.Value |
+--                Gela.Lexical_Types.Predefined_Symbols.Wide_Image |
+--                Gela.Lexical_Types.Predefined_Symbols.Wide_Value |
+--                Gela.Lexical_Types.Predefined_Symbols.Wide_Wide_Image |
+--                Gela.Lexical_Types.Predefined_Symbols.Wide_Wide_Value =>
+
             Get_Subtype
               (Comp,
                Env    => Env,
@@ -387,6 +419,7 @@ package body Gela.Resolve is
 
             Comp.Context.Interpretation_Manager.Add_Attr_Function
               (Kind   => Symbol,
+               Tipe   => Type_Index,
                Down   => (1 => Index),
                Result => Set);
 
@@ -830,6 +863,12 @@ package body Gela.Resolve is
             null;
          end record;
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -850,6 +889,17 @@ package body Gela.Resolve is
       ----------
 
       package body Each is
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Attr_Function (Tipe, Kind, Cursor);
+         end On_Attr_Function;
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
@@ -910,6 +960,12 @@ package body Gela.Resolve is
             null;
          end record;
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -926,6 +982,17 @@ package body Gela.Resolve is
         Comp.Context.Types;
 
       package body Each is
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+         begin
+            Target.On_Attr_Function (Tipe, Kind, Cursor);
+         end On_Attr_Function;
 
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
@@ -1009,6 +1076,12 @@ package body Gela.Resolve is
       package Each_Prefix is
          type Visiter is new Gela.Interpretations.Up_Visiter with null record;
 
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class);
+
          overriding procedure On_Defining_Name
            (Self   : in out Visiter;
             Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -1031,19 +1104,18 @@ package body Gela.Resolve is
 
       package body Each_Prefix is
 
-         overriding procedure On_Defining_Name
-           (Self   : in out Visiter;
-            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-            Cursor : Gela.Interpretations.Cursor'Class)
+         procedure On_Call
+           (Profile : Gela.Profiles.Profile_Access;
+            Cursor  : Gela.Interpretations.Cursor'Class);
+
+         procedure On_Call
+           (Profile : Gela.Profiles.Profile_Access;
+            Cursor  : Gela.Interpretations.Cursor'Class)
          is
-            pragma Unreferenced (Self);
             Chosen : Gela.Interpretations.Interpretation_Index := 0;
             Count  : Natural := 0;
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
-
-            Profile : constant Gela.Profiles.Profile_Access :=
-              TM.Get_Profile (Env, Name);
 
          begin
             if not Profile.Assigned then
@@ -1118,6 +1190,33 @@ package body Gela.Resolve is
                   Result => Set);
 
             end if;
+         end On_Call;
+
+         overriding procedure On_Attr_Function
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+
+            Profile : constant Gela.Profiles.Profile_Access :=
+              TM.Get_Profile (Tipe, Kind);
+         begin
+            On_Call (Profile, Cursor);
+         end On_Attr_Function;
+
+         overriding procedure On_Defining_Name
+           (Self   : in out Visiter;
+            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+            Cursor : Gela.Interpretations.Cursor'Class)
+         is
+            pragma Unreferenced (Self);
+
+            Profile : constant Gela.Profiles.Profile_Access :=
+              TM.Get_Profile (Env, Name);
+         begin
+            On_Call (Profile, Cursor);
          end On_Defining_Name;
 
          -------------------

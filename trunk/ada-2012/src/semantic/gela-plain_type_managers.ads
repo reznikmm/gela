@@ -10,6 +10,7 @@ with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
+with Gela.Lexical_Types;
 with Gela.Profiles;
 with Gela.Semantic_Types;
 with Gela.Type_Managers;
@@ -62,6 +63,19 @@ private
       Hash            => Hash,
       Equivalent_Keys => Gela.Elements.Defining_Names."=");
 
+   type Attribute_Key is record
+      Tipe      : Gela.Semantic_Types.Type_Index;
+      Attribute : Gela.Lexical_Types.Symbol;
+   end record;
+
+   function Hash (Value : Attribute_Key) return Ada.Containers.Hash_Type;
+
+   package Attribute_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Attribute_Key,
+      Element_Type    => Profile_Access,
+      Hash            => Hash,
+      Equivalent_Keys => "=");
+
    function Hash
      (Self : Gela.Elements.Root_Type_Definitions.
         Root_Type_Definition_Access)
@@ -78,10 +92,11 @@ private
    type Type_Manager (Context : Gela.Contexts.Context_Access) is
      new Gela.Type_Managers.Type_Manager with
    record
-       Map      : Type_View_Maps.Map;
-       Back     : Back_Maps.Map;
-       Profiles : Profile_Maps.Map;
-       Roots    : Root_Maps.Map;
+       Map        : Type_View_Maps.Map;
+       Back       : Back_Maps.Map;
+       Profiles   : Profile_Maps.Map;
+       Attributes : Attribute_Maps.Map;
+       Roots      : Root_Maps.Map;
    end record;
 
    not overriding function Get
@@ -165,6 +180,12 @@ private
       Env   : Gela.Semantic_Types.Env_Index;
       Name  : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Profiles.Profile_Access;
+
+   overriding function Get_Profile
+     (Self      : access Type_Manager;
+      Tipe      : Gela.Semantic_Types.Type_Index;
+      Attribute : Gela.Lexical_Types.Symbol)
+         return Gela.Profiles.Profile_Access;
 
    overriding function Boolean
      (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
