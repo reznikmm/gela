@@ -11,6 +11,7 @@ with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Generic_Package_Declarations;
+with Gela.Elements.Object_Declarations;
 with Gela.Elements.Subtype_Declarations;
 with Gela.Interpretations;
 with Gela.Environments;
@@ -186,6 +187,11 @@ package body Gela.Instantiation is
         (Self : in out Visiter;
          Node : not null Gela.Elements.Generic_Package_Declarations.
            Generic_Package_Declaration_Access);
+
+      overriding procedure Object_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Object_Declarations.
+           Object_Declaration_Access);
 
       overriding procedure Subtype_Declaration
         (Self : in out Visiter;
@@ -569,6 +575,26 @@ package body Gela.Instantiation is
 
          Self.Env := Self.Set.Leave_Declarative_Region (Self.Env);
       end Generic_Package_Declaration;
+
+      overriding procedure Object_Declaration
+        (Self : in out Visiter;
+         Node : not null Gela.Elements.Object_Declarations.
+           Object_Declaration_Access)
+      is
+         Item   : Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Access;
+         Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Cursor : Gela.Elements.Defining_Identifiers.
+           Defining_Identifier_Sequence_Cursor := Node.Names.First;
+      begin
+         while Cursor.Has_Element loop
+            Item := Cursor.Element;
+            Name := Gela.Elements.Defining_Names.Defining_Name_Access (Item);
+            Self.Env := Self.Set.Add_Defining_Name
+              (Self.Env, Name.Full_Name, Name);
+            Cursor.Next;
+         end loop;
+      end Object_Declaration;
 
       overriding procedure Subtype_Declaration
         (Self : in out Visiter;
