@@ -1317,10 +1317,21 @@ package body Asis.Elements is
      (Clause : in Asis.Representation_Clause)
       return Asis.Representation_Clause_Kinds
    is
+      Map : constant array (F.A_Representation_Clause)
+        of Asis.Representation_Clause_Kinds :=
+          (F.An_Attribute_Definition_Clause =>
+             Asis.An_Attribute_Definition_Clause,
+           F.An_Enumeration_Representation_Clause =>
+             Asis.An_Enumeration_Representation_Clause,
+           F.A_Record_Representation_Clause =>
+             Asis.A_Record_Representation_Clause,
+           F.An_At_Clause => Asis.An_At_Clause);
+
+      Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
+        Asis.Extensions.Flat_Kinds.Flat_Kind (Clause);
    begin
-      if Assigned (Clause) then
-         Raise_Not_Implemented ("");
-         return Not_A_Representation_Clause;
+      if Kind in Map'Range then
+         return Map (Kind);
       else
          return Not_A_Representation_Clause;
       end if;

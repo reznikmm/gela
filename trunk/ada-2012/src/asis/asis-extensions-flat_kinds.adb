@@ -350,8 +350,7 @@ package body Asis.Extensions.Flat_Kinds is
 
    overriding procedure Component_Clause
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Component_Clauses.Component_Clause_Access)
-   is null;
+      Node : not null Gela.Elements.Component_Clauses.Component_Clause_Access);
 
    overriding procedure Component_Declaration
      (Self : in out Visiter;
@@ -1014,8 +1013,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Record_Representation_Clause
      (Self : in out Visiter;
       Node : not null Gela.Elements.Record_Representation_Clauses.
-        Record_Representation_Clause_Access)
-   is null;
+        Record_Representation_Clause_Access);
 
    overriding procedure Record_Type_Definition
      (Self : in out Visiter;
@@ -1465,6 +1463,15 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Case_Statement;
    end Case_Statement;
 
+   overriding procedure Component_Clause
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Component_Clauses.Component_Clause_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Component_Clause;
+   end Component_Clause;
+
    overriding procedure Component_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Component_Declarations.
@@ -1630,11 +1637,16 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Discrete_Simple_Expression_Range
      (Self : in out Visiter;
       Node : not null Gela.Elements.Discrete_Simple_Expression_Ranges.
-        Discrete_Simple_Expression_Range_Access)
-   is
-      pragma Unreferenced (Node);
+        Discrete_Simple_Expression_Range_Access) is
    begin
-      Self.Result := A_Discrete_Simple_Expression_Range;
+      Node.Enclosing_Element.Visit (Self);
+
+      case Self.Result is
+         when A_Component_Clause =>
+            Self.Result := A_Discrete_Simple_Expression_Range_DR;
+         when others =>
+            Self.Result := A_Discrete_Simple_Expression_Range;
+      end case;
    end Discrete_Simple_Expression_Range;
 
    overriding procedure Discrete_Subtype_Indication
@@ -2369,6 +2381,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Record_Definition;
    end Record_Definition;
+
+   overriding procedure Record_Representation_Clause
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Record_Representation_Clauses.
+        Record_Representation_Clause_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Record_Representation_Clause;
+   end Record_Representation_Clause;
 
    overriding procedure Record_Type_Definition
      (Self : in out Visiter;

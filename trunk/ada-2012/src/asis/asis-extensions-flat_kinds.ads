@@ -487,7 +487,7 @@ package Asis.Extensions.Flat_Kinds is
      An_If_Path .. A_Then_Abort_Path;
 
    subtype A_Clause is Element_Flat_Kind range
-     A_Use_Package_Clause .. A_With_Clause;
+     A_Use_Package_Clause .. A_Component_Clause;
 
    subtype An_Operator_Symbol is Element_Flat_Kind range
      An_And_Operator .. A_Not_Operator;
