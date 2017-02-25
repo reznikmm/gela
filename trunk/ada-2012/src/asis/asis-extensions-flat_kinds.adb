@@ -1393,47 +1393,15 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access)
    is
-      Comp  : constant Gela.Compilations.Compilation_Access :=
-        Node.Enclosing_Compilation;
-
-      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
-        Comp.Context.Interpretation_Manager;
-
-      package Visiters is
-         type Visiter is new Gela.Interpretations.Down_Visiter with record
-            Result : Element_Flat_Kind := A_Function_Call;
-         end record;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Flag   : Gela.Interpretations.Expression_Flags;
-            Down   : Gela.Interpretations.Interpretation_Index_Array);
-
-      end Visiters;
-
-      package body Visiters is
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Flag   : Gela.Interpretations.Expression_Flags;
-            Down   : Gela.Interpretations.Interpretation_Index_Array)
-         is
-            pragma Unreferenced (Down, Tipe);
-            use type Gela.Interpretations.Expression_Flags;
-         begin
-            if Flag = Gela.Interpretations.Indexed_Component then
-               Self.Result := An_Indexed_Component;
-            end if;
-         end On_Expression;
-
-      end Visiters;
-
-      V : Visiters.Visiter;
+      use type Gela.Interpretations.Auxiliary_Apply_Kinds;
    begin
-      IM.Visit (Node.Down, V);
-      Self.Result := V.Result;
+      if Node.Chosen_Interpretation =
+        Gela.Interpretations.Indexed_Component
+      then
+         Self.Result := An_Indexed_Component;
+      else
+         Self.Result := A_Function_Call;
+      end if;
    end Auxiliary_Apply;
 
    overriding procedure Block_Statement
@@ -2343,7 +2311,7 @@ package body Asis.Extensions.Flat_Kinds is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Flag   : Gela.Interpretations.Expression_Flags;
+            Kind   : Gela.Interpretations.Interpretation_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       end Visiters;
@@ -2353,10 +2321,10 @@ package body Asis.Extensions.Flat_Kinds is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Flag   : Gela.Interpretations.Expression_Flags;
+            Kind   : Gela.Interpretations.Interpretation_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
-            pragma Unreferenced (Down, Flag);
+            pragma Unreferenced (Down, Kind);
             View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
          begin
             if View.Assigned and then View.Is_Array then

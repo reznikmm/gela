@@ -9,26 +9,26 @@ package body Gela.Int.Expressions is
    function Create
      (Down            : Gela.Interpretations.Interpretation_Index_Array;
       Expression_Type : Gela.Semantic_Types.Type_Index;
-      Expression_Flag : Gela.Interpretations.Expression_Flags)
+      Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
       return Expression is
    begin
       return (Index           => 0,
               Length          => Down'Length,
               Expression_Type => Expression_Type,
-              Expression_Flag => Expression_Flag,
+              Expression_Kind => Expression_Kind,
               Down            => Down);
    end Create;
 
    ---------------------
-   -- Expression_Flag --
+   -- Expression_Kind --
    ---------------------
 
-   function Expression_Flag
+   function Expression_Kind
      (Self : Expression)
-      return Gela.Interpretations.Expression_Flags is
+      return Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds is
    begin
-      return Self.Expression_Flag;
-   end Expression_Flag;
+      return Self.Expression_Kind;
+   end Expression_Kind;
 
    ---------------------
    -- Expression_Type --

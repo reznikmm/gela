@@ -10,6 +10,7 @@
 #include "inst.ag"
 #include "errors.ag"
 #include "static_value.ag"
+#include "chosen.ag"
 
 Synthesized attributes
   function_declaration,

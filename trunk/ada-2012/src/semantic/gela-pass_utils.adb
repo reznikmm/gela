@@ -504,6 +504,55 @@ package body Gela.Pass_Utils is
       return Visiter.Env;
    end Add_Use_Package;
 
+   -------------------------------------------
+   -- Choose_Auxiliary_Apply_Interpretation --
+   -------------------------------------------
+
+   procedure Choose_Auxiliary_Apply_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Down   : Gela.Interpretations.Interpretation_Index;
+      Result : out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
+   is
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      package Visiters is
+         type Visiter is new Gela.Interpretations.Down_Visiter with record
+            Result : Gela.Interpretations.Interpretation_Kinds :=
+              Gela.Interpretations.Function_Call;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down, Tipe);
+         begin
+            if Kind in Gela.Interpretations.Auxiliary_Apply_Kinds then
+               Self.Result := Kind;
+            end if;
+         end On_Expression;
+
+      end Visiters;
+
+      V : Visiters.Visiter;
+   begin
+      IM.Visit (Down, V);
+      Result := V.Result;
+   end Choose_Auxiliary_Apply_Interpretation;
+
    ------------------------------
    -- Create_Completion_Region --
    ------------------------------

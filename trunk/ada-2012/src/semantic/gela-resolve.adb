@@ -1176,7 +1176,7 @@ package body Gela.Resolve is
             if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Profile.Return_Type,
-                  Flag   => Gela.Interpretations.Function_Call,
+                  Kind   => Gela.Interpretations.Function_Call,
                   Down   => Cursor.Get_Index & Chosen,
                   Result => Set);
 
@@ -1185,7 +1185,7 @@ package body Gela.Resolve is
             then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Profile.Return_Type,
-                  Flag   => Gela.Interpretations.Function_Call,
+                  Kind   => Gela.Interpretations.Function_Call,
                   Down   => Cursor.Get_Index & 0,
                   Result => Set);
 
@@ -1279,7 +1279,7 @@ package body Gela.Resolve is
             if Chosen /= 0 then
                Comp.Context.Interpretation_Manager.Add_Expression
                  (Tipe   => Arr.Component_Type,
-                  Flag   => Gela.Interpretations.Indexed_Component,
+                  Kind   => Gela.Interpretations.Indexed_Component,
                   Down   => Cursor.Get_Index & Chosen,
                   Result => Set);
             end if;
@@ -1821,7 +1821,7 @@ package body Gela.Resolve is
          overriding procedure On_Expression
            (Self : in out Visiter;
             Tipe : Gela.Semantic_Types.Type_Index;
-            Flag : Gela.Interpretations.Expression_Flags;
+            Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down : Gela.Interpretations.Interpretation_Index_Array);
 
       end Each;
@@ -1851,10 +1851,10 @@ package body Gela.Resolve is
          overriding procedure On_Expression
            (Self : in out Visiter;
             Tipe : Gela.Semantic_Types.Type_Index;
-            Flag : Gela.Interpretations.Expression_Flags;
+            Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down : Gela.Interpretations.Interpretation_Index_Array)
          is
-            pragma Unreferenced (Down, Flag);
+            pragma Unreferenced (Down, Kind);
 
             View   : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
             Tuples : constant Gela.Interpretations

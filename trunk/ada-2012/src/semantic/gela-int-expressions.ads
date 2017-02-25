@@ -8,22 +8,22 @@ package Gela.Int.Expressions is
    function Create
      (Down            : Gela.Interpretations.Interpretation_Index_Array;
       Expression_Type : Gela.Semantic_Types.Type_Index;
-      Expression_Flag : Gela.Interpretations.Expression_Flags)
+      Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
       return Expression;
 
    function Expression_Type
      (Self : Expression)
       return Gela.Semantic_Types.Type_Index;
 
-   function Expression_Flag
+   function Expression_Kind
      (Self : Expression)
-      return Gela.Interpretations.Expression_Flags;
+      return Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
 
 private
 
    type Expression is new Interpretation with record
       Expression_Type : Gela.Semantic_Types.Type_Index;
-      Expression_Flag : Gela.Interpretations.Expression_Flags;
+      Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
    end record;
 
    overriding procedure Visit

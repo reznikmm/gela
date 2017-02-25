@@ -169,6 +169,11 @@ package body Gela.Instantiation is
          Element : Gela.Elements.Element_Access;
          Value   : out Gela.Elements.Element_Access);
 
+      overriding procedure On_Chosen_Interpretation
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.Interpretation_Kinds);
+
    end Setters;
 
    package Update_Env is
@@ -466,6 +471,35 @@ package body Gela.Instantiation is
          Value := null;
       end On_Expanded;
 
+      overriding procedure On_Chosen_Interpretation
+        (Self    : in out Property_Setter;
+         Element : Gela.Elements.Element_Access;
+         Value   : out Gela.Interpretations.Interpretation_Kinds)
+      is
+         pragma Unreferenced (Element);
+         type Property_Visiter is new Gela.Property_Visiters.Property_Visiter
+           with null record;
+
+         overriding procedure On_Chosen_Interpretation
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Interpretations.Interpretation_Kinds);
+
+         overriding procedure On_Chosen_Interpretation
+           (Self    : in out Property_Visiter;
+            Element : Gela.Elements.Element_Access;
+            Value   : Gela.Interpretations.Interpretation_Kinds)
+         is
+            pragma Unreferenced (Self, Element);
+         begin
+            Setters.On_Chosen_Interpretation.Value := Value;
+         end On_Chosen_Interpretation;
+
+         Getter  : aliased Property_Visiter;
+         Visiter : Gela.Property_Visiters.Visiter (Getter'Access);
+      begin
+         Self.Source.Visit (Visiter);
+      end On_Chosen_Interpretation;
    end Setters;
 
 

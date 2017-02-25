@@ -1,0 +1,26 @@
+Synthesized attributes
+ auxiliary_apply
+  : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
+
+Rules for auxiliary_apply. :
+(.
+      --  choose between Function_Call and Indexed_Component
+      Gela.Pass_Utils.Choose_Auxiliary_Apply_Interpretation
+        (Self.Compilation,
+         ${auxiliary_apply.Down},
+         ${auxiliary_apply.chosen_interpretation});
+
+--  Composite_Constraint
+--   Index_Constraint, Discriminant_Constraint
+
+--  Identifier
+--   Enumeration_Literal ? f(Defining_Name)
+
+--  Operator_Symbol/ String_Literal ?
+
+--  Record_Aggregate
+--   Positional_Array_Aggregate, Record_Aggregate
+
+--  Simple_Expression_Range_Dr?
+
+.)

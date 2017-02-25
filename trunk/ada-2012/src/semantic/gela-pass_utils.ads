@@ -16,6 +16,7 @@ with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Resolve;
 with Gela.Instantiation;
+with Gela.Interpretations;
 
 package Gela.Pass_Utils is
    pragma Preelaborate;
@@ -112,5 +113,11 @@ package Gela.Pass_Utils is
       Tipe : Gela.Elements.Element_Access;
       Name : Gela.Elements.Defining_Names.Defining_Name_Access;
       Env  : in out Gela.Semantic_Types.Env_Index);
+
+   procedure Choose_Auxiliary_Apply_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Down   : Gela.Interpretations.Interpretation_Index;
+      Result : out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds);
+   --  Maybe move it into separate unit???
 
 end Gela.Pass_Utils;
