@@ -24,6 +24,7 @@ with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Program_Unit_Names;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
+with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Elements.Type_Definitions;
 with Gela.Elements.With_Clauses;
@@ -525,7 +526,7 @@ package body Gela.Pass_Utils is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       end Visiters;
@@ -535,7 +536,7 @@ package body Gela.Pass_Utils is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Down, Tipe);
@@ -552,6 +553,39 @@ package body Gela.Pass_Utils is
       IM.Visit (Down, V);
       Result := V.Result;
    end Choose_Auxiliary_Apply_Interpretation;
+
+   ------------------------------------------------
+   -- Choose_Composite_Constraint_Interpretation --
+   ------------------------------------------------
+
+   procedure Choose_Composite_Constraint_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Node   : access Gela.Elements.Element'Class;
+      Result : out Gela.Interpretations.Constraint_Kinds)
+   is
+      use type Gela.Types.Type_View_Access;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      Subtype_Indication : constant Gela.Elements.Subtype_Indications.
+        Subtype_Indication_Access :=
+          Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+            (Node.Enclosing_Element);
+
+      Type_Index : constant Gela.Semantic_Types.Type_Index :=
+        TM.Type_From_Subtype_Mark
+          (Subtype_Indication.Env_In, Subtype_Indication.Subtype_Mark);
+
+      Type_View : constant Gela.Types.Type_View_Access :=
+        TM.Get (Type_Index);
+   begin
+      if Type_View /= null and then Type_View.Is_Array then
+         Result := Gela.Interpretations.Index_Constraint;
+      else
+         Result := Gela.Interpretations.Discriminant_Constraint;
+      end if;
+   end Choose_Composite_Constraint_Interpretation;
 
    ------------------------------
    -- Create_Completion_Region --

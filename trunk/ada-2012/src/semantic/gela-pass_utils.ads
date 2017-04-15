@@ -120,4 +120,9 @@ package Gela.Pass_Utils is
       Result : out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds);
    --  Maybe move it into separate unit???
 
+   procedure Choose_Composite_Constraint_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Node   : access Gela.Elements.Element'Class;
+      Result : out Gela.Interpretations.Constraint_Kinds);
+
 end Gela.Pass_Utils;

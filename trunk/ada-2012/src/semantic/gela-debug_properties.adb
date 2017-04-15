@@ -106,7 +106,7 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
-         Kind   : Gela.Interpretations.Interpretation_Kinds;
+         Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       overriding procedure On_Expression_Category
@@ -298,7 +298,7 @@ package body Gela.Debug_Properties is
       overriding procedure On_Expression
         (Self   : in out Visiter;
          Tipe   : Gela.Semantic_Types.Type_Index;
-         Kind   : Gela.Interpretations.Interpretation_Kinds;
+         Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
          Down   : Gela.Interpretations.Interpretation_Index_Array)
       is
          use type Gela.Semantic_Types.Type_Index;

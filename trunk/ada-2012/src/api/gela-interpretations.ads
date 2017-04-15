@@ -32,13 +32,19 @@ package Gela.Interpretations is
      (Unknown,
       --  Interpretation of Auxiliary_Apply
       Function_Call,
-      Indexed_Component);
+      Indexed_Component,
+      --  Interpretation of Composite_Constraint
+      Index_Constraint,
+      Discriminant_Constraint);
 
    subtype Auxiliary_Apply_Kinds is Interpretation_Kinds
      range Function_Call .. Indexed_Component;
 
    subtype Unknown_Auxiliary_Apply_Kinds is Interpretation_Kinds
      range Unknown .. Indexed_Component;
+
+   subtype Constraint_Kinds is Interpretation_Kinds
+     range Index_Constraint .. Discriminant_Constraint;
 
    type Interpretation_Manager is limited interface;
    --  This object keeps sets of possible interpretations

@@ -1,5 +1,6 @@
 Synthesized attributes
- auxiliary_apply
+ auxiliary_apply,
+ composite_constraint
   : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
 
 Rules for auxiliary_apply. :
@@ -9,9 +10,6 @@ Rules for auxiliary_apply. :
         (Self.Compilation,
          ${auxiliary_apply.Down},
          ${auxiliary_apply.chosen_interpretation});
-
---  Composite_Constraint
---   Index_Constraint, Discriminant_Constraint
 
 --  Identifier
 --   Enumeration_Literal ? f(Defining_Name)
@@ -24,3 +22,14 @@ Rules for auxiliary_apply. :
 --  Simple_Expression_Range_Dr?
 
 .)
+
+Rules for composite_constraint. :
+(.
+      --  choose between Function_Call and Indexed_Component
+      --   ${composite_constraint.Down},
+      Gela.Pass_Utils.Choose_Composite_Constraint_Interpretation
+        (Self.Compilation,
+         Node,
+         ${composite_constraint.chosen_interpretation});
+.)
+

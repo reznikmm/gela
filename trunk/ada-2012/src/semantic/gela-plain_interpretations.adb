@@ -90,7 +90,7 @@ package body Gela.Plain_Interpretations is
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
       Tipe   : Gela.Semantic_Types.Type_Index;
-      Kind   : Gela.Interpretations.Interpretation_Kinds :=
+      Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds :=
         Gela.Interpretations.Unknown;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)

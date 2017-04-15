@@ -1465,27 +1465,11 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Composite_Constraints.
         Composite_Constraint_Access)
    is
-      use type Gela.Types.Type_View_Access;
-
-      Comp : constant Gela.Compilations.Compilation_Access :=
-        Node.Enclosing_Compilation;
-
-      TM : constant Gela.Type_Managers.Type_Manager_Access :=
-        Comp.Context.Types;
-
-      Subtype_Indication : constant Gela.Elements.Subtype_Indications.
-        Subtype_Indication_Access :=
-          Gela.Elements.Subtype_Indications.Subtype_Indication_Access
-            (Node.Enclosing_Element);
-
-      Type_Index : constant Gela.Semantic_Types.Type_Index :=
-        TM.Type_From_Subtype_Mark
-          (Subtype_Indication.Env_In, Subtype_Indication.Subtype_Mark);
-
-      Type_View : constant Gela.Types.Type_View_Access :=
-        TM.Get (Type_Index);
+      use type Gela.Interpretations.Interpretation_Kinds;
    begin
-      if Type_View /= null and then Type_View.Is_Array then
+      if Node.Chosen_Interpretation =
+        Gela.Interpretations.Index_Constraint
+      then
          Self.Result := An_Index_Constraint;
       else
          Self.Result := A_Discriminant_Constraint;
@@ -2311,7 +2295,7 @@ package body Asis.Extensions.Flat_Kinds is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
       end Visiters;
@@ -2321,7 +2305,7 @@ package body Asis.Extensions.Flat_Kinds is
          overriding procedure On_Expression
            (Self   : in out Visiter;
             Tipe   : Gela.Semantic_Types.Type_Index;
-            Kind   : Gela.Interpretations.Interpretation_Kinds;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
             pragma Unreferenced (Down, Kind);
