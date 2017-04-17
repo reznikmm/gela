@@ -711,7 +711,12 @@ Rules for null_record_definition. :
 
 Rules for number_declaration. :
 (.
-      ${number_declaration.env_out} := ${number_declaration.env_in};
+      ${number_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${number_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for object_declaration. :
