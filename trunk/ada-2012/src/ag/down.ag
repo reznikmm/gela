@@ -269,7 +269,11 @@ Rules for case_expression_path. :
 
 Rules for component_clause. :
 (.
-      ${Component_Clause_Position.Down} := 0;  --  FIXME
+      --  13.5.1 (7)
+      Gela.Pass_Utils.Resolve.Signed_Integer_Type
+        (Self.Compilation,
+         ${Component_Clause_Position.Up},
+         ${Component_Clause_Position.Down});
 .)
 
 Rules for component_declaration. :
@@ -784,7 +788,11 @@ Rules for record_aggregate.Associations :
 
 Rules for record_representation_clause. :
 (.
-      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${record_representation_clause.env_in},
+         ${Representation_Clause_Name.Up},
+         ${Representation_Clause_Name.Down});
 .)
 
 Rules for record_representation_clause. :

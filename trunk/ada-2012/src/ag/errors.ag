@@ -18,8 +18,10 @@ Synthesized attributes
   case_statement,
   character_literal,
   clause_name,
+  component_clause,
   component_definition,
   composite_constraint,
+  clause_or_pragma,
   constrained_array_definition,
   constraint,
   defining_expanded_unit_name,
@@ -106,6 +108,7 @@ Synthesized attributes
   Body_Statements,
   Block_Statements,
   Case_Statement_Paths,
+  Component_Clauses,
   Exception_Choices,
   Exception_Handlers,
   Discrete_Subtype_Definitions,
@@ -309,6 +312,14 @@ Rules for Case_Statement_Paths.case_path :
       ${Case_Statement_Paths.Errors} := ${case_path.Errors}; --  FIXME
 .)
 
+Rules for Component_Clauses.clause_or_pragma :
+(.
+      ${Component_Clauses.Errors} := 0;
+.)
+Rules for Component_Clauses.clause_or_pragma :
+(.
+      ${Component_Clauses.Errors} := ${clause_or_pragma.Errors};
+.)
 Rules for Record_Component_Associations.association :
 (.
       ${Record_Component_Associations.Errors} := 0;
@@ -375,6 +386,11 @@ Rules for constrained_array_definition. :
 (.
       ${constrained_array_definition.Errors} := ${Discrete_Subtype_Definitions.Errors};
       --  ${Array_Component_Definition.Errors}
+.)
+
+Rules for component_clause. :
+(.
+      ${component_clause.Errors} := ${Component_Clause_Range.Errors};
 .)
 
 Rules for component_definition. :

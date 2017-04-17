@@ -2505,12 +2505,24 @@ Rules for record_representation_clause. :
 
 Rules for record_representation_clause. :
 (.
-      ${Mod_Clause_Expression.env_in} := ${record_representation_clause.env_in};
+      ${Mod_Clause_Expression.env_in} :=
+        Gela.Pass_Utils.Create_Completion_Region
+          (Self.Compilation,
+           ${record_representation_clause.env_in},
+           ${Representation_Clause_Name.full_name},
+           null,
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for record_representation_clause. :
 (.
-      ${Component_Clauses.env_in} := ${record_representation_clause.env_in};
+      ${Component_Clauses.env_in} :=
+        Gela.Pass_Utils.Create_Completion_Region
+          (Self.Compilation,
+           ${record_representation_clause.env_in},
+           ${Representation_Clause_Name.full_name},
+           null,
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for record_type_definition. :
