@@ -2681,6 +2681,7 @@ Rules for subtype_indication. :
 
 Rules for subtype_indication. :
 (.
+      --  Depend on ${subtype_mark.Errors}
       ${Subtype_Constraint.env_in} := ${subtype_indication.env_in};
 .)
 
