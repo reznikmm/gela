@@ -68,6 +68,7 @@ Synthesized attributes
   others_choice,
   package_declaration,
   parameter_specification,
+  pragma_argument_association,
   pragma_node,
   prefix,
   procedure_body,
@@ -115,6 +116,7 @@ Synthesized attributes
   Generic_Actual_Part,
   Index_Subtype_Definitions,
   Membership_Test_Choices,
+  Pragma_Argument_Associations,
   Record_Component_Associations,
   Variant_Choices,
   Variants
@@ -328,6 +330,15 @@ Rules for Record_Component_Associations.association :
 (.
       ${Record_Component_Associations.Errors} := ${association.Errors};
 .)
+Rules for Pragma_Argument_Associations.pragma_argument_association :
+(.
+      ${Pragma_Argument_Associations.Errors} := 0;
+.)
+Rules for Pragma_Argument_Associations.pragma_argument_association :
+(.
+      ${Pragma_Argument_Associations.Errors} :=
+        ${pragma_argument_association.Errors};
+.)
 Rules for Variant_Choices.discrete_choice :
 (.
       ${Variant_Choices.Errors} := 0;
@@ -494,6 +505,11 @@ Rules for loop_statement. :
 Rules for null_statement. :
 (.
       ${null_statement.Errors} := 0;  --  FIXME
+.)
+Rules for pragma_argument_association. :
+(.
+      ${pragma_argument_association.Errors} :=
+        ${Actual_Parameter.Errors};  --  FIXME
 .)
 Rules for pragma_node. :
 (.
