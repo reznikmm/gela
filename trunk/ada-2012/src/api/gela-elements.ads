@@ -1,6 +1,7 @@
 --  This package provides Element interface and their methods.
 
 with Ada.Containers;
+with Ada.Iterator_Interfaces;
 
 with Gela.Lexical_Types;
 
@@ -91,8 +92,13 @@ package Gela.Elements is
    --  Return nested elements.
 
    package Element_Sequences is
-      type Sequence is limited interface;
+      type Sequence is limited interface with
+        Constant_Indexing => Constant_Reference,
+        Variable_Indexing => Reference,
+        Default_Iterator  => Each_Element,
+        Iterator_Element  => Gela.Elements.Element'Class;
       --  Sequence containing Elements
+
       type Sequence_Cursor is interface;
       --  Cursor in sequence of Element
 
@@ -115,6 +121,34 @@ package Gela.Elements is
       not overriding procedure Next
         (Self : in out Sequence_Cursor) is abstract;
 
+      --  Iterating syntax sugar stuff
+      function Has_Some
+        (Self : Sequence_Cursor'Class) return Boolean is (Self.Has_Element);
+
+      package Iterators is new Ada.Iterator_Interfaces
+        (Sequence_Cursor'Class, Has_Some);
+
+      not overriding function Each_Element
+        (Self : Sequence) return Iterators.Forward_Iterator'Class is abstract;
+
+      type Constant_Reference_Type
+        (Item : not null access constant Gela.Elements.Element'Class) is
+          null record with Implicit_Dereference => Item;
+
+      function Constant_Reference
+        (Self     : Sequence'Class;
+         Position : Sequence_Cursor'Class)
+         return Constant_Reference_Type is (Item => Position.Element);
+
+      type Reference_Type
+        (Item : not null access Gela.Elements.Element'Class) is
+          null record with Implicit_Dereference => Item;
+
+      function Reference
+        (Self     : in out Sequence'Class;
+         Position : Sequence_Cursor'Class)
+         return Reference_Type is (Item => Position.Element);
+
    end Element_Sequences;
 
    type Element_Sequence is limited interface and Element_Sequences.Sequence;
@@ -124,8 +158,11 @@ package Gela.Elements is
       type Item is limited interface and Element;
       type Item_Access is access all Item'Class;
    package Generic_Element_Sequences is
-      type Sequence is limited interface and Element_Sequence;
+      type Sequence is limited interface and Element_Sequence with
+        Default_Iterator  => Iterate,
+        Iterator_Element  => Item'Class;
       --  Sequence containing given Item-s
+
       type Sequence_Cursor is interface;
       --  Cursor in sequence of Item
 
@@ -141,14 +178,53 @@ package Gela.Elements is
         (Self : Sequence) return Sequence_Cursor'Class is abstract;
 
       not overriding function Has_Element
-        (Self : Sequence_Cursor)
-      return Boolean is abstract;
+        (Self : Sequence_Cursor) return Boolean is abstract;
 
       not overriding function Element
         (Self : Sequence_Cursor) return Item_Access is abstract;
 
       not overriding procedure Next
         (Self : in out Sequence_Cursor) is abstract;
+
+      --  Iterating syntax sugar stuff
+      function Has_Some
+        (Self : Sequence_Cursor'Class) return Boolean is (Self.Has_Element);
+
+      package Iterators is new Ada.Iterator_Interfaces
+        (Sequence_Cursor'Class, Has_Some);
+
+      not overriding function Iterate
+        (Self : Sequence) return Iterators.Forward_Iterator'Class is abstract;
+
+      function Constant_Reference
+        (Self     : Sequence'Class;
+         Position : Element_Sequences.Sequence_Cursor'Class)
+         return Element_Sequences.Constant_Reference_Type
+           is (Item => Position.Element);
+
+      type Constant_Reference_Type
+        (Item : not null access constant Gela.Elements.Element'Class) is
+          null record with Implicit_Dereference => Item;
+
+      function Constant_Reference
+        (Self     : Sequence'Class;
+         Position : Sequence_Cursor'Class)
+         return Constant_Reference_Type is (Item => Position.Element);
+
+      function Reference
+        (Self     : in out Sequence'Class;
+         Position : Element_Sequences.Sequence_Cursor'Class)
+         return Element_Sequences.Reference_Type
+           is (Item => Position.Element);
+
+      type Reference_Type
+        (Item : not null access Gela.Elements.Element'Class) is
+          null record with Implicit_Dereference => Item;
+
+      function Reference
+        (Self     : in out Sequence'Class;
+         Position : Sequence_Cursor'Class)
+         return Reference_Type is (Item => Position.Element);
 
    end Generic_Element_Sequences;
 

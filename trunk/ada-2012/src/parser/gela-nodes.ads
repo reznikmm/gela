@@ -70,6 +70,13 @@ package Gela.Nodes is
         (Self  : in out Sequence;
          Value : Gela.Elements.Element_Access);
 
+      overriding function Each_Element (Self : Sequence)
+        return Gela.Elements.Element_Sequences.Iterators
+          .Forward_Iterator'Class;
+
+      overriding function Iterate (Self : Sequence)
+        return Generic_Element_Sequences.Iterators.Forward_Iterator'Class;
+
       type Sequence_Cursor is new Generic_Element_Sequences.Sequence_Cursor
         and Gela.Elements.Element_Sequences.Sequence_Cursor
       with record

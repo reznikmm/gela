@@ -240,6 +240,31 @@ package body Gela.Nodes is
 
    package body Node_Sequences is
 
+      type Forward_Iterator is
+        new Gela.Elements.Element_Sequences.Iterators.Forward_Iterator
+          and Generic_Element_Sequences.Iterators.Forward_Iterator
+          with record
+             First : Sequence_Cursor;
+          end record;
+
+      overriding function First
+        (Object : Forward_Iterator)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class;
+
+      overriding function Next
+        (Object   : Forward_Iterator;
+         Position : Gela.Elements.Element_Sequences.Sequence_Cursor'Class)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class;
+
+      overriding function First
+        (Object : Forward_Iterator)
+         return Generic_Element_Sequences.Sequence_Cursor'Class;
+
+      overriding function Next
+        (Object   : Forward_Iterator;
+         Position : Generic_Element_Sequences.Sequence_Cursor'Class)
+         return Generic_Element_Sequences.Sequence_Cursor'Class;
+
       ------------
       -- Append --
       ------------
@@ -254,6 +279,17 @@ package body Gela.Nodes is
       begin
          Self.List.Append (Y);
       end Append;
+
+      ------------------
+      -- Each_Element --
+      ------------------
+
+      overriding function Each_Element (Self : Sequence)
+        return Gela.Elements.Element_Sequences.Iterators.Forward_Iterator'Class
+      is
+      begin
+         return Forward_Iterator'(First => (Data => Self.List.First));
+      end Each_Element;
 
       -------------
       -- Element --
@@ -278,6 +314,28 @@ package body Gela.Nodes is
       begin
          return Gela.Elements.Element_Access (Result);
       end Element;
+
+      -----------
+      -- First --
+      -----------
+
+      overriding function First
+        (Object : Forward_Iterator)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class is
+      begin
+         return Object.First;
+      end First;
+
+      -----------
+      -- First --
+      -----------
+
+      overriding function First
+        (Object : Forward_Iterator)
+         return Generic_Element_Sequences.Sequence_Cursor'Class is
+      begin
+         return Object.First;
+      end First;
 
       -----------
       -- First --
@@ -320,6 +378,17 @@ package body Gela.Nodes is
          return Self.List.Is_Empty;
       end Is_Empty;
 
+      -------------
+      -- Iterate --
+      -------------
+
+      overriding function Iterate (Self : Sequence)
+        return Generic_Element_Sequences.Iterators.Forward_Iterator'Class
+      is
+      begin
+         return Forward_Iterator'(First => (Data => Self.List.First));
+      end Iterate;
+
       ------------
       -- Length --
       ------------
@@ -328,6 +397,38 @@ package body Gela.Nodes is
       begin
          return Natural (Self.List.Length);
       end Length;
+
+      ----------
+      -- Next --
+      ----------
+
+      overriding function Next
+        (Object   : Forward_Iterator;
+         Position : Gela.Elements.Element_Sequences.Sequence_Cursor'Class)
+         return Gela.Elements.Element_Sequences.Sequence_Cursor'Class
+      is
+         pragma Unreferenced (Object);
+      begin
+         return Result : Sequence_Cursor := Sequence_Cursor (Position) do
+            Result.Next;
+         end return;
+      end Next;
+
+      ----------
+      -- Next --
+      ----------
+
+      overriding function Next
+        (Object   : Forward_Iterator;
+         Position : Generic_Element_Sequences.Sequence_Cursor'Class)
+         return Generic_Element_Sequences.Sequence_Cursor'Class
+      is
+         pragma Unreferenced (Object);
+      begin
+         return Result : Sequence_Cursor := Sequence_Cursor (Position) do
+            Result.Next;
+         end return;
+      end Next;
 
       ----------
       -- Next --
