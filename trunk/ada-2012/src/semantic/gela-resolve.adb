@@ -14,6 +14,7 @@ with Gela.Elements.Simple_Expression_Ranges;
 with Gela.Elements.Subtype_Indications;
 with Gela.Environments;
 with Gela.Profiles;
+with Gela.Resolve.Type_Matchers;
 with Gela.Type_Managers;
 with Gela.Types.Arrays;
 with Gela.Types.Simple;
@@ -80,184 +81,11 @@ package body Gela.Resolve is
       Down_Right : out Gela.Interpretations.Interpretation_Index;
       Tipe       : out Gela.Semantic_Types.Type_Index);
 
-   package String_Type_Matcher is
-      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
-         Match : Boolean := False;
-      end record;
-
-      type Type_Matcher_Access is access all Type_Matcher'Class;
-
-      overriding procedure Array_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Arrays.Array_Type_Access);
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean;
-   end String_Type_Matcher;
-
-   package body String_Type_Matcher is
-
-      overriding procedure Array_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Arrays.Array_Type_Access)
-      is
-         pragma Unreferenced (Value);
-      begin
-         Self.Match := True;  --  Value.Is_String;  FIXME
-      end Array_Type;
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean is
-      begin
-         return Self.Match;
-      end Is_Matched;
-
-   end String_Type_Matcher;
-
-   package Array_Type_Matcher is
-      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
-         Match : Boolean := False;
-      end record;
-
-      type Type_Matcher_Access is not null access all Type_Matcher'Class;
-
-      overriding procedure Array_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Arrays.Array_Type_Access);
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean;
-   end Array_Type_Matcher;
-
-   package body Array_Type_Matcher is
-
-      overriding procedure Array_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Arrays.Array_Type_Access)
-      is
-         pragma Unreferenced (Value);
-      begin
-         Self.Match := True;
-      end Array_Type;
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean is
-      begin
-         return Self.Match;
-      end Is_Matched;
-
-   end Array_Type_Matcher;
-
-
-   package Record_Type_Matcher is
-      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
-         Match : Boolean := False;
-      end record;
-
-      type Type_Matcher_Access is not null access all Type_Matcher'Class;
-
-      overriding procedure Untagged_Record
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Untagged_Records.
-           Untagged_Record_Type_Access);
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean;
-   end Record_Type_Matcher;
-
-   package body Record_Type_Matcher is
-
-      overriding procedure Untagged_Record
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Untagged_Records.
-           Untagged_Record_Type_Access)
-      is
-         pragma Unreferenced (Value);
-      begin
-         Self.Match := True;
-      end Untagged_Record;
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean is
-      begin
-         return Self.Match;
-      end Is_Matched;
-
-   end Record_Type_Matcher;
-
-   package Integer_Type_Matcher is
-      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
-         Match : Boolean := False;
-      end record;
-
-      type Type_Matcher_Access is access all Type_Matcher'Class;
-
-      overriding procedure Signed_Integer_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access);
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean;
-   end Integer_Type_Matcher;
-
-   package body Integer_Type_Matcher is
-
-      overriding procedure Signed_Integer_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Simple.Signed_Integer_Type_Access)
-      is
-         pragma Unreferenced (Value);
-      begin
-         Self.Match := True;
-      end Signed_Integer_Type;
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean is
-      begin
-         return Self.Match;
-      end Is_Matched;
-
-   end Integer_Type_Matcher;
-
-   package Float_Type_Matcher is
-      type Type_Matcher is new Gela.Interpretations.Type_Matcher with record
-         Match : Boolean := False;
-      end record;
-
-      type Type_Matcher_Access is access all Type_Matcher'Class;
-
-      overriding procedure Floating_Point_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Simple.Floating_Point_Type_Access);
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean;
-   end Float_Type_Matcher;
-
-   package body Float_Type_Matcher is
-
-      overriding procedure Floating_Point_Type
-        (Self  : in out Type_Matcher;
-         Value : not null Gela.Types.Simple.Floating_Point_Type_Access)
-      is
-         pragma Unreferenced (Value);
-      begin
-         Self.Match := True;
-      end Floating_Point_Type;
-
-      overriding function Is_Matched
-        (Self : Type_Matcher) return Boolean is
-      begin
-         return Self.Match;
-      end Is_Matched;
-
-   end Float_Type_Matcher;
-
    function Array_Matcher
      return not null Gela.Interpretations.Type_Matcher_Access
    is
-      Result : constant Array_Type_Matcher.Type_Matcher_Access :=
-        new Array_Type_Matcher.Type_Matcher;
+      Result : constant Type_Matchers.Type_Matcher_Access :=
+        new Type_Matchers.Array_Type_Matcher;
    begin
       return Gela.Interpretations.Type_Matcher_Access (Result);
    end Array_Matcher;
@@ -1967,8 +1795,8 @@ package body Gela.Resolve is
    function Record_Matcher
      return not null Gela.Interpretations.Type_Matcher_Access
    is
-      Result : constant Record_Type_Matcher.Type_Matcher_Access :=
-        new Record_Type_Matcher.Type_Matcher;
+      Result : constant Type_Matchers.Type_Matcher_Access :=
+        new Type_Matchers.Record_Type_Matcher;
    begin
       return Gela.Interpretations.Type_Matcher_Access (Result);
    end Record_Matcher;
@@ -2331,8 +2159,6 @@ package body Gela.Resolve is
       L_Val : Counter_By_Type renames Visiter.Counters (Left_Side);
       R_Val : Counter_By_Type renames Visiter.Counters (Right_Side);
 
-      Int_Matcher   : Integer_Type_Matcher.Type_Matcher_Access;
-      Float_Matcher : Float_Type_Matcher.Type_Matcher_Access;
    begin
       Set := 0;
       Each_Expression
@@ -2342,21 +2168,27 @@ package body Gela.Resolve is
          Target => Visiter);
 
       if L_Val (Integer).Count = 1 and R_Val (Integer).Count = 1 then
-         Int_Matcher := new Integer_Type_Matcher.Type_Matcher;
-
-         Comp.Context.Interpretation_Manager.Add_Expression_Category
-           (Match  => Gela.Interpretations.Type_Matcher_Access (Int_Matcher),
-            Down   => (L_Val (Integer).Index, R_Val (Integer).Index),
-            Result => Set);
+         declare
+            Matcher   : constant Type_Matchers.Type_Matcher_Access :=
+              new Type_Matchers.Integer_Type_Matcher;
+         begin
+            Comp.Context.Interpretation_Manager.Add_Expression_Category
+              (Match  => Gela.Interpretations.Type_Matcher_Access (Matcher),
+               Down   => (L_Val (Integer).Index, R_Val (Integer).Index),
+               Result => Set);
+         end;
       end if;
 
       if L_Val (Float).Count = 1 and R_Val (Float).Count = 1 then
-         Float_Matcher := new Float_Type_Matcher.Type_Matcher;
-
-         Comp.Context.Interpretation_Manager.Add_Expression_Category
-           (Match  => Gela.Interpretations.Type_Matcher_Access (Float_Matcher),
-            Down   => (L_Val (Float).Index, R_Val (Float).Index),
-            Result => Set);
+         declare
+            Matcher : constant Type_Matchers.Type_Matcher_Access :=
+              new Type_Matchers.Float_Type_Matcher;
+         begin
+            Comp.Context.Interpretation_Manager.Add_Expression_Category
+              (Match  => Gela.Interpretations.Type_Matcher_Access (Matcher),
+               Down   => (L_Val (Float).Index, R_Val (Float).Index),
+               Result => Set);
+         end;
       end if;
    end Simple_Expression_Range;
 
@@ -2578,8 +2410,8 @@ package body Gela.Resolve is
       Result : out Gela.Interpretations.Interpretation_Set_Index)
    is
       pragma Unreferenced (Token);
-      Matcher : constant String_Type_Matcher.Type_Matcher_Access :=
-        new String_Type_Matcher.Type_Matcher;
+      Matcher : constant Type_Matchers.Type_Matcher_Access :=
+        new Type_Matchers.String_Type_Matcher;
    begin
       Result := 0;
 
