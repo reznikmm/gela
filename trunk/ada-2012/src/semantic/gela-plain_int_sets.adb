@@ -1,3 +1,5 @@
+with Gela.Elements.Defining_Names;
+
 with Gela.Int.Attr_Functions;
 with Gela.Int.Categories;
 with Gela.Int.Defining_Names;
@@ -8,6 +10,147 @@ with Gela.Int.Tuples;
 with Gela.Int.Visiters;
 
 package body Gela.Plain_Int_Sets is
+
+   package Cursors is
+
+      type Defining_Name_Cursor is
+        new Gela.Interpretations.Defining_Name_Cursor with record
+
+         Set : access Interpretation_Set;
+         Pos : Int_Lists.Cursor := Int_Lists.No_Element;
+      end record;
+
+      overriding function Has_Element
+        (Self : Defining_Name_Cursor) return Boolean;
+
+      overriding function Get_Index
+        (Self : Defining_Name_Cursor)
+      return Gela.Interpretations.Interpretation_Index;
+
+      overriding function Defining_Name
+        (Self : Defining_Name_Cursor)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      type Defining_Name_Iterator is
+        new Gela.Interpretations.Defining_Name_Iterators.Forward_Iterator with
+      record
+         Set : access Interpretation_Set;
+         Pos : Int_Lists.Cursor := Int_Lists.No_Element;
+      end record;
+
+      overriding function First
+        (Object : Defining_Name_Iterator)
+          return Gela.Interpretations.Defining_Name_Cursor'Class;
+
+      overriding function Next
+        (Object   : Defining_Name_Iterator;
+         Position : Gela.Interpretations.Defining_Name_Cursor'Class)
+           return Gela.Interpretations.Defining_Name_Cursor'Class;
+
+      procedure Step_To_Defining_Name (Pos : in out Int_Lists.Cursor);
+
+   end Cursors;
+
+   -------------
+   -- Cursors --
+   -------------
+
+   package body Cursors is
+
+      -----------------
+      -- Has_Element --
+      -----------------
+
+      overriding function Has_Element
+        (Self : Defining_Name_Cursor) return Boolean is
+      begin
+         return Int_Lists.Has_Element (Self.Pos);
+      end Has_Element;
+
+      ---------------
+      -- Get_Index --
+      ---------------
+
+      overriding function Get_Index
+        (Self : Defining_Name_Cursor)
+         return Gela.Interpretations.Interpretation_Index
+      is
+         use type Gela.Interpretations.Interpretation_Index;
+
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
+         Result : Gela.Interpretations.Interpretation_Index;
+      begin
+         if Item.Index /= 0 then
+            return Item.Index;
+         end if;
+
+         Self.Set.Add (Result, Item);
+
+         return Result;
+      end Get_Index;
+
+      -------------------
+      -- Defining_Name --
+      -------------------
+
+      overriding function Defining_Name
+        (Self : Defining_Name_Cursor)
+         return Gela.Elements.Defining_Names.Defining_Name_Access
+      is
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
+      begin
+         return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
+      end Defining_Name;
+
+      -----------
+      -- First --
+      -----------
+
+      overriding function First
+        (Object : Defining_Name_Iterator)
+         return Gela.Interpretations.Defining_Name_Cursor'Class is
+      begin
+         return Cursors.Defining_Name_Cursor'(Object.Set, Object.Pos);
+      end First;
+
+      ----------
+      -- Next --
+      ----------
+
+      overriding function Next
+        (Object   : Defining_Name_Iterator;
+         Position : Gela.Interpretations.Defining_Name_Cursor'Class)
+         return Gela.Interpretations.Defining_Name_Cursor'Class
+      is
+         pragma Unreferenced (Object);
+         Cursor : Cursors.Defining_Name_Cursor :=
+           Cursors.Defining_Name_Cursor (Position);
+      begin
+         if Int_Lists.Has_Element (Cursor.Pos) then
+            Int_Lists.Next (Cursor.Pos);
+            Step_To_Defining_Name (Cursor.Pos);
+         end if;
+
+         return Cursor;
+      end Next;
+
+      ---------------------------
+      -- Step_To_Defining_Name --
+      ---------------------------
+
+      procedure Step_To_Defining_Name (Pos : in out Int_Lists.Cursor) is
+      begin
+         while Int_Lists.Has_Element (Pos) loop
+
+            exit when Int_Lists.Element (Pos).all in
+              Gela.Int.Defining_Names.Defining_Name;
+
+            Int_Lists.Next (Pos);
+         end loop;
+      end Step_To_Defining_Name;
+   end Cursors;
 
    ---------
    -- Add --
@@ -81,6 +224,26 @@ package body Gela.Plain_Int_Sets is
       Self.Int_Map.Insert (Index, Item);
       Item.Index := Index;
    end Add;
+
+   --------------------
+   -- Defining_Names --
+   --------------------
+
+   overriding function Defining_Names
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Defining_Name_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Cursors.Defining_Name_Iterator := (Self, others => <>) do
+         if Index /= 0 then
+            Result.Pos := Self.Map (Index).First;
+            Cursors.Step_To_Defining_Name (Result.Pos);
+         end if;
+      end return;
+   end Defining_Names;
 
    -------------
    -- Element --

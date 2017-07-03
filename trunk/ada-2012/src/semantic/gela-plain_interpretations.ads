@@ -165,4 +165,10 @@ private
       From : out Gela.Interpretations.Interpretation_Index;
       To   : out Gela.Interpretations.Interpretation_Index);
 
+   overriding function Defining_Names
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Defining_Name_Iterators
+                 .Forward_Iterator'Class;
+
 end Gela.Plain_Interpretations;

@@ -1,3 +1,5 @@
+with Ada.Iterator_Interfaces;
+
 --  This package provides Interpretation_Manager interface and its methods.
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
@@ -196,8 +198,8 @@ package Gela.Interpretations is
    type Cursor is limited interface;
    type Up_Visiter is tagged;
 
-   not overriding function Has_Element (Self : Cursor) return Boolean is
-     abstract;
+   not overriding function Has_Element
+     (Self : Cursor) return Boolean is abstract;
    --  Check if cursor points to an interpretation
 
    not overriding procedure Next (Self : in out Cursor) is abstract;
@@ -282,5 +284,30 @@ package Gela.Interpretations is
       Value  : Gela.Interpretations.Interpretation_Index;
       Result : out Gela.Elements.Defining_Names.Defining_Name_Access)
         is abstract;
+
+   --  Iterating over defining name interpretation
+   type Defining_Name_Cursor is interface;
+
+   not overriding function Has_Element
+     (Self : Defining_Name_Cursor) return Boolean is abstract;
+
+   not overriding function Get_Index
+     (Self : Defining_Name_Cursor)
+      return Gela.Interpretations.Interpretation_Index is abstract;
+
+   not overriding function Defining_Name
+     (Self : Defining_Name_Cursor)
+      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+
+   function Has_Some
+     (Self : Defining_Name_Cursor'Class) return Boolean is (Self.Has_Element);
+
+   package Defining_Name_Iterators is new Ada.Iterator_Interfaces
+     (Defining_Name_Cursor'Class, Has_Some);
+
+   not overriding function Defining_Names
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Defining_Name_Iterators.Forward_Iterator'Class is abstract;
 
 end Gela.Interpretations;

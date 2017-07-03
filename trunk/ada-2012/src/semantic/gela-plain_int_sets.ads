@@ -70,6 +70,12 @@ private
       Index : Gela.Interpretations.Interpretation_Set_Index)
      return Gela.Interpretations.Cursor'Class;
 
+   overriding function Defining_Names
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Defining_Name_Iterators
+                 .Forward_Iterator'Class;
+
    type Cursor is new Gela.Interpretations.Cursor with record
       Set : access Interpretation_Set;
       Pos : Int_Lists.Cursor := Int_Lists.No_Element;

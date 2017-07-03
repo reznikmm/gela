@@ -282,6 +282,20 @@ package body Gela.Plain_Interpretations is
       end if;
    end Get_Down_Interpretation;
 
+   --------------------
+   -- Defining_Names --
+   --------------------
+
+   overriding function Defining_Names
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Defining_Name_Iterators
+                .Forward_Iterator'Class
+   is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Defining_Names (Set);
+   end Defining_Names;
+
    ----------------
    -- Get_Cursor --
    ----------------
