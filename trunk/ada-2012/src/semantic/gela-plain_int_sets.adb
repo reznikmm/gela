@@ -1,3 +1,4 @@
+with Ada.Iterator_Interfaces;
 with Gela.Elements.Defining_Names;
 
 with Gela.Int.Attr_Functions;
@@ -9,45 +10,56 @@ with Gela.Int.Symbols;
 with Gela.Int.Tuples;
 with Gela.Int.Visiters;
 
+with Gela.Lexical_Types;
+
 package body Gela.Plain_Int_Sets is
 
    package Cursors is
 
-      type Defining_Name_Cursor is
-        new Gela.Interpretations.Defining_Name_Cursor with record
-
+      type Base_Cursor is abstract new Gela.Interpretations.Abstract_Cursor
+      with record
          Set : access Interpretation_Set;
          Pos : Int_Lists.Cursor := Int_Lists.No_Element;
       end record;
 
-      overriding function Has_Element
-        (Self : Defining_Name_Cursor) return Boolean;
+      overriding function Has_Element (Self : Base_Cursor) return Boolean;
 
       overriding function Get_Index
-        (Self : Defining_Name_Cursor)
-      return Gela.Interpretations.Interpretation_Index;
+        (Self : Base_Cursor) return Gela.Interpretations.Interpretation_Index;
+
+      generic
+         type Cursor is interface and Gela.Interpretations.Abstract_Cursor;
+         type Some_Cursor is new Base_Cursor and Cursor with private;
+         with package Iterators is new Ada.Iterator_Interfaces
+           (Cursor'Class, Has_Element => <>);
+         type Interpretation is new Gela.Int.Interpretation with private;
+      package Generic_Iterators is
+         type Iterator is new Iterators.Forward_Iterator with record
+            Cursor : Some_Cursor;
+         end record;
+
+         overriding function First (Object : Iterator) return Cursor'Class;
+
+         overriding function Next
+           (Object   : Iterator;
+            Position : Cursor'Class) return Cursor'Class;
+
+         procedure Step (Pos : in out Int_Lists.Cursor);
+
+      end Generic_Iterators;
+
+      type Defining_Name_Cursor is new Base_Cursor
+        and Gela.Interpretations.Defining_Name_Cursor with null record;
 
       overriding function Defining_Name
         (Self : Defining_Name_Cursor)
       return Gela.Elements.Defining_Names.Defining_Name_Access;
 
-      type Defining_Name_Iterator is
-        new Gela.Interpretations.Defining_Name_Iterators.Forward_Iterator with
-      record
-         Set : access Interpretation_Set;
-         Pos : Int_Lists.Cursor := Int_Lists.No_Element;
-      end record;
+      type Symbol_Cursor is new Base_Cursor
+        and Gela.Interpretations.Symbol_Cursor with null record;
 
-      overriding function First
-        (Object : Defining_Name_Iterator)
-          return Gela.Interpretations.Defining_Name_Cursor'Class;
-
-      overriding function Next
-        (Object   : Defining_Name_Iterator;
-         Position : Gela.Interpretations.Defining_Name_Cursor'Class)
-           return Gela.Interpretations.Defining_Name_Cursor'Class;
-
-      procedure Step_To_Defining_Name (Pos : in out Int_Lists.Cursor);
+      overriding function Symbol
+        (Self : Symbol_Cursor) return Gela.Lexical_Types.Symbol;
 
    end Cursors;
 
@@ -57,12 +69,46 @@ package body Gela.Plain_Int_Sets is
 
    package body Cursors is
 
+      package body Generic_Iterators is
+         overriding function First (Object : Iterator) return Cursor'Class is
+         begin
+            return Object.Cursor;
+         end First;
+
+         overriding function Next
+           (Object   : Iterator;
+            Position : Cursor'Class) return Cursor'Class
+         is
+            pragma Unreferenced (Object);
+            Cursor : Some_Cursor := Some_Cursor (Position);
+         begin
+            if Int_Lists.Has_Element (Cursor.Pos) then
+               Int_Lists.Next (Cursor.Pos);
+               Step (Cursor.Pos);
+            end if;
+
+            return Cursor;
+         end Next;
+
+         procedure Step (Pos : in out Int_Lists.Cursor) is
+         begin
+            while Int_Lists.Has_Element (Pos) loop
+
+               exit when Int_Lists.Element (Pos).all in
+                 Interpretation;
+
+               Int_Lists.Next (Pos);
+            end loop;
+         end Step;
+
+      end Generic_Iterators;
+
       -----------------
       -- Has_Element --
       -----------------
 
       overriding function Has_Element
-        (Self : Defining_Name_Cursor) return Boolean is
+        (Self : Base_Cursor) return Boolean is
       begin
          return Int_Lists.Has_Element (Self.Pos);
       end Has_Element;
@@ -72,7 +118,7 @@ package body Gela.Plain_Int_Sets is
       ---------------
 
       overriding function Get_Index
-        (Self : Defining_Name_Cursor)
+        (Self : Base_Cursor)
          return Gela.Interpretations.Interpretation_Index
       is
          use type Gela.Interpretations.Interpretation_Index;
@@ -104,53 +150,32 @@ package body Gela.Plain_Int_Sets is
          return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
       end Defining_Name;
 
-      -----------
-      -- First --
-      -----------
+      ------------
+      -- Symbol --
+      ------------
 
-      overriding function First
-        (Object : Defining_Name_Iterator)
-         return Gela.Interpretations.Defining_Name_Cursor'Class is
-      begin
-         return Cursors.Defining_Name_Cursor'(Object.Set, Object.Pos);
-      end First;
-
-      ----------
-      -- Next --
-      ----------
-
-      overriding function Next
-        (Object   : Defining_Name_Iterator;
-         Position : Gela.Interpretations.Defining_Name_Cursor'Class)
-         return Gela.Interpretations.Defining_Name_Cursor'Class
+      overriding function Symbol
+        (Self : Symbol_Cursor) return Gela.Lexical_Types.Symbol
       is
-         pragma Unreferenced (Object);
-         Cursor : Cursors.Defining_Name_Cursor :=
-           Cursors.Defining_Name_Cursor (Position);
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
       begin
-         if Int_Lists.Has_Element (Cursor.Pos) then
-            Int_Lists.Next (Cursor.Pos);
-            Step_To_Defining_Name (Cursor.Pos);
-         end if;
+         return Gela.Int.Symbols.Symbol (Item.all).Get_Symbol;
+      end Symbol;
 
-         return Cursor;
-      end Next;
-
-      ---------------------------
-      -- Step_To_Defining_Name --
-      ---------------------------
-
-      procedure Step_To_Defining_Name (Pos : in out Int_Lists.Cursor) is
-      begin
-         while Int_Lists.Has_Element (Pos) loop
-
-            exit when Int_Lists.Element (Pos).all in
-              Gela.Int.Defining_Names.Defining_Name;
-
-            Int_Lists.Next (Pos);
-         end loop;
-      end Step_To_Defining_Name;
    end Cursors;
+
+   package Defining_Name_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Defining_Name_Cursor,
+      Some_Cursor    => Cursors.Defining_Name_Cursor,
+      Iterators      => Gela.Interpretations.Defining_Name_Iterators,
+      Interpretation => Gela.Int.Defining_Names.Defining_Name);
+
+   package Symbol_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Symbol_Cursor,
+      Some_Cursor    => Cursors.Symbol_Cursor,
+      Iterators      => Gela.Interpretations.Symbol_Iterators,
+      Interpretation => Gela.Int.Symbols.Symbol);
 
    ---------
    -- Add --
@@ -237,13 +262,33 @@ package body Gela.Plain_Int_Sets is
    is
       use type Gela.Interpretations.Interpretation_Set_Index;
    begin
-      return Result : Cursors.Defining_Name_Iterator := (Self, others => <>) do
+      return Result : Defining_Name_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
          if Index /= 0 then
-            Result.Pos := Self.Map (Index).First;
-            Cursors.Step_To_Defining_Name (Result.Pos);
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Defining_Name_Iterators.Step (Result.Cursor.Pos);
          end if;
       end return;
    end Defining_Names;
+
+   overriding function Symbols
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Symbol_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Symbol_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
+         if Index /= 0 then
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Symbol_Iterators.Step (Result.Cursor.Pos);
+         end if;
+      end return;
+   end Symbols;
 
    -------------
    -- Element --

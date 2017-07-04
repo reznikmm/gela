@@ -290,8 +290,7 @@ package body Gela.Plain_Interpretations is
      (Self   : in out Interpretation_Manager;
       Set    : Gela.Interpretations.Interpretation_Set_Index)
         return Gela.Interpretations.Defining_Name_Iterators
-                .Forward_Iterator'Class
-   is
+                .Forward_Iterator'Class is
    begin
       return Self.Set_Batches.Element (Set / Batch_Size).Defining_Names (Set);
    end Defining_Names;
@@ -444,6 +443,19 @@ package body Gela.Plain_Interpretations is
       To := From + Batch_Size - 1;
       From := Gela.Interpretations.Interpretation_Index'Max (1, From);
    end Reserve_Indexes;
+
+   -------------
+   -- Symbols --
+   -------------
+
+   overriding function Symbols
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Symbol_Iterators
+                 .Forward_Iterator'Class is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Symbols (Set);
+   end Symbols;
 
    -----------
    -- Visit --

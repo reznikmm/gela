@@ -70,6 +70,12 @@ private
       Index : Gela.Interpretations.Interpretation_Set_Index)
      return Gela.Interpretations.Cursor'Class;
 
+   overriding function Symbols
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Symbol_Iterators
+                 .Forward_Iterator'Class;
+
    overriding function Defining_Names
      (Self  : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index)
