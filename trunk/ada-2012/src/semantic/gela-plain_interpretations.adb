@@ -282,6 +282,19 @@ package body Gela.Plain_Interpretations is
       end if;
    end Get_Down_Interpretation;
 
+   ----------------
+   -- Categories --
+   ----------------
+
+   overriding function Categories
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Category_Iterators
+                 .Forward_Iterator'Class is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Categories (Set);
+   end Categories;
+
    --------------------
    -- Defining_Names --
    --------------------
@@ -294,6 +307,19 @@ package body Gela.Plain_Interpretations is
    begin
       return Self.Set_Batches.Element (Set / Batch_Size).Defining_Names (Set);
    end Defining_Names;
+
+   -----------------
+   -- Expressions --
+   -----------------
+
+   overriding function Expressions
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Expression_Iterators
+                 .Forward_Iterator'Class is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Expressions (Set);
+   end Expressions;
 
    ----------------
    -- Get_Cursor --
@@ -411,6 +437,19 @@ package body Gela.Plain_Interpretations is
 
       return Result;
    end Get_Tuple_List;
+
+   --------------
+   -- Profiles --
+   --------------
+
+   overriding function Profiles
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Profile_Iterators
+                 .Forward_Iterator'Class is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Profiles (Set);
+   end Profiles;
 
    ---------------------
    -- Reserve_Indexes --

@@ -11,6 +11,7 @@ with Gela.Int.Tuples;
 with Gela.Int.Visiters;
 
 with Gela.Lexical_Types;
+with Gela.Semantic_Types;
 
 package body Gela.Plain_Int_Sets is
 
@@ -48,18 +49,41 @@ package body Gela.Plain_Int_Sets is
 
       end Generic_Iterators;
 
+      type Category_Cursor is new Base_Cursor
+        and Gela.Interpretations.Category_Cursor with null record;
+
+      overriding function Matcher
+        (Self : Category_Cursor)
+           return Gela.Interpretations.Type_Matcher_Access;
+
       type Defining_Name_Cursor is new Base_Cursor
         and Gela.Interpretations.Defining_Name_Cursor with null record;
 
       overriding function Defining_Name
         (Self : Defining_Name_Cursor)
-      return Gela.Elements.Defining_Names.Defining_Name_Access;
+          return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+      type Expression_Cursor is new Base_Cursor
+        and Gela.Interpretations.Expression_Cursor with null record;
+
+      overriding function Expression_Type
+        (Self : Expression_Cursor) return Gela.Semantic_Types.Type_Index;
 
       type Symbol_Cursor is new Base_Cursor
         and Gela.Interpretations.Symbol_Cursor with null record;
 
       overriding function Symbol
         (Self : Symbol_Cursor) return Gela.Lexical_Types.Symbol;
+
+      type Profile_Cursor is new Base_Cursor
+        and Gela.Interpretations.Profile_Cursor with null record;
+
+      overriding function Corresponding_Type
+        (Self : Profile_Cursor) return Gela.Semantic_Types.Type_Index;
+
+      overriding function Attribute_Kind
+        (Self : Profile_Cursor)
+          return Gela.Lexical_Types.Predefined_Symbols.Attribute;
 
    end Cursors;
 
@@ -103,15 +127,59 @@ package body Gela.Plain_Int_Sets is
 
       end Generic_Iterators;
 
-      -----------------
-      -- Has_Element --
-      -----------------
+      --------------------
+      -- Attribute_Kind --
+      --------------------
 
-      overriding function Has_Element
-        (Self : Base_Cursor) return Boolean is
+      overriding function Attribute_Kind
+        (Self : Profile_Cursor)
+          return Gela.Lexical_Types.Predefined_Symbols.Attribute
+      is
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
       begin
-         return Int_Lists.Has_Element (Self.Pos);
-      end Has_Element;
+         return Gela.Int.Attr_Functions.Attr_Function (Item.all).Kind;
+      end Attribute_Kind;
+
+      ------------------------
+      -- Corresponding_Type --
+      ------------------------
+
+      overriding function Corresponding_Type
+        (Self : Profile_Cursor) return Gela.Semantic_Types.Type_Index
+      is
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
+      begin
+         return Gela.Int.Attr_Functions.Attr_Function (Item.all).Tipe;
+      end Corresponding_Type;
+
+      -------------------
+      -- Defining_Name --
+      -------------------
+
+      overriding function Defining_Name
+        (Self : Defining_Name_Cursor)
+         return Gela.Elements.Defining_Names.Defining_Name_Access
+      is
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
+      begin
+         return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
+      end Defining_Name;
+
+      ---------------------
+      -- Expression_Type --
+      ---------------------
+
+      overriding function Expression_Type
+        (Self : Expression_Cursor) return Gela.Semantic_Types.Type_Index
+      is
+         Item   : constant Gela.Int.Interpretation_Access :=
+           Int_Lists.Element (Self.Pos);
+      begin
+         return Gela.Int.Expressions.Expression (Item.all).Expression_Type;
+      end Expression_Type;
 
       ---------------
       -- Get_Index --
@@ -136,19 +204,29 @@ package body Gela.Plain_Int_Sets is
          return Result;
       end Get_Index;
 
-      -------------------
-      -- Defining_Name --
-      -------------------
+      -----------------
+      -- Has_Element --
+      -----------------
 
-      overriding function Defining_Name
-        (Self : Defining_Name_Cursor)
-         return Gela.Elements.Defining_Names.Defining_Name_Access
+      overriding function Has_Element
+        (Self : Base_Cursor) return Boolean is
+      begin
+         return Int_Lists.Has_Element (Self.Pos);
+      end Has_Element;
+
+      -------------
+      -- Matcher --
+      -------------
+
+      overriding function Matcher
+        (Self : Category_Cursor)
+           return Gela.Interpretations.Type_Matcher_Access
       is
          Item   : constant Gela.Int.Interpretation_Access :=
            Int_Lists.Element (Self.Pos);
       begin
-         return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
-      end Defining_Name;
+         return Gela.Int.Categories.Category (Item.all).Match;
+      end Matcher;
 
       ------------
       -- Symbol --
@@ -165,17 +243,35 @@ package body Gela.Plain_Int_Sets is
 
    end Cursors;
 
+   package Category_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Category_Cursor,
+      Some_Cursor    => Cursors.Category_Cursor,
+      Iterators      => Gela.Interpretations.Category_Iterators,
+      Interpretation => Gela.Int.Categories.Category);
+
    package Defining_Name_Iterators is new Cursors.Generic_Iterators
      (Cursor         => Gela.Interpretations.Defining_Name_Cursor,
       Some_Cursor    => Cursors.Defining_Name_Cursor,
       Iterators      => Gela.Interpretations.Defining_Name_Iterators,
       Interpretation => Gela.Int.Defining_Names.Defining_Name);
 
+   package Expression_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Expression_Cursor,
+      Some_Cursor    => Cursors.Expression_Cursor,
+      Iterators      => Gela.Interpretations.Expression_Iterators,
+      Interpretation => Gela.Int.Expressions.Expression);
+
    package Symbol_Iterators is new Cursors.Generic_Iterators
      (Cursor         => Gela.Interpretations.Symbol_Cursor,
       Some_Cursor    => Cursors.Symbol_Cursor,
       Iterators      => Gela.Interpretations.Symbol_Iterators,
       Interpretation => Gela.Int.Symbols.Symbol);
+
+   package Profile_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Profile_Cursor,
+      Some_Cursor    => Cursors.Profile_Cursor,
+      Iterators      => Gela.Interpretations.Profile_Iterators,
+      Interpretation => Gela.Int.Attr_Functions.Attr_Function);
 
    ---------
    -- Add --
@@ -250,6 +346,28 @@ package body Gela.Plain_Int_Sets is
       Item.Index := Index;
    end Add;
 
+   ----------------
+   -- Categories --
+   ----------------
+
+   overriding function Categories
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Category_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Category_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
+         if Index /= 0 then
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Category_Iterators.Step (Result.Cursor.Pos);
+         end if;
+      end return;
+   end Categories;
+
    --------------------
    -- Defining_Names --
    --------------------
@@ -272,24 +390,6 @@ package body Gela.Plain_Int_Sets is
       end return;
    end Defining_Names;
 
-   overriding function Symbols
-     (Self  : access Interpretation_Set;
-      Index : Gela.Interpretations.Interpretation_Set_Index)
-        return Gela.Interpretations.Symbol_Iterators
-                 .Forward_Iterator'Class
-   is
-      use type Gela.Interpretations.Interpretation_Set_Index;
-   begin
-      return Result : Symbol_Iterators.Iterator :=
-        (Cursor => (Self, others => <>))
-      do
-         if Index /= 0 then
-            Result.Cursor.Pos := Self.Map (Index).First;
-            Symbol_Iterators.Step (Result.Cursor.Pos);
-         end if;
-      end return;
-   end Symbols;
-
    -------------
    -- Element --
    -------------
@@ -301,6 +401,28 @@ package body Gela.Plain_Int_Sets is
    begin
       return Self.Int_Map.Element (Index);
    end Element;
+
+   -----------------
+   -- Expressions --
+   -----------------
+
+   overriding function Expressions
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Expression_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Expression_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
+         if Index /= 0 then
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Symbol_Iterators.Step (Result.Cursor.Pos);
+         end if;
+      end return;
+   end Expressions;
 
    ----------------
    -- Get_Cursor --
@@ -398,6 +520,27 @@ package body Gela.Plain_Int_Sets is
       return Ada.Containers.Hash_Type (Value);
    end Hash;
 
+   --------------
+   -- Profiles --
+   --------------
+
+   overriding function Profiles
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Profile_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Profile_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
+         if Index /= 0 then
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Profile_Iterators.Step (Result.Cursor.Pos);
+         end if;
+      end return;
+   end Profiles;
 
    ----------
    -- Next --
@@ -407,6 +550,28 @@ package body Gela.Plain_Int_Sets is
    begin
       Int_Lists.Next (Self.Pos);
    end Next;
+
+   -------------
+   -- Symbols --
+   -------------
+
+   overriding function Symbols
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Symbol_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Symbol_Iterators.Iterator :=
+        (Cursor => (Self, others => <>))
+      do
+         if Index /= 0 then
+            Result.Cursor.Pos := Self.Map (Index).First;
+            Symbol_Iterators.Step (Result.Cursor.Pos);
+         end if;
+      end return;
+   end Symbols;
 
    -----------
    -- Visit --

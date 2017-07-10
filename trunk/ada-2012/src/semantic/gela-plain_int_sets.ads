@@ -76,10 +76,28 @@ private
         return Gela.Interpretations.Symbol_Iterators
                  .Forward_Iterator'Class;
 
+   overriding function Categories
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Category_Iterators
+                 .Forward_Iterator'Class;
+
    overriding function Defining_Names
      (Self  : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index)
         return Gela.Interpretations.Defining_Name_Iterators
+                 .Forward_Iterator'Class;
+
+   overriding function Expressions
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Expression_Iterators
+                 .Forward_Iterator'Class;
+
+   overriding function Profiles
+     (Self  : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Profile_Iterators
                  .Forward_Iterator'Class;
 
    type Cursor is new Gela.Interpretations.Cursor with record

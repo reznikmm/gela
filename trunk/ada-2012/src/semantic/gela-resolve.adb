@@ -62,17 +62,6 @@ package body Gela.Resolve is
    --  The same as Each_Expression, but add implicit dereference
    --  interpretations.
 
-   procedure Wrap_Tuple
-     (Self   : access Gela.Interpretations.Up_Visiter'Class;
-      IM     : Gela.Interpretations.Interpretation_Manager_Access;
-      Value  : Gela.Interpretations.Interpretation_Set_Index_Array;
-      Found  : access Gela.Interpretations.Interpretation_Index;
-      Chosen : out Gela.Interpretations.Interpretation_Index);
-   pragma Unreferenced (Wrap_Tuple);
-   --  For each Value (J), iterate over its interpretation set and call Self to
-   --  resolve. Read resolved value from Found. Wrap each resolved value in
-   --  down interpretation, then return its index as Chosen
-
    procedure Discrete_Range
      (Comp       : Gela.Compilations.Compilation_Access;
       Env        : Gela.Semantic_Types.Env_Index;
@@ -2498,54 +2487,25 @@ package body Gela.Resolve is
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
 
-      package Each is
-         type Visiter is new Gela.Interpretations.Up_Visiter with null record;
-
-         overriding procedure On_Expression_Category
-           (Self   : in out Visiter;
-            Match  : not null Gela.Interpretations.Type_Matcher_Access;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each;
-
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
       View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
 
-      ----------
-      -- Each --
-      ----------
-
-      package body Each is
-
-         overriding procedure On_Expression_Category
-           (Self   : in out Visiter;
-            Match  : not null Gela.Interpretations.Type_Matcher_Access;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Self);
-         begin
-            View.Visit (Match.all);
-
-            if Match.Is_Matched then
-               Result := Cursor.Get_Index;
-            end if;
-         end On_Expression_Category;
-
-      end Each;
-
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
-      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Up);
-      Visiter : aliased Each.Visiter;
+      Matcher : Gela.Interpretations.Type_Matcher_Access;
    begin
       Result := 0;
 
-      while Cursor.Has_Element loop
-         Cursor.Visit (Visiter'Access);
-         Cursor.Next;
+      for J in IM.Categories (Up) loop
+         Matcher := J.Matcher;
+         View.Visit (Matcher.all);
+
+         if Matcher.Is_Matched then
+            Result := J.Get_Index;
+         end if;
       end loop;
    end To_Type_Category;
 
@@ -2674,50 +2634,5 @@ package body Gela.Resolve is
          Target => Visiter);
 
    end Variant_Part;
-
-   ----------------
-   -- Wrap_Tuple --
-   ----------------
-
-   procedure Wrap_Tuple
-     (Self   : access Gela.Interpretations.Up_Visiter'Class;
-      IM     : Gela.Interpretations.Interpretation_Manager_Access;
-      Value  : Gela.Interpretations.Interpretation_Set_Index_Array;
-      Found  : access Gela.Interpretations.Interpretation_Index;
-      Chosen : out Gela.Interpretations.Interpretation_Index)
-   is
-      List   : Gela.Interpretations.Interpretation_Index_Array (Value'Range) :=
-        (others => 0);
-   begin
-      Chosen := 0;
-
-      for J in Value'Range loop
-         declare
-            use type Gela.Interpretations.Interpretation_Index;
-
-            Cursor : Gela.Interpretations.Cursor'Class :=
-              IM.Get_Cursor (Value (J));
-         begin
-            while Cursor.Has_Element loop
-               Cursor.Visit (Self);
-
-               if Found.all /= 0 then
-                  List (J) := Found.all;
-                  Found.all := 0;
-               end if;
-
-               Cursor.Next;
-            end loop;
-
-            if List (J) = 0 then
-               return;
-            end if;
-         end;
-      end loop;
-
-      for J in reverse List'Range loop
-         IM.Get_Tuple_Index (List (J), Chosen, Chosen);
-      end loop;
-   end Wrap_Tuple;
 
 end Gela.Resolve;

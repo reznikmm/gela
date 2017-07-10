@@ -331,4 +331,61 @@ package Gela.Interpretations is
       Set    : Gela.Interpretations.Interpretation_Set_Index)
         return Defining_Name_Iterators.Forward_Iterator'Class is abstract;
 
+   --  Iterating over expression interpretation
+   type Expression_Cursor is interface and Abstract_Cursor;
+
+   not overriding function Expression_Type
+     (Self : Expression_Cursor)
+      return Gela.Semantic_Types.Type_Index is abstract;
+
+   function Has_Some
+     (Self : Expression_Cursor'Class) return Boolean is (Self.Has_Element);
+
+   package Expression_Iterators is new Ada.Iterator_Interfaces
+     (Expression_Cursor'Class, Has_Some);
+
+   not overriding function Expressions
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Expression_Iterators.Forward_Iterator'Class is abstract;
+
+   --  Iterating over expression category interpretation
+   type Category_Cursor is interface and Abstract_Cursor;
+
+   not overriding function Matcher
+     (Self : Category_Cursor)
+        return Gela.Interpretations.Type_Matcher_Access is abstract;
+
+   function Has_Some
+     (Self : Category_Cursor'Class) return Boolean is (Self.Has_Element);
+
+   package Category_Iterators is new Ada.Iterator_Interfaces
+     (Category_Cursor'Class, Has_Some);
+
+   not overriding function Categories
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Category_Iterators.Forward_Iterator'Class is abstract;
+
+   --  Iterating over attribute denoting subprogram interpretation
+   type Profile_Cursor is interface and Abstract_Cursor;
+
+   not overriding function Corresponding_Type
+     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_Index is abstract;
+
+   not overriding function Attribute_Kind
+     (Self : Profile_Cursor)
+        return Gela.Lexical_Types.Predefined_Symbols.Attribute is abstract;
+
+   function Has_Some
+     (Self : Profile_Cursor'Class) return Boolean is (Self.Has_Element);
+
+   package Profile_Iterators is new Ada.Iterator_Interfaces
+     (Profile_Cursor'Class, Has_Some);
+
+   not overriding function Profiles
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Profile_Iterators.Forward_Iterator'Class is abstract;
+
 end Gela.Interpretations;

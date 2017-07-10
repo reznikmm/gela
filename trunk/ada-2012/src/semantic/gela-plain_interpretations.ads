@@ -177,4 +177,22 @@ private
         return Gela.Interpretations.Defining_Name_Iterators
                  .Forward_Iterator'Class;
 
+   overriding function Expressions
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Expression_Iterators
+                 .Forward_Iterator'Class;
+
+   overriding function Categories
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Category_Iterators
+                 .Forward_Iterator'Class;
+
+   overriding function Profiles
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Profile_Iterators
+                 .Forward_Iterator'Class;
+
 end Gela.Plain_Interpretations;
