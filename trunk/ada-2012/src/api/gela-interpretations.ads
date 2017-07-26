@@ -291,6 +291,9 @@ package Gela.Interpretations is
    not overriding function Has_Element
      (Self : Abstract_Cursor) return Boolean is abstract;
 
+   not overriding procedure Next (Self : in out Abstract_Cursor) is abstract;
+   --  Go to next interpretation in set under cursor
+
    not overriding function Get_Index
      (Self : Abstract_Cursor)
       return Gela.Interpretations.Interpretation_Index is abstract;
