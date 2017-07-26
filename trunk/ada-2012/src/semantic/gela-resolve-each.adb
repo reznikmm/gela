@@ -1,4 +1,7 @@
+with Gela.Elements.Subtype_Indications;
 with Gela.Plain_Int_Sets.Cursors;
+with Gela.Types.Simple;
+with Gela.Types.Visitors;
 
 package body Gela.Resolve.Each is
 
@@ -42,6 +45,25 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Join_Cursor) return Gela.Semantic_Types.Type_Index;
+
+   procedure Initialize
+     (Self : in out Join_Cursor'Class;
+      IM   : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index);
+
+   type Prefix_Cursor is new Join_Cursor with record
+      Is_Implicit_Dereference   : Boolean := False;
+      Implicit_Dereference_Type : Gela.Semantic_Types.Type_Index;
+   end record;
+
+   overriding procedure Next (Self : in out Prefix_Cursor);
+
+   overriding function Expression_Type
+     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_Index;
+
+   procedure Step (Self : in out Prefix_Cursor'Class);
 
    ---------------------
    -- Expression_Type --
@@ -113,6 +135,25 @@ package body Gela.Resolve.Each is
       return Self.Name.Has_Element or else Self.Exp.Has_Element;
    end Has_Element;
 
+   procedure Initialize
+     (Self : in out Join_Cursor'Class;
+      IM   : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index) is
+   begin
+      Self.Exp := Gela.Plain_Int_Sets.Cursors.Expression_Cursor
+        (IM.Expressions (Set).First);
+
+      Self.Name.Name := Gela.Plain_Int_Sets.Cursors.Defining_Name_Cursor
+        (IM.Defining_Names (Set).First);
+
+      Self.Name.TM   := TM;
+      Self.Name.Env  := Env;
+      Self.Name.Tipe := 0;
+      Self.Name.Step;
+   end Initialize;
+
    ----------
    -- Next --
    ----------
@@ -158,12 +199,101 @@ package body Gela.Resolve.Each is
       end loop;
    end Step;
 
+   procedure Step (Self : in out Prefix_Cursor'Class) is
+
+      package Type_Visiters is
+         type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
+         with null record;
+
+         overriding procedure Object_Access_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple
+            .Object_Access_Type_Access);
+
+      end Type_Visiters;
+
+      package body Type_Visiters is
+
+         overriding procedure Object_Access_Type
+           (Self  : in out Type_Visitor;
+            Value : not null Gela.Types.Simple
+            .Object_Access_Type_Access)
+         is
+            pragma Unreferenced (Self);
+            SI : constant Gela.Elements.Subtype_Indications
+              .Subtype_Indication_Access := Value.Get_Designated;
+            Index : constant Gela.Semantic_Types.Type_Index :=
+              Step.Self.Name.TM.Type_From_Subtype_Mark
+                (Step.Self.Name.Env, SI.Subtype_Mark);
+         begin
+            Step.Self.Is_Implicit_Dereference := True;
+            Step.Self.Implicit_Dereference_Type := Index;
+         end Object_Access_Type;
+
+      end Type_Visiters;
+
+      View    : Gela.Types.Type_View_Access;
+      Visiter : Type_Visiters.Type_Visitor;
+   begin
+      if Self.Has_Element then
+         View := Self.Name.TM.Get (Join_Cursor (Self).Expression_Type);
+      end if;
+
+      Self.Is_Implicit_Dereference := False;
+      View.Visit_If_Assigned (Visiter);
+   end Step;
+
+   overriding procedure Next (Self : in out Prefix_Cursor) is
+   begin
+      if Self.Is_Implicit_Dereference then
+         Self.Is_Implicit_Dereference := False;
+      else
+         Join_Cursor (Self).Next;
+         Self.Step;
+      end if;
+   end Next;
+
+   overriding function Expression_Type
+     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_Index is
+   begin
+      if Self.Is_Implicit_Dereference then
+         return Self.Implicit_Dereference_Type;
+      else
+         return Join_Cursor (Self).Expression_Type;
+      end if;
+   end Expression_Type;
+
    package Join_Iterators is
      new Gela.Plain_Int_Sets.Cursors.Generic_Iterators
      (Cursor      => Gela.Interpretations.Expression_Cursor,
       Next        => Gela.Interpretations.Next,
       Some_Cursor => Join_Cursor,
       Iterators   => Gela.Interpretations.Expression_Iterators);
+
+   package Prefix_Iterators is
+     new Gela.Plain_Int_Sets.Cursors.Generic_Iterators
+     (Cursor      => Gela.Interpretations.Expression_Cursor,
+      Next        => Gela.Interpretations.Next,
+      Some_Cursor => Prefix_Cursor,
+      Iterators   => Gela.Interpretations.Expression_Iterators);
+
+   ------------
+   -- Prefix --
+   ------------
+
+   function Prefix
+     (Self : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index)
+      return Gela.Interpretations.Expression_Iterators.Forward_Iterator'Class
+   is
+   begin
+      return Result : Prefix_Iterators.Iterator do
+         Result.Cursor.Initialize (Self, TM, Env, Set);
+         Result.Cursor.Step;
+      end return;
+   end Prefix;
 
    ----------------
    -- Expression --
@@ -178,18 +308,7 @@ package body Gela.Resolve.Each is
    is
    begin
       return Result : Join_Iterators.Iterator do
-         Result.Cursor.Exp :=
-           Gela.Plain_Int_Sets.Cursors.Expression_Cursor
-             (Self.Expressions (Set).First);
-
-         Result.Cursor.Name.Name :=
-           Gela.Plain_Int_Sets.Cursors.Defining_Name_Cursor
-             (Self.Defining_Names (Set).First);
-
-         Result.Cursor.Name.TM   := TM;
-         Result.Cursor.Name.Env  := Env;
-         Result.Cursor.Name.Tipe := 0;
-         Result.Cursor.Name.Step;
+         Result.Cursor.Initialize (Self, TM, Env, Set);
       end return;
    end Expression;
 
