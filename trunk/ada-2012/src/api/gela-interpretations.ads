@@ -195,65 +195,6 @@ package Gela.Interpretations is
       Target : in out Down_Visiter'Class) is abstract;
    --  For interpretation with given persistent Index apply Target visiter
 
-   type Cursor is limited interface;
-   type Up_Visiter is tagged;
-
-   not overriding function Has_Element
-     (Self : Cursor) return Boolean is abstract;
-   --  Check if cursor points to an interpretation
-
-   not overriding procedure Next (Self : in out Cursor) is abstract;
-   --  Go to next interpretation in set under cursor
-
-   not overriding procedure Visit
-     (Self   : Cursor;
-      Target : access Up_Visiter'Class) is abstract;
-   --  For current interpretation for cursor apply Target visiter
-
-   not overriding function Get_Index
-     (Self : Cursor) return Gela.Interpretations.Interpretation_Index
-        is abstract;
-   --  Request persistent index for current interpretation
-
-   type Up_Visiter is limited interface;
-
-   not overriding procedure On_Defining_Name
-     (Self   : in out Up_Visiter;
-      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each defining name interpretation
-
-   not overriding procedure On_Expression
-     (Self   : in out Up_Visiter;
-      Tipe   : Gela.Semantic_Types.Type_Index;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each expression interpretation
-
-   not overriding procedure On_Expression_Category
-     (Self   : in out Up_Visiter;
-      Match  : not null Gela.Interpretations.Type_Matcher_Access;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each category of expression interpretation
-
-   not overriding procedure On_Attr_Function
-     (Self   : in out Up_Visiter;
-      Tipe   : Gela.Semantic_Types.Type_Index;
-      Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each attribute denoting function
-
-   not overriding procedure On_Placeholder
-     (Self   : in out Up_Visiter;
-      Kind   : Gela.Interpretations.Placeholder_Kind;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each placeholder
-
-   not overriding procedure On_Symbol
-     (Self   : in out Up_Visiter;
-      Symbol : Gela.Lexical_Types.Symbol;
-      Cursor : Gela.Interpretations.Cursor'Class) is null;
-   --  Called for each symbol
-
    not overriding function Get_Tuple
      (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Tuple_Index)
@@ -265,12 +206,6 @@ package Gela.Interpretations is
       Index  : Gela.Interpretations.Interpretation_Tuple_List_Index)
       return Gela.Interpretations.Interpretation_Tuple_Index_Array is abstract;
    --  Get tuple list elements
-
-   not overriding function Get_Cursor
-     (Self   : in out Interpretation_Manager;
-      Set    : Gela.Interpretations.Interpretation_Set_Index)
-      return Gela.Interpretations.Cursor'Class is abstract;
-   --  Get cursor to iterate over all interpretations in Set
 
    not overriding procedure Get_Down_Interpretation
      (Self     : in out Interpretation_Manager;
@@ -297,6 +232,7 @@ package Gela.Interpretations is
    not overriding function Get_Index
      (Self : Abstract_Cursor)
       return Gela.Interpretations.Interpretation_Index is abstract;
+   --  Request persistent index for current interpretation
 
    --  Iterating over symbol interpretation
    type Symbol_Cursor is interface and Abstract_Cursor;
@@ -390,5 +326,53 @@ package Gela.Interpretations is
      (Self   : in out Interpretation_Manager;
       Set    : Gela.Interpretations.Interpretation_Set_Index)
         return Profile_Iterators.Forward_Iterator'Class is abstract;
+
+   --  Iterating over any interpretation
+   type Any_Cursor is interface and Abstract_Cursor;
+
+   function Has_Some
+     (Self : Any_Cursor'Class) return Boolean is (Self.Has_Element);
+
+   not overriding function Is_Symbol
+     (Self : Any_Cursor) return Boolean is abstract;
+
+   not overriding function Is_Defining_Name (Self : Any_Cursor)
+      return Boolean is abstract;
+
+   not overriding function Is_Expression (Self : Any_Cursor)
+      return Boolean is abstract;
+
+   not overriding function Is_Expression_Category (Self : Any_Cursor)
+      return Boolean is abstract;
+
+   not overriding function Is_Profile (Self : Any_Cursor)
+      return Boolean is abstract;
+
+   not overriding function Symbol
+     (Self : Any_Cursor) return Gela.Lexical_Types.Symbol is abstract;
+
+   not overriding function Defining_Name (Self : Any_Cursor)
+      return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
+
+   not overriding function Expression_Type (Self : Any_Cursor)
+      return Gela.Semantic_Types.Type_Index is abstract;
+
+   not overriding function Matcher (Self : Any_Cursor)
+        return Gela.Interpretations.Type_Matcher_Access is abstract;
+
+   not overriding function Corresponding_Type
+     (Self : Any_Cursor) return Gela.Semantic_Types.Type_Index is abstract;
+
+   not overriding function Attribute_Kind (Self : Any_Cursor)
+        return Gela.Lexical_Types.Predefined_Symbols.Attribute is abstract;
+
+   package Any_Iterators is new Ada.Iterator_Interfaces
+     (Any_Cursor'Class, Has_Some);
+
+   not overriding function Each
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Any_Iterators.Forward_Iterator'Class is abstract;
+   --  Get cursor to iterate over all interpretations in Set
 
 end Gela.Interpretations;

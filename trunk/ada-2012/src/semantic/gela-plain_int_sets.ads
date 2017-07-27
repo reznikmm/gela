@@ -65,11 +65,6 @@ private
       Index : Gela.Interpretations.Interpretation_Index)
      return Gela.Int.Interpretation_Access;
 
-   overriding function Get_Cursor
-     (Self  : access Interpretation_Set;
-      Index : Gela.Interpretations.Interpretation_Set_Index)
-     return Gela.Interpretations.Cursor'Class;
-
    overriding function Symbols
      (Self  : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index)
@@ -100,20 +95,10 @@ private
         return Gela.Interpretations.Profile_Iterators
                  .Forward_Iterator'Class;
 
-   type Cursor is new Gela.Interpretations.Cursor with record
-      Set : access Interpretation_Set;
-      Pos : Int_Lists.Cursor := Int_Lists.No_Element;
-   end record;
-
-   overriding function Has_Element (Self : Cursor) return Boolean;
-
-   overriding procedure Next (Self : in out Cursor);
-
-   overriding procedure Visit
-     (Self   : Cursor;
-      Target : access Gela.Interpretations.Up_Visiter'Class);
-
-   overriding function Get_Index
-     (Self : Cursor) return Gela.Interpretations.Interpretation_Index;
+   overriding function Each
+     (Self   : access Interpretation_Set;
+      Index  : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Any_Iterators
+                 .Forward_Iterator'Class;
 
 end Gela.Plain_Int_Sets;

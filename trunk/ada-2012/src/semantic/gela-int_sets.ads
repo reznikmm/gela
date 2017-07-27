@@ -13,11 +13,6 @@ package Gela.Int_Sets is
       Index : Gela.Interpretations.Interpretation_Index)
      return Gela.Int.Interpretation_Access is abstract;
 
-   not overriding function Get_Cursor
-     (Self  : access Interpretation_Set;
-      Index : Gela.Interpretations.Interpretation_Set_Index)
-     return Gela.Interpretations.Cursor'Class is abstract;
-
    not overriding function Categories
      (Self  : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index)
@@ -46,6 +41,12 @@ package Gela.Int_Sets is
      (Self  : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index)
         return Gela.Interpretations.Symbol_Iterators
+                 .Forward_Iterator'Class is abstract;
+
+   not overriding function Each
+     (Self   : access Interpretation_Set;
+      Index  : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Any_Iterators
                  .Forward_Iterator'Class is abstract;
 
    type Index_Provider is limited interface;

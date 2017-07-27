@@ -129,12 +129,6 @@ private
       Index  : Gela.Interpretations.Interpretation_Tuple_List_Index)
       return Gela.Interpretations.Interpretation_Tuple_Index_Array;
 
-   overriding function Get_Cursor
-     (Self   : in out Interpretation_Manager;
-      Set    : Gela.Interpretations.Interpretation_Set_Index)
-      return Gela.Interpretations.Cursor'Class;
-   --  Get cursor to iterate over all interpretations in Set
-
    overriding procedure Visit
      (Self   : in out Interpretation_Manager;
       Index  : Gela.Interpretations.Interpretation_Index;
@@ -193,6 +187,12 @@ private
      (Self   : in out Interpretation_Manager;
       Set    : Gela.Interpretations.Interpretation_Set_Index)
         return Gela.Interpretations.Profile_Iterators
+                 .Forward_Iterator'Class;
+
+   overriding function Each
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Any_Iterators
                  .Forward_Iterator'Class;
 
 end Gela.Plain_Interpretations;

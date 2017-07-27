@@ -1,12 +1,3 @@
-with Gela.Int.Attr_Functions;
-with Gela.Int.Categories;
-with Gela.Int.Defining_Names;
-with Gela.Int.Expressions;
-with Gela.Int.Placeholders;
-with Gela.Int.Symbols;
-with Gela.Int.Tuples;
-with Gela.Int.Visiters;
-
 with Gela.Plain_Int_Sets.Cursors;
 
 package body Gela.Plain_Int_Sets is
@@ -40,6 +31,12 @@ package body Gela.Plain_Int_Sets is
       Next           => Gela.Interpretations.Next,
       Some_Cursor    => Cursors.Profile_Cursor,
       Iterators      => Gela.Interpretations.Profile_Iterators);
+
+   package Any_Iterators is new Cursors.Generic_Iterators
+     (Cursor         => Gela.Interpretations.Any_Cursor,
+      Next           => Gela.Interpretations.Next,
+      Some_Cursor    => Cursors.Any_Cursor,
+      Iterators      => Gela.Interpretations.Any_Iterators);
 
    ---------
    -- Add --
@@ -164,6 +161,25 @@ package body Gela.Plain_Int_Sets is
       return Self.Int_Map.Element (Index);
    end Element;
 
+   ----------
+   -- Each --
+   ----------
+
+   overriding function Each
+     (Self   : access Interpretation_Set;
+      Index  : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Any_Iterators
+                 .Forward_Iterator'Class
+   is
+      use type Gela.Interpretations.Interpretation_Set_Index;
+   begin
+      return Result : Any_Iterators.Iterator do
+         if Index /= 0 then
+            Result.Cursor.Initialize (Self, Index);
+         end if;
+      end return;
+   end Each;
+
    -----------------
    -- Expressions --
    -----------------
@@ -182,80 +198,6 @@ package body Gela.Plain_Int_Sets is
          end if;
       end return;
    end Expressions;
-
-   ----------------
-   -- Get_Cursor --
-   ----------------
-
-   overriding function Get_Cursor
-     (Self  : access Interpretation_Set;
-      Index : Gela.Interpretations.Interpretation_Set_Index)
-      return Gela.Interpretations.Cursor'Class
-   is
-   begin
-      return Result : Cursor do
-
-         declare
-            procedure Get
-              (Key     : Gela.Interpretations.Interpretation_Set_Index;
-               Element : Int_Lists.List);
-
-            ---------
-            -- Get --
-            ---------
-
-            procedure Get
-              (Key     : Gela.Interpretations.Interpretation_Set_Index;
-               Element : Int_Lists.List)
-            is
-               pragma Unreferenced (Key);
-            begin
-               Result.Pos := Element.First;
-            end Get;
-
-            use type Gela.Interpretations.Interpretation_Set_Index;
-         begin
-            if Index /= 0 then
-               Int_List_Maps.Query_Element (Self.Map.Find (Index), Get'Access);
-            end if;
-
-            Result.Set := Self;
-         end;
-
-      end return;
-   end Get_Cursor;
-
-   ---------------
-   -- Get_Index --
-   ---------------
-
-   overriding function Get_Index
-     (Self : Cursor)
-      return Gela.Interpretations.Interpretation_Index
-   is
-      use type Gela.Interpretations.Interpretation_Index;
-
-      Item   : constant Gela.Int.Interpretation_Access :=
-        Int_Lists.Element (Self.Pos);
-      Result : Gela.Interpretations.Interpretation_Index;
-   begin
-      if Item.Index /= 0 then
-         return Item.Index;
-      end if;
-
-      Self.Set.Add (Result, Item);
-
-      return Result;
-   end Get_Index;
-
-   -----------------
-   -- Has_Element --
-   -----------------
-
-   overriding function Has_Element (Self : Cursor) return Boolean is
-   begin
-      return Int_Lists.Has_Element (Self.Pos);
-   end Has_Element;
 
    ----------
    -- Hash --
@@ -298,15 +240,6 @@ package body Gela.Plain_Int_Sets is
       end return;
    end Profiles;
 
-   ----------
-   -- Next --
-   ----------
-
-   overriding procedure Next (Self : in out Cursor) is
-   begin
-      Int_Lists.Next (Self.Pos);
-   end Next;
-
    -------------
    -- Symbols --
    -------------
@@ -325,142 +258,5 @@ package body Gela.Plain_Int_Sets is
          end if;
       end return;
    end Symbols;
-
-   -----------
-   -- Visit --
-   -----------
-
-   overriding procedure Visit
-     (Self   : Cursor;
-      Target : access Gela.Interpretations.Up_Visiter'Class)
-   is
-      package Each is
-         type Visiter is new Gela.Int.Visiters.Visiter with null record;
-
-         overriding procedure Attr_Function
-           (Self  : access Visiter;
-            Value : Gela.Int.Attr_Functions.Attr_Function);
-
-         overriding procedure Chosen_Tuple
-           (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Chosen_Tuple);
-
-         overriding procedure Defining_Name
-           (Self  : access Visiter;
-            Value : Gela.Int.Defining_Names.Defining_Name);
-
-         overriding procedure Expression
-           (Self  : access Visiter;
-            Value : Gela.Int.Expressions.Expression);
-
-         overriding procedure Expression_Category
-           (Self  : access Visiter;
-            Value : Gela.Int.Categories.Category);
-
-         overriding procedure Placeholder
-           (Self  : access Visiter;
-            Value : Gela.Int.Placeholders.Placeholder);
-
-         overriding procedure Symbol
-           (Self  : access Visiter;
-            Value : Gela.Int.Symbols.Symbol);
-
-         overriding procedure Tuple
-           (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Tuple);
-
-      end Each;
-
-      package body Each is
-
-         overriding procedure Defining_Name
-           (Self  : access Visiter;
-            Value : Gela.Int.Defining_Names.Defining_Name)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Defining_Name
-              (Name   => Value.Name,
-               Cursor => Visit.Self);
-         end Defining_Name;
-
-         overriding procedure Expression
-           (Self  : access Visiter;
-            Value : Gela.Int.Expressions.Expression)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Expression
-              (Tipe   => Value.Expression_Type,
-               Cursor => Visit.Self);
-         end Expression;
-
-         overriding procedure Expression_Category
-           (Self  : access Visiter;
-            Value : Gela.Int.Categories.Category)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Expression_Category
-              (Match  => Value.Match,
-               Cursor => Visit.Self);
-         end Expression_Category;
-
-         overriding procedure Attr_Function
-           (Self  : access Visiter;
-            Value : Gela.Int.Attr_Functions.Attr_Function)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Attr_Function
-              (Kind   => Value.Kind,
-               Tipe   => Value.Tipe,
-               Cursor => Visit.Self);
-         end Attr_Function;
-
-         overriding procedure Placeholder
-           (Self  : access Visiter;
-            Value : Gela.Int.Placeholders.Placeholder)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Placeholder
-              (Kind   => Value.Placeholder_Kind,
-               Cursor => Visit.Self);
-         end Placeholder;
-
-         overriding procedure Symbol
-           (Self  : access Visiter;
-            Value : Gela.Int.Symbols.Symbol)
-         is
-            pragma Unreferenced (Self);
-         begin
-            Target.On_Symbol
-              (Symbol => Value.Get_Symbol,
-               Cursor => Visit.Self);
-         end Symbol;
-
-         overriding procedure Tuple
-           (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Tuple) is
-         begin
-            null;
-         end Tuple;
-
-         overriding procedure Chosen_Tuple
-           (Self  : access Visiter;
-            Value : Gela.Int.Tuples.Chosen_Tuple)
-         is
-            pragma Unreferenced (Self, Value);
-         begin
-            raise Constraint_Error with "Unexpected down interpretation in up";
-         end Chosen_Tuple;
-
-      end Each;
-
-      V : aliased Each.Visiter;
-   begin
-      Int_Lists.Element (Self.Pos).Visit (V'Access);
-   end Visit;
 
 end Gela.Plain_Int_Sets;

@@ -46,6 +46,10 @@ package Gela.Plain_Int_Sets.Cursors is
 
    overriding procedure Next (Self : in out Defining_Name_Cursor);
 
+   overriding function Defining_Name
+     (Self : Defining_Name_Cursor)
+         return Gela.Elements.Defining_Names.Defining_Name_Access;
+
    type Expression_Cursor is
      new Gela.Interpretations.Expression_Cursor with private;
 
@@ -53,6 +57,9 @@ package Gela.Plain_Int_Sets.Cursors is
      (Self  : out Expression_Cursor;
       Set   : access Interpretation_Set;
       Index : Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding function Expression_Type
+     (Self : Expression_Cursor) return Gela.Semantic_Types.Type_Index;
 
    overriding procedure Next (Self : in out Expression_Cursor);
 
@@ -75,6 +82,16 @@ package Gela.Plain_Int_Sets.Cursors is
       Index : Gela.Interpretations.Interpretation_Set_Index);
 
    overriding procedure Next (Self : in out Profile_Cursor);
+
+   type Any_Cursor is
+     new Gela.Interpretations.Any_Cursor with private;
+
+   not overriding procedure Initialize
+     (Self  : out Any_Cursor;
+      Set   : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index);
+
+   overriding procedure Next (Self : in out Any_Cursor);
 
 private
 
@@ -99,15 +116,8 @@ private
    type Defining_Name_Cursor is new Base_Cursor
      and Gela.Interpretations.Defining_Name_Cursor with null record;
 
-   overriding function Defining_Name
-     (Self : Defining_Name_Cursor)
-         return Gela.Elements.Defining_Names.Defining_Name_Access;
-
    type Expression_Cursor is new Base_Cursor
      and Gela.Interpretations.Expression_Cursor with null record;
-
-   overriding function Expression_Type
-     (Self : Expression_Cursor) return Gela.Semantic_Types.Type_Index;
 
    type Symbol_Cursor is new Base_Cursor
      and Gela.Interpretations.Symbol_Cursor with null record;
@@ -124,5 +134,37 @@ private
    overriding function Attribute_Kind
      (Self : Profile_Cursor)
          return Gela.Lexical_Types.Predefined_Symbols.Attribute;
+
+   type Any_Cursor is new Base_Cursor
+     and Gela.Interpretations.Any_Cursor with null record;
+
+   overriding function Is_Symbol (Self : Any_Cursor) return Boolean;
+
+   overriding function Is_Defining_Name (Self : Any_Cursor) return Boolean;
+
+   overriding function Is_Expression (Self : Any_Cursor) return Boolean;
+
+   overriding function Is_Expression_Category (Self : Any_Cursor)
+      return Boolean;
+
+   overriding function Is_Profile (Self : Any_Cursor) return Boolean;
+
+   overriding function Symbol
+     (Self : Any_Cursor) return Gela.Lexical_Types.Symbol;
+
+   overriding function Defining_Name (Self : Any_Cursor)
+      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+   overriding function Expression_Type (Self : Any_Cursor)
+      return Gela.Semantic_Types.Type_Index;
+
+   overriding function Matcher (Self : Any_Cursor)
+        return Gela.Interpretations.Type_Matcher_Access;
+
+   overriding function Corresponding_Type
+     (Self : Any_Cursor) return Gela.Semantic_Types.Type_Index;
+
+   overriding function Attribute_Kind (Self : Any_Cursor)
+        return Gela.Lexical_Types.Predefined_Symbols.Attribute;
 
 end Gela.Plain_Int_Sets.Cursors;

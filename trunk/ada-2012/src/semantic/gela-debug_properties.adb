@@ -126,39 +126,6 @@ package body Gela.Debug_Properties is
 
    end Dump_Interpretation;
 
-   package Dump_Up_Interpretation is
-      type Visiter is new Gela.Interpretations.Up_Visiter with record
-         Comp : not null Gela.Compilations.Compilation_Access;
-      end record;
-
-      overriding procedure On_Defining_Name
-        (Self   : in out Visiter;
-         Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-         Cursor : Gela.Interpretations.Cursor'Class);
-
-      overriding procedure On_Expression
-        (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_Index;
-         Cursor : Gela.Interpretations.Cursor'Class);
-
-      overriding procedure On_Expression_Category
-        (Self   : in out Visiter;
-         Match  : not null Gela.Interpretations.Type_Matcher_Access;
-         Cursor : Gela.Interpretations.Cursor'Class);
-
-      overriding procedure On_Attr_Function
-        (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_Index;
-         Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
-         Cursor : Gela.Interpretations.Cursor'Class);
-
-      overriding procedure On_Symbol
-        (Self   : in out Visiter;
-         Symbol : Gela.Lexical_Types.Symbol;
-         Cursor : Gela.Interpretations.Cursor'Class);
-
-   end Dump_Up_Interpretation;
-
    package body Dump_Property is
       overriding procedure On_Down
         (Self    : in out Property_Visiter;
@@ -252,8 +219,8 @@ package body Gela.Debug_Properties is
            Element.Enclosing_Compilation;
          IM  : constant Gela.Interpretations.Interpretation_Manager_Access :=
            Comp.Context.Interpretation_Manager;
-         IV  : aliased Dump_Up_Interpretation.Visiter := (Comp => Comp);
-         Pos : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Value);
+         TM : constant Gela.Type_Managers.Type_Manager_Access :=
+           Comp.Context.Types;
       begin
          if Self.Flags (Up) = False then
             return;
@@ -263,13 +230,55 @@ package body Gela.Debug_Properties is
            ("up:" &
               Gela.Interpretations.Interpretation_Set_Index'Image (Value));
 
-         while Pos.Has_Element loop
+         for J in IM.Each (Value) loop
             Put_Line
               ("   INDEX:" &
                  Gela.Interpretations.Interpretation_Index'Image
-                   (Pos.Get_Index));
-            Pos.Visit (IV'Access);
-            Pos.Next;
+                   (J.Get_Index));
+
+            if J.Is_Defining_Name then
+               declare
+                  Name   : constant Gela.Elements.Defining_Names.
+                    Defining_Name_Access := J.Defining_Name;
+                  Symbol : constant Gela.Lexical_Types.Symbol :=
+                    Name.Full_Name;
+               begin
+                  Put_Line
+                    ("   Defining_Name " &
+                       Comp.Context.Symbols.Image (Symbol).To_UTF_8_String);
+               end;
+            elsif J.Is_Expression then
+               declare
+                  use type Gela.Semantic_Types.Type_Index;
+                  use type Gela.Types.Type_View_Access;
+
+                  Tipe : constant Gela.Semantic_Types.Type_Index :=
+                    J.Expression_Type;
+                  View : Gela.Types.Type_View_Access;
+                  DT   : Dump_Type.Type_Visitor (Put_Expression'Access);
+               begin
+                  if Tipe /= 0 then
+                     View := TM.Get (Tipe);
+                  end if;
+
+                  if View = null then
+                     Put_Line ("   Expression NULL");
+                  else
+                     View.Visit (DT);
+                  end if;
+               end;
+            elsif J.Is_Expression_Category then
+               Put_Line ("   Expression_Category: ");
+            elsif J.Is_Symbol then
+               Put_Line
+                 ("   Symbol " &
+                    Comp.Context.Symbols.Image (J.Symbol).To_UTF_8_String);
+            elsif J.Is_Profile then
+               Put_Line
+                 ("   Attr_Function " &
+                    Comp.Context.Symbols.Image (J.Attribute_Kind).
+                      To_UTF_8_String);
+            end if;
          end loop;
       end On_Up;
 
@@ -369,97 +378,6 @@ package body Gela.Debug_Properties is
 
    end Dump_Interpretation;
 
-   package body Dump_Up_Interpretation is
-
-      overriding procedure On_Defining_Name
-        (Self   : in out Visiter;
-         Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-         Cursor : Gela.Interpretations.Cursor'Class)
-      is
-         pragma Unreferenced (Cursor);
-         Symbol : constant Gela.Lexical_Types.Symbol := Name.Full_Name;
-      begin
-         Put_Line
-           ("   Defining_Name " &
-              Self.Comp.Context.Symbols.Image (Symbol).To_UTF_8_String);
-      end On_Defining_Name;
-
-      overriding procedure On_Expression
-        (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_Index;
-         Cursor : Gela.Interpretations.Cursor'Class)
-      is
-         pragma Unreferenced (Cursor);
-         use type Gela.Semantic_Types.Type_Index;
-         use type Gela.Types.Type_View_Access;
-
-         TM : constant Gela.Type_Managers.Type_Manager_Access :=
-           Self.Comp.Context.Types;
-         View : Gela.Types.Type_View_Access;
-         DT   : Dump_Type.Type_Visitor (Put_Expression'Access);
-      begin
-         if Tipe /= 0 then
-            View := TM.Get (Tipe);
-         end if;
-
-         if View = null then
-            Put_Line ("   Expression NULL");
-         else
-            View.Visit (DT);
-         end if;
-      end On_Expression;
-
-      overriding procedure On_Expression_Category
-        (Self   : in out Visiter;
-         Match  : not null Gela.Interpretations.Type_Matcher_Access;
-         Cursor : Gela.Interpretations.Cursor'Class)
-      is
-         pragma Unreferenced (Self, Cursor, Match);
-      begin
-         Put_Line ("   Expression_Category: ");
-      end On_Expression_Category;
-
-      overriding procedure On_Attr_Function
-        (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_Index;
-         Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
-         Cursor : Gela.Interpretations.Cursor'Class)
-      is
-         pragma Unreferenced (Cursor, Tipe);
-      begin
-         Put_Line
-           ("   Attr_Function " &
-              Self.Comp.Context.Symbols.Image (Kind).To_UTF_8_String);
-      end On_Attr_Function;
-
-      overriding procedure On_Symbol
-        (Self   : in out Visiter;
-         Symbol : Gela.Lexical_Types.Symbol;
-         Cursor : Gela.Interpretations.Cursor'Class)
-      is
-         pragma Unreferenced (Cursor);
-      begin
-         Put_Line
-           ("   Symbol " &
-              Self.Comp.Context.Symbols.Image (Symbol).To_UTF_8_String);
-      end On_Symbol;
-
---        overriding procedure On_Tuple
---          (Self  : in out Visiter;
---           Value : Gela.Interpretations.Interpretation_Set_Index_Array)
---        is
---           pragma Unreferenced (Self);
---        begin
---           Put_Line ("   Tuple");
---
---           for J of Value loop
---              Put_Line
---                ("     " &
---                   Gela.Interpretations.Interpretation_Set_Index'Image (J));
---           end loop;
---        end On_Tuple;
-
-   end Dump_Up_Interpretation;
 
    package body Dump_Type is
 

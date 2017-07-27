@@ -1031,6 +1031,10 @@ package body Gela.Resolve is
       end loop;
    end Get_Subtype;
 
+   --------------------
+   -- Interpretation --
+   --------------------
+
    procedure Interpretation
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;
@@ -1039,50 +1043,16 @@ package body Gela.Resolve is
    is
       pragma Unreferenced (Env);
 
-      package Each is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Prev   : Gela.Interpretations.Interpretation_Index := 0;
-            Result : Gela.Interpretations.Interpretation_Index := 0;
-         end record;
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each;
-
-      package body Each is
-
-         overriding procedure On_Symbol
-           (Self   : in out Visiter;
-            Symbol : Gela.Lexical_Types.Symbol;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Symbol, Cursor);
-         begin
-            --  Skip symbols
-            Self.Result := Self.Prev;
-         end On_Symbol;
-
-      end Each;
-
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
-
-      Cursor : Gela.Interpretations.Cursor'Class :=
-        IM.Get_Cursor (Set);
-
-      Visiter : aliased Each.Visiter;
    begin
-      while Cursor.Has_Element loop
-         Visiter.Result := Cursor.Get_Index;
-         Cursor.Visit (Visiter'Access);
-         Visiter.Prev := Visiter.Result;
-         Cursor.Next;
-      end loop;
+      Result := 0;
 
-      Result := Visiter.Result;
+      for J in IM.Each (Set) loop
+         if not J.Is_Symbol then
+            Result := J.Get_Index;
+         end if;
+      end loop;
    end Interpretation;
 
    ---------------------
@@ -1870,29 +1840,6 @@ package body Gela.Resolve is
    is
       pragma Unreferenced (Env);
 
-      package Each is
-         type Visiter is new Gela.Interpretations.Up_Visiter with record
-            Type_Index : Gela.Semantic_Types.Type_Index;
-            Index      : Gela.Interpretations.Interpretation_Index := 0;
-         end record;
-
-         overriding procedure On_Defining_Name
-           (Self   : in out Visiter;
-            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-         overriding procedure On_Expression_Category
-           (Self   : in out Visiter;
-            Match  : not null Gela.Interpretations.Type_Matcher_Access;
-            Cursor : Gela.Interpretations.Cursor'Class);
-
-      end Each;
-
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
@@ -1901,69 +1848,43 @@ package body Gela.Resolve is
 
       View : constant Gela.Types.Type_View_Access := TM.Get (Type_Up);
 
-      ----------
-      -- Each --
-      ----------
-
-      package body Each is
-
-         overriding procedure On_Defining_Name
-           (Self   : in out Visiter;
-            Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Name);
-         begin
-            Self.Index := Cursor.Get_Index;
-         end On_Defining_Name;
-
-         overriding procedure On_Expression
-           (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            This_Type : constant Gela.Types.Type_View_Access :=
-              TM.Get (Tipe);
-         begin
-            if This_Type.Assigned and then
-              This_Type.Is_Expected_Type (View)
-            then
-               Self.Index := Cursor.Get_Index;
-            end if;
-         end On_Expression;
-
-         overriding procedure On_Expression_Category
-           (Self   : in out Visiter;
-            Match  : not null Gela.Interpretations.Type_Matcher_Access;
-            Cursor : Gela.Interpretations.Cursor'Class)
-         is
-            pragma Unreferenced (Cursor);
-            use type Gela.Interpretations.Interpretation_Index;
-         begin
-            View.Visit (Match.all);
-
-            if Match.Is_Matched and Self.Index = 0 then
-               IM.Get_Expression_Index
-                 (Tipe   => Self.Type_Index,
-                  Result => Self.Index);
-            end if;
-         end On_Expression_Category;
-
-      end Each;
-
-      Cursor  : Gela.Interpretations.Cursor'Class := IM.Get_Cursor (Expr_Up);
-      Visiter : aliased Each.Visiter;
    begin
-      Visiter.Type_Index := Type_Up;
+      Result := 0;
 
-      if View.Assigned then
-         while Cursor.Has_Element loop
-            Cursor.Visit (Visiter'Access);
-            Cursor.Next;
-         end loop;
+      if not View.Assigned then
+         return;
       end if;
 
-      Result := Visiter.Index;
+      for J in IM.Each (Expr_Up) loop
+         if J.Is_Defining_Name then
+            Result := J.Get_Index;  --  ???
+         elsif J.Is_Expression then
+            declare
+               This_Type : constant Gela.Types.Type_View_Access :=
+                 TM.Get (J.Expression_Type);
+            begin
+               if This_Type.Assigned and then
+                 This_Type.Is_Expected_Type (View)
+               then
+                  Result := J.Get_Index;
+               end if;
+            end;
+         elsif J.Is_Expression_Category then
+            declare
+               use type Gela.Interpretations.Interpretation_Index;
+               Match  : constant Gela.Interpretations.Type_Matcher_Access :=
+                 J.Matcher;
+            begin
+               View.Visit (Match.all);
+
+               if Match.Is_Matched and Result = 0 then
+                  IM.Get_Expression_Index
+                    (Tipe   => Type_Up,
+                     Result => Result);
+               end if;
+            end;
+         end if;
+      end loop;
    end To_Type;
 
    ----------------------

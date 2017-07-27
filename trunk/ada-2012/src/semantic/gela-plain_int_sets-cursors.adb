@@ -69,12 +69,38 @@ package body Gela.Plain_Int_Sets.Cursors is
       return Gela.Int.Attr_Functions.Attr_Function (Item.all).Kind;
    end Attribute_Kind;
 
+   --------------------
+   -- Attribute_Kind --
+   --------------------
+
+   overriding function Attribute_Kind (Self : Any_Cursor)
+      return Gela.Lexical_Types.Predefined_Symbols.Attribute
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Attr_Functions.Attr_Function (Item.all).Kind;
+   end Attribute_Kind;
+
    ------------------------
    -- Corresponding_Type --
    ------------------------
 
    overriding function Corresponding_Type
      (Self : Profile_Cursor)
+      return Gela.Semantic_Types.Type_Index
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Attr_Functions.Attr_Function (Item.all).Tipe;
+   end Corresponding_Type;
+
+   ------------------------
+   -- Corresponding_Type --
+   ------------------------
+
+   overriding function Corresponding_Type (Self : Any_Cursor)
       return Gela.Semantic_Types.Type_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
@@ -97,12 +123,38 @@ package body Gela.Plain_Int_Sets.Cursors is
       return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
    end Defining_Name;
 
+   -------------------
+   -- Defining_Name --
+   -------------------
+
+   overriding function Defining_Name (Self : Any_Cursor)
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Defining_Names.Defining_Name (Item.all).Name;
+   end Defining_Name;
+
    ---------------------
    -- Expression_Type --
    ---------------------
 
    overriding function Expression_Type
      (Self : Expression_Cursor)
+      return Gela.Semantic_Types.Type_Index
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Expressions.Expression (Item.all).Expression_Type;
+   end Expression_Type;
+
+   ---------------------
+   -- Expression_Type --
+   ---------------------
+
+   overriding function Expression_Type (Self : Any_Cursor)
       return Gela.Semantic_Types.Type_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
@@ -208,12 +260,94 @@ package body Gela.Plain_Int_Sets.Cursors is
       Symbol_Step (Self);
    end Initialize;
 
+   ----------------
+   -- Initialize --
+   ----------------
+
+   not overriding procedure Initialize
+     (Self  : out Any_Cursor;
+      Set   : access Interpretation_Set;
+      Index : Gela.Interpretations.Interpretation_Set_Index) is
+   begin
+      Self := (Set, Set.Map (Index).First);
+   end Initialize;
+
+   ----------------------
+   -- Is_Defining_Name --
+   ----------------------
+
+   overriding function Is_Defining_Name (Self : Any_Cursor) return Boolean is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Item.all in Gela.Int.Defining_Names.Defining_Name'Class;
+   end Is_Defining_Name;
+
+   -------------------
+   -- Is_Expression --
+   -------------------
+
+   overriding function Is_Expression (Self : Any_Cursor) return Boolean is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Item.all in Gela.Int.Expressions.Expression'Class;
+   end Is_Expression;
+
+   ----------------------------
+   -- Is_Expression_Category --
+   ----------------------------
+
+   overriding function Is_Expression_Category
+     (Self : Any_Cursor) return Boolean
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Item.all in Gela.Int.Categories.Category'Class;
+   end Is_Expression_Category;
+
+   ----------------
+   -- Is_Profile --
+   ----------------
+
+   overriding function Is_Profile (Self : Any_Cursor) return Boolean is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Item.all in Gela.Int.Attr_Functions.Attr_Function'Class;
+   end Is_Profile;
+
+   ---------------
+   -- Is_Symbol --
+   ---------------
+
+   overriding function Is_Symbol (Self : Any_Cursor) return Boolean is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Item.all in Gela.Int.Symbols.Symbol'Class;
+   end Is_Symbol;
+
    -------------
    -- Matcher --
    -------------
 
    overriding function Matcher
      (Self : Category_Cursor)
+      return Gela.Interpretations.Type_Matcher_Access
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Categories.Category (Item.all).Match;
+   end Matcher;
+
+   -------------
+   -- Matcher --
+   -------------
+
+   overriding function Matcher (Self : Any_Cursor)
       return Gela.Interpretations.Type_Matcher_Access
    is
       Item   : constant Gela.Int.Interpretation_Access :=
@@ -272,6 +406,15 @@ package body Gela.Plain_Int_Sets.Cursors is
       Profile_Step (Self);
    end Next;
 
+   ----------
+   -- Next --
+   ----------
+
+   overriding procedure Next (Self : in out Any_Cursor) is
+   begin
+      Int_Lists.Next (Self.Pos);
+   end Next;
+
    ------------
    -- Symbol --
    ------------
@@ -279,6 +422,19 @@ package body Gela.Plain_Int_Sets.Cursors is
    overriding function Symbol
      (Self : Symbol_Cursor)
       return Gela.Lexical_Types.Symbol
+   is
+      Item   : constant Gela.Int.Interpretation_Access :=
+        Int_Lists.Element (Self.Pos);
+   begin
+      return Gela.Int.Symbols.Symbol (Item.all).Get_Symbol;
+   end Symbol;
+
+   ------------
+   -- Symbol --
+   ------------
+
+   overriding function Symbol
+     (Self : Any_Cursor) return Gela.Lexical_Types.Symbol
    is
       Item   : constant Gela.Int.Interpretation_Access :=
         Int_Lists.Element (Self.Pos);

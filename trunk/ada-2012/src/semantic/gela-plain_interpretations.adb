@@ -9,40 +9,6 @@ with Gela.Int.Visiters;
 
 package body Gela.Plain_Interpretations is
 
-   package Empty_Cursors is
-      type Cursor is new Gela.Interpretations.Cursor with null record;
-
-      overriding function Has_Element (Self : Cursor) return Boolean;
-
-      overriding procedure Next (Self : in out Cursor) is null;
-
-      overriding procedure Visit
-        (Self   : Cursor;
-         Target : access Gela.Interpretations.Up_Visiter'Class) is null;
-
-      overriding function Get_Index
-        (Self : Cursor) return Gela.Interpretations.Interpretation_Index;
-
-   end Empty_Cursors;
-
-   package body Empty_Cursors is
-
-      overriding function Has_Element (Self : Cursor) return Boolean is
-         pragma Unreferenced (Self);
-      begin
-         return False;
-      end Has_Element;
-
-      overriding function Get_Index
-        (Self : Cursor) return Gela.Interpretations.Interpretation_Index
-      is
-         pragma Unreferenced (Self);
-      begin
-         return 0;
-      end Get_Index;
-
-   end Empty_Cursors;
-
    -----------------------
    -- Add_Attr_Function --
    -----------------------
@@ -308,6 +274,19 @@ package body Gela.Plain_Interpretations is
       return Self.Set_Batches.Element (Set / Batch_Size).Defining_Names (Set);
    end Defining_Names;
 
+   ----------
+   -- Each --
+   ----------
+
+   overriding function Each
+     (Self   : in out Interpretation_Manager;
+      Set    : Gela.Interpretations.Interpretation_Set_Index)
+        return Gela.Interpretations.Any_Iterators
+                 .Forward_Iterator'Class is
+   begin
+      return Self.Set_Batches.Element (Set / Batch_Size).Each (Set);
+   end Each;
+
    -----------------
    -- Expressions --
    -----------------
@@ -320,22 +299,6 @@ package body Gela.Plain_Interpretations is
    begin
       return Self.Set_Batches.Element (Set / Batch_Size).Expressions (Set);
    end Expressions;
-
-   ----------------
-   -- Get_Cursor --
-   ----------------
-
-   overriding function Get_Cursor
-     (Self   : in out Interpretation_Manager;
-      Set    : Gela.Interpretations.Interpretation_Set_Index)
-      return Gela.Interpretations.Cursor'Class is
-   begin
-      if Set = 0 then
-         return None : Empty_Cursors.Cursor;
-      else
-         return Self.Set_Batches.Element (Set / Batch_Size).Get_Cursor (Set);
-      end if;
-   end Get_Cursor;
 
    -----------------------------
    -- Get_Defining_Name_Index --
