@@ -149,7 +149,7 @@ package body AG_Tools.Clone_Generator is
       Spec.P;
       Spec.P ("   type Cloner (Factory : not null");
       Spec.P ("                  " &
-                "Gela.Element_Factories.Element_Factory_Access) is");
+                "Gela.Element_Factories.Element_Factory_Access) is limited");
       Spec.P ("   new Gela.Element_Visiters.Visiter with record");
       Spec.P ("      Result  : Gela.Elements.Element_Access;");
       Spec.P ("   end record;");
