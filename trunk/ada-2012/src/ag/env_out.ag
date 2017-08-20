@@ -427,7 +427,11 @@ Rules for derived_record_definition. :
 
 Rules for derived_type_definition. :
 (.
-      ${derived_type_definition.env_out} := ${derived_type_definition.env_in};
+      Gela.Pass_Utils.Inheritance.Environment
+        (Self.Compilation,
+         Node,
+         ${derived_type_definition.env_in},
+         ${derived_type_definition.env_out});
 .)
 
 Rules for discriminant_specification. :

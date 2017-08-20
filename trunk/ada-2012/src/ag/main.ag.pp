@@ -8,6 +8,7 @@
 #include "down.ag"
 #include "def_name.ag"
 #include "inst.ag"
+#include "inherited.ag"
 #include "errors.ag"
 #include "static_value.ag"
 #include "chosen.ag"

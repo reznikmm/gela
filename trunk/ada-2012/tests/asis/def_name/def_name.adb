@@ -118,6 +118,10 @@ procedure Def_Name is
       Result.Append (Asis.ASIS_Natural'Wide_Wide_Image (Span.First_Column));
       Result.Append (" => ");
 
+      if Asis.Elements.Is_Part_Of_Inherited (Def) then
+         Result.Append ("#");
+      end if;
+
       while Asis.Elements.Is_Part_Of_Instance (Def) loop
          Result.Append ("@");
          Def := Asis.Declarations.Corresponding_Generic_Element (Def);

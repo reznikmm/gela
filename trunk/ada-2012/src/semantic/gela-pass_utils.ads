@@ -15,6 +15,7 @@ with Gela.Elements.Use_Package_Clauses;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
 with Gela.Resolve;
+with Gela.Inheritance;
 with Gela.Instantiation;
 with Gela.Interpretations;
 
@@ -23,6 +24,7 @@ package Gela.Pass_Utils is
 
    package Resolve renames Gela.Resolve;
    package Instantiation renames Gela.Instantiation;
+   package Inheritance renames Gela.Inheritance;
 
    function Add_Name_Create_Region
      (Comp   : Gela.Compilations.Compilation_Access;

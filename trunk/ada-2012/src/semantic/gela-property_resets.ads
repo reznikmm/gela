@@ -22,6 +22,7 @@ package Gela.Property_Resets is
       Type_Index    : Gela.Semantic_Types.Type_Index := 0;
       Up_Set        : Gela.Interpretations.Interpretation_Set_Index := 0;
       Up_Tuple      : Gela.Interpretations.Interpretation_Tuple_Index := 0;
+      Inh_List      : Gela.Elements.Element_Sequence_Access;
 
       Name_List     : Gela.Lexical_Types.Symbol_List :=
         Gela.Lexical_Types.Empty_Symbol_List;
@@ -155,5 +156,10 @@ private
      (Self    : in out Property_Reset;
       Element : Gela.Elements.Element_Access;
       Value   : out Gela.Interpretations.Interpretation_Kinds);
+
+   overriding procedure On_Inh_List
+     (Self    : in out Property_Reset;
+      Element : Gela.Elements.Element_Access;
+      Value   : out Gela.Elements.Element_Sequence_Access);
 
 end Gela.Property_Resets;

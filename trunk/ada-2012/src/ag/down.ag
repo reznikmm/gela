@@ -196,7 +196,11 @@ Rules for attribute_reference. :
 
 Rules for component_clause. :
 (.
-      ${Representation_Clause_Name.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${component_clause.env_in},
+         ${Representation_Clause_Name.Up},
+         ${Representation_Clause_Name.Down});
 .)
 
 Rules for Aborted_Tasks.name :

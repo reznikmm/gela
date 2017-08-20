@@ -183,6 +183,20 @@ package body Gela.Property_Resets is
       Value := Self.Index;
    end On_Index;
 
+   -----------------
+   -- On_Inh_List --
+   -----------------
+
+   overriding procedure On_Inh_List
+     (Self    : in out Property_Reset;
+      Element : Gela.Elements.Element_Access;
+      Value   : out Gela.Elements.Element_Sequence_Access)
+   is
+      pragma Unreferenced (Element);
+   begin
+      Value := Self.Inh_List;
+   end On_Inh_List;
+
    --------------------------
    -- On_Limited_With_List --
    --------------------------

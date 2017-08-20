@@ -1,0 +1,13 @@
+Synthesized attributes
+  derived_type_definition
+   : Gela.Elements.Element_Sequence_Access : Inh_List;
+
+Rules for derived_type_definition. :
+(.
+        --   ${Parent_Subtype_Indication.Errors},
+        Gela.Pass_Utils.Inheritance.Copy_Declarations
+          (Self.Compilation,
+           ${derived_type_definition.env_in},
+           Node,
+           ${derived_type_definition.Inh_List});
+.)
