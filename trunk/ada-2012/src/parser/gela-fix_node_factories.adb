@@ -161,7 +161,8 @@ package body Gela.Fix_Node_Factories is
          end Record_Aggregate;
       end Get;
 
-      V      : Get.Visiter;
+      V      : Get.Visiter :=
+        (Result => Converted_Or_Qualified_Expression, others => <>);
       Parent : Gela.Node_Factories.Element_Factory renames
         Gela.Node_Factories.Element_Factory (Self);
    begin
