@@ -34,6 +34,7 @@ package Gela.Interpretations is
      (Unknown,
       --  Interpretation of Auxiliary_Apply
       Function_Call,
+      Type_Convertion,
       Indexed_Component,
       --  Interpretation of Composite_Constraint
       Index_Constraint,

@@ -1394,13 +1394,16 @@ package body Asis.Extensions.Flat_Kinds is
    is
       use type Gela.Interpretations.Auxiliary_Apply_Kinds;
    begin
-      if Node.Chosen_Interpretation =
-        Gela.Interpretations.Indexed_Component
-      then
-         Self.Result := An_Indexed_Component;
-      else
-         Self.Result := A_Function_Call;
-      end if;
+      case Node.Chosen_Interpretation is
+         when Gela.Interpretations.Indexed_Component =>
+            Self.Result := An_Indexed_Component;
+         when Gela.Interpretations.Function_Call =>
+            Self.Result := A_Function_Call;
+         when Gela.Interpretations.Type_Convertion =>
+            Self.Result := A_Type_Conversion;
+         when others =>
+            Self.Result := A_Function_Call;  --  ??? raise exception?
+      end case;
    end Auxiliary_Apply;
 
    overriding procedure Block_Statement

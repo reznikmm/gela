@@ -117,7 +117,8 @@ package body Asis is
                Node.Enclosing_Element.Visit (Self);
             elsif Self.Flags (Is_Association) then
                Self.Result := Kind in
-                 Asis.Extensions.Flat_Kinds.An_Indexed_Component;
+                 Asis.Extensions.Flat_Kinds.An_Indexed_Component
+                 | Asis.Extensions.Flat_Kinds.A_Type_Conversion;
             else
                Self.Result := Self.Flags (Is_Association_List);
             end if;

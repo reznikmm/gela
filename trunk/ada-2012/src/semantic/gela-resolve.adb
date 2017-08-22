@@ -776,6 +776,44 @@ package body Gela.Resolve is
             end if;
          end;
       end loop;
+
+      --  Type Convertion
+      if Tuples'Length = 1 then
+         declare
+            Tipe        : Gela.Interpretations.Interpretation_Index;
+            Chosen      : Gela.Interpretations.Interpretation_Index;
+            Type_Index  : Gela.Semantic_Types.Type_Index;
+            Tuple       : constant Gela.Interpretations
+              .Interpretation_Set_Index_Array
+                := IM.Get_Tuple (Tuples (1));
+         begin
+            if Tuple'Length = 1 then  --  Single expression without choices
+               Get_Subtype
+                 (Comp   => Comp,
+                  Env    => Env,
+                  Set    => Prefix,
+                  Index  => Tipe,
+                  Result => Type_Index);
+
+               if Type_Index not in 0 then
+                  Interpretation
+                    (Comp,
+                     Env,
+                     Set    => Tuple (1),
+                     Result => Chosen);
+
+                  IM.Get_Tuple_Index (Chosen, 0, Chosen);
+                  IM.Get_Tuple_Index (Chosen, 0, Chosen);
+
+                  Comp.Context.Interpretation_Manager.Add_Expression
+                    (Tipe   => Type_Index,
+                     Kind   => Gela.Interpretations.Type_Convertion,
+                     Down   => Tipe & Chosen,
+                     Result => Set);
+               end if;
+            end if;
+         end;
+      end if;
    end Function_Call;
 
    -------------------------
