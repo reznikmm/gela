@@ -327,8 +327,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Character_Literal
      (Self : in out Visiter;
       Node : not null Gela.Elements.Character_Literals.
-        Character_Literal_Access)
-   is null;
+        Character_Literal_Access);
 
    overriding procedure Choice_Parameter_Specification
      (Self : in out Visiter;
@@ -1430,6 +1429,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Case_Statement;
    end Case_Statement;
+
+   overriding procedure Character_Literal
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Character_Literals.
+        Character_Literal_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Character_Literal;
+   end Character_Literal;
 
    overriding procedure Component_Clause
      (Self : in out Visiter;

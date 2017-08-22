@@ -11,15 +11,16 @@
 
 with Gela.Compilations;
 with Gela.Element_Visiters;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
 with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Character_Literals;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Expression_Or_Boxes;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Numeric_Literals;
 with Gela.Elements.Operator_Symbols;
 with Gela.Elements.Prefixes;
-with Gela.Elements.Association_Lists;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
 with Gela.Elements.Selector_Names;
@@ -591,6 +592,11 @@ package body Asis.Expressions is
             Symbol : Gela.Lexical_Types.Symbol := 0;
          end record;
 
+         overriding procedure Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Character_Literals.
+              Character_Literal_Access);
+
          overriding procedure Identifier
            (Self : in out Visiter;
             Node : not null Gela.Elements.Identifiers.Identifier_Access);
@@ -602,6 +608,19 @@ package body Asis.Expressions is
       end Get;
 
       package body Get is
+
+         overriding procedure Character_Literal
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Character_Literals.
+              Character_Literal_Access)
+         is
+            Token : constant Gela.Lexical_Types.Token_Count :=
+              Node.Character_Literal_Token;
+            Comp  : constant Gela.Compilations.Compilation_Access :=
+              Node.Enclosing_Compilation;
+         begin
+            Self.Symbol := Comp.Get_Token (Token).Symbol;
+         end Character_Literal;
 
          ----------------
          -- Identifier --
