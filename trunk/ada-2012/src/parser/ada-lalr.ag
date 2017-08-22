@@ -3412,7 +3412,7 @@ qualified_expression ::= prefix apostrophe_token aggregate;
 
 Rules for qualified_expression. :
 (.  ${qualified_expression.ast} := +Self.Factory.Qualified_Expression
-     (-${prefix.ast}, -${apostrophe_token.ast}, -${aggregate.ast});
+     (-${prefix.ast}, -${apostrophe_token.ast}, 0, -${aggregate.ast}, 0);
 .)
 
 quantified_expression ::=

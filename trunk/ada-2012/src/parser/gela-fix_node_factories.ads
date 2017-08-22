@@ -2,9 +2,12 @@
 --  Gela.Nodes.Fixed_* packages.
 
 with Gela.Compilations;
+with Gela.Elements.Expressions;
 with Gela.Elements.Names;
 with Gela.Elements.Operator_Symbols;
 with Gela.Elements.Procedure_Call_Statements;
+with Gela.Elements.Qualified_Expressions;
+with Gela.Elements.Subtype_Marks;
 with Gela.Lexical_Types;
 with Gela.Node_Factories;
 
@@ -26,5 +29,16 @@ package Gela.Fix_Node_Factories is
       Semicolon_Token : Gela.Lexical_Types.Token_Count)
       return Gela.Elements.Procedure_Call_Statements.
         Procedure_Call_Statement_Access;
+
+   overriding function Qualified_Expression
+     (Self : in out Element_Factory;
+      Converted_Or_Qualified_Subtype_Mark : Gela.Elements.Subtype_Marks.
+        Subtype_Mark_Access;
+      Apostrophe_Token : Gela.Lexical_Types.Token_Count;
+      Left_Parenthesis_Token : Gela.Lexical_Types.Token_Count;
+      Converted_Or_Qualified_Expression : Gela.Elements.Expressions.
+        Expression_Access;
+      Right_Parenthesis_Token : Gela.Lexical_Types.Token_Count)
+      return Gela.Elements.Qualified_Expressions.Qualified_Expression_Access;
 
 end Gela.Fix_Node_Factories;

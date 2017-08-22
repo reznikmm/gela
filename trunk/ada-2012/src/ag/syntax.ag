@@ -1487,8 +1487,11 @@ protected_type_declaration ::=
 
 qualified_expression ::=
   subtype_mark <Converted_Or_Qualified_Subtype_Mark>
-  token <apostrophe_token>
-  expression <Converted_Or_Qualified_Expression>;
+  token        <apostrophe_token>
+  token        <left_parenthesis_token>
+  expression   <Converted_Or_Qualified_Expression>
+  token        <right_parenthesis_token>
+;
 
 raise_statement ::=
   token       <raise_token>
