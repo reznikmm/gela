@@ -9,6 +9,7 @@ package body Asis.Iterator is
    Skip : constant array (Asis.Extensions.Flat_Kinds.Element_Flat_Kind) of
      Natural :=
        (Asis.Extensions.Flat_Kinds.A_Procedure_Body_Declaration => 16,
+        Asis.Extensions.Flat_Kinds.A_Function_Body_Declaration => 20,
         Asis.Extensions.Flat_Kinds.A_Package_Declaration => 9,
         Asis.Extensions.Flat_Kinds.A_Package_Body_Declaration => 12,
         Asis.Extensions.Flat_Kinds.An_Incomplete_Type_Declaration => 5,
