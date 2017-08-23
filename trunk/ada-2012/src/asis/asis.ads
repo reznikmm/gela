@@ -1224,7 +1224,7 @@ package Asis is
       A_Goto_Statement,                    --  5.8
 
       A_Procedure_Call_Statement,          --  6.4
-      A_Simple_Return_Statement,           --  6.5
+      A_Return_Statement,                  --  6.5
       An_Extended_Return_Statement,        --  6.5
 
       An_Accept_Statement,                 --  9.5.2
@@ -1246,8 +1246,10 @@ package Asis is
       A_Raise_Statement,                   --  11.3
       A_Code_Statement);                   --  13.8
 
-   A_Return_Statement : Statement_Kinds renames A_Simple_Return_Statement;
    --  For compatibility with a prior version of this Standard
+   --   A_Return_Statement : Statement_Kinds renames A_Simple_Return_Statement;
+   --  For compatibility with a next version of this standard
+   A_Simple_Return_Statement : Statement_Kinds renames A_Return_Statement;
 
 -------------------------------------------------------------------------------
 --  3.9.21 type Path_Kinds
