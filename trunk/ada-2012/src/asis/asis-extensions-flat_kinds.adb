@@ -18,7 +18,7 @@ with Gela.Elements.Asynchronous_Selects;
 with Gela.Elements.At_Clauses;
 with Gela.Elements.Attribute_Definition_Clauses;
 with Gela.Elements.Attribute_References;
-with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Function_Calls;
 with Gela.Elements.Block_Statements;
 with Gela.Elements.Boxes;
 with Gela.Elements.Case_Expression_Paths;
@@ -292,9 +292,9 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Attribute_References.
         Attribute_Reference_Access);
 
-   overriding procedure Auxiliary_Apply
+   overriding procedure Function_Call
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access);
+      Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
 
    overriding procedure Block_Statement
      (Self : in out Visiter;
@@ -1388,9 +1388,9 @@ package body Asis.Extensions.Flat_Kinds is
       end if;
    end Attribute_Reference;
 
-   overriding procedure Auxiliary_Apply
+   overriding procedure Function_Call
      (Self : in out Visiter;
-      Node : not null Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access)
+      Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
    is
       use type Gela.Interpretations.Auxiliary_Apply_Kinds;
    begin
@@ -1404,7 +1404,7 @@ package body Asis.Extensions.Flat_Kinds is
          when others =>
             Self.Result := A_Function_Call;  --  ??? raise exception?
       end case;
-   end Auxiliary_Apply;
+   end Function_Call;
 
    overriding procedure Block_Statement
      (Self : in out Visiter;

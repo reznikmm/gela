@@ -1,15 +1,15 @@
 Synthesized attributes
- auxiliary_apply,
+ function_call,
  composite_constraint
   : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
 
-Rules for auxiliary_apply. :
+Rules for function_call. :
 (.
       --  choose between Function_Call and Indexed_Component
       Gela.Pass_Utils.Choose_Auxiliary_Apply_Interpretation
         (Self.Compilation,
-         ${auxiliary_apply.Down},
-         ${auxiliary_apply.chosen_interpretation});
+         ${function_call.Down},
+         ${function_call.chosen_interpretation});
 
 --  Identifier
 --   Enumeration_Literal ? f(Defining_Name)

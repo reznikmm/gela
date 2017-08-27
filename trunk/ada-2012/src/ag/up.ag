@@ -23,7 +23,7 @@ Synthesized attributes
   expression,
   expression_or_box,
   extension_aggregate,
-  auxiliary_apply,
+  function_call,
   generic_association,
   generic_formal_parameter,
   identifier,
@@ -235,14 +235,14 @@ Rules for composite_constraint. :
         Gela.Interpretations.Interpretation_Set_Index (${Associations.Up});
 .)
 
-Rules for auxiliary_apply. :
+Rules for function_call. :
 (.
       Gela.Pass_Utils.Resolve.Function_Call
         (Self.Compilation,
-         ${auxiliary_apply.env_in},
+         ${function_call.env_in},
          ${prefix.Up},
          ${Function_Call_Parameters.Up},
-         ${auxiliary_apply.Up});
+         ${function_call.Up});
 .)
 
 Rules for character_literal.character_literal_token :

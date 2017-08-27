@@ -173,7 +173,7 @@ Inherited attributes
   formal_unconstrained_array_definition,
   full_type_declaration,
   function_body,
-  auxiliary_apply,
+  function_call,
   function_declaration,
   function_instantiation,
   generalized_iterator_specification,
@@ -1680,14 +1680,14 @@ Rules for function_body. :
       ${end_name.env_in} := ${function_body.env_in};
 .)
 
-Rules for auxiliary_apply. :
+Rules for function_call. :
 (.
-      ${prefix.env_in} := ${auxiliary_apply.env_in};
+      ${prefix.env_in} := ${function_call.env_in};
 .)
 
-Rules for auxiliary_apply. :
+Rules for function_call. :
 (.
-      ${Function_Call_Parameters.env_in} := ${auxiliary_apply.env_in};
+      ${Function_Call_Parameters.env_in} := ${function_call.env_in};
 .)
 
 Rules for function_declaration. :

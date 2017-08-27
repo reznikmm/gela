@@ -13,7 +13,7 @@ with Gela.Element_Visiters;
 with Gela.Elements.Assignment_Statements;
 with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
-with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Function_Calls;
 with Gela.Elements.Expressions;
 with Gela.Elements.Names;
 with Gela.Elements.Prefixes;
@@ -251,10 +251,10 @@ package body Asis.Statements is
             Result : Gela.Elements.Element_Sequence_Access;
          end record;
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access);
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access);
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;
@@ -276,10 +276,10 @@ package body Asis.Statements is
             Prefix.Visit (Self);
          end Procedure_Call_Statement;
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access)
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access)
          is
             RA : constant Gela.Elements.Association_Lists.
               Association_List_Access := Node.Function_Call_Parameters;
@@ -288,7 +288,7 @@ package body Asis.Statements is
                 RA.Record_Component_Associations;
          begin
             Self.Result := Gela.Elements.Element_Sequence_Access (List);
-         end Auxiliary_Apply;
+         end Function_Call;
 
       end Get;
 
@@ -318,10 +318,10 @@ package body Asis.Statements is
             Result : Gela.Elements.Element_Access;
          end record;
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access);
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access);
 
          overriding procedure Procedure_Call_Statement
            (Self : in out Visiter;
@@ -343,16 +343,16 @@ package body Asis.Statements is
             Prefix.Visit (Self);
          end Procedure_Call_Statement;
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access)
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access)
          is
             Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
               Node.Prefix;
          begin
             Self.Result := Gela.Elements.Element_Access (Prefix);
-         end Auxiliary_Apply;
+         end Function_Call;
 
       end Get;
 

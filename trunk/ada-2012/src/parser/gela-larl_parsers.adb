@@ -11,6 +11,7 @@ with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Constraints;
 with Gela.Elements.Association_Lists;
 with Gela.Elements.Composite_Constraints;
+with Gela.Elements.Subtype_Marks;
 
 package body Gela.LARL_Parsers is
 
@@ -144,7 +145,7 @@ package body Gela.LARL_Parsers is
       Prefix : Gela.Lexical_Types.Token_Count;
       Left   : Gela.Elements.Expressions.Expression_Access;
       Right  : Gela.Elements.Expressions.Expression_Access := null)
-      return Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access
+      return Gela.Elements.Function_Calls.Function_Call_Access
    is
       use type Gela.Elements.Expressions.Expression_Access;
 
@@ -177,7 +178,7 @@ package body Gela.LARL_Parsers is
       P := Gela.Elements.Prefixes.Prefix_Access
         (Self.Factory.Operator_Symbol (Prefix));
 
-      return Self.Factory.Auxiliary_Apply
+      return Self.Factory.Function_Call
         (Prefix                   => P,
          Function_Call_Parameters => Self.Factory.Association_List
            (Left_Token                    => 0,
@@ -276,7 +277,7 @@ package body Gela.LARL_Parsers is
      (Self       : access Parser_Context;
       Not_Token  : Gela.Lexical_Types.Token_Count;
       Null_Token : Gela.Lexical_Types.Token_Count;
-      Mark       : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
+      Mark       : Gela.Elements.Element_Access;
       Constraint : Gela.Elements.Scalar_Constraints.Scalar_Constraint_Access)
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
    is
@@ -284,17 +285,16 @@ package body Gela.LARL_Parsers is
       Subtype_Mark       : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
       Subtype_Constraint : Gela.Elements.Constraints.Constraint_Access;
    begin
-      Subtype_Mark := Mark;
       Subtype_Constraint := Gela.Elements.Constraints.Constraint_Access
         (Constraint);
 
       if Subtype_Constraint = null and then
-        Mark.all in Gela.Elements.Auxiliary_Applies.Auxiliary_Apply'Class
+        Mark.all in Gela.Elements.Function_Calls.Function_Call'Class
       then
          declare
-            Call : constant Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access
-                := Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access
+            Call : constant Gela.Elements.Function_Calls.
+              Function_Call_Access
+                := Gela.Elements.Function_Calls.Function_Call_Access
                   (Mark);
             Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
               Call.Prefix;
@@ -314,6 +314,9 @@ package body Gela.LARL_Parsers is
             Subtype_Constraint := Gela.Elements.Constraints.Constraint_Access
               (CC);
          end;
+      else
+         Subtype_Mark :=
+           Gela.Elements.Subtype_Marks.Subtype_Mark_Access (Mark);
       end if;
 
       return Self.Factory.Subtype_Indication

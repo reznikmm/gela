@@ -6,7 +6,7 @@ with Asis.Extensions.Flat_Kinds;
 with Gela.Element_Visiters;
 with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
-with Gela.Elements.Auxiliary_Applies;
+with Gela.Elements.Function_Calls;
 with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Procedure_Call_Statements;
 with Gela.Elements.Record_Aggregates;
@@ -70,10 +70,10 @@ package body Asis is
             Node : not null Gela.Elements.Association_Lists.
               Association_List_Access);
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access);
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access);
 
          overriding procedure Composite_Constraint
            (Self : in out Visiter;
@@ -103,10 +103,10 @@ package body Asis is
             end if;
          end Association;
 
-         overriding procedure Auxiliary_Apply
+         overriding procedure Function_Call
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Auxiliary_Applies.
-              Auxiliary_Apply_Access)
+            Node : not null Gela.Elements.Function_Calls.
+              Function_Call_Access)
          is
             Kind : constant Asis.Extensions.Flat_Kinds.Element_Flat_Kind :=
               Asis.Extensions.Flat_Kinds.Flat_Kind
@@ -122,7 +122,7 @@ package body Asis is
             else
                Self.Result := Self.Flags (Is_Association_List);
             end if;
-         end Auxiliary_Apply;
+         end Function_Call;
 
          overriding procedure Composite_Constraint
            (Self : in out Visiter;

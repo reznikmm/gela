@@ -4,8 +4,7 @@ with Gela.Elements.Compilations;
 with Gela.Parsers;
 with Gela.Contexts;
 with Gela.Elements.Expressions;
-with Gela.Elements.Auxiliary_Applies;
-with Gela.Elements.Subtype_Marks;
+with Gela.Elements.Function_Calls;
 with Gela.Elements.Scalar_Constraints;
 with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Selected_Identifiers;
@@ -38,7 +37,7 @@ private
       Prefix : Gela.Lexical_Types.Token_Count;
       Left   : Gela.Elements.Expressions.Expression_Access;
       Right  : Gela.Elements.Expressions.Expression_Access := null)
-      return Gela.Elements.Auxiliary_Applies.Auxiliary_Apply_Access;
+      return Gela.Elements.Function_Calls.Function_Call_Access;
 
    function To_Defining_Program_Unit_Name
      (Self       : access Parser_Context;
@@ -50,7 +49,7 @@ private
      (Self       : access Parser_Context;
       Not_Token  : Gela.Lexical_Types.Token_Count;
       Null_Token : Gela.Lexical_Types.Token_Count;
-      Mark       : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
+      Mark       : Gela.Elements.Element_Access;
       Constraint : Gela.Elements.Scalar_Constraints.Scalar_Constraint_Access)
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access;
 

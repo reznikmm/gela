@@ -12,7 +12,7 @@ Synthesized attributes
   expression,
   expression_or_box,
   extension_aggregate,
-  auxiliary_apply,
+  function_call,
   identifier,
   if_expression,
   membership_test,
@@ -87,12 +87,12 @@ Rules for explicit_dereference. :
 (.
 	  ${explicit_dereference.static_value} := 0;  --  FIXME
 .)
-Rules for auxiliary_apply. :
+Rules for function_call. :
 (.
       Self.Compilation.Context.Values.Apply
         (Name  => ${prefix.static_value},
          Args  => ${Function_Call_Parameters.static_value},
-         Value => ${auxiliary_apply.static_value});
+         Value => ${function_call.static_value});
 .)
 Rules for qualified_expression. :
 (.

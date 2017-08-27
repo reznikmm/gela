@@ -2112,7 +2112,7 @@ Rules for function_body.function_access :
 function_call ::= prefix association_list;
 
 Rules for function_call. :
-(.  ${function_call.ast} := +Self.Factory.Auxiliary_Apply
+(.  ${function_call.ast} := +Self.Factory.Function_Call
      (-${prefix.ast}, -${association_list.ast});
 .)
 
