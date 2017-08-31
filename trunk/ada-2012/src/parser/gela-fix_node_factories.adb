@@ -3,8 +3,8 @@ with Gela.Element_Visiters;
 with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
 with Gela.Elements.Function_Calls;
+with Gela.Elements.Parenthesized_Expressions;
 with Gela.Elements.Prefixes;
-with Gela.Elements.Record_Aggregates;
 
 package body Gela.Fix_Node_Factories is
 
@@ -119,46 +119,21 @@ package body Gela.Fix_Node_Factories is
             Right_Parenthesis_Token : Gela.Lexical_Types.Token_Count := 0;
          end record;
 
-         overriding procedure Record_Aggregate
+         overriding procedure Parenthesized_Expression
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access);
+            Node : not null Gela.Elements.Parenthesized_Expressions.
+              Parenthesized_Expression_Access);
       end Get;
 
       package body Get is
 
-         overriding procedure Record_Aggregate
+         overriding procedure Parenthesized_Expression
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Record_Aggregates.
-              Record_Aggregate_Access)
-         is
-            First : Gela.Elements.Associations.Association_Access;
+            Node : not null Gela.Elements.Parenthesized_Expressions.
+              Parenthesized_Expression_Access) is
          begin
-            if Node.Associations.Record_Component_Associations.Length = 1 then
-               First := Node.Associations.Record_Component_Associations.all.
-                 First.Element;
-
-               if First.Array_Component_Choices.Length = 0 then
-                  if First.Component_Expression.all in
-                    Gela.Elements.Expressions.Expression'Class
-                  then
-                     Self.Result :=
-                       Gela.Elements.Expressions.Expression_Access
-                         (First.Component_Expression);
-
-                     Self.Left_Parenthesis_Token :=
-                       Node.Associations.Left_Token;
-
-                     Self.Right_Parenthesis_Token :=
-                       Node.Associations.Right_Token;
-                  end if;
-
-                  return;
-               end if;
-            end if;
-
-            Self.Result := Gela.Elements.Expressions.Expression_Access (Node);
-         end Record_Aggregate;
+            Self.Result := Node.Expression_Parenthesized;
+         end Parenthesized_Expression;
       end Get;
 
       V      : Get.Visiter :=

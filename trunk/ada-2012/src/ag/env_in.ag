@@ -2214,7 +2214,7 @@ Rules for parameter_specification. :
 
 Rules for parenthesized_expression. :
 (.
-      ${Expression_Parenthesized.env_in} := 0;  --  not used in resolv
+      ${Expression_Parenthesized.env_in} := ${parenthesized_expression.env_in};
 .)
 
 Rules for pragma_argument_association. :

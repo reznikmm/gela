@@ -1,14 +1,15 @@
-with Gela.Lexical_Types;
-with Gela.Element_Factories;
-with Gela.Elements.Compilations;
-with Gela.Parsers;
 with Gela.Contexts;
+with Gela.Element_Factories;
+with Gela.Elements.Association_Lists;
+with Gela.Elements.Compilations;
+with Gela.Elements.Defining_Program_Unit_Names;
 with Gela.Elements.Expressions;
 with Gela.Elements.Function_Calls;
 with Gela.Elements.Scalar_Constraints;
-with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Selected_Identifiers;
-with Gela.Elements.Defining_Program_Unit_Names;
+with Gela.Elements.Subtype_Indications;
+with Gela.Lexical_Types;
+with Gela.Parsers;
 
 package Gela.LARL_Parsers is
    pragma Preelaborate;
@@ -52,5 +53,12 @@ private
       Mark       : Gela.Elements.Element_Access;
       Constraint : Gela.Elements.Scalar_Constraints.Scalar_Constraint_Access)
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access;
+
+   function To_Aggregate_Or_Expression
+     (Self  : access Parser_Context;
+      Value : Gela.Elements.Association_Lists.Association_List_Access)
+      return Gela.Elements.Expressions.Expression_Access;
+   --  If Value is (X) return Parenthesized_Expression else
+   --  return Record_Aggregate
 
 end Gela.LARL_Parsers;

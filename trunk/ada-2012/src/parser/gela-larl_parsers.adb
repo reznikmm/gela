@@ -9,7 +9,6 @@ with Gela.Elements.Selector_Names;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Constraints;
-with Gela.Elements.Association_Lists;
 with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Subtype_Marks;
 
@@ -268,6 +267,39 @@ package body Gela.LARL_Parsers is
       return Gela.Elements.Defining_Program_Unit_Names.
                Defining_Program_Unit_Name_Access (Result);
    end To_Defining_Program_Unit_Name;
+
+   --------------------------------
+   -- To_Aggregate_Or_Expression --
+   --------------------------------
+
+   function To_Aggregate_Or_Expression
+     (Self  : access Parser_Context;
+      Value : Gela.Elements.Association_Lists.Association_List_Access)
+      return Gela.Elements.Expressions.Expression_Access
+   is
+      First : Gela.Elements.Associations.Association_Access;
+      Result : access Gela.Elements.Expressions.Expression'Class;
+   begin
+      if Value.Record_Component_Associations.Length = 1 then
+         First := Value.Record_Component_Associations.all.First.Element;
+
+         if First.Array_Component_Choices.Length = 0 then
+            Result :=
+              Self.Factory.Parenthesized_Expression
+                 (Left_Token               => Value.Last_Token,
+                  Expression_Parenthesized =>
+                    Gela.Elements.Expressions.Expression_Access
+                      (First.Component_Expression),
+                  Right_Token              => Value.Right_Token);
+         else
+            Result := Self.Factory.Record_Aggregate (Value);
+         end if;
+      else
+         Result := Self.Factory.Record_Aggregate (Value);
+      end if;
+
+      return Result;
+   end To_Aggregate_Or_Expression;
 
    ---------------------------
    -- To_Subtype_Indication --

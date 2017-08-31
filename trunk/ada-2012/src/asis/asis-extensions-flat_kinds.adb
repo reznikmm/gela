@@ -13,12 +13,12 @@ with Gela.Elements.Anonymous_Access_To_Object_Definitions;
 with Gela.Elements.Anonymous_Access_To_Procedure_Definitions;
 with Gela.Elements.Aspect_Specifications;
 with Gela.Elements.Assignment_Statements;
+with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
 with Gela.Elements.Asynchronous_Selects;
 with Gela.Elements.At_Clauses;
 with Gela.Elements.Attribute_Definition_Clauses;
 with Gela.Elements.Attribute_References;
-with Gela.Elements.Function_Calls;
 with Gela.Elements.Block_Statements;
 with Gela.Elements.Boxes;
 with Gela.Elements.Case_Expression_Paths;
@@ -40,6 +40,7 @@ with Gela.Elements.Defining_Character_Literals;
 with Gela.Elements.Defining_Enumeration_Literals;
 with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Operator_Symbols;
 with Gela.Elements.Delay_Statements;
 with Gela.Elements.Delta_Constraints;
@@ -92,6 +93,7 @@ with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Formal_Unconstrained_Array_Definitions;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Function_Bodies;
+with Gela.Elements.Function_Calls;
 with Gela.Elements.Function_Declarations;
 with Gela.Elements.Function_Instantiations;
 with Gela.Elements.Generalized_Iterator_Specifications;
@@ -136,6 +138,7 @@ with Gela.Elements.Package_Instantiations;
 with Gela.Elements.Package_Renaming_Declarations;
 with Gela.Elements.Parameter_Associations;
 with Gela.Elements.Parameter_Specifications;
+with Gela.Elements.Parenthesized_Expressions;
 with Gela.Elements.Pragma_Argument_Associations;
 with Gela.Elements.Pragma_Nodes;
 with Gela.Elements.Private_Extension_Declarations;
@@ -155,7 +158,6 @@ with Gela.Elements.Quantified_Expressions;
 with Gela.Elements.Raise_Statements;
 with Gela.Elements.Range_Attribute_Reference_Drs;
 with Gela.Elements.Range_Attribute_References;
-with Gela.Elements.Association_Lists;
 with Gela.Elements.Record_Aggregates;
 with Gela.Elements.Record_Definitions;
 with Gela.Elements.Record_Representation_Clauses;
@@ -191,10 +193,9 @@ with Gela.Elements.Variant_Parts;
 with Gela.Elements.Variants;
 with Gela.Elements.While_Loop_Statements;
 with Gela.Elements.With_Clauses;
-with Gela.Elements.Defining_Names;
 with Gela.Interpretations;
-with Gela.Type_Managers;
 with Gela.Semantic_Types;
+with Gela.Type_Managers;
 with Gela.Types;
 
 package body Asis.Extensions.Flat_Kinds is
@@ -894,6 +895,11 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Parameter_Specifications.
         Parameter_Specification_Access);
+
+   overriding procedure Parenthesized_Expression
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Parenthesized_Expressions.
+        Parenthesized_Expression_Access);
 
    overriding procedure Pragma_Argument_Association
      (Self : in out Visiter;
@@ -2114,6 +2120,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Parameter_Specification;
    end Parameter_Specification;
+
+   overriding procedure Parenthesized_Expression
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Parenthesized_Expressions.
+        Parenthesized_Expression_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Parenthesized_Expression;
+   end Parenthesized_Expression;
 
    overriding procedure Pragma_Node
      (Self : in out Visiter;

@@ -732,7 +732,7 @@ Rules for package_instantiation. :
 
 Rules for parenthesized_expression. :
 (.
-      ${Expression_Parenthesized.Down} := 0;  --  not used in resolv
+      ${Expression_Parenthesized.Down} := ${parenthesized_expression.Down};
 .)
 
 Rules for procedure_body. :
