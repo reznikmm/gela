@@ -40,7 +40,7 @@ private
       return Gela.Elements.Function_Calls.Function_Call_Access;
 
    function To_Defining_Program_Unit_Name
-     (Self       : access Parser_Context;
+     (Self  : access Parser_Context;
       Value : Gela.Elements.Selected_Identifiers.Selected_Identifier_Access)
       return Gela.Elements.Defining_Program_Unit_Names.
                Defining_Program_Unit_Name_Access;

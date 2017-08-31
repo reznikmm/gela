@@ -68,6 +68,7 @@ Synthesized attributes
   others_choice,
   package_declaration,
   parameter_specification,
+  parenthesized_expression,
   pragma_argument_association,
   pragma_node,
   prefix,
@@ -251,6 +252,10 @@ Rules for parameter_specification. :
 (.
       ${parameter_specification.Errors} := ${Initialization_Expression.Errors:0};
       --  ${Object_Declaration_Subtype.Errors};
+.)
+Rules for parenthesized_expression. :
+(.
+      ${parenthesized_expression.Errors} := ${Expression_Parenthesized.Errors};
 .)
 Rules for membership_test. :
 (.

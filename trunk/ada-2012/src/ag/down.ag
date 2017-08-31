@@ -51,6 +51,7 @@ Inherited attributes
   operator_symbol,
   ordinary_fixed_point_definition,
   others_choice,
+  parenthesized_expression,
   prefix,
   program_unit_name,
   qualified_expression,
@@ -727,6 +728,11 @@ Rules for package_instantiation. :
          Node.Generic_Actual_Part,
          ${Generic_Actual_Part.Up},
          ${Generic_Actual_Part.Down});
+.)
+
+Rules for parenthesized_expression. :
+(.
+      ${Expression_Parenthesized.Down} := 0;  --  not used in resolv
 .)
 
 Rules for procedure_body. :

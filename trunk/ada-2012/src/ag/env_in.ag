@@ -226,6 +226,7 @@ Inherited attributes
   package_renaming_declaration,
   parameter_association,
   parameter_specification,
+  parenthesized_expression,
   pragma_argument_association,
   pragma_node,
   prefix,
@@ -2209,6 +2210,11 @@ Rules for parameter_specification. :
 Rules for parameter_specification. :
 (.
       ${Initialization_Expression.env_in} := ${parameter_specification.env_in};
+.)
+
+Rules for parenthesized_expression. :
+(.
+      ${Expression_Parenthesized.env_in} := 0;  --  not used in resolv
 .)
 
 Rules for pragma_argument_association. :

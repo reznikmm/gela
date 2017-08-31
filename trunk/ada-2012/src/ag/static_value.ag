@@ -20,6 +20,7 @@ Synthesized attributes
   null_literal,
   numeric_literal,
   operator_symbol,
+  parenthesized_expression,
   prefix,
   qualified_expression,
   quantified_expression,
@@ -134,6 +135,11 @@ Rules for if_expression.Expression_Paths :
 Rules for case_expression. :
 (.
       ${case_expression.static_value} := 0;  --  FIXME
+.)
+Rules for parenthesized_expression. :
+(.
+      ${parenthesized_expression.static_value} :=
+        ${Expression_Parenthesized.static_value};
 .)
 Rules for quantified_expression. :
 (.

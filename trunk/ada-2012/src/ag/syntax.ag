@@ -1307,6 +1307,12 @@ parameter_specification ::=
   [expression                       <Initialization_Expression>]
 ;
 
+parenthesized_expression ::=
+  token         <left_token>
+  expression    <Expression_Parenthesized>
+  token         <right_token>
+;
+
 pragma_node ::=
   token         <pragma_token>
   identifier    <Formal_Parameter>
@@ -1606,6 +1612,7 @@ simple_expression ::=
     extension_aggregate |
     name |
     allocator |
+    parenthesized_expression |
     if_expression |
     case_expression |
     quantified_expression;

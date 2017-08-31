@@ -36,6 +36,7 @@ Synthesized attributes
   object_definition,
   operator_symbol,
   others_choice,
+  parenthesized_expression,
   prefix,
   program_unit_name,
   qualified_expression,
@@ -438,6 +439,11 @@ Rules for constrained_array_definition. :
 Rules for box.box_token :
 (.
       ${box.Up} := 0;  --  FIXME
+.)
+
+Rules for parenthesized_expression. :
+(.
+      ${parenthesized_expression.Up} := ${Expression_Parenthesized.Up};
 .)
 
 Rules for others_choice.others_token :

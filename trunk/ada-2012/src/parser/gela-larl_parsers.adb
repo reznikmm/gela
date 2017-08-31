@@ -213,7 +213,7 @@ package body Gela.LARL_Parsers is
    overriding procedure Parse
      (Self       : in out Parser;
       Input      : not null access Gela.Parsers.Parser_Input'Class;
-      Factory     : not null Gela.Element_Factories.Element_Factory_Access;
+      Factory    : not null Gela.Element_Factories.Element_Factory_Access;
       Root       : out Gela.Elements.Compilations.Compilation_Access;
       Last_Token : out Gela.Lexical_Types.Token_Index)
    is
@@ -247,7 +247,7 @@ package body Gela.LARL_Parsers is
    -----------------------------------
 
    function To_Defining_Program_Unit_Name
-     (Self       : access Parser_Context;
+     (Self  : access Parser_Context;
       Value : Gela.Elements.Selected_Identifiers.Selected_Identifier_Access)
       return Gela.Elements.Defining_Program_Unit_Names.
                Defining_Program_Unit_Name_Access
