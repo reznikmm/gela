@@ -119,6 +119,10 @@ package Gela.Resolve is
    --  Resolve Type_Up to be a type or an expression of some type,
    --  then resolve Expr_Up to have this type.
 
+   procedure Character_Literal
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Result : out Gela.Interpretations.Interpretation_Set_Index);
+
    procedure Numeric_Literal
      (Comp   : Gela.Compilations.Compilation_Access;
       Token  : Gela.Lexical_Types.Token_Count;

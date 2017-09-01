@@ -283,6 +283,25 @@ package body Gela.Resolve is
       end loop;
    end Case_Statement;
 
+   -----------------------
+   -- Character_Literal --
+   -----------------------
+
+   procedure Character_Literal
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Result : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      Type_Matcher : constant Type_Matchers.Type_Matcher_Access :=
+        new Type_Matchers.Character_Type_Matcher;
+   begin
+      Result := 0;
+
+      Comp.Context.Interpretation_Manager.Add_Expression_Category
+        (Match => Gela.Interpretations.Type_Matcher_Access (Type_Matcher),
+         Down => (1 .. 0 => 0),
+         Result => Result);
+   end Character_Literal;
+
    ----------------
    -- Constraint --
    ----------------

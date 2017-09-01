@@ -248,8 +248,11 @@ Rules for function_call. :
 
 Rules for character_literal.character_literal_token :
 (.
-      ${character_literal.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Character_Literal
+        (Self.Compilation,
+         ${character_literal.Up});
 .)
+
 Rules for explicit_dereference. :
 (.
       ${explicit_dereference.Up} := 0;  --  FIXME

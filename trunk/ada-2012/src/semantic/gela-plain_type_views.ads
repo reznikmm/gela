@@ -13,6 +13,7 @@ package Gela.Plain_Type_Views is
    pragma Preelaborate;
 
    type Type_View is new Gela.Type_Categories.Type_View
+     and Gela.Types.Simple.Character_Type
      and Gela.Types.Simple.Enumeration_Type
      and Gela.Types.Simple.Signed_Integer_Type
      and Gela.Types.Simple.Floating_Point_Type
@@ -37,6 +38,7 @@ package Gela.Plain_Type_Views is
 private
 
    type Type_View is new Gela.Type_Categories.Type_View
+     and Gela.Types.Simple.Character_Type
      and Gela.Types.Simple.Enumeration_Type
      and Gela.Types.Simple.Signed_Integer_Type
      and Gela.Types.Simple.Floating_Point_Type

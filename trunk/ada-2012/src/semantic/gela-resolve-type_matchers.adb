@@ -26,6 +26,19 @@ package body Gela.Resolve.Type_Matchers is
       Self.Match := True;  --  Value.Is_String;  FIXME
    end Array_Type;
 
+   --------------------
+   -- Character_Type --
+   --------------------
+
+   overriding procedure Character_Type
+     (Self  : in out Character_Type_Matcher;
+      Value : not null Gela.Types.Simple.Character_Type_Access)
+   is
+      pragma Unreferenced (Value);
+   begin
+      Self.Match := True;
+   end Character_Type;
+
    -------------------------
    -- Floating_Point_Type --
    -------------------------

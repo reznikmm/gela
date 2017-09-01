@@ -21,6 +21,15 @@ package Gela.Types.Simple is
    type Enumeration_Type_Access is access all Enumeration_Type'Class;
    for Enumeration_Type_Access'Storage_Size use 0;
 
+   --------------------
+   -- Character_Type --
+   --------------------
+
+   type Character_Type is limited interface and Enumeration_Type;
+
+   type Character_Type_Access is access all Character_Type'Class;
+   for Character_Type_Access'Storage_Size use 0;
+
    -------------------------
    -- Signed_Integer_Type --
    -------------------------

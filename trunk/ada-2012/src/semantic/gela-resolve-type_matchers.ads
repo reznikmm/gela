@@ -11,6 +11,9 @@ private package Gela.Resolve.Type_Matchers is
    type Array_Type_Matcher is
      new Gela.Interpretations.Type_Matcher with private;
 
+   type Character_Type_Matcher is
+     new Gela.Interpretations.Type_Matcher with private;
+
    type Float_Type_Matcher is
      new Gela.Interpretations.Type_Matcher with private;
 
@@ -62,5 +65,11 @@ private
    overriding procedure Array_Type
      (Self  : in out String_Type_Matcher;
       Value : not null Gela.Types.Arrays.Array_Type_Access);
+
+   type Character_Type_Matcher is new Base_Type_Matcher with null record;
+
+   overriding procedure Character_Type
+     (Self  : in out Character_Type_Matcher;
+      Value : not null Gela.Types.Simple.Character_Type_Access);
 
 end Gela.Resolve.Type_Matchers;

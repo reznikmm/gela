@@ -12,6 +12,11 @@ package Gela.Types.Visitors is
       Value : not null Gela.Types.Simple.Enumeration_Type_Access)
         is null;
 
+   not overriding procedure Character_Type
+     (Self  : in out Type_Visitor;
+      Value : not null Gela.Types.Simple.Character_Type_Access)
+        is null;
+
    not overriding procedure Signed_Integer_Type
      (Self  : in out Type_Visitor;
       Value : not null Gela.Types.Simple.Signed_Integer_Type_Access)

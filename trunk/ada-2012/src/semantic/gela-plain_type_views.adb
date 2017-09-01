@@ -472,10 +472,11 @@ package body Gela.Plain_Type_Views is
       Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is
    begin
       case Self.Category is
-         when Gela.Type_Categories.A_Character |
-              Gela.Type_Categories.A_Boolean |
+         when Gela.Type_Categories.A_Character =>
+            Visiter.Character_Type
+              (Gela.Types.Simple.Character_Type_Access (Self));
+         when Gela.Type_Categories.A_Boolean |
               Gela.Type_Categories.An_Other_Enum =>
-
             Visiter.Enumeration_Type
               (Gela.Types.Simple.Enumeration_Type_Access (Self));
          when Gela.Type_Categories.A_Signed_Integer |
