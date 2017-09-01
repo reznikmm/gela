@@ -1648,7 +1648,13 @@ Rules for function_body. :
 
 Rules for function_body. :
 (.
-      ${Parameter_Profile.env_in} := ${function_body.env_in};
+      ${Parameter_Profile.env_in} :=
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${function_body.env_in},
+           ${Names.full_name},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for function_body. :
@@ -1663,17 +1669,18 @@ Rules for function_body. :
 
 Rules for function_body. :
 (.
-      ${Body_Declarative_Items.env_in} := ${function_body.env_in};
+      ${Body_Declarative_Items.env_in} := ${Parameter_Profile.env_out};
 .)
 
 Rules for function_body. :
 (.
-      ${Body_Statements.env_in} := ${function_body.env_in};
+      ${Body_Statements.env_in} := ${Body_Declarative_Items.env_out};
 .)
 
 Rules for function_body. :
 (.
-      ${Exception_Handlers.env_in} := ${function_body.env_in};
+      --  ${Body_Statements.Errors}
+      ${Exception_Handlers.env_in} := ${Body_Declarative_Items.env_out};
 .)
 
 Rules for function_body. :

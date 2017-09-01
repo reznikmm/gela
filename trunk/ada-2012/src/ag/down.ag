@@ -1011,7 +1011,11 @@ Rules for formal_object_declaration. :
 
 Rules for function_body. :
 (.
-      ${Result_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${function_body.env_in},
+         ${Result_Subtype.Up},
+         ${Result_Subtype.Down});
 .)
 
 Rules for function_declaration. :

@@ -624,7 +624,8 @@ Rules for full_type_declaration. :
 
 Rules for function_body. :
 (.
-      ${function_body.env_out} := ${function_body.env_in};
+      ${function_body.env_out} := Self.Compilation.Context.Environment_Set.
+        Leave_Declarative_Region (${Parameter_Profile.env_out});
 .)
 
 Rules for function_declaration. :
@@ -806,7 +807,8 @@ Rules for private_type_definition. :
 
 Rules for procedure_body. :
 (.
-      ${procedure_body.env_out} := ${procedure_body.env_in};
+      ${procedure_body.env_out} := Self.Compilation.Context.Environment_Set.
+        Leave_Declarative_Region (${Parameter_Profile.env_out});
 .)
 
 Rules for procedure_declaration. :
