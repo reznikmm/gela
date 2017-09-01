@@ -3,6 +3,7 @@
 
 with Gela.Compilations;
 with Gela.Elements.Expressions;
+with Gela.Elements.Identifiers;
 with Gela.Elements.Names;
 with Gela.Elements.Operator_Symbols;
 with Gela.Elements.Procedure_Call_Statements;
@@ -17,6 +18,11 @@ package Gela.Fix_Node_Factories is
    type Element_Factory (Comp : Gela.Compilations.Compilation_Access) is
       limited new Gela.Node_Factories.Element_Factory (Comp) with null record;
    type Element_Factory_Access is access all Element_Factory'Class;
+
+   overriding function Identifier
+     (Self : in out Element_Factory;
+      Identifier_Token : Gela.Lexical_Types.Token_Count)
+      return Gela.Elements.Identifiers.Identifier_Access;
 
    overriding function Operator_Symbol
      (Self : in out Element_Factory;

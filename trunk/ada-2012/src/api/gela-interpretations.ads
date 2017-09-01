@@ -32,6 +32,8 @@ package Gela.Interpretations is
 
    type Interpretation_Kinds is
      (Unknown,
+      --  Interpretation of Identifier
+      Identifier,
       --  Interpretation of Auxiliary_Apply
       Function_Call,
       Type_Convertion,

@@ -1,16 +1,17 @@
-with Gela.Grammars.LR_Parsers;
-with Gela.LARL_Parsers.Data;
-with Gela.LARL_Parsers_Nodes;
-with Gela.LARL_Parsers.On_Reduce;
+with Gela.Element_Visiters;
 with Gela.Elements.Associations;
+with Gela.Elements.Composite_Constraints;
+with Gela.Elements.Constraints;
+with Gela.Elements.Defining_Expanded_Unit_Names;
 with Gela.Elements.Expression_Or_Boxes;
+with Gela.Elements.Identifiers;
 with Gela.Elements.Prefixes;
 with Gela.Elements.Selector_Names;
-with Gela.Elements.Identifiers;
-with Gela.Elements.Defining_Expanded_Unit_Names;
-with Gela.Elements.Constraints;
-with Gela.Elements.Composite_Constraints;
 with Gela.Elements.Subtype_Marks;
+with Gela.Grammars.LR_Parsers;
+with Gela.LARL_Parsers.Data;
+with Gela.LARL_Parsers.On_Reduce;
+with Gela.LARL_Parsers_Nodes;
 
 package body Gela.LARL_Parsers is
 
@@ -314,24 +315,30 @@ package body Gela.LARL_Parsers is
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
    is
       use type Gela.Elements.Constraints.Constraint_Access;
-      Subtype_Mark       : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
-      Subtype_Constraint : Gela.Elements.Constraints.Constraint_Access;
-   begin
-      Subtype_Constraint := Gela.Elements.Constraints.Constraint_Access
-        (Constraint);
 
-      if Subtype_Constraint = null and then
-        Mark.all in Gela.Elements.Function_Calls.Function_Call'Class
-      then
-         declare
-            Call : constant Gela.Elements.Function_Calls.
-              Function_Call_Access
-                := Gela.Elements.Function_Calls.Function_Call_Access
-                  (Mark);
+      package Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Factory : not null Gela.Element_Factories.Element_Factory_Access;
+            Subtype_Mark : Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
+            Subtype_Constraint : Gela.Elements.Constraints.Constraint_Access;
+         end record;
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure Function_Call
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Calls.Function_Call_Access)
+         is
             Prefix : constant Gela.Elements.Prefixes.Prefix_Access :=
-              Call.Prefix;
+              Node.Prefix;
             Args   : constant Gela.Elements.Association_Lists.
-              Association_List_Access := Call.Function_Call_Parameters;
+              Association_List_Access := Node.Function_Call_Parameters;
             Ass : constant Gela.Elements.Associations.
               Association_Sequence_Access :=
                 Args.Record_Component_Associations;
@@ -341,21 +348,33 @@ package body Gela.LARL_Parsers is
                  Associations => Ass,
                  Right_Token  => Args.Right_Token);
          begin
-            Subtype_Mark := Gela.Elements.Subtype_Marks.Subtype_Mark_Access
-              (Prefix);
-            Subtype_Constraint := Gela.Elements.Constraints.Constraint_Access
-              (CC);
-         end;
-      else
-         Subtype_Mark :=
+            Self.Subtype_Mark :=
+              Gela.Elements.Subtype_Marks.Subtype_Mark_Access (Prefix);
+            Self.Subtype_Constraint :=
+              Gela.Elements.Constraints.Constraint_Access (CC);
+         end Function_Call;
+
+      end Visiters;
+
+      V : Visiters.Visiter := (Self.Factory, null, null);
+   begin
+      V.Subtype_Constraint := Gela.Elements.Constraints.Constraint_Access
+        (Constraint);
+
+      if not Constraint.Assigned then
+         Mark.Visit (V);
+      end if;
+
+      if not V.Subtype_Mark.Assigned then
+         V.Subtype_Mark :=
            Gela.Elements.Subtype_Marks.Subtype_Mark_Access (Mark);
       end if;
 
       return Self.Factory.Subtype_Indication
         (Not_Token          => Not_Token,
          Null_Token         => Null_Token,
-         Subtype_Mark       => Subtype_Mark,
-         Subtype_Constraint => Subtype_Constraint);
+         Subtype_Mark       => V.Subtype_Mark,
+         Subtype_Constraint => V.Subtype_Constraint);
 
    end To_Subtype_Indication;
 

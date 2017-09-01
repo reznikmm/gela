@@ -1,4 +1,5 @@
 with Gela.Nodes.Fixed_Operator_Symbols;
+with Gela.Nodes.Fixed_Identifiers;
 with Gela.Element_Visiters;
 with Gela.Elements.Association_Lists;
 with Gela.Elements.Associations;
@@ -7,6 +8,23 @@ with Gela.Elements.Parenthesized_Expressions;
 with Gela.Elements.Prefixes;
 
 package body Gela.Fix_Node_Factories is
+
+   ----------------
+   -- Identifier --
+   ----------------
+
+   overriding function Identifier
+     (Self : in out Element_Factory;
+      Identifier_Token : Gela.Lexical_Types.Token_Count)
+      return Gela.Elements.Identifiers.Identifier_Access
+   is
+      Result : constant Gela.Nodes.Fixed_Identifiers.Identifier_Access :=
+        new Gela.Nodes.Fixed_Identifiers.Identifier'
+          (Gela.Nodes.Fixed_Identifiers.Create
+             (Self.Comp, Identifier_Token));
+   begin
+      return Gela.Elements.Identifiers.Identifier_Access (Result);
+   end Identifier;
 
    ---------------------
    -- Operator_Symbol --
