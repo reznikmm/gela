@@ -152,7 +152,6 @@ package body AG_Tools is
       NT : Gela.Grammars.Non_Terminal)
       return League.Strings.Universal_String
    is
-      use type Gela.Grammars.Part_Count;
       use type League.Strings.Universal_String;
 
       Result : League.Strings.Universal_String;

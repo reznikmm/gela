@@ -27,7 +27,6 @@ procedure YACC_Driver is
 
    use type Gela.Grammars.Rule_Count;
    use type Gela.Grammars.LR.State_Count;
-   use type Gela.Grammars.Non_Terminal_Count;
 
    procedure Put_Proc_Decl
      (Output : in out Writer;

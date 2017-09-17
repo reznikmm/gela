@@ -26,8 +26,6 @@ with AG_Tools.Clone_Generator;
 procedure AG_Driver is
    use AG_Tools.Input;
 
-   use type Gela.Grammars.Production_Index;
-   use type Gela.Grammars.Part_Count;
    use type Gela.Grammars.Non_Terminal_Count;
    use type League.Strings.Universal_String;
 

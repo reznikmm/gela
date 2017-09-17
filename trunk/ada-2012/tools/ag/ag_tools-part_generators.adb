@@ -78,7 +78,6 @@ package body AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive)
    is
-      use type League.Strings.Universal_String;
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
@@ -121,7 +120,6 @@ package body AG_Tools.Part_Generators is
       Part : Gela.Grammars.Part_Index;
       Pass : Positive)
    is
-      use type League.Strings.Universal_String;
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
@@ -196,7 +194,6 @@ package body AG_Tools.Part_Generators is
       Template  : Gela.Grammars.Rule_Templates.Rule_Template)
    is
       pragma Unreferenced (Template);
-      use type Gela.Grammars.Production_Index;
 
       G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;

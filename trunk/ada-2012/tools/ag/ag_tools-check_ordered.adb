@@ -109,7 +109,6 @@ package body AG_Tools.Check_Ordered is
       Partitions  : Gela.Grammars.Ordered.Partition_Array)
    is
       use Gela.Grammars;
-      use type Ordered.Partition_Count;
       use type League.Strings.Universal_String;
 
       Context : constant AG_Tools.Contexts.Context_Access :=

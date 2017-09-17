@@ -157,7 +157,6 @@ package body AG_Tools.Input is
                begin
                   for Y in S.First_Rule .. S.Last_Rule loop
                      declare
-                        use type Gela.Grammars.Part_Count;
                         R : Gela.Grammars.Rule renames G.Rule (Y);
                      begin
                         V.Create_Rule (N.Name, S.Name, R.Text);
