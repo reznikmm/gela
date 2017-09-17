@@ -95,7 +95,6 @@ package body Gela.Resolve is
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Lexical_Types.Symbol;
-      use type Gela.Lexical_Types.Token_Count;
       use type Gela.Semantic_Types.Type_Index;
 
       IM   : constant Gela.Interpretations.Interpretation_Manager_Access :=
@@ -434,7 +433,6 @@ package body Gela.Resolve is
                   for K in Tuples'Range loop
                      declare
                         use type Gela.Semantic_Types.Type_Index;
-                        use type Gela.Interpretations.Interpretation_Index;
                         Tuple : constant Gela.Interpretations.
                                   Interpretation_Set_Index_Array :=
                                     IM.Get_Tuple (Tuples (K));
