@@ -238,7 +238,6 @@ package body Gela.Test_Cases.Execute is
          end Run_Test;
 
          use type League.Calendars.Date_Time;
-         use type Test_Cases.Status_Kind;
 
          Started : constant League.Calendars.Date_Time :=
            League.Calendars.Clock;

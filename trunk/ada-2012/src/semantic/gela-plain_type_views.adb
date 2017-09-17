@@ -328,9 +328,6 @@ package body Gela.Plain_Type_Views is
      (Self     : Type_View;
       Expected : not null Gela.Types.Type_View_Access) return Boolean
    is
-      use type Gela.Elements.Full_Type_Declarations
-        .Full_Type_Declaration_Access;
-
       package Visitors is
          type Type_Visitor is new Gela.Types.Visitors.Type_Visitor with record
             Match_Integer : Boolean := False;

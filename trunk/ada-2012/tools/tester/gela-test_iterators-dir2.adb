@@ -15,13 +15,6 @@ with Gela.Test_Cases.Valgrind;
 
 package body Gela.Test_Iterators.Dir2 is
 
-   use type League.Strings.Universal_String;
-
---     function "+"
---       (Text : Wide_Wide_String)
---           return League.Strings.Universal_String
---           renames League.Strings.To_Universal_String;
-
    procedure Add_Each_Input
      (Result : in out Iterator;
       Dir    : Ada.Directories.Directory_Entry_Type;

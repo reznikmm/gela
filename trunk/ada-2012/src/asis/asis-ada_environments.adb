@@ -21,7 +21,6 @@ with League.String_Vectors;
 
 with Gela.Context_Factories;
 with Gela.Contexts;
-with Gela.Lexical_Types;
 
 package body Asis.Ada_Environments is
 
@@ -151,7 +150,6 @@ package body Asis.Ada_Environments is
 
       declare
          use type League.Strings.Universal_String;
-         use type Gela.Lexical_Types.Symbol;
 
          A_Unit : Gela.Compilation_Units.Compilation_Unit_Access;
          B_Unit : Gela.Compilation_Units.Compilation_Unit_Access;

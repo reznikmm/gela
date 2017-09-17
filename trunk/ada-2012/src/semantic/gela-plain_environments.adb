@@ -572,8 +572,6 @@ package body Gela.Plain_Environments is
       Symbol : Gela.Lexical_Types.Symbol)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
-      use type Gela.Lexical_Types.Symbol;
-
       Env : Env_Item;
    begin
       if Index = Gela.Library_Environments.Library_Env then
@@ -862,7 +860,6 @@ package body Gela.Plain_Environments is
       Found  : access Boolean)
       return Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class
    is
-      use type Gela.Lexical_Types.Symbol;
       use type Region_Item_List;
 
       Item : Region_Item_List;

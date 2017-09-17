@@ -5,13 +5,8 @@ with League.String_Vectors;
 
 with Gela.Contexts;
 with Gela.Context_Factories;
-with Gela.Elements.Compilations;
 
 procedure Parser_Test is
-
-   use type League.Hash_Type;
-   use type League.Strings.Universal_String;
-   use type Gela.Elements.Compilations.Compilation_Access;
 
    Hash    : League.Hash_Type;
    pragma Unreferenced (Hash);

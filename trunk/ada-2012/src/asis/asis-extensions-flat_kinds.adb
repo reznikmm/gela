@@ -1280,7 +1280,6 @@ package body Asis.Extensions.Flat_Kinds is
         Attribute_Reference_Access)
    is
       package X renames Gela.Lexical_Types.Predefined_Symbols;
-      use type Gela.Lexical_Types.Token_Count;
 
       Id    : constant Gela.Elements.Identifiers.Identifier_Access :=
         Node.Attribute_Designator_Identifier;

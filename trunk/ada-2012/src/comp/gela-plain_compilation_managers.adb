@@ -945,8 +945,6 @@ package body Gela.Plain_Compilation_Managers is
      (Self   : in out Compilation_Manager;
       List   : Gela.Dependency_Lists.Dependency_List_Access)
    is
-      use type Gela.Lexical_Types.Symbol;
-
       Action : Gela.Dependency_Lists.Action;
    begin
       loop
