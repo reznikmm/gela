@@ -1,4 +1,5 @@
 with Gela.Element_Factories;
+with Gela.Elements.Associations;
 with Gela.Elements.Identifiers;
 with Gela.Property_Resets;
 with Gela.Property_Setters;
@@ -31,8 +32,36 @@ package body Gela.Nodes.Fixed_Identifiers is
       return Identifier is
    begin
       return (Gela.Nodes.Identifiers.Create (Comp, Identifier_Token)
-              with Prefix => null);
+              with Prefix => null, Parameters => null);
    end Create;
+
+   ------------------------------
+   -- Function_Call_Parameters --
+   ------------------------------
+
+   overriding function Function_Call_Parameters
+     (Self : Identifier)
+      return Gela.Elements.Association_Lists.Association_List_Access is
+   begin
+      return Self.Parameters;
+   end Function_Call_Parameters;
+
+   ------------------
+   -- Nested_Items --
+   ------------------
+
+   overriding function Nested_Items
+     (Self  : Identifier) return Gela.Elements.Nested_Array is
+   begin
+      if Self.Prefix.Assigned then
+         return ((Gela.Elements.Nested_Element,
+                 Gela.Elements.Element_Access (Self.Prefix)),
+                 (Gela.Elements.Nested_Element,
+                  Gela.Elements.Element_Access (Self.Parameters)));
+      else
+         return Gela.Nodes.Identifiers.Identifier (Self).Nested_Items;
+      end if;
+   end Nested_Items;
 
    ------------
    -- Prefix --
@@ -60,6 +89,8 @@ package body Gela.Nodes.Fixed_Identifiers is
                Identifier : access Gela.Elements.Identifiers.Identifier'Class;
                Set : aliased Gela.Property_Resets.Property_Reset;
                Visiter : Gela.Property_Setters.Visiter (Set'Access);
+               Sequence : Gela.Elements.Associations.
+                 Association_Sequence_Access;
             begin
                Set.Defining_Name := Self.Defining_Name;
                Set.Down := Self.Down;
@@ -68,11 +99,19 @@ package body Gela.Nodes.Fixed_Identifiers is
                Set.Env_In := Self.Env_In;
                Set.Full_Name := Self.Full_Name;
                Set.Static_Value := Self.Static_Value;
+               Set.Chosen_Interpretation := Gela.Interpretations.Identifier;
 
                Factory := Self.Enclosing_Compilation.Factory;
                Identifier := Factory.Identifier (Self.Identifier_Token);
                Identifier.Visit (Visiter);
                Self.Prefix := Identifier;
+               Sequence := Factory.Association_Sequence;
+               Self.Parameters := Factory.Association_List (0, Sequence, 0);
+
+               Gela.Elements.Set_Enclosing.Element_Access (Self.Parameters)
+                 .Set_Enclosing_Element (Self'Unchecked_Access);
+               Gela.Elements.Set_Enclosing.Element_Access (Identifier)
+                 .Set_Enclosing_Element (Self'Unchecked_Access);
             end;
          when Gela.Interpretations.Identifier =>
             Self.Prefix := null;
@@ -80,6 +119,22 @@ package body Gela.Nodes.Fixed_Identifiers is
             raise Constraint_Error;
       end case;
    end Set_Chosen_Interpretation;
+
+   -----------------------
+   -- Set_Defining_Name --
+   -----------------------
+
+   overriding procedure Set_Defining_Name
+     (Self    : in out Identifier;
+      Value   : Gela.Elements.Defining_Names.Defining_Name_Access) is
+   begin
+      if Self.Prefix.Assigned then
+         Gela.Nodes.Identifiers.Identifier (Self.Prefix.all)
+           .Set_Defining_Name (Value);
+      else
+         Gela.Nodes.Identifiers.Identifier (Self).Set_Defining_Name (Value);
+      end if;
+   end Set_Defining_Name;
 
    -----------
    -- Visit --

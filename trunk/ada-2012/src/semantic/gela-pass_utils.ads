@@ -119,7 +119,7 @@ package Gela.Pass_Utils is
    procedure Choose_Auxiliary_Apply_Interpretation
      (Comp   : Gela.Compilations.Compilation_Access;
       Down   : Gela.Interpretations.Interpretation_Index;
-      Result : out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds);
+      Result : in out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds);
    --  Maybe move it into separate unit???
 
    procedure Choose_Composite_Constraint_Interpretation

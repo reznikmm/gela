@@ -564,10 +564,43 @@ package body Gela.Resolve is
       Symbol : Gela.Lexical_Types.Symbol;
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
+      procedure Add_Function
+        (Name : Gela.Elements.Defining_Names.Defining_Name_Access);
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
       ES : constant Gela.Environments.Environment_Set_Access :=
         Comp.Context.Environment_Set;
+
+      ------------------
+      -- Add_Function --
+      ------------------
+
+      procedure Add_Function
+        (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
+      is
+         Tipe    : Gela.Semantic_Types.Type_Index;
+         Profile : constant Gela.Profiles.Profile_Access :=
+            TM.Get_Profile (Env, Name);
+      begin
+         if Profile not in null and then
+           Profile.Is_Function and then
+           Profile.Allow_Empty_Argument_List
+         then
+            Tipe := Profile.Return_Type;
+
+            if Tipe not in 0 then
+               IM.Add_Expression
+                 (Tipe   => Tipe,
+                  Kind   => Gela.Interpretations.Function_Call,
+               Down   => (1 .. 0 => 0),
+                  Result => Set);
+            end if;
+         end if;
+      end Add_Function;
+
       DV : Gela.Defining_Name_Cursors.Defining_Name_Cursor'Class :=
         ES.Direct_Visible (Env, Symbol);
 
@@ -581,6 +614,8 @@ package body Gela.Resolve is
            (Name   => DV.Element,
             Down   => (1 .. 0 => 0),
             Result => Set);
+
+         Add_Function (DV.Element);
 
          DV.Next;
       end loop;
@@ -598,6 +633,8 @@ package body Gela.Resolve is
               (Name   => UV.Element,
                Down   => (1 .. 0 => 0),
                Result => Set);
+
+            Add_Function (UV.Element);
 
             UV.Next;
          end loop;
@@ -1600,6 +1637,22 @@ package body Gela.Resolve is
                end;
             end loop;
 
+            for R in IM.Categories (Right) loop
+               declare
+                  Match : constant Gela.Interpretations.Type_Matcher_Access :=
+                    R.Matcher;
+               begin
+                  L_Type_View.Visit (Match.all);
+
+                  if Match.Is_Matched then
+                     Comp.Context.Interpretation_Manager.Add_Expression
+                       (Tipe   => L_Tipe,
+                        Down   => (L.Get_Index, R.Get_Index),
+                        Result => Set);
+                  end if;
+               end;
+            end loop;
+
             if L_Type_View.Is_Integer then
                Increment
                  (L_Val,
@@ -1620,9 +1673,29 @@ package body Gela.Resolve is
          end;
       end loop;
 
+      for L in IM.Categories (Left) loop
+         for R in Each.Expression (IM, TM, Env, Right) loop
+            declare
+               Match : constant Gela.Interpretations.Type_Matcher_Access :=
+                 L.Matcher;
+               Type_View : constant Gela.Types.Type_View_Access :=
+                 TM.Get (R.Expression_Type);
+            begin
+               Type_View.Visit (Match.all);
+
+               if Match.Is_Matched then
+                  Comp.Context.Interpretation_Manager.Add_Expression
+                    (Tipe   => R.Expression_Type,
+                     Down   => (L.Get_Index, R.Get_Index),
+                     Result => Set);
+               end if;
+            end;
+         end loop;
+      end loop;
+
       if L_Val (Integer).Count = 1 and R_Val (Integer).Count = 1 then
          declare
-            Matcher   : constant Type_Matchers.Type_Matcher_Access :=
+            Matcher : constant Type_Matchers.Type_Matcher_Access :=
               new Type_Matchers.Integer_Type_Matcher;
          begin
             Comp.Context.Interpretation_Manager.Add_Expression_Category

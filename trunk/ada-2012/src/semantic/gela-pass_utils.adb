@@ -512,15 +512,14 @@ package body Gela.Pass_Utils is
    procedure Choose_Auxiliary_Apply_Interpretation
      (Comp   : Gela.Compilations.Compilation_Access;
       Down   : Gela.Interpretations.Interpretation_Index;
-      Result : out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
+      Result : in out Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
    is
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
 
       package Visiters is
          type Visiter is new Gela.Interpretations.Down_Visiter with record
-            Result : Gela.Interpretations.Interpretation_Kinds :=
-              Gela.Interpretations.Function_Call;
+            Result : Gela.Interpretations.Interpretation_Kinds;
          end record;
 
          overriding procedure On_Expression
@@ -548,7 +547,7 @@ package body Gela.Pass_Utils is
 
       end Visiters;
 
-      V : Visiters.Visiter;
+      V : Visiters.Visiter := (Result => Result);
    begin
       IM.Visit (Down, V);
       Result := V.Result;

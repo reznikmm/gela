@@ -1,11 +1,14 @@
 Synthesized attributes
- function_call,
- composite_constraint
-  : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
+  function_call,
+  identifier,
+  composite_constraint
+   : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
 
 Rules for function_call. :
 (.
       --  choose between Function_Call and Indexed_Component
+      ${function_call.chosen_interpretation} :=
+        Gela.Interpretations.Function_Call;
       Gela.Pass_Utils.Choose_Auxiliary_Apply_Interpretation
         (Self.Compilation,
          ${function_call.Down},
@@ -21,6 +24,16 @@ Rules for function_call. :
 
 --  Simple_Expression_Range_Dr?
 
+.)
+
+Rules for identifier.identifier_token :
+(.
+      --  choose between Function_Call and Identifier
+      ${identifier.chosen_interpretation} := Gela.Interpretations.Identifier;
+      Gela.Pass_Utils.Choose_Auxiliary_Apply_Interpretation
+        (Self.Compilation,
+         ${identifier.Down},
+         ${identifier.chosen_interpretation});
 .)
 
 Rules for composite_constraint. :

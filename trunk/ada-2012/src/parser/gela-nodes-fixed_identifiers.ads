@@ -3,12 +3,13 @@
 --  its state.
 
 
-with Gela.Nodes.Identifiers;
 with Gela.Element_Visiters;
 with Gela.Elements.Association_Lists;
+with Gela.Elements.Defining_Names;
 with Gela.Elements.Function_Calls;
 with Gela.Elements.Prefixes;
 with Gela.Interpretations;
+with Gela.Nodes.Identifiers;
 
 package Gela.Nodes.Fixed_Identifiers is
    pragma Preelaborate;
@@ -30,7 +31,8 @@ private
      Gela.Nodes.Identifiers.Identifier
      and Gela.Elements.Function_Calls.Function_Call with
    record
-      Prefix : Gela.Elements.Prefixes.Prefix_Access;
+      Prefix     : Gela.Elements.Prefixes.Prefix_Access;
+      Parameters : Gela.Elements.Association_Lists.Association_List_Access;
    end record;
 
    overriding function Prefix
@@ -39,8 +41,7 @@ private
 
    overriding function Function_Call_Parameters
      (Self : Identifier)
-      return Gela.Elements.Association_Lists.Association_List_Access is
-       (null);
+      return Gela.Elements.Association_Lists.Association_List_Access;
 
    overriding function Chosen_Interpretation
      (Self : Identifier) return Gela.Interpretations.Interpretation_Kinds;
@@ -49,8 +50,15 @@ private
      (Self    : in out Identifier;
       Value   : Gela.Interpretations.Interpretation_Kinds);
 
+   overriding procedure Set_Defining_Name
+     (Self    : in out Identifier;
+      Value   : Gela.Elements.Defining_Names.Defining_Name_Access);
+
    overriding procedure Visit
      (Self    : access Identifier;
       Visiter : in out Gela.Element_Visiters.Visiter'Class);
+
+   overriding function Nested_Items
+     (Self  : Identifier) return Gela.Elements.Nested_Array;
 
 end Gela.Nodes.Fixed_Identifiers;

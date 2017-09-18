@@ -1,10 +1,12 @@
 with Gela.Compilations;
 with Gela.Element_Visiters;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Function_Bodies;
 with Gela.Elements.Function_Declarations;
 with Gela.Elements.Parameter_Specifications;
-with Gela.Type_Managers;
+with Gela.Elements.Procedure_Bodies;
 with Gela.Elements.Procedure_Declarations;
+with Gela.Type_Managers;
 
 package body Gela.Profiles.Names is
 
@@ -37,10 +39,20 @@ package body Gela.Profiles.Names is
             List : Gela.Elements.Parameter_Specifications.
               Parameter_Specification_Sequence_Access);
 
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access);
+
          overriding procedure Function_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Function_Declarations.
               Function_Declaration_Access);
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
 
          overriding procedure Procedure_Declaration
            (Self : in out Visiter;
@@ -83,6 +95,14 @@ package body Gela.Profiles.Names is
             end loop;
          end Add;
 
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access) is
+         begin
+            Self.Add (Node.Parameter_Profile);
+         end Function_Body;
+
          overriding procedure Function_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Function_Declarations.
@@ -90,6 +110,14 @@ package body Gela.Profiles.Names is
          begin
             Self.Add (Node.Parameter_Profile);
          end Function_Declaration;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access) is
+         begin
+            Self.Add (Node.Parameter_Profile);
+         end Procedure_Body;
 
          overriding procedure Procedure_Declaration
            (Self : in out Visiter;
@@ -118,10 +146,20 @@ package body Gela.Profiles.Names is
             List : Gela.Elements.Parameter_Specifications.
               Parameter_Specification_Sequence_Access);
 
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access);
+
          overriding procedure Function_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Function_Declarations.
               Function_Declaration_Access);
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access);
 
          overriding procedure Procedure_Declaration
            (Self : in out Visiter;
@@ -174,11 +212,22 @@ package body Gela.Profiles.Names is
             end loop;
          end Add;
 
+         overriding procedure Function_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Function_Bodies.
+              Function_Body_Access) is
+         begin
+            Self.Add (Node.Parameter_Profile);
+
+            Self.Result.Funct := True;
+            Self.Result.Result :=
+              TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype);
+         end Function_Body;
+
          overriding procedure Function_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Function_Declarations.
-              Function_Declaration_Access)
-         is
+              Function_Declaration_Access) is
          begin
             Self.Add (Node.Parameter_Profile);
 
@@ -186,6 +235,14 @@ package body Gela.Profiles.Names is
             Self.Result.Result :=
               TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype);
          end Function_Declaration;
+
+         overriding procedure Procedure_Body
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Procedure_Bodies.
+              Procedure_Body_Access) is
+         begin
+            Self.Add (Node.Parameter_Profile);
+         end Procedure_Body;
 
          overriding procedure Procedure_Declaration
            (Self : in out Visiter;

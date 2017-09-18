@@ -512,7 +512,8 @@ package body Asis.Expressions is
          is
             use type Gela.Lexical_Types.Token_Count;
          begin
-            Self.Result := Node.Left_Token /= 0;
+            Self.Result := Node.Left_Token /= 0 or
+              Node.Record_Component_Associations.Length = 0;
          end Association_List;
       end Get;
 

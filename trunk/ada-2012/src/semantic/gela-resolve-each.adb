@@ -1,6 +1,5 @@
 with Gela.Elements.Subtype_Indications;
 with Gela.Plain_Int_Sets.Cursors;
-with Gela.Profiles;
 with Gela.Types.Simple;
 with Gela.Types.Visitors;
 
@@ -192,19 +191,9 @@ package body Gela.Resolve.Each is
               := Self.Name.Defining_Name;
             Decl : constant Gela.Elements.Element_Access :=
               Name.Enclosing_Element;
-            Profile : Gela.Profiles.Profile_Access;
          begin
             Self.Tipe := Self.TM.Type_Of_Object_Declaration (Self.Env, Decl);
             exit when Self.Tipe not in 0;
-            Profile := Self.TM.Get_Profile (Self.Env, Name);
-
-            if Profile not in null and then
-              Profile.Is_Function and then
-              Profile.Allow_Empty_Argument_List
-            then
-               Self.Tipe := Profile.Return_Type;
-               exit when Self.Tipe not in 0;
-            end if;
             Self.Name.Next;
          end;
       end loop;
