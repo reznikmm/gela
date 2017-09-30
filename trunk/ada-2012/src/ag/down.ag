@@ -1100,7 +1100,12 @@ Rules for digits_constraint. :
 
 Rules for discrete_subtype_indication. :
 (.
-      ${Subtype_Constraint.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Constraint
+        (Subtype_Constraint,
+         ${discrete_subtype_indication.env_in},
+         ${Subtype_Mark.Up},
+         ${Subtype_Constraint.Up:0},
+         ${Subtype_Constraint.Down});
 .)
 
 Rules for discrete_subtype_indication_dr. :

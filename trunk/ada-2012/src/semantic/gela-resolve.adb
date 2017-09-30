@@ -306,7 +306,7 @@ package body Gela.Resolve is
    ----------------
 
    procedure Constraint
-     (Constraint : Gela.Elements.Constraints.Constraint_Access;
+     (Constraint : access Gela.Elements.Element'Class;
       Env        : Gela.Semantic_Types.Env_Index;
       Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
       Constr     : Gela.Interpretations.Interpretation_Set_Index;
@@ -794,13 +794,15 @@ package body Gela.Resolve is
                   Tuple : constant Gela.Interpretations
                     .Interpretation_Set_Index_Array
                       := IM.Get_Tuple (Tuples (J));
-
+                  Index_Types : constant Gela.Semantic_Types.Type_Index_Array
+                    := Arr.all.Index_Types;
                   Index_Type : Gela.Semantic_Types.Type_Index := 0;
                begin
                   --  Check if this is positional association
-                  if Tuple'Length = 1 then
+                  --  Check agains Constraint_Error in case of slice FIXME
+                  if Tuple'Length = 1 and Count + 1 <= Index_Types'Last then
                      Count := Count + 1;
-                     Index_Type := Arr.all.Index_Types (Count);
+                     Index_Type := Index_Types (Count);
                      To_Type
                        (Comp, Env, Index_Type, Tuple (Tuple'First), Chosen);
 

@@ -13,6 +13,7 @@ with Gela.Elements.Defining_Enumeration_Names;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Derived_Type_Definitions;
 with Gela.Elements.Discrete_Simple_Expression_Ranges;
+with Gela.Elements.Discrete_Subtype_Indications;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Enumeration_Literal_Specifications;
 with Gela.Elements.Enumeration_Type_Definitions;
@@ -22,6 +23,7 @@ with Gela.Elements.Formal_Object_Declarations;
 with Gela.Elements.Formal_Signed_Integer_Type_Definitions;
 with Gela.Elements.Formal_Type_Definitions;
 with Gela.Elements.Identifiers;
+with Gela.Elements.Loop_Parameter_Specifications;
 with Gela.Elements.Object_Declarations;
 with Gela.Elements.Object_Definitions;
 with Gela.Elements.Package_Declarations;
@@ -1046,6 +1048,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Discriminant_Specifications.
               Discriminant_Specification_Access);
 
+         overriding procedure Discrete_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discrete_Subtype_Indications.
+              Discrete_Subtype_Indication_Access);
+
          overriding procedure Enumeration_Literal_Specification
            (Self : in out Visiter;
             Node : not null Gela.Elements.Enumeration_Literal_Specifications.
@@ -1055,6 +1062,11 @@ package body Gela.Plain_Type_Managers is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Formal_Object_Declarations.
               Formal_Object_Declaration_Access);
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access);
 
          overriding procedure Object_Declaration
            (Self : in out Visiter;
@@ -1099,6 +1111,18 @@ package body Gela.Plain_Type_Managers is
             X.Visit (Self);
          end Component_Definition;
 
+         overriding procedure Discrete_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Discrete_Subtype_Indications.
+              Discrete_Subtype_Indication_Access)
+         is
+            X : constant Gela.Elements.Subtype_Marks.Subtype_Mark_Access  :=
+              Node.Subtype_Mark;
+         begin
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
+         end Discrete_Subtype_Indication;
+
          overriding procedure Discriminant_Specification
            (Self : in out Visiter;
             Node : not null Gela.Elements.Discriminant_Specifications.
@@ -1138,6 +1162,14 @@ package body Gela.Plain_Type_Managers is
             Self.Result :=
               Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Formal_Object_Declaration;
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access) is
+         begin
+            Node.Specification_Subtype_Definition.Visit (Self);
+         end Loop_Parameter_Specification;
 
          overriding procedure Object_Declaration
            (Self : in out Visiter;
