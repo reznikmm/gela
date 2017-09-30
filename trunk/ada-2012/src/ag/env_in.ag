@@ -1425,12 +1425,14 @@ Rules for for_loop_statement. :
 
 Rules for for_loop_statement. :
 (.
-      ${Loop_Parameter_Specification.env_in} := ${for_loop_statement.env_in};
+      ${Loop_Parameter_Specification.env_in} :=
+        Self.Compilation.Context.Environment_Set.Enter_Declarative_Region
+          (${for_loop_statement.env_in}, null);
 .)
 
 Rules for for_loop_statement. :
 (.
-      ${Loop_Statements.env_in} := ${for_loop_statement.env_in};
+      ${Loop_Statements.env_in} := ${Loop_Parameter_Specification.env_out};
 .)
 
 Rules for formal_access_to_function_definition. :

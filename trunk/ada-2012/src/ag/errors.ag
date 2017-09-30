@@ -116,6 +116,7 @@ Synthesized attributes
   Discrete_Subtype_Definitions,
   Generic_Actual_Part,
   Index_Subtype_Definitions,
+  Loop_Statements,
   Membership_Test_Choices,
   Pragma_Argument_Associations,
   Record_Component_Associations,
@@ -309,6 +310,14 @@ Rules for Block_Statements.statement :
 Rules for Block_Statements.statement :
 (.
       ${Block_Statements.Errors} := ${statement.Errors};
+.)
+Rules for Loop_Statements.statement :
+(.
+      ${Loop_Statements.Errors} := 0;
+.)
+Rules for Loop_Statements.statement :
+(.
+      ${Loop_Statements.Errors} := ${statement.Errors};
 .)
 Rules for Case_Statement_Paths.case_path :
 (.

@@ -696,7 +696,12 @@ Rules for known_discriminant_part. :
 
 Rules for loop_parameter_specification. :
 (.
-      ${loop_parameter_specification.env_out} := ${loop_parameter_specification.env_in};
+      ${loop_parameter_specification.env_out} :=
+         Self.Compilation.Context.Environment_Set.Add_Defining_Name
+           (Index  => ${loop_parameter_specification.env_in},
+            Symbol => ${Names.full_name},
+            Name   => Gela.Elements.Defining_Names
+                        .Defining_Name_Access (Names));
 .)
 
 Rules for modular_type_definition. :
