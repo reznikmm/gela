@@ -267,7 +267,12 @@ Rules for operator_symbol.operator_symbol_token :
 .)
 Rules for qualified_expression. :
 (.
-      ${qualified_expression.Up} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Qualified_Expression
+        (Self.Compilation,
+         ${qualified_expression.env_in},
+         ${Converted_Or_Qualified_Subtype_Mark.Up},
+         ${Converted_Or_Qualified_Expression.Up},
+         ${qualified_expression.Up});
 .)
 
 Rules for delta_constraint. :

@@ -85,6 +85,9 @@ package body Gela.Nodes.Fixed_Identifiers is
       case Value is
          when Gela.Interpretations.Function_Call =>
             declare
+               IM  : constant Gela.Interpretations.
+                 Interpretation_Manager_Access :=
+                   Self.Enclosing_Compilation.Context.Interpretation_Manager;
                Factory : Gela.Element_Factories.Element_Factory_Access;
                Identifier : access Gela.Elements.Identifiers.Identifier'Class;
                Set : aliased Gela.Property_Resets.Property_Reset;
@@ -92,8 +95,11 @@ package body Gela.Nodes.Fixed_Identifiers is
                Sequence : Gela.Elements.Associations.
                  Association_Sequence_Access;
             begin
-               Set.Defining_Name := Self.Defining_Name;
-               Set.Down := Self.Down;
+               IM.Get_Down_Interpretation
+                 (Value  => Self.Down,
+                  Index  => 1,
+                  Result => Set.Down);
+               IM.Get_Defining_Name (Set.Down, Set.Defining_Name);
                Set.Errors := Self.Errors;
                Set.Up_Set := Self.Up;
                Set.Env_In := Self.Env_In;
@@ -119,22 +125,6 @@ package body Gela.Nodes.Fixed_Identifiers is
             raise Constraint_Error;
       end case;
    end Set_Chosen_Interpretation;
-
-   -----------------------
-   -- Set_Defining_Name --
-   -----------------------
-
-   overriding procedure Set_Defining_Name
-     (Self    : in out Identifier;
-      Value   : Gela.Elements.Defining_Names.Defining_Name_Access) is
-   begin
-      if Self.Prefix.Assigned then
-         Gela.Nodes.Identifiers.Identifier (Self.Prefix.all)
-           .Set_Defining_Name (Value);
-      else
-         Gela.Nodes.Identifiers.Identifier (Self).Set_Defining_Name (Value);
-      end if;
-   end Set_Defining_Name;
 
    -----------
    -- Visit --

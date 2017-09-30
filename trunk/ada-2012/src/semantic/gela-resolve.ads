@@ -77,6 +77,13 @@ package Gela.Resolve is
       Args   : Gela.Interpretations.Interpretation_Tuple_List_Index;
       Set    : out Gela.Interpretations.Interpretation_Set_Index);
 
+   procedure Qualified_Expression
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Prefix : Gela.Interpretations.Interpretation_Set_Index;
+      Arg    : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index);
+
    procedure Shall_Be_Subtype
      (Comp   : Gela.Compilations.Compilation_Access;
       Env    : Gela.Semantic_Types.Env_Index;

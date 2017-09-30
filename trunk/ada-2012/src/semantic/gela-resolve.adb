@@ -581,6 +581,7 @@ package body Gela.Resolve is
       procedure Add_Function
         (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
       is
+         Index   : Gela.Interpretations.Interpretation_Index;
          Tipe    : Gela.Semantic_Types.Type_Index;
          Profile : constant Gela.Profiles.Profile_Access :=
             TM.Get_Profile (Env, Name);
@@ -592,10 +593,11 @@ package body Gela.Resolve is
             Tipe := Profile.Return_Type;
 
             if Tipe not in 0 then
+               IM.Get_Defining_Name_Index (Name, Index);
                IM.Add_Expression
                  (Tipe   => Tipe,
                   Kind   => Gela.Interpretations.Function_Call,
-               Down   => (1 .. 0 => 0),
+                  Down   => (1 => Index),
                   Result => Set);
             end if;
          end if;
@@ -869,6 +871,39 @@ package body Gela.Resolve is
          end;
       end if;
    end Function_Call;
+
+   --------------------------
+   -- Qualified_Expression --
+   --------------------------
+
+   procedure Qualified_Expression
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Prefix : Gela.Interpretations.Interpretation_Set_Index;
+      Arg    : Gela.Interpretations.Interpretation_Set_Index;
+      Set    : out Gela.Interpretations.Interpretation_Set_Index)
+   is
+      pragma Unreferenced (Arg);
+      Tipe        : Gela.Interpretations.Interpretation_Index;
+      Type_Index  : Gela.Semantic_Types.Type_Index;
+   begin
+      Set := 0;
+      Get_Subtype
+        (Comp   => Comp,
+         Env    => Env,
+         Set    => Prefix,
+         Index  => Tipe,
+         Result => Type_Index);
+
+      if Type_Index not in 0 then
+         Comp.Context.Interpretation_Manager.Add_Expression
+           (Tipe   => Type_Index,
+            Kind   => Gela.Interpretations.Type_Convertion,
+            Down   => (1 .. 0 => 0),
+            Result => Set);
+      end if;
+   end Qualified_Expression;
+
 
    -------------------------
    -- Generic_Association --

@@ -5,7 +5,6 @@
 
 with Gela.Element_Visiters;
 with Gela.Elements.Association_Lists;
-with Gela.Elements.Defining_Names;
 with Gela.Elements.Function_Calls;
 with Gela.Elements.Prefixes;
 with Gela.Interpretations;
@@ -49,10 +48,6 @@ private
    overriding procedure Set_Chosen_Interpretation
      (Self    : in out Identifier;
       Value   : Gela.Interpretations.Interpretation_Kinds);
-
-   overriding procedure Set_Defining_Name
-     (Self    : in out Identifier;
-      Value   : Gela.Elements.Defining_Names.Defining_Name_Access);
 
    overriding procedure Visit
      (Self    : access Identifier;
