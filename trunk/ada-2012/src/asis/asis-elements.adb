@@ -11,18 +11,21 @@
 
 with Ada.Containers;
 
-with Gela.Compilations;
+with Asis.Extensions.Flat_Kinds;
+
 with Gela.Compilation_Unit_Sets;
-with Gela.Elements.Compilation_Units;
+with Gela.Compilations;
 with Gela.Element_Visiters;
 with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Compilation_Unit_Declarations;
-with Gela.Elements.Subunits;
+with Gela.Elements.Compilation_Units;
 with Gela.Elements.Context_Items;
-with Asis.Extensions.Flat_Kinds;
+with Gela.Elements.For_Loop_Statements;
+with Gela.Elements.Loop_Parameter_Specifications;
 with Gela.Elements.Library_Unit_Bodies;
 with Gela.Elements.Library_Unit_Declarations;
 with Gela.Elements.Proper_Bodies;
+with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
 
 package body Asis.Elements is
@@ -1413,10 +1416,50 @@ package body Asis.Elements is
      (Element : in Asis.Element)
       return Asis.Trait_Kinds
    is
+      package Get is
+
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Trait : Asis.Trait_Kinds := Not_A_Trait;
+         end record;
+
+         overriding procedure For_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.For_Loop_Statements.
+              For_Loop_Statement_Access);
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access);
+
+      end Get;
+
+      package body Get is
+         overriding procedure For_Loop_Statement
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.For_Loop_Statements.
+              For_Loop_Statement_Access) is
+         begin
+            Node.Loop_Parameter_Specification.Visit (Self);
+         end For_Loop_Statement;
+
+         overriding procedure Loop_Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Loop_Parameter_Specifications.
+              Loop_Parameter_Specification_Access) is
+         begin
+            if Node.Reverse_Token in Gela.Lexical_Types.Token_Index then
+               Self.Trait := A_Reverse_Trait;
+            end if;
+         end Loop_Parameter_Specification;
+
+      end Get;
+
+      V : aliased Get.Visiter;
    begin
       if Assigned (Element) then
---         Raise_Not_Implemented ("");
-         return Not_A_Trait;
+         Element.Data.Visit (V);
+         return V.Trait;
       else
          return Not_A_Trait;
       end if;

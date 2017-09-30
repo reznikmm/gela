@@ -552,8 +552,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure For_Loop_Statement
      (Self : in out Visiter;
       Node : not null Gela.Elements.For_Loop_Statements.
-        For_Loop_Statement_Access)
-   is null;
+        For_Loop_Statement_Access);
 
    overriding procedure Formal_Access_To_Function_Definition
      (Self : in out Visiter;
@@ -793,8 +792,7 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Loop_Parameter_Specification
      (Self : in out Visiter;
       Node : not null Gela.Elements.Loop_Parameter_Specifications.
-        Loop_Parameter_Specification_Access)
-   is null;
+        Loop_Parameter_Specification_Access);
 
    overriding procedure Loop_Statement
      (Self : in out Visiter;
@@ -1758,6 +1756,16 @@ package body Asis.Extensions.Flat_Kinds is
       Self.Result := A_Floating_Point_Definition;
    end Floating_Point_Definition;
 
+   overriding procedure For_Loop_Statement
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.For_Loop_Statements.
+        For_Loop_Statement_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_For_Loop_Statement;
+   end For_Loop_Statement;
+
    overriding procedure Formal_Derived_Type_Definition
      (Self : in out Visiter;
       Node : not null Gela.Elements.Formal_Derived_Type_Definitions.
@@ -1924,6 +1932,16 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Known_Discriminant_Part;
    end Known_Discriminant_Part;
+
+   overriding procedure Loop_Parameter_Specification
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Loop_Parameter_Specifications.
+        Loop_Parameter_Specification_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Loop_Parameter_Specification;
+   end Loop_Parameter_Specification;
 
    overriding procedure Loop_Statement
      (Self : in out Visiter;
