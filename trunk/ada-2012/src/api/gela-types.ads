@@ -56,6 +56,9 @@ package Gela.Types is
    not overriding function Is_Character (Self : Type_View) return Boolean
      is abstract;
 
+   not overriding function Is_Enumeration (Self : Type_View) return Boolean
+     is abstract;
+
    not overriding function Is_Floating_Point (Self : Type_View) return Boolean
      is abstract;
 
@@ -74,9 +77,10 @@ package Gela.Types is
    not overriding function Is_Universal (Self : Type_View) return Boolean
      is abstract;
 
-   function Is_Integer (Self : Type_View'Class) return Boolean;
-   function Is_Real    (Self : Type_View'Class) return Boolean;
-   function Is_Numeric (Self : Type_View'Class) return Boolean;
+   function Is_Discrete (Self : Type_View'Class) return Boolean;
+   function Is_Integer  (Self : Type_View'Class) return Boolean;
+   function Is_Real     (Self : Type_View'Class) return Boolean;
+   function Is_Numeric  (Self : Type_View'Class) return Boolean;
 
    not overriding procedure Visit
      (Self    : not null access Type_View;

@@ -123,6 +123,15 @@ package body Gela.Derived_Type_Views is
       return Self.Parent.Is_Character;
    end Is_Character;
 
+   --------------------
+   -- Is_Enumeration --
+   --------------------
+
+   overriding function Is_Enumeration (Self : Type_View) return Boolean is
+   begin
+      return Self.Parent.Is_Enumeration;
+   end Is_Enumeration;
+
    ----------------------
    -- Is_Expected_Type --
    ----------------------

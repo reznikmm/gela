@@ -1786,7 +1786,7 @@ package body Gela.Resolve is
               TM.Get (L_Tipe);
             R_Count     : Natural := 0;
          begin
-            if L_Type_View.Assigned and then L_Type_View.Is_Integer then
+            if L_Type_View.Assigned and then L_Type_View.Is_Discrete then
                for R in Each.Expression (IM, TM, Env, Right) loop
                   declare
                      use type Gela.Semantic_Types.Type_Index;
@@ -1797,7 +1797,7 @@ package body Gela.Resolve is
                        TM.Get (R_Tipe);
                   begin
                      if not Type_View.Assigned or else
-                       not Type_View.Is_Integer
+                       not Type_View.Is_Discrete
                      then
                         null;
                      elsif not Type_View.Is_Universal then
@@ -1812,10 +1812,12 @@ package body Gela.Resolve is
                            R_Count := R_Count + 1;
                            Down_Right := R.Get_Index;
                         end if;
-                     elsif R_Tipe = L_Tipe then
+                     elsif R_Tipe = L_Tipe and Type_View.Is_Integer then
                         Tipe := TM.Universal_Integer; --  FIXME Root_Int
                         R_Count := R_Count + 1;
                         Down_Right := R.Get_Index;
+                     else
+                        null;
                      end if;
                   end;
                end loop;

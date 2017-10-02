@@ -85,6 +85,8 @@ private
 
    overriding function Is_Character (Self : Type_View) return Boolean;
 
+   overriding function Is_Enumeration (Self : Type_View) return Boolean;
+
    overriding function Is_Floating_Point (Self : Type_View) return Boolean;
 
    overriding function Is_Modular_Integer (Self : Type_View) return Boolean;

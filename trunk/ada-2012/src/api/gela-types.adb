@@ -1,5 +1,14 @@
 package body Gela.Types is
 
+   -----------------
+   -- Is_Discrete --
+   -----------------
+
+   function Is_Discrete (Self : Type_View'Class) return Boolean is
+   begin
+      return Self.Is_Integer or else Self.Is_Enumeration;
+   end Is_Discrete;
+
    ----------------
    -- Is_Integer --
    ----------------

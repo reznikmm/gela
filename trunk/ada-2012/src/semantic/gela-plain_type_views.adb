@@ -320,6 +320,17 @@ package body Gela.Plain_Type_Views is
       return Self.Category in Gela.Type_Categories.A_Character;
    end Is_Character;
 
+   --------------------
+   -- Is_Enumeration --
+   --------------------
+
+   overriding function Is_Enumeration (Self : Type_View) return Boolean is
+   begin
+      return Self.Category in Gela.Type_Categories.A_Character
+        | Gela.Type_Categories.A_Boolean
+          | Gela.Type_Categories.An_Other_Enum;
+   end Is_Enumeration;
+
    ----------------------
    -- Is_Expected_Type --
    ----------------------

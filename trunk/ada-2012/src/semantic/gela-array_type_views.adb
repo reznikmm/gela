@@ -102,6 +102,16 @@ package body Gela.Array_Type_Views is
       return False;
    end Is_Character;
 
+   --------------------
+   -- Is_Enumeration --
+   --------------------
+
+   overriding function Is_Enumeration (Self : Type_View) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Enumeration;
+
    ----------------------
    -- Is_Expected_Type --
    ----------------------
