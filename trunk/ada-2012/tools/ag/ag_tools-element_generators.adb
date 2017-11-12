@@ -7,60 +7,60 @@ with AG_Tools.Input;
 
 package body AG_Tools.Element_Generators is
 
-   type NT_Map is array (Gela.Grammars.Non_Terminal_Index range <>)
+   type NT_Map is array (Anagram.Grammars.Non_Terminal_Index range <>)
      of Boolean;
 
    procedure Write_Parts
-     (G        : Gela.Grammars.Grammar_Access;
-      Prod     : Gela.Grammars.Production;
+     (G        : Anagram.Grammars.Grammar_Access;
+      Prod     : Anagram.Grammars.Production;
       Nodes_NT : in out Writers.Writer;
       Withes   : in out Writers.Writer;
       Withed   : in out League.String_Vectors.Universal_String_Vector);
 
    procedure Generate_Element
-     (G  : Gela.Grammars.Grammar_Access;
-      NT : Gela.Grammars.Non_Terminal);
+     (G  : Anagram.Grammars.Grammar_Access;
+      NT : Anagram.Grammars.Non_Terminal);
 
    procedure Generate_Node
-     (G  : Gela.Grammars.Grammar_Access;
-      NT : Gela.Grammars.Non_Terminal);
+     (G  : Anagram.Grammars.Grammar_Access;
+      NT : Anagram.Grammars.Non_Terminal);
 
-   procedure Generate_Node_Factory (G  : Gela.Grammars.Grammar_Access);
+   procedure Generate_Node_Factory (G  : Anagram.Grammars.Grammar_Access);
 
    procedure Generate_Node_Sequence
-     (NT : Gela.Grammars.Non_Terminal);
+     (NT : Anagram.Grammars.Non_Terminal);
 
    procedure Generate_Constructor
-     (G    : Gela.Grammars.Grammar_Access;
-      NT   : Gela.Grammars.Non_Terminal;
-      Prod : Gela.Grammars.Production;
+     (G    : Anagram.Grammars.Grammar_Access;
+      NT   : Anagram.Grammars.Non_Terminal;
+      Prod : Anagram.Grammars.Production;
       Spec : in out AG_Tools.Writers.Writer;
       Used : in out NT_Map);
 
    procedure Generate_Sequence_Constructor
-     (G    : Gela.Grammars.Grammar_Access;
-      NT   : Gela.Grammars.Non_Terminal;
+     (G    : Anagram.Grammars.Grammar_Access;
+      NT   : Anagram.Grammars.Non_Terminal;
       Spec : in out AG_Tools.Writers.Writer);
 
    function Return_Type_Image
-     (G    : Gela.Grammars.Grammar_Access;
-      Part : Gela.Grammars.Part)
+     (G    : Anagram.Grammars.Grammar_Access;
+      Part : Anagram.Grammars.Part)
          return League.Strings.Universal_String;
 
    procedure Write_Attr_With
-     (G      : Gela.Grammars.Grammar_Access;
-      NT     : Gela.Grammars.Non_Terminal;
+     (G      : Anagram.Grammars.Grammar_Access;
+      NT     : Anagram.Grammars.Non_Terminal;
       Output : in out AG_Tools.Writers.Writer;
       Done   : in out League.String_Vectors.Universal_String_Vector);
 
    procedure Write_Attr_Get
-     (Decl   : Gela.Grammars.Attribute_Declaration;
+     (Decl   : Anagram.Grammars.Attribute_Declaration;
       Output : in out AG_Tools.Writers.Writer;
       Name   : League.Strings.Universal_String;
       Impl   : Boolean);
 
    procedure Write_Attr_Set
-     (Decl   : Gela.Grammars.Attribute_Declaration;
+     (Decl   : Anagram.Grammars.Attribute_Declaration;
       Output : in out AG_Tools.Writers.Writer;
       Name   : League.Strings.Universal_String;
       Impl   : Boolean);
@@ -70,9 +70,9 @@ package body AG_Tools.Element_Generators is
    --------------------------
 
    procedure Generate_Constructor
-     (G    : Gela.Grammars.Grammar_Access;
-      NT   : Gela.Grammars.Non_Terminal;
-      Prod : Gela.Grammars.Production;
+     (G    : Anagram.Grammars.Grammar_Access;
+      NT   : Anagram.Grammars.Non_Terminal;
+      Prod : Anagram.Grammars.Production;
       Spec : in out AG_Tools.Writers.Writer;
       Used : in out NT_Map) is
    begin
@@ -103,14 +103,14 @@ package body AG_Tools.Element_Generators is
    ----------------------
 
    procedure Generate_Element
-     (G  : Gela.Grammars.Grammar_Access;
-      NT : Gela.Grammars.Non_Terminal)
+     (G  : Anagram.Grammars.Grammar_Access;
+      NT : Anagram.Grammars.Non_Terminal)
    is
       use AG_Tools.Input;
       use type League.Strings.Universal_String;
 
       procedure Write_Attr
-        (NT    : Gela.Grammars.Non_Terminal;
+        (NT    : Anagram.Grammars.Non_Terminal;
          Attrs : in out AG_Tools.Writers.Writer);
 
       Name   : constant League.Strings.Universal_String := To_Ada (NT.Name);
@@ -120,7 +120,7 @@ package body AG_Tools.Element_Generators is
       ----------------
 
       procedure Write_Attr
-        (NT    : Gela.Grammars.Non_Terminal;
+        (NT    : Anagram.Grammars.Non_Terminal;
          Attrs : in out AG_Tools.Writers.Writer) is
       begin
          for A in NT.First_Attribute .. NT.Last_Attribute loop
@@ -245,7 +245,7 @@ package body AG_Tools.Element_Generators is
    -- Generate_Elements --
    -----------------------
 
-   procedure Generate_Elements (G : Gela.Grammars.Grammar_Access) is
+   procedure Generate_Elements (G : Anagram.Grammars.Grammar_Access) is
    begin
       for NT of G.Non_Terminal loop
          if not NT.Is_List then
@@ -265,7 +265,7 @@ package body AG_Tools.Element_Generators is
    ---------------------
 
    procedure Generate_Factory
-     (G : Gela.Grammars.Grammar_Access)
+     (G : Anagram.Grammars.Grammar_Access)
    is
       Spec   : AG_Tools.Writers.Writer;
       Withes : AG_Tools.Writers.Writer;
@@ -329,14 +329,14 @@ package body AG_Tools.Element_Generators is
    -------------------
 
    procedure Generate_Node
-     (G  : Gela.Grammars.Grammar_Access;
-      NT : Gela.Grammars.Non_Terminal)
+     (G  : Anagram.Grammars.Grammar_Access;
+      NT : Anagram.Grammars.Non_Terminal)
    is
       use type League.Strings.Universal_String;
-      use type Gela.Grammars.Part_Count;
+      use type Anagram.Grammars.Part_Count;
 
       procedure Write_Attr
-        (NT    : Gela.Grammars.Non_Terminal;
+        (NT    : Anagram.Grammars.Non_Terminal;
          Nodes : in out AG_Tools.Writers.Writer;
          Impl  : in out AG_Tools.Writers.Writer;
          Attrs : in out AG_Tools.Writers.Writer);
@@ -350,7 +350,7 @@ package body AG_Tools.Element_Generators is
       ----------------
 
       procedure Write_Attr
-        (NT    : Gela.Grammars.Non_Terminal;
+        (NT    : Anagram.Grammars.Non_Terminal;
          Nodes : in out AG_Tools.Writers.Writer;
          Impl  : in out AG_Tools.Writers.Writer;
          Attrs : in out AG_Tools.Writers.Writer)
@@ -359,7 +359,7 @@ package body AG_Tools.Element_Generators is
       begin
          for A in NT.First_Attribute .. NT.Last_Attribute loop
             declare
-               Decl : Gela.Grammars.Attribute_Declaration renames
+               Decl : Anagram.Grammars.Attribute_Declaration renames
                  G.Declaration (A);
             begin
                Pkg := Package_Name (Decl.Type_Name);
@@ -410,7 +410,7 @@ package body AG_Tools.Element_Generators is
       Impl   : AG_Tools.Writers.Writer;
       Pkg    : constant League.Strings.Universal_String :=
         "Gela.Elements." & Plural (NT.Name);
-      Prod   : Gela.Grammars.Production renames G.Production (NT.First);
+      Prod   : Anagram.Grammars.Production renames G.Production (NT.First);
 
       Part_Type    : League.Strings.Universal_String;
       Package_Name : League.Strings.Universal_String;
@@ -692,7 +692,7 @@ package body AG_Tools.Element_Generators is
    -- Generate_Node_Factory --
    --------------------------
 
-   procedure Generate_Node_Factory (G  : Gela.Grammars.Grammar_Access) is
+   procedure Generate_Node_Factory (G  : Anagram.Grammars.Grammar_Access) is
       Spec   : AG_Tools.Writers.Writer;
       Withes : AG_Tools.Writers.Writer;
       Impl   : AG_Tools.Writers.Writer;
@@ -822,7 +822,7 @@ package body AG_Tools.Element_Generators is
    ----------------------------
 
    procedure Generate_Node_Sequence
-     (NT : Gela.Grammars.Non_Terminal)
+     (NT : Anagram.Grammars.Non_Terminal)
    is
       Nodes  : AG_Tools.Writers.Writer;
    begin
@@ -855,8 +855,8 @@ package body AG_Tools.Element_Generators is
    -----------------------------------
 
    procedure Generate_Sequence_Constructor
-     (G    : Gela.Grammars.Grammar_Access;
-      NT   : Gela.Grammars.Non_Terminal;
+     (G    : Anagram.Grammars.Grammar_Access;
+      NT   : Anagram.Grammars.Non_Terminal;
       Spec : in out AG_Tools.Writers.Writer) is
    begin
       Spec.N ("overriding function ");
@@ -873,8 +873,8 @@ package body AG_Tools.Element_Generators is
    -----------------------
 
    function Return_Type_Image
-     (G    : Gela.Grammars.Grammar_Access;
-      Part : Gela.Grammars.Part)
+     (G    : Anagram.Grammars.Grammar_Access;
+      Part : Anagram.Grammars.Part)
          return League.Strings.Universal_String
    is
       use type League.Strings.Universal_String;
@@ -895,8 +895,8 @@ package body AG_Tools.Element_Generators is
    ---------------------
 
    procedure Write_Attr_With
-     (G     : Gela.Grammars.Grammar_Access;
-      NT     : Gela.Grammars.Non_Terminal;
+     (G     : Anagram.Grammars.Grammar_Access;
+      NT     : Anagram.Grammars.Non_Terminal;
       Output : in out AG_Tools.Writers.Writer;
       Done   : in out League.String_Vectors.Universal_String_Vector)
    is
@@ -919,7 +919,7 @@ package body AG_Tools.Element_Generators is
    --------------------
 
    procedure Write_Attr_Get
-     (Decl   : Gela.Grammars.Attribute_Declaration;
+     (Decl   : Anagram.Grammars.Attribute_Declaration;
       Output : in out AG_Tools.Writers.Writer;
       Name   : League.Strings.Universal_String;
       Impl   : Boolean) is
@@ -942,7 +942,7 @@ package body AG_Tools.Element_Generators is
    --------------------
 
    procedure Write_Attr_Set
-     (Decl   : Gela.Grammars.Attribute_Declaration;
+     (Decl   : Anagram.Grammars.Attribute_Declaration;
       Output : in out AG_Tools.Writers.Writer;
       Name   : League.Strings.Universal_String;
       Impl   : Boolean) is
@@ -966,8 +966,8 @@ package body AG_Tools.Element_Generators is
    -----------------
 
    procedure Write_Parts
-     (G        : Gela.Grammars.Grammar_Access;
-      Prod     : Gela.Grammars.Production;
+     (G        : Anagram.Grammars.Grammar_Access;
+      Prod     : Anagram.Grammars.Production;
       Nodes_NT : in out Writers.Writer;
       Withes   : in out Writers.Writer;
       Withed   : in out League.String_Vectors.Universal_String_Vector)

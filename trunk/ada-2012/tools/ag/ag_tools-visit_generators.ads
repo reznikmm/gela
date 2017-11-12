@@ -9,8 +9,8 @@
 
 with League.Strings;
 
-with Gela.Grammars.Ordered;
-with Gela.Grammars.Rule_Templates;
+with Anagram.Grammars.Ordered;
+with Anagram.Grammars.Rule_Templates;
 
 package AG_Tools.Visit_Generators is
 
@@ -20,18 +20,18 @@ package AG_Tools.Visit_Generators is
    not overriding procedure Make_Local_Variable
      (Self      : access Generator;
       Origin    : League.Strings.Universal_String;
-      Attribute : Gela.Grammars.Attribute_Declaration) is abstract;
+      Attribute : Anagram.Grammars.Attribute_Declaration) is abstract;
    --  Generate local variable to store value of given Attribute
 
    not overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute;
-      Template  : Gela.Grammars.Rule_Templates.Rule_Template) is abstract;
+      Attribute : Anagram.Grammars.Attribute;
+      Template  : Anagram.Grammars.Rule_Templates.Rule_Template) is abstract;
    --  Generate code to get/fetch value of given Attribute
 
    not overriding procedure Make_Set
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute) is abstract;
+      Attribute : Anagram.Grammars.Attribute) is abstract;
    --  Generate code to set/update value in given Attribute
 
    type Part_Generator is limited interface and Generator;
@@ -39,13 +39,13 @@ package AG_Tools.Visit_Generators is
 
    not overriding procedure Make_Descent
      (Self : access Part_Generator;
-      Part : Gela.Grammars.Part_Index;
+      Part : Anagram.Grammars.Part_Index;
       Pass : Positive) is abstract;
    --  Generate code to go deeper in the tree
 
    not overriding procedure Make_Local_Variable
      (Self : access Part_Generator;
-      Part : Gela.Grammars.Part_Index) is abstract;
+      Part : Anagram.Grammars.Part_Index) is abstract;
    --  Generate local variable to store value of given Attribute
 
    type NT_Generator is limited interface and Generator;
@@ -53,8 +53,8 @@ package AG_Tools.Visit_Generators is
 
    not overriding procedure Make_Procedure
      (Self  : access NT_Generator;
-      Order : Gela.Grammars.Ordered.Order_Maps.Map;
-      NT    : Gela.Grammars.Non_Terminal;
+      Order : Anagram.Grammars.Ordered.Order_Maps.Map;
+      NT    : Anagram.Grammars.Non_Terminal;
       Pass  : Positive) is abstract;
    --  Generate procedure
 
@@ -63,18 +63,18 @@ package AG_Tools.Visit_Generators is
 
    not overriding function Get
      (Self : access Factory;
-      NT   : Gela.Grammars.Non_Terminal)
+      NT   : Anagram.Grammars.Non_Terminal)
       return NT_Generator_Access is abstract;
 
    not overriding function Get
      (Self : access Factory;
-      Part : Gela.Grammars.Part)
+      Part : Anagram.Grammars.Part)
       return Part_Generator_Access is abstract;
 
    not overriding function Get
      (Self : access Factory;
-      Attr : Gela.Grammars.Attribute;
-      NT   : Gela.Grammars.Non_Terminal)
+      Attr : Anagram.Grammars.Attribute;
+      NT   : Anagram.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.Generator_Access is abstract;
 
 end AG_Tools.Visit_Generators;

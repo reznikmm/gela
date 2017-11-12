@@ -1,5 +1,5 @@
 with "matreshka_league";
-with "gela_grammars";
+with "anagram";
 with "gela_common";
 
 project Gela_Build is

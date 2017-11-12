@@ -12,9 +12,9 @@ package body AG_Tools.Prop_Setter is
    -- Generate --
    --------------
 
-   procedure Generate (G : Gela.Grammars.Grammar_Access) is
+   procedure Generate (G : Anagram.Grammars.Grammar_Access) is
       use type League.Strings.Universal_String;
-      use type Gela.Grammars.Attribute_Declaration_Index;
+      use type Anagram.Grammars.Attribute_Declaration_Index;
 
       Context : aliased AG_Tools.Contexts.Context;
       Done    : League.String_Vectors.Universal_String_Vector;

@@ -11,7 +11,7 @@ with Ada.Containers.Hashed_Sets;
 
 with League.String_Vectors;
 
-with Gela.Grammars.Ordered;
+with Anagram.Grammars.Ordered;
 
 with AG_Tools.Visit_Generators;
 with AG_Tools.Writers;
@@ -19,14 +19,14 @@ with AG_Tools.Writers;
 package AG_Tools.Contexts is
 
    type Partition_Array_Access is
-     access all Gela.Grammars.Ordered.Partition_Array;
+     access all Anagram.Grammars.Ordered.Partition_Array;
 
-   type Part_Map is array (Gela.Grammars.Part_Index range <>) of Boolean;
+   type Part_Map is array (Anagram.Grammars.Part_Index range <>) of Boolean;
    type Part_Map_Access is access all Part_Map;
 
    type Attr is record
       Origin : League.Strings.Universal_String;
-      Decl   : Gela.Grammars.Attribute_Declaration_Index;
+      Decl   : Anagram.Grammars.Attribute_Declaration_Index;
    end record;
 
    function Hash (Self : Attr) return Ada.Containers.Hash_Type;
@@ -42,7 +42,7 @@ package AG_Tools.Contexts is
 
    type Context is tagged record
       Factory    : AG_Tools.Visit_Generators.Factory_Access;
-      Grammar   : Gela.Grammars.Grammar_Access;
+      Grammar   : Anagram.Grammars.Grammar_Access;
       Partition : Partition_Array_Access;
       Part_Map  : Part_Map_Access;
       Attr_Map  : Attr_Sets.Set;

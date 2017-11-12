@@ -8,7 +8,7 @@
 ------------------------------------------------------------------------------
 
 with AG_Tools.Writers;
-with Gela.Grammars.Ordered;
+with Anagram.Grammars.Ordered;
 
 package body AG_Tools.Part_Generators is
 
@@ -18,8 +18,8 @@ package body AG_Tools.Part_Generators is
      League.Strings.To_Universal_String ("This");
 
    function Origin
-     (G         : Gela.Grammars.Grammar;
-      Attribute : Gela.Grammars.Attribute)
+     (G         : Anagram.Grammars.Grammar;
+      Attribute : Anagram.Grammars.Attribute)
       return League.Strings.Universal_String;
 
    ------------------
@@ -28,11 +28,11 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Descent
      (Self : access Generator;
-      Part : Gela.Grammars.Part_Index;
+      Part : Anagram.Grammars.Part_Index;
       Pass : Positive)
    is
-      P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
-      NT   : Gela.Grammars.Non_Terminal renames
+      P    : Anagram.Grammars.Part renames Self.Context.Grammar.Part (Part);
+      NT   : Anagram.Grammars.Non_Terminal renames
         Self.Context.Grammar.Non_Terminal (P.Denote);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
@@ -54,10 +54,10 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Descent
      (Self : access Option_Generator;
-      Part : Gela.Grammars.Part_Index;
+      Part : Anagram.Grammars.Part_Index;
       Pass : Positive)
    is
-      P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
+      P    : Anagram.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Self.Make_Local_Variable (Part);
@@ -75,14 +75,14 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Descent
      (Self : access List_Generator;
-      Part : Gela.Grammars.Part_Index;
+      Part : Anagram.Grammars.Part_Index;
       Pass : Positive)
    is
-      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
-      P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
+      G    : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
+      P    : Anagram.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
-      Parts : Gela.Grammars.Ordered.Partition_Array renames
+      NT   : Anagram.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
+      Parts : Anagram.Grammars.Ordered.Partition_Array renames
         Self.Context.Partition.all (NT.First_Attribute .. NT.Last_Attribute);
    begin
       Self.Make_Local_Variable (Part);
@@ -97,7 +97,7 @@ package body AG_Tools.Part_Generators is
       Code.N (To_Ada (P.Name));
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop
-         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
+         if Anagram.Grammars.Ordered.To_Pass (Parts, J) = Pass then
             Self.Make_Local_Variable
               (P.Name, G.Declaration (J));
 
@@ -117,14 +117,14 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Descent
      (Self : access Head_Generator;
-      Part : Gela.Grammars.Part_Index;
+      Part : Anagram.Grammars.Part_Index;
       Pass : Positive)
    is
-      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
-      P    : Gela.Grammars.Part renames Self.Context.Grammar.Part (Part);
+      G    : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
+      P    : Anagram.Grammars.Part renames Self.Context.Grammar.Part (Part);
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
-      Parts : Gela.Grammars.Ordered.Partition_Array renames
+      NT   : Anagram.Grammars.Non_Terminal renames G.Non_Terminal (P.Denote);
+      Parts : Anagram.Grammars.Ordered.Partition_Array renames
         Self.Context.Partition.all (NT.First_Attribute .. NT.Last_Attribute);
    begin
 --      Self.Make_Local_Variable (Part);
@@ -135,7 +135,7 @@ package body AG_Tools.Part_Generators is
       Code.N (" (This");
 
       for J in NT.First_Attribute .. NT.Last_Attribute loop
-         if Gela.Grammars.Ordered.To_Pass (Parts, J) = Pass then
+         if Anagram.Grammars.Ordered.To_Pass (Parts, J) = Pass then
             Self.Make_Local_Variable
               (P.Name, G.Declaration (J));
 
@@ -155,14 +155,14 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute;
-      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
+      Attribute : Anagram.Grammars.Attribute;
+      Template  : Anagram.Grammars.Rule_Templates.Rule_Template)
    is
       pragma Unreferenced (Template);
-      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G    : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Origin : League.Strings.Universal_String;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
-      D      : Gela.Grammars.Attribute_Declaration renames
+      D      : Anagram.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
       Generator'Class (Self.all).Make_Local_Variable (Attribute.Origin);
@@ -190,14 +190,14 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Head_Generator;
-      Attribute : Gela.Grammars.Attribute;
-      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
+      Attribute : Anagram.Grammars.Attribute;
+      Template  : Anagram.Grammars.Rule_Templates.Rule_Template)
    is
       pragma Unreferenced (Template);
 
-      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G    : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Code : AG_Tools.Writers.Writer renames Self.Context.Code;
-      D    : Gela.Grammars.Attribute_Declaration renames
+      D    : Anagram.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
       Self.Make_Local_Variable (Tail, D);
@@ -210,11 +210,11 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute;
-      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
+      Attribute : Anagram.Grammars.Attribute;
+      Template  : Anagram.Grammars.Rule_Templates.Rule_Template)
    is
       pragma Unreferenced (Template);
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Code.P ("   --  Make_Get LIST");
@@ -230,11 +230,11 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Get
      (Self      : access Option_Generator;
-      Attribute : Gela.Grammars.Attribute;
-      Template  : Gela.Grammars.Rule_Templates.Rule_Template)
+      Attribute : Anagram.Grammars.Attribute;
+      Template  : Anagram.Grammars.Rule_Templates.Rule_Template)
    is
       use type League.Strings.Universal_String;
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
       Part   : constant League.Strings.Universal_String :=
         G.Part (Attribute.Origin).Name;
@@ -273,7 +273,7 @@ package body AG_Tools.Part_Generators is
    overriding procedure Make_Local_Variable
      (Self      : access Generator;
       Origin    : League.Strings.Universal_String;
-      Attribute : Gela.Grammars.Attribute_Declaration)
+      Attribute : Anagram.Grammars.Attribute_Declaration)
    is
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
       Attr : constant AG_Tools.Contexts.Attr := (Origin, Attribute.Index);
@@ -300,13 +300,14 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Local_Variable
      (Self : access Generator;
-      Part : Gela.Grammars.Part_Index)
+      Part : Anagram.Grammars.Part_Index)
    is
-      G    : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
-      P    : Gela.Grammars.Part renames G.Part (Part);
+      G    : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
+      P    : Anagram.Grammars.Part renames G.Part (Part);
       Impl : AG_Tools.Writers.Writer renames Self.Context.Impl;
-      Prod : Gela.Grammars.Production renames G.Production (P.Parent);
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      Prod : Anagram.Grammars.Production renames G.Production (P.Parent);
+      NT   : Anagram.Grammars.Non_Terminal renames
+               G.Non_Terminal (Prod.Parent);
       RT   : constant League.Strings.Universal_String := Return_Type (G, P);
    begin
       if not Self.Context.Part_Map (Part) then
@@ -341,12 +342,12 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Set
      (Self      : access Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Anagram.Grammars.Attribute)
    is
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Origin : League.Strings.Universal_String;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
-      D      : Gela.Grammars.Attribute_Declaration renames
+      D      : Anagram.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
       Generator'Class (Self.all).Make_Local_Variable (Attribute.Origin);
@@ -370,11 +371,11 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Set
      (Self      : access Head_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Anagram.Grammars.Attribute)
    is
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
-      D      : Gela.Grammars.Attribute_Declaration renames
+      D      : Anagram.Grammars.Attribute_Declaration renames
         G.Declaration (Attribute.Declaration);
    begin
       Self.Make_Local_Variable (Tail, D);
@@ -387,9 +388,9 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Set
      (Self      : access List_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Anagram.Grammars.Attribute)
    is
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
       Code.P ("   --  Make_Set LIST");
@@ -405,9 +406,9 @@ package body AG_Tools.Part_Generators is
 
    overriding procedure Make_Set
      (Self : access Option_Generator;
-      Attribute : Gela.Grammars.Attribute)
+      Attribute : Anagram.Grammars.Attribute)
    is
-      G      : Gela.Grammars.Grammar renames Self.Context.Grammar.all;
+      G      : Anagram.Grammars.Grammar renames Self.Context.Grammar.all;
       Origin : League.Strings.Universal_String;
       Code   : AG_Tools.Writers.Writer renames Self.Context.Code;
    begin
@@ -424,13 +425,14 @@ package body AG_Tools.Part_Generators is
    ------------
 
    function Origin
-     (G         : Gela.Grammars.Grammar;
-      Attribute : Gela.Grammars.Attribute)
+     (G         : Anagram.Grammars.Grammar;
+      Attribute : Anagram.Grammars.Attribute)
       return League.Strings.Universal_String
    is
-      Rule : Gela.Grammars.Rule renames G.Rule (Attribute.Parent);
-      Prod : Gela.Grammars.Production renames G.Production (Rule.Parent);
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      Rule : Anagram.Grammars.Rule renames G.Rule (Attribute.Parent);
+      Prod : Anagram.Grammars.Production renames G.Production (Rule.Parent);
+      NT   : Anagram.Grammars.Non_Terminal renames
+               G.Non_Terminal (Prod.Parent);
    begin
       if Attribute.Is_Left_Hand_Side then
          return NT.Name;

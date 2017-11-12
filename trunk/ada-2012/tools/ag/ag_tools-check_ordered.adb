@@ -9,10 +9,10 @@
 
 with Ada.Text_IO;
 
-with Gela.Grammars_Checks;
-with Gela.Grammars_Convertors;
-with Gela.Grammars.Ordered;
---  with Gela.Grammars_Debug;
+with Anagram.Grammars_Checks;
+with Anagram.Grammars_Convertors;
+with Anagram.Grammars.Ordered;
+--  with Anagram.Grammars_Debug;
 
 with League.Strings;
 
@@ -24,9 +24,9 @@ with AG_Tools.Input;   use AG_Tools.Input;
 package body AG_Tools.Check_Ordered is
 
    procedure Generate2
-     (G           : Gela.Grammars.Grammar_Access;
-      Order       : Gela.Grammars.Ordered.Order_Maps.Map;
-      Partitions  : Gela.Grammars.Ordered.Partition_Array);
+     (G           : Anagram.Grammars.Grammar_Access;
+      Order       : Anagram.Grammars.Ordered.Order_Maps.Map;
+      Partitions  : Anagram.Grammars.Ordered.Partition_Array);
 
    -----------
    -- Check --
@@ -34,25 +34,25 @@ package body AG_Tools.Check_Ordered is
 
    procedure Check is
       Ok     : Boolean;
-      Result : constant Gela.Grammars.Grammar_Access :=
-        new Gela.Grammars.Grammar'
-          (Gela.Grammars_Convertors.Convert_With_Empty
+      Result : constant Anagram.Grammars.Grammar_Access :=
+        new Anagram.Grammars.Grammar'
+          (Anagram.Grammars_Convertors.Convert_With_Empty
                (AG_Tools.Input.Grammar.all));
 
-      Order  : Gela.Grammars.Ordered.Order_Maps.Map;
-      Partitions : Gela.Grammars.Ordered.Partition_Array
+      Order  : Anagram.Grammars.Ordered.Order_Maps.Map;
+      Partitions : Anagram.Grammars.Ordered.Partition_Array
         (Result.Declaration'Range);
    begin
-      --           Gela.Grammars_Debug.Print (G);
-      --           Gela.Grammars_Debug.Print (Result.all);
+      --           Anagram.Grammars_Debug.Print (G);
+      --           Anagram.Grammars_Debug.Print (Result.all);
 
-      Ok := Gela.Grammars_Checks.Is_Well_Formed (Result.all, True);
+      Ok := Anagram.Grammars_Checks.Is_Well_Formed (Result.all, True);
 
       if not Ok then
          raise Constraint_Error with "Not well formed";
       end if;
 
-      Gela.Grammars.Ordered.Find_Order (Result.all, Ok, Partitions, Order);
+      Anagram.Grammars.Ordered.Find_Order (Result.all, Ok, Partitions, Order);
 
       if not Ok then
          raise Constraint_Error with "Not ordered";
@@ -64,10 +64,10 @@ package body AG_Tools.Check_Ordered is
       pragma Warnings (Off);
       for J in Order.Iterate loop
          declare
-            Key : constant Gela.Grammars.Ordered.Key :=
-              Gela.Grammars.Ordered.Order_Maps.Key (J);
-            Item : constant Gela.Grammars.Ordered.Action :=
-              Gela.Grammars.Ordered.Order_Maps.Element (J);
+            Key : constant Anagram.Grammars.Ordered.Key :=
+              Anagram.Grammars.Ordered.Order_Maps.Key (J);
+            Item : constant Anagram.Grammars.Ordered.Action :=
+              Anagram.Grammars.Ordered.Order_Maps.Element (J);
          begin
             Ada.Text_IO.Put
               (Result.Non_Terminal
@@ -84,11 +84,11 @@ package body AG_Tools.Check_Ordered is
             Ada.Text_IO.Put (" ");
 
             case Item.Kind is
-               when Gela.Grammars.Ordered.Evaluate_Rule =>
+               when Anagram.Grammars.Ordered.Evaluate_Rule =>
                   Ada.Text_IO.Put_Line (Item.Rule'Img);
                   Ada.Text_IO.Put_Line
                     (Result.Rule (Item.Rule).Text.To_UTF_8_String);
-               when Gela.Grammars.Ordered.Descent =>
+               when Anagram.Grammars.Ordered.Descent =>
                   Ada.Text_IO.Put
                     (Result.Part (Item.Part).Name.
                          To_UTF_8_String);
@@ -104,11 +104,11 @@ package body AG_Tools.Check_Ordered is
    ---------------
 
    procedure Generate2
-     (G           : Gela.Grammars.Grammar_Access;
-      Order       : Gela.Grammars.Ordered.Order_Maps.Map;
-      Partitions  : Gela.Grammars.Ordered.Partition_Array)
+     (G           : Anagram.Grammars.Grammar_Access;
+      Order       : Anagram.Grammars.Ordered.Order_Maps.Map;
+      Partitions  : Anagram.Grammars.Ordered.Partition_Array)
    is
-      use Gela.Grammars;
+      use Anagram.Grammars;
       use type League.Strings.Universal_String;
 
       Context : constant AG_Tools.Contexts.Context_Access :=
@@ -122,7 +122,7 @@ package body AG_Tools.Check_Ordered is
       Context.Factory := new AG_Tools.Generator_Factories.Factory (Context);
       Context.Grammar := G;
       Context.Partition :=
-        new Gela.Grammars.Ordered.Partition_Array'(Partitions);
+        new Anagram.Grammars.Ordered.Partition_Array'(Partitions);
       Context.Part_Map :=
         new AG_Tools.Contexts.Part_Map'(G.Part'Range => False);
 
@@ -159,7 +159,7 @@ package body AG_Tools.Check_Ordered is
 
          for NT of G.Non_Terminal loop
             declare
-               use Gela.Grammars.Ordered.Order_Maps;
+               use Anagram.Grammars.Ordered.Order_Maps;
                Pos : constant Cursor :=
                  Order.Ceiling ((NT.First, Pass, Step => 1));
             begin

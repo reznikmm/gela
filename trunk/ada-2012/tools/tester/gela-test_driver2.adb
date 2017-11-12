@@ -16,6 +16,8 @@ with Gela.Bitten_Report;
 with Gela.Host;
 with Gela.Test_Cases;
 with Gela.Test_Iterators.Dir2;
+--  We don't use Dir2 now, but we would like to compile it to avoid errors.
+pragma Unreferenced (Gela.Test_Iterators.Dir2);
 with Gela.Test_Iterators.ACATS;
 with Gela.Test_Iterators.Append;
 with Gela.Test_Tools;
@@ -145,9 +147,6 @@ begin
 
    declare
       use type Gela.Test_Iterators.Append.Iterator;
-      Dirs  : constant Gela.Test_Iterators.Iterator'Class :=
-        Gela.Test_Iterators.Dir2.Create
-          (Tests & "/grammars", Build & "/tests/grammars");
       Lexer : constant Gela.Test_Iterators.Iterator'Class :=
         Gela.Test_Iterators.ACATS.Create
           (Command   => Build & "/tests/gela/lexer_test",
@@ -179,7 +178,7 @@ begin
            Fixture   => League.Strings.To_Universal_String ("comp.sh"),
            ACATS     => ACATS_Dir);
       Iterator : Gela.Test_Iterators.Append.Iterator :=
-        Dirs + Lexer + Parser + Def_Name + ASIS2XML + Run_Compiler;
+        Lexer + Parser + Def_Name + ASIS2XML + Run_Compiler;
    begin
       Iterator.Start;
 

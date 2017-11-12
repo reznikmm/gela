@@ -9,6 +9,6 @@
 
 package AG_Tools.Clone_Generator is
 
-   procedure Run (G : Gela.Grammars.Grammar_Access);
+   procedure Run (G : Anagram.Grammars.Grammar_Access);
 
 end AG_Tools.Clone_Generator;

@@ -19,18 +19,18 @@ package AG_Tools.Generator_Factories is
 
    overriding function Get
      (Self : access Factory;
-      NT   : Gela.Grammars.Non_Terminal)
+      NT   : Anagram.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.NT_Generator_Access;
 
    overriding function Get
      (Self : access Factory;
-      Part : Gela.Grammars.Part)
+      Part : Anagram.Grammars.Part)
       return AG_Tools.Visit_Generators.Part_Generator_Access;
 
    overriding function Get
      (Self : access Factory;
-      Attr : Gela.Grammars.Attribute;
-      NT   : Gela.Grammars.Non_Terminal)
+      Attr : Anagram.Grammars.Attribute;
+      NT   : Anagram.Grammars.Non_Terminal)
       return AG_Tools.Visit_Generators.Generator_Access;
 
 private

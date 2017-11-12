@@ -7,7 +7,7 @@
 --              Read copyright and license in gela.ads file                 --
 ------------------------------------------------------------------------------
 
-with Gela.Grammars;
+with Anagram.Grammars;
 
 package AG_Tools.Input is
 
@@ -23,29 +23,31 @@ package AG_Tools.Input is
    --    outside of resulting grammar (see Is_Option frunction)
    --  * create attribution rules for abstract productions as trivial copy-rule
 
-   function Grammar return Gela.Grammars.Grammar_Access;
+   function Grammar return Anagram.Grammars.Grammar_Access;
 
-   function Is_Concrete (NT : Gela.Grammars.Non_Terminal_Index) return Boolean;
+   function Is_Concrete
+     (NT : Anagram.Grammars.Non_Terminal_Index) return Boolean;
    --  Return true if NT has production with several parts, in other words
    --  there is production in form NT ::= child_1 child_2 ..;
    --  Such NT has just single production
 
-   function Implement (X, Y : Gela.Grammars.Non_Terminal_Index) return Boolean;
+   function Implement
+     (X, Y : Anagram.Grammars.Non_Terminal_Index) return Boolean;
    --  If Implement (X, Y) then X implement Y, in other words there is
    --  production  Y := X | ..;
 
    function Macro_Reference
-     (Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count;
+     (Prod : Anagram.Grammars.Production)
+      return Anagram.Grammars.Non_Terminal_Count;
    --  If Prod is just reference to another NT, return NT.Index.
    --  Return 0 otherwise.
 
-   function Has_List (NT : Gela.Grammars.Non_Terminal_Index) return Boolean;
+   function Has_List (NT : Anagram.Grammars.Non_Terminal_Index) return Boolean;
    --  If there are references to {NT} then Has_List (NT) = True
 
    function Is_Option
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part) return Boolean;
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part) return Boolean;
    --  Return True if Part was option in original grammar
 
 end AG_Tools.Input;

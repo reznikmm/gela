@@ -9,15 +9,15 @@
 with Ada.Command_Line;
 with Ada.Text_IO;
 
-with Gela.Grammars;
-with Gela.Grammars.Reader;
-with Gela.Grammars_Convertors;
-with Gela.Grammars.Rule_Templates;
-with Gela.Grammars_Debug;
-with Gela.Grammars.LR_Tables;
-with Gela.Grammars.LR.LALR;
-with Gela.Grammars.Constructors;
-with Gela.Grammars.Conflicts;
+with Anagram.Grammars;
+with Anagram.Grammars.Reader;
+with Anagram.Grammars_Convertors;
+with Anagram.Grammars.Rule_Templates;
+with Anagram.Grammars_Debug;
+with Anagram.Grammars.LR_Tables;
+with Anagram.Grammars.LR.LALR;
+with Anagram.Grammars.Constructors;
+with Anagram.Grammars.Conflicts;
 with AG_Tools.Writers;                 use AG_Tools.Writers;
 
 with League.String_Vectors;
@@ -25,8 +25,8 @@ with League.Strings;
 
 procedure YACC_Driver is
 
-   use type Gela.Grammars.Rule_Count;
-   use type Gela.Grammars.LR.State_Count;
+   use type Anagram.Grammars.Rule_Count;
+   use type Anagram.Grammars.LR.State_Count;
 
    procedure Put_Proc_Decl
      (Output : in out Writer;
@@ -34,13 +34,13 @@ procedure YACC_Driver is
 
    procedure Put_Piece
      (Piece : in out Writer;
-      From  : Gela.Grammars.Production_Index;
-      To    : Gela.Grammars.Production_Index);
+      From  : Anagram.Grammars.Production_Index;
+      To    : Anagram.Grammars.Production_Index);
 
    procedure Put_Rule
      (Output : in out Writer;
-      Prod   : Gela.Grammars.Production;
-      Rule   : Gela.Grammars.Rule);
+      Prod   : Anagram.Grammars.Production;
+      Rule   : Anagram.Grammars.Rule);
 
    function Image (X : Integer) return Wide_Wide_String;
 
@@ -48,16 +48,17 @@ procedure YACC_Driver is
    procedure Print_Action;
 
    File  : constant String := Ada.Command_Line.Argument (1);
-   G     : constant Gela.Grammars.Grammar := Gela.Grammars.Reader.Read (File);
-   Plain : constant Gela.Grammars.Grammar :=
-     Gela.Grammars_Convertors.Convert (G, Left => False);
-   AG    : constant Gela.Grammars.Grammar :=
-     Gela.Grammars.Constructors.To_Augmented (Plain);
-   Table : constant Gela.Grammars.LR_Tables.Table_Access :=
-     Gela.Grammars.LR.LALR.Build
+   G     : constant Anagram.Grammars.Grammar :=
+     Anagram.Grammars.Reader.Read (File);
+   Plain : constant Anagram.Grammars.Grammar :=
+     Anagram.Grammars_Convertors.Convert (G, Left => False);
+   AG    : constant Anagram.Grammars.Grammar :=
+     Anagram.Grammars.Constructors.To_Augmented (Plain);
+   Table : constant Anagram.Grammars.LR_Tables.Table_Access :=
+     Anagram.Grammars.LR.LALR.Build
        (Input        => AG,
         Right_Nulled => False);
-   Resolver : Gela.Grammars.Conflicts.Resolver;
+   Resolver : Anagram.Grammars.Conflicts.Resolver;
    Output : Writer;
 
    -----------
@@ -75,8 +76,8 @@ procedure YACC_Driver is
    ------------------
 
    procedure Print_Action is
-      use type Gela.Grammars.Production_Count;
-      use type Gela.Grammars.Part_Count;
+      use type Anagram.Grammars.Production_Count;
+      use type Anagram.Grammars.Part_Count;
       type Action_Code is mod 2 ** 16;
 
       Count  : Natural;
@@ -87,13 +88,13 @@ procedure YACC_Driver is
       Output.P;
       Output.P ("   Action_Table : constant array");
       Output.N ("     (State_Index range 1 .. ");
-      Output.N (Natural (Gela.Grammars.LR_Tables.Last_State (Table.all)));
+      Output.N (Natural (Anagram.Grammars.LR_Tables.Last_State (Table.all)));
       Output.P (",");
-      Output.N ("      Gela.Grammars.Terminal_Count range 0 .. ");
+      Output.N ("      Anagram.Grammars.Terminal_Count range 0 .. ");
       Output.N (Natural (Plain.Last_Terminal));
       Output.P (") of Action_Code :=");
 
-      for State in 1 .. Gela.Grammars.LR_Tables.Last_State (Table.all) loop
+      for State in 1 .. Anagram.Grammars.LR_Tables.Last_State (Table.all) loop
          if State = 1 then
             Output.N ("     (");
          else
@@ -107,8 +108,8 @@ procedure YACC_Driver is
 
          for T in 0 .. Plain.Last_Terminal loop
             declare
-               use Gela.Grammars.LR_Tables;
-               S : constant Gela.Grammars.LR.State_Count :=
+               use Anagram.Grammars.LR_Tables;
+               S : constant Anagram.Grammars.LR.State_Count :=
                  Shift (Table.all, State, T);
                R : constant Reduce_Iterator := Reduce (Table.all, State, T);
             begin
@@ -141,7 +142,7 @@ procedure YACC_Driver is
       Output.P (");");
       Output.P;
       Output.P ("   type Production_Record is record");
-      Output.P ("      NT    : Gela.Grammars.Non_Terminal_Index;");
+      Output.P ("      NT    : Anagram.Grammars.Non_Terminal_Index;");
       Output.P ("      Parts : Natural;");
       Output.P ("   end record;");
       Output.P;
@@ -175,9 +176,9 @@ procedure YACC_Driver is
       Output.P;
 
       Output.P ("   procedure Next_Action");
-      Output.P ("     (State : Gela.Grammars.LR_Parsers.State_Index;");
-      Output.P ("      Token : Gela.Grammars.Terminal_Count;");
-      Output.P ("      Value : out Gela.Grammars.LR_Parsers.Action)");
+      Output.P ("     (State : Anagram.Grammars.LR_Parsers.State_Index;");
+      Output.P ("      Token : Anagram.Grammars.Terminal_Count;");
+      Output.P ("      Value : out Anagram.Grammars.LR_Parsers.Action)");
       Output.P ("   is");
       Output.P ("      Code : constant Action_Code := " &
                   "Action_Table (State, Token);");
@@ -188,12 +189,12 @@ procedure YACC_Driver is
       Output.P ("      elsif Code /= 0 then");
       Output.P ("         Value := (Kind  => Reduce,");
       Output.P ("                   Prod  => " &
-                  "Gela.Grammars.Production_Index (Code),");
+                  "Anagram.Grammars.Production_Index (Code),");
       Output.P ("                   NT    => Prods (Code).NT,");
       Output.P ("                   Parts => Prods (Code).Parts);");
 
-      for State in 1 .. Gela.Grammars.LR_Tables.Last_State (Table.all) loop
-         if Gela.Grammars.LR_Tables.Finish (Table.all, State) then
+      for State in 1 .. Anagram.Grammars.LR_Tables.Last_State (Table.all) loop
+         if Anagram.Grammars.LR_Tables.Finish (Table.all, State) then
             Output.N ("      elsif State = ");
             Output.N (Natural (State));
             Output.P (" then");
@@ -216,14 +217,14 @@ procedure YACC_Driver is
       Count  : Natural;
    begin
       Output.P ("   Go_To_Table : constant array");
-      Output.N ("     (Gela.Grammars.LR_Parsers.State_Index range 1 .. ");
-      Output.N (Natural (Gela.Grammars.LR_Tables.Last_State (Table.all)));
+      Output.N ("     (Anagram.Grammars.LR_Parsers.State_Index range 1 .. ");
+      Output.N (Natural (Anagram.Grammars.LR_Tables.Last_State (Table.all)));
       Output.P (",");
-      Output.N ("      Gela.Grammars.Non_Terminal_Index range 1 .. ");
+      Output.N ("      Anagram.Grammars.Non_Terminal_Index range 1 .. ");
       Output.N (Natural (Plain.Last_Non_Terminal));
       Output.P (") of State_Index :=");
 
-      for State in 1 .. Gela.Grammars.LR_Tables.Last_State (Table.all) loop
+      for State in 1 .. Anagram.Grammars.LR_Tables.Last_State (Table.all) loop
          if State = 1 then
             Output.N ("     (");
          else
@@ -237,9 +238,9 @@ procedure YACC_Driver is
 
          for NT in 1 .. Plain.Last_Non_Terminal loop
             declare
-               use Gela.Grammars.LR;
+               use Anagram.Grammars.LR;
                Next : constant State_Count :=
-                 Gela.Grammars.LR_Tables.Shift (Table.all, State, NT);
+                 Anagram.Grammars.LR_Tables.Shift (Table.all, State, NT);
             begin
                if Next /= 0 then
                   Output.N (Natural (NT));
@@ -262,9 +263,9 @@ procedure YACC_Driver is
       Output.P;
 
       Output.P ("   function Go_To");
-      Output.P ("     (State : Gela.Grammars.LR_Parsers.State_Index;");
-      Output.P ("      NT    : Gela.Grammars.Non_Terminal_Index)");
-      Output.P ("      return Gela.Grammars.LR_Parsers.State_Index");
+      Output.P ("     (State : Anagram.Grammars.LR_Parsers.State_Index;");
+      Output.P ("      NT    : Anagram.Grammars.Non_Terminal_Index)");
+      Output.P ("      return Anagram.Grammars.LR_Parsers.State_Index");
       Output.P ("   is");
       Output.P ("   begin");
       Output.P ("      return Go_To_Table (State, NT);");
@@ -278,10 +279,10 @@ procedure YACC_Driver is
 
    procedure Put_Rule
      (Output : in out Writer;
-      Prod   : Gela.Grammars.Production;
-      Rule   : Gela.Grammars.Rule)
+      Prod   : Anagram.Grammars.Production;
+      Rule   : Anagram.Grammars.Rule)
    is
-      use Gela.Grammars.Rule_Templates;
+      use Anagram.Grammars.Rule_Templates;
       use type League.Strings.Universal_String;
       Template : constant Rule_Template := Create (Rule.Text);
       Args     : League.String_Vectors.Universal_String_Vector;
@@ -338,22 +339,22 @@ procedure YACC_Driver is
       Output.N ("procedure Gela.LARL_Parsers.On_Reduce");
       Output.P (Suffix);
       Output.P ("  (Self  : access Parser_Context;");
-      Output.P ("   Prod  : Gela.Grammars.Production_Index;");
+      Output.P ("   Prod  : Anagram.Grammars.Production_Index;");
       Output.N ("   Nodes : in out " &
                   "Gela.LARL_Parsers_Nodes.Node_Array)");
    end Put_Proc_Decl;
 
    procedure Put_Piece
      (Piece : in out Writer;
-      From  : Gela.Grammars.Production_Index;
-      To    : Gela.Grammars.Production_Index)
+      From  : Anagram.Grammars.Production_Index;
+      To    : Anagram.Grammars.Production_Index)
    is
       Suffix : Wide_Wide_String :=
-        Gela.Grammars.Production_Index'Wide_Wide_Image (From);
+        Anagram.Grammars.Production_Index'Wide_Wide_Image (From);
    begin
       Suffix (1) := '_';
 
-      Piece.P ("with Gela.Grammars;");
+      Piece.P ("with Anagram.Grammars;");
       Piece.P ("with Gela.LARL_Parsers_Nodes;");
       Piece.N ("private ");
       Put_Proc_Decl (Piece, Suffix);
@@ -411,7 +412,8 @@ procedure YACC_Driver is
 
       for Prod of Plain.Production (From .. To) loop
          Piece.N ("      when");
-         Piece.N (Gela.Grammars.Production_Index'Wide_Wide_Image (Prod.Index));
+         Piece.N
+           (Anagram.Grammars.Production_Index'Wide_Wide_Image (Prod.Index));
          Piece.P (" =>");
 
          for Rule of Plain.Rule (Prod.First_Rule .. Prod.Last_Rule) loop
@@ -431,35 +433,35 @@ procedure YACC_Driver is
       Piece.P (";");
    end Put_Piece;
 
-   use type Gela.Grammars.Production_Count;
+   use type Anagram.Grammars.Production_Count;
 
-   Piece_Length : constant Gela.Grammars.Production_Count := 500;
+   Piece_Length : constant Anagram.Grammars.Production_Count := 500;
 
    Piece : Writer;
 begin
    Resolver.Resolve (AG, Table.all);
 
-   Output.P ("with Gela.Grammars;");
-   Output.P ("with Gela.Grammars.LR_Parsers;");
+   Output.P ("with Anagram.Grammars;");
+   Output.P ("with Anagram.Grammars.LR_Parsers;");
    Output.P;
    Output.P ("package Gela.LARL_Parsers.Data is");
    Output.P ("   pragma Preelaborate;");
    Output.P;
    Output.P ("   procedure Next_Action");
-   Output.P ("     (State : Gela.Grammars.LR_Parsers.State_Index;");
-   Output.P ("      Token : Gela.Grammars.Terminal_Count;");
-   Output.P ("      Value : out Gela.Grammars.LR_Parsers.Action);");
+   Output.P ("     (State : Anagram.Grammars.LR_Parsers.State_Index;");
+   Output.P ("      Token : Anagram.Grammars.Terminal_Count;");
+   Output.P ("      Value : out Anagram.Grammars.LR_Parsers.Action);");
    Output.P;
    Output.P ("   function Go_To");
-   Output.P ("     (State : Gela.Grammars.LR_Parsers.State_Index;");
-   Output.P ("      NT    : Gela.Grammars.Non_Terminal_Index)");
-   Output.P ("      return Gela.Grammars.LR_Parsers.State_Index;");
+   Output.P ("     (State : Anagram.Grammars.LR_Parsers.State_Index;");
+   Output.P ("      NT    : Anagram.Grammars.Non_Terminal_Index)");
+   Output.P ("      return Anagram.Grammars.LR_Parsers.State_Index;");
    Output.P;
    Output.P ("end Gela.LARL_Parsers.Data;");
 
    Output.P;
    Output.P ("package body Gela.LARL_Parsers.Data is");
-   Output.P ("   use Gela.Grammars.LR_Parsers;");
+   Output.P ("   use Anagram.Grammars.LR_Parsers;");
    Output.P;
 
    Print_Go_To;
@@ -467,7 +469,7 @@ begin
 
    Output.P ("end Gela.LARL_Parsers.Data;");
    Output.P;
-   Output.P ("with Gela.Grammars;");
+   Output.P ("with Anagram.Grammars;");
    Output.P ("with Gela.LARL_Parsers_Nodes;");
    Output.N ("private ");
    Put_Proc_Decl (Output, "");
@@ -478,7 +480,7 @@ begin
 
    for Piece_Index in 0 .. (Plain.Last_Production - 1) / Piece_Length loop
       declare
-         From  : constant Gela.Grammars.Production_Index :=
+         From  : constant Anagram.Grammars.Production_Index :=
            Piece_Index * Piece_Length + 1;
       begin
          Output.N ("with Gela.LARL_Parsers.On_Reduce_");
@@ -494,10 +496,10 @@ begin
 
    for Piece_Index in 0 .. (Plain.Last_Production - 1) / Piece_Length loop
       declare
-         From  : constant Gela.Grammars.Production_Index :=
+         From  : constant Anagram.Grammars.Production_Index :=
            Piece_Index * Piece_Length + 1;
-         To    : constant Gela.Grammars.Production_Index :=
-           Gela.Grammars.Production_Index'Min
+         To    : constant Anagram.Grammars.Production_Index :=
+           Anagram.Grammars.Production_Index'Min
              (Plain.Last_Production, (Piece_Index + 1) * Piece_Length);
       begin
          Output.N ("      when ");
@@ -524,9 +526,9 @@ begin
    Ada.Text_IO.Put_Line (Output.Text.To_UTF_8_String);
    Ada.Text_IO.Put_Line (Piece.Text.To_UTF_8_String);
 
-   Gela.Grammars_Debug.Print_Conflicts (AG, Table.all);
+   Anagram.Grammars_Debug.Print_Conflicts (AG, Table.all);
 
    if Ada.Command_Line.Argument_Count > 1 then
-      Gela.Grammars_Debug.Print (G);
+      Anagram.Grammars_Debug.Print (G);
    end if;
 end YACC_Driver;

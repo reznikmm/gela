@@ -16,12 +16,12 @@ package body AG_Tools is
    -----------------------
 
    function Is_Converted_List
-     (G  : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal) return Boolean
+     (G  : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal) return Boolean
    is
-      use type Gela.Grammars.Part_Index;
+      use type Anagram.Grammars.Part_Index;
 
-      Prod : Gela.Grammars.Production renames G.Production (NT.Last);
+      Prod : Anagram.Grammars.Production renames G.Production (NT.Last);
    begin
       return Prod.First > Prod.Last;
    end Is_Converted_List;
@@ -31,12 +31,12 @@ package body AG_Tools is
    ---------------
 
    function List_Item
-     (G : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
-      return Gela.Grammars.Non_Terminal_Index
+     (G : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal)
+      return Anagram.Grammars.Non_Terminal_Index
    is
-      Prod : Gela.Grammars.Production renames G.Production (NT.First);
-      Part : Gela.Grammars.Part renames G.Part (Prod.First);
+      Prod : Anagram.Grammars.Production renames G.Production (NT.First);
+      Part : Anagram.Grammars.Part renames G.Part (Prod.First);
    begin
       return Part.Denote;
    end List_Item;
@@ -104,11 +104,11 @@ package body AG_Tools is
    -----------------
 
    function Return_Type
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part)
       return League.Strings.Universal_String
    is
-      use Gela.Grammars;
+      use Anagram.Grammars;
 
       Result : League.Strings.Universal_String;
    begin
@@ -118,7 +118,7 @@ package body AG_Tools is
          end if;
 
          declare
-            Prod : Gela.Grammars.Production renames
+            Prod : Anagram.Grammars.Production renames
               G.Production (Part.First);
          begin
             if Prod.First /= Prod.Last then
@@ -132,7 +132,7 @@ package body AG_Tools is
          Result.Append ("Gela.Lexical_Types.Token_Count");
       else
          declare
-            NT : Gela.Grammars.Non_Terminal renames
+            NT : Anagram.Grammars.Non_Terminal renames
               G.Non_Terminal (Part.Denote);
          begin
             return Return_Type (G, NT);
@@ -148,14 +148,14 @@ package body AG_Tools is
    -----------------
 
    function Return_Type
-     (G  : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
+     (G  : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal)
       return League.Strings.Universal_String
    is
       use type League.Strings.Universal_String;
 
       Result : League.Strings.Universal_String;
-      Prod : Gela.Grammars.Production renames G.Production (NT.First);
+      Prod : Anagram.Grammars.Production renames G.Production (NT.First);
    begin
       if NT.Is_List or Is_Converted_List (G, NT) then
          Result := Return_Type (G, G.Part (Prod.First));

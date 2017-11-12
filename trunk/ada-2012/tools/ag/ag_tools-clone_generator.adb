@@ -18,9 +18,9 @@ package body AG_Tools.Clone_Generator is
    -- Run --
    ---------
 
-   procedure Run (G : Gela.Grammars.Grammar_Access) is
+   procedure Run (G : Anagram.Grammars.Grammar_Access) is
       procedure Each_Part
-        (Part   : Gela.Grammars.Part;
+        (Part   : Anagram.Grammars.Part;
          Decl   : in out Writer;
          Assign : in out Writer;
          List   : in out Writer);
@@ -34,7 +34,7 @@ package body AG_Tools.Clone_Generator is
       ---------------
 
       procedure Each_Part
-        (Part   : Gela.Grammars.Part;
+        (Part   : Anagram.Grammars.Part;
          Decl   : in out Writer;
          Assign : in out Writer;
          List   : in out Writer)
@@ -66,7 +66,7 @@ package body AG_Tools.Clone_Generator is
 
          if Part.Is_List_Reference then
             declare
-               NT : constant Gela.Grammars.Non_Terminal_Index :=
+               NT : constant Anagram.Grammars.Non_Terminal_Index :=
                  List_Item (G.all, G.Non_Terminal (Part.Denote));
             begin
                if not Is_Concrete (NT) and not Withed (NT) then
@@ -115,7 +115,8 @@ package body AG_Tools.Clone_Generator is
             Assign.P;
          else
             declare
-               NT : constant Gela.Grammars.Non_Terminal_Index := Part.Denote;
+               NT : constant Anagram.Grammars.Non_Terminal_Index :=
+                 Part.Denote;
             begin
                if not Is_Concrete (NT) and not Withed (NT) then
                   Withed (NT) := True;

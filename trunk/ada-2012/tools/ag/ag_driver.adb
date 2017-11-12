@@ -12,11 +12,11 @@ with Ada.Text_IO;
 
 with League.Strings;
 
-with Gela.Grammars;
+with Anagram.Grammars;
 
 with AG_Tools; use AG_Tools;
 with AG_Tools.Writers; use AG_Tools.Writers;
---  with Gela.Grammars_Debug;
+--  with Anagram.Grammars_Debug;
 with AG_Tools.Input;
 with AG_Tools.Element_Generators;
 with AG_Tools.Prop_Visiters;
@@ -26,14 +26,14 @@ with AG_Tools.Clone_Generator;
 procedure AG_Driver is
    use AG_Tools.Input;
 
-   use type Gela.Grammars.Non_Terminal_Count;
+   use type Anagram.Grammars.Non_Terminal_Count;
    use type League.Strings.Universal_String;
 
    procedure Generate_Visiter;
    procedure Generate_2;
 
    Name  : constant String := Ada.Command_Line.Argument (1);
-   G     : Gela.Grammars.Grammar_Access;
+   G     : Anagram.Grammars.Grammar_Access;
 
    procedure Generate_2 is
       Fab_With    : Writer;
@@ -258,7 +258,7 @@ begin
    AG_Tools.Input.Initialize (Name);
    G := AG_Tools.Input.Grammar;
 
---     Gela.Grammars_Debug.Print (G);
+--     Anagram.Grammars_Debug.Print (G);
 
 --   Generate_Factory;
    Generate_2;

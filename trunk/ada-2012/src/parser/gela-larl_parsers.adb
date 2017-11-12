@@ -1,3 +1,5 @@
+with Anagram.Grammars.LR_Parsers;
+
 with Gela.Element_Visiters;
 with Gela.Elements.Associations;
 with Gela.Elements.Composite_Constraints;
@@ -8,7 +10,6 @@ with Gela.Elements.Identifiers;
 with Gela.Elements.Prefixes;
 with Gela.Elements.Selector_Names;
 with Gela.Elements.Subtype_Marks;
-with Gela.Grammars.LR_Parsers;
 with Gela.LARL_Parsers.Data;
 with Gela.LARL_Parsers.On_Reduce;
 with Gela.LARL_Parsers_Nodes;
@@ -18,7 +19,7 @@ package body Gela.LARL_Parsers is
    use Gela.Lexical_Types;
 
    Map : constant array (Gela.Lexical_Types.Token_Kind)
-     of Gela.Grammars.Terminal_Count :=
+     of Anagram.Grammars.Terminal_Count :=
      (Error                   => 0,
       End_Of_Input            => 0,
       Abort_Token             => 1,
@@ -133,7 +134,7 @@ package body Gela.LARL_Parsers is
 
    procedure Next_Token
      (Self  : access Input_Wrapper;
-      Token : out Gela.Grammars.Terminal_Count;
+      Token : out Anagram.Grammars.Terminal_Count;
       Value : out Gela.LARL_Parsers_Nodes.Node);
 
    ----------------
@@ -192,7 +193,7 @@ package body Gela.LARL_Parsers is
 
    procedure Next_Token
      (Self  : access Input_Wrapper;
-      Token : out Gela.Grammars.Terminal_Count;
+      Token : out Anagram.Grammars.Terminal_Count;
       Value : out Gela.LARL_Parsers_Nodes.Node)
    is
       use Gela.LARL_Parsers_Nodes;
@@ -219,7 +220,7 @@ package body Gela.LARL_Parsers is
    is
       pragma Unreferenced (Self);
 
-      procedure Do_It is new Gela.Grammars.LR_Parsers.Parse
+      procedure Do_It is new Anagram.Grammars.LR_Parsers.Parse
         (Node        => Gela.LARL_Parsers_Nodes.Node,
          Node_Array  => Gela.LARL_Parsers_Nodes.Node_Array,
          Lexer       => Input_Wrapper,
@@ -314,8 +315,6 @@ package body Gela.LARL_Parsers is
       Constraint : Gela.Elements.Scalar_Constraints.Scalar_Constraint_Access)
       return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
    is
-      use type Gela.Elements.Constraints.Constraint_Access;
-
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
             Factory : not null Gela.Element_Factories.Element_Factory_Access;

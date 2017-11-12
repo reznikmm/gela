@@ -13,67 +13,67 @@ with Ada.Containers.Hashed_Sets;
 with League.String_Vectors;
 with League.Strings.Hash;
 
-with Gela.Grammars.Reader;
-with Gela.Grammars.Constructors;
+with Anagram.Grammars.Reader;
+with Anagram.Grammars.Constructors;
 
 with AG_Tools.Check_Ordered; use AG_Tools.Check_Ordered;
 
 package body AG_Tools.Input is
 
    type NT_List is array
-     (Gela.Grammars.Non_Terminal_Index range <>) of Boolean;
+     (Anagram.Grammars.Non_Terminal_Index range <>) of Boolean;
 
    type NT_List_Access is access all NT_List;
 
    type NT_NT_Map is array
-     (Gela.Grammars.Non_Terminal_Index range <>,
-      Gela.Grammars.Non_Terminal_Index range <>) of Boolean;
+     (Anagram.Grammars.Non_Terminal_Index range <>,
+      Anagram.Grammars.Non_Terminal_Index range <>) of Boolean;
 
    type NT_NT_Map_Access is access all NT_NT_Map;
 
    function Macro_Reference
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count;
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production)
+      return Anagram.Grammars.Non_Terminal_Count;
    --  If Prod is just reference to another NT, return NT.Index.
    --  Return 0 otherwise.
 
    function List_Reference
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
-      return Gela.Grammars.Non_Terminal_Count;
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part)
+      return Anagram.Grammars.Non_Terminal_Count;
    --  If Part is reference to list, return NT.Index of the list
    --  Return 0 otherwise
 
    procedure Look_For_List
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production);
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production);
    --  If any port of Prod is reference to list of some NT then
    --  mark With_List (NT) as True
 
    procedure Copy
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
+     (G : Anagram.Grammars.Grammar;
+      V : in out Anagram.Grammars.Constructors.Constructor;
       Is_Concrete : NT_List);
 
    procedure Copy_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Child  : Gela.Grammars.Non_Terminal_Index;
-      Parent : Gela.Grammars.Non_Terminal_Index;
+     (G      : Anagram.Grammars.Grammar;
+      V      : in out Anagram.Grammars.Constructors.Constructor;
+      Child  : Anagram.Grammars.Non_Terminal_Index;
+      Parent : Anagram.Grammars.Non_Terminal_Index;
       Done   : in out League.String_Vectors.Universal_String_Vector);
 
    procedure Copy_Productions
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      From : Gela.Grammars.Production_Index;
-      To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List);
+     (G : Anagram.Grammars.Grammar;
+      V : in out Anagram.Grammars.Constructors.Constructor;
+      From : Anagram.Grammars.Production_Index;
+      To   : Anagram.Grammars.Production_Count;
+      PL : in out Anagram.Grammars.Constructors.Production_List);
 
    procedure Add_Option
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production;
-      Part : Gela.Grammars.Part);
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production;
+      Part : Anagram.Grammars.Part);
    --  Remember Prod.Part as option
 
    package String_Sets is new Ada.Containers.Hashed_Sets
@@ -82,7 +82,7 @@ package body AG_Tools.Input is
       Equivalent_Elements => League.Strings."=",
       "="                 => League.Strings."=");
 
-   G            : Gela.Grammars.Grammar_Access;
+   G            : Anagram.Grammars.Grammar_Access;
    Concrete     : NT_List_Access;
    With_List    : NT_List_Access;
    Is_Implement : NT_NT_Map_Access;
@@ -93,12 +93,13 @@ package body AG_Tools.Input is
    ----------------
 
    procedure Add_Option
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production;
-      Part : Gela.Grammars.Part)
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production;
+      Part : Anagram.Grammars.Part)
    is
       use type League.Strings.Universal_String;
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      NT   : Anagram.Grammars.Non_Terminal renames
+        G.Non_Terminal (Prod.Parent);
       Name : constant League.Strings.Universal_String :=
         NT.Name & " " & Prod.Name & " " & Part.Name;
    begin
@@ -110,13 +111,13 @@ package body AG_Tools.Input is
    ----------
 
    procedure Copy
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
+     (G : Anagram.Grammars.Grammar;
+      V : in out Anagram.Grammars.Constructors.Constructor;
       Is_Concrete : NT_List) is
    begin
       for J in G.Terminal'Range loop
          declare
-            T : Gela.Grammars.Terminal renames G.Terminal (J);
+            T : Anagram.Grammars.Terminal renames G.Terminal (J);
          begin
             V.Create_Terminal (T.Image, T.Precedence);
 
@@ -131,8 +132,8 @@ package body AG_Tools.Input is
 
       for J in G.Non_Terminal'Range loop
          declare
-            N  : Gela.Grammars.Non_Terminal renames G.Non_Terminal (J);
-            PL : Gela.Grammars.Constructors.Production_List :=
+            N  : Anagram.Grammars.Non_Terminal renames G.Non_Terminal (J);
+            PL : Anagram.Grammars.Constructors.Production_List :=
               V.Create_Production_List;
          begin
             Copy_Productions (G, V, N.First, N.Last, PL);
@@ -153,11 +154,11 @@ package body AG_Tools.Input is
 
             for K in N.First .. N.Last loop
                declare
-                  S : Gela.Grammars.Production renames G.Production (K);
+                  S : Anagram.Grammars.Production renames G.Production (K);
                begin
                   for Y in S.First_Rule .. S.Last_Rule loop
                      declare
-                        R : Gela.Grammars.Rule renames G.Rule (Y);
+                        R : Anagram.Grammars.Rule renames G.Rule (Y);
                      begin
                         V.Create_Rule (N.Name, S.Name, R.Text);
 
@@ -177,18 +178,18 @@ package body AG_Tools.Input is
    ---------------
 
    procedure Copy_Attr
-     (G      : Gela.Grammars.Grammar;
-      V      : in out Gela.Grammars.Constructors.Constructor;
-      Child  : Gela.Grammars.Non_Terminal_Index;
-      Parent : Gela.Grammars.Non_Terminal_Index;
+     (G      : Anagram.Grammars.Grammar;
+      V      : in out Anagram.Grammars.Constructors.Constructor;
+      Child  : Anagram.Grammars.Non_Terminal_Index;
+      Parent : Anagram.Grammars.Non_Terminal_Index;
       Done   : in out League.String_Vectors.Universal_String_Vector)
    is
-      X : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Child);
-      Y : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Parent);
+      X : Anagram.Grammars.Non_Terminal renames G.Non_Terminal (Child);
+      Y : Anagram.Grammars.Non_Terminal renames G.Non_Terminal (Parent);
    begin
       for K in Y.First_Attribute .. Y.Last_Attribute loop
          declare
-            YA : Gela.Grammars.Attribute_Declaration renames
+            YA : Anagram.Grammars.Attribute_Declaration renames
               G.Declaration (K);
          begin
             if Done.Index (YA.Name) > 0 then
@@ -201,7 +202,7 @@ package body AG_Tools.Input is
                declare
                   use type League.Strings.Universal_String;
 
-                  XA : Gela.Grammars.Attribute_Declaration renames
+                  XA : Anagram.Grammars.Attribute_Declaration renames
                     G.Declaration (J);
                   Text : League.Strings.Universal_String;
                begin
@@ -230,22 +231,22 @@ package body AG_Tools.Input is
    ----------------------
 
    procedure Copy_Productions
-     (G : Gela.Grammars.Grammar;
-      V : in out Gela.Grammars.Constructors.Constructor;
-      From : Gela.Grammars.Production_Index;
-      To   : Gela.Grammars.Production_Count;
-      PL : in out Gela.Grammars.Constructors.Production_List)
+     (G : Anagram.Grammars.Grammar;
+      V : in out Anagram.Grammars.Constructors.Constructor;
+      From : Anagram.Grammars.Production_Index;
+      To   : Anagram.Grammars.Production_Count;
+      PL : in out Anagram.Grammars.Constructors.Production_List)
    is
    begin
       for K in From .. To loop
          declare
-            S : Gela.Grammars.Production renames G.Production (K);
-            P : Gela.Grammars.Constructors.Production :=
+            S : Anagram.Grammars.Production renames G.Production (K);
+            P : Anagram.Grammars.Constructors.Production :=
               V.Create_Production (S.Name, S.Precedence);
          begin
             for X in S.First .. S.Last loop
                declare
-                  R : Gela.Grammars.Part renames G.Part (X);
+                  R : Anagram.Grammars.Part renames G.Part (X);
                begin
                   if R.Is_Terminal_Reference then
                      P.Add (V.Create_Terminal_Reference
@@ -263,9 +264,9 @@ package body AG_Tools.Input is
                      --  remove Option from grammar by replacing its
                      --  nested items
                      declare
-                        Nested_Production : Gela.Grammars.Production renames
+                        Nested_Production : Anagram.Grammars.Production renames
                           G.Production (R.First);
-                        Nested_Part : Gela.Grammars.Part renames
+                        Nested_Part : Anagram.Grammars.Part renames
                           G.Part (Nested_Production.First);
                      begin
                         Add_Option
@@ -302,7 +303,7 @@ package body AG_Tools.Input is
    -- Grammar --
    -------------
 
-   function Grammar return Gela.Grammars.Grammar_Access is
+   function Grammar return Anagram.Grammars.Grammar_Access is
    begin
       return G;
    end Grammar;
@@ -311,7 +312,8 @@ package body AG_Tools.Input is
    -- Has_List --
    --------------
 
-   function Has_List (NT : Gela.Grammars.Non_Terminal_Index) return Boolean is
+   function Has_List
+     (NT : Anagram.Grammars.Non_Terminal_Index) return Boolean is
    begin
       return With_List (NT);
    end Has_List;
@@ -320,7 +322,7 @@ package body AG_Tools.Input is
    ---------------
 
    function Implement
-     (X, Y : Gela.Grammars.Non_Terminal_Index) return Boolean is
+     (X, Y : Anagram.Grammars.Non_Terminal_Index) return Boolean is
    begin
       return Is_Implement (X, Y);
    end Implement;
@@ -330,11 +332,11 @@ package body AG_Tools.Input is
    ----------------
 
    procedure Initialize (File_Name : String) is
-      use type Gela.Grammars.Production_Count;
-      use type Gela.Grammars.Non_Terminal_Count;
+      use type Anagram.Grammars.Production_Count;
+      use type Anagram.Grammars.Non_Terminal_Count;
 
-      F : constant Gela.Grammars.Grammar :=
-        Gela.Grammars.Reader.Read (File_Name, Tail_List => True);
+      F : constant Anagram.Grammars.Grammar :=
+        Anagram.Grammars.Reader.Read (File_Name, Tail_List => True);
    begin
       Concrete := new NT_List'(F.Non_Terminal'Range => False);
       With_List := new NT_List'(F.Non_Terminal'Range => False);
@@ -360,7 +362,7 @@ package body AG_Tools.Input is
          if not NT.Is_List then
             for Prod of F.Production (NT.First .. NT.Last) loop
                declare
-                  Ref : constant Gela.Grammars.Non_Terminal_Count :=
+                  Ref : constant Anagram.Grammars.Non_Terminal_Count :=
                     Macro_Reference (F, Prod);
                begin
                   if Ref /= 0 then
@@ -373,7 +375,7 @@ package body AG_Tools.Input is
       end loop;
 
       declare
-         V : Gela.Grammars.Constructors.Constructor;
+         V : Anagram.Grammars.Constructors.Constructor;
       begin
          Copy (F, V, Concrete.all);
 
@@ -389,7 +391,7 @@ package body AG_Tools.Input is
             end loop;
          end loop;
 
-         G := new Gela.Grammars.Grammar'(V.Complete);
+         G := new Anagram.Grammars.Grammar'(V.Complete);
       end;
 
       Check;
@@ -401,7 +403,7 @@ package body AG_Tools.Input is
    -----------------
 
    function Is_Concrete
-     (NT : Gela.Grammars.Non_Terminal_Index) return Boolean is
+     (NT : Anagram.Grammars.Non_Terminal_Index) return Boolean is
    begin
       return Concrete (NT);
    end Is_Concrete;
@@ -411,12 +413,13 @@ package body AG_Tools.Input is
    ---------------
 
    function Is_Option
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part) return Boolean
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part) return Boolean
    is
       use type League.Strings.Universal_String;
-      Prod : Gela.Grammars.Production renames G.Production (Part.Parent);
-      NT   : Gela.Grammars.Non_Terminal renames G.Non_Terminal (Prod.Parent);
+      Prod : Anagram.Grammars.Production renames G.Production (Part.Parent);
+      NT   : Anagram.Grammars.Non_Terminal renames
+        G.Non_Terminal (Prod.Parent);
       Name : constant League.Strings.Universal_String :=
         NT.Name & " " & Prod.Name & " " & Part.Name;
    begin
@@ -428,13 +431,13 @@ package body AG_Tools.Input is
    --------------------
 
    function List_Reference
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
-      return Gela.Grammars.Non_Terminal_Count is
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part)
+      return Anagram.Grammars.Non_Terminal_Count is
    begin
       if Part.Is_List_Reference then
          declare
-            NT   : Gela.Grammars.Non_Terminal renames
+            NT   : Anagram.Grammars.Non_Terminal renames
               G.Non_Terminal (Part.Denote);
          begin
             return List_Item (G, NT);
@@ -449,11 +452,11 @@ package body AG_Tools.Input is
    -------------------
 
    procedure Look_For_List
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production)
    is
-      use type Gela.Grammars.Non_Terminal_Count;
-      List : Gela.Grammars.Non_Terminal_Count;
+      use type Anagram.Grammars.Non_Terminal_Count;
+      List : Anagram.Grammars.Non_Terminal_Count;
    begin
       for Part of G.Part (Prod.First .. Prod.Last) loop
          List := List_Reference (G, Part);
@@ -468,19 +471,19 @@ package body AG_Tools.Input is
    ---------------------
 
    function Macro_Reference
-     (G    : Gela.Grammars.Grammar;
-      Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count
+     (G    : Anagram.Grammars.Grammar;
+      Prod : Anagram.Grammars.Production)
+      return Anagram.Grammars.Non_Terminal_Count
    is
       use type League.Strings.Universal_String;
-      use type Gela.Grammars.Part_Count;
+      use type Anagram.Grammars.Part_Count;
    begin
       if Prod.First /= Prod.Last then
          return 0;
       end if;
 
       declare
-         Part : Gela.Grammars.Part renames G.Part (Prod.First);
+         Part : Anagram.Grammars.Part renames G.Part (Prod.First);
       begin
          if not Part.Is_Non_Terminal_Reference then
             return 0;
@@ -497,8 +500,8 @@ package body AG_Tools.Input is
    ---------------------
 
    function Macro_Reference
-     (Prod : Gela.Grammars.Production)
-      return Gela.Grammars.Non_Terminal_Count is
+     (Prod : Anagram.Grammars.Production)
+      return Anagram.Grammars.Non_Terminal_Count is
    begin
       return Macro_Reference (G.all, Prod);
    end Macro_Reference;

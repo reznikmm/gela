@@ -1,6 +1,6 @@
 with "matreshka_league";
 with "gela_common";
-with "gela_grammars";
+with "anagram";
 
 project Gela_AG is
    for Source_Dirs use ("../tools/ag");

@@ -8,7 +8,7 @@
 ------------------------------------------------------------------------------
 
 with League.Strings;
-with Gela.Grammars;
+with Anagram.Grammars;
 
 package AG_Tools is
    pragma Preelaborate;
@@ -24,14 +24,14 @@ package AG_Tools is
    --  Get Plural form of noun Text
 
    function Return_Type
-     (G    : Gela.Grammars.Grammar;
-      Part : Gela.Grammars.Part)
+     (G    : Anagram.Grammars.Grammar;
+      Part : Anagram.Grammars.Part)
       return League.Strings.Universal_String;
    --  Get identifier of type of given Part
 
    function Return_Type
-     (G  : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
+     (G  : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal)
       return League.Strings.Universal_String;
    --  Get identifier of type of given Part
 
@@ -40,14 +40,14 @@ package AG_Tools is
       return League.Strings.Universal_String;
 
    function Is_Converted_List
-     (G  : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal) return Boolean;
+     (G  : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal) return Boolean;
    --  Detect if NT was a list before converting to plain AG
 
    function List_Item
-     (G : Gela.Grammars.Grammar;
-      NT : Gela.Grammars.Non_Terminal)
-      return Gela.Grammars.Non_Terminal_Index;
+     (G : Anagram.Grammars.Grammar;
+      NT : Anagram.Grammars.Non_Terminal)
+      return Anagram.Grammars.Non_Terminal_Index;
    --  Return items non-terminal for list, like NT={item}
 
 end AG_Tools;
