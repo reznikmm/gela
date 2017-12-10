@@ -21,9 +21,12 @@ with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Compilation_Units;
 with Gela.Elements.Context_Items;
 with Gela.Elements.For_Loop_Statements;
-with Gela.Elements.Loop_Parameter_Specifications;
 with Gela.Elements.Library_Unit_Bodies;
 with Gela.Elements.Library_Unit_Declarations;
+with Gela.Elements.Loop_Parameter_Specifications;
+with Gela.Elements.Parameter_Specifications;
+with Gela.Elements.Private_Type_Declarations;
+with Gela.Elements.Private_Type_Definitions;
 with Gela.Elements.Proper_Bodies;
 with Gela.Elements.Subunits;
 with Gela.Lexical_Types;
@@ -1204,10 +1207,45 @@ package body Asis.Elements is
      (Declaration : in Asis.Declaration)
       return Asis.Mode_Kinds
    is
+      package Get is
+
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Mode : Asis.Mode_Kinds := Not_A_Mode;
+         end record;
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access);
+
+      end Get;
+
+      package body Get is
+
+         overriding procedure Parameter_Specification
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Parameter_Specifications.
+              Parameter_Specification_Access) is
+         begin
+            if Node.In_Token in Gela.Lexical_Types.Token_Index then
+               if Node.Out_Token in Gela.Lexical_Types.Token_Index then
+                  Self.Mode := An_In_Out_Mode;
+               else
+                  Self.Mode := An_In_Mode;
+               end if;
+            elsif Node.Out_Token in Gela.Lexical_Types.Token_Index then
+               Self.Mode := An_Out_Mode;
+            else
+               Self.Mode := A_Default_In_Mode;
+            end if;
+         end Parameter_Specification;
+      end Get;
+
+      V : aliased Get.Visiter;
    begin
       if Assigned (Declaration) then
-         Raise_Not_Implemented ("");
-         return Not_A_Mode;
+         Declaration.Data.Visit (V);
+         return V.Mode;
       else
          return Not_A_Mode;
       end if;
@@ -1222,12 +1260,95 @@ package body Asis.Elements is
       return Asis.Operator_Kinds
    is
    begin
-      if Assigned (Element) then
-         Raise_Not_Implemented ("");
-         return Not_An_Operator;
-      else
-         return Not_An_Operator;
-      end if;
+      case F.Flat_Kind (Element) is
+         when F.A_Defining_And_Operator =>
+            return An_And_Operator;
+         when F.A_Defining_Or_Operator =>
+            return An_Or_Operator;
+         when F.A_Defining_Xor_Operator =>
+            return An_Xor_Operator;
+         when F.A_Defining_Equal_Operator =>
+            return An_Equal_Operator;
+         when F.A_Defining_Not_Equal_Operator =>
+            return A_Not_Equal_Operator;
+         when F.A_Defining_Less_Than_Operator =>
+            return A_Less_Than_Operator;
+         when F.A_Defining_Less_Than_Or_Equal_Operator =>
+            return A_Less_Than_Or_Equal_Operator;
+         when F.A_Defining_Greater_Than_Operator =>
+            return A_Greater_Than_Operator;
+         when F.A_Defining_Greater_Than_Or_Equal_Operator =>
+            return A_Greater_Than_Or_Equal_Operator;
+         when F.A_Defining_Plus_Operator =>
+            return A_Plus_Operator;
+         when F.A_Defining_Minus_Operator =>
+            return A_Minus_Operator;
+         when F.A_Defining_Concatenate_Operator =>
+            return A_Concatenate_Operator;
+         when F.A_Defining_Unary_Plus_Operator =>
+            return A_Unary_Plus_Operator;
+         when F.A_Defining_Unary_Minus_Operator =>
+            return A_Unary_Minus_Operator;
+         when F.A_Defining_Multiply_Operator =>
+            return A_Multiply_Operator;
+         when F.A_Defining_Divide_Operator =>
+            return A_Divide_Operator;
+         when F.A_Defining_Mod_Operator =>
+            return A_Mod_Operator;
+         when F.A_Defining_Rem_Operator =>
+            return A_Rem_Operator;
+         when F.A_Defining_Exponentiate_Operator =>
+            return An_Exponentiate_Operator;
+         when F.A_Defining_Abs_Operator =>
+            return An_Abs_Operator;
+         when F.A_Defining_Not_Operator =>
+            return A_Not_Operator;
+
+         when F.An_And_Operator =>
+            return An_And_Operator;
+         when F.An_Or_Operator =>
+            return An_Or_Operator;
+         when F.An_Xor_Operator =>
+            return An_Xor_Operator;
+         when F.An_Equal_Operator =>
+            return An_Equal_Operator;
+         when F.A_Not_Equal_Operator =>
+            return A_Not_Equal_Operator;
+         when F.A_Less_Than_Operator =>
+            return A_Less_Than_Operator;
+         when F.A_Less_Than_Or_Equal_Operator =>
+            return A_Less_Than_Or_Equal_Operator;
+         when F.A_Greater_Than_Operator =>
+            return A_Greater_Than_Operator;
+         when F.A_Greater_Than_Or_Equal_Operator =>
+            return A_Greater_Than_Or_Equal_Operator;
+         when F.A_Plus_Operator =>
+            return A_Plus_Operator;
+         when F.A_Minus_Operator =>
+            return A_Minus_Operator;
+         when F.A_Concatenate_Operator =>
+            return A_Concatenate_Operator;
+         when F.A_Unary_Plus_Operator =>
+            return A_Unary_Plus_Operator;
+         when F.A_Unary_Minus_Operator =>
+            return A_Unary_Minus_Operator;
+         when F.A_Multiply_Operator =>
+            return A_Multiply_Operator;
+         when F.A_Divide_Operator =>
+            return A_Divide_Operator;
+         when F.A_Mod_Operator =>
+            return A_Mod_Operator;
+         when F.A_Rem_Operator =>
+            return A_Rem_Operator;
+         when F.An_Exponentiate_Operator =>
+            return An_Exponentiate_Operator;
+         when F.An_Abs_Operator =>
+            return An_Abs_Operator;
+         when F.A_Not_Operator =>
+            return A_Not_Operator;
+         when others =>
+            return Not_An_Operator;
+      end case;
    end Operator_Kind;
 
    ---------------
@@ -1432,6 +1553,16 @@ package body Asis.Elements is
             Node : not null Gela.Elements.Loop_Parameter_Specifications.
               Loop_Parameter_Specification_Access);
 
+         overriding procedure Private_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Declarations.
+              Private_Type_Declaration_Access);
+
+         overriding procedure Private_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Definitions.
+              Private_Type_Definition_Access);
+
       end Get;
 
       package body Get is
@@ -1453,6 +1584,31 @@ package body Asis.Elements is
             end if;
          end Loop_Parameter_Specification;
 
+         overriding procedure Private_Type_Declaration
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Declarations.
+              Private_Type_Declaration_Access) is
+         begin
+            if Node.Type_Declaration_View not in null then
+               Node.Type_Declaration_View.Visit (Self);
+            end if;
+         end Private_Type_Declaration;
+
+         overriding procedure Private_Type_Definition
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Private_Type_Definitions.
+              Private_Type_Definition_Access) is
+         begin
+            if Node.Private_Token in Gela.Lexical_Types.Token_Index then
+               if Node.Limited_Token in Gela.Lexical_Types.Token_Index then
+                  Self.Trait := A_Limited_Private_Trait;
+               else
+                  Self.Trait := A_Private_Trait;
+               end if;
+            elsif Node.Limited_Token in Gela.Lexical_Types.Token_Index then
+               Self.Trait := A_Limited_Trait;
+            end if;
+         end Private_Type_Definition;
       end Get;
 
       V : aliased Get.Visiter;

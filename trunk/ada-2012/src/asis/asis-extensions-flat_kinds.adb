@@ -1840,9 +1840,13 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Function_Declarations.
         Function_Declaration_Access)
    is
-      pragma Unreferenced (Node);
+      use type Gela.Lexical_Types.Token_Count;
    begin
-      Self.Result := A_Function_Declaration;
+      if Node.Renames_Token = 0 then
+         Self.Result := A_Function_Declaration;
+      else
+         Self.Result := A_Function_Renaming_Declaration;
+      end if;
    end Function_Declaration;
 
    overriding procedure Generic_Association
@@ -2020,6 +2024,8 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       if Node.Constant_Token = 0 then
          Self.Result := A_Variable_Declaration;
+      elsif Node.Initialization_Expression in null then
+         Self.Result := A_Deferred_Constant_Declaration;
       else
          Self.Result := A_Constant_Declaration;
       end if;
@@ -2275,9 +2281,13 @@ package body Asis.Extensions.Flat_Kinds is
       Node : not null Gela.Elements.Procedure_Declarations.
         Procedure_Declaration_Access)
    is
-      pragma Unreferenced (Node);
+      use type Gela.Lexical_Types.Token_Count;
    begin
-      Self.Result := A_Procedure_Declaration;
+      if Node.Renames_Token = 0 then
+         Self.Result := A_Procedure_Declaration;
+      else
+         Self.Result := A_Procedure_Renaming_Declaration;
+      end if;
    end Procedure_Declaration;
 
    overriding procedure Protected_Body
