@@ -175,6 +175,12 @@ private
    overriding function Universal_Access
      (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
 
+   overriding function Root_Integer
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
+
+   overriding function Root_Real
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index;
+
    overriding function Get_Profile
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;

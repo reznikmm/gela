@@ -512,7 +512,9 @@ package body Gela.Plain_Symbol_Sets is
          String_Symbol,
          Wide_String_Symbol,
          Wide_Wide_String_Symbol,
-         Duration_Symbol);
+         Duration_Symbol,
+         Root_Integer_Symbol,
+         Root_Real_Symbol);
       pragma Warnings (On);
 
       function To_Mixed_Case

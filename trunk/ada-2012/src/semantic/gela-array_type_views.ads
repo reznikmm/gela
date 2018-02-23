@@ -62,6 +62,8 @@ private
 
    overriding function Is_Universal (Self : Type_View) return Boolean;
 
+   overriding function Is_Root (Self : Type_View) return Boolean;
+
    overriding function Index_Types
      (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array;
 

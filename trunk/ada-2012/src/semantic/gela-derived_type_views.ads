@@ -99,4 +99,6 @@ private
 
    overriding function Is_Universal (Self : Type_View) return Boolean;
 
+   overriding function Is_Root (Self : Type_View) return Boolean;
+
 end Gela.Derived_Type_Views;

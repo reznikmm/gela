@@ -80,6 +80,16 @@ package Gela.Type_Managers is
       return Gela.Semantic_Types.Type_Index is abstract;
    --  Get type view of predefined universal_access
 
+   not overriding function Root_Integer
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Get type view of predefined root_integer
+
+   not overriding function Root_Real
+     (Self  : access Type_Manager)
+      return Gela.Semantic_Types.Type_Index is abstract;
+   --  Get type view of predefined root_real
+
    not overriding function Get_Profile
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;

@@ -140,7 +140,7 @@ package Gela.Lexical_Types is
 
    package Predefined_Symbols is
       subtype Symbol is
-        Gela.Lexical_Types.Symbol range 16#11_0000# .. 16#11_0095#;
+        Gela.Lexical_Types.Symbol range 16#11_0000# .. 16#11_0097#;
 
       All_Calls_Remote              : constant Symbol := 16#11_0000#;
       Assert                        : constant Symbol := 16#11_0001#;
@@ -292,6 +292,9 @@ package Gela.Lexical_Types is
       Wide_String                   : constant Symbol := 16#11_0093#;
       Wide_Wide_String              : constant Symbol := 16#11_0094#;
       Duration                      : constant Symbol := 16#11_0095#;
+      Root_Integer                  : constant Symbol := 16#11_0096#;
+      Root_Real                     : constant Symbol := 16#11_0097#;
+      --  Fix gela-plain_symbol_sets.adb after adding new values here
 
       subtype Attribute is Symbol range Access_Symbol .. Write;
 

@@ -50,6 +50,8 @@ package body Gela.Plain_Type_Managers is
    Universal_Integer_Index : constant Gela.Semantic_Types.Type_Index := 2;
    Universal_Real_Index    : constant Gela.Semantic_Types.Type_Index := 3;
    Boolean_Index           : constant Gela.Semantic_Types.Type_Index := 4;
+   Root_Integer_Index      : constant Gela.Semantic_Types.Type_Index := 5;
+   Root_Real_Index         : constant Gela.Semantic_Types.Type_Index := 6;
 
    -------------
    -- Boolean --
@@ -107,15 +109,19 @@ package body Gela.Plain_Type_Managers is
       Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
       Result : constant Gela.Semantic_Types.Type_Index :=
         Self.Map.Last_Key + 1;
+      Type_View : Gela.Type_Categories.Type_View_Access;
    begin
       if Back_Maps.Has_Element (Pos) then
          return Back_Maps.Element (Pos);
       end if;
 
-      Self.Map.Insert
-        (Result,
-         Gela.Plain_Type_Views.Create_Full_Type (Category, Decl));
+      if Result in Root_Integer_Index | Root_Real_Index then
+         Type_View := Gela.Plain_Type_Views.Create_Root_Type (Category, Decl);
+      else
+         Type_View := Gela.Plain_Type_Views.Create_Full_Type (Category, Decl);
+      end if;
 
+      Self.Map.Insert (Result, Type_View);
       Self.Back.Insert (Key, Result);
 
       return Result;
@@ -341,7 +347,10 @@ package body Gela.Plain_Type_Managers is
         (Category : Gela.Type_Categories.Category_Kinds;
          Index    : Gela.Semantic_Types.Type_Index);
 
-      procedure Find_Boolean;
+      procedure Find_Type
+        (Symbol   : Gela.Lexical_Types.Symbol;
+         Category : Gela.Type_Categories.Category_Kinds;
+         Expect   : Gela.Semantic_Types.Type_Index);
 
       Comp : constant Gela.Compilations.Compilation_Access :=
         Standard.Enclosing_Compilation;
@@ -378,10 +387,19 @@ package body Gela.Plain_Type_Managers is
             Gela.Plain_Type_Views.Create_Full_Type (Category, Node));
       end Create;
 
-      procedure Find_Boolean is
+      ---------------
+      -- Find_Type --
+      ---------------
+
+      procedure Find_Type
+        (Symbol   : Gela.Lexical_Types.Symbol;
+         Category : Gela.Type_Categories.Category_Kinds;
+         Expect   : Gela.Semantic_Types.Type_Index)
+      is
          package Visiters is
             type Visiter is new Gela.Element_Visiters.Visiter with record
-               Stop : S.Boolean := False;
+               Stop   : S.Boolean := False;
+               Result : Gela.Semantic_Types.Type_Index := 0;
             end record;
 
             overriding procedure Full_Type_Declaration
@@ -398,23 +416,21 @@ package body Gela.Plain_Type_Managers is
                  Full_Type_Declaration_Access)
             is
                use type Gela.Lexical_Types.Symbol;
-               use type Gela.Semantic_Types.Type_Index;
-               Name   : constant Gela.Elements.Defining_Identifiers
+               Identifier : constant Gela.Elements.Defining_Identifiers
                  .Defining_Identifier_Access := Node.Names;
-               Ignore : Gela.Semantic_Types.Type_Index;
+               Name : constant Gela.Lexical_Types.Symbol :=
+                 Comp.Get_Token (Identifier.Identifier_Token).Symbol;
             begin
-               if Name.Full_Name = Gela.Lexical_Types.Predefined_Symbols
-                 .Boolean
-               then
+               if Name = Symbol then
                   Self.Stop := True;
-                  Ignore := Initialize.Self.Get
-                    (Category => Gela.Type_Categories.A_Boolean,
+                  Self.Result := Initialize.Self.Get
+                    (Category => Category,
                      Decl     => Node);
-                  pragma Assert (Ignore = Boolean_Index);
                end if;
             end Full_Type_Declaration;
          end Visiters;
 
+         use type Gela.Semantic_Types.Type_Index;
          Seq : constant Gela.Elements.Basic_Declarative_Items
            .Basic_Declarative_Item_Sequence_Access
              := Gela.Elements.Package_Declarations
@@ -428,15 +444,48 @@ package body Gela.Plain_Type_Managers is
             Cursor.Element.Visit (Visiter);
             Cursor.Next;
          end loop;
-      end Find_Boolean;
+
+         pragma Assert (Visiter.Result = Expect);
+      end Find_Type;
 
       use Gela.Type_Categories;
    begin
       Create (An_Universal_Access, Universal_Access_Index);
       Create (An_Universal_Integer, Universal_Integer_Index);
       Create (An_Universal_Real, Universal_Real_Index);
-      Find_Boolean;
+      Find_Type
+        (Gela.Lexical_Types.Predefined_Symbols.Boolean,
+         Gela.Type_Categories.A_Boolean,
+         Boolean_Index);
+      Find_Type
+        (Gela.Lexical_Types.Predefined_Symbols.Root_Integer,
+         Gela.Type_Categories.A_Signed_Integer,
+         Root_Integer_Index);
    end Initialize;
+
+   ------------------
+   -- Root_Integer --
+   ------------------
+
+   overriding function Root_Integer
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return Root_Integer_Index;
+   end Root_Integer;
+
+   ---------------
+   -- Root_Real --
+   ---------------
+
+   overriding function Root_Real
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+   is
+      pragma Unreferenced (Self);
+   begin
+      return Root_Real_Index;
+   end Root_Real;
 
    ------------------
    -- Type_By_Name --

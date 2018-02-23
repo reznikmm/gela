@@ -173,6 +173,16 @@ package body Gela.Array_Type_Views is
       return False;
    end Is_Record;
 
+   -------------
+   -- Is_Root --
+   -------------
+
+   overriding function Is_Root (Self : Type_View) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Root;
+
    -----------------------
    -- Is_Signed_Integer --
    -----------------------

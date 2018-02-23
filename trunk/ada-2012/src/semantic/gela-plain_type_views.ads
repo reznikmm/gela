@@ -29,6 +29,12 @@ package Gela.Plain_Type_Views is
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
 
+   function Create_Root_Type
+     (Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+                   .Full_Type_Declaration_Access)
+      return Gela.Type_Categories.Type_View_Access;
+
    function Create_Formal_Type
      (Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Formal_Type_Declarations
@@ -93,5 +99,11 @@ private
    overriding function Is_Signed_Integer (Self : Type_View) return Boolean;
 
    overriding function Is_Universal (Self : Type_View) return Boolean;
+
+   overriding function Is_Root (Self : Type_View) return Boolean;
+
+   type Root_Type_View is new Type_View with null record;
+
+   overriding function Is_Root (Self : Root_Type_View) return Boolean;
 
 end Gela.Plain_Type_Views;

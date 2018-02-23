@@ -77,6 +77,9 @@ package Gela.Types is
    not overriding function Is_Universal (Self : Type_View) return Boolean
      is abstract;
 
+   not overriding function Is_Root (Self : Type_View) return Boolean
+     is abstract;
+
    function Is_Discrete (Self : Type_View'Class) return Boolean;
    function Is_Integer  (Self : Type_View'Class) return Boolean;
    function Is_Real     (Self : Type_View'Class) return Boolean;

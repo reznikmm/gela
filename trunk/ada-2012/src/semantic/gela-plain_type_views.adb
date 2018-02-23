@@ -60,6 +60,24 @@ package body Gela.Plain_Type_Views is
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
 
+   ----------------------
+   -- Create_Root_Type --
+   ----------------------
+
+   function Create_Root_Type
+     (Category : Gela.Type_Categories.Category_Kinds;
+      Decl     : Gela.Elements.Full_Type_Declarations
+                   .Full_Type_Declaration_Access)
+      return Gela.Type_Categories.Type_View_Access
+   is
+      Value : constant Type_View_Access :=
+        new Root_Type_View'(Category => Category,
+                            Def      => Decl.Type_Declaration_View,
+                            Discr    => Decl.Discriminant_Part);
+   begin
+      return Gela.Type_Categories.Type_View_Access (Value);
+   end Create_Root_Type;
+
    -------------------
    -- Get_Component --
    -------------------
@@ -448,6 +466,26 @@ package body Gela.Plain_Type_Views is
       return Self.Category in Gela.Type_Categories.A_Untagged_Record
        | Gela.Type_Categories.A_Tagged;
    end Is_Record;
+
+   -------------
+   -- Is_Root --
+   -------------
+
+   overriding function Is_Root (Self : Type_View) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Root;
+
+   -------------
+   -- Is_Root --
+   -------------
+
+   overriding function Is_Root (Self : Root_Type_View) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return True;
+   end Is_Root;
 
    -----------------------
    -- Is_Signed_Integer --
