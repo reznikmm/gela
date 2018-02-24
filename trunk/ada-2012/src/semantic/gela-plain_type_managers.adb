@@ -461,6 +461,10 @@ package body Gela.Plain_Type_Managers is
         (Gela.Lexical_Types.Predefined_Symbols.Root_Integer,
          Gela.Type_Categories.A_Signed_Integer,
          Root_Integer_Index);
+      Find_Type
+        (Gela.Lexical_Types.Predefined_Symbols.Root_Real,
+         Gela.Type_Categories.A_Float_Point,
+         Root_Real_Index);
    end Initialize;
 
    ------------------

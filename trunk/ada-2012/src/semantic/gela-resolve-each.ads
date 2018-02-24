@@ -13,6 +13,15 @@ private package Gela.Resolve.Each is
    --  others non-expression interpretations. Translate defining name into
    --  expression.
 
+   function Prefer_Root
+     (Self : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index)
+      return Gela.Interpretations.Expression_Iterators.Forward_Iterator'Class;
+   --  The same as Expression, but prefere root_integer and root_read over
+   --  other interpretations.
+
    function Prefix
      (Self : access Gela.Interpretations.Interpretation_Manager'Class;
       TM   : Gela.Type_Managers.Type_Manager_Access;

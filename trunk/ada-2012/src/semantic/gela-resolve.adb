@@ -1634,7 +1634,6 @@ package body Gela.Resolve is
               L.Expression_Type;
             L_Type_View : constant Gela.Types.Type_View_Access :=
               TM.Get (L_Tipe);
-            R_Counters  : Counter_By_Type;
 
          begin
             if not L_Type_View.Assigned then
@@ -1649,10 +1648,6 @@ package body Gela.Resolve is
                begin
                   if not Type_View.Assigned then
                      return;
-                  elsif Type_View.Is_Integer then
-                     Increment (R_Counters, R.Get_Index, Integer);
-                  elsif Type_View.Is_Real then
-                     Increment (R_Counters, R.Get_Index, Float);
                   else  --  FIXME Return after implementation of types
                      null;
                   end if;
@@ -1689,24 +1684,6 @@ package body Gela.Resolve is
                   end if;
                end;
             end loop;
-
-            if L_Type_View.Is_Integer then
-               Increment
-                 (L_Val,
-                  R_Val,
-                  L.Get_Index,
-                  R_Counters,
-                  Integer);
-            elsif L_Type_View.Is_Real then
-               Increment
-                 (L_Val,
-                  R_Val,
-                  L.Get_Index,
-                  R_Counters,
-                  Float);
-            else  --  FIXME Drop after implementation of types
-               null;
-            end if;
          end;
       end loop;
 
@@ -1728,6 +1705,49 @@ package body Gela.Resolve is
                end if;
             end;
          end loop;
+      end loop;
+
+      for L in Each.Prefer_Root (IM, TM, Env, Left) loop
+         declare
+
+            R_Counters  : Counter_By_Type;
+            L_Type_View : constant Gela.Types.Type_View_Access :=
+              TM.Get (L.Expression_Type);
+
+         begin
+            for R in Each.Prefer_Root (IM, TM, Env, Right) loop
+               declare
+                  Type_View : constant Gela.Types.Type_View_Access :=
+                    TM.Get (R.Expression_Type);
+               begin
+                  if Type_View.Is_Integer then
+                     Increment (R_Counters, R.Get_Index, Integer);
+                  elsif Type_View.Is_Real then
+                     Increment (R_Counters, R.Get_Index, Float);
+                  else  --  FIXME Return after implementation of types
+                     null;
+                  end if;
+               end;
+            end loop;
+
+            if L_Type_View.Is_Integer then
+               Increment
+                 (L_Val,
+                  R_Val,
+                  L.Get_Index,
+                  R_Counters,
+                  Integer);
+            elsif L_Type_View.Is_Real then
+               Increment
+                 (L_Val,
+                  R_Val,
+                  L.Get_Index,
+                  R_Counters,
+                  Float);
+            else  --  FIXME Drop after implementation of types
+               null;
+            end if;
+         end;
       end loop;
 
       if L_Val (Integer).Count = 1 and R_Val (Integer).Count = 1 then
@@ -1777,7 +1797,7 @@ package body Gela.Resolve is
 
       L_Count : Natural := 0;
    begin
-      for L in Each.Expression (IM, TM, Env, Left) loop
+      for L in Each.Prefer_Root (IM, TM, Env, Left) loop
          declare
 
             L_Tipe      : constant Gela.Semantic_Types.Type_Index :=
@@ -1787,7 +1807,7 @@ package body Gela.Resolve is
             R_Count     : Natural := 0;
          begin
             if L_Type_View.Assigned and then L_Type_View.Is_Discrete then
-               for R in Each.Expression (IM, TM, Env, Right) loop
+               for R in Each.Prefer_Root (IM, TM, Env, Right) loop
                   declare
                      use type Gela.Semantic_Types.Type_Index;
 

@@ -65,6 +65,37 @@ package body Gela.Resolve.Each is
 
    procedure Step (Self : in out Prefix_Cursor'Class);
 
+   type Prefer_Root_Cursor is
+     new Gela.Interpretations.Expression_Cursor with
+   record
+      Has_Integer_Root : Boolean := False;
+      Has_Real_Root    : Boolean := False;
+      Root_Cursor      : Join_Cursor;
+      Exp_Cursor       : Join_Cursor;
+   end record;
+
+   procedure Step (Self : in out Prefer_Root_Cursor'Class);
+
+   overriding function Has_Element
+     (Self : Prefer_Root_Cursor) return Boolean;
+
+   overriding procedure Next (Self : in out Prefer_Root_Cursor);
+
+   overriding function Get_Index
+     (Self : Prefer_Root_Cursor)
+       return Gela.Interpretations.Interpretation_Index;
+
+   overriding function Expression_Type
+     (Self : Prefer_Root_Cursor)
+       return Gela.Semantic_Types.Type_Index;
+
+   procedure Initialize
+     (Self : in out Prefer_Root_Cursor'Class;
+      IM   : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index);
+
    ---------------------
    -- Expression_Type --
    ---------------------
@@ -116,6 +147,21 @@ package body Gela.Resolve.Each is
       end if;
    end Get_Index;
 
+   ---------------
+   -- Get_Index --
+   ---------------
+
+   overriding function Get_Index
+     (Self : Prefer_Root_Cursor)
+       return Gela.Interpretations.Interpretation_Index is
+   begin
+      if Self.Root_Cursor.Has_Element then
+         return Self.Root_Cursor.Get_Index;
+      else
+         return Self.Exp_Cursor.Get_Index;
+      end if;
+   end Get_Index;
+
    -----------------
    -- Has_Element --
    -----------------
@@ -135,6 +181,16 @@ package body Gela.Resolve.Each is
       return Self.Name.Has_Element or else Self.Exp.Has_Element;
    end Has_Element;
 
+   -----------------
+   -- Has_Element --
+   -----------------
+
+   overriding function Has_Element
+     (Self : Prefer_Root_Cursor) return Boolean is
+   begin
+      return Self.Root_Cursor.Has_Element or else Self.Exp_Cursor.Has_Element;
+   end Has_Element;
+
    procedure Initialize
      (Self : in out Join_Cursor'Class;
       IM   : access Gela.Interpretations.Interpretation_Manager'Class;
@@ -152,6 +208,22 @@ package body Gela.Resolve.Each is
       Self.Name.Env  := Env;
       Self.Name.Tipe := 0;
       Self.Name.Step;
+   end Initialize;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize
+     (Self : in out Prefer_Root_Cursor'Class;
+      IM   : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index) is
+   begin
+      Self.Root_Cursor.Initialize (IM, TM, Env, Set);
+      Self.Exp_Cursor.Initialize (IM, TM, Env, Set);
+      Self.Step;
    end Initialize;
 
    ----------
@@ -178,6 +250,21 @@ package body Gela.Resolve.Each is
    end Next;
 
    ----------
+   -- Next --
+   ----------
+
+   overriding procedure Next (Self : in out Prefer_Root_Cursor) is
+   begin
+      if Self.Root_Cursor.Has_Element then
+         Self.Root_Cursor.Next;
+      else
+         Self.Exp_Cursor.Next;
+      end if;
+
+      Self.Step;
+   end Next;
+
+   ----------
    -- Step --
    ----------
 
@@ -198,6 +285,62 @@ package body Gela.Resolve.Each is
          end;
       end loop;
    end Step;
+
+   ----------
+   -- Step --
+   ----------
+
+   procedure Step (Self : in out Prefer_Root_Cursor'Class) is
+      TM         : constant Gela.Type_Managers.Type_Manager_Access :=
+        Self.Root_Cursor.Name.TM;
+      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_View  : Gela.Types.Type_View_Access;
+   begin
+      --   In the first phase look for root types and return them
+      while Self.Root_Cursor.Has_Element loop
+         Type_Index := Self.Root_Cursor.Expression_Type;
+         Type_View := TM.Get (Type_Index);
+
+         if Type_View in null then
+            null;  --  Skip unknown types
+         elsif Type_View.Is_Root then
+            if Type_View.Is_Signed_Integer then
+               Self.Has_Integer_Root := True;
+            else
+               Self.Has_Real_Root := True;
+            end if;
+
+            return;
+         end if;
+
+         Self.Root_Cursor.Next;
+      end loop;
+
+      --   In the second phase look for other types, if not hidden by root
+      while Self.Exp_Cursor.Has_Element loop
+         Type_Index := Self.Exp_Cursor.Expression_Type;
+         Type_View := TM.Get (Type_Index);
+
+         if Type_View in null then
+            null;  --  Skip unknown types
+         elsif Type_View.Is_Root then
+            null;  --  Skip root types
+         elsif Self.Has_Integer_Root and then Type_View.Is_Signed_Integer then
+            null;  --  Skip any integer type if we have integer_root
+         elsif Self.Has_Real_Root and then Type_View.Is_Real then
+            null;  --  Skip any real type if we have real_root
+         else
+            --  Found other expression type, return it
+            return;
+         end if;
+
+         Self.Exp_Cursor.Next;
+      end loop;
+   end Step;
+
+   ----------
+   -- Step --
+   ----------
 
    procedure Step (Self : in out Prefix_Cursor'Class) is
 
@@ -263,6 +406,21 @@ package body Gela.Resolve.Each is
       end if;
    end Expression_Type;
 
+   ---------------------
+   -- Expression_Type --
+   ---------------------
+
+   overriding function Expression_Type
+     (Self : Prefer_Root_Cursor)
+       return Gela.Semantic_Types.Type_Index is
+   begin
+      if Self.Root_Cursor.Has_Element then
+         return Self.Root_Cursor.Expression_Type;
+      else
+         return Self.Exp_Cursor.Expression_Type;
+      end if;
+   end Expression_Type;
+
    package Join_Iterators is
      new Gela.Plain_Int_Sets.Cursors.Generic_Iterators
      (Cursor      => Gela.Interpretations.Expression_Cursor,
@@ -276,6 +434,30 @@ package body Gela.Resolve.Each is
       Next        => Gela.Interpretations.Next,
       Some_Cursor => Prefix_Cursor,
       Iterators   => Gela.Interpretations.Expression_Iterators);
+
+   package Prefer_Root_Iterators is
+     new Gela.Plain_Int_Sets.Cursors.Generic_Iterators
+     (Cursor      => Gela.Interpretations.Expression_Cursor,
+      Next        => Gela.Interpretations.Next,
+      Some_Cursor => Prefer_Root_Cursor,
+      Iterators   => Gela.Interpretations.Expression_Iterators);
+
+   -----------------
+   -- Prefer_Root --
+   -----------------
+
+   function Prefer_Root
+     (Self : access Gela.Interpretations.Interpretation_Manager'Class;
+      TM   : Gela.Type_Managers.Type_Manager_Access;
+      Env  : Gela.Semantic_Types.Env_Index;
+      Set  : Gela.Interpretations.Interpretation_Set_Index)
+      return Gela.Interpretations.Expression_Iterators.Forward_Iterator'Class
+   is
+   begin
+      return Result : Prefer_Root_Iterators.Iterator do
+         Result.Cursor.Initialize (Self, TM, Env, Set);
+      end return;
+   end Prefer_Root;
 
    ------------
    -- Prefix --
