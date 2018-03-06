@@ -34,10 +34,13 @@ package body Gela.Plain_Type_Views is
                    .Formal_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
    is
+      Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
         new Type_View'(Category => Category,
                        Def      => Decl.Type_Declaration_View,
-                       Discr    => Decl.Discriminant_Part);
+                       Discr    => Decl.Discriminant_Part,
+                       Name     => Name);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Formal_Type;
@@ -52,10 +55,13 @@ package body Gela.Plain_Type_Views is
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
    is
+      Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
         new Type_View'(Category => Category,
                        Def      => Decl.Type_Declaration_View,
-                       Discr    => Decl.Discriminant_Part);
+                       Discr    => Decl.Discriminant_Part,
+                       Name     => Name);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
@@ -70,13 +76,26 @@ package body Gela.Plain_Type_Views is
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
    is
+      Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
+        Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
         new Root_Type_View'(Category => Category,
                             Def      => Decl.Type_Declaration_View,
-                            Discr    => Decl.Discriminant_Part);
+                            Discr    => Decl.Discriminant_Part,
+                            Name     => Name);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Root_Type;
+
+   -------------------
+   -- Defining_Name --
+   -------------------
+
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access is
+   begin
+      return Self.Name;
+   end Defining_Name;
 
    -------------------
    -- Get_Component --
@@ -397,8 +416,8 @@ package body Gela.Plain_Type_Views is
 
       Matcher : Visitors.Type_Visitor;
    begin
-      if Expected.all in Type_View and then
-        Self.Def = Type_View (Expected.all).Def
+      if Expected.all in Type_View'Class and then
+        Self.Def = Type_View'Class (Expected.all).Def
       then
          return True;
       end if;

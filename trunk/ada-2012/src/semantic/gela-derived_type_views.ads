@@ -101,4 +101,7 @@ private
 
    overriding function Is_Root (Self : Type_View) return Boolean;
 
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access;
+
 end Gela.Derived_Type_Views;

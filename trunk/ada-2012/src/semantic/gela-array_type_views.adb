@@ -1,5 +1,7 @@
 with Gela.Compilations;
 with Gela.Type_Managers;
+with Gela.Elements.Defining_Identifiers;
+pragma Unreferenced (Gela.Elements.Defining_Identifiers);
 
 package body Gela.Array_Type_Views is
 
@@ -42,6 +44,17 @@ package body Gela.Array_Type_Views is
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
+
+   -------------------
+   -- Defining_Name --
+   -------------------
+
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access is
+   begin
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+        (Self.Decl.Names);
+   end Defining_Name;
 
    ---------------
    -- Dimension --

@@ -97,6 +97,7 @@ private
        Profiles   : Profile_Maps.Map;
        Attributes : Attribute_Maps.Map;
        Roots      : Root_Maps.Map;
+       Boolean    : Gela.Elements.Defining_Names.Defining_Name_Access;
    end record;
 
    not overriding function Get

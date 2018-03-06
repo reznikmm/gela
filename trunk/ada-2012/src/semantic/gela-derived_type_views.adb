@@ -1,4 +1,8 @@
 with Gela.Types.Discriminated;
+
+with Gela.Elements.Defining_Identifiers;
+pragma Unreferenced (Gela.Elements.Defining_Identifiers);
+
 package body Gela.Derived_Type_Views is
 
    -------------------------
@@ -44,6 +48,14 @@ package body Gela.Derived_Type_Views is
    begin
       return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Dimension;
    end Dimension;
+
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access
+   is
+   begin
+      return Gela.Elements.Defining_Names.Defining_Name_Access
+        (Self.Decl.Names);
+   end Defining_Name;
 
    ----------------------
    -- Get_Discriminant --

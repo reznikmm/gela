@@ -54,6 +54,7 @@ private
    record
       Category : Gela.Type_Categories.Category_Kinds;
       Def      : access Gela.Elements.Element'Class;
+      Name     : Gela.Elements.Defining_Names.Defining_Name_Access;
       Discr    : Gela.Elements.Discriminant_Parts.Discriminant_Part_Access;
    end record;
 
@@ -101,6 +102,9 @@ private
    overriding function Is_Universal (Self : Type_View) return Boolean;
 
    overriding function Is_Root (Self : Type_View) return Boolean;
+
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access;
 
    type Root_Type_View is new Type_View with null record;
 

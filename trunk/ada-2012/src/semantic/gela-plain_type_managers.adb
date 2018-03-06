@@ -418,14 +418,22 @@ package body Gela.Plain_Type_Managers is
                use type Gela.Lexical_Types.Symbol;
                Identifier : constant Gela.Elements.Defining_Identifiers
                  .Defining_Identifier_Access := Node.Names;
-               Name : constant Gela.Lexical_Types.Symbol :=
-                 Comp.Get_Token (Identifier.Identifier_Token).Symbol;
+               Name : constant
+                 Gela.Elements.Defining_Names.Defining_Name_Access :=
+                   Gela.Elements.Defining_Names.Defining_Name_Access
+                     (Identifier);
+               Token : constant Gela.Lexical_Types.Token :=
+                 Comp.Get_Token (Identifier.Identifier_Token);
             begin
-               if Name = Symbol then
+               if Token.Symbol = Symbol then
                   Self.Stop := True;
                   Self.Result := Initialize.Self.Get
                     (Category => Category,
                      Decl     => Node);
+
+                  if Category in Gela.Type_Categories.A_Boolean then
+                     Initialize.Self.Boolean := Name;
+                  end if;
                end if;
             end Full_Type_Declaration;
          end Visiters;
@@ -530,7 +538,8 @@ package body Gela.Plain_Type_Managers is
 
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Type_Index := 0;
+            Result  : Gela.Semantic_Types.Type_Index := 0;
+            Boolean : Gela.Elements.Defining_Names.Defining_Name_Access;
          end record;
 
          overriding procedure Access_To_Object_Definition
@@ -770,10 +779,21 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Full_Type_Declarations.
               Full_Type_Declaration_Access)
          is
+            use type Gela.Elements.Defining_Names.Defining_Name_Access;
+
+            Name : constant Gela.Elements.Defining_Names.Defining_Name_Access
+              := Gela.Elements.Defining_Names.Defining_Name_Access
+                (Node.Names);
             View : constant Gela.Elements.Type_Definitions.
               Type_Definition_Access := Node.Type_Declaration_View;
          begin
-            View.Visit (Self);
+            if Name = Self.Boolean then
+               Self.Result := Type_From_Declaration.Self.Get
+                 (Category => Gela.Type_Categories.A_Boolean,
+                  Decl     => Node);
+            else
+               View.Visit (Self);
+            end if;
          end Full_Type_Declaration;
 
          ----------------------------
@@ -954,7 +974,7 @@ package body Gela.Plain_Type_Managers is
 
       end Visiters;
 
-      V : Visiters.Visiter;
+      V : Visiters.Visiter := (0, Self.Boolean);
    begin
       Node.Visit (V);
 

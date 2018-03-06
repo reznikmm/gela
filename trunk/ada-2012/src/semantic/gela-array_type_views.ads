@@ -1,3 +1,4 @@
+private with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Types.Arrays;
 with Gela.Types.Simple;
@@ -74,5 +75,8 @@ private
 
    overriding function Component_Type
      (Self : Type_View) return Gela.Semantic_Types.Type_Index;
+
+   overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access;
 
 end Gela.Array_Type_Views;

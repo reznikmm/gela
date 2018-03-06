@@ -1,6 +1,7 @@
 --  This package provides representation of types and their categories.
 
 limited with Gela.Types.Visitors;
+with Gela.Elements.Defining_Names;
 
 package Gela.Types is
    pragma Preelaborate;
@@ -15,6 +16,11 @@ package Gela.Types is
    procedure Visit_If_Assigned
      (Self    : access Type_View'Class;
       Visiter : in out Gela.Types.Visitors.Type_Visitor'Class);
+
+   not overriding function Defining_Name (Self : Type_View)
+     return Gela.Elements.Defining_Names.Defining_Name_Access
+       is abstract;
+   --  Defining name of the type for non-anonymous types
 
    not overriding function Is_Expected_Type
      (Self     : Type_View;

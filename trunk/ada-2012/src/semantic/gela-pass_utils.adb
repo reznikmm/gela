@@ -64,8 +64,10 @@ package body Gela.Pass_Utils is
         (Factory         : Gela.Element_Factories.Element_Factory_Access;
          Operator_Symbol : Gela.Lexical_Types.Symbol;
          Type_Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Left_Type_Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Right_Type_Name : Gela.Elements.Defining_Names.Defining_Name_Access;
          Arity           : Positive := 2)
-         return Gela.Elements.Defining_Names.Defining_Name_Access;
+           return Gela.Elements.Defining_Names.Defining_Name_Access;
    end Implicits;
 
    package Each_Use_Package is
@@ -153,6 +155,7 @@ package body Gela.Pass_Utils is
               Comp.Context.Environment_Set;
             Factory : Gela.Element_Factories.Element_Factory_Access :=
               Comp.Factory;
+            Is_Root_Real : Boolean;
          end record;
 
          procedure Add
@@ -173,7 +176,31 @@ package body Gela.Pass_Utils is
 
       end Visitors;
 
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
       package body Visitors is
+
+         type Symbol_List is array (Positive range <>) of
+           Gela.Lexical_Types.Symbol;
+
+         procedure Create_Operators
+           (Self : in out Type_Visitor'Class;
+            List : Symbol_List);
+
+         procedure Create_Operators
+           (Self : in out Type_Visitor'Class;
+            List : Symbol_List) is
+         begin
+            for Symbol of List loop
+               Self.Add
+                 (Implicits.Create_Operator
+                    (Self.Factory,
+                     Symbol,
+                     Name, Name, Name,
+                     Arity => 2));
+            end loop;
+         end Create_Operators;
 
          ---------
          -- Add --
@@ -199,7 +226,7 @@ package body Gela.Pass_Utils is
               (Implicits.Create_Operator
                  (Self.Factory,
                   Gela.Lexical_Types.Operators.Ampersand_Operator,
-                  Name,
+                  Name, Name, Name,
                   Arity => 2));
          end Array_Type;
 
@@ -213,8 +240,31 @@ package body Gela.Pass_Utils is
               (Implicits.Create_Operator
                  (Self.Factory,
                   Gela.Lexical_Types.Operators.Hyphen_Operator,
-                  Name,
+                  Name, Name, Name,
                   Arity => 1));
+
+            Self.Add
+              (Implicits.Create_Operator
+                 (Self.Factory,
+                  Gela.Lexical_Types.Operators.Plus_Operator,
+                  Name, Name, Name,
+                  Arity => 2));
+
+            if Self.Is_Root_Real then
+               declare
+                  Root_Integer : constant Gela.Types.Type_View_Access :=
+                    TM.Get (TM.Root_Integer);
+               begin
+                  Self.Add
+                    (Implicits.Create_Operator
+                       (Self.Factory,
+                        Gela.Lexical_Types.Operators.Star_Operator,
+                        Type_Name       => Name,
+                        Left_Type_Name  => Root_Integer.Defining_Name,
+                        Right_Type_Name => Name,
+                        Arity           => 2));
+               end;
+            end if;
          end Floating_Point_Type;
 
          overriding procedure Signed_Integer_Type
@@ -223,18 +273,14 @@ package body Gela.Pass_Utils is
          is
             pragma Unreferenced (Value);
          begin
-            Self.Add
-              (Implicits.Create_Operator
-                 (Self.Factory,
-                  Gela.Lexical_Types.Operators.Hyphen_Operator,
-                  Name,
-                  Arity => 2));
+            Create_Operators
+              (Self,
+               (Gela.Lexical_Types.Operators.Plus_Operator,
+                Gela.Lexical_Types.Operators.Hyphen_Operator));
          end Signed_Integer_Type;
 
       end Visitors;
 
-      TM : constant Gela.Type_Managers.Type_Manager_Access :=
-        Comp.Context.Types;
       Type_Index : constant Gela.Semantic_Types.Type_Index :=
         TM.Type_From_Declaration (Env, Tipe);
       Type_View : constant Gela.Types.Type_View_Access :=
@@ -246,7 +292,9 @@ package body Gela.Pass_Utils is
       end if;
 
       declare
-         Visitor : Visitors.Type_Visitor;
+         Visitor : Visitors.Type_Visitor :=
+           (Is_Root_Real => Type_Index in TM.Root_Real,
+            others => <>);
       begin
          Type_View.Visit (Visitor);
       end;
@@ -707,8 +755,10 @@ package body Gela.Pass_Utils is
         (Factory         : Gela.Element_Factories.Element_Factory_Access;
          Operator_Symbol : Gela.Lexical_Types.Symbol;
          Type_Name       : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Left_Type_Name  : Gela.Elements.Defining_Names.Defining_Name_Access;
+         Right_Type_Name : Gela.Elements.Defining_Names.Defining_Name_Access;
          Arity           : Positive := 2)
-         return Gela.Elements.Defining_Names.Defining_Name_Access
+           return Gela.Elements.Defining_Names.Defining_Name_Access
       is
          FD : Gela.Elements.Function_Declarations.Function_Declaration_Access;
 
@@ -736,7 +786,11 @@ package body Gela.Pass_Utils is
            (Oper);
 
          for J in 1 .. Arity loop
-            Mark := Create_Subtype (Factory, Type_Name);
+            if J = 1 then
+               Mark := Create_Subtype (Factory, Left_Type_Name);
+            else
+               Mark := Create_Subtype (Factory, Right_Type_Name);
+            end if;
 
             Param := Factory.Parameter_Specification
               (Names                      =>
@@ -780,7 +834,7 @@ package body Gela.Pass_Utils is
             Semicolon_Token       => 0);
 
          Set_Part_Of_Implicit (FD);
-         FD.Set_Corresponding_Type (Type_Name.Enclosing_Element);
+         FD.Set_Corresponding_Type (Left_Type_Name.Enclosing_Element);
 
          return Gela.Elements.Defining_Names.Defining_Name_Access (Name);
       end Create_Operator;

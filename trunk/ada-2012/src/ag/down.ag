@@ -532,7 +532,11 @@ Rules for modular_type_definition. :
 
 Rules for number_declaration. :
 (.
-      ${Initialization_Expression.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Interpretation
+        (Self.Compilation,
+         ${number_declaration.env_in},
+         ${Initialization_Expression.Up},
+         ${Initialization_Expression.Down});
 .)
 
 Rules for object_declaration. :
