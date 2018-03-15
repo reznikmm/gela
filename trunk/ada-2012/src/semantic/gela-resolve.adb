@@ -11,13 +11,15 @@ with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Range_Attribute_References;
 with Gela.Elements.Simple_Expression_Ranges;
+with Gela.Elements.Subtype_Indications;
 with Gela.Environments;
 with Gela.Profiles;
 with Gela.Resolve.Type_Matchers;
 with Gela.Type_Managers;
 with Gela.Types.Arrays;
-with Gela.Types.Visitors;
+with Gela.Types.Simple;
 with Gela.Types.Untagged_Records;
+with Gela.Types.Visitors;
 
 with Gela.Resolve.Each;
 
@@ -306,7 +308,8 @@ package body Gela.Resolve is
    ----------------
 
    procedure Constraint
-     (Constraint : access Gela.Elements.Element'Class;
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Constraint : access Gela.Elements.Element'Class;
       Env        : Gela.Semantic_Types.Env_Index;
       Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
       Constr     : Gela.Interpretations.Interpretation_Set_Index;
@@ -332,8 +335,11 @@ package body Gela.Resolve is
 
       end Each_Constraint;
 
-      Comp       : Gela.Compilations.Compilation_Access;
-      IM         : Gela.Interpretations.Interpretation_Manager_Access;
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
       Type_Index : Gela.Semantic_Types.Type_Index;
 
       package body Each_Constraint is
@@ -354,9 +360,6 @@ package body Gela.Resolve is
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
 
-            TM : constant Gela.Type_Managers.Type_Manager_Access :=
-              Comp.Context.Types;
-
             package Type_Visiters is
                type Type_Visitor is new Gela.Types.Visitors.Type_Visitor
                  with null record;
@@ -369,6 +372,11 @@ package body Gela.Resolve is
                  (Self  : in out Type_Visitor;
                   Value : not null Gela.Types.Untagged_Records
                     .Untagged_Record_Type_Access);
+
+               overriding procedure Object_Access_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Simple
+                    .Object_Access_Type_Access);
 
             end Type_Visiters;
 
@@ -421,10 +429,25 @@ package body Gela.Resolve is
                   Result := Chosen;
                end Array_Type;
 
+               overriding procedure Object_Access_Type
+                 (Self  : in out Type_Visitor;
+                  Value : not null Gela.Types.Simple
+                    .Object_Access_Type_Access)
+               is
+                  Designated : constant Gela.Elements.Subtype_Indications
+                    .Subtype_Indication_Access := Value.Get_Designated;
+                  Des_Index  : constant Gela.Semantic_Types.Type_Index :=
+                    TM.Type_From_Subtype_Mark (Env, Designated.Subtype_Mark);
+                  Des_View   : constant Gela.Types.Type_View_Access :=
+                    TM.Get (Des_Index);
+               begin
+                  Des_View.Visit_If_Assigned (Self);
+               end Object_Access_Type;
+
                overriding procedure Untagged_Record
                  (Self  : in out Type_Visitor;
                   Value : not null Gela.Types.Untagged_Records
-                  .Untagged_Record_Type_Access)
+                    .Untagged_Record_Type_Access)
                is
                   pragma Unreferenced (Self);
 
@@ -544,12 +567,6 @@ package body Gela.Resolve is
       if not Constraint.Assigned then
          return;
       end if;
-
-      Comp := Constraint.Enclosing_Compilation;
-      pragma Warnings (Off);
-      --  GNAT GPL 2013 gets warnings here about useless assignment
-      IM := Comp.Context.Interpretation_Manager;
-      pragma Warnings (On);
 
       Constraint.Visit (V);
    end Constraint;

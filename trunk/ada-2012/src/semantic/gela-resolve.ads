@@ -151,7 +151,8 @@ package Gela.Resolve is
       return Gela.Interpretations.Interpretation_Set_Index;
 
    procedure Constraint
-     (Constraint : access Gela.Elements.Element'Class;
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Constraint : access Gela.Elements.Element'Class;
       Env        : Gela.Semantic_Types.Env_Index;
       Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
       Constr     : Gela.Interpretations.Interpretation_Set_Index;

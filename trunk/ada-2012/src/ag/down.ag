@@ -552,7 +552,13 @@ Rules for object_declaration. :
 
 Rules for object_renaming_declaration. :
 (.
-      ${Renamed_Entity.Down} := 0;  --  FIXME
+      -- 8.5.1
+      Gela.Pass_Utils.Resolve.To_Type
+        (Self.Compilation,
+         ${object_renaming_declaration.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Renamed_Entity.Up},
+         ${Renamed_Entity.Down});
 .)
 
 Rules for ordinary_fixed_point_definition. :
@@ -1038,7 +1044,11 @@ Rules for generic_function_declaration. :
 
 Rules for object_renaming_declaration. :
 (.
-      ${Object_Declaration_Subtype.Down} := 0;  --  FIXME
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${object_renaming_declaration.env_in},
+         ${Object_Declaration_Subtype.Up},
+         ${Object_Declaration_Subtype.Down});
 .)
 
 Rules for qualified_expression. :
@@ -1061,7 +1071,8 @@ Rules for subtype_indication. :
 Rules for subtype_indication. :
 (.
       Gela.Pass_Utils.Resolve.Constraint
-        (Subtype_Constraint,
+        (Self.Compilation,
+         Subtype_Constraint,
          ${subtype_indication.env_in},
          ${subtype_mark.Up},
          ${Subtype_Constraint.Up:0},
@@ -1105,7 +1116,8 @@ Rules for digits_constraint. :
 Rules for discrete_subtype_indication. :
 (.
       Gela.Pass_Utils.Resolve.Constraint
-        (Subtype_Constraint,
+        (Self.Compilation,
+         Subtype_Constraint,
          ${discrete_subtype_indication.env_in},
          ${Subtype_Mark.Up},
          ${Subtype_Constraint.Up:0},
