@@ -1,6 +1,6 @@
                        = Gela ASIS User Manual =
 {{{
-              Gela ASIS Version 0.3.2 (01 Dec 2013, SVN 210)
+                  Gela ASIS Version 0.3.3 (15 Mar 2018)
                            The Gela project
 }}}
 == Overview ==
@@ -22,8 +22,9 @@ Gela ASIS is distributed under BSD License.
 
 This document (Gela ASIS User Manual) tells how to install and use Gela ASIS.
 
-== What's new in 0.3.2 version ==
+== What's new in 0.3.3 version ==
 New features since 0.3 version are:
+ * Use gprbuild instead of gnatmake
  * Bug fixes
  * Support building gela-asis as relocatable library
 
@@ -79,9 +80,9 @@ Building process required about 62 Mb of free space. Final installation takes
 about 27 Mb.
 
 Follow software needed to build Gela ASIS from sources from scratch
- * GNAT Ada compiler
+ * GNAT Ada compiler and gprbuild tool
  * ayacc compiler tool (optional, included in distribution)
- * xsltproc - XSL processor. 
+ * xsltproc - XSL processor.
  * make, sed, echo, rm, cat, cp, install - commands
 
 Windows version of xsltproc is available at 
@@ -115,12 +116,12 @@ you can just compile provided Ada sources.
 
 Unpack Geal ASIS sources archive:
 {{{
-tar xjf gela-asis-0.3.2.tar.bz2
+tar xjf gela-asis-0.3.3.tar.bz2
 }}}
 
 Compile Gela ASIS library (using provided generated sources):
 {{{
-  cd gela-asis-0.3.2/
+  cd gela-asis-0.3.3/
   make
 }}}
 

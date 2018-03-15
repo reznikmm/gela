@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-T=gela-asis-0.3.2
+T=gela-asis-0.3.3
 svn export svn://forge.ada-ru.org/gela/trunk /tmp/$T
 
 cd /tmp/$T

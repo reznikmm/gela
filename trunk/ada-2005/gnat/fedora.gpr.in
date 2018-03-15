@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---  Copyright (c) 2013, Maxim Reznik
+--  Copyright (c) 2013-2018, Maxim Reznik
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -35,4 +35,9 @@ library project Gela_ASIS is
    for Library_Dir use Directories.Libdir & "/gela-asis";
    for Library_Kind use "@Library_Kind@";
    for Externally_Built use "True";
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-g", "-O2");
+   end Compiler;
+
 end Gela_ASIS;

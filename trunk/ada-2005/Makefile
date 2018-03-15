@@ -14,7 +14,7 @@
 # rpm specific
 DESTDIR ?= 
 # Library version
-VERSION ?= .0.3.2
+VERSION ?= .0.3.3
 # Place to install
 PREFIX           ?= ${HOME}/gela-asis
 # libraries directory
@@ -24,8 +24,8 @@ LIBKIND		 ?= static
 #LIBKIND	 ?= relocatable
 # Place to write files during building:
 BUILD            ?= $(abspath .build)
-# gnatmake flags:
-FLAGS            ?= -j0 -g -m -O2
+# gprbuild flags:
+FLAGS            ?= -j0 -m
 # Where install standard Ada library files
 SPECDIR          ?= ${PREFIX}/include/gela-asis/spec/
 # Where install project file
@@ -91,13 +91,13 @@ BIN_ECHO     ?= echo
 BIN_CAT      ?= cat
 BIN_CP       ?= cp
 BIN_GNATCHOP ?= gnatchop
-BIN_GNATMAKE ?= gnatmake
+BIN_GPRBUILD ?= gprbuild
 BIN_GCC      ?= gcc
 BIN_AYACC    ?= ${BUILD}/ayacc/ayacc
 
 EXTRA_BUILD  ?= ${BIN_AYACC}
 
-GNATMAKE := ${BIN_GNATMAKE} ${FLAGS} -XGELA_BUILD=${BUILD} \
+GPRBUILD := ${BIN_GPRBUILD} ${FLAGS} -XGELA_BUILD=${BUILD} \
   -XLIBRARY_TYPE=${LIBKIND} -XVERSION=${VERSION}
 
 all: ${LIB_STAMP}
@@ -117,10 +117,10 @@ ${BUFFER_SRC}:
 	>> ${BUFFER_SRC}
 
 ${XML_TO_Y}: ${XML_TO_Y_SRC} ${LIBGELA_SRC} ${ENCODING_SRC} ${XML_IO_SRC}
-	${GNATMAKE} -P gnat/gela_xml2y.gpr -o ${XML_TO_Y} xml_to_y-driver.adb
+	${GPRBUILD} -P gnat/gela_xml2y.gpr -o ${XML_TO_Y} xml_to_y-driver.adb
 
 ${UAFLEX_BIN}: ${UAFLEX_SRC}
-	${GNATMAKE} -P gnat/gela_uaflex.gpr -o ${UAFLEX_BIN} uaflex-driver.adb
+	${GPRBUILD} -P gnat/gela_uaflex.gpr -o ${UAFLEX_BIN} uaflex-driver.adb
 
 ${LEXER_STAMP}: ${UAFLEX_BIN} ${ASIS}/ada.uaflex
 	${UAFLEX_BIN} ${ASIS}/ada.uaflex Asis.Gela.Scanner_Tables \
@@ -164,7 +164,7 @@ ${ASIS_STAMP}: ${XML}/asis_hier.xml ${XSL}/asis-gela-elements.xsl \
 	$(BIN_ECHO) "" > ${ASIS_STAMP}
 
 ${LIB_STAMP}: ${WORK_DIRS}
-	${GNATMAKE} -P gnat/gela_asis.gpr
+	${GPRBUILD} -P gnat/gela_asis.gpr
 	$(BIN_ECHO) "" > ${LIB_STAMP}
 
 install: ${ASIS_STAMP}
@@ -190,7 +190,7 @@ install: ${ASIS_STAMP}
 	@${BIN_ECHO} GELA_INCLUDE_PATH=${SPECDIR}
 
 ${BIN_AYACC}: contrib/ayacc/src/*.ad[sb]
-	${GNATMAKE} -P gnat/contrib_ayacc.gpr -o ${BIN_AYACC}
+	${GPRBUILD} -P gnat/contrib_ayacc.gpr -o ${BIN_AYACC}
 
 clean:
 	rm -rf ${WORK_DIRS}
@@ -207,7 +207,7 @@ asis_view: ${AV_OUT}
 	    ${AV_SRC}/create.xsl ${AV_HIER}
 	$(BIN_XSLTPROC) -o ${AV_OUT}/gtk_asis_elements-show.adb \
 	    ${AV_SRC}/show.xsl ${AV_HIER}
-	${BIN_GNATMAKE} -P ${AV_SRC}/asis_view.gpr
+	${BIN_GPRBUILD} -P ${AV_SRC}/asis_view.gpr
 
 ${AV_OUT}:
 	mkdir -p ${AV_OUT}
