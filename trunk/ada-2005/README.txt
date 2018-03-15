@@ -1,6 +1,6 @@
               Gela ASIS: Portable ASIS Implementation
               ---------------------------------------
-                   Version 0.3.3   01 Dec 2013
+                   Version 0.3.3   15 Mar 2018
                      http://gela.ada-ru.org
 
 Gela ASIS is platform/compiler independent implementation of Ada
@@ -11,6 +11,7 @@ capable to process Ada 2005 code.
 Read installation and usage instruction in doc/gela_asis_ug.txt
 
 Changes since Gela 0.3.0:
+ * Use gprbuild instead of gnatmake
  * Bug fixes
  * Support building gela-asis as relocatable library
 

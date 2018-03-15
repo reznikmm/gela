@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 T=gela-asis-0.3.3
-svn export svn://forge.ada-ru.org/gela/trunk /tmp/$T
+svn export svn://forge.ada-ru.org/gela/trunk/ada-2005 /tmp/$T
 
 cd /tmp/$T
 rm source/gela.gpr
