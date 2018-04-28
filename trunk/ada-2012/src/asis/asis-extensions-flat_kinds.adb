@@ -2006,11 +2006,13 @@ package body Asis.Extensions.Flat_Kinds is
    overriding procedure Number_Declaration
      (Self : in out Visiter;
       Node : not null Gela.Elements.Number_Declarations.
-        Number_Declaration_Access)
-   is
-      pragma Unreferenced (Node);
+        Number_Declaration_Access) is
    begin
-      Self.Result := An_Integer_Number_Declaration;
+      if Node.Chosen_Interpretation in Gela.Interpretations.Integer_Number then
+         Self.Result := An_Integer_Number_Declaration;
+      else
+         Self.Result := A_Real_Number_Declaration;
+      end if;
    end Number_Declaration;
 
    overriding procedure Numeric_Literal

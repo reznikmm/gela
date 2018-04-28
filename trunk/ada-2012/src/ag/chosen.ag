@@ -1,7 +1,8 @@
 Synthesized attributes
   function_call,
   identifier,
-  composite_constraint
+  composite_constraint,
+  number_declaration
    : Gela.Interpretations.Interpretation_Kinds : chosen_interpretation;
 
 Rules for function_call. :
@@ -46,3 +47,13 @@ Rules for composite_constraint. :
          ${composite_constraint.chosen_interpretation});
 .)
 
+Rules for number_declaration. :
+(.
+      --  choose between Integer_Number and Real_Number
+      --  ${number_declaration.env_in},
+      --  ${Initialization_Expression.Up},
+      Gela.Pass_Utils.Choose_Number_Declaration_Interpretation
+        (Self.Compilation,
+         Node,
+         ${number_declaration.chosen_interpretation});
+.)

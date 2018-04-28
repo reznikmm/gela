@@ -11,6 +11,7 @@ with Gela.Compilations;
 with Gela.Elements.Compilation_Unit_Declarations;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Defining_Identifiers;
+with Gela.Elements.Number_Declarations;
 with Gela.Elements.Use_Package_Clauses;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
@@ -126,5 +127,11 @@ package Gela.Pass_Utils is
      (Comp   : Gela.Compilations.Compilation_Access;
       Node   : access Gela.Elements.Element'Class;
       Result : out Gela.Interpretations.Constraint_Kinds);
+
+   procedure Choose_Number_Declaration_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Node   : access Gela.Elements.Number_Declarations.
+        Number_Declaration'Class;
+      Result : out Gela.Interpretations.Number_Declaration_Kinds);
 
 end Gela.Pass_Utils;

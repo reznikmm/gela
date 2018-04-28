@@ -15,6 +15,7 @@ with Gela.Elements.Compilation_Unit_Bodies;
 with Gela.Elements.Context_Items;
 with Gela.Elements.Defining_Designators;
 with Gela.Elements.Enumeration_Type_Definitions;
+with Gela.Elements.Expressions;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Function_Declarations;
 with Gela.Elements.Identifiers;
@@ -633,6 +634,66 @@ package body Gela.Pass_Utils is
          Result := Gela.Interpretations.Discriminant_Constraint;
       end if;
    end Choose_Composite_Constraint_Interpretation;
+
+   ----------------------------------------------
+   -- Choose_Number_Declaration_Interpretation --
+   ----------------------------------------------
+
+   procedure Choose_Number_Declaration_Interpretation
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Node   : access Gela.Elements.Number_Declarations.
+        Number_Declaration'Class;
+      Result : out Gela.Interpretations.Number_Declaration_Kinds)
+   is
+      IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
+        Comp.Context.Interpretation_Manager;
+
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
+      Init : constant Gela.Elements.Expressions.Expression_Access :=
+        Node.Initialization_Expression;
+
+      Down : constant Gela.Interpretations.Interpretation_Index := Init.Down;
+
+      package Visiters is
+         type Visiter is new Gela.Interpretations.Down_Visiter with record
+            Result : Gela.Interpretations.Number_Declaration_Kinds;
+         end record;
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
+            Down   : Gela.Interpretations.Interpretation_Index_Array);
+
+      end Visiters;
+
+      package body Visiters is
+
+         overriding procedure On_Expression
+           (Self   : in out Visiter;
+            Tipe   : Gela.Semantic_Types.Type_Index;
+            Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
+            Down   : Gela.Interpretations.Interpretation_Index_Array)
+         is
+            pragma Unreferenced (Down, Kind);
+            use type Gela.Types.Type_View_Access;
+
+            Type_View : constant Gela.Types.Type_View_Access := TM.Get (Tipe);
+         begin
+            if Type_View /= null and then Type_View.Is_Integer then
+               Self.Result := Gela.Interpretations.Integer_Number;
+            end if;
+         end On_Expression;
+
+      end Visiters;
+
+      V : Visiters.Visiter := (Result => Gela.Interpretations.Real_Number);
+   begin
+      IM.Visit (Down, V);
+      Result := V.Result;
+   end Choose_Number_Declaration_Interpretation;
 
    ------------------------------
    -- Create_Completion_Region --
