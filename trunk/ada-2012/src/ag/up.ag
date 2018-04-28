@@ -9,9 +9,7 @@ Synthesized attributes
   case_expression,
   character_literal,
   clause_name,
-  composite_constraint,
   constrained_array_definition,
-  constraint,
   delta_constraint,
   digits_constraint,
   direct_name,
@@ -56,6 +54,8 @@ Synthesized attributes
   simple_expression_range_dr,
   string_literal,
   subtype_indication,
+  scalar_subtype_indication,
+  composite_subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
@@ -78,7 +78,8 @@ Synthesized attributes
   Case_Statement_Paths,
   Record_Component_Associations,
   Variants,
-  association_list
+  association_list,
+  composite_constraint
    : Gela.Interpretations.Interpretation_Tuple_List_Index : Up;
 
 Rules for Array_Component_Choices.discrete_choice :
@@ -232,8 +233,7 @@ Rules for attribute_reference. :
 
 Rules for composite_constraint. :
 (.
-      ${composite_constraint.Up} :=
-        Gela.Interpretations.Interpretation_Set_Index (${Associations.Up});
+      ${composite_constraint.Up} := ${Associations.Up};
 .)
 
 Rules for function_call. :
@@ -408,9 +408,14 @@ Rules for object_definition. :
       ${object_definition.Up} := 0;  --  FIXME
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
-      ${subtype_indication.Up} := ${subtype_mark.Up};
+      ${scalar_subtype_indication.Up} := ${subtype_mark.Up};
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      ${composite_subtype_indication.Up} := ${subtype_mark.Up};
 .)
 
 Rules for discrete_subtype_indication_dr. :

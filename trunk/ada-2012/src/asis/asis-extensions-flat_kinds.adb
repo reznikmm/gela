@@ -34,6 +34,7 @@ with Gela.Elements.Component_Clauses;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
 with Gela.Elements.Composite_Constraints;
+with Gela.Elements.Composite_Subtype_Indications;
 with Gela.Elements.Constrained_Array_Definitions;
 with Gela.Elements.Decimal_Fixed_Point_Definitions;
 with Gela.Elements.Defining_Character_Literals;
@@ -164,6 +165,7 @@ with Gela.Elements.Record_Representation_Clauses;
 with Gela.Elements.Record_Type_Definitions;
 with Gela.Elements.Requeue_Statements;
 with Gela.Elements.Return_Object_Specifications;
+with Gela.Elements.Scalar_Subtype_Indications;
 with Gela.Elements.Select_Or_Paths;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selected_Identifiers;
@@ -177,7 +179,6 @@ with Gela.Elements.Single_Protected_Declarations;
 with Gela.Elements.Single_Task_Declarations;
 with Gela.Elements.String_Literals;
 with Gela.Elements.Subtype_Declarations;
-with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subunits;
 with Gela.Elements.Task_Bodies;
 with Gela.Elements.Task_Body_Stubs;
@@ -366,6 +367,11 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Composite_Constraints.
         Composite_Constraint_Access);
+
+   overriding procedure Composite_Subtype_Indication
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Composite_Subtype_Indications.
+        Composite_Subtype_Indication_Access);
 
    overriding procedure Constrained_Array_Definition
      (Self : in out Visiter;
@@ -1034,6 +1040,11 @@ package body Asis.Extensions.Flat_Kinds is
         Return_Object_Specification_Access)
    is null;
 
+   overriding procedure Scalar_Subtype_Indication
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Scalar_Subtype_Indications.
+        Scalar_Subtype_Indication_Access);
+
    overriding procedure Select_Or_Path
      (Self : in out Visiter;
       Node : not null Gela.Elements.Select_Or_Paths.Select_Or_Path_Access);
@@ -1095,11 +1106,6 @@ package body Asis.Extensions.Flat_Kinds is
      (Self : in out Visiter;
       Node : not null Gela.Elements.Subtype_Declarations.
         Subtype_Declaration_Access);
-
-   overriding procedure Subtype_Indication
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Subtype_Indications.
-        Subtype_Indication_Access);
 
    overriding procedure Subunit
      (Self : in out Visiter;
@@ -1490,6 +1496,16 @@ package body Asis.Extensions.Flat_Kinds is
          Self.Result := A_Discriminant_Constraint;
       end if;
    end Composite_Constraint;
+
+   overriding procedure Composite_Subtype_Indication
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Composite_Subtype_Indications.
+        Composite_Subtype_Indication_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Subtype_Indication;
+   end Composite_Subtype_Indication;
 
    overriding procedure Constrained_Array_Definition
      (Self : in out Visiter;
@@ -2423,6 +2439,16 @@ package body Asis.Extensions.Flat_Kinds is
       end if;
    end Requeue_Statement;
 
+   overriding procedure Scalar_Subtype_Indication
+     (Self : in out Visiter;
+      Node : not null Gela.Elements.Scalar_Subtype_Indications.
+        Scalar_Subtype_Indication_Access)
+   is
+      pragma Unreferenced (Node);
+   begin
+      Self.Result := A_Subtype_Indication;
+   end Scalar_Subtype_Indication;
+
    overriding procedure Select_Or_Path
      (Self : in out Visiter;
       Node : not null Gela.Elements.Select_Or_Paths.Select_Or_Path_Access)
@@ -2551,16 +2577,6 @@ package body Asis.Extensions.Flat_Kinds is
    begin
       Self.Result := A_Subtype_Declaration;
    end Subtype_Declaration;
-
-   overriding procedure Subtype_Indication
-     (Self : in out Visiter;
-      Node : not null Gela.Elements.Subtype_Indications.
-        Subtype_Indication_Access)
-   is
-      pragma Unreferenced (Node);
-   begin
-      Self.Result := A_Subtype_Indication;
-   end Subtype_Indication;
 
    overriding procedure Task_Body
      (Self : in out Visiter;

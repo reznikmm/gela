@@ -621,8 +621,8 @@ package body Gela.Pass_Utils is
             (Node.Enclosing_Element);
 
       Type_Index : constant Gela.Semantic_Types.Type_Index :=
-        TM.Type_From_Subtype_Mark
-          (Subtype_Indication.Env_In, Subtype_Indication.Subtype_Mark);
+        TM.Type_From_Subtype_Indication
+          (Subtype_Indication.Env_In, Subtype_Indication);
 
       Type_View : constant Gela.Types.Type_View_Access :=
         TM.Get (Type_Index);

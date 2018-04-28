@@ -10,10 +10,12 @@
 --  Procedural wrapper over Object-Oriented ASIS implementation
 
 with Gela.Element_Visiters;
-with Gela.Elements.Constraints;
+with Gela.Elements.Composite_Constraints;
+with Gela.Elements.Composite_Subtype_Indications;
+with Gela.Elements.Scalar_Constraints;
+with Gela.Elements.Scalar_Subtype_Indications;
 with Gela.Elements.Simple_Expression_Range_Drs;
 with Gela.Elements.Simple_Expressions;
-with Gela.Elements.Subtype_Indications;
 
 package body Asis.Definitions is
 
@@ -546,24 +548,40 @@ package body Asis.Definitions is
             Result : Gela.Elements.Element_Access;
          end record;
 
-         overriding procedure Subtype_Indication
+         overriding procedure Composite_Subtype_Indication
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access);
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access);
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access);
       end Get;
 
       package body Get is
 
-         overriding procedure Subtype_Indication
+         overriding procedure Composite_Subtype_Indication
            (Self : in out Visiter;
-            Node : not null Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access)
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access)
          is
-            X : constant Gela.Elements.Constraints.Constraint_Access :=
-              Node.Subtype_Constraint;
+            X : constant Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access := Node.Composite_Constraint;
          begin
             Self.Result := Gela.Elements.Element_Access (X);
-         end Subtype_Indication;
+         end Composite_Subtype_Indication;
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access)
+         is
+            X : constant Gela.Elements.Scalar_Constraints.
+              Scalar_Constraint_Access := Node.Scalar_Constraint;
+         begin
+            Self.Result := Gela.Elements.Element_Access (X);
+         end Scalar_Subtype_Indication;
       end Get;
 
       V : Get.Visiter;

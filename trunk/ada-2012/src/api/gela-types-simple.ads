@@ -1,4 +1,4 @@
-limited with Gela.Elements.Subtype_Indications;
+limited with Gela.Elements.Subtype_Marks;
 
 package Gela.Types.Simple is
    pragma Preelaborate;
@@ -64,7 +64,7 @@ package Gela.Types.Simple is
 
    not overriding function Get_Designated
      (Self   : Object_Access_Type)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+      return Gela.Elements.Subtype_Marks.Subtype_Mark_Access
         is abstract;
 
    ----------------------------

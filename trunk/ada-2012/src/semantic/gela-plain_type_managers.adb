@@ -7,6 +7,7 @@ with Gela.Elements.Access_To_Object_Definitions;
 with Gela.Elements.Basic_Declarative_Items;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Definitions;
+with Gela.Elements.Composite_Subtype_Indications;
 with Gela.Elements.Constrained_Array_Definitions;
 with Gela.Elements.Defining_Character_Literals;
 with Gela.Elements.Defining_Enumeration_Names;
@@ -26,10 +27,10 @@ with Gela.Elements.Identifiers;
 with Gela.Elements.Loop_Parameter_Specifications;
 with Gela.Elements.Number_Declarations;
 with Gela.Elements.Object_Declarations;
-with Gela.Elements.Object_Definitions;
 with Gela.Elements.Package_Declarations;
 with Gela.Elements.Parameter_Specifications;
 with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Scalar_Subtype_Indications;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Selector_Names;
 with Gela.Elements.Signed_Integer_Type_Definitions;
@@ -671,11 +672,9 @@ package body Gela.Plain_Type_Managers is
 
             Parent : constant Gela.Elements.Subtype_Indications.
               Subtype_Indication_Access := Node.Parent_Subtype_Indication;
-            Subtype_Mark : constant Gela.Elements.Subtype_Marks
-              .Subtype_Mark_Access  := Parent.Subtype_Mark;
             Tipe : constant Gela.Semantic_Types.Type_Index :=
-              Type_From_Declaration.Self.Type_From_Subtype_Mark
-                (Env, Subtype_Mark);
+              Type_From_Declaration.Self.Type_From_Subtype_Indication
+                (Env, Parent);
             Type_View : Gela.Type_Categories.Type_View_Access;
          begin
             if Tipe /= 0 then
@@ -841,11 +840,10 @@ package body Gela.Plain_Type_Managers is
          is
             Indication : constant Gela.Elements.Subtype_Indications.
               Subtype_Indication_Access := Node.Type_Declaration_View;
-            Subtype_Mark : constant Gela.Elements.Subtype_Marks
-              .Subtype_Mark_Access  := Indication.Subtype_Mark;
          begin
-            Self.Result := Type_From_Declaration.Self.Type_From_Subtype_Mark
-              (Env, Subtype_Mark);
+            Self.Result :=
+              Type_From_Declaration.Self.Type_From_Subtype_Indication
+                (Env, Indication);
          end Subtype_Declaration;
 
          overriding procedure Unconstrained_Array_Definition
@@ -1037,6 +1035,63 @@ package body Gela.Plain_Type_Managers is
       return V.Result;
    end Type_From_Discrete_Subtype;
 
+   overriding function Type_From_Subtype_Indication
+     (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
+      Node  : access Gela.Elements.Object_Definitions.Object_Definition'Class)
+      return Gela.Semantic_Types.Type_Index
+   is
+
+      package Visiters is
+         type Visiter is new Gela.Element_Visiters.Visiter with record
+            Result  : Gela.Semantic_Types.Type_Index := 0;
+         end record;
+
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access);
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access);
+
+      end Visiters;
+
+      --------------
+      -- Visiters --
+      --------------
+
+      package body Visiters is
+
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access) is
+         begin
+            Self.Result := Type_From_Subtype_Indication.Self.
+              Type_From_Subtype_Mark (Env, Node.Subtype_Mark);
+         end Composite_Subtype_Indication;
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access) is
+         begin
+            Self.Result := Type_From_Subtype_Indication.Self.
+              Type_From_Subtype_Mark (Env, Node.Subtype_Mark);
+         end Scalar_Subtype_Indication;
+
+      end Visiters;
+
+      V : Visiters.Visiter := (Result => 0);
+   begin
+      Node.Visit (V);
+
+      return V.Result;
+   end Type_From_Subtype_Indication;
+
    ----------------------------
    -- Type_From_Subtype_Mark --
    ----------------------------
@@ -1170,11 +1225,6 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Parameter_Specifications.
               Parameter_Specification_Access);
 
-         overriding procedure Subtype_Indication
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access);
-
       end Visiters;
 
       package body Visiters is
@@ -1200,7 +1250,11 @@ package body Gela.Plain_Type_Managers is
               .Subtype_Indication_Or_Access_Definition_Access :=
                 Node.Component_Subtype_Indication;
          begin
-            X.Visit (Self);
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Indication
+                (Env,
+                 Gela.Elements.Object_Definitions.Object_Definition_Access
+                   (X));
          end Component_Definition;
 
          overriding procedure Discriminant_Specification
@@ -1272,7 +1326,9 @@ package body Gela.Plain_Type_Managers is
             X : constant Gela.Elements.Object_Definitions.
               Object_Definition_Access := Node.Object_Declaration_Subtype;
          begin
-            X.Visit (Self);
+            Self.Result :=
+              Type_Of_Object_Declaration.Self.Type_From_Subtype_Indication
+                (Env, X);
          end Object_Declaration;
 
          overriding procedure Parameter_Specification
@@ -1288,17 +1344,6 @@ package body Gela.Plain_Type_Managers is
               Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
          end Parameter_Specification;
 
-         overriding procedure Subtype_Indication
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access)
-         is
-            X : constant Gela.Elements.Subtype_Marks.Subtype_Mark_Access  :=
-              Node.Subtype_Mark;
-         begin
-            Self.Result :=
-              Type_Of_Object_Declaration.Self.Type_From_Subtype_Mark (Env, X);
-         end Subtype_Indication;
       end Visiters;
 
       V    : Visiters.Visiter;

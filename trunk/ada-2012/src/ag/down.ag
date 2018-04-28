@@ -17,7 +17,6 @@ Inherited attributes
   clause_name,
   composite_constraint,
   constrained_array_definition,
-  constraint,
   decimal_fixed_point_definition,
   delta_constraint,
   derived_record_definition,
@@ -74,6 +73,8 @@ Inherited attributes
   simple_expression_range_dr,
   simple_name,
   string_literal,
+  scalar_subtype_indication,
+  composite_subtype_indication,
   subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
@@ -1060,23 +1061,46 @@ Rules for qualified_expression. :
          ${Converted_Or_Qualified_Subtype_Mark.Down});
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
       --  3.2.2 (8)
       Gela.Pass_Utils.Resolve.Shall_Be_Subtype
         (Self.Compilation,
-         ${subtype_indication.env_in}, ${subtype_mark.Up}, ${subtype_mark.Down});
+         ${scalar_subtype_indication.env_in},
+         ${subtype_mark.Up},
+         ${subtype_mark.Down});
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
       Gela.Pass_Utils.Resolve.Constraint
         (Self.Compilation,
-         Subtype_Constraint,
-         ${subtype_indication.env_in},
+         Scalar_Constraint,
+         ${scalar_subtype_indication.env_in},
          ${subtype_mark.Up},
-         ${Subtype_Constraint.Up:0},
-         ${Subtype_Constraint.Down});
+         ${scalar_constraint.Up:0},
+         ${scalar_constraint.Down});
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      --  3.2.2 (8)
+      Gela.Pass_Utils.Resolve.Shall_Be_Subtype
+        (Self.Compilation,
+         ${composite_subtype_indication.env_in},
+         ${subtype_mark.Up},
+         ${subtype_mark.Down});
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      Gela.Pass_Utils.Resolve.Constraint
+        (Self.Compilation,
+         Composite_Constraint,
+         ${composite_subtype_indication.env_in},
+         ${subtype_mark.Up},
+         ${composite_constraint.Up:0},
+         ${composite_constraint.Down});
 .)
 
 Rules for parameter_specification. :

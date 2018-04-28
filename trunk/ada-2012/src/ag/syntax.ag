@@ -316,8 +316,6 @@ constrained_array_definition ::=
     component_definition <Array_Component_Definition>
 ;
 
-constraint ::= scalar_constraint | composite_constraint;
-
 composite_constraint ::=
   token         <left_token>
   {association} <Associations>
@@ -1684,10 +1682,17 @@ subtype_declaration ::=
 ;
 
 subtype_indication ::=
+  scalar_subtype_indication | composite_subtype_indication;
+
+scalar_subtype_indication ::=
+  subtype_mark
+  [scalar_constraint];
+
+composite_subtype_indication ::=
   token <not_token>
   token <null_token>
   subtype_mark
-  [constraint <Subtype_Constraint>];
+  [composite_constraint];
 
 subtype_indication_or_access_definition ::=
   subtype_indication | access_definition;

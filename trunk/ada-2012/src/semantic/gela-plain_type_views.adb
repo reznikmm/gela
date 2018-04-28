@@ -3,11 +3,13 @@ with Gela.Elements.Access_To_Object_Definitions;
 with Gela.Elements.Alt_Record_Definitions;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Items;
+with Gela.Elements.Composite_Subtype_Indications;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Discriminant_Specifications;
 with Gela.Elements.Known_Discriminant_Parts;
 with Gela.Elements.Record_Definitions;
 with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Scalar_Subtype_Indications;
 with Gela.Elements.Variant_Parts;
 with Gela.Elements.Variants;
 
@@ -237,18 +239,27 @@ package body Gela.Plain_Type_Views is
 
    overriding function Get_Designated
      (Self   : Type_View)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
+      return Gela.Elements.Subtype_Marks.Subtype_Mark_Access
    is
       package Get is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Elements.Subtype_Indications.
-              Subtype_Indication_Access;
+            Result : Gela.Elements.Subtype_Marks. Subtype_Mark_Access;
          end record;
 
          overriding procedure Access_To_Object_Definition
            (Self : in out Visiter;
             Node : not null Gela.Elements.Access_To_Object_Definitions.
               Access_To_Object_Definition_Access);
+
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access);
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access);
 
       end Get;
 
@@ -259,8 +270,24 @@ package body Gela.Plain_Type_Views is
             Node : not null Gela.Elements.Access_To_Object_Definitions.
               Access_To_Object_Definition_Access) is
          begin
-            Self.Result := Node.Subtype_Indication;
+            Node.Subtype_Indication.Visit (Self);
          end Access_To_Object_Definition;
+
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access) is
+         begin
+            Self.Result := Node.Subtype_Mark;
+         end Composite_Subtype_Indication;
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access) is
+         begin
+            Self.Result := Node.Subtype_Mark;
+         end Scalar_Subtype_Indication;
 
       end Get;
 

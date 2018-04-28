@@ -136,6 +136,8 @@ Synthesized attributes
   single_task_declaration,
   subtype_declaration,
   subtype_indication,
+  scalar_subtype_indication,
+  composite_subtype_indication,
   subunit,
   task_body,
   task_body_stub,
@@ -888,9 +890,14 @@ Rules for subtype_declaration. :
         (${Type_Declaration_View.env_out});
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
-      ${subtype_indication.env_out} := ${subtype_indication.env_in};
+      ${scalar_subtype_indication.env_out} := ${scalar_subtype_indication.env_in};
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      ${composite_subtype_indication.env_out} := ${composite_subtype_indication.env_in};
 .)
 
 Rules for subunit. :

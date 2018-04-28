@@ -1,7 +1,7 @@
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Formal_Type_Declarations;
-with Gela.Elements.Subtype_Indications;
+with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Discriminant_Parts;
 with Gela.Lexical_Types;
 with Gela.Types.Simple;
@@ -73,7 +73,7 @@ private
 
    overriding function Get_Designated
      (Self   : Type_View)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access;
+      return Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
 
    overriding function Is_Expected_Type
      (Self     : Type_View;

@@ -3,23 +3,24 @@ with Gela.Element_Cloners;
 with Gela.Element_Visiters;
 with Gela.Elements.Component_Declarations;
 with Gela.Elements.Component_Items;
+with Gela.Elements.Composite_Subtype_Indications;
 with Gela.Elements.Defining_Identifiers;
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
 with Gela.Elements.Identifiers;
 with Gela.Elements.Record_Definitions;
 with Gela.Elements.Record_Type_Definitions;
+with Gela.Elements.Scalar_Subtype_Indications;
 with Gela.Elements.Selected_Components;
 with Gela.Elements.Subtype_Indications;
 with Gela.Elements.Subtype_Marks;
 with Gela.Environments;
+with Gela.Interpretations;
+with Gela.Lexical_Types;
 with Gela.Property_Getters;
 with Gela.Property_Resets;
 with Gela.Property_Setters;
 with Gela.Property_Visiters;
-with Gela.Lexical_Types;
-with Gela.Interpretations;
---  with Gela.Type_Managers;
 
 package body Gela.Inheritance is
 
@@ -234,9 +235,6 @@ package body Gela.Inheritance is
       Parent : constant
         Gela.Elements.Subtype_Indications.Subtype_Indication_Access :=
           Node.Parent_Subtype_Indication;
-      Subtype_Mark : constant
-        Gela.Elements.Subtype_Marks.Subtype_Mark_Access :=
-          Parent.Subtype_Mark;
 
       package Each is
          type Visiter is new Gela.Element_Visiters.Visiter with record
@@ -245,6 +243,16 @@ package body Gela.Inheritance is
             Components : Gela.Elements.Component_Items.
               Component_Item_Sequence_Access;
          end record;
+
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access);
+
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access);
 
          overriding procedure Identifier
            (Self : in out Visiter;
@@ -294,6 +302,14 @@ package body Gela.Inheritance is
             Self.Components.Append (Item);
          end Component_Declaration;
 
+         overriding procedure Composite_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Subtype_Indications.
+              Composite_Subtype_Indication_Access) is
+         begin
+            Node.Subtype_Mark.Visit (Self);
+         end Composite_Subtype_Indication;
+
          overriding procedure Full_Type_Declaration
            (Self : in out Visiter;
             Node : not null Gela.Elements.Full_Type_Declarations.
@@ -335,6 +351,14 @@ package body Gela.Inheritance is
             Node.Record_Definition.Visit (Self);
          end Record_Type_Definition;
 
+         overriding procedure Scalar_Subtype_Indication
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Scalar_Subtype_Indications.
+              Scalar_Subtype_Indication_Access) is
+         begin
+            Node.Subtype_Mark.Visit (Self);
+         end Scalar_Subtype_Indication;
+
          overriding procedure Selected_Component
            (Self : in out Visiter;
             Node : not null Gela.Elements.Selected_Components.
@@ -352,7 +376,7 @@ package body Gela.Inheritance is
       if Inherited not in null then
          return;
       end if;
-      Subtype_Mark.Visit (V);
+      Parent.Visit (V);
       Inherited := Gela.Elements.Element_Sequence_Access (V.Components);
    end Copy_Declarations;
 

@@ -11,7 +11,6 @@ with Gela.Elements.Generic_Formals;
 with Gela.Elements.Generic_Package_Declarations;
 with Gela.Elements.Range_Attribute_References;
 with Gela.Elements.Simple_Expression_Ranges;
-with Gela.Elements.Subtype_Indications;
 with Gela.Environments;
 with Gela.Profiles;
 with Gela.Resolve.Type_Matchers;
@@ -318,11 +317,6 @@ package body Gela.Resolve is
       package Each_Constraint is
          type Visiter is new Gela.Element_Visiters.Visiter with null record;
 
-         overriding procedure Composite_Constraint
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Composite_Constraints.
-              Composite_Constraint_Access);
-
          overriding procedure Range_Attribute_Reference
            (Self : in out Visiter;
             Node : not null Gela.Elements.Range_Attribute_References.
@@ -332,6 +326,72 @@ package body Gela.Resolve is
            (Self : in out Visiter;
             Node : not null Gela.Elements.Simple_Expression_Ranges.
               Simple_Expression_Range_Access);
+
+      end Each_Constraint;
+
+      package body Each_Constraint is
+
+         overriding procedure Range_Attribute_Reference
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Range_Attribute_References.
+              Range_Attribute_Reference_Access)
+         is
+            pragma Unreferenced (Node, Self);
+         begin
+            --  3.5 (5)
+            Gela.Resolve.To_Type
+              (Comp    => Comp,
+               Env     => Env,
+               Type_Up => Type_Up,
+               Expr_Up => Constr,
+               Result  => Result);
+         end Range_Attribute_Reference;
+
+         overriding procedure Simple_Expression_Range
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Simple_Expression_Ranges.
+              Simple_Expression_Range_Access)
+         is
+            pragma Unreferenced (Node, Self);
+         begin
+            --  3.5 (5)
+            Gela.Resolve.To_Type
+              (Comp    => Comp,
+               Env     => Env,
+               Type_Up => Type_Up,
+               Expr_Up => Constr,
+               Result  => Result);
+         end Simple_Expression_Range;
+
+      end Each_Constraint;
+
+      V : Each_Constraint.Visiter;
+
+   begin
+      Result := 0;
+
+      if not Constraint.Assigned then
+         return;
+      end if;
+
+      Constraint.Visit (V);
+   end Constraint;
+
+   procedure Constraint
+     (Comp       : Gela.Compilations.Compilation_Access;
+      Constraint : access Gela.Elements.Element'Class;
+      Env        : Gela.Semantic_Types.Env_Index;
+      Type_Up    : Gela.Interpretations.Interpretation_Set_Index;
+      Constr     : Gela.Interpretations.Interpretation_Tuple_List_Index;
+      Result     : out Gela.Interpretations.Interpretation_Index)
+   is
+      package Each_Constraint is
+         type Visiter is new Gela.Element_Visiters.Visiter with null record;
+
+         overriding procedure Composite_Constraint
+           (Self : in out Visiter;
+            Node : not null Gela.Elements.Composite_Constraints.
+              Composite_Constraint_Access);
 
       end Each_Constraint;
 
@@ -351,11 +411,8 @@ package body Gela.Resolve is
          is
             pragma Unreferenced (Node, Self);
 
-            X : constant Gela.Interpretations.Interpretation_Tuple_List_Index
-              := Gela.Interpretations.Interpretation_Tuple_List_Index (Constr);
-
             Tuples : constant Gela.Interpretations
-              .Interpretation_Tuple_Index_Array := IM.Get_Tuple_List (X);
+              .Interpretation_Tuple_Index_Array := IM.Get_Tuple_List (Constr);
 
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
@@ -434,10 +491,8 @@ package body Gela.Resolve is
                   Value : not null Gela.Types.Simple
                     .Object_Access_Type_Access)
                is
-                  Designated : constant Gela.Elements.Subtype_Indications
-                    .Subtype_Indication_Access := Value.Get_Designated;
                   Des_Index  : constant Gela.Semantic_Types.Type_Index :=
-                    TM.Type_From_Subtype_Mark (Env, Designated.Subtype_Mark);
+                    TM.Type_From_Subtype_Mark (Env, Value.Get_Designated);
                   Des_View   : constant Gela.Types.Type_View_Access :=
                     TM.Get (Des_Index);
                begin
@@ -525,38 +580,6 @@ package body Gela.Resolve is
             Type_View.Visit_If_Assigned (Visiter);
          end Composite_Constraint;
 
-         overriding procedure Range_Attribute_Reference
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Range_Attribute_References.
-              Range_Attribute_Reference_Access)
-         is
-            pragma Unreferenced (Node, Self);
-         begin
-            --  3.5 (5)
-            Gela.Resolve.To_Type
-              (Comp    => Comp,
-               Env     => Env,
-               Type_Up => Type_Up,
-               Expr_Up => Constr,
-               Result  => Result);
-         end Range_Attribute_Reference;
-
-         overriding procedure Simple_Expression_Range
-           (Self : in out Visiter;
-            Node : not null Gela.Elements.Simple_Expression_Ranges.
-              Simple_Expression_Range_Access)
-         is
-            pragma Unreferenced (Node, Self);
-         begin
-            --  3.5 (5)
-            Gela.Resolve.To_Type
-              (Comp    => Comp,
-               Env     => Env,
-               Type_Up => Type_Up,
-               Expr_Up => Constr,
-               Result  => Result);
-         end Simple_Expression_Range;
-
       end Each_Constraint;
 
       V : Each_Constraint.Visiter;
@@ -570,6 +593,7 @@ package body Gela.Resolve is
 
       Constraint.Visit (V);
    end Constraint;
+
 
    -----------------
    -- Direct_Name --

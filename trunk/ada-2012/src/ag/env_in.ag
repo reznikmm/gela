@@ -98,7 +98,6 @@ Inherited attributes
   component_item,
   composite_constraint,
   constrained_array_definition,
-  constraint,
   context_item,
   decimal_fixed_point_definition,
   declarative_item,
@@ -282,6 +281,8 @@ Inherited attributes
   string_literal,
   subtype_declaration,
   subtype_indication,
+  scalar_subtype_indication,
+  composite_subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
@@ -2701,15 +2702,26 @@ Rules for subtype_declaration. :
       ${Aspect_Specifications.env_in} := ${Type_Declaration_View.env_out};
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
-      ${subtype_mark.env_in} := ${subtype_indication.env_in};
+      ${subtype_mark.env_in} := ${scalar_subtype_indication.env_in};
 .)
 
-Rules for subtype_indication. :
+Rules for composite_subtype_indication. :
+(.
+      ${subtype_mark.env_in} := ${composite_subtype_indication.env_in};
+.)
+
+Rules for scalar_subtype_indication. :
 (.
       --  Depend on ${subtype_mark.Errors}
-      ${Subtype_Constraint.env_in} := ${subtype_indication.env_in};
+      ${scalar_constraint.env_in} := ${scalar_subtype_indication.env_in};
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      --  Depend on ${subtype_mark.Errors}
+      ${composite_constraint.env_in} := ${composite_subtype_indication.env_in};
 .)
 
 Rules for subunit. :

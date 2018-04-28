@@ -23,7 +23,6 @@ Synthesized attributes
   composite_constraint,
   clause_or_pragma,
   constrained_array_definition,
-  constraint,
   defining_expanded_unit_name,
   defining_identifier,
   defining_program_unit_name,
@@ -97,6 +96,8 @@ Synthesized attributes
   statement,
   string_literal,
   subtype_indication,
+  scalar_subtype_indication,
+  composite_subtype_indication,
   subtype_indication_or_access_definition,
   subtype_mark,
   subtype_mark_or_access_definition,
@@ -150,9 +151,14 @@ Rules for function_call. :
       ${function_call.Errors} := 0;
 .)
 
-Rules for subtype_indication. :
+Rules for scalar_subtype_indication. :
 (.
-      ${subtype_indication.Errors} := ${Subtype_Constraint.Errors:0};
+      ${scalar_subtype_indication.Errors} := ${scalar_constraint.Errors:0};
+.)
+
+Rules for composite_subtype_indication. :
+(.
+      ${composite_subtype_indication.Errors} := ${composite_constraint.Errors:0};
 .)
 
 Rules for discrete_subtype_indication_dr. :

@@ -8,14 +8,15 @@ with Gela.Elements.Defining_Names;
 with Gela.Elements.Discrete_Subtype_Definitions;
 with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Full_Type_Declarations;
+with Gela.Elements.Object_Definitions;
 with Gela.Elements.Root_Type_Definitions;
 with Gela.Elements.Subtype_Mark_Or_Access_Definitions;
 with Gela.Lexical_Types;
 with Gela.Profiles;
 with Gela.Semantic_Types;
+with Gela.Type_Categories;
 with Gela.Type_Managers;
 with Gela.Types;
-with Gela.Type_Categories;
 
 package Gela.Plain_Type_Managers is
    pragma Preelaborate;
@@ -145,6 +146,12 @@ private
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Type_Index;
+
+   overriding function Type_From_Subtype_Indication
+     (Self  : access Type_Manager;
+      Env   : Gela.Semantic_Types.Env_Index;
+      Node  : access Gela.Elements.Object_Definitions.Object_Definition'Class)
       return Gela.Semantic_Types.Type_Index;
 
    overriding function Type_From_Subtype_Mark

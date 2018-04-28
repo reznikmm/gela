@@ -1,6 +1,6 @@
 with Gela.Elements.Defining_Names;
 with Gela.Elements.Full_Type_Declarations;
-with Gela.Elements.Subtype_Indications;
+with Gela.Elements.Subtype_Marks;
 with Gela.Lexical_Types;
 with Gela.Types.Arrays;
 with Gela.Types.Simple;
@@ -60,7 +60,7 @@ private
 
    overriding function Get_Designated
      (Self   : Type_View)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access;
+      return Gela.Elements.Subtype_Marks.Subtype_Mark_Access;
 
    overriding function Index_Types
      (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array;

@@ -90,8 +90,7 @@ package body Gela.Derived_Type_Views is
 
    overriding function Get_Designated
      (Self   : Type_View)
-      return Gela.Elements.Subtype_Indications.Subtype_Indication_Access
-   is
+      return Gela.Elements.Subtype_Marks.Subtype_Mark_Access is
    begin
       return Gela.Types.Simple.Object_Access_Type_Access
         (Self.Parent).Get_Designated;

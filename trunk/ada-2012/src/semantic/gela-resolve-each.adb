@@ -1,4 +1,3 @@
-with Gela.Elements.Subtype_Indications;
 with Gela.Plain_Int_Sets.Cursors;
 with Gela.Types.Simple;
 with Gela.Types.Visitors;
@@ -363,11 +362,9 @@ package body Gela.Resolve.Each is
             .Object_Access_Type_Access)
          is
             pragma Unreferenced (Self);
-            SI : constant Gela.Elements.Subtype_Indications
-              .Subtype_Indication_Access := Value.Get_Designated;
             Index : constant Gela.Semantic_Types.Type_Index :=
               Step.Self.Name.TM.Type_From_Subtype_Mark
-                (Step.Self.Name.Env, SI.Subtype_Mark);
+                (Step.Self.Name.Env, Value.Get_Designated);
          begin
             Step.Self.Is_Implicit_Dereference := True;
             Step.Self.Implicit_Dereference_Type := Index;
