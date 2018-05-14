@@ -492,7 +492,12 @@ Rules for exception_declaration. :
 
 Rules for exception_renaming_declaration. :
 (.
-      ${exception_renaming_declaration.env_out} := ${exception_renaming_declaration.env_in};
+      ${exception_renaming_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${exception_renaming_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for floating_point_definition. :
@@ -743,7 +748,12 @@ Rules for object_declaration. :
 
 Rules for object_renaming_declaration. :
 (.
-      ${object_renaming_declaration.env_out} := ${object_renaming_declaration.env_in};
+      ${object_renaming_declaration.env_out} :=
+        Gela.Pass_Utils.Add_Names
+          (Self.Compilation,
+           ${object_renaming_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for ordinary_fixed_point_definition. :
@@ -778,7 +788,11 @@ Rules for package_instantiation. :
 
 Rules for package_renaming_declaration. :
 (.
-      ${package_renaming_declaration.env_out} := ${package_renaming_declaration.env_in};
+      ${package_renaming_declaration.env_out} :=
+        Self.Compilation.Context.Environment_Set.Add_Defining_Name
+          (Index  => ${package_renaming_declaration.env_in},
+           Symbol => ${Names.full_name},
+           Name   => Gela.Elements.Defining_Names.Defining_Name_Access (Names));
 .)
 
 Rules for parameter_specification. :

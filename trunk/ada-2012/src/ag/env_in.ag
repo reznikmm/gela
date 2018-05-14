@@ -941,8 +941,12 @@ Rules for block_statement. :
 Rules for block_statement. :
 (.
       ${Block_Declarative_Items.env_in} :=
-        Self.Compilation.Context.Environment_Set.Enter_Declarative_Region
-          (${block_statement.env_in}, null);
+        Gela.Pass_Utils.Add_Name_Create_Region
+          (Self.Compilation,
+           ${block_statement.env_in},
+           ${Statement_Identifier.full_name:0},
+           Gela.Elements.Defining_Names.Defining_Name_Access (Statement_Identifier),
+           Gela.Elements.Element_Access (Node));
 .)
 
 Rules for block_statement. :
@@ -1361,7 +1365,12 @@ Rules for exception_renaming_declaration. :
 
 Rules for exception_renaming_declaration. :
 (.
-      ${Renamed_Entity.env_in} := ${exception_renaming_declaration.env_in};
+      ${Renamed_Entity.env_in} :=
+        Gela.Pass_Utils.Add_Names_Create_Region
+          (Self.Compilation,
+           ${exception_renaming_declaration.env_in},
+           ${Names.name_list},
+           Names);
 .)
 
 Rules for exception_renaming_declaration. :
