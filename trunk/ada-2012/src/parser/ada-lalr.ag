@@ -3059,7 +3059,7 @@ Rules for package_declaration. :
 
 package_renaming_declaration ::=
   package_token defining_program_unit_name
-  renames_token name
+  renames_token program_unit_name
   [aspect_specification]
   semicolon_token
 ;
@@ -3071,7 +3071,7 @@ Rules for package_renaming_declaration. :
          (-${package_token.ast},
           -${defining_program_unit_name.ast},
           -${renames_token.ast},
-          -${name.ast},
+          -${program_unit_name.ast},
           -${aspect_specification.ast:(+Self.Factory.Aspect_Specification_Sequence)},
           -${semicolon_token.ast});
 .)

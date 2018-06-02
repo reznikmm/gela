@@ -59,6 +59,13 @@ private
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
 
+   overriding function Add_Rename_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index;
+
    overriding function Add_Completion
      (Self       : in out Environment_Set;
       Index      : Gela.Semantic_Types.Env_Index;

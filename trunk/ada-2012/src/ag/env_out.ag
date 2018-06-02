@@ -793,6 +793,11 @@ Rules for package_renaming_declaration. :
           (Index  => ${package_renaming_declaration.env_in},
            Symbol => ${Names.full_name},
            Name   => Gela.Elements.Defining_Names.Defining_Name_Access (Names));
+      ${package_renaming_declaration.env_out} :=
+        Self.Compilation.Context.Environment_Set.Add_Rename_Package
+          (Index  => ${package_renaming_declaration.env_out},
+           Region => Gela.Elements.Defining_Names.Defining_Name_Access (Names),
+           Name   => ${Renamed_Entity.Defining_Name});
 .)
 
 Rules for parameter_specification. :

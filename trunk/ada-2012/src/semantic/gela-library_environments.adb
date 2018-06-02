@@ -595,6 +595,21 @@ package body Gela.Library_Environments is
       return 0;
    end Add_Defining_Name;
 
+   ------------------------
+   -- Add_Rename_Package --
+   ------------------------
+
+   overriding function Add_Rename_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      raise Program_Error;
+      return 0;
+   end Add_Rename_Package;
+
    ---------------------
    -- Add_Use_Package --
    ---------------------

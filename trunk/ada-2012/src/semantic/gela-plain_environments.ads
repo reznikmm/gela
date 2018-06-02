@@ -37,6 +37,8 @@ private
       --  List of use_package_clauses in the region
       Completion : Defining_Name_List;
       --  List of <Completion, Name> pairs
+      Rename : Gela.Name_List_Managers.List;
+      --  List of package renames.
    end record;
 
    package Region_Item_Lists is new Gela.Peristent_Lists
@@ -121,6 +123,13 @@ private
    overriding function Add_Use_Package
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
+      return Gela.Semantic_Types.Env_Index;
+
+   overriding function Add_Rename_Package
+     (Self   : in out Environment_Set;
+      Index  : Gela.Semantic_Types.Env_Index;
+      Region : Gela.Elements.Defining_Names.Defining_Name_Access;
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access)
       return Gela.Semantic_Types.Env_Index;
 

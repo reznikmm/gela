@@ -1282,7 +1282,7 @@ package_renaming_declaration ::=
   token                      <package_token>
   defining_program_unit_name <Names>
   token                      <renames_token>
-  name                       <Renamed_Entity>
+  program_unit_name          <Renamed_Entity>
   {aspect_specification}     <Aspect_Specifications>
   token                      <semicolon_token>
 ;
