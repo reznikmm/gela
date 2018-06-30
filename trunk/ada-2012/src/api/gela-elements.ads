@@ -136,7 +136,7 @@ package Gela.Elements is
           null record with Implicit_Dereference => Item;
 
       function Constant_Reference
-        (Self     : Sequence'Class;
+        (Unused   : Sequence'Class;
          Position : Sequence_Cursor'Class)
          return Constant_Reference_Type is (Item => Position.Element);
 
@@ -145,7 +145,7 @@ package Gela.Elements is
           null record with Implicit_Dereference => Item;
 
       function Reference
-        (Self     : in out Sequence'Class;
+        (Unused   : in out Sequence'Class;
          Position : Sequence_Cursor'Class)
          return Reference_Type is (Item => Position.Element);
 
@@ -197,7 +197,7 @@ package Gela.Elements is
         (Self : Sequence) return Iterators.Forward_Iterator'Class is abstract;
 
       function Constant_Reference
-        (Self     : Sequence'Class;
+        (Unused   : Sequence'Class;
          Position : Element_Sequences.Sequence_Cursor'Class)
          return Element_Sequences.Constant_Reference_Type
            is (Item => Position.Element);
@@ -207,12 +207,12 @@ package Gela.Elements is
           null record with Implicit_Dereference => Item;
 
       function Constant_Reference
-        (Self     : Sequence'Class;
+        (Unused   : Sequence'Class;
          Position : Sequence_Cursor'Class)
          return Constant_Reference_Type is (Item => Position.Element);
 
       function Reference
-        (Self     : in out Sequence'Class;
+        (Unused   : in out Sequence'Class;
          Position : Element_Sequences.Sequence_Cursor'Class)
          return Element_Sequences.Reference_Type
            is (Item => Position.Element);
@@ -222,7 +222,7 @@ package Gela.Elements is
           null record with Implicit_Dereference => Item;
 
       function Reference
-        (Self     : in out Sequence'Class;
+        (Unused   : in out Sequence'Class;
          Position : Sequence_Cursor'Class)
          return Reference_Type is (Item => Position.Element);
 
