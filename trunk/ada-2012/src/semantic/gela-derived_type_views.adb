@@ -150,15 +150,9 @@ package body Gela.Derived_Type_Views is
    overriding function Is_Expected_Type
      (Self     : Type_View;
       Expected : not null Gela.Types.Type_View_Access)
-      return Boolean
-   is
-      use type Gela.Elements.Full_Type_Declarations
-        .Full_Type_Declaration_Access;
-
+      return Boolean is
    begin
-      if Expected.all in Type_View and then
-        Self.Decl = Type_View (Expected.all).Decl
-      then
+      if Self.Is_The_Same_Type (Expected.all) then
          return True;
       end if;
 
@@ -227,6 +221,26 @@ package body Gela.Derived_Type_Views is
    begin
       return Self.Parent.Is_Signed_Integer;
    end Is_Signed_Integer;
+
+   ----------------------
+   -- Is_The_Same_Type --
+   ----------------------
+
+   overriding function Is_The_Same_Type
+     (Left  : Type_View;
+      Right : Gela.Types.Type_View'Class) return Boolean
+    is
+      use type Gela.Elements.Full_Type_Declarations
+        .Full_Type_Declaration_Access;
+   begin
+      if Right in Type_View'Class and then
+        Left.Decl = Type_View (Right).Decl
+      then
+         return True;
+      end if;
+
+      return False;
+   end Is_The_Same_Type;
 
    ------------------
    -- Is_Universal --

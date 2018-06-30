@@ -22,6 +22,10 @@ package Gela.Types is
        is abstract;
    --  Defining name of the type for non-anonymous types
 
+   not overriding function Is_The_Same_Type
+     (Left  : Type_View;
+      Right : Gela.Types.Type_View'Class) return Boolean is abstract;
+
    not overriding function Is_Expected_Type
      (Self     : Type_View;
       Expected : not null Type_View_Access) return Boolean is abstract;

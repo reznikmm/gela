@@ -73,6 +73,10 @@ private
    overriding function Component_Type
      (Self : Type_View) return Gela.Semantic_Types.Type_Index;
 
+   overriding function Is_The_Same_Type
+     (Left  : Type_View;
+      Right : Gela.Types.Type_View'Class) return Boolean;
+
    overriding function Is_Expected_Type
      (Self     : Type_View;
       Expected : not null Gela.Types.Type_View_Access) return Boolean;

@@ -443,9 +443,7 @@ package body Gela.Plain_Type_Views is
 
       Matcher : Visitors.Type_Visitor;
    begin
-      if Expected.all in Type_View'Class and then
-        Self.Def = Type_View'Class (Expected.all).Def
-      then
+      if Self.Is_The_Same_Type (Expected.all) then
          return True;
       end if;
 
@@ -542,6 +540,23 @@ package body Gela.Plain_Type_Views is
       return Self.Category in Gela.Type_Categories.A_Signed_Integer
         | Gela.Type_Categories.An_Universal_Integer;
    end Is_Signed_Integer;
+
+   ----------------------
+   -- Is_The_Same_Type --
+   ----------------------
+
+   overriding function Is_The_Same_Type
+     (Left  : Type_View;
+      Right : Gela.Types.Type_View'Class) return Boolean
+   is
+      use type Gela.Elements.Defining_Names.Defining_Name_Access;
+   begin
+      if Right in Type_View'Class then
+         return Left.Name = Type_View'Class (Right).Name;
+      end if;
+
+      return False;
+   end Is_The_Same_Type;
 
    ------------------
    -- Is_Universal --
