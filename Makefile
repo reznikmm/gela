@@ -1,7 +1,7 @@
 export GELA_BUILD=$(abspath build)
 AG_DRIVER=$(GELA_BUILD)/ag/ag_driver
 YACC_DRIVER=$(GELA_BUILD)/ag/yacc_driver
-UAFLEX=$(GELA_BUILD)/tools/uaflex-driver
+UAFLEX=uaflex
 AST=$(GELA_BUILD)/ada-ast.ag
 AST_STAMP=$(GELA_BUILD)/.stamp-ast
 SYNTAX=src/parser/ada-lalr.ag
@@ -26,7 +26,7 @@ $(AST_STAMP): $(AG_DRIVER) $(AST)
 $(AST): src/ag/*.ag src/ag/main.ag.pp
 	cpp -P src/ag/main.ag.pp $(AST)
 
-$(LEXER_STAMP): $(UAFLEX) $(LEXER)
+$(LEXER_STAMP): $(LEXER)
 	cd $(BUILD_CHOP); $(UAFLEX) --types Gela.Scanner_Types \
             --handler Gela.Scanner_Handlers --scanner Gela.Scanners \
             --tokens Gela.Lexical_Types $(LEXER)
@@ -38,9 +38,6 @@ $(PARSER): $(YACC_DRIVER) $(SYNTAX)
 
 $(AG_DRIVER) $(YACC_DRIVER):
 	gprbuild -m -j0 -p -P gnat/gela_ag.gpr
-
-$(UAFLEX):
-	gprbuild -m -j0 -p -P gnat/gela_uaflex2.gpr
 
 tests: asis
 	gprbuild -m -j0 -p -P gnat/gela_tester.gpr
