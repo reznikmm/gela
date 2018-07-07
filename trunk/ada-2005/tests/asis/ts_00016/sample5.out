@@ -1,7 +1,0 @@
-Declaration_Kind:A_PROCEDURE_BODY_DECLARATION Procedure_Body_Stub at procedure_body-procedure_body_stub.adb [2:1..5:4]
-  Defining_Name_Kind:A_DEFINING_IDENTIFIER Procedure_Body_Stub at procedure_body-procedure_body_stub.adb [2:11..2:29]
-  Declaration_Kind:A_PARAMETER_SPECIFICATION X at procedure_body-procedure_body_stub.adb [2:32..2:49]
-    Defining_Name_Kind:A_DEFINING_IDENTIFIER X at procedure_body-procedure_body_stub.adb [2:32..2:32]
-    Access_Definition_Kind:AN_ANONYMOUS_ACCESS_TO_VARIABLE  at procedure_body-procedure_body_stub.adb [2:36..2:49]
-      Expression_Kind:AN_IDENTIFIER Integer at procedure_body-procedure_body_stub.adb [2:43..2:49]
-  Statement_Kind:A_NULL_STATEMENT  at procedure_body-procedure_body_stub.adb [4:4..4:8]

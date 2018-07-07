@@ -1,4 +1,0 @@
-Associate -I../../../source/asis/spec -Isample sample/inheritance.adb
-Action Print Any
-Process_Context Library_Unit_Declaration Inheritance
-Process_Context Compilation_Unit_Body    Inheritance

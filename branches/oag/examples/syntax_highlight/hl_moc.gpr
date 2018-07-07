@@ -1,7 +1,0 @@
-with "qt_gui";
-
-project HL_Moc is
-    for Languages use ("Amoc");
-    for Source_Files use ("ada_syntax_highlighters.ads");
-    for Object_Dir use ".amoc";
-end HL_Moc;

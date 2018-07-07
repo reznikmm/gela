@@ -1,4 +1,0 @@
-Declaration_Kind:A_TASK_BODY_DECLARATION Task_Body_Stub at procedure_body-task_body_stub.adb [2:1..5:4]
-  Defining_Name_Kind:A_DEFINING_IDENTIFIER Task_Body_Stub at procedure_body-task_body_stub.adb [2:11..2:24]
-  Statement_Kind:AN_ABORT_STATEMENT  at procedure_body-task_body_stub.adb [4:4..4:24]
-    Expression_Kind:AN_IDENTIFIER Task_Body_Stub at procedure_body-task_body_stub.adb [4:10..4:23]

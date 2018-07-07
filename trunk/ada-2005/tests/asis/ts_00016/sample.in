@@ -1,7 +1,0 @@
-Associate -I../../../source/asis/spec -Isample sample/procedure_body-function_body_stub.adb
-Action Print Any
-Process_Context Library_Unit_Declaration package_declaration
-Process_Context Library_Unit_Declaration package_declaration.child
-Process_Context Library_Unit_Declaration package_declaration.types
-Process_Context Compilation_Unit_Body    procedure_body
-Process_Context Compilation_Unit_Body    procedure_body.function_body_stub
