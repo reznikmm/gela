@@ -33,8 +33,8 @@ procedure Gela.Test_Driver2 is
    --  Path to directory containing tests' sources (trunk/tests/)
 
    ACATS_Dir : constant League.Strings.Universal_String :=
-     Gela.Host.Source_Root & "/../acats/";
-   --  Path to directory with ACATS tests (trunk/../acats/)
+     Gela.Host.Source_Root & "/acats/";
+   --  Path to directory with ACATS tests (trunk/acats/)
 
    Build    : constant League.Strings.Universal_String :=
      Gela.Host.Build_Root;
@@ -184,9 +184,9 @@ begin
 
       while Iterator.Has_More_Tests loop
          Iterator.Next (Test);
-         Ada.Wide_Wide_Text_IO.Put_Line
-           (Test.Fixture.To_Wide_Wide_String & "/" &
-              Test.Name.To_Wide_Wide_String);
+--         Ada.Wide_Wide_Text_IO.Put_Line
+--           (Test.Fixture.To_Wide_Wide_String & "/" &
+--              Test.Name.To_Wide_Wide_String);
          Queue.Put (Test);
       end loop;
 

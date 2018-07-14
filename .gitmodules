@@ -1,0 +1,3 @@
+[submodule "src/adalib"]
+	path = src/adalib
+	url = https://github.com/reznikmm/adalib.git
