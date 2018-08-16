@@ -36,10 +36,6 @@ private
    type Environment_Set (Context : access Gela.Contexts.Context'Class) is
      new Gela.Environments.Environment_Set with null record;
 
-   overriding function Empty_Environment
-     (Self  : Environment_Set)
-      return Gela.Semantic_Types.Env_Index;
-
    overriding function Add_With_Clause
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;

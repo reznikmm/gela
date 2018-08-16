@@ -16,11 +16,6 @@ package Gela.Environments is
       return Gela.Semantic_Types.Env_Index is abstract;
    --  Return environment that incudes only library level names.
 
-   not overriding function Empty_Environment
-     (Self  : Environment_Set)
-      return Gela.Semantic_Types.Env_Index is abstract;
-   --  Return environment that incudes no names nor use/with clauses at all.
-
    not overriding function Add_With_Clause
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;

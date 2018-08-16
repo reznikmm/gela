@@ -690,18 +690,6 @@ package body Gela.Library_Environments is
       end return;
    end Direct_Visible;
 
-   -----------------------
-   -- Empty_Environment --
-   -----------------------
-
-   overriding function Empty_Environment
-     (Self  : Environment_Set) return Gela.Semantic_Types.Env_Index
-   is
-      pragma Unreferenced (Self);
-   begin
-      return 0;
-   end Empty_Environment;
-
    -----------------------------
    -- Enter_Completion_Region --
    -----------------------------

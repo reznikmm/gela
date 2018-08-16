@@ -638,17 +638,6 @@ package body Gela.Plain_Environments is
       end return;
    end Direct_Visible;
 
-   -----------------------
-   -- Empty_Environment --
-   -----------------------
-
-   overriding function Empty_Environment
-     (Self  : Environment_Set)
-      return Gela.Semantic_Types.Env_Index is
-   begin
-      return Self.Lib.Empty_Environment;
-   end Empty_Environment;
-
    -----------------------------
    -- Enter_Completion_Region --
    -----------------------------

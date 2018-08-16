@@ -103,10 +103,6 @@ private
       --  Reverse mapping for Units_Env
    end record;
 
-   overriding function Empty_Environment
-     (Self  : Environment_Set)
-      return Gela.Semantic_Types.Env_Index;
-
    overriding function Add_With_Clause
      (Self   : in out Environment_Set;
       Index  : Gela.Semantic_Types.Env_Index;
