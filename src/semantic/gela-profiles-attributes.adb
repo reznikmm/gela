@@ -17,9 +17,9 @@ package body Gela.Profiles.Attributes is
    ------------
 
    function Create
-     (Params : Gela.Semantic_Types.Type_Index_Array;
+     (Params : Gela.Types.Type_View_Array;
       Result : Gela.Semantic_Types.Type_View_Index)
-     return Gela.Profiles.Profile'Class is
+      return Gela.Profiles.Profile'Class is
    begin
       return Profile'(Params'Length, Params, Result);
    end Create;
@@ -60,7 +60,11 @@ package body Gela.Profiles.Attributes is
      (Self  : Profile; Index : Positive)
       return Gela.Semantic_Types.Type_View_Index is
    begin
-      return Self.Types (Index);
+      if Self.Types (Index).Assigned then
+         return Self.Types (Index).Type_View_Index;
+      else
+         return 0;
+      end if;
    end Get_Type;
 
    -----------------

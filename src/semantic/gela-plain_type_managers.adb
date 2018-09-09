@@ -245,6 +245,7 @@ package body Gela.Plain_Type_Managers is
          return Gela.Profiles.Profile_Access
    is
       Result : Profile_Access;
+      Type_View : constant Gela.Types.Type_View_Access := Self.Get (Tipe);
       Key    : constant Attribute_Key := (Tipe, Attribute);
       Cursor : constant Attribute_Maps.Cursor := Self.Attributes.Find (Key);
    begin
@@ -266,20 +267,20 @@ package body Gela.Plain_Type_Managers is
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Tipe), Tipe));
+                    ((1 => Type_View), Tipe));
 
             when Gela.Lexical_Types.Predefined_Symbols.Pos =>
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Tipe), Self.Universal_Integer));
+                    ((1 => Type_View), Self.Universal_Integer));
 
             when Gela.Lexical_Types.Predefined_Symbols.Mod_Symbol |
                  Gela.Lexical_Types.Predefined_Symbols.Val =>
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Self.Universal_Integer), Tipe));
+                    ((1 => Self.Get (Self.Universal_Integer)), Tipe));
 
             when others =>
                raise Constraint_Error;

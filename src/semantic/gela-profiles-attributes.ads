@@ -1,3 +1,5 @@
+with Gela.Types;
+
 package Gela.Profiles.Attributes is
    pragma Preelaborate;
 
@@ -5,7 +7,7 @@ package Gela.Profiles.Attributes is
    type Profile_Access is access all Profile'Class;
 
    function Create
-     (Params : Gela.Semantic_Types.Type_Index_Array;
+     (Params : Gela.Types.Type_View_Array;
       Result : Gela.Semantic_Types.Type_View_Index)
      return Gela.Profiles.Profile'Class;
 
@@ -13,7 +15,7 @@ private
 
    type Profile (Length : Natural) is limited new Gela.Profiles.Profile
    with record
-      Types  : Gela.Semantic_Types.Type_Index_Array (1 .. Length);
+      Types  : Gela.Types.Type_View_Array (1 .. Length);
       Result : Gela.Semantic_Types.Type_View_Index;
    end record;
 

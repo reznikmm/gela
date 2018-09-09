@@ -11,6 +11,8 @@ package Gela.Types is
    type Type_View_Access is access all Type_View'Class;
    for Type_View_Access'Storage_Size use 0;
 
+   type Type_View_Array is array (Positive range <>) of access Type_View'Class;
+
    function Assigned (Self : access Type_View'Class) return Boolean
      is (Self /= null);
 
