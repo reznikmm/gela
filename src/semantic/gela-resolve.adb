@@ -41,7 +41,7 @@ package body Gela.Resolve is
    procedure To_Type
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Semantic_Types.Type_View_Index;
+      Type_Up : access Gela.Types.Type_View'Class;
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index);
 
@@ -260,7 +260,7 @@ package body Gela.Resolve is
                   To_Type
                     (Comp    => Comp,
                      Env     => Env,
-                     Type_Up => X.Expression_Type,
+                     Type_Up => TM.Get (X.Expression_Type),
                      Expr_Up => Value (K),
                      Result  => List (K));
                end loop;
@@ -467,7 +467,7 @@ package body Gela.Resolve is
                         To_Type
                           (Comp    => Comp,
                            Env     => Env,
-                           Type_Up => IT (Count).Type_View_Index,
+                           Type_Up => IT (Count),
                            Expr_Up => Tuple (Tuple'Last),
                            Result  => Chosen);
 
@@ -547,7 +547,7 @@ package body Gela.Resolve is
                         To_Type
                           (Comp    => Comp,
                            Env     => Env,
-                           Type_Up => Exp,
+                           Type_Up => TM.Get (Exp),
                            Expr_Up => Tuple (Tuple'First),
                            Result  => List (List'First));
 
@@ -750,7 +750,8 @@ package body Gela.Resolve is
                   if Count < Profile.Length then
                      Count := Count + 1;
                      Tipe := Profile.Get_Type (Count);
-                     To_Type (Comp, Env, Tipe, Tuple (Tuple'First), Chosen);
+                     To_Type
+                       (Comp, Env, TM.Get (Tipe), Tuple (Tuple'First), Chosen);
 
                      if Chosen = 0 then
                         return;
@@ -842,7 +843,6 @@ package body Gela.Resolve is
                       := IM.Get_Tuple (Tuples (J));
                   Index_Types : constant Gela.Types.Simple.Discrete_Type_Array
                     := Arr.all.Index_Types;
-                  Index_Type : Gela.Semantic_Types.Type_View_Index := 0;
                begin
                   --  Check if this is positional association
                   --  Check agains Constraint_Error in case of slice FIXME
@@ -853,9 +853,9 @@ package body Gela.Resolve is
                         return;
                      end if;
 
-                     Index_Type := Index_Types (Count).Type_View_Index;
                      To_Type
-                       (Comp, Env, Index_Type, Tuple (Tuple'First), Chosen);
+                       (Comp, Env,
+                        Index_Types (Count), Tuple (Tuple'First), Chosen);
 
                      if Chosen = 0 then
                         return;
@@ -1440,7 +1440,7 @@ package body Gela.Resolve is
                   To_Type
                     (Comp    => Comp,
                      Env     => Env,
-                     Type_Up => Comp_Type,
+                     Type_Up => TM.Get (Comp_Type),
                      Expr_Up => Value (Value'First),
                      Result  => List (List'First));
 
@@ -2028,7 +2028,7 @@ package body Gela.Resolve is
          To_Type
            (Comp    => Comp,
             Env     => Env,
-            Type_Up => J.Expression_Type,
+            Type_Up => TM.Get (J.Expression_Type),
             Expr_Up => Expr_Up,
             Result  => Result);
 
@@ -2047,6 +2047,8 @@ package body Gela.Resolve is
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
       Index      : Gela.Interpretations.Interpretation_Index;
       Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
@@ -2060,7 +2062,7 @@ package body Gela.Resolve is
       To_Type
         (Comp    => Comp,
          Env     => Env,
-         Type_Up => Type_Index,
+         Type_Up => TM.Get (Type_Index),
          Expr_Up => Expr_Up,
          Result  => Result);
    end To_Type;
@@ -2072,7 +2074,7 @@ package body Gela.Resolve is
    procedure To_Type
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Semantic_Types.Type_View_Index;
+      Type_Up : access Gela.Types.Type_View'Class;
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
@@ -2084,12 +2086,10 @@ package body Gela.Resolve is
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
-      View : constant Gela.Types.Type_View_Access := TM.Get (Type_Up);
-
    begin
       Result := 0;
 
-      if not View.Assigned then
+      if not Type_Up.Assigned then
          return;
       end if;
 
@@ -2102,7 +2102,7 @@ package body Gela.Resolve is
                  TM.Get (J.Expression_Type);
             begin
                if This_Type.Assigned and then
-                 This_Type.Is_Expected_Type (View)
+                 This_Type.Is_Expected_Type (Type_Up)
                then
                   Result := J.Get_Index;
                end if;
@@ -2113,11 +2113,11 @@ package body Gela.Resolve is
                Match  : constant Gela.Interpretations.Type_Matcher_Access :=
                  J.Matcher;
             begin
-               View.Visit (Match.all);
+               Type_Up.Visit (Match.all);
 
                if Match.Is_Matched and Result = 0 then
                   IM.Get_Expression_Index
-                    (Tipe   => Type_Up,
+                    (Tipe   => Type_Up.Type_View_Index,
                      Result => Result);
                end if;
             end;
@@ -2171,6 +2171,9 @@ package body Gela.Resolve is
    is
       use type Gela.Semantic_Types.Type_View_Index;
 
+      TM : constant Gela.Type_Managers.Type_Manager_Access :=
+        Comp.Context.Types;
+
       Index      : Gela.Interpretations.Interpretation_Index;
       Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
@@ -2192,7 +2195,7 @@ package body Gela.Resolve is
          To_Type
            (Comp    => Comp,
             Env     => Env,
-            Type_Up => Type_Index,
+            Type_Up => TM.Get (Type_Index),
             Expr_Up => Expr_Up,
             Result  => Result);
       end if;
@@ -2236,7 +2239,7 @@ package body Gela.Resolve is
                   To_Type
                     (Comp    => Comp,
                      Env     => Env,
-                     Type_Up => E.Expression_Type,
+                     Type_Up => TM.Get (E.Expression_Type),
                      Expr_Up => Tuple (K),
                      Result  => List (K));
                end loop;
