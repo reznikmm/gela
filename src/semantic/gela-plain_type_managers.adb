@@ -267,20 +267,20 @@ package body Gela.Plain_Type_Managers is
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Type_View), Tipe));
+                    ((1 => Type_View), Type_View));
 
             when Gela.Lexical_Types.Predefined_Symbols.Pos =>
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Type_View), Self.Universal_Integer));
+                    ((1 => Type_View), Self.Get (Self.Universal_Integer)));
 
             when Gela.Lexical_Types.Predefined_Symbols.Mod_Symbol |
                  Gela.Lexical_Types.Predefined_Symbols.Val =>
 
                Result := new Gela.Profiles.Profile'Class'
                  (Gela.Profiles.Attributes.Create
-                    ((1 => Self.Get (Self.Universal_Integer)), Tipe));
+                    ((1 => Self.Get (Self.Universal_Integer)), Type_View));
 
             when others =>
                raise Constraint_Error;

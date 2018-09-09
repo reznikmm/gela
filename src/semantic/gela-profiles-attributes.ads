@@ -8,7 +8,7 @@ package Gela.Profiles.Attributes is
 
    function Create
      (Params : Gela.Types.Type_View_Array;
-      Result : Gela.Semantic_Types.Type_View_Index)
+      Result : Gela.Types.Type_View_Access)
      return Gela.Profiles.Profile'Class;
 
 private
@@ -16,7 +16,7 @@ private
    type Profile (Length : Natural) is limited new Gela.Profiles.Profile
    with record
       Types  : Gela.Types.Type_View_Array (1 .. Length);
-      Result : Gela.Semantic_Types.Type_View_Index;
+      Result : Gela.Types.Type_View_Access;
    end record;
 
    overriding function Is_Function
@@ -29,11 +29,11 @@ private
      (Self : Profile) return Natural;
 
    overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index;
+     (Self  : Profile) return Gela.Types.Type_View_Access;
 
    overriding function Get_Type
      (Self  : Profile;
-      Index : Positive) return Gela.Semantic_Types.Type_View_Index;
+      Index : Positive) return Gela.Types.Type_View_Access;
 
    overriding function Get_Name
      (Self  : Profile;

@@ -193,7 +193,7 @@ package body Gela.Profiles.Names is
                begin
                   if not Pos.Has_Element then
                      Self.Index := Self.Index + 1;
-                     Self.Result.Params (Self.Index).Tipe := Tipe;
+                     Self.Result.Params (Self.Index).Tipe := TM.Get (Tipe);
                   end if;
 
                   while Pos.Has_Element loop
@@ -202,7 +202,7 @@ package body Gela.Profiles.Names is
                      Self.Result.Params (Self.Index).Name :=
                        Gela.Elements.Defining_Names.Defining_Name_Access
                          (Name);
-                     Self.Result.Params (Self.Index).Tipe := Tipe;
+                     Self.Result.Params (Self.Index).Tipe := TM.Get (Tipe);
 
                      Pos.Next;
                   end loop;
@@ -221,7 +221,7 @@ package body Gela.Profiles.Names is
 
             Self.Result.Funct := True;
             Self.Result.Result :=
-              TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype);
+              TM.Get (TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype));
          end Function_Body;
 
          overriding procedure Function_Declaration
@@ -233,7 +233,7 @@ package body Gela.Profiles.Names is
 
             Self.Result.Funct := True;
             Self.Result.Result :=
-              TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype);
+              TM.Get (TM.Type_From_Subtype_Mark (Env, Node.Result_Subtype));
          end Function_Declaration;
 
          overriding procedure Procedure_Body
@@ -294,7 +294,7 @@ package body Gela.Profiles.Names is
    -----------------
 
    overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index is
+     (Self  : Profile) return Gela.Types.Type_View_Access is
    begin
       return Self.Result;
    end Return_Type;
@@ -305,8 +305,7 @@ package body Gela.Profiles.Names is
 
    overriding function Get_Type
      (Self  : Profile;
-      Index : Positive)
-      return Gela.Semantic_Types.Type_View_Index is
+      Index : Positive) return Gela.Types.Type_View_Access is
    begin
       return Self.Params (Index).Tipe;
    end Get_Type;

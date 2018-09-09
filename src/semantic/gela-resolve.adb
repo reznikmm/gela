@@ -634,9 +634,10 @@ package body Gela.Resolve is
       begin
          if Profile not in null and then
            Profile.Is_Function and then
-           Profile.Allow_Empty_Argument_List
+           Profile.Allow_Empty_Argument_List and then
+           Profile.Return_Type.Assigned
          then
-            Tipe := Profile.Return_Type;
+            Tipe := Profile.Return_Type.Type_View_Index;
 
             if Tipe not in 0 then
                IM.Get_Defining_Name_Index (Name, Index);
@@ -730,9 +731,12 @@ package body Gela.Resolve is
          Output : Gela.Interpretations.Interpretation_Index_Array
            (Tuples'Range);
 
+         Return_Type : Gela.Semantic_Types.Type_View_Index := 0;
       begin
          if not Profile.Assigned then
             return;
+         elsif Profile.Return_Type.Assigned then
+            Return_Type := Profile.Return_Type.Type_View_Index;
          end if;
 
          for J in Tuples'Range loop
@@ -741,7 +745,7 @@ package body Gela.Resolve is
                  .Interpretation_Set_Index_Array
                    := IM.Get_Tuple (Tuples (J));
 
-               Tipe   : Gela.Semantic_Types.Type_View_Index;
+               Tipe   : Gela.Types.Type_View_Access;
                List   : Gela.Interpretations.Interpretation_Index_Array
                  (Tuple'Range);
             begin
@@ -750,8 +754,7 @@ package body Gela.Resolve is
                   if Count < Profile.Length then
                      Count := Count + 1;
                      Tipe := Profile.Get_Type (Count);
-                     To_Type
-                       (Comp, Env, TM.Get (Tipe), Tuple (Tuple'First), Chosen);
+                     To_Type (Comp, Env, Tipe, Tuple (Tuple'First), Chosen);
 
                      if Chosen = 0 then
                         return;
@@ -789,7 +792,7 @@ package body Gela.Resolve is
 
          if Chosen /= 0 then
             Comp.Context.Interpretation_Manager.Add_Expression
-              (Tipe   => Profile.Return_Type,
+              (Tipe   => Return_Type,
                Kind   => Gela.Interpretations.Function_Call,
                Down   => Cursor.Get_Index & Chosen,
                Result => Set);
@@ -798,7 +801,7 @@ package body Gela.Resolve is
            and then Profile.Allow_Empty_Argument_List
          then
             Comp.Context.Interpretation_Manager.Add_Expression
-              (Tipe   => Profile.Return_Type,
+              (Tipe   => Return_Type,
                Kind   => Gela.Interpretations.Function_Call,
                Down   => Cursor.Get_Index & 0,
                Result => Set);

@@ -2,7 +2,7 @@
 
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
-with Gela.Semantic_Types;
+with Gela.Types;
 
 package Gela.Profiles is
    pragma Preelaborate;
@@ -24,11 +24,11 @@ package Gela.Profiles is
      (Self : Profile) return Natural is abstract;
 
    not overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index is abstract;
+     (Self  : Profile) return Gela.Types.Type_View_Access is abstract;
 
    not overriding function Get_Type
      (Self  : Profile;
-      Index : Positive) return Gela.Semantic_Types.Type_View_Index is abstract;
+      Index : Positive) return Gela.Types.Type_View_Access is abstract;
 
    not overriding function Get_Name
      (Self  : Profile;
