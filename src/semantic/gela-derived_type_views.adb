@@ -10,12 +10,13 @@ package body Gela.Derived_Type_Views is
    -------------------------
 
    function Create_Derived_Type
-     (Parent   : not null Gela.Type_Categories.Type_View_Access;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Parent   : not null Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
    is
-      Value : constant Type_View_Access := new Type_View'(Parent, Decl);
+      Value : constant Type_View_Access := new Type_View'(Index, Parent, Decl);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Derived_Type;
@@ -251,6 +252,16 @@ package body Gela.Derived_Type_Views is
    begin
       return False;
    end Is_Universal;
+
+   ---------------------
+   -- Type_View_Index --
+   ---------------------
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is
+   begin
+      return Self.Index;
+   end Type_View_Index;
 
    -----------
    -- Visit --

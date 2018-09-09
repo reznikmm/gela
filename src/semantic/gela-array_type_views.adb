@@ -30,7 +30,8 @@ package body Gela.Array_Type_Views is
    ----------------------
 
    function Create_Full_Type
-     (Category  : Gela.Type_Categories.Category_Kinds;
+     (Index     : Gela.Semantic_Types.Type_View_Index;
+      Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
@@ -38,9 +39,10 @@ package body Gela.Array_Type_Views is
       return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access :=
-        new Type_View'(Category => Category, Decl => Decl,
+        new Type_View'(Index     => Index,
+                       Category  => Category, Decl => Decl,
                        Component => Component,
-                       Length => Indexes'Length, Indexes => Indexes);
+                       Length    => Indexes'Length, Indexes => Indexes);
    begin
       return Gela.Type_Categories.Type_View_Access (Value);
    end Create_Full_Type;
@@ -226,6 +228,16 @@ package body Gela.Array_Type_Views is
    begin
       return False;
    end Is_Universal;
+
+   ---------------------
+   -- Type_View_Index --
+   ---------------------
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is
+   begin
+      return Self.Index;
+   end Type_View_Index;
 
    -----------
    -- Visit --

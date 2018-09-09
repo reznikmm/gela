@@ -15,7 +15,8 @@ package Gela.Array_Type_Views is
    type Type_View_Access is access all Type_View'Class;
 
    function Create_Full_Type
-     (Category  : Gela.Type_Categories.Category_Kinds;
+     (Index     : Gela.Semantic_Types.Type_View_Index;
+      Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
@@ -27,6 +28,7 @@ private
    type Type_View (Length : Positive) is new Gela.Type_Categories.Type_View
      and Gela.Types.Arrays.Array_Type with
    record
+      Index     : Gela.Semantic_Types.Type_View_Index;
       Category  : Gela.Type_Categories.Category_Kinds;
       Indexes   : Gela.Semantic_Types.Type_Index_Array (1 .. Length);
       Component : Gela.Semantic_Types.Type_View_Index;
@@ -82,5 +84,8 @@ private
 
    overriding function Defining_Name (Self : Type_View)
      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index;
 
 end Gela.Array_Type_Views;

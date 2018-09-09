@@ -4,6 +4,7 @@ with Gela.Elements.Formal_Type_Declarations;
 with Gela.Elements.Subtype_Marks;
 with Gela.Elements.Discriminant_Parts;
 with Gela.Lexical_Types;
+with Gela.Semantic_Types;
 with Gela.Types.Simple;
 with Gela.Types.Untagged_Records;
 with Gela.Types.Visitors;
@@ -24,19 +25,22 @@ package Gela.Plain_Type_Views is
    type Type_View_Access is access all Type_View'Class;
 
    function Create_Full_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
 
    function Create_Root_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
 
    function Create_Formal_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Formal_Type_Declarations
                    .Formal_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
@@ -52,6 +56,7 @@ private
      and Gela.Types.Simple.Subprogram_Access_Type
      and Gela.Types.Untagged_Records.Untagged_Record_Type with
    record
+      Index    : Gela.Semantic_Types.Type_View_Index;
       Category : Gela.Type_Categories.Category_Kinds;
       Def      : access Gela.Elements.Element'Class;
       Name     : Gela.Elements.Defining_Names.Defining_Name_Access;
@@ -109,6 +114,9 @@ private
 
    overriding function Defining_Name (Self : Type_View)
      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index;
 
    type Root_Type_View is new Type_View with null record;
 

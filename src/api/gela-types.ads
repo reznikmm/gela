@@ -2,6 +2,7 @@
 
 limited with Gela.Types.Visitors;
 with Gela.Elements.Defining_Names;
+with Gela.Semantic_Types;
 
 package Gela.Types is
    pragma Preelaborate;
@@ -98,5 +99,8 @@ package Gela.Types is
    not overriding procedure Visit
      (Self    : not null access Type_View;
       Visiter : in out Gela.Types.Visitors.Type_Visitor'Class) is abstract;
+
+   not overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is abstract;
 
 end Gela.Types;

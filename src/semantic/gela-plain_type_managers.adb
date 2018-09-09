@@ -86,7 +86,7 @@ package body Gela.Plain_Type_Managers is
 
       Self.Map.Insert
         (Result,
-         Gela.Plain_Type_Views.Create_Formal_Type (Category, Decl));
+         Gela.Plain_Type_Views.Create_Formal_Type (Result, Category, Decl));
 
       Self.Back.Insert (Key, Result);
 
@@ -117,9 +117,11 @@ package body Gela.Plain_Type_Managers is
       end if;
 
       if Result in Root_Integer_Index | Root_Real_Index then
-         Type_View := Gela.Plain_Type_Views.Create_Root_Type (Category, Decl);
+         Type_View := Gela.Plain_Type_Views.Create_Root_Type
+           (Result, Category, Decl);
       else
-         Type_View := Gela.Plain_Type_Views.Create_Full_Type (Category, Decl);
+         Type_View := Gela.Plain_Type_Views.Create_Full_Type
+           (Result, Category, Decl);
       end if;
 
       Self.Map.Insert (Result, Type_View);
@@ -169,7 +171,7 @@ package body Gela.Plain_Type_Managers is
       Self.Map.Insert
         (Result,
          Gela.Array_Type_Views.Create_Full_Type
-           (Category, Decl, Component, Indexes));
+           (Result, Category, Decl, Component, Indexes));
 
       Self.Back.Insert (Key, Result);
 
@@ -201,7 +203,7 @@ package body Gela.Plain_Type_Managers is
 
       Self.Map.Insert
         (Result,
-         Gela.Derived_Type_Views.Create_Derived_Type (Parent, Decl));
+         Gela.Derived_Type_Views.Create_Derived_Type (Result, Parent, Decl));
 
       Self.Back.Insert (Key, Result);
 
@@ -385,7 +387,7 @@ package body Gela.Plain_Type_Managers is
 
          Self.Map.Insert
            (Index,
-            Gela.Plain_Type_Views.Create_Full_Type (Category, Node));
+            Gela.Plain_Type_Views.Create_Full_Type (Index, Category, Node));
       end Create;
 
       ---------------

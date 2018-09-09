@@ -24,7 +24,8 @@ package Gela.Derived_Type_Views is
    type Type_View_Access is access all Type_View'Class;
 
    function Create_Derived_Type
-     (Parent   : not null Gela.Type_Categories.Type_View_Access;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Parent   : not null Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access;
@@ -40,6 +41,7 @@ private
      and Gela.Types.Untagged_Records.Untagged_Record_Type
      and Gela.Types.Arrays.Array_Type with
    record
+      Index    : Gela.Semantic_Types.Type_View_Index;
       Parent   : not null Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
@@ -107,5 +109,8 @@ private
 
    overriding function Defining_Name (Self : Type_View)
      return Gela.Elements.Defining_Names.Defining_Name_Access;
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index;
 
 end Gela.Derived_Type_Views;

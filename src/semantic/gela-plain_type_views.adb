@@ -31,7 +31,8 @@ package body Gela.Plain_Type_Views is
    ------------------------
 
    function Create_Formal_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Formal_Type_Declarations
                    .Formal_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
@@ -39,7 +40,8 @@ package body Gela.Plain_Type_Views is
       Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
         Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
-        new Type_View'(Category => Category,
+        new Type_View'(Index    => Index,
+                       Category => Category,
                        Def      => Decl.Type_Declaration_View,
                        Discr    => Decl.Discriminant_Part,
                        Name     => Name);
@@ -52,7 +54,8 @@ package body Gela.Plain_Type_Views is
    ----------------------
 
    function Create_Full_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
@@ -60,7 +63,8 @@ package body Gela.Plain_Type_Views is
       Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
         Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
-        new Type_View'(Category => Category,
+        new Type_View'(Index    => Index,
+                       Category => Category,
                        Def      => Decl.Type_Declaration_View,
                        Discr    => Decl.Discriminant_Part,
                        Name     => Name);
@@ -73,7 +77,8 @@ package body Gela.Plain_Type_Views is
    ----------------------
 
    function Create_Root_Type
-     (Category : Gela.Type_Categories.Category_Kinds;
+     (Index    : Gela.Semantic_Types.Type_View_Index;
+      Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
                    .Full_Type_Declaration_Access)
       return Gela.Type_Categories.Type_View_Access
@@ -81,7 +86,8 @@ package body Gela.Plain_Type_Views is
       Name  : constant Gela.Elements.Defining_Names.Defining_Name_Access :=
         Gela.Elements.Defining_Names.Defining_Name_Access (Decl.Names);
       Value : constant Type_View_Access :=
-        new Root_Type_View'(Category => Category,
+        new Root_Type_View'(Index    => Index,
+                            Category => Category,
                             Def      => Decl.Type_Declaration_View,
                             Discr    => Decl.Discriminant_Part,
                             Name     => Name);
@@ -569,6 +575,16 @@ package body Gela.Plain_Type_Views is
         | Gela.Type_Categories.An_Universal_Fixed
         | Gela.Type_Categories.An_Universal_Access;
    end Is_Universal;
+
+   ---------------------
+   -- Type_View_Index --
+   ---------------------
+
+   overriding function Type_View_Index
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is
+   begin
+      return Self.Index;
+   end Type_View_Index;
 
    -----------
    -- Visit --
