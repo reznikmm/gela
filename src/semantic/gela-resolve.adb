@@ -207,7 +207,7 @@ package body Gela.Resolve is
 
             IM.Add_Attr_Function
               (Kind   => Symbol,
-               Tipe   => Type_Index,
+               Tipe   => TM.Get (Type_Index),
                Down   => (1 => Index),
                Result => Set);
 
@@ -820,8 +820,11 @@ package body Gela.Resolve is
       Set := 0;
 
       for J in IM.Profiles (Prefix) loop
-         Profile := TM.Get_Profile (J.Corresponding_Type, J.Attribute_Kind);
-         On_Call (Profile, J);
+         if J.Corresponding_Type.Assigned then
+            Profile := TM.Get_Profile
+              (J.Corresponding_Type.Type_View_Index, J.Attribute_Kind);
+            On_Call (Profile, J);
+         end if;
       end loop;
 
       for J in IM.Defining_Names (Prefix) loop

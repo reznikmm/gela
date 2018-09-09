@@ -1,5 +1,5 @@
 with Gela.Lexical_Types;
-with Gela.Semantic_Types;
+with Gela.Types;
 
 package Gela.Int.Attr_Functions is
    pragma Preelaborate;
@@ -8,7 +8,7 @@ package Gela.Int.Attr_Functions is
 
    function Create
      (Down     : Gela.Interpretations.Interpretation_Index_Array;
-      Tipe     : Gela.Semantic_Types.Type_View_Index;
+      Tipe     : Gela.Types.Type_View_Access;
       Kind     : Gela.Lexical_Types.Predefined_Symbols.Attribute)
       return Attr_Function;
 
@@ -17,12 +17,12 @@ package Gela.Int.Attr_Functions is
       return Gela.Lexical_Types.Predefined_Symbols.Attribute;
 
    not overriding function Tipe
-     (Self : Attr_Function) return Gela.Semantic_Types.Type_View_Index;
+     (Self : Attr_Function) return Gela.Types.Type_View_Access;
 
 private
 
    type Attr_Function is new Interpretation with record
-      Tipe : Gela.Semantic_Types.Type_View_Index;
+      Tipe : Gela.Types.Type_View_Access;
       Kind : Gela.Lexical_Types.Predefined_Symbols.Attribute;
    end record;
 

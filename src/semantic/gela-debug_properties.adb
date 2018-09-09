@@ -116,7 +116,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_View_Index;
+         Tipe   : Gela.Types.Type_View_Access;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -357,7 +357,7 @@ package body Gela.Debug_Properties is
 
       overriding procedure On_Attr_Function
         (Self   : in out Visiter;
-         Tipe   : Gela.Semantic_Types.Type_View_Index;
+         Tipe   : Gela.Types.Type_View_Access;
          Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
          Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
 

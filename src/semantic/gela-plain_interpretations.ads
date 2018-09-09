@@ -9,6 +9,7 @@ with Gela.Interpretations;
 with Gela.Lexical_Types;
 with Gela.Plain_Int_Sets;
 with Gela.Semantic_Types;
+with Gela.Types;
 
 package Gela.Plain_Interpretations is
    pragma Preelaborate;
@@ -76,7 +77,7 @@ private
 
    overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_View_Index;
+      Tipe   : Gela.Types.Type_View_Access;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index);

@@ -3,6 +3,7 @@ with Ada.Iterator_Interfaces;
 with Gela.Elements.Defining_Names;
 with Gela.Lexical_Types;
 with Gela.Semantic_Types;
+with Gela.Types;
 
 package Gela.Plain_Int_Sets.Cursors is
    pragma Preelaborate;
@@ -129,7 +130,7 @@ private
      and Gela.Interpretations.Profile_Cursor with null record;
 
    overriding function Corresponding_Type
-     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_View_Index;
+     (Self : Profile_Cursor) return Gela.Types.Type_View_Access;
 
    overriding function Attribute_Kind
      (Self : Profile_Cursor)
@@ -162,7 +163,7 @@ private
         return Gela.Interpretations.Type_Matcher_Access;
 
    overriding function Corresponding_Type
-     (Self : Any_Cursor) return Gela.Semantic_Types.Type_View_Index;
+     (Self : Any_Cursor) return Gela.Types.Type_View_Access;
 
    overriding function Attribute_Kind (Self : Any_Cursor)
         return Gela.Lexical_Types.Predefined_Symbols.Attribute;

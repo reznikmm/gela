@@ -105,7 +105,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_View_Index;
+      Tipe   : Gela.Types.Type_View_Access;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
@@ -182,7 +182,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Attr_Function
      (Self   : in out Down_Visiter;
-      Tipe   : Gela.Semantic_Types.Type_View_Index;
+      Tipe   : Gela.Types.Type_View_Access;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each attribute denoting function
@@ -319,8 +319,7 @@ package Gela.Interpretations is
    type Profile_Cursor is interface and Abstract_Cursor;
 
    not overriding function Corresponding_Type
-     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_View_Index
-      is abstract;
+     (Self : Profile_Cursor) return Gela.Types.Type_View_Access is abstract;
 
    not overriding function Attribute_Kind
      (Self : Profile_Cursor)
@@ -371,8 +370,7 @@ package Gela.Interpretations is
         return Gela.Interpretations.Type_Matcher_Access is abstract;
 
    not overriding function Corresponding_Type
-     (Self : Any_Cursor) return Gela.Semantic_Types.Type_View_Index
-        is abstract;
+     (Self : Any_Cursor) return Gela.Types.Type_View_Access is abstract;
 
    not overriding function Attribute_Kind (Self : Any_Cursor)
         return Gela.Lexical_Types.Predefined_Symbols.Attribute is abstract;
