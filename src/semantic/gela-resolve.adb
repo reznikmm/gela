@@ -126,35 +126,41 @@ package body Gela.Resolve is
 
             if Type_Index = 0 then
                for J in Each.Prefix (IM, TM, Env, Prefix) loop
-                  declare
-                     View : constant Gela.Types.Type_View_Access :=
-                       TM.Get (J.Expression_Type);
-                     Arr  : Gela.Types.Arrays.Array_Type_Access;
-                  begin
-                     if View.Assigned and then View.Is_Array then
-                        Arr  := Gela.Types.Arrays.Array_Type_Access (View);
-
-                        if Is_Length then
-                           Comp.Context.Interpretation_Manager.Add_Expression
-                             (Tipe   => TM.Universal_Integer,
-                              Down   => (1 => Index),
-                              Result => Set);
-                        elsif Arr.all.Index_Types (1).Assigned then
-                           Comp.Context.Interpretation_Manager.Add_Expression
-                             (Tipe  => Arr.all.Index_Types (1).Type_View_Index,
-                              Down   => (1 => Index),
-                              Result => Set);
+                  if Is_Length then
+                     IM.Add_Expression
+                       (Tipe   => TM.Universal_Integer,
+                        Down   => (1 => Index),
+                        Result => Set);
+                  else
+                     declare
+                        View : constant Gela.Types.Type_View_Access :=
+                          TM.Get (J.Expression_Type);
+                     begin
+                        if View.Assigned and then View.Is_Array then
+                           declare
+                              Index_Types : constant
+                                Gela.Types.Simple.Discrete_Type_Array :=
+                                  Gela.Types.Arrays.Array_Type_Access (View)
+                                    .all.Index_Types;
+                           begin
+                              if Index_Types (1).Assigned then
+                                 IM.Add_Expression
+                                   (Tipe   => Index_Types (1).Type_View_Index,
+                                    Down   => (1 => Index),
+                                    Result => Set);
+                              end if;
+                           end;
                         end if;
-                     end if;
-                  end;
+                     end;
+                  end if;
                end loop;
             elsif Is_Length then
-               Comp.Context.Interpretation_Manager.Add_Expression
+               IM.Add_Expression
                  (Tipe   => TM.Universal_Integer,
                   Down   => (1 => Index),
                   Result => Set);
             else
-               Comp.Context.Interpretation_Manager.Add_Expression
+               IM.Add_Expression
                  (Tipe   => Type_Index,
                   Down   => (1 => Index),
                   Result => Set);
@@ -199,7 +205,7 @@ package body Gela.Resolve is
                Index  => Index,
                Result => Type_Index);
 
-            Comp.Context.Interpretation_Manager.Add_Attr_Function
+            IM.Add_Attr_Function
               (Kind   => Symbol,
                Tipe   => Type_Index,
                Down   => (1 => Index),
@@ -213,7 +219,7 @@ package body Gela.Resolve is
                Index  => Index,
                Result => Type_Index);
 
-            Comp.Context.Interpretation_Manager.Add_Expression
+            IM.Add_Expression
               (Tipe   => TM.Universal_Integer,
                Down   => (1 => Index),
                Result => Set);
