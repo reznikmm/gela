@@ -18,7 +18,7 @@ package body Gela.Array_Type_Views is
    --------------------
 
    overriding function Component_Type
-     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is
+     (Self : Type_View) return Gela.Types.Type_View_Access is
    begin
       return Self.Component;
    end Component_Type;
@@ -32,7 +32,7 @@ package body Gela.Array_Type_Views is
       Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
-      Component : Gela.Semantic_Types.Type_View_Index;
+      Component : Gela.Types.Type_View_Access;
       Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Type_Categories.Type_View_Access
    is

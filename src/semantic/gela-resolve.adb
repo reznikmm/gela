@@ -885,9 +885,9 @@ package body Gela.Resolve is
                IM.Get_Tuple_Index (Output (K), Chosen, Chosen);
             end loop;
 
-            if Chosen /= 0 then
+            if Chosen /= 0 and Arr.Component_Type.Assigned then
                Comp.Context.Interpretation_Manager.Add_Expression
-                 (Tipe   => Arr.Component_Type,
+                 (Tipe   => Arr.Component_Type.Type_View_Index,
                   Kind   => Gela.Interpretations.Indexed_Component,
                   Down   => J.Get_Index & Chosen,
                   Result => Set);
@@ -1393,9 +1393,9 @@ package body Gela.Resolve is
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
 
-            Comp_Type : Gela.Semantic_Types.Type_View_Index := 0;
+            Comp_Type : Gela.Types.Type_View_Access;
          begin
-            if View.Is_Array then
+            if View.Assigned and then View.Is_Array then
                declare
                   Arr : constant Gela.Types.Arrays.Array_Type_Access :=
                     Gela.Types.Arrays.Array_Type_Access (View);
@@ -1408,7 +1408,7 @@ package body Gela.Resolve is
 
             for J in Tuples'Range loop
                declare
-                  Exp    : Gela.Semantic_Types.Type_View_Index := 0;
+                  Exp    : Gela.Types.Type_View_Access;
                   Chosen : Gela.Interpretations.Interpretation_Index := 0;
                   Value  : constant Gela.Interpretations
                     .Interpretation_Set_Index_Array :=
@@ -1433,8 +1433,9 @@ package body Gela.Resolve is
                            if Component.Assigned then
                               IM.Get_Defining_Name_Index (Component, Name);
 
-                              Exp := TM.Type_Of_Object_Declaration
-                                (Env, Component.Enclosing_Element);
+                              Exp := TM.Get
+                                (TM.Type_Of_Object_Declaration
+                                   (Env, Component.Enclosing_Element));
                            end if;
                         end loop;
 
@@ -1449,7 +1450,7 @@ package body Gela.Resolve is
                   To_Type
                     (Comp    => Comp,
                      Env     => Env,
-                     Type_Up => TM.Get (Comp_Type),
+                     Type_Up => Comp_Type,
                      Expr_Up => Value (Value'First),
                      Result  => List (List'First));
 

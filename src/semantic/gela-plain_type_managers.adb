@@ -153,7 +153,7 @@ package body Gela.Plain_Type_Managers is
       Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
-      Component : Gela.Semantic_Types.Type_View_Index;
+      Component : Gela.Types.Type_View_Access;
       Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Semantic_Types.Type_View_Index
    is
@@ -896,14 +896,14 @@ package body Gela.Plain_Type_Managers is
                  (Category  => Gela.Type_Categories.A_String,
                   Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Component => Component_Type,
+                  Component => Component_Type_View,
                   Indexes   => Indexes);
             else
                Self.Result := Type_From_Declaration.Self.Get_Array
                  (Category  => Gela.Type_Categories.An_Other_Array,
                   Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Component => Component_Type,
+                  Component => Component_Type_View,
                   Indexes   => Indexes);
             end if;
          end Unconstrained_Array_Definition;
@@ -965,14 +965,14 @@ package body Gela.Plain_Type_Managers is
                  (Category  => Gela.Type_Categories.A_String,
                   Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Component => Component_Type,
+                  Component => Component_Type_View,
                   Indexes   => Indexes);
             else
                Self.Result := Type_From_Declaration.Self.Get_Array
                  (Category  => Gela.Type_Categories.An_Other_Array,
                   Decl      => Gela.Elements.Full_Type_Declarations.
                     Full_Type_Declaration_Access (Node.Enclosing_Element),
-                  Component => Component_Type,
+                  Component => Component_Type_View,
                   Indexes   => Indexes);
             end if;
          end Constrained_Array_Definition;

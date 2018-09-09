@@ -36,7 +36,7 @@ package body Gela.Derived_Type_Views is
    --------------------
 
    overriding function Component_Type
-     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index is
+     (Self : Type_View) return Gela.Types.Type_View_Access is
    begin
       return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Component_Type;
    end Component_Type;

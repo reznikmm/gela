@@ -1,4 +1,3 @@
-with Gela.Semantic_Types;
 with Gela.Types.Simple;
 
 package Gela.Types.Arrays is
@@ -13,8 +12,7 @@ package Gela.Types.Arrays is
        is abstract;
 
    not overriding function Component_Type
-     (Self : Array_Type) return Gela.Semantic_Types.Type_View_Index
-       is abstract;
+     (Self : Array_Type) return Gela.Types.Type_View_Access is abstract;
 
    not overriding function Dimension (Self : Array_Type) return Positive
      is abstract;

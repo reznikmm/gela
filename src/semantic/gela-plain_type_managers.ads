@@ -128,7 +128,7 @@ private
       Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
-      Component : Gela.Semantic_Types.Type_View_Index;
+      Component : Gela.Types.Type_View_Access;
       Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Semantic_Types.Type_View_Index;
 
