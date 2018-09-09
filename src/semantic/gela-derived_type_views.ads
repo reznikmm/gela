@@ -67,9 +67,6 @@ private
    overriding function Index_Types
      (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array;
 
-   overriding function Index_Types
-     (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array;
-
    overriding function Dimension (Self : Type_View) return Positive;
 
    overriding function Component_Type

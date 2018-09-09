@@ -139,9 +139,9 @@ package body Gela.Resolve is
                              (Tipe   => TM.Universal_Integer,
                               Down   => (1 => Index),
                               Result => Set);
-                        else
+                        elsif Arr.all.Index_Types (1).Assigned then
                            Comp.Context.Interpretation_Manager.Add_Expression
-                             (Tipe   => Arr.all.Index_Types (1),
+                             (Tipe  => Arr.all.Index_Types (1).Type_View_Index,
                               Down   => (1 => Index),
                               Result => Set);
                         end if;
@@ -445,12 +445,17 @@ package body Gela.Resolve is
                is
                   pragma Unreferenced (Self);
 
-                  IT : constant Gela.Semantic_Types.Type_Index_Array :=
+                  IT : constant Gela.Types.Simple.Discrete_Type_Array :=
                     Value.Index_Types;
                   Count : Natural := 0;
 
                   Chosen : Gela.Interpretations.Interpretation_Index;
                begin
+                  if not (for all X of IT => X.Assigned) then
+                     Result := 0;
+                     return;
+                  end if;
+
                   for K in Tuples'Range loop
                      declare
                         Tuple  : constant Gela.Interpretations
@@ -462,7 +467,7 @@ package body Gela.Resolve is
                         To_Type
                           (Comp    => Comp,
                            Env     => Env,
-                           Type_Up => IT (Count),
+                           Type_Up => IT (Count).Type_View_Index,
                            Expr_Up => Tuple (Tuple'Last),
                            Result  => Chosen);
 
@@ -835,7 +840,7 @@ package body Gela.Resolve is
                   Tuple : constant Gela.Interpretations
                     .Interpretation_Set_Index_Array
                       := IM.Get_Tuple (Tuples (J));
-                  Index_Types : constant Gela.Semantic_Types.Type_Index_Array
+                  Index_Types : constant Gela.Types.Simple.Discrete_Type_Array
                     := Arr.all.Index_Types;
                   Index_Type : Gela.Semantic_Types.Type_View_Index := 0;
                begin
@@ -843,7 +848,12 @@ package body Gela.Resolve is
                   --  Check agains Constraint_Error in case of slice FIXME
                   if Tuple'Length = 1 and Count + 1 <= Index_Types'Last then
                      Count := Count + 1;
-                     Index_Type := Index_Types (Count);
+
+                     if not Index_Types (Count).Assigned then
+                        return;
+                     end if;
+
+                     Index_Type := Index_Types (Count).Type_View_Index;
                      To_Type
                        (Comp, Env, Index_Type, Tuple (Tuple'First), Chosen);
 

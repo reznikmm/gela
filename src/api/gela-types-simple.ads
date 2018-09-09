@@ -3,7 +3,11 @@ limited with Gela.Elements.Subtype_Marks;
 package Gela.Types.Simple is
    pragma Preelaborate;
 
-   type Discrete_Type is limited interface;
+   type Scalar_Type is limited interface and Type_View;
+   type Scalar_Type_Access is access all Scalar_Type'Class;
+   for Scalar_Type_Access'Storage_Size use 0;
+
+   type Discrete_Type is limited interface and Scalar_Type;
    type Discrete_Type_Access is access all Discrete_Type'Class;
    for Discrete_Type_Access'Storage_Size use 0;
 
@@ -15,7 +19,6 @@ package Gela.Types.Simple is
    ----------------------
 
    type Enumeration_Type is limited interface
-     and Type_View
      and Discrete_Type;
 
    type Enumeration_Type_Access is access all Enumeration_Type'Class;
@@ -35,7 +38,6 @@ package Gela.Types.Simple is
    -------------------------
 
    type Signed_Integer_Type is limited interface
-     and Type_View
      and Discrete_Type;
 
    type Signed_Integer_Type_Access is access all Signed_Integer_Type'Class;
@@ -46,8 +48,7 @@ package Gela.Types.Simple is
    -------------------------
 
    type Floating_Point_Type is limited interface
-     and Type_View
-     and Discrete_Type;
+     and Scalar_Type;
 
    type Floating_Point_Type_Access is access all Floating_Point_Type'Class;
    for Floating_Point_Type_Access'Storage_Size use 0;

@@ -20,7 +20,7 @@ package Gela.Array_Type_Views is
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
-      Indexes   : Gela.Semantic_Types.Type_Index_Array)
+      Indexes   : Gela.Types.Simple.Discrete_Type_Array)
         return Gela.Type_Categories.Type_View_Access;
 
 private
@@ -30,7 +30,7 @@ private
    record
       Index     : Gela.Semantic_Types.Type_View_Index;
       Category  : Gela.Type_Categories.Category_Kinds;
-      Indexes   : Gela.Semantic_Types.Type_Index_Array (1 .. Length);
+      Indexes   : Gela.Types.Simple.Discrete_Type_Array (1 .. Length);
       Component : Gela.Semantic_Types.Type_View_Index;
       Decl      : Gela.Elements.Full_Type_Declarations
         .Full_Type_Declaration_Access;
@@ -73,9 +73,6 @@ private
 
    overriding function Index_Types
      (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array;
-
-   overriding function Index_Types
-     (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array;
 
    overriding function Dimension (Self : Type_View) return Positive;
 

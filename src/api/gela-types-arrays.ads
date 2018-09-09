@@ -12,10 +12,6 @@ package Gela.Types.Arrays is
      (Self : Array_Type) return Gela.Types.Simple.Discrete_Type_Array
        is abstract;
 
-   not overriding function Index_Types
-     (Self : Array_Type) return Gela.Semantic_Types.Type_Index_Array
-       is abstract;
-
    not overriding function Component_Type
      (Self : Array_Type) return Gela.Semantic_Types.Type_View_Index
        is abstract;

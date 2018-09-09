@@ -1,5 +1,3 @@
-with Gela.Compilations;
-with Gela.Type_Managers;
 with Gela.Elements.Defining_Identifiers;
 pragma Unreferenced (Gela.Elements.Defining_Identifiers);
 
@@ -35,7 +33,7 @@ package body Gela.Array_Type_Views is
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
-      Indexes   : Gela.Semantic_Types.Type_Index_Array)
+      Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Type_Categories.Type_View_Access
    is
       Value : constant Type_View_Access :=
@@ -72,31 +70,11 @@ package body Gela.Array_Type_Views is
    -----------------
 
    overriding function Index_Types
-     (Self : Type_View)
-      return Gela.Types.Simple.Discrete_Type_Array
-   is
-      X : constant Gela.Compilations.Compilation_Access :=
-        Self.Decl.Enclosing_Compilation;
-      TM : constant Gela.Type_Managers.Type_Manager_Access := X.Context.Types;
-      Result : Gela.Types.Simple.Discrete_Type_Array (1 .. Self.Length);
-   begin
-      for J in Result'Range loop
-         Result (J) :=
-           Gela.Types.Simple.Discrete_Type_Access (TM.Get (Self.Indexes (J)));
-      end loop;
-
-      return Result;
-   end Index_Types;
-
-   -----------------
-   -- Index_Types --
-   -----------------
-
-   overriding function Index_Types
-     (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array is
+     (Self : Type_View) return Gela.Types.Simple.Discrete_Type_Array is
    begin
       return Self.Indexes;
    end Index_Types;
+
    --------------
    -- Is_Array --
    --------------

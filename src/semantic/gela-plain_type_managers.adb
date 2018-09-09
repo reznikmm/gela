@@ -154,7 +154,7 @@ package body Gela.Plain_Type_Managers is
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
-      Indexes   : Gela.Semantic_Types.Type_Index_Array)
+      Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Semantic_Types.Type_View_Index
    is
       use type Gela.Semantic_Types.Type_View_Index;
@@ -868,7 +868,7 @@ package body Gela.Plain_Type_Managers is
             Index_Seq : constant Gela.Elements.Subtype_Marks.
               Subtype_Mark_Sequence_Access := Node.Index_Subtype_Definitions;
 
-            Indexes  : Gela.Semantic_Types.Type_Index_Array
+            Indexes  : Gela.Types.Simple.Discrete_Type_Array
               (1 .. Index_Seq.Length);
          begin
             declare
@@ -878,8 +878,10 @@ package body Gela.Plain_Type_Managers is
             begin
                while Cursor.Has_Element loop
                   Indexes (Index) :=
-                    Type_From_Declaration.Self.Type_From_Subtype_Mark
-                      (Env, Cursor.Element);
+                    Gela.Types.Simple.Discrete_Type_Access
+                      (Type_From_Declaration.Self.Get
+                         (Type_From_Declaration.Self.Type_From_Subtype_Mark
+                            (Env, Cursor.Element)));
 
                   Index := Index + 1;
                   Cursor.Next;
@@ -926,7 +928,7 @@ package body Gela.Plain_Type_Managers is
               Discrete_Subtype_Definition_Sequence_Access :=
                 Node.Discrete_Subtype_Definitions;
 
-            Indexes  : Gela.Semantic_Types.Type_Index_Array
+            Indexes  : Gela.Types.Simple.Discrete_Type_Array
               (1 .. Index_Seq.Length);
          begin
             if Node.Env_In in 0 then
@@ -945,8 +947,10 @@ package body Gela.Plain_Type_Managers is
                while Cursor.Has_Element loop
                   Element := Cursor.Element;
                   Indexes (Index) :=
-                    Type_From_Declaration.Self.Type_From_Discrete_Subtype
-                      (Element.Env_In, Element);
+                    Gela.Types.Simple.Discrete_Type_Access
+                      (Type_From_Declaration.Self.Get
+                         (Type_From_Declaration.Self.Type_From_Discrete_Subtype
+                           (Element.Env_In, Element)));
 
                   Index := Index + 1;
                   Cursor.Next;

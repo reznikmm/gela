@@ -107,16 +107,6 @@ package body Gela.Derived_Type_Views is
       return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Index_Types;
    end Index_Types;
 
-   -----------------
-   -- Index_Types --
-   -----------------
-
-   overriding function Index_Types
-     (Self : Type_View) return Gela.Semantic_Types.Type_Index_Array is
-   begin
-      return Gela.Types.Arrays.Array_Type_Access (Self.Parent).Index_Types;
-   end Index_Types;
-
    --------------
    -- Is_Array --
    --------------

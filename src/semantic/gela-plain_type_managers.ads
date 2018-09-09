@@ -17,6 +17,7 @@ with Gela.Semantic_Types;
 with Gela.Type_Categories;
 with Gela.Type_Managers;
 with Gela.Types;
+with Gela.Types.Simple;
 
 package Gela.Plain_Type_Managers is
    pragma Preelaborate;
@@ -128,7 +129,7 @@ private
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
       Component : Gela.Semantic_Types.Type_View_Index;
-      Indexes   : Gela.Semantic_Types.Type_Index_Array)
+      Indexes   : Gela.Types.Simple.Discrete_Type_Array)
       return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Get
