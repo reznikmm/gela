@@ -7,13 +7,13 @@ package Gela.Int.Expressions is
 
    function Create
      (Down            : Gela.Interpretations.Interpretation_Index_Array;
-      Expression_Type : Gela.Semantic_Types.Type_Index;
+      Expression_Type : Gela.Semantic_Types.Type_View_Index;
       Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
       return Expression;
 
    function Expression_Type
      (Self : Expression)
-      return Gela.Semantic_Types.Type_Index;
+      return Gela.Semantic_Types.Type_View_Index;
 
    function Expression_Kind
      (Self : Expression)
@@ -22,7 +22,7 @@ package Gela.Int.Expressions is
 private
 
    type Expression is new Interpretation with record
-      Expression_Type : Gela.Semantic_Types.Type_Index;
+      Expression_Type : Gela.Semantic_Types.Type_View_Index;
       Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
    end record;
 

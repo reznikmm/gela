@@ -19,11 +19,11 @@ package Gela.Profiles.Names is
      (Self : Profile) return Natural;
 
    overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_Index;
+     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Get_Type
      (Self  : Profile;
-      Index : Positive) return Gela.Semantic_Types.Type_Index;
+      Index : Positive) return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Get_Name
      (Self  : Profile;
@@ -38,7 +38,7 @@ private
 
    type Param is record
       Name : Gela.Elements.Defining_Names.Defining_Name_Access;
-      Tipe : Gela.Semantic_Types.Type_Index;
+      Tipe : Gela.Semantic_Types.Type_View_Index;
    end record;
 
    type Param_Array is array (Positive range <>) of Param;
@@ -48,7 +48,7 @@ private
       Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
       Empty  : Boolean := False;
       Funct  : Boolean := False;
-      Result : Gela.Semantic_Types.Type_Index := 0;
+      Result : Gela.Semantic_Types.Type_View_Index := 0;
       Params : Param_Array (1 .. Length);
    end record;
 

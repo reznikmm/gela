@@ -53,7 +53,7 @@ package Gela.Resolve is
       Env        : Gela.Semantic_Types.Env_Index;
       Left       : Gela.Interpretations.Interpretation_Set_Index;
       Right      : Gela.Interpretations.Interpretation_Set_Index;
-      Tipe       : out Gela.Semantic_Types.Type_Index);
+      Tipe       : out Gela.Semantic_Types.Type_View_Index);
 
    procedure Discrete_Range_Lower
      (Comp       : Gela.Compilations.Compilation_Access;

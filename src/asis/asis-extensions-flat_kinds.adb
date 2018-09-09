@@ -2367,7 +2367,7 @@ package body Asis.Extensions.Flat_Kinds is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -2377,7 +2377,7 @@ package body Asis.Extensions.Flat_Kinds is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is

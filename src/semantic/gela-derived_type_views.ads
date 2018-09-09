@@ -71,7 +71,7 @@ private
    overriding function Dimension (Self : Type_View) return Positive;
 
    overriding function Component_Type
-     (Self : Type_View) return Gela.Semantic_Types.Type_Index;
+     (Self : Type_View) return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Is_The_Same_Type
      (Left  : Type_View;

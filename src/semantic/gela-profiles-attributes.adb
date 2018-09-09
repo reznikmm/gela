@@ -18,7 +18,7 @@ package body Gela.Profiles.Attributes is
 
    function Create
      (Params : Gela.Semantic_Types.Type_Index_Array;
-      Result : Gela.Semantic_Types.Type_Index)
+      Result : Gela.Semantic_Types.Type_View_Index)
      return Gela.Profiles.Profile'Class is
    begin
       return Profile'(Params'Length, Params, Result);
@@ -58,7 +58,7 @@ package body Gela.Profiles.Attributes is
 
    overriding function Get_Type
      (Self  : Profile; Index : Positive)
-      return Gela.Semantic_Types.Type_Index is
+      return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Types (Index);
    end Get_Type;
@@ -87,7 +87,7 @@ package body Gela.Profiles.Attributes is
    -----------------
 
    overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_Index is
+     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Result;
    end Return_Type;

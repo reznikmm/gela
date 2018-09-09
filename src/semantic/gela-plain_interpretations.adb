@@ -15,7 +15,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
@@ -55,7 +55,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds :=
         Gela.Interpretations.Unknown;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
@@ -323,7 +323,7 @@ package body Gela.Plain_Interpretations is
 
    overriding procedure Get_Expression_Index
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Result : out Gela.Interpretations.Interpretation_Index)
    is
       Item : constant Gela.Int.Interpretation_Access :=

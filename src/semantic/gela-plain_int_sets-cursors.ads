@@ -59,7 +59,7 @@ package Gela.Plain_Int_Sets.Cursors is
       Index : Gela.Interpretations.Interpretation_Set_Index);
 
    overriding function Expression_Type
-     (Self : Expression_Cursor) return Gela.Semantic_Types.Type_Index;
+     (Self : Expression_Cursor) return Gela.Semantic_Types.Type_View_Index;
 
    overriding procedure Next (Self : in out Expression_Cursor);
 
@@ -129,7 +129,7 @@ private
      and Gela.Interpretations.Profile_Cursor with null record;
 
    overriding function Corresponding_Type
-     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_Index;
+     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Attribute_Kind
      (Self : Profile_Cursor)
@@ -156,13 +156,13 @@ private
       return Gela.Elements.Defining_Names.Defining_Name_Access;
 
    overriding function Expression_Type (Self : Any_Cursor)
-      return Gela.Semantic_Types.Type_Index;
+      return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Matcher (Self : Any_Cursor)
         return Gela.Interpretations.Type_Matcher_Access;
 
    overriding function Corresponding_Type
-     (Self : Any_Cursor) return Gela.Semantic_Types.Type_Index;
+     (Self : Any_Cursor) return Gela.Semantic_Types.Type_View_Index;
 
    overriding function Attribute_Kind (Self : Any_Cursor)
         return Gela.Lexical_Types.Predefined_Symbols.Attribute;

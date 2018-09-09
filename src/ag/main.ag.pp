@@ -32,7 +32,7 @@ Rules for procedure_declaration. :
 
 Synthesized attributes
   discrete_simple_expression_range
-    : Gela.Semantic_Types.Type_Index : type_index;
+    : Gela.Semantic_Types.Type_View_Index : type_index;
 
 Rules for discrete_simple_expression_range. :
 (.

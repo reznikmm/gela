@@ -282,7 +282,7 @@ package body Gela.Pass_Utils is
 
       end Visitors;
 
-      Type_Index : constant Gela.Semantic_Types.Type_Index :=
+      Type_Index : constant Gela.Semantic_Types.Type_View_Index :=
         TM.Type_From_Declaration (Env, Tipe);
       Type_View : constant Gela.Types.Type_View_Access :=
         TM.Get (Type_Index);
@@ -573,7 +573,7 @@ package body Gela.Pass_Utils is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -583,7 +583,7 @@ package body Gela.Pass_Utils is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is
@@ -621,7 +621,7 @@ package body Gela.Pass_Utils is
           Gela.Elements.Subtype_Indications.Subtype_Indication_Access
             (Node.Enclosing_Element);
 
-      Type_Index : constant Gela.Semantic_Types.Type_Index :=
+      Type_Index : constant Gela.Semantic_Types.Type_View_Index :=
         TM.Type_From_Subtype_Indication
           (Subtype_Indication.Env_In, Subtype_Indication);
 
@@ -663,7 +663,7 @@ package body Gela.Pass_Utils is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -673,7 +673,7 @@ package body Gela.Pass_Utils is
 
          overriding procedure On_Expression
            (Self   : in out Visiter;
-            Tipe   : Gela.Semantic_Types.Type_Index;
+            Tipe   : Gela.Semantic_Types.Type_View_Index;
             Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down   : Gela.Interpretations.Interpretation_Index_Array)
          is

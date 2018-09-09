@@ -88,7 +88,7 @@ package body Gela.Plain_Int_Sets.Cursors is
 
    overriding function Corresponding_Type
      (Self : Profile_Cursor)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
         Int_Lists.Element (Self.Pos);
@@ -101,7 +101,7 @@ package body Gela.Plain_Int_Sets.Cursors is
    ------------------------
 
    overriding function Corresponding_Type (Self : Any_Cursor)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
         Int_Lists.Element (Self.Pos);
@@ -142,7 +142,7 @@ package body Gela.Plain_Int_Sets.Cursors is
 
    overriding function Expression_Type
      (Self : Expression_Cursor)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
         Int_Lists.Element (Self.Pos);
@@ -155,7 +155,7 @@ package body Gela.Plain_Int_Sets.Cursors is
    ---------------------
 
    overriding function Expression_Type (Self : Any_Cursor)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       Item   : constant Gela.Int.Interpretation_Access :=
         Int_Lists.Element (Self.Pos);

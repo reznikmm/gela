@@ -87,7 +87,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Expression
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds :=
         Gela.Interpretations.Unknown;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
@@ -105,7 +105,7 @@ package Gela.Interpretations is
 
    not overriding procedure Add_Attr_Function
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array;
       Result : in out Gela.Interpretations.Interpretation_Set_Index)
@@ -145,7 +145,7 @@ package Gela.Interpretations is
 
    not overriding procedure Get_Expression_Index
      (Self   : in out Interpretation_Manager;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Result : out Gela.Interpretations.Interpretation_Index) is abstract;
    --  Register chosen expression interpretation
 
@@ -169,7 +169,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Expression
      (Self   : in out Down_Visiter;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each expression interpretation
@@ -182,7 +182,7 @@ package Gela.Interpretations is
 
    not overriding procedure On_Attr_Function
      (Self   : in out Down_Visiter;
-      Tipe   : Gela.Semantic_Types.Type_Index;
+      Tipe   : Gela.Semantic_Types.Type_View_Index;
       Kind   : Gela.Lexical_Types.Predefined_Symbols.Attribute;
       Down   : Gela.Interpretations.Interpretation_Index_Array) is null;
    --  Called for each attribute denoting function
@@ -284,7 +284,7 @@ package Gela.Interpretations is
 
    not overriding function Expression_Type
      (Self : Expression_Cursor)
-      return Gela.Semantic_Types.Type_Index is abstract;
+      return Gela.Semantic_Types.Type_View_Index is abstract;
 
    function Has_Some
      (Self : Expression_Cursor'Class) return Boolean is (Self.Has_Element);
@@ -319,7 +319,8 @@ package Gela.Interpretations is
    type Profile_Cursor is interface and Abstract_Cursor;
 
    not overriding function Corresponding_Type
-     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_Index is abstract;
+     (Self : Profile_Cursor) return Gela.Semantic_Types.Type_View_Index
+      is abstract;
 
    not overriding function Attribute_Kind
      (Self : Profile_Cursor)
@@ -364,13 +365,14 @@ package Gela.Interpretations is
       return Gela.Elements.Defining_Names.Defining_Name_Access is abstract;
 
    not overriding function Expression_Type (Self : Any_Cursor)
-      return Gela.Semantic_Types.Type_Index is abstract;
+      return Gela.Semantic_Types.Type_View_Index is abstract;
 
    not overriding function Matcher (Self : Any_Cursor)
         return Gela.Interpretations.Type_Matcher_Access is abstract;
 
    not overriding function Corresponding_Type
-     (Self : Any_Cursor) return Gela.Semantic_Types.Type_Index is abstract;
+     (Self : Any_Cursor) return Gela.Semantic_Types.Type_View_Index
+        is abstract;
 
    not overriding function Attribute_Kind (Self : Any_Cursor)
         return Gela.Lexical_Types.Predefined_Symbols.Attribute is abstract;

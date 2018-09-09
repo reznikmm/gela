@@ -47,19 +47,19 @@ with Gela.Profiles.Names;
 
 package body Gela.Plain_Type_Managers is
 
-   Universal_Access_Index  : constant Gela.Semantic_Types.Type_Index := 1;
-   Universal_Integer_Index : constant Gela.Semantic_Types.Type_Index := 2;
-   Universal_Real_Index    : constant Gela.Semantic_Types.Type_Index := 3;
-   Boolean_Index           : constant Gela.Semantic_Types.Type_Index := 4;
-   Root_Integer_Index      : constant Gela.Semantic_Types.Type_Index := 5;
-   Root_Real_Index         : constant Gela.Semantic_Types.Type_Index := 6;
+   Universal_Access_Index  : constant Gela.Semantic_Types.Type_View_Index := 1;
+   Universal_Integer_Index : constant Gela.Semantic_Types.Type_View_Index := 2;
+   Universal_Real_Index    : constant Gela.Semantic_Types.Type_View_Index := 3;
+   Boolean_Index           : constant Gela.Semantic_Types.Type_View_Index := 4;
+   Root_Integer_Index      : constant Gela.Semantic_Types.Type_View_Index := 5;
+   Root_Real_Index         : constant Gela.Semantic_Types.Type_View_Index := 6;
 
    -------------
    -- Boolean --
    -------------
 
    overriding function Boolean
-     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin
@@ -71,13 +71,13 @@ package body Gela.Plain_Type_Managers is
       Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Formal_Type_Declarations
       .Formal_Type_Declaration_Access)
-        return Gela.Semantic_Types.Type_Index
+        return Gela.Semantic_Types.Type_View_Index
    is
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       Key : constant Back_Key := (Category, Decl);
       Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
-      Result : constant Gela.Semantic_Types.Type_Index :=
+      Result : constant Gela.Semantic_Types.Type_View_Index :=
         Self.Map.Last_Key + 1;
    begin
       if Back_Maps.Has_Element (Pos) then
@@ -102,13 +102,13 @@ package body Gela.Plain_Type_Managers is
       Category : Gela.Type_Categories.Category_Kinds;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       Key : constant Back_Key := (Category, Decl);
       Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
-      Result : constant Gela.Semantic_Types.Type_Index :=
+      Result : constant Gela.Semantic_Types.Type_View_Index :=
         Self.Map.Last_Key + 1;
       Type_View : Gela.Type_Categories.Type_View_Access;
    begin
@@ -134,10 +134,10 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Get
      (Self  : access Type_Manager;
-      Index : Gela.Semantic_Types.Type_Index)
+      Index : Gela.Semantic_Types.Type_View_Index)
       return Gela.Types.Type_View_Access
    is
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
    begin
       if Index = 0 then
          return null;
@@ -151,15 +151,15 @@ package body Gela.Plain_Type_Managers is
       Category  : Gela.Type_Categories.Category_Kinds;
       Decl      : Gela.Elements.Full_Type_Declarations
                     .Full_Type_Declaration_Access;
-      Component : Gela.Semantic_Types.Type_Index;
+      Component : Gela.Semantic_Types.Type_View_Index;
       Indexes   : Gela.Semantic_Types.Type_Index_Array)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       Key : constant Back_Key := (Category, Decl);
       Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
-      Result : constant Gela.Semantic_Types.Type_Index :=
+      Result : constant Gela.Semantic_Types.Type_View_Index :=
         Self.Map.Last_Key + 1;
    begin
       if Back_Maps.Has_Element (Pos) then
@@ -185,14 +185,14 @@ package body Gela.Plain_Type_Managers is
       Parent   : Gela.Type_Categories.Type_View_Access;
       Decl     : Gela.Elements.Full_Type_Declarations
       .Full_Type_Declaration_Access)
-        return Gela.Semantic_Types.Type_Index
+        return Gela.Semantic_Types.Type_View_Index
    is
       --  FIXME: Use separate maps for derived types
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       Key : constant Back_Key := (Parent.Category, Decl);
       Pos : constant Back_Maps.Cursor := Self.Back.Find (Key);
-      Result : constant Gela.Semantic_Types.Type_Index :=
+      Result : constant Gela.Semantic_Types.Type_View_Index :=
         Self.Map.Last_Key + 1;
    begin
       if Back_Maps.Has_Element (Pos) then
@@ -238,7 +238,7 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Get_Profile
      (Self      : access Type_Manager;
-      Tipe      : Gela.Semantic_Types.Type_Index;
+      Tipe      : Gela.Semantic_Types.Type_View_Index;
       Attribute : Gela.Lexical_Types.Symbol)
          return Gela.Profiles.Profile_Access
    is
@@ -346,12 +346,12 @@ package body Gela.Plain_Type_Managers is
    is
       procedure Create
         (Category : Gela.Type_Categories.Category_Kinds;
-         Index    : Gela.Semantic_Types.Type_Index);
+         Index    : Gela.Semantic_Types.Type_View_Index);
 
       procedure Find_Type
         (Symbol   : Gela.Lexical_Types.Symbol;
          Category : Gela.Type_Categories.Category_Kinds;
-         Expect   : Gela.Semantic_Types.Type_Index);
+         Expect   : Gela.Semantic_Types.Type_View_Index);
 
       Comp : constant Gela.Compilations.Compilation_Access :=
         Standard.Enclosing_Compilation;
@@ -360,7 +360,7 @@ package body Gela.Plain_Type_Managers is
 
       procedure Create
         (Category : Gela.Type_Categories.Category_Kinds;
-         Index    : Gela.Semantic_Types.Type_Index)
+         Index    : Gela.Semantic_Types.Type_View_Index)
       is
          Id   : Gela.Elements.Defining_Identifiers.Defining_Identifier_Access;
          Def  : Gela.Elements.Root_Type_Definitions
@@ -395,12 +395,12 @@ package body Gela.Plain_Type_Managers is
       procedure Find_Type
         (Symbol   : Gela.Lexical_Types.Symbol;
          Category : Gela.Type_Categories.Category_Kinds;
-         Expect   : Gela.Semantic_Types.Type_Index)
+         Expect   : Gela.Semantic_Types.Type_View_Index)
       is
          package Visiters is
             type Visiter is new Gela.Element_Visiters.Visiter with record
                Stop   : S.Boolean := False;
-               Result : Gela.Semantic_Types.Type_Index := 0;
+               Result : Gela.Semantic_Types.Type_View_Index := 0;
             end record;
 
             overriding procedure Full_Type_Declaration
@@ -439,7 +439,7 @@ package body Gela.Plain_Type_Managers is
             end Full_Type_Declaration;
          end Visiters;
 
-         use type Gela.Semantic_Types.Type_Index;
+         use type Gela.Semantic_Types.Type_View_Index;
          Seq : constant Gela.Elements.Basic_Declarative_Items
            .Basic_Declarative_Item_Sequence_Access
              := Gela.Elements.Package_Declarations
@@ -481,7 +481,7 @@ package body Gela.Plain_Type_Managers is
    ------------------
 
    overriding function Root_Integer
-     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin
@@ -493,7 +493,7 @@ package body Gela.Plain_Type_Managers is
    ---------------
 
    overriding function Root_Real
-     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin
@@ -508,7 +508,7 @@ package body Gela.Plain_Type_Managers is
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Defining_Names.Defining_Name_Access)
-        return Gela.Semantic_Types.Type_Index
+        return Gela.Semantic_Types.Type_View_Index
    is
       ES : constant Gela.Environments.Environment_Set_Access :=
         Self.Context.Environment_Set;
@@ -534,12 +534,12 @@ package body Gela.Plain_Type_Managers is
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
 
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result  : Gela.Semantic_Types.Type_Index := 0;
+            Result  : Gela.Semantic_Types.Type_View_Index := 0;
             Boolean : Gela.Elements.Defining_Names.Defining_Name_Access;
          end record;
 
@@ -668,11 +668,11 @@ package body Gela.Plain_Type_Managers is
             Node : not null Gela.Elements.Derived_Type_Definitions.
               Derived_Type_Definition_Access)
          is
-            use type Gela.Semantic_Types.Type_Index;
+            use type Gela.Semantic_Types.Type_View_Index;
 
             Parent : constant Gela.Elements.Subtype_Indications.
               Subtype_Indication_Access := Node.Parent_Subtype_Indication;
-            Tipe : constant Gela.Semantic_Types.Type_Index :=
+            Tipe : constant Gela.Semantic_Types.Type_View_Index :=
               Type_From_Declaration.Self.Type_From_Subtype_Indication
                 (Env, Parent);
             Type_View : Gela.Type_Categories.Type_View_Access;
@@ -856,7 +856,7 @@ package body Gela.Plain_Type_Managers is
             Component : constant Gela.Elements.Component_Definitions.
               Component_Definition_Access := Node.Array_Component_Definition;
 
-            Component_Type : constant Gela.Semantic_Types.Type_Index :=
+            Component_Type : constant Gela.Semantic_Types.Type_View_Index :=
               Type_From_Declaration.Self.Type_Of_Object_Declaration
                 (Env, Gela.Elements.Element_Access (Component));
 
@@ -913,7 +913,7 @@ package body Gela.Plain_Type_Managers is
             Component : constant Gela.Elements.Component_Definitions.
               Component_Definition_Access := Node.Array_Component_Definition;
 
-            Component_Type : constant Gela.Semantic_Types.Type_Index :=
+            Component_Type : constant Gela.Semantic_Types.Type_View_Index :=
               Type_From_Declaration.Self.Type_Of_Object_Declaration
                 (Env, Gela.Elements.Element_Access (Component));
 
@@ -988,11 +988,11 @@ package body Gela.Plain_Type_Managers is
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Discrete_Subtype_Definitions.
                 Discrete_Subtype_Definition'Class)
-        return Gela.Semantic_Types.Type_Index
+        return Gela.Semantic_Types.Type_View_Index
    is
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Type_Index := 0;
+            Result : Gela.Semantic_Types.Type_View_Index := 0;
          end record;
 
          overriding procedure Discrete_Simple_Expression_Range
@@ -1039,12 +1039,12 @@ package body Gela.Plain_Type_Managers is
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Object_Definitions.Object_Definition'Class)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
 
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result  : Gela.Semantic_Types.Type_Index := 0;
+            Result  : Gela.Semantic_Types.Type_View_Index := 0;
          end record;
 
          overriding procedure Composite_Subtype_Indication
@@ -1101,11 +1101,11 @@ package body Gela.Plain_Type_Managers is
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : access Gela.Elements.Subtype_Mark_Or_Access_Definitions.
                 Subtype_Mark_Or_Access_Definition'Class)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Type_Index := 0;
+            Result : Gela.Semantic_Types.Type_View_Index := 0;
          end record;
 
          overriding procedure Identifier
@@ -1173,11 +1173,11 @@ package body Gela.Plain_Type_Managers is
      (Self  : access Type_Manager;
       Env   : Gela.Semantic_Types.Env_Index;
       Node  : Gela.Elements.Element_Access)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       package Visiters is
          type Visiter is new Gela.Element_Visiters.Visiter with record
-            Result : Gela.Semantic_Types.Type_Index := 0;
+            Result : Gela.Semantic_Types.Type_View_Index := 0;
          end record;
 
          overriding procedure Component_Declaration
@@ -1358,7 +1358,7 @@ package body Gela.Plain_Type_Managers is
    ----------------------
 
    overriding function Universal_Access
-     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin
@@ -1371,7 +1371,7 @@ package body Gela.Plain_Type_Managers is
 
    overriding function Universal_Integer
      (Self  : access Type_Manager)
-      return Gela.Semantic_Types.Type_Index
+      return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin
@@ -1383,7 +1383,7 @@ package body Gela.Plain_Type_Managers is
    --------------------
 
    overriding function Universal_Real
-     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_Index
+     (Self  : access Type_Manager) return Gela.Semantic_Types.Type_View_Index
    is
       pragma Unreferenced (Self);
    begin

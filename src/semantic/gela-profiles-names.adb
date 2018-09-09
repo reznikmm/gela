@@ -183,7 +183,7 @@ package body Gela.Profiles.Names is
                     Defining_Identifier_Access;
                   Param : constant Gela.Elements.Parameter_Specifications.
                     Parameter_Specification_Access := Cursor.Element;
-                  Tipe : constant Gela.Semantic_Types.Type_Index :=
+                  Tipe : constant Gela.Semantic_Types.Type_View_Index :=
                     TM.Type_Of_Object_Declaration
                       (Env, Gela.Elements.Element_Access (Param));
                   Names : constant Gela.Elements.Defining_Identifiers.
@@ -294,7 +294,7 @@ package body Gela.Profiles.Names is
    -----------------
 
    overriding function Return_Type
-     (Self  : Profile) return Gela.Semantic_Types.Type_Index is
+     (Self  : Profile) return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Result;
    end Return_Type;
@@ -306,7 +306,7 @@ package body Gela.Profiles.Names is
    overriding function Get_Type
      (Self  : Profile;
       Index : Positive)
-      return Gela.Semantic_Types.Type_Index is
+      return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Params (Index).Tipe;
    end Get_Type;

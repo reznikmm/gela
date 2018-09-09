@@ -10,7 +10,7 @@ package body Gela.Resolve.Each is
       Name : Gela.Plain_Int_Sets.Cursors.Defining_Name_Cursor;
       TM   : Gela.Type_Managers.Type_Manager_Access;
       Env  : Gela.Semantic_Types.Env_Index;
-      Tipe : Gela.Semantic_Types.Type_Index := 0;
+      Tipe : Gela.Semantic_Types.Type_View_Index := 0;
    end record;
 
    procedure Step (Self : in out Name_As_Expression_Cursor'Class);
@@ -26,7 +26,7 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Name_As_Expression_Cursor)
-       return Gela.Semantic_Types.Type_Index;
+       return Gela.Semantic_Types.Type_View_Index;
 
    type Join_Cursor is
      new Gela.Interpretations.Expression_Cursor with
@@ -43,7 +43,7 @@ package body Gela.Resolve.Each is
      (Self : Join_Cursor) return Gela.Interpretations.Interpretation_Index;
 
    overriding function Expression_Type
-     (Self : Join_Cursor) return Gela.Semantic_Types.Type_Index;
+     (Self : Join_Cursor) return Gela.Semantic_Types.Type_View_Index;
 
    procedure Initialize
      (Self : in out Join_Cursor'Class;
@@ -54,13 +54,13 @@ package body Gela.Resolve.Each is
 
    type Prefix_Cursor is new Join_Cursor with record
       Is_Implicit_Dereference   : Boolean := False;
-      Implicit_Dereference_Type : Gela.Semantic_Types.Type_Index;
+      Implicit_Dereference_Type : Gela.Semantic_Types.Type_View_Index;
    end record;
 
    overriding procedure Next (Self : in out Prefix_Cursor);
 
    overriding function Expression_Type
-     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_Index;
+     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_View_Index;
 
    procedure Step (Self : in out Prefix_Cursor'Class);
 
@@ -86,7 +86,7 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Prefer_Root_Cursor)
-       return Gela.Semantic_Types.Type_Index;
+       return Gela.Semantic_Types.Type_View_Index;
 
    procedure Initialize
      (Self : in out Prefer_Root_Cursor'Class;
@@ -101,7 +101,7 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Name_As_Expression_Cursor)
-      return Gela.Semantic_Types.Type_Index is
+      return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Tipe;
    end Expression_Type;
@@ -112,7 +112,7 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Join_Cursor)
-      return Gela.Semantic_Types.Type_Index is
+      return Gela.Semantic_Types.Type_View_Index is
    begin
       if Self.Name.Has_Element then
          return Self.Name.Expression_Type;
@@ -292,7 +292,7 @@ package body Gela.Resolve.Each is
    procedure Step (Self : in out Prefer_Root_Cursor'Class) is
       TM         : constant Gela.Type_Managers.Type_Manager_Access :=
         Self.Root_Cursor.Name.TM;
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
       Type_View  : Gela.Types.Type_View_Access;
    begin
       --   In the first phase look for root types and return them
@@ -362,7 +362,7 @@ package body Gela.Resolve.Each is
             .Object_Access_Type_Access)
          is
             pragma Unreferenced (Self);
-            Index : constant Gela.Semantic_Types.Type_Index :=
+            Index : constant Gela.Semantic_Types.Type_View_Index :=
               Step.Self.Name.TM.Type_From_Subtype_Mark
                 (Step.Self.Name.Env, Value.Get_Designated);
          begin
@@ -394,7 +394,7 @@ package body Gela.Resolve.Each is
    end Next;
 
    overriding function Expression_Type
-     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_Index is
+     (Self : Prefix_Cursor) return Gela.Semantic_Types.Type_View_Index is
    begin
       if Self.Is_Implicit_Dereference then
          return Self.Implicit_Dereference_Type;
@@ -409,7 +409,7 @@ package body Gela.Resolve.Each is
 
    overriding function Expression_Type
      (Self : Prefer_Root_Cursor)
-       return Gela.Semantic_Types.Type_Index is
+       return Gela.Semantic_Types.Type_View_Index is
    begin
       if Self.Root_Cursor.Has_Element then
          return Self.Root_Cursor.Expression_Type;

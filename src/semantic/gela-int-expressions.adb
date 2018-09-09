@@ -8,7 +8,7 @@ package body Gela.Int.Expressions is
 
    function Create
      (Down            : Gela.Interpretations.Interpretation_Index_Array;
-      Expression_Type : Gela.Semantic_Types.Type_Index;
+      Expression_Type : Gela.Semantic_Types.Type_View_Index;
       Expression_Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds)
       return Expression is
    begin
@@ -36,7 +36,7 @@ package body Gela.Int.Expressions is
 
    function Expression_Type
      (Self : Expression)
-      return Gela.Semantic_Types.Type_Index is
+      return Gela.Semantic_Types.Type_View_Index is
    begin
       return Self.Expression_Type;
    end Expression_Type;

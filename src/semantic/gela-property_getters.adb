@@ -259,7 +259,7 @@ package body Gela.Property_Getters is
    overriding procedure On_Type_Index
      (Self    : in out Getter;
       Element : Gela.Elements.Element_Access;
-      Value   : Gela.Semantic_Types.Type_Index)
+      Value   : Gela.Semantic_Types.Type_View_Index)
    is
       pragma Unreferenced (Element);
    begin

@@ -27,7 +27,7 @@ package body Gela.Resolve is
    procedure To_Type_Category
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Tipe     : Gela.Semantic_Types.Type_Index;
+      Tipe     : Gela.Semantic_Types.Type_View_Index;
       Result   : out Gela.Interpretations.Interpretation_Index);
    --  Fetch Type_Category interpretation from Up that match given Tipe.
 
@@ -36,12 +36,12 @@ package body Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Index  : out Gela.Interpretations.Interpretation_Index;
-      Result : out Gela.Semantic_Types.Type_Index);
+      Result : out Gela.Semantic_Types.Type_View_Index);
 
    procedure To_Type
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Semantic_Types.Type_Index;
+      Type_Up : Gela.Semantic_Types.Type_View_Index;
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index);
 
@@ -52,7 +52,7 @@ package body Gela.Resolve is
       Right      : Gela.Interpretations.Interpretation_Set_Index;
       Down_Left  : out Gela.Interpretations.Interpretation_Index;
       Down_Right : out Gela.Interpretations.Interpretation_Index;
-      Tipe       : out Gela.Semantic_Types.Type_Index);
+      Tipe       : out Gela.Semantic_Types.Type_View_Index);
 
    function Array_Matcher
      return not null Gela.Interpretations.Type_Matcher_Access
@@ -96,7 +96,7 @@ package body Gela.Resolve is
       Set    : out Gela.Interpretations.Interpretation_Set_Index)
    is
       use type Gela.Lexical_Types.Symbol;
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       IM   : constant Gela.Interpretations.Interpretation_Manager_Access :=
         Comp.Context.Interpretation_Manager;
@@ -107,7 +107,7 @@ package body Gela.Resolve is
       Index       : Gela.Interpretations.Interpretation_Index;
       Is_Length   : constant Boolean :=
         Symbol = Gela.Lexical_Types.Predefined_Symbols.Length;
-      Type_Index  : Gela.Semantic_Types.Type_Index;
+      Type_Index  : Gela.Semantic_Types.Type_View_Index;
    begin
       Set := 0;
 
@@ -400,7 +400,7 @@ package body Gela.Resolve is
       TM : constant Gela.Type_Managers.Type_Manager_Access :=
         Comp.Context.Types;
 
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
 
       package body Each_Constraint is
 
@@ -491,7 +491,7 @@ package body Gela.Resolve is
                   Value : not null Gela.Types.Simple
                     .Object_Access_Type_Access)
                is
-                  Des_Index  : constant Gela.Semantic_Types.Type_Index :=
+                  Des_Index  : constant Gela.Semantic_Types.Type_View_Index :=
                     TM.Type_From_Subtype_Mark (Env, Value.Get_Designated);
                   Des_View   : constant Gela.Types.Type_View_Access :=
                     TM.Get (Des_Index);
@@ -510,11 +510,11 @@ package body Gela.Resolve is
                begin
                   for K in Tuples'Range loop
                      declare
-                        use type Gela.Semantic_Types.Type_Index;
+                        use type Gela.Semantic_Types.Type_View_Index;
                         Tuple : constant Gela.Interpretations.
                                   Interpretation_Set_Index_Array :=
                                     IM.Get_Tuple (Tuples (K));
-                        Exp   : Gela.Semantic_Types.Type_Index := 0;
+                        Exp   : Gela.Semantic_Types.Type_View_Index := 0;
                         List  : Gela.Interpretations.Interpretation_Index_Array
                                   (Tuple'Range) := (others => 0);
                         Name  : Gela.Elements.Defining_Names.
@@ -623,7 +623,7 @@ package body Gela.Resolve is
         (Name : Gela.Elements.Defining_Names.Defining_Name_Access)
       is
          Index   : Gela.Interpretations.Interpretation_Index;
-         Tipe    : Gela.Semantic_Types.Type_Index;
+         Tipe    : Gela.Semantic_Types.Type_View_Index;
          Profile : constant Gela.Profiles.Profile_Access :=
             TM.Get_Profile (Env, Name);
       begin
@@ -736,7 +736,7 @@ package body Gela.Resolve is
                  .Interpretation_Set_Index_Array
                    := IM.Get_Tuple (Tuples (J));
 
-               Tipe   : Gela.Semantic_Types.Type_Index;
+               Tipe   : Gela.Semantic_Types.Type_View_Index;
                List   : Gela.Interpretations.Interpretation_Index_Array
                  (Tuple'Range);
             begin
@@ -837,7 +837,7 @@ package body Gela.Resolve is
                       := IM.Get_Tuple (Tuples (J));
                   Index_Types : constant Gela.Semantic_Types.Type_Index_Array
                     := Arr.all.Index_Types;
-                  Index_Type : Gela.Semantic_Types.Type_Index := 0;
+                  Index_Type : Gela.Semantic_Types.Type_View_Index := 0;
                begin
                   --  Check if this is positional association
                   --  Check agains Constraint_Error in case of slice FIXME
@@ -881,7 +881,7 @@ package body Gela.Resolve is
          declare
             Tipe        : Gela.Interpretations.Interpretation_Index;
             Chosen      : Gela.Interpretations.Interpretation_Index;
-            Type_Index  : Gela.Semantic_Types.Type_Index;
+            Type_Index  : Gela.Semantic_Types.Type_View_Index;
             Tuple       : constant Gela.Interpretations
               .Interpretation_Set_Index_Array
                 := IM.Get_Tuple (Tuples (1));
@@ -928,7 +928,7 @@ package body Gela.Resolve is
    is
       pragma Unreferenced (Arg);
       Tipe        : Gela.Interpretations.Interpretation_Index;
-      Type_Index  : Gela.Semantic_Types.Type_Index;
+      Type_Index  : Gela.Semantic_Types.Type_View_Index;
    begin
       Set := 0;
       Get_Subtype
@@ -1182,7 +1182,7 @@ package body Gela.Resolve is
       Env    : Gela.Semantic_Types.Env_Index;
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Index  : out Gela.Interpretations.Interpretation_Index;
-      Result : out Gela.Semantic_Types.Type_Index)
+      Result : out Gela.Semantic_Types.Type_View_Index)
    is
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
@@ -1278,7 +1278,7 @@ package body Gela.Resolve is
       Result : out Gela.Interpretations.Interpretation_Set_Index)
    is
       Value : constant Gela.Lexical_Types.Token := Comp.Get_Token (Token);
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
       Result := 0;
 
@@ -1345,7 +1345,7 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression
            (Self : in out Visiter;
-            Tipe : Gela.Semantic_Types.Type_Index;
+            Tipe : Gela.Semantic_Types.Type_View_Index;
             Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down : Gela.Interpretations.Interpretation_Index_Array);
 
@@ -1361,7 +1361,7 @@ package body Gela.Resolve is
 
          overriding procedure On_Expression
            (Self : in out Visiter;
-            Tipe : Gela.Semantic_Types.Type_Index;
+            Tipe : Gela.Semantic_Types.Type_View_Index;
             Kind : Gela.Interpretations.Unknown_Auxiliary_Apply_Kinds;
             Down : Gela.Interpretations.Interpretation_Index_Array)
          is
@@ -1374,7 +1374,7 @@ package body Gela.Resolve is
             Output : Gela.Interpretations.Interpretation_Index_Array
               (Tuples'Range);
 
-            Comp_Type : Gela.Semantic_Types.Type_Index := 0;
+            Comp_Type : Gela.Semantic_Types.Type_View_Index := 0;
          begin
             if View.Is_Array then
                declare
@@ -1389,7 +1389,7 @@ package body Gela.Resolve is
 
             for J in Tuples'Range loop
                declare
-                  Exp    : Gela.Semantic_Types.Type_Index := 0;
+                  Exp    : Gela.Semantic_Types.Type_View_Index := 0;
                   Chosen : Gela.Interpretations.Interpretation_Index := 0;
                   Value  : constant Gela.Interpretations
                     .Interpretation_Set_Index_Array :=
@@ -1572,7 +1572,7 @@ package body Gela.Resolve is
       Set    : Gela.Interpretations.Interpretation_Set_Index;
       Result : out Gela.Interpretations.Interpretation_Index)
    is
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
       Get_Subtype
         (Comp,
@@ -1671,7 +1671,7 @@ package body Gela.Resolve is
       for L in Each.Expression (IM, TM, Env, Left) loop
          declare
 
-            L_Tipe      : constant Gela.Semantic_Types.Type_Index :=
+            L_Tipe      : constant Gela.Semantic_Types.Type_View_Index :=
               L.Expression_Type;
             L_Type_View : constant Gela.Types.Type_View_Access :=
               TM.Get (L_Tipe);
@@ -1683,7 +1683,7 @@ package body Gela.Resolve is
 
             for R in Each.Expression (IM, TM, Env, Right) loop
                declare
-                  Chosen : Gela.Semantic_Types.Type_Index;
+                  Chosen : Gela.Semantic_Types.Type_View_Index;
                   Type_View : constant Gela.Types.Type_View_Access :=
                     TM.Get (R.Expression_Type);
                begin
@@ -1827,7 +1827,7 @@ package body Gela.Resolve is
       Right      : Gela.Interpretations.Interpretation_Set_Index;
       Down_Left  : out Gela.Interpretations.Interpretation_Index;
       Down_Right : out Gela.Interpretations.Interpretation_Index;
-      Tipe       : out Gela.Semantic_Types.Type_Index)
+      Tipe       : out Gela.Semantic_Types.Type_View_Index)
    is
 
       IM : constant Gela.Interpretations.Interpretation_Manager_Access :=
@@ -1841,7 +1841,7 @@ package body Gela.Resolve is
       for L in Each.Prefer_Root (IM, TM, Env, Left) loop
          declare
 
-            L_Tipe      : constant Gela.Semantic_Types.Type_Index :=
+            L_Tipe      : constant Gela.Semantic_Types.Type_View_Index :=
               L.Expression_Type;
             L_Type_View : constant Gela.Types.Type_View_Access :=
               TM.Get (L_Tipe);
@@ -1850,9 +1850,9 @@ package body Gela.Resolve is
             if L_Type_View.Assigned and then L_Type_View.Is_Discrete then
                for R in Each.Prefer_Root (IM, TM, Env, Right) loop
                   declare
-                     use type Gela.Semantic_Types.Type_Index;
+                     use type Gela.Semantic_Types.Type_View_Index;
 
-                     R_Tipe      : constant Gela.Semantic_Types.Type_Index :=
+                     R_Tipe : constant Gela.Semantic_Types.Type_View_Index :=
                        R.Expression_Type;
                      Type_View : constant Gela.Types.Type_View_Access :=
                        TM.Get (R_Tipe);
@@ -1908,7 +1908,7 @@ package body Gela.Resolve is
       Env        : Gela.Semantic_Types.Env_Index;
       Left       : Gela.Interpretations.Interpretation_Set_Index;
       Right      : Gela.Interpretations.Interpretation_Set_Index;
-      Tipe       : out Gela.Semantic_Types.Type_Index)
+      Tipe       : out Gela.Semantic_Types.Type_View_Index)
    is
       Ignore_Left  : Gela.Interpretations.Interpretation_Index;
       Ignore_Right : Gela.Interpretations.Interpretation_Index;
@@ -1934,7 +1934,7 @@ package body Gela.Resolve is
       Right      : Gela.Interpretations.Interpretation_Set_Index;
       Result     : out Gela.Interpretations.Interpretation_Index)
    is
-      Ignore_Tipe  : Gela.Semantic_Types.Type_Index;
+      Ignore_Tipe  : Gela.Semantic_Types.Type_View_Index;
       Ignore_Right : Gela.Interpretations.Interpretation_Index;
    begin
       Discrete_Range
@@ -1958,7 +1958,7 @@ package body Gela.Resolve is
       Right      : Gela.Interpretations.Interpretation_Set_Index;
       Result     : out Gela.Interpretations.Interpretation_Index)
    is
-      Ignore_Tipe  : Gela.Semantic_Types.Type_Index;
+      Ignore_Tipe  : Gela.Semantic_Types.Type_View_Index;
       Ignore_Left  : Gela.Interpretations.Interpretation_Index;
    begin
       Discrete_Range
@@ -2038,7 +2038,7 @@ package body Gela.Resolve is
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
       Index      : Gela.Interpretations.Interpretation_Index;
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
       Get_Subtype
         (Comp,
@@ -2062,7 +2062,7 @@ package body Gela.Resolve is
    procedure To_Type
      (Comp    : Gela.Compilations.Compilation_Access;
       Env     : Gela.Semantic_Types.Env_Index;
-      Type_Up : Gela.Semantic_Types.Type_Index;
+      Type_Up : Gela.Semantic_Types.Type_View_Index;
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
@@ -2122,7 +2122,7 @@ package body Gela.Resolve is
    procedure To_Type_Category
      (Comp     : Gela.Compilations.Compilation_Access;
       Up       : Gela.Interpretations.Interpretation_Set_Index;
-      Tipe     : Gela.Semantic_Types.Type_Index;
+      Tipe     : Gela.Semantic_Types.Type_View_Index;
       Result   : out Gela.Interpretations.Interpretation_Index)
    is
 
@@ -2159,10 +2159,10 @@ package body Gela.Resolve is
       Expr_Up : Gela.Interpretations.Interpretation_Set_Index;
       Result  : out Gela.Interpretations.Interpretation_Index)
    is
-      use type Gela.Semantic_Types.Type_Index;
+      use type Gela.Semantic_Types.Type_View_Index;
 
       Index      : Gela.Interpretations.Interpretation_Index;
-      Type_Index : Gela.Semantic_Types.Type_Index;
+      Type_Index : Gela.Semantic_Types.Type_View_Index;
    begin
       Get_Subtype
         (Comp,

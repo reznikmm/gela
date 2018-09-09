@@ -246,7 +246,7 @@ package body Gela.Property_Resets is
    overriding procedure On_Type_Index
      (Self    : in out Property_Reset;
       Element : Gela.Elements.Element_Access;
-      Value   : out Gela.Semantic_Types.Type_Index)
+      Value   : out Gela.Semantic_Types.Type_View_Index)
    is
       pragma Unreferenced (Element);
    begin
