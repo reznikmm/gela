@@ -695,6 +695,26 @@ package body Gela.Pass_Utils is
       Result := V.Result;
    end Choose_Number_Declaration_Interpretation;
 
+   -------------------------
+   -- Create_Block_Region --
+   -------------------------
+
+   function Create_Block_Region
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Block  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Env_Index is
+   begin
+      if Name.Assigned then
+         return Add_Name_Create_Region (Comp, Env, Symbol, Name, Block);
+      else
+         return Comp.Context.Environment_Set.Enter_Declarative_Region
+          (Env, null);
+      end if;
+   end Create_Block_Region;
+
    ------------------------------
    -- Create_Completion_Region --
    ------------------------------

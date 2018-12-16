@@ -38,6 +38,16 @@ package Gela.Pass_Utils is
    --  Check if Name is part of enumeration type declaration
    --  else create new declarative region
 
+   function Create_Block_Region
+     (Comp   : Gela.Compilations.Compilation_Access;
+      Env    : Gela.Semantic_Types.Env_Index;
+      Symbol : Gela.Lexical_Types.Symbol;
+      Name   : Gela.Elements.Defining_Names.Defining_Name_Access;
+      Block  : Gela.Elements.Element_Access)
+      return Gela.Semantic_Types.Env_Index;
+   --  Add region for block_statements. If name /= null call
+   --  Add_Name_Create_Region, otherwise just create new region
+
    function Leave_Declarative_Region
      (Comp   : Gela.Compilations.Compilation_Access;
       Index  : Gela.Semantic_Types.Env_Index;
