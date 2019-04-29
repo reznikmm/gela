@@ -12,6 +12,8 @@ with League.Strings;
 
 package body Meta.Writes is
 
+   use type League.Strings.Universal_String;
+
    function "+" (T : Wide_Wide_String) return League.Strings.Universal_String
      renames League.Strings.To_Universal_String;
 
@@ -23,7 +25,40 @@ package body Meta.Writes is
 
    procedure Open_File
      (Output : out Ada.Wide_Wide_Text_IO.File_Type;
-      Unit   : League.Strings.Universal_String);
+      Unit   : League.Strings.Universal_String;
+      Spec   : Boolean := True);
+
+   function Get_With_Clauses
+     (F          : access Ada_Pretty.Factory;
+      Vector     : Meta.Read.Class_Vectors.Vector;
+      Is_Limited : Boolean) return Ada_Pretty.Node_Access;
+
+   ----------------------
+   -- Get_With_Clauses --
+   ----------------------
+
+   function Get_With_Clauses
+     (F          : access Ada_Pretty.Factory;
+      Vector     : Meta.Read.Class_Vectors.Vector;
+      Is_Limited : Boolean) return Ada_Pretty.Node_Access
+   is
+      Result : Ada_Pretty.Node_Access;
+   begin
+      for J in 2 .. Vector.Last_Index loop
+         declare
+            Item : constant Meta.Classes.Class := Vector (J);
+            Name : constant League.Strings.Universal_String := Item.Name;
+            Package_Name : constant League.Strings.Universal_String :=
+              "Program.Elements." & Name & "s";
+            Next : constant Ada_Pretty.Node_Access :=
+              F.New_With (F.New_Name (Package_Name), Is_Limited);
+         begin
+            Result := F.New_List (Result, Next);
+         end;
+      end loop;
+
+      return Result;
+   end Get_With_Clauses;
 
    ---------------
    -- Open_File --
@@ -31,12 +66,18 @@ package body Meta.Writes is
 
    procedure Open_File
      (Output : out Ada.Wide_Wide_Text_IO.File_Type;
-      Unit   : League.Strings.Universal_String)
+      Unit   : League.Strings.Universal_String;
+      Spec   : Boolean := True)
    is
       Name : League.Strings.Universal_String :=
         Unit.To_Lowercase.Split ('.').Join ("-");
    begin
-      Name.Append (".ads");
+      if Spec then
+         Name.Append (".ads");
+      else
+         Name.Append (".adb");
+      end if;
+
       Ada.Wide_Wide_Text_IO.Create
         (Output, Name => Name.To_UTF_8_String);
       Write_Header (Output);
@@ -47,10 +88,56 @@ package body Meta.Writes is
    --------------------
 
    procedure Write_Elements (Vector : Meta.Read.Class_Vectors.Vector) is
+
       F : aliased Ada_Pretty.Factory;
 
       function Element_Classifications (Prefix : Ada_Pretty.Node_Access)
         return Ada_Pretty.Node_Access;
+
+      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
+        return Ada_Pretty.Node_Access;
+
+      -------------------
+      -- Element_Casts --
+      -------------------
+
+      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
+        return Ada_Pretty.Node_Access
+      is
+         Result : Ada_Pretty.Node_Access := Prefix;
+      begin
+         for J in 2 .. Vector.Last_Index loop
+            declare
+               Item : constant Meta.Classes.Class := Vector (J);
+
+               Name : constant League.Strings.Universal_String :=
+                 "To_" & Item.Name;
+
+               Type_Name : constant Ada_Pretty.Node_Access :=
+                 F.New_Selected_Name
+                 (+"Program.Elements." & Item.Name & "s." &
+                    Item.Name & "_Access");
+
+               Funct : constant Ada_Pretty.Node_Access :=
+                 F.New_Subprogram_Declaration
+                   (F.New_Subprogram_Specification
+                      (Name          => F.New_Name (Name),
+                       Parameters    => F.New_Parameter
+                         (Name            => F.New_Name (+"Self"),
+                          Type_Definition => F.New_Access
+                            (Is_All => False,
+                             Target => F.New_Name (+"Element'Class"))),
+                       Result        => Type_Name),
+                    Aspects     => F.New_Aspect
+                      (Name  => F.New_Name (+"Pre"),
+                       Value => F.New_Name ("Self.Is_" & Item.Name)));
+            begin
+               Result := F.New_List (Result, Funct);
+            end;
+         end loop;
+
+         return Result;
+      end Element_Casts;
 
       -----------------------------
       -- Element_Classifications --
@@ -59,8 +146,6 @@ package body Meta.Writes is
       function Element_Classifications (Prefix : Ada_Pretty.Node_Access)
         return Ada_Pretty.Node_Access
       is
-         use type League.Strings.Universal_String;
-
          function Get_Aspect
            (Item : Meta.Classes.Class) return Ada_Pretty.Node_Access;
 
@@ -164,12 +249,15 @@ package body Meta.Writes is
         F.New_List ((Pure, Element_Decl, Element_Access));
 
       Public_Part : constant Ada_Pretty.Node_Access :=
-        Element_Classifications (Public_Part_Prefix);
+        Element_Casts (Element_Classifications (Public_Part_Prefix));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (Program_Elements, Public_Part);
 
-      Unit : constant Ada_Pretty.Node_Access := F.New_Compilation_Unit (Root);
+      Unit : constant Ada_Pretty.Node_Access :=
+        F.New_Compilation_Unit
+          (Root,
+           Get_With_Clauses (F'Access, Vector, Is_Limited => True));
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
@@ -182,6 +270,85 @@ package body Meta.Writes is
 
       Ada.Wide_Wide_Text_IO.Close (Output);
    end Write_Elements;
+
+   -------------------------
+   -- Write_Elements_Body --
+   -------------------------
+
+   procedure Write_Elements_Body (Vector : Meta.Read.Class_Vectors.Vector) is
+      F : aliased Ada_Pretty.Factory;
+
+      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
+        return Ada_Pretty.Node_Access;
+
+      -------------------
+      -- Element_Casts --
+      -------------------
+
+      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
+        return Ada_Pretty.Node_Access
+      is
+         Result : Ada_Pretty.Node_Access := Prefix;
+      begin
+         for J in 2 .. Vector.Last_Index loop
+            declare
+               Item : constant Meta.Classes.Class := Vector (J);
+
+               Name : constant League.Strings.Universal_String :=
+                 "To_" & Item.Name;
+
+               Type_Name : constant Ada_Pretty.Node_Access :=
+                 F.New_Selected_Name
+                 (+"Program.Elements." & Item.Name & "s." &
+                    Item.Name & "_Access");
+
+               Stmt  : constant Ada_Pretty.Node_Access :=
+                 F.New_Return
+                   (F.New_Apply
+                      (Prefix    => Type_Name,
+                       Arguments => F.New_Name (+"Self")));
+
+               Funct : constant Ada_Pretty.Node_Access :=
+                 F.New_Subprogram_Body
+                   (F.New_Subprogram_Specification
+                      (Name          => F.New_Name (Name),
+                       Parameters    => F.New_Parameter
+                         (Name            => F.New_Name (+"Self"),
+                          Type_Definition => F.New_Access
+                            (Is_All => False,
+                             Target => F.New_Name (+"Element'Class"))),
+                       Result        => Type_Name),
+                    Statements => Stmt);
+            begin
+               Result := F.New_List (Result, Funct);
+            end;
+         end loop;
+
+         return Result;
+      end Element_Casts;
+
+      Program_Elements : constant Ada_Pretty.Node_Access :=
+        F.New_Selected_Name (+"Program.Elements");
+
+      Root : constant Ada_Pretty.Node_Access :=
+        F.New_Package_Body (Program_Elements, Element_Casts (null));
+
+      Unit : constant Ada_Pretty.Node_Access :=
+        F.New_Compilation_Unit
+          (Root,
+           Get_With_Clauses (F'Access, Vector, Is_Limited => False));
+
+      Output : Ada.Wide_Wide_Text_IO.File_Type;
+   begin
+      Open_File (Output, +"Program.Elements", Spec => False);
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (Output,
+         F.To_Text (Unit).Join (Ada.Characters.Wide_Wide_Latin_1.LF)
+         .To_Wide_Wide_String);
+
+      Ada.Wide_Wide_Text_IO.Close (Output);
+   end Write_Elements_Body;
 
    ------------------
    -- Write_Header --
@@ -211,7 +378,6 @@ package body Meta.Writes is
    ------------------------
 
    procedure Write_One_Elements (Item : Meta.Classes.Class) is
-      use type League.Strings.Universal_String;
 
       F : aliased Ada_Pretty.Factory;
 

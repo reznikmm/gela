@@ -18,6 +18,7 @@ begin
       Result    => Class_List);
 
    Meta.Writes.Write_Elements (Class_List);
+   Meta.Writes.Write_Elements_Body (Class_List);
 
    for J in 2 .. Class_List.Last_Index loop
       Meta.Writes.Write_One_Elements (Class_List (J));

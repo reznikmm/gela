@@ -10,6 +10,7 @@ with Meta.Read;
 package Meta.Writes is
 
    procedure Write_Elements (Vector : Meta.Read.Class_Vectors.Vector);
+   procedure Write_Elements_Body (Vector : Meta.Read.Class_Vectors.Vector);
    procedure Write_One_Elements (Item : Meta.Classes.Class);
 
 end Meta.Writes;
