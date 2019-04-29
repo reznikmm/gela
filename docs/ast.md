@@ -1,4 +1,6 @@
-# _Element_
+# Abstract Syntax Tree Elements
+
+## _Element_
 
  * [Pragma]
  * _[Defining_Name]_
@@ -44,7 +46,7 @@
 
 ### Defining_Expanded_Name
 > _[Defining_Name]_
- - Prefix                : _[Expression]_ {[Selected_Component], [Identifier]}
+ - Prefix                : _[Expression]_ {[Selected_Component],[Identifier]}
  - Dot_Token             : Token
  - Selector              : [Defining_Identifier]
 
@@ -55,9 +57,9 @@
 > _[Declaration]_
  - Type_Token            : Token
  - Name                  : [Defining_Identifier]
- - Discriminant_Part     : _[Definition]_? {[Known_Discriminant_Part], [Unknown_Discriminant_Part]}
+ - Discriminant_Part     : _[Definition]_? {[Known_Discriminant_Part],[Unknown_Discriminant_Part]}
  - Is_Token              : Token
- - View                  : _[Definition]_ {_[Type_Definition]_, [Private_Type_Definition], [Private_Extension_Definition], [Incomplete_Type_Definition]}
+ - View                  : _[Definition]_ {_[Type_Definition]_,[Private_Type_Definition],[Private_Extension_Definition],[Incomplete_Type_Definition]}
  - With_Token            : Token?
  - Aspects               : [Aspect_Specification]*
  - Semicolon_Token       : Token
@@ -74,7 +76,7 @@
  - Is_Token              : Token
  - New_Token             : Token?
  - And_Token             : Token?
- - Progenitors           : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors           : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2          : Token?
  - View                  : [Task_Definition]
  - Semicolon_Token       : Token
@@ -89,7 +91,7 @@
  - Aspects               : [Aspect_Specification]*
  - Is_Token              : Token
  - New_Token             : Token?
- - Progenitors           : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors           : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2          : Token?
  - View                  : [Protected_Definition]
  - Semicolon_Token       : Token
@@ -110,7 +112,7 @@
  - Colon_Token                : Token
  - Aliased_Token              : Token?
  - Constant_Token             : Token?
- - Object_Subtype             : _[Definition]_ {[Constrained_Array_Type], [Subtype_Indication], _[Anonymous_Access_Definition]_, [Identifier], [Selected_Component], [Attribute_Reference]}
+ - Object_Subtype             : _[Definition]_ {[Constrained_Array_Type],[Subtype_Indication],_[Anonymous_Access_Definition]_,[Identifier],[Selected_Component],[Attribute_Reference]}
  - Assignment_Token           : Token?
  - Initialization_Expression  : _[Expression]_? {^[Box_Expression]}
  - With_Token                 : Token?
@@ -125,7 +127,7 @@
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
  - New_Token                  : Token?
- - Progenitors                : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2               : Token?
  - Object_Subtype             : [Task_Definition]
  - Semicolon_Token            : Token
@@ -138,7 +140,7 @@
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
  - New_Token                  : Token?
- - Progenitors                : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2               : Token?
  - Object_Subtype             : [Protected_Definition]
  - Semicolon_Token            : Token
@@ -162,7 +164,7 @@
  - Colon_Token                : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Object_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference]}
+ - Object_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Assignment_Token           : Token?
  - Initialization_Expression  : _[Expression]_? {^[Box_Expression]}
  - Semicolon_Token            : Token
@@ -206,7 +208,7 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Procedure_Token            : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
@@ -221,14 +223,14 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Is_Token                   : Token?
  - Result_Expression          : _[Parenthesized_Expression]_?
  - Abstract_Token             : Token?
@@ -245,7 +247,7 @@
  - Out_Token                  : Token?
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Object_Subtype             : _[Element]_ {[Constrained_Array_Type], [Subtype_Indication], _[Anonymous_Access_Definition]_, [Identifier], [Selected_Component], [Attribute_Reference]}
+ - Object_Subtype             : _[Element]_ {[Constrained_Array_Type],[Subtype_Indication],_[Anonymous_Access_Definition]_,[Identifier],[Selected_Component],[Attribute_Reference]}
  - Assignment_Token           : Token?
  - Initialization_Expression  : _[Expression]_? {^[Box_Expression]}
 
@@ -254,20 +256,20 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Procedure_Token            : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Declarative_Part           : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part           : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
- - End_Name                   : _[Expression]_? {[Identifier], [Selected_Component]}
+ - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component]}
  - Semicolon_Token            : Token
 
 ### Function_Body_Declaration
@@ -275,24 +277,24 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Declarative_Part           : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part           : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
- - End_Name                   : _[Expression]_? {[Identifier], [Selected_Component], [Operator_Symbol]}
+ - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component],[Operator_Symbol]}
  - Semicolon_Token            : Token
 
 ### Return_Object_Specification
@@ -301,39 +303,39 @@
  - Colon_Token                : Token
  - Aliased_Token              : Token?
  - Constant_Token             : Token?
- - Object_Subtype             : _[Element]_ {[Subtype_Indication], _[Anonymous_Access_Definition]_}
+ - Object_Subtype             : _[Element]_ {[Subtype_Indication],_[Anonymous_Access_Definition]_}
  - Assignment_Token           : Token?
  - Initialization_Expression  : _[Expression]_? {^[Box_Expression]}
 
 ### Package_Declaration
 > _[Declaration]_
  - Package_Token              : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Visible_Part               : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Visible_Part               : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Private_Token              : Token?
- - Private_Part               : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Private_Part               : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - End_Token                  : Token
- - End_Name                   : _[Expression]_? {[Identifier], [Selected_Component]}
+ - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component]}
  - Semicolon_Token            : Token
  
 ### Package_Body_Declaration
 > _[Declaration]_
  - Package_Token              : Token
  - Body_Token                 : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Declarative_Part           : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part           : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
- - End_Name                   : _[Expression]_? {[Identifier], [Selected_Component]}
+ - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component]}
  - Semicolon_Token            : Token
 
 ### Object_Renaming_Declaration
@@ -342,7 +344,7 @@
  - Colon_Token                : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Object_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Object_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Renames_Token              : Token
  - Renamed_Entity             : _[Expression]_ {^[Box_Expression]}
  - With_Token                 : Token?
@@ -355,7 +357,7 @@
  - Colon_Token                : Token
  - Exception_Token            : Token
  - Renames_Token              : Token
- - Renamed_Entity             : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Renamed_Entity             : _[Expression]_ {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -365,7 +367,7 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Procedure_Token            : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
@@ -380,14 +382,14 @@
  - Not_Token                  : Token?
  - Overriding_Token           : Token?
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Renames_Token              : Token?
  - Renamed_Entity             : _[Expression]_? {^[Box_Expression]}
  - With_Token                 : Token?
@@ -397,9 +399,9 @@
 ### Package_Renaming_Declaration
 > _[Declaration]_
  - Package_Token              : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Renames_Token              : Token
- - Renamed_Entity             : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Renamed_Entity             : _[Expression]_ {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -409,9 +411,9 @@
  - Generic_Token              : Token
  - Generic_Formal_Part        : _[Element]_*
  - Package_Token              : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Renames_Token              : Token
- - Renamed_Entity             : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Renamed_Entity             : _[Expression]_ {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -421,9 +423,9 @@
  - Generic_Token              : Token
  - Generic_Formal_Part        : _[Element]_*
  - Procedure_Token            : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Renames_Token              : Token
- - Renamed_Entity             : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Renamed_Entity             : _[Expression]_ {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -433,9 +435,9 @@
  - Generic_Token              : Token
  - Generic_Formal_Part        : _[Element]_*
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Renames_Token              : Token
- - Renamed_Entity             : _[Expression]_ {[Identifier], [Selected_Component], [Operator_Symbol]}
+ - Renamed_Entity             : _[Expression]_ {[Identifier],[Selected_Component],[Operator_Symbol]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -448,9 +450,9 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Declarative_Part           : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part           : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
@@ -465,7 +467,7 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Protected_Operation_Items  : _[Element]_+ {[Pragma], _[Declaration]_, _[Clause]_}
+ - Protected_Operation_Items  : _[Element]_+ {[Pragma],_[Declaration]_,_[Clause]_}
  - End_Token                  : Token
  - End_Name                   : [Identifier]?
  - Semicolon_Token            : Token
@@ -499,9 +501,9 @@
  - When_Token                 : Token
  - Entry_Barrier              : _[Expression]_ {^[Box_Expression]}
  - Is_Token                   : Token
- - Declarative_Part           : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part           : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
@@ -542,7 +544,7 @@
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Is_Token                   : Token?
  - Separate_Token             : Token?
  - With_Token                 : Token?
@@ -598,25 +600,25 @@
 ### Generic_Package_Declaration
 > _[Declaration]_
  - Generic_Token              : Token
- - Formal_Part                : _[Element]_* {[Pragma], [Use_Clause], [Formal_Object_Declaration], [Formal_Type_Declaration], [Formal_Procedure_Declaration], [Formal_Function_Declaration], [Formal_Package_Declaration]}
+ - Formal_Part                : _[Element]_* {[Pragma],[Use_Clause],[Formal_Object_Declaration],[Formal_Type_Declaration],[Formal_Procedure_Declaration],[Formal_Function_Declaration],[Formal_Package_Declaration]}
  - Package_Token              : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
- - Visible_Part               : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Visible_Part               : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Private_Token              : Token?
- - Private_Part               : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Private_Part               : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - End_Token                  : Token
- - End_Name                   : _[Expression]_? {[Identifier], [Selected_Component]}
+ - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component]}
  - Semicolon_Token            : Token
 
 ### Generic_Procedure_Declaration
 > _[Declaration]_
  - Generic_Token              : Token
- - Formal_Part                : _[Element]_* {[Pragma], [Use_Clause], [Formal_Object_Declaration], [Formal_Type_Declaration], [Formal_Procedure_Declaration], [Formal_Function_Declaration], [Formal_Package_Declaration]}
+ - Formal_Part                : _[Element]_* {[Pragma],[Use_Clause],[Formal_Object_Declaration],[Formal_Type_Declaration],[Formal_Procedure_Declaration],[Formal_Function_Declaration],[Formal_Package_Declaration]}
  - Procedure_Token            : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
@@ -627,16 +629,16 @@
 ### Generic_Function_Declaration
 > _[Declaration]_
  - Generic_Token              : Token
- - Formal_Part                : _[Element]_* {[Pragma], [Use_Clause], [Formal_Object_Declaration], [Formal_Type_Declaration], [Formal_Procedure_Declaration], [Formal_Function_Declaration], [Formal_Package_Declaration]}
+ - Formal_Part                : _[Element]_* {[Pragma],[Use_Clause],[Formal_Object_Declaration],[Formal_Type_Declaration],[Formal_Procedure_Declaration],[Formal_Function_Declaration],[Formal_Package_Declaration]}
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
@@ -644,10 +646,10 @@
 ### Package_Instantiation
 > _[Declaration]_
  - Package_Token              : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Is_Token                   : Token
  - New_Token                  : Token
- - Generic_Package_Name       : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Generic_Package_Name       : _[Expression]_ {[Identifier],[Selected_Component]}
  - Left_Bracket_Token         : Token?
  - Generic_Actual_Part        : [Parameter_Association]*
  - Right_Bracket_Token        : Token?
@@ -660,10 +662,10 @@
  - Not_Token                      : Token?
  - Overriding_Token               : Token?
  - Procedure_Token                : Token
- - Name                           : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name]}
+ - Name                           : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
  - Is_Token                       : Token
  - New_Token                      : Token
- - Generic_Procedure_Name         : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Generic_Procedure_Name         : _[Expression]_ {[Identifier],[Selected_Component]}
  - Left_Bracket_Token             : Token?
  - Generic_Actual_Part            : [Parameter_Association]*
  - Right_Bracket_Token            : Token?
@@ -676,10 +678,10 @@
  - Not_Token                      : Token?
  - Overriding_Token               : Token?
  - Function_Token                 : Token
- - Name                           : _[Defining_Name]_ {[Defining_Identifier], [Defining_Expanded_Name], [Defining_Operator_Symbol]}
+ - Name                           : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
  - Is_Token                       : Token
  - New_Token                      : Token
- - Generic_Function_Name          : _[Expression]_ {[Identifier], [Selected_Component]}
+ - Generic_Function_Name          : _[Expression]_ {[Identifier],[Selected_Component]}
  - Left_Bracket_Token             : Token?
  - Generic_Actual_Part            : [Parameter_Association]*
  - Right_Bracket_Token            : Token?
@@ -695,7 +697,7 @@
  - Out_Token                  : Token?
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Object_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Object_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Assignment_Token           : Token?
  - Initialization_Expression  : _[Expression]_? {^[Box_Expression]}
  - With_Token                 : Token?
@@ -706,7 +708,7 @@
 > _[Declaration]_
  - Type_Token            : Token
  - Name                  : [Defining_Identifier]
- - Discriminant_Part     : _[Definition]_? {[Known_Discriminant_Part], [Unknown_Discriminant_Part]}
+ - Discriminant_Part     : _[Definition]_? {[Known_Discriminant_Part],[Unknown_Discriminant_Part]}
  - Is_Token              : Token
  - View                  : _[Formal_Type_Definition]_
  - With_Token            : Token?
@@ -733,14 +735,14 @@
 > _[Declaration]_
  - With_Token                 : Token
  - Function_Token             : Token
- - Name                       : _[Defining_Name]_ {[Defining_Identifier], [Defining_Operator_Symbol]}
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Operator_Symbol]}
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Is_Token                   : Token?
  - Abstract_Token             : Token?
  - Formal_Subprogram_Default  : _[Expression]_?
@@ -773,7 +775,7 @@
 > _[Definition]_,_[Discrete_Subtype_Definition]_,_[Discrete_Range]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Subtype_Mark               : _[Expression]_ {[Identifier], [Selected_Component], [Attribute_Reference]}
+ - Subtype_Mark               : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Subtype_Constraint         : _[Constraint]_?
 
 ### _Constraint_
@@ -782,7 +784,7 @@
 ### Component_Definition
 > _[Definition]_
  - Aliased_Token              : Token?
- - Subtype_Indication         : _[Element]_ {[Subtype_Indication], _[Anonymous_Access_Definition]_}
+ - Subtype_Indication         : _[Element]_ {[Subtype_Indication],_[Anonymous_Access_Definition]_}
 
 ### _Discrete_Subtype_Definition_
 > _[Definition]_
@@ -805,7 +807,7 @@
 ### Record_Definition
 > _[Definition]_
  - Record_Token      : Token
- - Components        : _[Element]_+ {[Pragma], [Component_Declaration], [Null_Component], [Variant_Part], [Attribute_Definition_Clause]}
+ - Components        : _[Element]_+ {[Pragma],[Component_Declaration],[Null_Component],[Variant_Part],[Attribute_Definition_Clause]}
  - End_Token         : Token
  - Record_Token_2    : Token
 
@@ -827,9 +829,9 @@
 ### Variant
 > _[Definition]_
  - When_Token               : Token
- - Choices                  : _[Element]_+ {_[Expression]_, [Discrete_Range], [Others_Choice]}
+ - Choices                  : _[Element]_+ {_[Expression]_,[Discrete_Range],[Others_Choice]}
  - Arrow_Token              : Token
- - Components               : _[Element]_+ {[Pragma], [Component_Declaration], [Null_Component], [Variant_Part], [Attribute_Definition_Clause]}
+ - Components               : _[Element]_+ {[Pragma],[Component_Declaration],[Null_Component],[Variant_Part],[Attribute_Definition_Clause]}
 
 ### Others_Choice
 > _[Definition]_
@@ -853,7 +855,7 @@
  - New_Token                   : Token
  - Ancestor_Subtype_Indication : [Subtype_Indication]
  - And_Token                   : Token?
- - Progenitors                 : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                 : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                  : Token
  - Private_Token               : Token
 
@@ -863,17 +865,17 @@
 
 ### Task_Definition
 > _[Definition]_
- - Visible_Part       : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Visible_Part       : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Private_Token      : Token
- - Private_Part       : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Private_Part       : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - End_Token          : Token
  - End_Name           : [Identifier]?
 
 ### Protected_Definition
 > _[Definition]_
- - Visible_Part            : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Visible_Part            : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Private_Token           : Token
- - Private_Part            : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Private_Part            : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - End_Token               : Token
  - End_Name                : [Identifier]?
 
@@ -882,7 +884,7 @@
 
 ### Aspect_Specification
 > _[Definition]_
- - Aspect_Mark        : _[Expression]_ {[Identifier], [Attribute_Reference]}
+ - Aspect_Mark        : _[Expression]_ {[Identifier],[Attribute_Reference]}
  - Arrow_Token        : Token
  - Aspect_Definition  : _[Expression]_ {^[Box_Expression]}
 
@@ -944,7 +946,7 @@
 > _[Expression]_
  - Prefix                    : _[Expression]_ {^[Box_Expression]}
  - Dot_Token                 : Token
- - Selector                  : _[Expression]_ {[Identifier], [Character_Literal], [Operator_Symbol]}
+ - Selector                  : _[Expression]_ {[Identifier],[Character_Literal],[Operator_Symbol]}
 
 ### Attribute_Reference
 > _[Expression]_
@@ -989,7 +991,7 @@
  - Membership_Test_Expression : _[Expression]_ {^[Box_Expression]}
  - Not_Token                  : Token?
  - In_Token                   : Token
- - Membership_Test_Choices    : _[Element]_+ {[Simple_Expression_Range], [Attribute_Reference], ^[Membership_Test], ^[Box_Expression]}
+ - Membership_Test_Choices    : _[Element]_+ {[Simple_Expression_Range],[Attribute_Reference],^[Membership_Test],^[Box_Expression]}
 
 ### Null_Literal
 > _[Expression]_
@@ -1010,14 +1012,14 @@
 
 ### Type_Conversion
 > _[Expression]_
- - Converted_Subtype_Mark  : _[Expression]_ {[Identifier], [Selected_Component], [Attribute_Reference]}
+ - Converted_Subtype_Mark  : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Left_Bracket_Token      : Token
  - Converted_Expression    : _[Expression]_ {^[Box_Expression]}
  - Right_Bracket_Token     : Token
 
 ### Qualified_Expression
 > _[Expression]_
- - Qualified_Subtype_Mark  : _[Expression]_ {[Identifier], [Selected_Component], [Attribute_Reference]}
+ - Qualified_Subtype_Mark  : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Apostrophe_Token        : Token
  - Left_Bracket_Token      : Token
  - Qualified_Expression    : _[Expression]_ {^[Box_Expression]}
@@ -1071,19 +1073,19 @@
 
 ### Record_Component_Association
 > _[Association]_
- - Choices                     : _[Element]_* {[Identifier], [Others_Choice]}
+ - Choices                     : _[Element]_* {[Identifier],[Others_Choice]}
  - Arrow_Token                 : Token?
  - Component_Expression        : _[Expression]_?
 
 ### Array_Component_Association
 > _[Association]_
- - Choices                     : _[Element]_* {_[Expression]_, [Subtype_Indication], _[Discrete_Range]_, [Others_Choice]}
+ - Choices                     : _[Element]_* {_[Expression]_,[Subtype_Indication],_[Discrete_Range]_,[Others_Choice]}
  - Arrow_Token                 : Token?
  - Component_Expression        : _[Expression]_?
 
 ### Parameter_Association
 > _[Association]_
- - Formal_Parameter : _[Expression]_? {[Identifier], [Operator_Symbol]}
+ - Formal_Parameter : _[Expression]_? {[Identifier],[Operator_Symbol]}
  - Arrow_Token      : Token?
  - Actual_Parameter : _[Expression]_ {^[Box_Expression]}
 
@@ -1107,10 +1109,10 @@
  - If_Token                   : Token
  - Condition_Expression       : _[Expression]_ {^[Box_Expression]}
  - Then_Token                 : Token
- - Then_Statements            : _[Element]_+ {[Pragma], _[Statement]_}
+ - Then_Statements            : _[Element]_+ {[Pragma],_[Statement]_}
  - Elsif_Paths                : [Elsif_Path]*
  - Else_Token                 : Token?
- - Else_Statements            : _[Element]_* {[Pragma], _[Statement]_}
+ - Else_Statements            : _[Element]_* {[Pragma],_[Statement]_}
  - End_Token                  : Token
  - If_Token_2                 : Token
  - Semicolon_Token            : Token
@@ -1130,7 +1132,7 @@
  - Statement_Identifier       : [Defining_Identifier]?
  - Colon_Token                : Token?
  - Loop_Token                 : Token
- - Loop_Statements            : _[Element]_+ {[Pragma], _[Statement]_}
+ - Loop_Statements            : _[Element]_+ {[Pragma],_[Statement]_}
  - End_Token                  : Token
  - Loop_Token_2               : Token
  - Statement_Identifier       : [Identifier]?
@@ -1143,7 +1145,7 @@
  - While_Token                : Token
  - While_Condition            : _[Expression]_ {^[Box_Expression]}
  - Loop_Token                 : Token
- - Loop_Statements            : _[Element]_+ {[Pragma], _[Statement]_}
+ - Loop_Statements            : _[Element]_+ {[Pragma],_[Statement]_}
  - End_Token                  : Token
  - Loop_Token_2               : Token
  - Statement_Identifier       : [Identifier]?
@@ -1158,7 +1160,7 @@
  - Generalized_Iterator         : [Generalized_Iterator_Specification]?
  - Element_Iterator             : [Element_Iterator_Specification]?
  - Loop_Token                   : Token
- - Loop_Statements              : _[Element]_+ {[Pragma], _[Statement]_}
+ - Loop_Statements              : _[Element]_+ {[Pragma],_[Statement]_}
  - End_Token                    : Token
  - Loop_Token_2                 : Token
  - Statement_Identifier         : [Identifier]?
@@ -1169,9 +1171,9 @@
  - Statement_Identifier         : [Defining_Identifier]?
  - Colon_Token                  : Token?
  - Declare_Token                : Token?
- - Declarative_Part             : _[Element]_* {[Pragma], _[Declaration]_, _[Clause]_}
+ - Declarative_Part             : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
  - Begin_Token                  : Token
- - Statements                   : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                   : _[Element]_+ {[Pragma],_[Statement]_}
  - Exception_Token              : Token?
  - Exception_Handlers           : [Exception_Handler]*
  - End_Token                    : Token
@@ -1211,7 +1213,7 @@
  - Return_Token                 : Token
  - Return_Object_Specification  : [Return_Object_Specification]
  - Do_Token                     : Token?
- - Extended_Return_Statements   : _[Element]_* {[Pragma], _[Statement]_}
+ - Extended_Return_Statements   : _[Element]_* {[Pragma],_[Statement]_}
  - Exception_Token              : Token?
  - Exception_Handlers           : [Exception_Handler]*
  - End_Token                    : Token?
@@ -1229,7 +1231,7 @@
  - Accept_Parameters            : [Parameter_Specification]*
  - Right_Bracket_Token_2        : Token?
  - Do_Token                     : Token?
- - Accept_Body_Statements       : _[Element]_* {[Pragma], _[Statement]_}
+ - Accept_Body_Statements       : _[Element]_* {[Pragma],_[Statement]_}
  - Exception_Token              : Token?
  - Exception_Handlers           : [Exception_Handler]*
  - End_Token                    : Token?
@@ -1291,27 +1293,27 @@
  - Elsif_Token                : Token
  - Condition_Expression       : _[Expression]_ {^[Box_Expression]}
  - Then_Token                 : Token
- - Then_Statements            : _[Element]_+ {[Pragma], _[Statement]_}
+ - Then_Statements            : _[Element]_+ {[Pragma],_[Statement]_}
 
 ### Case_Path
 > _[Path]_
  - When_Token                 : Token
  - Variant_Choices            : _[Element]_+
  - Arrow_Token                : Token?
- - Sequence_Of_Statements     : _[Element]_+ {[Pragma], _[Statement]_}
+ - Sequence_Of_Statements     : _[Element]_+ {[Pragma],_[Statement]_}
 
 ### Select_Path
 > _[Path]_
  - When_Token                 : Token
  - Guard                      : _[Expression]_? {^[Box_Expression]}
  - Arrow_Token                : Token?
- - Sequence_Of_Statements     : _[Element]_+ {[Pragma], _[Statement]_}
+ - Sequence_Of_Statements     : _[Element]_+ {[Pragma],_[Statement]_}
 
 ### Then_Abort_Path
 > _[Path]_
  - Then_Token                 : Token
  - Abort_Token                : Token
- - Sequence_Of_Statements     : _[Element]_+ {[Pragma], _[Statement]_}
+ - Sequence_Of_Statements     : _[Element]_+ {[Pragma],_[Statement]_}
 
 ### Case_Expression_Path
 > _[Path]_
@@ -1358,9 +1360,6 @@
  - Component_Clause_Range     : [Simple_Expression_Range]
  - Semicolon_Token            : Token
 
-## _Type_Definition_
-> _[Definition]_
-
 ### Derived_Type
 > _[Type_Definition]_
  - Abstract_Token             : Token?
@@ -1375,7 +1374,7 @@
  - New_Token                  : Token
  - Parent_Subtype_Indication  : _[Expression]_ {^[Box_Expression]}
  - And_Token                  : Token?
- - Progenitors                : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                 : Token
  - Record_Definition          : _[Definition]_
 
@@ -1451,7 +1450,7 @@
  - Synchronized_Token            : Token?
  - Interface_Token               : Token?
  - And_Token                     : Token?
- - Progenitors                   : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                   : _[Expression]_* {[Identifier],[Selected_Component]}
 
 ### Object_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
@@ -1474,7 +1473,7 @@
  - Return_Token               : Token
  - Not_Token                  : Token?
  - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier], [Selected_Component], [Attribute_Reference], _[Anonymous_Access_Definition]_}
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
 
 ### Function_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
@@ -1486,9 +1485,6 @@
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
-
-## _Formal_Type_Definition_
-> _[Definition]_
 
 ### Formal_Private_Type_Definition
 > _[Formal_Type_Definition]_
@@ -1505,7 +1501,7 @@
  - Private_Token              : Token
  - Subtype_Mark               : _[Expression]_ {^[Box_Expression]}
  - And_Token                  : Token?
- - Progenitors                : _[Expression]_* {[Identifier], [Selected_Component]}
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Private_Token              : Token?
 
@@ -1548,9 +1544,6 @@
 ## _Access_Type_
 > _[Type_Definition]_
 
-## _Constraint_
-> _[Definition]_
-
 ### Range_Attribute_Reference
 > _[Constraint]_,_[Discrete_Subtype_Definition]_,_[Discrete_Range]_
  - Range_Attribute   : [Attribute_Reference]
@@ -1586,9 +1579,6 @@
  - Left_Bracket_Token        : Token?
  - Discriminant_Associations : [Discriminant_Association]+
  - Right_Bracket_Token       : Token?
-
-## _Representation_Clause_
-> _[Clause]_
 
 ### Attribute_Definition_Clause
 > _[Representation_Clause]_
@@ -1635,7 +1625,7 @@
  - Colon_Token                      : Token?
  - Choices                          : _[Element]_+
  - Arrow_Token                      : Token
- - Statements                       : _[Element]_+ {[Pragma], _[Statement]_}
+ - Statements                       : _[Element]_+ {[Pragma],_[Statement]_}
 
 [Abort_Statement]: ast.md#Abort_Statement
 [Accept_Statement]: ast.md#Accept_Statement
