@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Array_Aggregates is
 
@@ -15,5 +16,13 @@ package Program.Elements.Array_Aggregates is
 
    type Array_Aggregate_Access is access all Array_Aggregate'Class
      with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Array_Aggregate)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Array_Aggregate)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Array_Aggregates;

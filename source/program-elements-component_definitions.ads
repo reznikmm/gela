@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
 
 package Program.Elements.Component_Definitions is
 
@@ -15,5 +16,13 @@ package Program.Elements.Component_Definitions is
 
    type Component_Definition_Access is access all Component_Definition'Class
      with Storage_Size => 0;
+
+   not overriding function Aliased_Token
+    (Self : Component_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Subtype_Indication
+    (Self : Component_Definition)
+      return Program.Elements.Element_Access is abstract;
 
 end Program.Elements.Component_Definitions;

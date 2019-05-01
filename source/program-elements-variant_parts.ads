@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
+with Program.Elements.Identifiers;
 
 package Program.Elements.Variant_Parts is
 
@@ -15,5 +17,29 @@ package Program.Elements.Variant_Parts is
 
    type Variant_Part_Access is access all Variant_Part'Class
      with Storage_Size => 0;
+
+   not overriding function Case_Token
+    (Self : Variant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Discriminant_Direct_Name
+    (Self : Variant_Part)
+      return Program.Elements.Identifiers.Identifier_Access is abstract;
+
+   not overriding function Is_Token
+    (Self : Variant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Token
+    (Self : Variant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Case_Token_2
+    (Self : Variant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Variant_Part)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Variant_Parts;

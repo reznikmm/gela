@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Clauses;
+with Program.Tokens;
 
 package Program.Elements.With_Clauses is
 
@@ -14,5 +15,21 @@ package Program.Elements.With_Clauses is
 
    type With_Clause_Access is access all With_Clause'Class
      with Storage_Size => 0;
+
+   not overriding function Limited_Token
+    (Self : With_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Private_Token
+    (Self : With_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token
+    (Self : With_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : With_Clause)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.With_Clauses;

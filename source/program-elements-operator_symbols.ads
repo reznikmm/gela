@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Operator_Symbols is
 
@@ -15,5 +16,9 @@ package Program.Elements.Operator_Symbols is
 
    type Operator_Symbol_Access is access all Operator_Symbol'Class
      with Storage_Size => 0;
+
+   not overriding function Operator_Symbol_Token
+    (Self : Operator_Symbol)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Operator_Symbols;

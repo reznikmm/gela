@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Numeric_Literals is
 
@@ -15,5 +16,9 @@ package Program.Elements.Numeric_Literals is
 
    type Numeric_Literal_Access is access all Numeric_Literal'Class
      with Storage_Size => 0;
+
+   not overriding function Numeric_Literal_Token
+    (Self : Numeric_Literal)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Numeric_Literals;

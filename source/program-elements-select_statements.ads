@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
 
 package Program.Elements.Select_Statements is
 
@@ -15,5 +16,21 @@ package Program.Elements.Select_Statements is
 
    type Select_Statement_Access is access all Select_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Select_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Select_Token_2
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Select_Statements;

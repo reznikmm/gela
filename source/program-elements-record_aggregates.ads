@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Record_Aggregates is
 
@@ -15,5 +16,13 @@ package Program.Elements.Record_Aggregates is
 
    type Record_Aggregate_Access is access all Record_Aggregate'Class
      with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Record_Aggregate)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Record_Aggregate)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Record_Aggregates;

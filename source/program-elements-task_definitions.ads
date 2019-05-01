@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
+with Program.Elements.Identifiers;
 
 package Program.Elements.Task_Definitions is
 
@@ -15,5 +17,17 @@ package Program.Elements.Task_Definitions is
 
    type Task_Definition_Access is access all Task_Definition'Class
      with Storage_Size => 0;
+
+   not overriding function Private_Token
+    (Self : Task_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Token
+    (Self : Task_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Name
+    (Self : Task_Definition)
+      return Program.Elements.Identifiers.Identifier_Access is abstract;
 
 end Program.Elements.Task_Definitions;

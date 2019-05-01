@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Defining_Names;
+with Program.Tokens;
 
 package Program.Elements.Defining_Character_Literals is
 
@@ -15,5 +16,9 @@ package Program.Elements.Defining_Character_Literals is
 
    type Defining_Character_Literal_Access is
      access all Defining_Character_Literal'Class with Storage_Size => 0;
+
+   not overriding function Character_Literal_Token
+    (Self : Defining_Character_Literal)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Defining_Character_Literals;

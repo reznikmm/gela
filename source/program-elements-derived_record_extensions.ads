@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
+with Program.Tokens;
+with Program.Elements.Expressions;
+with Program.Elements.Definitions;
 
 package Program.Elements.Derived_Record_Extensions is
 
@@ -15,5 +18,33 @@ package Program.Elements.Derived_Record_Extensions is
 
    type Derived_Record_Extension_Access is
      access all Derived_Record_Extension'Class with Storage_Size => 0;
+
+   not overriding function Abstract_Token
+    (Self : Derived_Record_Extension)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Limited_Token
+    (Self : Derived_Record_Extension)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Derived_Record_Extension)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parent_Subtype_Indication
+    (Self : Derived_Record_Extension)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function And_Token
+    (Self : Derived_Record_Extension)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Derived_Record_Extension)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Record_Definition
+    (Self : Derived_Record_Extension)
+      return Program.Elements.Definitions.Definition_Access is abstract;
 
 end Program.Elements.Derived_Record_Extensions;

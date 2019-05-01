@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Identifiers is
 
@@ -15,5 +16,9 @@ package Program.Elements.Identifiers is
 
    type Identifier_Access is access all Identifier'Class
      with Storage_Size => 0;
+
+   not overriding function Identifier_Token
+    (Self : Identifier)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Identifiers;

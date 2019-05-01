@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Formal_Type_Definitions;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Formal_Derived_Type_Definitions is
 
@@ -16,5 +18,37 @@ package Program.Elements.Formal_Derived_Type_Definitions is
 
    type Formal_Derived_Type_Definition_Access is
      access all Formal_Derived_Type_Definition'Class with Storage_Size => 0;
+
+   not overriding function Abstract_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Limited_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Synchronized_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Subtype_Mark
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function And_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Private_Token
+    (Self : Formal_Derived_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Formal_Derived_Type_Definitions;

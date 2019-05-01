@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Formal_Type_Definitions;
+with Program.Tokens;
 
 package Program.Elements.Formal_Discrete_Type_Definitions is
 
@@ -16,5 +17,17 @@ package Program.Elements.Formal_Discrete_Type_Definitions is
 
    type Formal_Discrete_Type_Definition_Access is
      access all Formal_Discrete_Type_Definition'Class with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Formal_Discrete_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Box_Token
+    (Self : Formal_Discrete_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Formal_Discrete_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Formal_Discrete_Type_Definitions;

@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Explicit_Dereferences is
 
@@ -15,5 +16,17 @@ package Program.Elements.Explicit_Dereferences is
 
    type Explicit_Dereference_Access is access all Explicit_Dereference'Class
      with Storage_Size => 0;
+
+   not overriding function Prefix
+    (Self : Explicit_Dereference)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Dot_Token
+    (Self : Explicit_Dereference)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function All_Token
+    (Self : Explicit_Dereference)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Explicit_Dereferences;

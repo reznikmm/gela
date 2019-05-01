@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Modular_Types is
 
@@ -15,5 +17,13 @@ package Program.Elements.Modular_Types is
 
    type Modular_Type_Access is access all Modular_Type'Class
      with Storage_Size => 0;
+
+   not overriding function Mod_Token
+    (Self : Modular_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Mod_Static_Expression
+    (Self : Modular_Type)
+      return Program.Elements.Expressions.Expression_Access is abstract;
 
 end Program.Elements.Modular_Types;

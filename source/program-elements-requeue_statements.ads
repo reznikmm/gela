@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Requeue_Statements is
 
@@ -15,5 +17,25 @@ package Program.Elements.Requeue_Statements is
 
    type Requeue_Statement_Access is access all Requeue_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Requeue_Token
+    (Self : Requeue_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Requeue_Entry_Name
+    (Self : Requeue_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Requeue_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Abort_Token
+    (Self : Requeue_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Requeue_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Requeue_Statements;

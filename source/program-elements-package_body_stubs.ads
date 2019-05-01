@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Tokens;
+with Program.Elements.Defining_Identifiers;
 
 package Program.Elements.Package_Body_Stubs is
 
@@ -15,5 +17,34 @@ package Program.Elements.Package_Body_Stubs is
 
    type Package_Body_Stub_Access is access all Package_Body_Stub'Class
      with Storage_Size => 0;
+
+   not overriding function Package_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Body_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Name
+    (Self : Package_Body_Stub)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
+
+   not overriding function Is_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Separate_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Package_Body_Stub)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Package_Body_Stubs;

@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
+with Program.Tokens;
+with Program.Elements.Discrete_Subtype_Definitions;
 
 package Program.Elements.Loop_Parameter_Specifications is
 
@@ -15,5 +18,23 @@ package Program.Elements.Loop_Parameter_Specifications is
 
    type Loop_Parameter_Specification_Access is
      access all Loop_Parameter_Specification'Class with Storage_Size => 0;
+
+   not overriding function Name
+    (Self : Loop_Parameter_Specification)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
+
+   not overriding function In_Token
+    (Self : Loop_Parameter_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Reverse_Token
+    (Self : Loop_Parameter_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Object_Subtype
+    (Self : Loop_Parameter_Specification)
+      return Program.Elements.Discrete_Subtype_Definitions
+          .Discrete_Subtype_Definition_Access is abstract;
 
 end Program.Elements.Loop_Parameter_Specifications;

@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Paths;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Select_Paths is
 
@@ -14,5 +16,17 @@ package Program.Elements.Select_Paths is
 
    type Select_Path_Access is access all Select_Path'Class
      with Storage_Size => 0;
+
+   not overriding function When_Token
+    (Self : Select_Path)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Guard
+    (Self : Select_Path)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Select_Path)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Select_Paths;

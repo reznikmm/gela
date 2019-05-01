@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.String_Literals is
 
@@ -15,5 +16,9 @@ package Program.Elements.String_Literals is
 
    type String_Literal_Access is access all String_Literal'Class
      with Storage_Size => 0;
+
+   not overriding function String_Literal_Token
+    (Self : String_Literal)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.String_Literals;

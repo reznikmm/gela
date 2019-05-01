@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Tokens;
+with Program.Elements.Defining_Names;
+with Program.Elements.Expressions;
 
 package Program.Elements.Function_Instantiations is
 
@@ -15,5 +18,49 @@ package Program.Elements.Function_Instantiations is
 
    type Function_Instantiation_Access is
      access all Function_Instantiation'Class with Storage_Size => 0;
+
+   not overriding function Not_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Overriding_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Function_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Name
+    (Self : Function_Instantiation)
+      return Program.Elements.Defining_Names.Defining_Name_Access is abstract;
+
+   not overriding function Is_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Generic_Function_Name
+    (Self : Function_Instantiation)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Function_Instantiation)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Function_Instantiations;

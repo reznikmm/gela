@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Constraints;
+with Program.Tokens;
 
 package Program.Elements.Discriminant_Constraints is
 
@@ -15,5 +16,13 @@ package Program.Elements.Discriminant_Constraints is
 
    type Discriminant_Constraint_Access is
      access all Discriminant_Constraint'Class with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Discriminant_Constraint)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Discriminant_Constraint)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Discriminant_Constraints;

@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
 
 package Program.Elements.Unknown_Discriminant_Parts is
 
@@ -15,5 +16,17 @@ package Program.Elements.Unknown_Discriminant_Parts is
 
    type Unknown_Discriminant_Part_Access is
      access all Unknown_Discriminant_Part'Class with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Unknown_Discriminant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Box_Token
+    (Self : Unknown_Discriminant_Part)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Unknown_Discriminant_Part)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Unknown_Discriminant_Parts;

@@ -6,6 +6,7 @@
 
 with Program.Elements.Type_Definitions;
 with Program.Elements.Formal_Type_Definitions;
+with Program.Tokens;
 
 package Program.Elements.Interface_Types is
 
@@ -17,5 +18,29 @@ package Program.Elements.Interface_Types is
 
    type Interface_Type_Access is access all Interface_Type'Class
      with Storage_Size => 0;
+
+   not overriding function Limited_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Task_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Protected_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Synchronized_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Interface_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function And_Token
+    (Self : Interface_Type)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Interface_Types;

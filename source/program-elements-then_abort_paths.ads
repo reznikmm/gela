@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Paths;
+with Program.Tokens;
 
 package Program.Elements.Then_Abort_Paths is
 
@@ -14,5 +15,13 @@ package Program.Elements.Then_Abort_Paths is
 
    type Then_Abort_Path_Access is access all Then_Abort_Path'Class
      with Storage_Size => 0;
+
+   not overriding function Then_Token
+    (Self : Then_Abort_Path)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Abort_Token
+    (Self : Then_Abort_Path)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Then_Abort_Paths;

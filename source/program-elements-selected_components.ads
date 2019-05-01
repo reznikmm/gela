@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Selected_Components is
 
@@ -15,5 +16,17 @@ package Program.Elements.Selected_Components is
 
    type Selected_Component_Access is access all Selected_Component'Class
      with Storage_Size => 0;
+
+   not overriding function Prefix
+    (Self : Selected_Component)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Dot_Token
+    (Self : Selected_Component)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Selector
+    (Self : Selected_Component)
+      return Program.Elements.Expressions.Expression_Access is abstract;
 
 end Program.Elements.Selected_Components;

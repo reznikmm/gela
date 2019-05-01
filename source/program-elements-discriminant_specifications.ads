@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Discriminant_Specifications is
 
@@ -15,5 +17,33 @@ package Program.Elements.Discriminant_Specifications is
 
    type Discriminant_Specification_Access is
      access all Discriminant_Specification'Class with Storage_Size => 0;
+
+   not overriding function Colon_Token
+    (Self : Discriminant_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Not_Token
+    (Self : Discriminant_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Null_Token
+    (Self : Discriminant_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Object_Subtype
+    (Self : Discriminant_Specification)
+      return Program.Elements.Element_Access is abstract;
+
+   not overriding function Assignment_Token
+    (Self : Discriminant_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Initialization_Expression
+    (Self : Discriminant_Specification)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Discriminant_Specification)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Discriminant_Specifications;

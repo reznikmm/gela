@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Representation_Clauses;
+with Program.Tokens;
+with Program.Elements.Identifiers;
+with Program.Elements.Expressions;
 
 package Program.Elements.At_Clauses is
 
@@ -15,5 +18,29 @@ package Program.Elements.At_Clauses is
        and Program.Elements.Representation_Clauses.Representation_Clause;
 
    type At_Clause_Access is access all At_Clause'Class with Storage_Size => 0;
+
+   not overriding function For_Token
+    (Self : At_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Name
+    (Self : At_Clause)
+      return Program.Elements.Identifiers.Identifier_Access is abstract;
+
+   not overriding function Use_Token
+    (Self : At_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function At_Token
+    (Self : At_Clause)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Expression
+    (Self : At_Clause)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : At_Clause)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.At_Clauses;

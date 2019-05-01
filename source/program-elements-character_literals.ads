@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Character_Literals is
 
@@ -15,5 +16,9 @@ package Program.Elements.Character_Literals is
 
    type Character_Literal_Access is access all Character_Literal'Class
      with Storage_Size => 0;
+
+   not overriding function Character_Literal_Token
+    (Self : Character_Literal)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Character_Literals;

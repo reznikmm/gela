@@ -7,6 +7,7 @@
 with Program.Elements.Access_Types;
 with Program.Elements.Formal_Access_Types;
 with Program.Elements.Anonymous_Access_Definitions;
+with Program.Tokens;
 
 package Program.Elements.Procedure_Access_Types is
 
@@ -20,5 +21,33 @@ package Program.Elements.Procedure_Access_Types is
 
    type Procedure_Access_Type_Access is access all Procedure_Access_Type'Class
      with Storage_Size => 0;
+
+   not overriding function Not_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Null_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Access_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Protected_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Procedure_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Procedure_Access_Type)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Procedure_Access_Types;

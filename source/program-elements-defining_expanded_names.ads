@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Defining_Names;
+with Program.Elements.Expressions;
+with Program.Tokens;
+with Program.Elements.Defining_Identifiers;
 
 package Program.Elements.Defining_Expanded_Names is
 
@@ -15,5 +18,18 @@ package Program.Elements.Defining_Expanded_Names is
 
    type Defining_Expanded_Name_Access is
      access all Defining_Expanded_Name'Class with Storage_Size => 0;
+
+   not overriding function Prefix
+    (Self : Defining_Expanded_Name)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Dot_Token
+    (Self : Defining_Expanded_Name)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Selector
+    (Self : Defining_Expanded_Name)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
 
 end Program.Elements.Defining_Expanded_Names;

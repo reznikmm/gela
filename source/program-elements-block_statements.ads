@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Elements.Defining_Identifiers;
+with Program.Tokens;
+with Program.Elements.Identifiers;
 
 package Program.Elements.Block_Statements is
 
@@ -15,5 +18,38 @@ package Program.Elements.Block_Statements is
 
    type Block_Statement_Access is access all Block_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Statement_Identifier
+    (Self : Block_Statement)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
+
+   not overriding function Colon_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Declare_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Begin_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Exception_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Statement_Identifier
+    (Self : Block_Statement)
+      return Program.Elements.Identifiers.Identifier_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Block_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Block_Statements;

@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Delay_Statements is
 
@@ -15,5 +17,21 @@ package Program.Elements.Delay_Statements is
 
    type Delay_Statement_Access is access all Delay_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Delay_Token
+    (Self : Delay_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Until_Token
+    (Self : Delay_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Delay_Expression
+    (Self : Delay_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Delay_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Delay_Statements;

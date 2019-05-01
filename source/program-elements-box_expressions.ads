@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Box_Expressions is
 
@@ -15,5 +16,9 @@ package Program.Elements.Box_Expressions is
 
    type Box_Expression_Access is access all Box_Expression'Class
      with Storage_Size => 0;
+
+   not overriding function Box_Token
+    (Self : Box_Expression)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Box_Expressions;

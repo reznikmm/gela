@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
 
 package Program.Elements.Enumeration_Literal_Specifications is
 
@@ -15,5 +16,10 @@ package Program.Elements.Enumeration_Literal_Specifications is
 
    type Enumeration_Literal_Specification_Access is
      access all Enumeration_Literal_Specification'Class with Storage_Size => 0;
+
+   not overriding function Name
+    (Self : Enumeration_Literal_Specification)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
 
 end Program.Elements.Enumeration_Literal_Specifications;

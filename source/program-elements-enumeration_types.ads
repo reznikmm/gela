@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
+with Program.Tokens;
 
 package Program.Elements.Enumeration_Types is
 
@@ -15,5 +16,13 @@ package Program.Elements.Enumeration_Types is
 
    type Enumeration_Type_Access is access all Enumeration_Type'Class
      with Storage_Size => 0;
+
+   not overriding function Left_Bracket_Token
+    (Self : Enumeration_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Enumeration_Type)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Enumeration_Types;

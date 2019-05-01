@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Derived_Types is
 
@@ -15,5 +17,21 @@ package Program.Elements.Derived_Types is
 
    type Derived_Type_Access is access all Derived_Type'Class
      with Storage_Size => 0;
+
+   not overriding function Abstract_Token
+    (Self : Derived_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Limited_Token
+    (Self : Derived_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Derived_Type)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parent_Subtype_Indication
+    (Self : Derived_Type)
+      return Program.Elements.Expressions.Expression_Access is abstract;
 
 end Program.Elements.Derived_Types;

@@ -5,6 +5,10 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
+with Program.Tokens;
+with Program.Elements.Subtype_Indications;
+with Program.Elements.Expressions;
 
 package Program.Elements.Element_Iterator_Specifications is
 
@@ -15,5 +19,31 @@ package Program.Elements.Element_Iterator_Specifications is
 
    type Element_Iterator_Specification_Access is
      access all Element_Iterator_Specification'Class with Storage_Size => 0;
+
+   not overriding function Name
+    (Self : Element_Iterator_Specification)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
+
+   not overriding function Colon_Token
+    (Self : Element_Iterator_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Subtype_Indication
+    (Self : Element_Iterator_Specification)
+      return Program.Elements.Subtype_Indications.Subtype_Indication_Access
+     is abstract;
+
+   not overriding function Of_Token
+    (Self : Element_Iterator_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Reverse_Token
+    (Self : Element_Iterator_Specification)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Iterable_Name
+    (Self : Element_Iterator_Specification)
+      return Program.Elements.Expressions.Expression_Access is abstract;
 
 end Program.Elements.Element_Iterator_Specifications;

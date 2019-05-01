@@ -5,6 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Tokens;
+with Program.Elements.Defining_Identifiers;
+with Program.Elements.Task_Definitions;
 
 package Program.Elements.Single_Task_Declarations is
 
@@ -15,5 +18,39 @@ package Program.Elements.Single_Task_Declarations is
 
    type Single_Task_Declaration_Access is
      access all Single_Task_Declaration'Class with Storage_Size => 0;
+
+   not overriding function Task_Token
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Name
+    (Self : Single_Task_Declaration)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
+
+   not overriding function With_Token
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Is_Token
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function With_Token_2
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Object_Subtype
+    (Self : Single_Task_Declaration)
+      return Program.Elements.Task_Definitions.Task_Definition_Access
+     is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Single_Task_Declaration)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Single_Task_Declarations;

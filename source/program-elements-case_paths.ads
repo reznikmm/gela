@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Paths;
+with Program.Tokens;
 
 package Program.Elements.Case_Paths is
 
@@ -13,5 +14,13 @@ package Program.Elements.Case_Paths is
    type Case_Path is limited interface and Program.Elements.Paths.Path;
 
    type Case_Path_Access is access all Case_Path'Class with Storage_Size => 0;
+
+   not overriding function When_Token
+    (Self : Case_Path)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Case_Path)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Case_Paths;

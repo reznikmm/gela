@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Assignment_Statements is
 
@@ -15,5 +17,21 @@ package Program.Elements.Assignment_Statements is
 
    type Assignment_Statement_Access is access all Assignment_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Variable_Name
+    (Self : Assignment_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Assignment_Token
+    (Self : Assignment_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Expression
+    (Self : Assignment_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Assignment_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Assignment_Statements;

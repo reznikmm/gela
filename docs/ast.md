@@ -228,7 +228,7 @@
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
- - Not_Token                  : Token?
+ - Not_Token_2                : Token?
  - Null_Token                 : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Is_Token                   : Token?
@@ -282,7 +282,7 @@
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
- - Not_Token                  : Token?
+ - Not_Token_2                : Token?
  - Null_Token                 : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - With_Token                 : Token?
@@ -387,7 +387,7 @@
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
- - Not_Token                  : Token?
+ - Not_Token_2                : Token?
  - Null_Token                 : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Renames_Token              : Token?
@@ -542,7 +542,7 @@
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
  - Return_Token               : Token
- - Not_Token                  : Token?
+ - Not_Token_2                : Token?
  - Null_Token                 : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
  - Is_Token                   : Token?
@@ -727,7 +727,7 @@
  - Abstract_Token             : Token?
  - Null_Token                 : Token?
  - Formal_Subprogram_Default  : _[Expression]_?
- - With_Token                 : Token?
+ - With_Token_2               : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
 
@@ -746,7 +746,7 @@
  - Is_Token                   : Token?
  - Abstract_Token             : Token?
  - Formal_Subprogram_Default  : _[Expression]_?
- - With_Token                 : Token?
+ - With_Token_2               : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
 
@@ -761,7 +761,7 @@
  - Left_Bracket_Token         : Token?
  - Generic_Actual_Part        : [Parameter_Association]*
  - Right_Bracket_Token        : Token?
- - With_Token                 : Token?
+ - With_Token_2               : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
 
@@ -1012,17 +1012,17 @@
 
 ### Type_Conversion
 > _[Expression]_
- - Converted_Subtype_Mark  : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
+ - Subtype_Mark            : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Left_Bracket_Token      : Token
- - Converted_Expression    : _[Expression]_ {^[Box_Expression]}
+ - Operand                 : _[Expression]_ {^[Box_Expression]}
  - Right_Bracket_Token     : Token
 
 ### Qualified_Expression
 > _[Expression]_
- - Qualified_Subtype_Mark  : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
+ - Subtype_Mark            : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Apostrophe_Token        : Token
  - Left_Bracket_Token      : Token
- - Qualified_Expression    : _[Expression]_ {^[Box_Expression]}
+ - Operand                 : _[Expression]_ {^[Box_Expression]}
  - Right_Bracket_Token     : Token
 
 ### Allocator
@@ -1037,7 +1037,7 @@
 ### Case_Expression
 > _[Expression]_
  - Case_Token                 : Token
- - Case_Expression            : _[Expression]_ {^[Box_Expression]}
+ - Selecting_Expression       : _[Expression]_ {^[Box_Expression]}
  - Is_Token                   : Token
  - Case_Expression_Paths      : [Case_Expression_Path]+
 
@@ -1120,7 +1120,7 @@
 ### Case_Statement
 > _[Statement]_
  - Case_Token                 : Token
- - Case_Expression            : _[Expression]_ {^[Box_Expression]}
+ - Selecting_Expression       : _[Expression]_ {^[Box_Expression]}
  - Is_Token                   : Token
  - Case_Statement_Paths       : [Case_Path]+
  - End_Token                  : Token
@@ -1470,10 +1470,6 @@
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
- - Return_Token               : Token
- - Not_Token                  : Token?
- - Null_Token                 : Token?
- - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
 
 ### Function_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
@@ -1485,6 +1481,10 @@
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
+ - Return_Token               : Token
+ - Not_Token_2                : Token?
+ - Null_Token_2               : Token?
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
 
 ### Formal_Private_Type_Definition
 > _[Formal_Type_Definition]_
@@ -1495,10 +1495,10 @@
 
 ### Formal_Derived_Type_Definition
 > _[Formal_Type_Definition]_
+ - Abstract_Token             : Token?
  - Limited_Token              : Token?
  - Synchronized_Token         : Token?
  - New_Token                  : Token
- - Private_Token              : Token
  - Subtype_Mark               : _[Expression]_ {^[Box_Expression]}
  - And_Token                  : Token?
  - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}

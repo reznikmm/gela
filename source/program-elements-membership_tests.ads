@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Membership_Tests is
 
@@ -15,5 +16,17 @@ package Program.Elements.Membership_Tests is
 
    type Membership_Test_Access is access all Membership_Test'Class
      with Storage_Size => 0;
+
+   not overriding function Membership_Test_Expression
+    (Self : Membership_Test)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Not_Token
+    (Self : Membership_Test)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function In_Token
+    (Self : Membership_Test)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Membership_Tests;

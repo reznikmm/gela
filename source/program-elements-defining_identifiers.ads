@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Defining_Names;
+with Program.Tokens;
 
 package Program.Elements.Defining_Identifiers is
 
@@ -15,5 +16,9 @@ package Program.Elements.Defining_Identifiers is
 
    type Defining_Identifier_Access is access all Defining_Identifier'Class
      with Storage_Size => 0;
+
+   not overriding function Identifier_Token
+    (Self : Defining_Identifier)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Defining_Identifiers;

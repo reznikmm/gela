@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Elements.Expressions;
+with Program.Tokens;
 
 package Program.Elements.Call_Statements is
 
@@ -15,5 +17,21 @@ package Program.Elements.Call_Statements is
 
    type Call_Statement_Access is access all Call_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Called_Name
+    (Self : Call_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Call_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Call_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Call_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Call_Statements;

@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
 
 package Program.Elements.Null_Statements is
 
@@ -15,5 +16,13 @@ package Program.Elements.Null_Statements is
 
    type Null_Statement_Access is access all Null_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Null_Token
+    (Self : Null_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Null_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Null_Statements;

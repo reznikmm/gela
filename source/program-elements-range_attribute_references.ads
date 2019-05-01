@@ -7,6 +7,7 @@
 with Program.Elements.Constraints;
 with Program.Elements.Discrete_Subtype_Definitions;
 with Program.Elements.Discrete_Ranges;
+with Program.Elements.Attribute_References;
 
 package Program.Elements.Range_Attribute_References is
 
@@ -20,5 +21,10 @@ package Program.Elements.Range_Attribute_References is
 
    type Range_Attribute_Reference_Access is
      access all Range_Attribute_Reference'Class with Storage_Size => 0;
+
+   not overriding function Range_Attribute
+    (Self : Range_Attribute_Reference)
+      return Program.Elements.Attribute_References.Attribute_Reference_Access
+     is abstract;
 
 end Program.Elements.Range_Attribute_References;

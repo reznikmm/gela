@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
 
 package Program.Elements.Abort_Statements is
 
@@ -15,5 +16,13 @@ package Program.Elements.Abort_Statements is
 
    type Abort_Statement_Access is access all Abort_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Abort_Token
+    (Self : Abort_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Abort_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Abort_Statements;

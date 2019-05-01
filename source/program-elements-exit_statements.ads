@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Exit_Statements is
 
@@ -15,5 +17,25 @@ package Program.Elements.Exit_Statements is
 
    type Exit_Statement_Access is access all Exit_Statement'Class
      with Storage_Size => 0;
+
+   not overriding function Exit_Token
+    (Self : Exit_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Exit_Loop_Name
+    (Self : Exit_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function When_Token
+    (Self : Exit_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Exit_Condition
+    (Self : Exit_Statement)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Exit_Statement)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Exit_Statements;

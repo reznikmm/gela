@@ -5,6 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Formal_Object_Declarations is
 
@@ -15,5 +17,45 @@ package Program.Elements.Formal_Object_Declarations is
 
    type Formal_Object_Declaration_Access is
      access all Formal_Object_Declaration'Class with Storage_Size => 0;
+
+   not overriding function Colon_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function In_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Out_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Not_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Null_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Object_Subtype
+    (Self : Formal_Object_Declaration)
+      return Program.Elements.Element_Access is abstract;
+
+   not overriding function Assignment_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Initialization_Expression
+    (Self : Formal_Object_Declaration)
+      return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Semicolon_Token
+    (Self : Formal_Object_Declaration)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Formal_Object_Declarations;

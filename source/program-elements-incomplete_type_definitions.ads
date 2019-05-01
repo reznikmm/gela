@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
 
 package Program.Elements.Incomplete_Type_Definitions is
 
@@ -15,5 +16,9 @@ package Program.Elements.Incomplete_Type_Definitions is
 
    type Incomplete_Type_Definition_Access is
      access all Incomplete_Type_Definition'Class with Storage_Size => 0;
+
+   not overriding function Tagged_Token
+    (Self : Incomplete_Type_Definition)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Incomplete_Type_Definitions;

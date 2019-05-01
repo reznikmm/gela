@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
 
 package Program.Elements.Record_Definitions is
 
@@ -15,5 +16,17 @@ package Program.Elements.Record_Definitions is
 
    type Record_Definition_Access is access all Record_Definition'Class
      with Storage_Size => 0;
+
+   not overriding function Record_Token
+    (Self : Record_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function End_Token
+    (Self : Record_Definition)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Record_Token_2
+    (Self : Record_Definition)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Record_Definitions;

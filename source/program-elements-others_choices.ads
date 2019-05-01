@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
+with Program.Tokens;
 
 package Program.Elements.Others_Choices is
 
@@ -15,5 +16,9 @@ package Program.Elements.Others_Choices is
 
    type Others_Choice_Access is access all Others_Choice'Class
      with Storage_Size => 0;
+
+   not overriding function Others_Token
+    (Self : Others_Choice)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Others_Choices;
