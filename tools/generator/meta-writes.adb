@@ -19,7 +19,7 @@ package body Meta.Writes is
 
    function Is_Element
      (Name : League.Strings.Universal_String) return Boolean is
-       (Name.Starts_With ("Element"));
+       (Name.To_Wide_Wide_String = "Element");
 
    procedure Write_Header (Output : Ada.Wide_Wide_Text_IO.File_Type);
 
@@ -32,6 +32,29 @@ package body Meta.Writes is
      (F          : access Ada_Pretty.Factory;
       Vector     : Meta.Read.Class_Vectors.Vector;
       Is_Limited : Boolean) return Ada_Pretty.Node_Access;
+
+   function Get_Package_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String;
+
+   function Full_Record_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String;
+
+   ----------------------
+   -- Full_Record_Name --
+   ----------------------
+
+   function Full_Record_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String
+   is
+      Result : League.Strings.Universal_String := Get_Package_Name (Type_Name);
+   begin
+      Result.Append (".");
+      Result.Append (Type_Name);
+      return Result;
+   end Full_Record_Name;
 
    ----------------------
    -- Get_With_Clauses --
@@ -49,7 +72,7 @@ package body Meta.Writes is
             Item : constant Meta.Classes.Class := Vector (J);
             Name : constant League.Strings.Universal_String := Item.Name;
             Package_Name : constant League.Strings.Universal_String :=
-              "Program.Elements." & Name & "s";
+              Get_Package_Name (Name);
             Next : constant Ada_Pretty.Node_Access :=
               F.New_With (F.New_Name (Package_Name), Is_Limited);
          begin
@@ -59,6 +82,31 @@ package body Meta.Writes is
 
       return Result;
    end Get_With_Clauses;
+
+   ----------------------
+   -- Get_Package_Name --
+   ----------------------
+
+   function Get_Package_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String
+   is
+      Result : League.Strings.Universal_String;
+   begin
+      Result.Append ("Program");
+
+      if Type_Name.To_Wide_Wide_String /= "Token" then
+         Result.Append (".Elements");
+      end if;
+
+      if not Is_Element (Type_Name) then
+         Result.Append (".");
+         Result.Append (Type_Name);
+         Result.Append ("s");
+      end if;
+
+      return Result;
+   end Get_Package_Name;
 
    ---------------
    -- Open_File --
@@ -377,34 +425,48 @@ package body Meta.Writes is
    -- Write_One_Elements --
    ------------------------
 
-   procedure Write_One_Elements (Item : Meta.Classes.Class) is
+   procedure Write_One_Element (Item : Meta.Classes.Class) is
 
       F : aliased Ada_Pretty.Factory;
 
       function Get_Clauses return Ada_Pretty.Node_Access;
       function Get_Parents return Ada_Pretty.Node_Access;
-
-      Program_Elements : constant Wide_Wide_String := "Program.Elements.";
+      function Get_Props
+        (Type_Name : League.Strings.Universal_String;
+         Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
 
       -----------------
       -- Get_Clauses --
       -----------------
 
       function Get_Clauses return Ada_Pretty.Node_Access is
+         use all type Meta.Classes.Capacity_Kind;
+
          Parents : constant League.String_Vectors.Universal_String_Vector :=
            Item.Parents;
-         Parent  : League.Strings.Universal_String;
          Result  : Ada_Pretty.Node_Access;
          Each    : Ada_Pretty.Node_Access;
+         List    : League.String_Vectors.Universal_String_Vector;
+         Props   : constant Meta.Classes.Property_Array := Item.Properties;
       begin
-         if Is_Element (Parents.Element (1)) then
-            return null;
-         end if;
-
          for J in 1 .. Parents.Length loop
-            Parent := Parents (J);
+            if not Is_Element (Parents.Element (J)) then
+               List.Append (Parents.Element (J));
+            end if;
+         end loop;
+
+         for P of Props loop
+            if P.Capacity in Just_One | Zero_Or_One
+              and then List.Index (P.Type_Name) = 0
+              and then not Is_Element (P.Type_Name)
+            then
+               List.Append (P.Type_Name);
+            end if;
+         end loop;
+
+         for J in 1 .. List.Length loop
             Each := F.New_With
-              (F.New_Selected_Name (Program_Elements & Parent & "s"));
+              (F.New_Selected_Name (Get_Package_Name (List (J))));
             Result := F.New_List (Result, Each);
          end loop;
 
@@ -423,13 +485,7 @@ package body Meta.Writes is
          Each    : Ada_Pretty.Node_Access;
       begin
          for J in 1 .. Parents.Length loop
-            Parent := Parents (J);
-
-            if Is_Element (Parent) then
-               Parent := +"Program.Elements.Element";
-            else
-               Parent := Program_Elements & Parent & "s." & Parent;
-            end if;
+            Parent := Full_Record_Name (Parents (J));
 
             Each := F.New_Infix
               (+"and",
@@ -441,8 +497,42 @@ package body Meta.Writes is
          return Result;
       end Get_Parents;
 
+      ---------------
+      -- Get_Props --
+      ---------------
+
+      function Get_Props
+        (Type_Name : League.Strings.Universal_String;
+         Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access
+      is
+         use all type Meta.Classes.Capacity_Kind;
+
+         Next   : Ada_Pretty.Node_Access;
+         Result : Ada_Pretty.Node_Access := Prefix;
+         Props  : constant Meta.Classes.Property_Array := Item.Properties;
+      begin
+         for P of Props loop
+            if P.Capacity in Just_One | Zero_Or_One then
+               Next := F.New_Subprogram_Declaration
+                 (Specification => F.New_Subprogram_Specification
+                    (Is_Overriding => Ada_Pretty.False,
+                     Name          =>
+                       F.New_Name (P.Name),
+                     Parameters    => F.New_Parameter
+                       (Name            => F.New_Name (+"Self"),
+                        Type_Definition => F.New_Name (Type_Name)),
+                     Result        => F.New_Selected_Name
+                       (Full_Record_Name (P.Type_Name) & "_Access")),
+                  Is_Abstract   => True);
+               Result := F.New_List (Result, Next);
+            end if;
+         end loop;
+
+         return Result;
+      end Get_Props;
+
       Package_Name : constant League.Strings.Universal_String :=
-        Program_Elements & Item.Name & "s";
+        Get_Package_Name (Item.Name);
 
       Element_Name : constant League.Strings.Universal_String :=
         (if Item.Name = +"Pragma" then +"Pragma_Element" else Item.Name);
@@ -477,7 +567,10 @@ package body Meta.Writes is
               Parents    => Get_Parents));
 
       Public_Part : constant Ada_Pretty.Node_Access :=
-        F.New_List ((Pure, Type_Decl, Element_Access));
+        F.New_List
+          ((Pure,
+           Type_Decl,
+           Get_Props (Element_Name, Element_Access)));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (F.New_Selected_Name (Package_Name), Public_Part);
@@ -495,6 +588,6 @@ package body Meta.Writes is
          .To_Wide_Wide_String);
 
       Ada.Wide_Wide_Text_IO.Close (Output);
-   end Write_One_Elements;
+   end Write_One_Element;
 
 end Meta.Writes;

@@ -59,8 +59,8 @@ package body Meta.Read is
                end;
             elsif Line.Starts_With (" - ") then
                declare
-                  Name : constant League.Strings.Universal_String := List (1);
-                  Tipe : League.Strings.Universal_String := List (3);
+                  Name : constant League.Strings.Universal_String := List (2);
+                  Tipe : League.Strings.Universal_String := List (4);
 
                   Capacity  : Meta.Classes.Capacity_Kind :=
                     Meta.Classes.Just_One;
@@ -78,7 +78,7 @@ package body Meta.Read is
 
                   Class.Add_Property
                     ((Name => Name,
-                      Type_Name => Tipe,
+                      Type_Name => To_Name (Tipe),
                       Capacity => Capacity));
                end;
             end if;
