@@ -63,9 +63,13 @@ package Program.Elements.Formal_Function_Declarations is
     (Self : Formal_Function_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Formal_Subprogram_Default
+   not overriding function Subprogram_Default
     (Self : Formal_Function_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Box_Token
+    (Self : Formal_Function_Declaration)
+      return Program.Tokens.Token_Access is abstract;
 
    not overriding function With_Token_2
     (Self : Formal_Function_Declaration)

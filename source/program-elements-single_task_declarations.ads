@@ -44,7 +44,7 @@ package Program.Elements.Single_Task_Declarations is
     (Self : Single_Task_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Object_Subtype
+   not overriding function Definition
     (Self : Single_Task_Declaration)
       return Program.Elements.Task_Definitions.Task_Definition_Access
      is abstract;

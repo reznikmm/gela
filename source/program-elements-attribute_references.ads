@@ -34,7 +34,7 @@ package Program.Elements.Attribute_References is
     (Self : Attribute_Reference)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Static_Expression
+   not overriding function Expressions
     (Self : Attribute_Reference)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

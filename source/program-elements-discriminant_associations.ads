@@ -22,7 +22,7 @@ package Program.Elements.Discriminant_Associations is
     (Self : Discriminant_Association)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Discriminant_Expression
+   not overriding function Expression
     (Self : Discriminant_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

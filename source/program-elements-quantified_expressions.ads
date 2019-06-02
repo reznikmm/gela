@@ -32,7 +32,7 @@ package Program.Elements.Quantified_Expressions is
     (Self : Quantified_Expression)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Loop_Parameter_Specification
+   not overriding function Parameter
     (Self : Quantified_Expression)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Access is abstract;

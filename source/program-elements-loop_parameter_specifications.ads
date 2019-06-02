@@ -32,7 +32,7 @@ package Program.Elements.Loop_Parameter_Specifications is
     (Self : Loop_Parameter_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Object_Subtype
+   not overriding function Definition
     (Self : Loop_Parameter_Specification)
       return Program.Elements.Discrete_Subtype_Definitions
           .Discrete_Subtype_Definition_Access is abstract;

@@ -30,7 +30,7 @@ package Program.Elements.Exception_Renaming_Declarations is
     (Self : Exception_Renaming_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Renamed_Entity
+   not overriding function Renamed_Exception
     (Self : Exception_Renaming_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

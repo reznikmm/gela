@@ -21,7 +21,7 @@ package Program.Elements.If_Expressions is
     (Self : If_Expression)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Condition_Expression
+   not overriding function Condition
     (Self : If_Expression)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

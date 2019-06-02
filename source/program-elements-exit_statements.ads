@@ -30,7 +30,7 @@ package Program.Elements.Exit_Statements is
     (Self : Exit_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Exit_Condition
+   not overriding function Condition
     (Self : Exit_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

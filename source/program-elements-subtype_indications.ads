@@ -36,7 +36,7 @@ package Program.Elements.Subtype_Indications is
     (Self : Subtype_Indication)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
-   not overriding function Subtype_Constraint
+   not overriding function Constraint
     (Self : Subtype_Indication)
       return Program.Elements.Constraints.Constraint_Access is abstract;
 

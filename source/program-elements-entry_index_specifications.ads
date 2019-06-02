@@ -32,7 +32,7 @@ package Program.Elements.Entry_Index_Specifications is
     (Self : Entry_Index_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Subtype_Definition
+   not overriding function Entry_Index_Subtype
     (Self : Entry_Index_Specification)
       return Program.Elements.Discrete_Subtype_Definitions
           .Discrete_Subtype_Definition_Access is abstract;

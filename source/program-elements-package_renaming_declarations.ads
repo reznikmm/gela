@@ -31,7 +31,7 @@ package Program.Elements.Package_Renaming_Declarations is
     (Self : Package_Renaming_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Renamed_Entity
+   not overriding function Renamed_Package
     (Self : Package_Renaming_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

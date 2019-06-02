@@ -36,7 +36,7 @@ package Program.Elements.Type_Declarations is
     (Self : Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function View
+   not overriding function Definition
     (Self : Type_Declaration)
       return Program.Elements.Definitions.Definition_Access is abstract;
 

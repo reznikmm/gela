@@ -16,6 +16,11 @@ Add `with "oasis";` to your project file.
 ### Abstract syntax tree elements
 Here is [concise description](docs/ast.md) of AST.
 
+## Related works
+
+ * [Ada ANTLR grammars[(https://github.com/okellogg/ada_antlr_grammar)
+ * [WisiToken](http://stephe-leake.org/ada/wisitoken.html)
+
 ## Maintainer
 
 [@MaximReznik](https://github.com/reznikmm).

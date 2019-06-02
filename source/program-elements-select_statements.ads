@@ -21,6 +21,18 @@ package Program.Elements.Select_Statements is
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Then_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Abort_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Else_Token
+    (Self : Select_Statement)
+      return Program.Tokens.Token_Access is abstract;
+
    not overriding function End_Token
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;

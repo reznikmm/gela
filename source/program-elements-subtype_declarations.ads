@@ -32,7 +32,7 @@ package Program.Elements.Subtype_Declarations is
     (Self : Subtype_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function View
+   not overriding function Subtype_Indication
     (Self : Subtype_Declaration)
       return Program.Elements.Subtype_Indications.Subtype_Indication_Access
      is abstract;

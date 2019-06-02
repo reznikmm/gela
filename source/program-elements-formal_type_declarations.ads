@@ -37,7 +37,7 @@ package Program.Elements.Formal_Type_Declarations is
     (Self : Formal_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function View
+   not overriding function Definition
     (Self : Formal_Type_Declaration)
       return Program.Elements.Formal_Type_Definitions
           .Formal_Type_Definition_Access is abstract;

@@ -17,7 +17,7 @@ package Program.Elements.Short_Circuit_Operations is
    type Short_Circuit_Operation_Access is
      access all Short_Circuit_Operation'Class with Storage_Size => 0;
 
-   not overriding function Left_Expression
+   not overriding function Left
     (Self : Short_Circuit_Operation)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
@@ -37,7 +37,7 @@ package Program.Elements.Short_Circuit_Operations is
     (Self : Short_Circuit_Operation)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Right_Expression
+   not overriding function Right
     (Self : Short_Circuit_Operation)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

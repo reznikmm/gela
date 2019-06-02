@@ -44,7 +44,7 @@ package Program.Elements.Return_Object_Specifications is
     (Self : Return_Object_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Expression
     (Self : Return_Object_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -30,7 +30,7 @@ package Program.Elements.Number_Declarations is
     (Self : Number_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Expression
     (Self : Number_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

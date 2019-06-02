@@ -21,7 +21,7 @@ package Program.Elements.Parenthesized_Expressions is
     (Self : Parenthesized_Expression)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Expression_Parenthesized
+   not overriding function Expression
     (Self : Parenthesized_Expression)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

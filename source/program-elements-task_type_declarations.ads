@@ -58,7 +58,7 @@ package Program.Elements.Task_Type_Declarations is
     (Self : Task_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function View
+   not overriding function Definition
     (Self : Task_Type_Declaration)
       return Program.Elements.Task_Definitions.Task_Definition_Access
      is abstract;

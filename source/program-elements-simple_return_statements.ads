@@ -22,7 +22,7 @@ package Program.Elements.Simple_Return_Statements is
     (Self : Simple_Return_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Return_Expression
+   not overriding function Expression
     (Self : Simple_Return_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

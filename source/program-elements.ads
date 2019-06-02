@@ -86,8 +86,8 @@ limited with Program.Elements.Task_Definitions;
 limited with Program.Elements.Protected_Definitions;
 limited with Program.Elements.Formal_Type_Definitions;
 limited with Program.Elements.Aspect_Specifications;
+limited with Program.Elements.Real_Range_Specifications;
 limited with Program.Elements.Expressions;
-limited with Program.Elements.Box_Expressions;
 limited with Program.Elements.Numeric_Literals;
 limited with Program.Elements.String_Literals;
 limited with Program.Elements.Identifiers;
@@ -118,6 +118,7 @@ limited with Program.Elements.Discriminant_Associations;
 limited with Program.Elements.Record_Component_Associations;
 limited with Program.Elements.Array_Component_Associations;
 limited with Program.Elements.Parameter_Associations;
+limited with Program.Elements.Formal_Package_Associations;
 limited with Program.Elements.Statements;
 limited with Program.Elements.Null_Statements;
 limited with Program.Elements.Assignment_Statements;
@@ -144,7 +145,6 @@ limited with Program.Elements.Paths;
 limited with Program.Elements.Elsif_Paths;
 limited with Program.Elements.Case_Paths;
 limited with Program.Elements.Select_Paths;
-limited with Program.Elements.Then_Abort_Paths;
 limited with Program.Elements.Case_Expression_Paths;
 limited with Program.Elements.Elsif_Expression_Paths;
 limited with Program.Elements.Clauses;
@@ -662,12 +662,14 @@ package Program.Elements is
      with Post'Class =>
        (if Is_Aspect_Specification'Result then Self.Is_Definition);
 
+   not overriding function Is_Real_Range_Specification
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Real_Range_Specification'Result then Self.Is_Definition);
+
    not overriding function Is_Expression (Self : Element) return Boolean
      is abstract;
-
-   not overriding function Is_Box_Expression (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Box_Expression'Result then Self.Is_Expression);
 
    not overriding function Is_Numeric_Literal (Self : Element) return Boolean
      is abstract
@@ -815,6 +817,12 @@ package Program.Elements is
      with Post'Class =>
        (if Is_Parameter_Association'Result then Self.Is_Association);
 
+   not overriding function Is_Formal_Package_Association
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Package_Association'Result then Self.Is_Association);
+
    not overriding function Is_Statement (Self : Element) return Boolean
      is abstract;
 
@@ -927,10 +935,6 @@ package Program.Elements is
    not overriding function Is_Select_Path (Self : Element) return Boolean
      is abstract
      with Post'Class => (if Is_Select_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Then_Abort_Path (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Then_Abort_Path'Result then Self.Is_Path);
 
    not overriding function Is_Case_Expression_Path
     (Self : Element)
@@ -1652,15 +1656,16 @@ package Program.Elements is
       return Program.Elements.Aspect_Specifications.Aspect_Specification_Access
      with Pre => Self.Is_Aspect_Specification;
 
+   function To_Real_Range_Specification
+    (Self : access Element'Class)
+      return Program.Elements.Real_Range_Specifications
+          .Real_Range_Specification_Access
+     with Pre => Self.Is_Real_Range_Specification;
+
    function To_Expression
     (Self : access Element'Class)
       return Program.Elements.Expressions.Expression_Access
      with Pre => Self.Is_Expression;
-
-   function To_Box_Expression
-    (Self : access Element'Class)
-      return Program.Elements.Box_Expressions.Box_Expression_Access
-     with Pre => Self.Is_Box_Expression;
 
    function To_Numeric_Literal
     (Self : access Element'Class)
@@ -1818,6 +1823,12 @@ package Program.Elements is
           .Parameter_Association_Access
      with Pre => Self.Is_Parameter_Association;
 
+   function To_Formal_Package_Association
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Package_Associations
+          .Formal_Package_Association_Access
+     with Pre => Self.Is_Formal_Package_Association;
+
    function To_Statement
     (Self : access Element'Class)
       return Program.Elements.Statements.Statement_Access
@@ -1949,11 +1960,6 @@ package Program.Elements is
     (Self : access Element'Class)
       return Program.Elements.Select_Paths.Select_Path_Access
      with Pre => Self.Is_Select_Path;
-
-   function To_Then_Abort_Path
-    (Self : access Element'Class)
-      return Program.Elements.Then_Abort_Paths.Then_Abort_Path_Access
-     with Pre => Self.Is_Then_Abort_Path;
 
    function To_Case_Expression_Path
     (Self : access Element'Class)

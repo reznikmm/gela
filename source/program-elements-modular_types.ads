@@ -22,7 +22,7 @@ package Program.Elements.Modular_Types is
     (Self : Modular_Type)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Mod_Static_Expression
+   not overriding function Modulus
     (Self : Modular_Type)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

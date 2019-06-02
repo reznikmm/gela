@@ -42,7 +42,7 @@ package Program.Elements.Parameter_Specifications is
     (Self : Parameter_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Object_Subtype
+   not overriding function Parameter_Subtype
     (Self : Parameter_Specification)
       return Program.Elements.Element_Access is abstract;
 
@@ -50,7 +50,7 @@ package Program.Elements.Parameter_Specifications is
     (Self : Parameter_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Default_Expression
     (Self : Parameter_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -26,7 +26,7 @@ package Program.Elements.Delay_Statements is
     (Self : Delay_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Delay_Expression
+   not overriding function Expression
     (Self : Delay_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

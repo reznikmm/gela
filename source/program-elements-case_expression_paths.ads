@@ -26,7 +26,7 @@ package Program.Elements.Case_Expression_Paths is
     (Self : Case_Expression_Path)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Case_Expression
+   not overriding function Expression
     (Self : Case_Expression_Path)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

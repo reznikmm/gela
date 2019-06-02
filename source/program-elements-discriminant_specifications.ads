@@ -38,7 +38,7 @@ package Program.Elements.Discriminant_Specifications is
     (Self : Discriminant_Specification)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Default_Expression
     (Self : Discriminant_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -54,7 +54,7 @@ package Program.Elements.Protected_Type_Declarations is
     (Self : Protected_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function View
+   not overriding function Definition
     (Self : Protected_Type_Declaration)
       return Program.Elements.Protected_Definitions.Protected_Definition_Access
      is abstract;

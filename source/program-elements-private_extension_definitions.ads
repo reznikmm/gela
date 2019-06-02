@@ -34,7 +34,7 @@ package Program.Elements.Private_Extension_Definitions is
     (Self : Private_Extension_Definition)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Ancestor_Subtype_Indication
+   not overriding function Ancestor
     (Self : Private_Extension_Definition)
       return Program.Elements.Subtype_Indications.Subtype_Indication_Access
      is abstract;

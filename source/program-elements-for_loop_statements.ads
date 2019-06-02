@@ -35,7 +35,7 @@ package Program.Elements.For_Loop_Statements is
     (Self : For_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Loop_Parameter_Specification
+   not overriding function Loop_Parameter
     (Self : For_Loop_Statement)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Access is abstract;
@@ -62,7 +62,7 @@ package Program.Elements.For_Loop_Statements is
     (Self : For_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Statement_Identifier
+   not overriding function End_Statement_Identifier
     (Self : For_Loop_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

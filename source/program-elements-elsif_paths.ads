@@ -21,7 +21,7 @@ package Program.Elements.Elsif_Paths is
     (Self : Elsif_Path)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Condition_Expression
+   not overriding function Condition
     (Self : Elsif_Path)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -22,7 +22,7 @@ package Program.Elements.Requeue_Statements is
     (Self : Requeue_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Requeue_Entry_Name
+   not overriding function Entry_Name
     (Self : Requeue_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -22,7 +22,7 @@ package Program.Elements.Variant_Parts is
     (Self : Variant_Part)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Discriminant_Direct_Name
+   not overriding function Discriminant
     (Self : Variant_Part)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

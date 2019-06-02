@@ -20,7 +20,7 @@ package Program.Elements.Component_Clauses is
    type Component_Clause_Access is access all Component_Clause'Class
      with Storage_Size => 0;
 
-   not overriding function Representation_Clause_Name
+   not overriding function Clause_Name
     (Self : Component_Clause)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 
@@ -28,7 +28,7 @@ package Program.Elements.Component_Clauses is
     (Self : Component_Clause)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Component_Clause_Position
+   not overriding function Position
     (Self : Component_Clause)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
@@ -36,7 +36,7 @@ package Program.Elements.Component_Clauses is
     (Self : Component_Clause)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Component_Clause_Range
+   not overriding function Clause_Range
     (Self : Component_Clause)
       return Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Access is abstract;

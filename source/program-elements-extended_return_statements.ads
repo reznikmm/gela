@@ -22,7 +22,7 @@ package Program.Elements.Extended_Return_Statements is
     (Self : Extended_Return_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Return_Object_Specification
+   not overriding function Return_Object
     (Self : Extended_Return_Statement)
       return Program.Elements.Return_Object_Specifications
           .Return_Object_Specification_Access is abstract;

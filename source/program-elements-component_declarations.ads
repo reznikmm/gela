@@ -32,7 +32,7 @@ package Program.Elements.Component_Declarations is
     (Self : Component_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Default_Expression
     (Self : Component_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

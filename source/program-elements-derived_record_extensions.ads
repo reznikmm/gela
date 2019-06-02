@@ -31,7 +31,7 @@ package Program.Elements.Derived_Record_Extensions is
     (Self : Derived_Record_Extension)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Parent_Subtype_Indication
+   not overriding function Parent
     (Self : Derived_Record_Extension)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

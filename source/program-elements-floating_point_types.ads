@@ -7,7 +7,7 @@
 with Program.Elements.Type_Definitions;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Elements.Simple_Expression_Ranges;
+with Program.Elements.Real_Range_Specifications;
 
 package Program.Elements.Floating_Point_Types is
 
@@ -27,9 +27,9 @@ package Program.Elements.Floating_Point_Types is
     (Self : Floating_Point_Type)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
-   not overriding function Real_Range_Constraint
+   not overriding function Real_Range
     (Self : Floating_Point_Type)
-      return Program.Elements.Simple_Expression_Ranges
-          .Simple_Expression_Range_Access is abstract;
+      return Program.Elements.Real_Range_Specifications
+          .Real_Range_Specification_Access is abstract;
 
 end Program.Elements.Floating_Point_Types;

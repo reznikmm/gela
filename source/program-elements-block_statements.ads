@@ -44,7 +44,7 @@ package Program.Elements.Block_Statements is
     (Self : Block_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Statement_Identifier
+   not overriding function End_Statement_Identifier
     (Self : Block_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

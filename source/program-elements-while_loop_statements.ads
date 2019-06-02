@@ -33,7 +33,7 @@ package Program.Elements.While_Loop_Statements is
     (Self : While_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function While_Condition
+   not overriding function Condition
     (Self : While_Loop_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
@@ -49,7 +49,7 @@ package Program.Elements.While_Loop_Statements is
     (Self : While_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Statement_Identifier
+   not overriding function End_Statement_Identifier
     (Self : While_Loop_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

@@ -40,7 +40,7 @@ package Program.Elements.Loop_Statements is
     (Self : Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Statement_Identifier
+   not overriding function End_Statement_Identifier
     (Self : Loop_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

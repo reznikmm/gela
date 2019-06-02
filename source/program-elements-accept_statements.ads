@@ -23,7 +23,7 @@ package Program.Elements.Accept_Statements is
     (Self : Accept_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Accept_Entry_Direct_Name
+   not overriding function Entry_Name
     (Self : Accept_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 
@@ -31,7 +31,7 @@ package Program.Elements.Accept_Statements is
     (Self : Accept_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Accept_Entry_Index
+   not overriding function Entry_Index
     (Self : Accept_Statement)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
@@ -59,7 +59,7 @@ package Program.Elements.Accept_Statements is
     (Self : Accept_Statement)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function End_Name
+   not overriding function End_Statement_Identifier
     (Self : Accept_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 

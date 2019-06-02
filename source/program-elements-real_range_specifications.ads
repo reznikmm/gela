@@ -4,34 +4,34 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-with Program.Elements.Type_Definitions;
+with Program.Elements.Definitions;
 with Program.Tokens;
 with Program.Elements.Expressions;
 
-package Program.Elements.Signed_Integer_Types is
+package Program.Elements.Real_Range_Specifications is
 
-   pragma Pure (Program.Elements.Signed_Integer_Types);
+   pragma Pure (Program.Elements.Real_Range_Specifications);
 
-   type Signed_Integer_Type is
-     limited interface and Program.Elements.Type_Definitions.Type_Definition;
+   type Real_Range_Specification is
+     limited interface and Program.Elements.Definitions.Definition;
 
-   type Signed_Integer_Type_Access is access all Signed_Integer_Type'Class
-     with Storage_Size => 0;
+   type Real_Range_Specification_Access is
+     access all Real_Range_Specification'Class with Storage_Size => 0;
 
    not overriding function Range_Token
-    (Self : Signed_Integer_Type)
+    (Self : Real_Range_Specification)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Lower_Bound
-    (Self : Signed_Integer_Type)
+    (Self : Real_Range_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
    not overriding function Double_Dot_Token
-    (Self : Signed_Integer_Type)
+    (Self : Real_Range_Specification)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Upper_Bound
-    (Self : Signed_Integer_Type)
+    (Self : Real_Range_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
-end Program.Elements.Signed_Integer_Types;
+end Program.Elements.Real_Range_Specifications;

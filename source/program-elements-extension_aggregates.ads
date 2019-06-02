@@ -21,7 +21,7 @@ package Program.Elements.Extension_Aggregates is
     (Self : Extension_Aggregate)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Ancestor_Part
+   not overriding function Ancestor
     (Self : Extension_Aggregate)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

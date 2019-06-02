@@ -44,7 +44,7 @@ package Program.Elements.Single_Protected_Declarations is
     (Self : Single_Protected_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Object_Subtype
+   not overriding function Definition
     (Self : Single_Protected_Declaration)
       return Program.Elements.Protected_Definitions.Protected_Definition_Access
      is abstract;

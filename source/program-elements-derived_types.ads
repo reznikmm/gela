@@ -30,7 +30,7 @@ package Program.Elements.Derived_Types is
     (Self : Derived_Type)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Parent_Subtype_Indication
+   not overriding function Parent
     (Self : Derived_Type)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

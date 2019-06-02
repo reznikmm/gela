@@ -22,7 +22,7 @@ package Program.Elements.Elsif_Expression_Paths is
     (Self : Elsif_Expression_Path)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Condition_Expression
+   not overriding function Condition
     (Self : Elsif_Expression_Path)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
@@ -30,7 +30,7 @@ package Program.Elements.Elsif_Expression_Paths is
     (Self : Elsif_Expression_Path)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Then_Expression
+   not overriding function Expression
     (Self : Elsif_Expression_Path)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

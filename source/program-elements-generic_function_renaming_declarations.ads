@@ -36,7 +36,7 @@ package Program.Elements.Generic_Function_Renaming_Declarations is
     (Self : Generic_Function_Renaming_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Renamed_Entity
+   not overriding function Renamed_Function
     (Self : Generic_Function_Renaming_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

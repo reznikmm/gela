@@ -22,8 +22,12 @@ package Program.Elements.Record_Component_Associations is
     (Self : Record_Component_Association)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Component_Expression
+   not overriding function Expression
     (Self : Record_Component_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
+
+   not overriding function Box_Token
+    (Self : Record_Component_Association)
+      return Program.Tokens.Token_Access is abstract;
 
 end Program.Elements.Record_Component_Associations;

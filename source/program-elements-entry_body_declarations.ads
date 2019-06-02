@@ -34,7 +34,7 @@ package Program.Elements.Entry_Body_Declarations is
     (Self : Entry_Body_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Entry_Index_Specification
+   not overriding function Entry_Index
     (Self : Entry_Body_Declaration)
       return Program.Elements.Entry_Index_Specifications
           .Entry_Index_Specification_Access is abstract;

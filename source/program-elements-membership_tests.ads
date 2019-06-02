@@ -17,7 +17,7 @@ package Program.Elements.Membership_Tests is
    type Membership_Test_Access is access all Membership_Test'Class
      with Storage_Size => 0;
 
-   not overriding function Membership_Test_Expression
+   not overriding function Expression
     (Self : Membership_Test)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

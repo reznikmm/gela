@@ -86,8 +86,8 @@ with Program.Elements.Task_Definitions;
 with Program.Elements.Protected_Definitions;
 with Program.Elements.Formal_Type_Definitions;
 with Program.Elements.Aspect_Specifications;
+with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Expressions;
-with Program.Elements.Box_Expressions;
 with Program.Elements.Numeric_Literals;
 with Program.Elements.String_Literals;
 with Program.Elements.Identifiers;
@@ -118,6 +118,7 @@ with Program.Elements.Discriminant_Associations;
 with Program.Elements.Record_Component_Associations;
 with Program.Elements.Array_Component_Associations;
 with Program.Elements.Parameter_Associations;
+with Program.Elements.Formal_Package_Associations;
 with Program.Elements.Statements;
 with Program.Elements.Null_Statements;
 with Program.Elements.Assignment_Statements;
@@ -144,7 +145,6 @@ with Program.Elements.Paths;
 with Program.Elements.Elsif_Paths;
 with Program.Elements.Case_Paths;
 with Program.Elements.Select_Paths;
-with Program.Elements.Then_Abort_Paths;
 with Program.Elements.Case_Expression_Paths;
 with Program.Elements.Elsif_Expression_Paths;
 with Program.Elements.Clauses;
@@ -946,19 +946,22 @@ package body Program.Elements is
         (Self);
    end To_Aspect_Specification;
 
+   function To_Real_Range_Specification
+    (Self : access Element'Class)
+      return Program.Elements.Real_Range_Specifications
+          .Real_Range_Specification_Access is
+   begin
+      return Program.Elements.Real_Range_Specifications
+        .Real_Range_Specification_Access
+        (Self);
+   end To_Real_Range_Specification;
+
    function To_Expression
     (Self : access Element'Class)
       return Program.Elements.Expressions.Expression_Access is
    begin
       return Program.Elements.Expressions.Expression_Access (Self);
    end To_Expression;
-
-   function To_Box_Expression
-    (Self : access Element'Class)
-      return Program.Elements.Box_Expressions.Box_Expression_Access is
-   begin
-      return Program.Elements.Box_Expressions.Box_Expression_Access (Self);
-   end To_Box_Expression;
 
    function To_Numeric_Literal
     (Self : access Element'Class)
@@ -1202,6 +1205,16 @@ package body Program.Elements is
         (Self);
    end To_Parameter_Association;
 
+   function To_Formal_Package_Association
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Package_Associations
+          .Formal_Package_Association_Access is
+   begin
+      return Program.Elements.Formal_Package_Associations
+        .Formal_Package_Association_Access
+        (Self);
+   end To_Formal_Package_Association;
+
    function To_Statement
     (Self : access Element'Class)
       return Program.Elements.Statements.Statement_Access is
@@ -1398,13 +1411,6 @@ package body Program.Elements is
    begin
       return Program.Elements.Select_Paths.Select_Path_Access (Self);
    end To_Select_Path;
-
-   function To_Then_Abort_Path
-    (Self : access Element'Class)
-      return Program.Elements.Then_Abort_Paths.Then_Abort_Path_Access is
-   begin
-      return Program.Elements.Then_Abort_Paths.Then_Abort_Path_Access (Self);
-   end To_Then_Abort_Path;
 
    function To_Case_Expression_Path
     (Self : access Element'Class)

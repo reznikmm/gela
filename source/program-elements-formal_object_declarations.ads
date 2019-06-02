@@ -46,7 +46,7 @@ package Program.Elements.Formal_Object_Declarations is
     (Self : Formal_Object_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
-   not overriding function Initialization_Expression
+   not overriding function Default_Expression
     (Self : Formal_Object_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
