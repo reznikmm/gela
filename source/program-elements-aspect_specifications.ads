@@ -7,6 +7,7 @@
 with Program.Elements.Definitions;
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Element_Vectors;
 
 package Program.Elements.Aspect_Specifications is
 
@@ -29,5 +30,23 @@ package Program.Elements.Aspect_Specifications is
    not overriding function Aspect_Definition
     (Self : Aspect_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
+
+   type Aspect_Specification_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Aspect_Specification_Vector_Access is
+     access all Aspect_Specification_Vector'Class with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Aspect_Specification_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Aspect_Specification;
+
+   function To_Aspect_Specification
+    (Self  : Aspect_Specification_Vector'Class;
+     Index : Positive)
+      return not null Aspect_Specification_Access
+     is (Self.Element (Index).To_Aspect_Specification);
 
 end Program.Elements.Aspect_Specifications;

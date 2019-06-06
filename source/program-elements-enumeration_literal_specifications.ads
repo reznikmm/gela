@@ -6,6 +6,7 @@
 
 with Program.Elements.Declarations;
 with Program.Elements.Defining_Identifiers;
+with Program.Element_Vectors;
 
 package Program.Elements.Enumeration_Literal_Specifications is
 
@@ -21,5 +22,24 @@ package Program.Elements.Enumeration_Literal_Specifications is
     (Self : Enumeration_Literal_Specification)
       return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
      is abstract;
+
+   type Enumeration_Literal_Specification_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Enumeration_Literal_Specification_Vector_Access is
+     access all Enumeration_Literal_Specification_Vector'Class
+     with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Enumeration_Literal_Specification_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Enumeration_Literal_Specification;
+
+   function To_Enumeration_Literal_Specification
+    (Self  : Enumeration_Literal_Specification_Vector'Class;
+     Index : Positive)
+      return not null Enumeration_Literal_Specification_Access
+     is (Self.Element (Index).To_Enumeration_Literal_Specification);
 
 end Program.Elements.Enumeration_Literal_Specifications;

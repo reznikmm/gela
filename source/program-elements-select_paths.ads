@@ -7,6 +7,7 @@
 with Program.Elements.Paths;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
 
 package Program.Elements.Select_Paths is
 
@@ -28,5 +29,23 @@ package Program.Elements.Select_Paths is
    not overriding function Arrow_Token
     (Self : Select_Path)
       return Program.Tokens.Token_Access is abstract;
+
+   type Select_Path_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Select_Path_Vector_Access is access all Select_Path_Vector'Class
+     with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Select_Path_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Select_Path;
+
+   function To_Select_Path
+    (Self  : Select_Path_Vector'Class;
+     Index : Positive)
+      return not null Select_Path_Access
+     is (Self.Element (Index).To_Select_Path);
 
 end Program.Elements.Select_Paths;

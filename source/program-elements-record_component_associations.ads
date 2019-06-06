@@ -7,6 +7,7 @@
 with Program.Elements.Associations;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
 
 package Program.Elements.Record_Component_Associations is
 
@@ -29,5 +30,24 @@ package Program.Elements.Record_Component_Associations is
    not overriding function Box_Token
     (Self : Record_Component_Association)
       return Program.Tokens.Token_Access is abstract;
+
+   type Record_Component_Association_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Record_Component_Association_Vector_Access is
+     access all Record_Component_Association_Vector'Class
+     with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Record_Component_Association_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Record_Component_Association;
+
+   function To_Record_Component_Association
+    (Self  : Record_Component_Association_Vector'Class;
+     Index : Positive)
+      return not null Record_Component_Association_Access
+     is (Self.Element (Index).To_Record_Component_Association);
 
 end Program.Elements.Record_Component_Associations;

@@ -7,6 +7,7 @@
 with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
 
 package Program.Elements.Discriminant_Specifications is
 
@@ -45,5 +46,23 @@ package Program.Elements.Discriminant_Specifications is
    not overriding function Semicolon_Token
     (Self : Discriminant_Specification)
       return Program.Tokens.Token_Access is abstract;
+
+   type Discriminant_Specification_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Discriminant_Specification_Vector_Access is
+     access all Discriminant_Specification_Vector'Class with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Discriminant_Specification_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Discriminant_Specification;
+
+   function To_Discriminant_Specification
+    (Self  : Discriminant_Specification_Vector'Class;
+     Index : Positive)
+      return not null Discriminant_Specification_Access
+     is (Self.Element (Index).To_Discriminant_Specification);
 
 end Program.Elements.Discriminant_Specifications;

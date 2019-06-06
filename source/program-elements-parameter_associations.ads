@@ -7,6 +7,7 @@
 with Program.Elements.Associations;
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Element_Vectors;
 
 package Program.Elements.Parameter_Associations is
 
@@ -29,5 +30,23 @@ package Program.Elements.Parameter_Associations is
    not overriding function Actual_Parameter
     (Self : Parameter_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
+
+   type Parameter_Association_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Parameter_Association_Vector_Access is
+     access all Parameter_Association_Vector'Class with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Parameter_Association_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Parameter_Association;
+
+   function To_Parameter_Association
+    (Self  : Parameter_Association_Vector'Class;
+     Index : Positive)
+      return not null Parameter_Association_Access
+     is (Self.Element (Index).To_Parameter_Association);
 
 end Program.Elements.Parameter_Associations;

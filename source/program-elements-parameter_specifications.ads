@@ -7,6 +7,7 @@
 with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
 
 package Program.Elements.Parameter_Specifications is
 
@@ -53,5 +54,23 @@ package Program.Elements.Parameter_Specifications is
    not overriding function Default_Expression
     (Self : Parameter_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
+
+   type Parameter_Specification_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Parameter_Specification_Vector_Access is
+     access all Parameter_Specification_Vector'Class with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Parameter_Specification_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Parameter_Specification;
+
+   function To_Parameter_Specification
+    (Self  : Parameter_Specification_Vector'Class;
+     Index : Positive)
+      return not null Parameter_Specification_Access
+     is (Self.Element (Index).To_Parameter_Specification);
 
 end Program.Elements.Parameter_Specifications;

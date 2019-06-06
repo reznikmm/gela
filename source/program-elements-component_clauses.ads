@@ -9,6 +9,7 @@ with Program.Elements.Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
 with Program.Elements.Simple_Expression_Ranges;
+with Program.Element_Vectors;
 
 package Program.Elements.Component_Clauses is
 
@@ -44,5 +45,23 @@ package Program.Elements.Component_Clauses is
    not overriding function Semicolon_Token
     (Self : Component_Clause)
       return Program.Tokens.Token_Access is abstract;
+
+   type Component_Clause_Vector is
+     limited interface and Program.Element_Vectors.Element_Vector;
+
+   type Component_Clause_Vector_Access is
+     access all Component_Clause_Vector'Class with Storage_Size => 0;
+
+   overriding function Element
+    (Self  : Component_Clause_Vector;
+     Index : Positive)
+      return not null Program.Elements.Element_Access is abstract
+     with Post'Class => Element'Result.Is_Component_Clause;
+
+   function To_Component_Clause
+    (Self  : Component_Clause_Vector'Class;
+     Index : Positive)
+      return not null Component_Clause_Access
+     is (Self.Element (Index).To_Component_Clause);
 
 end Program.Elements.Component_Clauses;
