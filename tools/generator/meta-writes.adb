@@ -425,7 +425,10 @@ package body Meta.Writes is
    -- Write_One_Elements --
    ------------------------
 
-   procedure Write_One_Element (Item : Meta.Classes.Class) is
+   procedure Write_One_Element
+     (Item      : Meta.Classes.Class;
+      With_List : Boolean)
+   is
 
       F : aliased Ada_Pretty.Factory;
 
@@ -434,6 +437,98 @@ package body Meta.Writes is
       function Get_Props
         (Type_Name : League.Strings.Universal_String;
          Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
+
+      function Append_Vector
+        (Upper          : Ada_Pretty.Node_Access;
+         Element_Access : Ada_Pretty.Node_Access)
+          return Ada_Pretty.Node_Access;
+
+      -------------------
+      -- Append_Vector --
+      -------------------
+
+      function Append_Vector
+        (Upper          : Ada_Pretty.Node_Access;
+         Element_Access : Ada_Pretty.Node_Access)
+         return Ada_Pretty.Node_Access is
+      begin
+         if not With_List then
+            return Upper;
+         end if;
+
+         declare
+            Type_Name : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Item.Name & "_Vector");
+            Type_Decl : constant Ada_Pretty.Node_Access :=
+              F.New_Type
+                (Type_Name,
+                 Definition => F.New_Interface
+                   (Is_Limited => True,
+                    Parents    => F.New_Infix
+                      (+"and",
+                       F.New_Selected_Name
+                         (+"Program.Element_Vectors.Element_Vector"))));
+
+            Vector_Class  : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Item.Name & "_Vector'Class");
+
+            Access_Name : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Item.Name & "_Vector_Access");
+
+            Vector_Access : constant Ada_Pretty.Node_Access :=
+              F.New_Type
+                (Access_Name,
+                 Definition => F.New_Access
+                   (Is_All => True,
+                    Target => Vector_Class),
+                 Aspects => F.New_Aspect
+                   (Name  => F.New_Name (+"Storage_Size"),
+                    Value => F.New_Literal (0)));
+
+            Element : constant Ada_Pretty.Node_Access :=
+              F.New_Subprogram_Declaration
+                (Specification => F.New_Subprogram_Specification
+                   (Is_Overriding => Ada_Pretty.True,
+                    Name          => F.New_Name (+"Element"),
+                    Parameters    => F.New_List
+                      (F.New_Parameter
+                           (Name            => F.New_Name (+"Self"),
+                            Type_Definition => Type_Name),
+                       F.New_Parameter
+                         (Name            => F.New_Name (+"Index"),
+                          Type_Definition => F.New_Name (+"Positive"))),
+                    Result        => F.New_Null_Exclusion
+                      (Definition => F.New_Selected_Name
+                           (+"Program.Elements.Element_Access"),
+                       Exclude    => True)),
+                 Is_Abstract   => True,
+                 Aspects       => F.New_Aspect
+                   (Name  => F.New_Name (+"Post'Class"),
+                    Value => F.New_Selected_Name
+                      ("Element'Result.Is_" & Item.Name)));
+
+            Specific : constant Ada_Pretty.Node_Access :=
+              F.New_Subprogram_Declaration
+                (Specification => F.New_Subprogram_Specification
+                   (Name          => F.New_Name ("To_" & Item.Name),
+                    Parameters    => F.New_List
+                      (F.New_Parameter
+                           (Name            => F.New_Name (+"Self"),
+                            Type_Definition => Vector_Class),
+                       F.New_Parameter
+                           (Name            => F.New_Name (+"Index"),
+                            Type_Definition => F.New_Name (+"Positive"))),
+                    Result        => F.New_Null_Exclusion
+                      (Definition => Element_Access,
+                       Exclude    => True)),
+                 Expression      => F.New_Selected_Name
+                   (Prefix   => F.New_Name (+"Self.Element (Index)"),
+                    Selector => F.New_Name ("To_" & Item.Name)));
+         begin
+            return F.New_List
+              ((Upper, Type_Decl, Vector_Access, Element, Specific));
+         end;
+      end Append_Vector;
 
       -----------------
       -- Get_Clauses --
@@ -469,6 +564,12 @@ package body Meta.Writes is
               (F.New_Selected_Name (Get_Package_Name (List (J))));
             Result := F.New_List (Result, Each);
          end loop;
+
+         if With_List then
+            Each := F.New_With
+              (F.New_Selected_Name (+"Program.Element_Vectors"));
+            Result := F.New_List (Result, Each);
+         end if;
 
          return Result;
       end Get_Clauses;
@@ -567,10 +668,12 @@ package body Meta.Writes is
               Parents    => Get_Parents));
 
       Public_Part : constant Ada_Pretty.Node_Access :=
-        F.New_List
-          ((Pure,
-           Type_Decl,
-           Get_Props (Element_Name, Element_Access)));
+        Append_Vector
+          (F.New_List
+             ((Pure,
+              Type_Decl,
+              Get_Props (Element_Name, Element_Access))),
+           Element_Access => Access_Name);
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (F.New_Selected_Name (Package_Name), Public_Part);
