@@ -7,6 +7,7 @@
 with Program.Elements.Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
+with Program.Element_Vectors;
 with Program.Elements.Identifiers;
 
 package Program.Elements.Loop_Statements is
@@ -31,6 +32,11 @@ package Program.Elements.Loop_Statements is
    not overriding function Loop_Token
     (Self : Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Statements
+    (Self : Loop_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : Loop_Statement)

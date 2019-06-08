@@ -188,6 +188,7 @@ limited with Program.Elements.Attribute_Definition_Clauses;
 limited with Program.Elements.Enumeration_Representation_Clauses;
 limited with Program.Elements.Record_Representation_Clauses;
 limited with Program.Elements.At_Clauses;
+limited with Program.Elements.Exception_Handlers;
 
 package Program.Elements is
 
@@ -1195,6 +1196,9 @@ package Program.Elements is
      with Post'Class =>
        (if Is_At_Clause'Result then Self.Is_Representation_Clause);
 
+   not overriding function Is_Exception_Handler (Self : Element) return Boolean
+     is abstract;
+
    function To_Pragma
     (Self : access Element'Class)
       return Program.Elements.Pragmas.Pragma_Access with Pre => Self.Is_Pragma;
@@ -2196,5 +2200,10 @@ package Program.Elements is
     (Self : access Element'Class)
       return Program.Elements.At_Clauses.At_Clause_Access
      with Pre => Self.Is_At_Clause;
+
+   function To_Exception_Handler
+    (Self : access Element'Class)
+      return Program.Elements.Exception_Handlers.Exception_Handler_Access
+     with Pre => Self.Is_Exception_Handler;
 
 end Program.Elements;

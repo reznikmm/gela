@@ -6,6 +6,7 @@
 
 with Program.Elements.Constraints;
 with Program.Tokens;
+with Program.Elements.Discriminant_Associations;
 
 package Program.Elements.Discriminant_Constraints is
 
@@ -20,6 +21,11 @@ package Program.Elements.Discriminant_Constraints is
    not overriding function Left_Bracket_Token
     (Self : Discriminant_Constraint)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Discriminants
+    (Self : Discriminant_Constraint)
+      return not null Program.Elements.Discriminant_Associations
+          .Discriminant_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Discriminant_Constraint)

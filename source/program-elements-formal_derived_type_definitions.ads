@@ -37,11 +37,17 @@ package Program.Elements.Formal_Derived_Type_Definitions is
 
    not overriding function Subtype_Mark
     (Self : Formal_Derived_Type_Definition)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function And_Token
     (Self : Formal_Derived_Type_Definition)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Progenitors
+    (Self : Formal_Derived_Type_Definition)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Formal_Derived_Type_Definition)

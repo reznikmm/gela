@@ -24,7 +24,8 @@ package Program.Elements.Elsif_Expression_Paths is
 
    not overriding function Condition
     (Self : Elsif_Expression_Path)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Then_Token
     (Self : Elsif_Expression_Path)
@@ -32,6 +33,7 @@ package Program.Elements.Elsif_Expression_Paths is
 
    not overriding function Expression
     (Self : Elsif_Expression_Path)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Elsif_Expression_Paths;

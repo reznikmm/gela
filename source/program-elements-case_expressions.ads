@@ -6,6 +6,7 @@
 
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Elements.Case_Expression_Paths;
 
 package Program.Elements.Case_Expressions is
 
@@ -23,10 +24,16 @@ package Program.Elements.Case_Expressions is
 
    not overriding function Selecting_Expression
     (Self : Case_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Is_Token
     (Self : Case_Expression)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Paths
+    (Self : Case_Expression)
+      return not null Program.Elements.Case_Expression_Paths
+          .Case_Expression_Path_Vector_Access is abstract;
 
 end Program.Elements.Case_Expressions;

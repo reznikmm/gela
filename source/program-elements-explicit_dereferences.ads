@@ -19,7 +19,8 @@ package Program.Elements.Explicit_Dereferences is
 
    not overriding function Prefix
     (Self : Explicit_Dereference)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Dot_Token
     (Self : Explicit_Dereference)

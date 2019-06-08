@@ -6,6 +6,7 @@
 
 with Program.Elements.Constraints;
 with Program.Tokens;
+with Program.Elements.Discrete_Ranges;
 
 package Program.Elements.Index_Constraints is
 
@@ -20,6 +21,11 @@ package Program.Elements.Index_Constraints is
    not overriding function Left_Bracket_Token
     (Self : Index_Constraint)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Ranges
+    (Self : Index_Constraint)
+      return not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Index_Constraint)

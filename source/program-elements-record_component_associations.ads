@@ -4,10 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Associations;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Element_Vectors;
 
 package Program.Elements.Record_Component_Associations is
 
@@ -18,6 +18,11 @@ package Program.Elements.Record_Component_Associations is
 
    type Record_Component_Association_Access is
      access all Record_Component_Association'Class with Storage_Size => 0;
+
+   not overriding function Choices
+    (Self : Record_Component_Association)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function Arrow_Token
     (Self : Record_Component_Association)

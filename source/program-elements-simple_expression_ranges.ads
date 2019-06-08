@@ -25,7 +25,8 @@ package Program.Elements.Simple_Expression_Ranges is
 
    not overriding function Lower_Bound
     (Self : Simple_Expression_Range)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Double_Dot_Token
     (Self : Simple_Expression_Range)
@@ -33,6 +34,7 @@ package Program.Elements.Simple_Expression_Ranges is
 
    not overriding function Upper_Bound
     (Self : Simple_Expression_Range)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Simple_Expression_Ranges;

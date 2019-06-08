@@ -24,7 +24,8 @@ package Program.Elements.Requeue_Statements is
 
    not overriding function Entry_Name
     (Self : Requeue_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Requeue_Statement)

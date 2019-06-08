@@ -24,7 +24,7 @@ package Program.Elements.Range_Attribute_References is
 
    not overriding function Range_Attribute
     (Self : Range_Attribute_Reference)
-      return Program.Elements.Attribute_References.Attribute_Reference_Access
-     is abstract;
+      return not null Program.Elements.Attribute_References
+          .Attribute_Reference_Access is abstract;
 
 end Program.Elements.Range_Attribute_References;

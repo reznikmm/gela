@@ -7,6 +7,7 @@
 with Program.Elements.Type_Definitions;
 with Program.Elements.Formal_Type_Definitions;
 with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Interface_Types is
 
@@ -42,5 +43,10 @@ package Program.Elements.Interface_Types is
    not overriding function And_Token
     (Self : Interface_Type)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Progenitors
+    (Self : Interface_Type)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
 end Program.Elements.Interface_Types;

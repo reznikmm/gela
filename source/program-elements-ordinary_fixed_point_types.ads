@@ -25,11 +25,12 @@ package Program.Elements.Ordinary_Fixed_Point_Types is
 
    not overriding function Delta_Expression
     (Self : Ordinary_Fixed_Point_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Real_Range
     (Self : Ordinary_Fixed_Point_Type)
-      return Program.Elements.Real_Range_Specifications
+      return not null Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Access is abstract;
 
 end Program.Elements.Ordinary_Fixed_Point_Types;

@@ -6,6 +6,7 @@
 
 with Program.Tokens;
 with Program.Elements.Identifiers;
+with Program.Elements.Parameter_Associations;
 
 package Program.Elements.Pragmas is
 
@@ -22,11 +23,17 @@ package Program.Elements.Pragmas is
 
    not overriding function Name
     (Self : Pragma_Element)
-      return Program.Elements.Identifiers.Identifier_Access is abstract;
+      return not null Program.Elements.Identifiers.Identifier_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Pragma_Element)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Arguments
+    (Self : Pragma_Element)
+      return not null Program.Elements.Parameter_Associations
+          .Parameter_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Pragma_Element)

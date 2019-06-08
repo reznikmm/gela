@@ -9,6 +9,7 @@ with Program.Tokens;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Definitions;
 with Program.Elements.Formal_Type_Definitions;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Formal_Type_Declarations is
 
@@ -26,8 +27,8 @@ package Program.Elements.Formal_Type_Declarations is
 
    not overriding function Name
     (Self : Formal_Type_Declaration)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Discriminant_Part
     (Self : Formal_Type_Declaration)
@@ -39,12 +40,17 @@ package Program.Elements.Formal_Type_Declarations is
 
    not overriding function Definition
     (Self : Formal_Type_Declaration)
-      return Program.Elements.Formal_Type_Definitions
+      return not null Program.Elements.Formal_Type_Definitions
           .Formal_Type_Definition_Access is abstract;
 
    not overriding function With_Token
     (Self : Formal_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Formal_Type_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Formal_Type_Declaration)

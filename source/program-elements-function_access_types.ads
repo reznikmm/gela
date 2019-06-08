@@ -8,6 +8,7 @@ with Program.Elements.Access_Types;
 with Program.Elements.Formal_Access_Types;
 with Program.Elements.Anonymous_Access_Definitions;
 with Program.Tokens;
+with Program.Elements.Parameter_Specifications;
 
 package Program.Elements.Function_Access_Types is
 
@@ -46,6 +47,11 @@ package Program.Elements.Function_Access_Types is
     (Self : Function_Access_Type)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Parameters
+    (Self : Function_Access_Type)
+      return not null Program.Elements.Parameter_Specifications
+          .Parameter_Specification_Vector_Access is abstract;
+
    not overriding function Right_Bracket_Token
     (Self : Function_Access_Type)
       return Program.Tokens.Token_Access is abstract;
@@ -64,6 +70,6 @@ package Program.Elements.Function_Access_Types is
 
    not overriding function Result_Subtype
     (Self : Function_Access_Type)
-      return Program.Elements.Element_Access is abstract;
+      return not null Program.Elements.Element_Access is abstract;
 
 end Program.Elements.Function_Access_Types;

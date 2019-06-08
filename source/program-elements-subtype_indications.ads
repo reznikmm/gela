@@ -34,7 +34,8 @@ package Program.Elements.Subtype_Indications is
 
    not overriding function Subtype_Mark
     (Self : Subtype_Indication)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Constraint
     (Self : Subtype_Indication)

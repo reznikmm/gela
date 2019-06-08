@@ -8,6 +8,7 @@ with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Subtype_Indications;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Subtype_Declarations is
 
@@ -25,8 +26,8 @@ package Program.Elements.Subtype_Declarations is
 
    not overriding function Name
     (Self : Subtype_Declaration)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Is_Token
     (Self : Subtype_Declaration)
@@ -34,12 +35,17 @@ package Program.Elements.Subtype_Declarations is
 
    not overriding function Subtype_Indication
     (Self : Subtype_Declaration)
-      return Program.Elements.Subtype_Indications.Subtype_Indication_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
    not overriding function With_Token
     (Self : Subtype_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Subtype_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Subtype_Declaration)

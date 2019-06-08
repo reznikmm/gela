@@ -10,6 +10,7 @@ with Program.Tokens;
 with Program.Elements.Loop_Parameter_Specifications;
 with Program.Elements.Generalized_Iterator_Specifications;
 with Program.Elements.Element_Iterator_Specifications;
+with Program.Element_Vectors;
 with Program.Elements.Identifiers;
 
 package Program.Elements.For_Loop_Statements is
@@ -53,6 +54,11 @@ package Program.Elements.For_Loop_Statements is
    not overriding function Loop_Token
     (Self : For_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Statements
+    (Self : For_Loop_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : For_Loop_Statement)

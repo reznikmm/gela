@@ -5,6 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
 
@@ -17,6 +18,11 @@ package Program.Elements.Number_Declarations is
 
    type Number_Declaration_Access is access all Number_Declaration'Class
      with Storage_Size => 0;
+
+   not overriding function Names
+    (Self : Number_Declaration)
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Vector_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Number_Declaration)
@@ -32,7 +38,8 @@ package Program.Elements.Number_Declarations is
 
    not overriding function Expression
     (Self : Number_Declaration)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Number_Declaration)

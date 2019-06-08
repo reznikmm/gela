@@ -8,6 +8,8 @@ with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Expressions;
+with Program.Elements.Formal_Package_Associations;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Formal_Package_Declarations is
 
@@ -29,8 +31,8 @@ package Program.Elements.Formal_Package_Declarations is
 
    not overriding function Name
     (Self : Formal_Package_Declaration)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Is_Token
     (Self : Formal_Package_Declaration)
@@ -42,11 +44,17 @@ package Program.Elements.Formal_Package_Declarations is
 
    not overriding function Generic_Package_Name
     (Self : Formal_Package_Declaration)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Formal_Package_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Formal_Package_Declaration)
+      return not null Program.Elements.Formal_Package_Associations
+          .Formal_Package_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Formal_Package_Declaration)
@@ -55,6 +63,11 @@ package Program.Elements.Formal_Package_Declarations is
    not overriding function With_Token_2
     (Self : Formal_Package_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Formal_Package_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Formal_Package_Declaration)

@@ -7,6 +7,7 @@
 with Program.Elements.Definitions;
 with Program.Tokens;
 with Program.Elements.Subtype_Indications;
+with Program.Elements.Expressions;
 
 package Program.Elements.Private_Extension_Definitions is
 
@@ -36,12 +37,17 @@ package Program.Elements.Private_Extension_Definitions is
 
    not overriding function Ancestor
     (Self : Private_Extension_Definition)
-      return Program.Elements.Subtype_Indications.Subtype_Indication_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
    not overriding function And_Token
     (Self : Private_Extension_Definition)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Progenitors
+    (Self : Private_Extension_Definition)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Private_Extension_Definition)

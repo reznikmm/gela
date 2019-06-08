@@ -8,6 +8,7 @@ with Program.Elements.Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
 with Program.Elements.Identifiers;
 
 package Program.Elements.While_Loop_Statements is
@@ -35,11 +36,17 @@ package Program.Elements.While_Loop_Statements is
 
    not overriding function Condition
     (Self : While_Loop_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Loop_Token
     (Self : While_Loop_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Statements
+    (Self : While_Loop_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : While_Loop_Statement)

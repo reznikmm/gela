@@ -19,7 +19,8 @@ package Program.Elements.Short_Circuit_Operations is
 
    not overriding function Left
     (Self : Short_Circuit_Operation)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function And_Token
     (Self : Short_Circuit_Operation)
@@ -39,6 +40,7 @@ package Program.Elements.Short_Circuit_Operations is
 
    not overriding function Right
     (Self : Short_Circuit_Operation)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Short_Circuit_Operations;

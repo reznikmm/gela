@@ -23,6 +23,6 @@ package Program.Elements.Component_Definitions is
 
    not overriding function Subtype_Indication
     (Self : Component_Definition)
-      return Program.Elements.Element_Access is abstract;
+      return not null Program.Elements.Element_Access is abstract;
 
 end Program.Elements.Component_Definitions;

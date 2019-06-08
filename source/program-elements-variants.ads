@@ -4,9 +4,9 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Definitions;
 with Program.Tokens;
-with Program.Element_Vectors;
 
 package Program.Elements.Variants is
 
@@ -21,9 +21,19 @@ package Program.Elements.Variants is
     (Self : Variant)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Choices
+    (Self : Variant)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
    not overriding function Arrow_Token
     (Self : Variant)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Components
+    (Self : Variant)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    type Variant_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

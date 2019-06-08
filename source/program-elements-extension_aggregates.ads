@@ -6,6 +6,7 @@
 
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Elements.Record_Component_Associations;
 
 package Program.Elements.Extension_Aggregates is
 
@@ -23,11 +24,17 @@ package Program.Elements.Extension_Aggregates is
 
    not overriding function Ancestor
     (Self : Extension_Aggregate)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Extension_Aggregate)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Components
+    (Self : Extension_Aggregate)
+      return not null Program.Elements.Record_Component_Associations
+          .Record_Component_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Extension_Aggregate)

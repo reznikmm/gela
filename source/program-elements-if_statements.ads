@@ -7,6 +7,8 @@
 with Program.Elements.Statements;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Element_Vectors;
+with Program.Elements.Elsif_Paths;
 
 package Program.Elements.If_Statements is
 
@@ -24,15 +26,31 @@ package Program.Elements.If_Statements is
 
    not overriding function Condition
     (Self : If_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Then_Token
     (Self : If_Statement)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Then_Statements
+    (Self : If_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
+   not overriding function Elsif_Paths
+    (Self : If_Statement)
+      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access
+     is abstract;
+
    not overriding function Else_Token
     (Self : If_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Else_Statements
+    (Self : If_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : If_Statement)

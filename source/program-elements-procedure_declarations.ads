@@ -7,6 +7,8 @@
 with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Names;
+with Program.Elements.Parameter_Specifications;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Procedure_Declarations is
 
@@ -32,11 +34,17 @@ package Program.Elements.Procedure_Declarations is
 
    not overriding function Name
     (Self : Procedure_Declaration)
-      return Program.Elements.Defining_Names.Defining_Name_Access is abstract;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Procedure_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Procedure_Declaration)
+      return not null Program.Elements.Parameter_Specifications
+          .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Procedure_Declaration)
@@ -53,6 +61,11 @@ package Program.Elements.Procedure_Declarations is
    not overriding function With_Token
     (Self : Procedure_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Procedure_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Procedure_Declaration)

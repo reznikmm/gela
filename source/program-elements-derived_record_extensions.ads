@@ -33,11 +33,17 @@ package Program.Elements.Derived_Record_Extensions is
 
    not overriding function Parent
     (Self : Derived_Record_Extension)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function And_Token
     (Self : Derived_Record_Extension)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Progenitors
+    (Self : Derived_Record_Extension)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Derived_Record_Extension)
@@ -45,6 +51,7 @@ package Program.Elements.Derived_Record_Extensions is
 
    not overriding function Record_Definition
     (Self : Derived_Record_Extension)
-      return Program.Elements.Definitions.Definition_Access is abstract;
+      return not null Program.Elements.Definitions.Definition_Access
+     is abstract;
 
 end Program.Elements.Derived_Record_Extensions;

@@ -28,7 +28,8 @@ package Program.Elements.Delay_Statements is
 
    not overriding function Expression
     (Self : Delay_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Delay_Statement)

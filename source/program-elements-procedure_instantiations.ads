@@ -8,6 +8,8 @@ with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Names;
 with Program.Elements.Expressions;
+with Program.Elements.Parameter_Associations;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Procedure_Instantiations is
 
@@ -33,7 +35,8 @@ package Program.Elements.Procedure_Instantiations is
 
    not overriding function Name
     (Self : Procedure_Instantiation)
-      return Program.Elements.Defining_Names.Defining_Name_Access is abstract;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access
+     is abstract;
 
    not overriding function Is_Token
     (Self : Procedure_Instantiation)
@@ -45,11 +48,17 @@ package Program.Elements.Procedure_Instantiations is
 
    not overriding function Generic_Procedure_Name
     (Self : Procedure_Instantiation)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Procedure_Instantiation)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Procedure_Instantiation)
+      return not null Program.Elements.Parameter_Associations
+          .Parameter_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Procedure_Instantiation)
@@ -58,6 +67,11 @@ package Program.Elements.Procedure_Instantiations is
    not overriding function With_Token
     (Self : Procedure_Instantiation)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Procedure_Instantiation)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Procedure_Instantiation)

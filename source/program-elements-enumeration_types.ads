@@ -6,6 +6,7 @@
 
 with Program.Elements.Type_Definitions;
 with Program.Tokens;
+with Program.Elements.Enumeration_Literal_Specifications;
 
 package Program.Elements.Enumeration_Types is
 
@@ -20,6 +21,11 @@ package Program.Elements.Enumeration_Types is
    not overriding function Left_Bracket_Token
     (Self : Enumeration_Type)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Literals
+    (Self : Enumeration_Type)
+      return not null Program.Elements.Enumeration_Literal_Specifications
+          .Enumeration_Literal_Specification_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Enumeration_Type)

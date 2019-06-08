@@ -4,10 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Definitions;
 with Program.Elements.Expressions;
 with Program.Tokens;
-with Program.Element_Vectors;
 
 package Program.Elements.Aspect_Specifications is
 
@@ -21,7 +21,8 @@ package Program.Elements.Aspect_Specifications is
 
    not overriding function Aspect_Mark
     (Self : Aspect_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Arrow_Token
     (Self : Aspect_Specification)
@@ -29,7 +30,8 @@ package Program.Elements.Aspect_Specifications is
 
    not overriding function Aspect_Definition
     (Self : Aspect_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    type Aspect_Specification_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

@@ -24,7 +24,8 @@ package Program.Elements.Goto_Statements is
 
    not overriding function Goto_Label
     (Self : Goto_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Goto_Statement)

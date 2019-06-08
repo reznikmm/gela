@@ -24,7 +24,8 @@ package Program.Elements.Real_Range_Specifications is
 
    not overriding function Lower_Bound
     (Self : Real_Range_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Double_Dot_Token
     (Self : Real_Range_Specification)
@@ -32,6 +33,7 @@ package Program.Elements.Real_Range_Specifications is
 
    not overriding function Upper_Bound
     (Self : Real_Range_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Real_Range_Specifications;

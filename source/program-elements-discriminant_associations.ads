@@ -4,10 +4,11 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Associations;
+with Program.Elements.Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Element_Vectors;
 
 package Program.Elements.Discriminant_Associations is
 
@@ -19,13 +20,19 @@ package Program.Elements.Discriminant_Associations is
    type Discriminant_Association_Access is
      access all Discriminant_Association'Class with Storage_Size => 0;
 
+   not overriding function Selector_Names
+    (Self : Discriminant_Association)
+      return not null Program.Elements.Identifiers.Identifier_Vector_Access
+     is abstract;
+
    not overriding function Arrow_Token
     (Self : Discriminant_Association)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Expression
     (Self : Discriminant_Association)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    type Discriminant_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

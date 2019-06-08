@@ -6,6 +6,7 @@
 
 with Program.Elements.Clauses;
 with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.With_Clauses is
 
@@ -27,6 +28,11 @@ package Program.Elements.With_Clauses is
    not overriding function With_Token
     (Self : With_Clause)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Clause_Names
+    (Self : With_Clause)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : With_Clause)

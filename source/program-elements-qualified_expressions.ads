@@ -19,7 +19,8 @@ package Program.Elements.Qualified_Expressions is
 
    not overriding function Subtype_Mark
     (Self : Qualified_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Apostrophe_Token
     (Self : Qualified_Expression)
@@ -31,7 +32,8 @@ package Program.Elements.Qualified_Expressions is
 
    not overriding function Operand
     (Self : Qualified_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Qualified_Expression)

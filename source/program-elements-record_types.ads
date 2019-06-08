@@ -32,6 +32,7 @@ package Program.Elements.Record_Types is
 
    not overriding function Record_Definition
     (Self : Record_Type)
-      return Program.Elements.Definitions.Definition_Access is abstract;
+      return not null Program.Elements.Definitions.Definition_Access
+     is abstract;
 
 end Program.Elements.Record_Types;

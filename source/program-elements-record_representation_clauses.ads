@@ -7,6 +7,7 @@
 with Program.Elements.Representation_Clauses;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Elements.Component_Clauses;
 
 package Program.Elements.Record_Representation_Clauses is
 
@@ -25,7 +26,8 @@ package Program.Elements.Record_Representation_Clauses is
 
    not overriding function Name
     (Self : Record_Representation_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Use_Token
     (Self : Record_Representation_Clause)
@@ -50,6 +52,11 @@ package Program.Elements.Record_Representation_Clauses is
    not overriding function Mod_Semicolon_Token
     (Self : Record_Representation_Clause)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Component_Clauses
+    (Self : Record_Representation_Clause)
+      return not null Program.Elements.Component_Clauses
+          .Component_Clause_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Record_Representation_Clause)

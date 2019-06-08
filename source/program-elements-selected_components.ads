@@ -19,7 +19,8 @@ package Program.Elements.Selected_Components is
 
    not overriding function Prefix
     (Self : Selected_Component)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Dot_Token
     (Self : Selected_Component)
@@ -27,6 +28,7 @@ package Program.Elements.Selected_Components is
 
    not overriding function Selector
     (Self : Selected_Component)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Selected_Components;

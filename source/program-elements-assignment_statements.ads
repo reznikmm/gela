@@ -20,7 +20,8 @@ package Program.Elements.Assignment_Statements is
 
    not overriding function Variable_Name
     (Self : Assignment_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Assignment_Token
     (Self : Assignment_Statement)
@@ -28,7 +29,8 @@ package Program.Elements.Assignment_Statements is
 
    not overriding function Expression
     (Self : Assignment_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Assignment_Statement)

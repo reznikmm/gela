@@ -24,7 +24,8 @@ package Program.Elements.Digits_Constraints is
 
    not overriding function Digits_Expression
     (Self : Digits_Constraint)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Range_Token
     (Self : Digits_Constraint)

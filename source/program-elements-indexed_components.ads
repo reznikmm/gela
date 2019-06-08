@@ -19,11 +19,17 @@ package Program.Elements.Indexed_Components is
 
    not overriding function Prefix
     (Self : Indexed_Component)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Indexed_Component)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Expressions
+    (Self : Indexed_Component)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Indexed_Component)

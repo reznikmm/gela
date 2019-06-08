@@ -5,8 +5,10 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Formal_Object_Declarations is
 
@@ -17,6 +19,11 @@ package Program.Elements.Formal_Object_Declarations is
 
    type Formal_Object_Declaration_Access is
      access all Formal_Object_Declaration'Class with Storage_Size => 0;
+
+   not overriding function Names
+    (Self : Formal_Object_Declaration)
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Vector_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Formal_Object_Declaration)
@@ -40,7 +47,7 @@ package Program.Elements.Formal_Object_Declarations is
 
    not overriding function Object_Subtype
     (Self : Formal_Object_Declaration)
-      return Program.Elements.Element_Access is abstract;
+      return not null Program.Elements.Element_Access is abstract;
 
    not overriding function Assignment_Token
     (Self : Formal_Object_Declaration)
@@ -53,6 +60,11 @@ package Program.Elements.Formal_Object_Declarations is
    not overriding function With_Token
     (Self : Formal_Object_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Formal_Object_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Formal_Object_Declaration)

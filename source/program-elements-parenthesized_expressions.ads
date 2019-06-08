@@ -23,7 +23,8 @@ package Program.Elements.Parenthesized_Expressions is
 
    not overriding function Expression
     (Self : Parenthesized_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Parenthesized_Expression)

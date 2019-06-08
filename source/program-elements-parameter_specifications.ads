@@ -4,10 +4,11 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Element_Vectors;
 
 package Program.Elements.Parameter_Specifications is
 
@@ -18,6 +19,11 @@ package Program.Elements.Parameter_Specifications is
 
    type Parameter_Specification_Access is
      access all Parameter_Specification'Class with Storage_Size => 0;
+
+   not overriding function Names
+    (Self : Parameter_Specification)
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Vector_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Parameter_Specification)
@@ -45,7 +51,7 @@ package Program.Elements.Parameter_Specifications is
 
    not overriding function Parameter_Subtype
     (Self : Parameter_Specification)
-      return Program.Elements.Element_Access is abstract;
+      return not null Program.Elements.Element_Access is abstract;
 
    not overriding function Assignment_Token
     (Self : Parameter_Specification)

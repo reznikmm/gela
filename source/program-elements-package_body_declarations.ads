@@ -7,6 +7,9 @@
 with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Names;
+with Program.Elements.Aspect_Specifications;
+with Program.Element_Vectors;
+with Program.Elements.Exception_Handlers;
 with Program.Elements.Expressions;
 
 package Program.Elements.Package_Body_Declarations is
@@ -29,23 +32,44 @@ package Program.Elements.Package_Body_Declarations is
 
    not overriding function Name
     (Self : Package_Body_Declaration)
-      return Program.Elements.Defining_Names.Defining_Name_Access is abstract;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Package_Body_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Aspects
+    (Self : Package_Body_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
+
    not overriding function Is_Token
     (Self : Package_Body_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Declarations
+    (Self : Package_Body_Declaration)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function Begin_Token
     (Self : Package_Body_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Statements
+    (Self : Package_Body_Declaration)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
    not overriding function Exception_Token
     (Self : Package_Body_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Exception_Handlers
+    (Self : Package_Body_Declaration)
+      return not null Program.Elements.Exception_Handlers
+          .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Token
     (Self : Package_Body_Declaration)

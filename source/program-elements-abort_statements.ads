@@ -6,6 +6,7 @@
 
 with Program.Elements.Statements;
 with Program.Tokens;
+with Program.Elements.Expressions;
 
 package Program.Elements.Abort_Statements is
 
@@ -20,6 +21,11 @@ package Program.Elements.Abort_Statements is
    not overriding function Abort_Token
     (Self : Abort_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aborted_Tasks
+    (Self : Abort_Statement)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Abort_Statement)

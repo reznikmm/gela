@@ -6,6 +6,7 @@
 
 with Program.Elements.Definitions;
 with Program.Tokens;
+with Program.Elements.Discriminant_Specifications;
 
 package Program.Elements.Known_Discriminant_Parts is
 
@@ -20,6 +21,11 @@ package Program.Elements.Known_Discriminant_Parts is
    not overriding function Left_Bracket_Token
     (Self : Known_Discriminant_Part)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Discriminants
+    (Self : Known_Discriminant_Part)
+      return not null Program.Elements.Discriminant_Specifications
+          .Discriminant_Specification_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Known_Discriminant_Part)

@@ -41,7 +41,7 @@ package Program.Elements.Object_Access_Types is
 
    not overriding function Subtype_Indication
     (Self : Object_Access_Type)
-      return Program.Elements.Subtype_Indications.Subtype_Indication_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
 end Program.Elements.Object_Access_Types;

@@ -4,10 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Paths;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Element_Vectors;
 
 package Program.Elements.Case_Expression_Paths is
 
@@ -23,13 +23,19 @@ package Program.Elements.Case_Expression_Paths is
     (Self : Case_Expression_Path)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Choices
+    (Self : Case_Expression_Path)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
    not overriding function Arrow_Token
     (Self : Case_Expression_Path)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Expression
     (Self : Case_Expression_Path)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    type Case_Expression_Path_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

@@ -4,10 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Associations;
 with Program.Elements.Expressions;
 with Program.Tokens;
-with Program.Element_Vectors;
 
 package Program.Elements.Parameter_Associations is
 
@@ -29,7 +29,8 @@ package Program.Elements.Parameter_Associations is
 
    not overriding function Actual_Parameter
     (Self : Parameter_Association)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    type Parameter_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

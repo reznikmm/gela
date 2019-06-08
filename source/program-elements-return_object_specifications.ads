@@ -21,8 +21,8 @@ package Program.Elements.Return_Object_Specifications is
 
    not overriding function Name
     (Self : Return_Object_Specification)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Return_Object_Specification)
@@ -38,7 +38,7 @@ package Program.Elements.Return_Object_Specifications is
 
    not overriding function Object_Subtype
     (Self : Return_Object_Specification)
-      return Program.Elements.Element_Access is abstract;
+      return not null Program.Elements.Element_Access is abstract;
 
    not overriding function Assignment_Token
     (Self : Return_Object_Specification)

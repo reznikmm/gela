@@ -21,8 +21,8 @@ package Program.Elements.Loop_Parameter_Specifications is
 
    not overriding function Name
     (Self : Loop_Parameter_Specification)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function In_Token
     (Self : Loop_Parameter_Specification)
@@ -34,7 +34,7 @@ package Program.Elements.Loop_Parameter_Specifications is
 
    not overriding function Definition
     (Self : Loop_Parameter_Specification)
-      return Program.Elements.Discrete_Subtype_Definitions
+      return not null Program.Elements.Discrete_Subtype_Definitions
           .Discrete_Subtype_Definition_Access is abstract;
 
 end Program.Elements.Loop_Parameter_Specifications;

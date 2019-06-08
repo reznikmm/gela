@@ -19,7 +19,8 @@ package Program.Elements.Type_Conversions is
 
    not overriding function Subtype_Mark
     (Self : Type_Conversion)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Type_Conversion)
@@ -27,7 +28,8 @@ package Program.Elements.Type_Conversions is
 
    not overriding function Operand
     (Self : Type_Conversion)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Type_Conversion)

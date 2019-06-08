@@ -8,6 +8,7 @@ with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Names;
 with Program.Elements.Expressions;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Package_Renaming_Declarations is
 
@@ -25,7 +26,8 @@ package Program.Elements.Package_Renaming_Declarations is
 
    not overriding function Name
     (Self : Package_Renaming_Declaration)
-      return Program.Elements.Defining_Names.Defining_Name_Access is abstract;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access
+     is abstract;
 
    not overriding function Renames_Token
     (Self : Package_Renaming_Declaration)
@@ -33,11 +35,17 @@ package Program.Elements.Package_Renaming_Declarations is
 
    not overriding function Renamed_Package
     (Self : Package_Renaming_Declaration)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Package_Renaming_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Package_Renaming_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Package_Renaming_Declaration)

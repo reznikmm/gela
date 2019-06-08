@@ -4,12 +4,12 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Clauses;
 with Program.Elements.Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
 with Program.Elements.Simple_Expression_Ranges;
-with Program.Element_Vectors;
 
 package Program.Elements.Component_Clauses is
 
@@ -23,7 +23,8 @@ package Program.Elements.Component_Clauses is
 
    not overriding function Clause_Name
     (Self : Component_Clause)
-      return Program.Elements.Identifiers.Identifier_Access is abstract;
+      return not null Program.Elements.Identifiers.Identifier_Access
+     is abstract;
 
    not overriding function At_Token
     (Self : Component_Clause)
@@ -31,7 +32,8 @@ package Program.Elements.Component_Clauses is
 
    not overriding function Position
     (Self : Component_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Range_Token
     (Self : Component_Clause)
@@ -39,7 +41,7 @@ package Program.Elements.Component_Clauses is
 
    not overriding function Clause_Range
     (Self : Component_Clause)
-      return Program.Elements.Simple_Expression_Ranges
+      return not null Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Access is abstract;
 
    not overriding function Semicolon_Token

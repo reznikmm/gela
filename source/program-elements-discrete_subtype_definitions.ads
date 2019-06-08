@@ -4,8 +4,8 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-with Program.Elements.Definitions;
 with Program.Element_Vectors;
+with Program.Elements.Definitions;
 
 package Program.Elements.Discrete_Subtype_Definitions is
 

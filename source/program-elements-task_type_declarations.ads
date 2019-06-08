@@ -8,6 +8,8 @@ with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Known_Discriminant_Parts;
+with Program.Elements.Aspect_Specifications;
+with Program.Elements.Expressions;
 with Program.Elements.Task_Definitions;
 
 package Program.Elements.Task_Type_Declarations is
@@ -30,8 +32,8 @@ package Program.Elements.Task_Type_Declarations is
 
    not overriding function Name
     (Self : Task_Type_Declaration)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Discriminant_Part
     (Self : Task_Type_Declaration)
@@ -41,6 +43,11 @@ package Program.Elements.Task_Type_Declarations is
    not overriding function With_Token
     (Self : Task_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Task_Type_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Is_Token
     (Self : Task_Type_Declaration)
@@ -54,13 +61,18 @@ package Program.Elements.Task_Type_Declarations is
     (Self : Task_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Progenitors
+    (Self : Task_Type_Declaration)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
+
    not overriding function With_Token_2
     (Self : Task_Type_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Definition
     (Self : Task_Type_Declaration)
-      return Program.Elements.Task_Definitions.Task_Definition_Access
+      return not null Program.Elements.Task_Definitions.Task_Definition_Access
      is abstract;
 
    not overriding function Semicolon_Token

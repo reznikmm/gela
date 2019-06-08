@@ -7,6 +7,8 @@
 with Program.Elements.Statements;
 with Program.Tokens;
 with Program.Elements.Return_Object_Specifications;
+with Program.Element_Vectors;
+with Program.Elements.Exception_Handlers;
 
 package Program.Elements.Extended_Return_Statements is
 
@@ -24,16 +26,26 @@ package Program.Elements.Extended_Return_Statements is
 
    not overriding function Return_Object
     (Self : Extended_Return_Statement)
-      return Program.Elements.Return_Object_Specifications
+      return not null Program.Elements.Return_Object_Specifications
           .Return_Object_Specification_Access is abstract;
 
    not overriding function Do_Token
     (Self : Extended_Return_Statement)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Statements
+    (Self : Extended_Return_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
    not overriding function Exception_Token
     (Self : Extended_Return_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Exception_Handlers
+    (Self : Extended_Return_Statement)
+      return not null Program.Elements.Exception_Handlers
+          .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Token
     (Self : Extended_Return_Statement)

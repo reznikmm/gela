@@ -4,10 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Paths;
 with Program.Tokens;
 with Program.Elements.Expressions;
-with Program.Element_Vectors;
 
 package Program.Elements.Elsif_Paths is
 
@@ -24,11 +24,17 @@ package Program.Elements.Elsif_Paths is
 
    not overriding function Condition
     (Self : Elsif_Path)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Then_Token
     (Self : Elsif_Path)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Statements
+    (Self : Elsif_Path)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    type Elsif_Path_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

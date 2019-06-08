@@ -6,6 +6,7 @@
 
 with Program.Elements.Definitions;
 with Program.Tokens;
+with Program.Element_Vectors;
 
 package Program.Elements.Record_Definitions is
 
@@ -20,6 +21,11 @@ package Program.Elements.Record_Definitions is
    not overriding function Record_Token
     (Self : Record_Definition)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Components
+    (Self : Record_Definition)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : Record_Definition)

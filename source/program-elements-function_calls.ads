@@ -6,6 +6,7 @@
 
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Elements.Parameter_Associations;
 
 package Program.Elements.Function_Calls is
 
@@ -19,11 +20,17 @@ package Program.Elements.Function_Calls is
 
    not overriding function Prefix
     (Self : Function_Call)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Function_Call)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Function_Call)
+      return not null Program.Elements.Parameter_Associations
+          .Parameter_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Function_Call)

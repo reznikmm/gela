@@ -24,7 +24,8 @@ package Program.Elements.Signed_Integer_Types is
 
    not overriding function Lower_Bound
     (Self : Signed_Integer_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Double_Dot_Token
     (Self : Signed_Integer_Type)
@@ -32,6 +33,7 @@ package Program.Elements.Signed_Integer_Types is
 
    not overriding function Upper_Bound
     (Self : Signed_Integer_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Signed_Integer_Types;

@@ -26,7 +26,8 @@ package Program.Elements.Enumeration_Representation_Clauses is
 
    not overriding function Name
     (Self : Enumeration_Representation_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Use_Token
     (Self : Enumeration_Representation_Clause)
@@ -34,7 +35,7 @@ package Program.Elements.Enumeration_Representation_Clauses is
 
    not overriding function Expression
     (Self : Enumeration_Representation_Clause)
-      return Program.Elements.Array_Aggregates.Array_Aggregate_Access
+      return not null Program.Elements.Array_Aggregates.Array_Aggregate_Access
      is abstract;
 
    not overriding function Semicolon_Token

@@ -25,7 +25,8 @@ package Program.Elements.Attribute_Definition_Clauses is
 
    not overriding function Name
     (Self : Attribute_Definition_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Use_Token
     (Self : Attribute_Definition_Clause)
@@ -33,7 +34,8 @@ package Program.Elements.Attribute_Definition_Clauses is
 
    not overriding function Expression
     (Self : Attribute_Definition_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : Attribute_Definition_Clause)

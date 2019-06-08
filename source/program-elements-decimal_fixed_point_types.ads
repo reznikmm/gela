@@ -25,7 +25,8 @@ package Program.Elements.Decimal_Fixed_Point_Types is
 
    not overriding function Delta_Expression
     (Self : Decimal_Fixed_Point_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Digits_Token
     (Self : Decimal_Fixed_Point_Type)
@@ -33,7 +34,8 @@ package Program.Elements.Decimal_Fixed_Point_Types is
 
    not overriding function Digits_Expression
     (Self : Decimal_Fixed_Point_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Real_Range
     (Self : Decimal_Fixed_Point_Type)

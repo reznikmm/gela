@@ -24,7 +24,8 @@ package Program.Elements.Delta_Constraints is
 
    not overriding function Delta_Expression
     (Self : Delta_Constraint)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Range_Token
     (Self : Delta_Constraint)

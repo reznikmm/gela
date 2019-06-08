@@ -7,6 +7,7 @@
 with Program.Elements.Statements;
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Elements.Parameter_Associations;
 
 package Program.Elements.Call_Statements is
 
@@ -20,11 +21,17 @@ package Program.Elements.Call_Statements is
 
    not overriding function Called_Name
     (Self : Call_Statement)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Call_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Call_Statement)
+      return not null Program.Elements.Parameter_Associations
+          .Parameter_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Call_Statement)

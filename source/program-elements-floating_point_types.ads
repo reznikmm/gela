@@ -25,7 +25,8 @@ package Program.Elements.Floating_Point_Types is
 
    not overriding function Digits_Expression
     (Self : Floating_Point_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Real_Range
     (Self : Floating_Point_Type)

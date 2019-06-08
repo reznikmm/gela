@@ -22,8 +22,8 @@ package Program.Elements.Element_Iterator_Specifications is
 
    not overriding function Name
     (Self : Element_Iterator_Specification)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Element_Iterator_Specification)
@@ -31,8 +31,8 @@ package Program.Elements.Element_Iterator_Specifications is
 
    not overriding function Subtype_Indication
     (Self : Element_Iterator_Specification)
-      return Program.Elements.Subtype_Indications.Subtype_Indication_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
    not overriding function Of_Token
     (Self : Element_Iterator_Specification)
@@ -44,6 +44,7 @@ package Program.Elements.Element_Iterator_Specifications is
 
    not overriding function Iterable_Name
     (Self : Element_Iterator_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Element_Iterator_Specifications;

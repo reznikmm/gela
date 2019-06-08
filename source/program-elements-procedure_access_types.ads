@@ -8,6 +8,7 @@ with Program.Elements.Access_Types;
 with Program.Elements.Formal_Access_Types;
 with Program.Elements.Anonymous_Access_Definitions;
 with Program.Tokens;
+with Program.Elements.Parameter_Specifications;
 
 package Program.Elements.Procedure_Access_Types is
 
@@ -45,6 +46,11 @@ package Program.Elements.Procedure_Access_Types is
    not overriding function Left_Bracket_Token
     (Self : Procedure_Access_Type)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Parameters
+    (Self : Procedure_Access_Type)
+      return not null Program.Elements.Parameter_Specifications
+          .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Procedure_Access_Type)

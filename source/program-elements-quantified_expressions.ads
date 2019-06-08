@@ -53,6 +53,7 @@ package Program.Elements.Quantified_Expressions is
 
    not overriding function Predicate
     (Self : Quantified_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Quantified_Expressions;

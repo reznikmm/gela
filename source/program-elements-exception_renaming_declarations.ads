@@ -5,8 +5,10 @@
 -------------------------------------------------------------
 
 with Program.Elements.Declarations;
+with Program.Elements.Defining_Identifiers;
 with Program.Tokens;
 with Program.Elements.Expressions;
+with Program.Elements.Aspect_Specifications;
 
 package Program.Elements.Exception_Renaming_Declarations is
 
@@ -17,6 +19,11 @@ package Program.Elements.Exception_Renaming_Declarations is
 
    type Exception_Renaming_Declaration_Access is
      access all Exception_Renaming_Declaration'Class with Storage_Size => 0;
+
+   not overriding function Names
+    (Self : Exception_Renaming_Declaration)
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Vector_Access is abstract;
 
    not overriding function Colon_Token
     (Self : Exception_Renaming_Declaration)
@@ -32,11 +39,17 @@ package Program.Elements.Exception_Renaming_Declarations is
 
    not overriding function Renamed_Exception
     (Self : Exception_Renaming_Declaration)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Exception_Renaming_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Exception_Renaming_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Exception_Renaming_Declaration)

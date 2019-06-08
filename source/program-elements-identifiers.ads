@@ -4,9 +4,9 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Expressions;
 with Program.Tokens;
-with Program.Element_Vectors;
 
 package Program.Elements.Identifiers is
 

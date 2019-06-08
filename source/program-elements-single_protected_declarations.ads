@@ -7,6 +7,8 @@
 with Program.Elements.Declarations;
 with Program.Tokens;
 with Program.Elements.Defining_Identifiers;
+with Program.Elements.Aspect_Specifications;
+with Program.Elements.Expressions;
 with Program.Elements.Protected_Definitions;
 
 package Program.Elements.Single_Protected_Declarations is
@@ -25,12 +27,17 @@ package Program.Elements.Single_Protected_Declarations is
 
    not overriding function Name
     (Self : Single_Protected_Declaration)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function With_Token
     (Self : Single_Protected_Declaration)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Aspects
+    (Self : Single_Protected_Declaration)
+      return not null Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Is_Token
     (Self : Single_Protected_Declaration)
@@ -40,14 +47,19 @@ package Program.Elements.Single_Protected_Declarations is
     (Self : Single_Protected_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Progenitors
+    (Self : Single_Protected_Declaration)
+      return not null Program.Elements.Expressions.Expression_Vector_Access
+     is abstract;
+
    not overriding function With_Token_2
     (Self : Single_Protected_Declaration)
       return Program.Tokens.Token_Access is abstract;
 
    not overriding function Definition
     (Self : Single_Protected_Declaration)
-      return Program.Elements.Protected_Definitions.Protected_Definition_Access
-     is abstract;
+      return not null Program.Elements.Protected_Definitions
+          .Protected_Definition_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Single_Protected_Declaration)

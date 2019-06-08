@@ -6,6 +6,8 @@
 
 with Program.Elements.Statements;
 with Program.Tokens;
+with Program.Elements.Select_Paths;
+with Program.Element_Vectors;
 
 package Program.Elements.Select_Statements is
 
@@ -21,6 +23,11 @@ package Program.Elements.Select_Statements is
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Paths
+    (Self : Select_Statement)
+      return not null Program.Elements.Select_Paths.Select_Path_Vector_Access
+     is abstract;
+
    not overriding function Then_Token
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;
@@ -29,9 +36,19 @@ package Program.Elements.Select_Statements is
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;
 
+   not overriding function Then_Abort_Statements
+    (Self : Select_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
    not overriding function Else_Token
     (Self : Select_Statement)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Else_Statements
+    (Self : Select_Statement)
+      return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : Select_Statement)

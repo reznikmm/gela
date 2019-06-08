@@ -22,8 +22,8 @@ package Program.Elements.Generalized_Iterator_Specifications is
 
    not overriding function Name
     (Self : Generalized_Iterator_Specification)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
    not overriding function In_Token
     (Self : Generalized_Iterator_Specification)
@@ -35,6 +35,7 @@ package Program.Elements.Generalized_Iterator_Specifications is
 
    not overriding function Iterator_Name
     (Self : Generalized_Iterator_Specification)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Generalized_Iterator_Specifications;

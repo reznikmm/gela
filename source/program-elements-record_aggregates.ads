@@ -6,6 +6,7 @@
 
 with Program.Elements.Expressions;
 with Program.Tokens;
+with Program.Elements.Record_Component_Associations;
 
 package Program.Elements.Record_Aggregates is
 
@@ -20,6 +21,11 @@ package Program.Elements.Record_Aggregates is
    not overriding function Left_Bracket_Token
     (Self : Record_Aggregate)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Components
+    (Self : Record_Aggregate)
+      return not null Program.Elements.Record_Component_Associations
+          .Record_Component_Association_Vector_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Record_Aggregate)

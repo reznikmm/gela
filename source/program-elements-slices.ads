@@ -18,7 +18,8 @@ package Program.Elements.Slices is
 
    not overriding function Prefix
     (Self : Slice)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Slice)
@@ -26,7 +27,7 @@ package Program.Elements.Slices is
 
    not overriding function Slice_Range
     (Self : Slice)
-      return Program.Elements.Discrete_Ranges.Discrete_Range_Access
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access
      is abstract;
 
    not overriding function Right_Bracket_Token

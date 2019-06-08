@@ -25,7 +25,8 @@ package Program.Elements.At_Clauses is
 
    not overriding function Name
     (Self : At_Clause)
-      return Program.Elements.Identifiers.Identifier_Access is abstract;
+      return not null Program.Elements.Identifiers.Identifier_Access
+     is abstract;
 
    not overriding function Use_Token
     (Self : At_Clause)
@@ -37,7 +38,8 @@ package Program.Elements.At_Clauses is
 
    not overriding function Expression
     (Self : At_Clause)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Semicolon_Token
     (Self : At_Clause)

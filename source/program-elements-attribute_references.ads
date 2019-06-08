@@ -20,7 +20,8 @@ package Program.Elements.Attribute_References is
 
    not overriding function Prefix
     (Self : Attribute_Reference)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Apostrophe_Token
     (Self : Attribute_Reference)
@@ -28,7 +29,8 @@ package Program.Elements.Attribute_References is
 
    not overriding function Attribute_Designator
     (Self : Attribute_Reference)
-      return Program.Elements.Identifiers.Identifier_Access is abstract;
+      return not null Program.Elements.Identifiers.Identifier_Access
+     is abstract;
 
    not overriding function Left_Bracket_Token
     (Self : Attribute_Reference)

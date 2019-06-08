@@ -21,7 +21,8 @@ package Program.Elements.Defining_Expanded_Names is
 
    not overriding function Prefix
     (Self : Defining_Expanded_Name)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function Dot_Token
     (Self : Defining_Expanded_Name)
@@ -29,7 +30,7 @@ package Program.Elements.Defining_Expanded_Names is
 
    not overriding function Selector
     (Self : Defining_Expanded_Name)
-      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
-     is abstract;
+      return not null Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is abstract;
 
 end Program.Elements.Defining_Expanded_Names;

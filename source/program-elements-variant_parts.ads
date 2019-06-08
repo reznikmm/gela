@@ -7,6 +7,7 @@
 with Program.Elements.Definitions;
 with Program.Tokens;
 with Program.Elements.Identifiers;
+with Program.Elements.Variants;
 
 package Program.Elements.Variant_Parts is
 
@@ -24,11 +25,17 @@ package Program.Elements.Variant_Parts is
 
    not overriding function Discriminant
     (Self : Variant_Part)
-      return Program.Elements.Identifiers.Identifier_Access is abstract;
+      return not null Program.Elements.Identifiers.Identifier_Access
+     is abstract;
 
    not overriding function Is_Token
     (Self : Variant_Part)
       return Program.Tokens.Token_Access is abstract;
+
+   not overriding function Variants
+    (Self : Variant_Part)
+      return not null Program.Elements.Variants.Variant_Vector_Access
+     is abstract;
 
    not overriding function End_Token
     (Self : Variant_Part)

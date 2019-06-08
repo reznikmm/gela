@@ -23,7 +23,8 @@ package Program.Elements.Raise_Expressions is
 
    not overriding function Exception_Name
     (Self : Raise_Expression)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Raise_Expression)

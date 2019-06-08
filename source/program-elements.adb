@@ -188,6 +188,7 @@ with Program.Elements.Attribute_Definition_Clauses;
 with Program.Elements.Enumeration_Representation_Clauses;
 with Program.Elements.Record_Representation_Clauses;
 with Program.Elements.At_Clauses;
+with Program.Elements.Exception_Handlers;
 
 package body Program.Elements is
 
@@ -1789,5 +1790,13 @@ package body Program.Elements is
    begin
       return Program.Elements.At_Clauses.At_Clause_Access (Self);
    end To_At_Clause;
+
+   function To_Exception_Handler
+    (Self : access Element'Class)
+      return Program.Elements.Exception_Handlers.Exception_Handler_Access is
+   begin
+      return Program.Elements.Exception_Handlers.Exception_Handler_Access
+        (Self);
+   end To_Exception_Handler;
 
 end Program.Elements;

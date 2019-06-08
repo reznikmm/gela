@@ -20,8 +20,8 @@ package Program.Elements.Code_Statements is
 
    not overriding function Expression
     (Self : Code_Statement)
-      return Program.Elements.Qualified_Expressions.Qualified_Expression_Access
-     is abstract;
+      return not null Program.Elements.Qualified_Expressions
+          .Qualified_Expression_Access is abstract;
 
    not overriding function Semicolon_Token
     (Self : Code_Statement)

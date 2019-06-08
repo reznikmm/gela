@@ -32,6 +32,7 @@ package Program.Elements.Derived_Types is
 
    not overriding function Parent
     (Self : Derived_Type)
-      return Program.Elements.Expressions.Expression_Access is abstract;
+      return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
 
 end Program.Elements.Derived_Types;
