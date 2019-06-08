@@ -17,10 +17,6 @@ package body Meta.Writes is
    function "+" (T : Wide_Wide_String) return League.Strings.Universal_String
      renames League.Strings.To_Universal_String;
 
-   function Is_Element
-     (Name : League.Strings.Universal_String) return Boolean is
-       (Name.To_Wide_Wide_String = "Element");
-
    procedure Write_Header (Output : Ada.Wide_Wide_Text_IO.File_Type);
 
    procedure Open_File
@@ -40,6 +36,22 @@ package body Meta.Writes is
    function Full_Record_Name
      (Type_Name : League.Strings.Universal_String)
       return League.Strings.Universal_String;
+
+   Element : constant League.Strings.Universal_String := +"Element";
+
+   Element_Vector : constant League.Strings.Universal_String :=
+     +"Element_Vector";
+
+   Token : constant League.Strings.Universal_String := +"Token";
+
+   function Is_Element
+     (Name : League.Strings.Universal_String) return Boolean is
+       (Name = Element);
+
+   function Is_Token
+     (Name : League.Strings.Universal_String) return Boolean is
+       (Name = Token);
+
 
    ----------------------
    -- Full_Record_Name --
@@ -95,7 +107,7 @@ package body Meta.Writes is
    begin
       Result.Append ("Program");
 
-      if Type_Name.To_Wide_Wide_String /= "Token" then
+      if Type_Name not in Element_Vector | Token then
          Result.Append (".Elements");
       end if;
 
@@ -251,7 +263,7 @@ package body Meta.Writes is
                        Name          => F.New_Name (Name),
                        Parameters    => F.New_Parameter
                          (Name            => F.New_Name (+"Self"),
-                          Type_Definition => F.New_Name (+"Element")),
+                          Type_Definition => F.New_Name (Element)),
                        Result        => F.New_Name (+"Boolean")),
                     Aspects     => Get_Aspect (Item),
                     Is_Abstract => True);
@@ -485,11 +497,11 @@ package body Meta.Writes is
                    (Name  => F.New_Name (+"Storage_Size"),
                     Value => F.New_Literal (0)));
 
-            Element : constant Ada_Pretty.Node_Access :=
+            Getter : constant Ada_Pretty.Node_Access :=
               F.New_Subprogram_Declaration
                 (Specification => F.New_Subprogram_Specification
                    (Is_Overriding => Ada_Pretty.True,
-                    Name          => F.New_Name (+"Element"),
+                    Name          => F.New_Name (Element),
                     Parameters    => F.New_List
                       (F.New_Parameter
                            (Name            => F.New_Name (+"Self"),
@@ -526,7 +538,7 @@ package body Meta.Writes is
                     Selector => F.New_Name ("To_" & Item.Name)));
          begin
             return F.New_List
-              ((Upper, Type_Decl, Vector_Access, Element, Specific));
+              ((Upper, Type_Decl, Vector_Access, Getter, Specific));
          end;
       end Append_Vector;
 
@@ -544,6 +556,10 @@ package body Meta.Writes is
          List    : League.String_Vectors.Universal_String_Vector;
          Props   : constant Meta.Classes.Property_Array := Item.Properties;
       begin
+         if With_List then
+            List.Append (Element_Vector);
+         end if;
+
          for J in 1 .. Parents.Length loop
             if not Is_Element (Parents.Element (J)) then
                List.Append (Parents.Element (J));
@@ -551,8 +567,12 @@ package body Meta.Writes is
          end loop;
 
          for P of Props loop
-            if P.Capacity in Just_One | Zero_Or_One
-              and then List.Index (P.Type_Name) = 0
+            if P.Capacity in One_Or_More | Zero_Or_More
+              and then List.Index (Element_Vector) = 0
+              and then Is_Element (P.Type_Name)
+            then
+               List.Append (Element_Vector);
+            elsif List.Index (P.Type_Name) = 0
               and then not Is_Element (P.Type_Name)
             then
                List.Append (P.Type_Name);
@@ -564,12 +584,6 @@ package body Meta.Writes is
               (F.New_Selected_Name (Get_Package_Name (List (J))));
             Result := F.New_List (Result, Each);
          end loop;
-
-         if With_List then
-            Each := F.New_With
-              (F.New_Selected_Name (+"Program.Element_Vectors"));
-            Result := F.New_List (Result, Each);
-         end if;
 
          return Result;
       end Get_Clauses;
@@ -609,24 +623,43 @@ package body Meta.Writes is
          use all type Meta.Classes.Capacity_Kind;
 
          Next   : Ada_Pretty.Node_Access;
+         R_Type : Ada_Pretty.Node_Access;
          Result : Ada_Pretty.Node_Access := Prefix;
          Props  : constant Meta.Classes.Property_Array := Item.Properties;
       begin
          for P of Props loop
             if P.Capacity in Just_One | Zero_Or_One then
-               Next := F.New_Subprogram_Declaration
-                 (Specification => F.New_Subprogram_Specification
-                    (Is_Overriding => Ada_Pretty.False,
-                     Name          =>
-                       F.New_Name (P.Name),
-                     Parameters    => F.New_Parameter
-                       (Name            => F.New_Name (+"Self"),
-                        Type_Definition => F.New_Name (Type_Name)),
-                     Result        => F.New_Selected_Name
-                       (Full_Record_Name (P.Type_Name) & "_Access")),
-                  Is_Abstract   => True);
-               Result := F.New_List (Result, Next);
+               R_Type := F.New_Selected_Name
+                 (Full_Record_Name (P.Type_Name) & "_Access");
+
+            elsif Is_Element (P.Type_Name) then
+               R_Type := F.New_Selected_Name
+                 (+"Program.Element_Vectors.Element_Vector_Access");
+
+            else
+               R_Type := F.New_Selected_Name
+                 (Full_Record_Name (P.Type_Name) & "_Vector_Access");
+
             end if;
+
+            if P.Capacity /= Zero_Or_One
+              and then not Is_Token (P.Type_Name)
+            then
+               R_Type := F.New_Null_Exclusion (R_Type);
+            end if;
+
+            Next := F.New_Subprogram_Declaration
+              (Specification => F.New_Subprogram_Specification
+                 (Is_Overriding => Ada_Pretty.False,
+                  Name          =>
+                    F.New_Name (P.Name),
+                  Parameters    => F.New_Parameter
+                    (Name            => F.New_Name (+"Self"),
+                     Type_Definition => F.New_Name (Type_Name)),
+                  Result        => R_Type),
+               Is_Abstract   => True);
+
+            Result := F.New_List (Result, Next);
          end loop;
 
          return Result;

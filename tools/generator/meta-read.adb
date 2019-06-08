@@ -85,6 +85,8 @@ package body Meta.Read is
          end;
       end loop;
 
+      Result.Append (Class);
+
       Ada.Wide_Wide_Text_IO.Close (Input);
    end Read_AST;
 
