@@ -2211,4 +2211,8 @@ package Program.Elements is
     (Self    : not null access Element;
      Visitor : in out Program.Element_Visitors.Element_Visitor) is abstract;
 
+   not overriding function Enclosing_Element
+    (Self : Element)
+      return Program.Elements.Element_Access is abstract;
+
 end Program.Elements;

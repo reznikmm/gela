@@ -20,6 +20,8 @@
    * _[Representation_Clause]_
  * [Exception_Handler]
 
+ - Enclosing_Element            : _[Element]_?
+
 ## Pragma
 > _[Element]_
  - Pragma_Token                 : Token
