@@ -189,6 +189,7 @@ limited with Program.Elements.Enumeration_Representation_Clauses;
 limited with Program.Elements.Record_Representation_Clauses;
 limited with Program.Elements.At_Clauses;
 limited with Program.Elements.Exception_Handlers;
+limited with Program.Element_Visitors;
 
 package Program.Elements is
 
@@ -2205,5 +2206,9 @@ package Program.Elements is
     (Self : access Element'Class)
       return Program.Elements.Exception_Handlers.Exception_Handler_Access
      with Pre => Self.Is_Exception_Handler;
+
+   not overriding procedure Visit
+    (Self    : not null access Element;
+     Visitor : in out Program.Element_Visitors.Element_Visitor) is abstract;
 
 end Program.Elements;
