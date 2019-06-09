@@ -61,6 +61,10 @@ package body Meta.Writes is
      (Name : League.Strings.Universal_String) return Boolean is
        (Name = Token);
 
+   function Get_Props
+     (F         : aliased in out Ada_Pretty.Factory;
+      Item      : Meta.Classes.Class;
+      Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
 
    ----------------------
    -- Full_Record_Name --
@@ -76,6 +80,63 @@ package body Meta.Writes is
       Result.Append (Type_Name);
       return Result;
    end Full_Record_Name;
+
+   ---------------
+   -- Get_Props --
+   ---------------
+
+   function Get_Props
+     (F         : aliased in out Ada_Pretty.Factory;
+      Item      : Meta.Classes.Class;
+      Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access
+   is
+      use all type Meta.Classes.Capacity_Kind;
+
+      Element_Name : constant League.Strings.Universal_String :=
+        To_Element_Name (Item.Name);
+
+      Next   : Ada_Pretty.Node_Access;
+      R_Type : Ada_Pretty.Node_Access;
+      Result : Ada_Pretty.Node_Access := Prefix;
+      Props  : constant Meta.Classes.Property_Array := Item.Properties;
+   begin
+      for P of Props loop
+         if P.Capacity in Just_One | Zero_Or_One then
+            R_Type := F.New_Selected_Name
+              (Full_Record_Name (P.Type_Name) & "_Access");
+
+         elsif Is_Element (P.Type_Name) then
+            R_Type := F.New_Selected_Name
+              (+"Program.Element_Vectors.Element_Vector_Access");
+
+         else
+            R_Type := F.New_Selected_Name
+              (Full_Record_Name (P.Type_Name) & "_Vector_Access");
+
+         end if;
+
+         if P.Capacity /= Zero_Or_One
+           and then not Is_Token (P.Type_Name)
+         then
+            R_Type := F.New_Null_Exclusion (R_Type);
+         end if;
+
+         Next := F.New_Subprogram_Declaration
+           (Specification => F.New_Subprogram_Specification
+              (Is_Overriding => Ada_Pretty.False,
+               Name          =>
+                 F.New_Name (P.Name),
+               Parameters    => F.New_Parameter
+                 (Name            => F.New_Name (+"Self"),
+                  Type_Definition => F.New_Name (Element_Name)),
+               Result        => R_Type),
+            Is_Abstract   => True);
+
+         Result := F.New_List (Result, Next);
+      end loop;
+
+      return Result;
+   end Get_Props;
 
    ----------------------
    -- Get_With_Clauses --
@@ -342,7 +403,7 @@ package body Meta.Writes is
          Element_Access,
          Classifications,
          Casts,
-         Visit));
+         Get_Props (F, Vector.First_Element, Visit)));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (Program_Elements, Public_Part);
@@ -484,10 +545,6 @@ package body Meta.Writes is
 
       function Get_Clauses return Ada_Pretty.Node_Access;
       function Get_Parents return Ada_Pretty.Node_Access;
-      function Get_Props
-        (Type_Name : League.Strings.Universal_String;
-         Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
-
       function Append_Vector
         (Upper          : Ada_Pretty.Node_Access;
          Element_Access : Ada_Pretty.Node_Access)
@@ -650,59 +707,6 @@ package body Meta.Writes is
          return Result;
       end Get_Parents;
 
-      ---------------
-      -- Get_Props --
-      ---------------
-
-      function Get_Props
-        (Type_Name : League.Strings.Universal_String;
-         Prefix    : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access
-      is
-         use all type Meta.Classes.Capacity_Kind;
-
-         Next   : Ada_Pretty.Node_Access;
-         R_Type : Ada_Pretty.Node_Access;
-         Result : Ada_Pretty.Node_Access := Prefix;
-         Props  : constant Meta.Classes.Property_Array := Item.Properties;
-      begin
-         for P of Props loop
-            if P.Capacity in Just_One | Zero_Or_One then
-               R_Type := F.New_Selected_Name
-                 (Full_Record_Name (P.Type_Name) & "_Access");
-
-            elsif Is_Element (P.Type_Name) then
-               R_Type := F.New_Selected_Name
-                 (+"Program.Element_Vectors.Element_Vector_Access");
-
-            else
-               R_Type := F.New_Selected_Name
-                 (Full_Record_Name (P.Type_Name) & "_Vector_Access");
-
-            end if;
-
-            if P.Capacity /= Zero_Or_One
-              and then not Is_Token (P.Type_Name)
-            then
-               R_Type := F.New_Null_Exclusion (R_Type);
-            end if;
-
-            Next := F.New_Subprogram_Declaration
-              (Specification => F.New_Subprogram_Specification
-                 (Is_Overriding => Ada_Pretty.False,
-                  Name          =>
-                    F.New_Name (P.Name),
-                  Parameters    => F.New_Parameter
-                    (Name            => F.New_Name (+"Self"),
-                     Type_Definition => F.New_Name (Type_Name)),
-                  Result        => R_Type),
-               Is_Abstract   => True);
-
-            Result := F.New_List (Result, Next);
-         end loop;
-
-         return Result;
-      end Get_Props;
-
       Package_Name : constant League.Strings.Universal_String :=
         Get_Package_Name (Item.Name);
 
@@ -743,7 +747,7 @@ package body Meta.Writes is
           (F.New_List
              ((Pure,
               Type_Decl,
-              Get_Props (Element_Name, Element_Access))),
+              Get_Props (F, Item, Element_Access))),
            Element_Access => Access_Name);
 
       Root : constant Ada_Pretty.Node_Access :=
