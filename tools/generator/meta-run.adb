@@ -32,6 +32,7 @@ begin
 
    Meta.Writes.Write_Elements (Class_List);
    Meta.Writes.Write_Elements_Body (Class_List);
+   Meta.Writes.Write_Visitors (Class_List);
 
    for J in 2 .. Class_List.Last_Index loop
       Meta.Writes.Write_One_Element

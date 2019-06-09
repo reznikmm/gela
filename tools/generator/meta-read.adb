@@ -46,7 +46,7 @@ package body Meta.Read is
 
                Class.Initialize
                  (Name        => To_Name (List (2)),
-                  Is_Abstract => Line.Count ('_') > 0);
+                  Is_Abstract => List.Element (2).Starts_With ("_"));
             elsif Line.Starts_With ("> ") then
                declare
                   Parents : constant

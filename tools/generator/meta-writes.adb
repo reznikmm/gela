@@ -27,7 +27,8 @@ package body Meta.Writes is
    function Get_With_Clauses
      (F          : access Ada_Pretty.Factory;
       Vector     : Meta.Read.Class_Vectors.Vector;
-      Is_Limited : Boolean) return Ada_Pretty.Node_Access;
+      Is_Limited : Boolean;
+      With_Abstract : Boolean := True) return Ada_Pretty.Node_Access;
 
    function Get_Package_Name
      (Type_Name : League.Strings.Universal_String)
@@ -37,10 +38,18 @@ package body Meta.Writes is
      (Type_Name : League.Strings.Universal_String)
       return League.Strings.Universal_String;
 
+   function To_Element_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String is
+        (if Type_Name = +"Pragma" then +"Pragma_Element" else Type_Name);
+
    Element : constant League.Strings.Universal_String := +"Element";
 
    Element_Vector : constant League.Strings.Universal_String :=
      +"Element_Vector";
+
+   Element_Visitor : constant League.Strings.Universal_String :=
+     +"Element_Visitor";
 
    Token : constant League.Strings.Universal_String := +"Token";
 
@@ -73,9 +82,10 @@ package body Meta.Writes is
    ----------------------
 
    function Get_With_Clauses
-     (F          : access Ada_Pretty.Factory;
-      Vector     : Meta.Read.Class_Vectors.Vector;
-      Is_Limited : Boolean) return Ada_Pretty.Node_Access
+     (F             : access Ada_Pretty.Factory;
+      Vector        : Meta.Read.Class_Vectors.Vector;
+      Is_Limited    : Boolean;
+      With_Abstract : Boolean := True) return Ada_Pretty.Node_Access
    is
       Result : Ada_Pretty.Node_Access;
    begin
@@ -88,7 +98,9 @@ package body Meta.Writes is
             Next : constant Ada_Pretty.Node_Access :=
               F.New_With (F.New_Name (Package_Name), Is_Limited);
          begin
-            Result := F.New_List (Result, Next);
+            if With_Abstract or else not Item.Is_Abstract then
+               Result := F.New_List (Result, Next);
+            end if;
          end;
       end loop;
 
@@ -107,7 +119,7 @@ package body Meta.Writes is
    begin
       Result.Append ("Program");
 
-      if Type_Name not in Element_Vector | Token then
+      if Type_Name not in Element_Vector | Token | Element_Visitor then
          Result.Append (".Elements");
       end if;
 
@@ -151,20 +163,16 @@ package body Meta.Writes is
 
       F : aliased Ada_Pretty.Factory;
 
-      function Element_Classifications (Prefix : Ada_Pretty.Node_Access)
-        return Ada_Pretty.Node_Access;
+      function Element_Classifications return Ada_Pretty.Node_Access;
 
-      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
-        return Ada_Pretty.Node_Access;
+      function Element_Casts return Ada_Pretty.Node_Access;
 
       -------------------
       -- Element_Casts --
       -------------------
 
-      function Element_Casts (Prefix : Ada_Pretty.Node_Access)
-        return Ada_Pretty.Node_Access
-      is
-         Result : Ada_Pretty.Node_Access := Prefix;
+      function Element_Casts return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
       begin
          for J in 2 .. Vector.Last_Index loop
             declare
@@ -203,9 +211,7 @@ package body Meta.Writes is
       -- Element_Classifications --
       -----------------------------
 
-      function Element_Classifications (Prefix : Ada_Pretty.Node_Access)
-        return Ada_Pretty.Node_Access
-      is
+      function Element_Classifications return Ada_Pretty.Node_Access is
          function Get_Aspect
            (Item : Meta.Classes.Class) return Ada_Pretty.Node_Access;
 
@@ -247,7 +253,7 @@ package body Meta.Writes is
                        Then_Path  => List)));
          end Get_Aspect;
 
-         Result : Ada_Pretty.Node_Access := Prefix;
+         Result : Ada_Pretty.Node_Access;
       begin
          for J in 2 .. Vector.Last_Index loop
             declare
@@ -305,11 +311,38 @@ package body Meta.Writes is
              (Name  => F.New_Name (+"Storage_Size"),
               Value => F.New_Literal (0)));
 
-      Public_Part_Prefix : constant Ada_Pretty.Node_Access :=
-        F.New_List ((Pure, Element_Decl, Element_Access));
+      Classifications : constant Ada_Pretty.Node_Access :=
+        Element_Classifications;
 
-      Public_Part : constant Ada_Pretty.Node_Access :=
-        Element_Casts (Element_Classifications (Public_Part_Prefix));
+      Casts : constant Ada_Pretty.Node_Access := Element_Casts;
+
+      Visit : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Is_Overriding => Ada_Pretty.False,
+              Name          => F.New_Name (+"Visit"),
+              Parameters    => F.New_List
+                (F.New_Parameter
+                     (Name            => F.New_Name (+"Self"),
+                      Type_Definition => F.New_Null_Exclusion
+                        (F.New_Access
+                           (Is_All => False,
+                            Target => Element_Name))),
+                 F.New_Parameter
+                   (Name            => F.New_Name (+"Visitor"),
+                    Type_Definition => F.New_Selected_Name
+                      (Full_Record_Name (Element_Visitor)),
+                    Is_In => True,
+                    Is_Out => True))),
+           Is_Abstract => True);
+
+      Public_Part : constant Ada_Pretty.Node_Access := F.New_List
+        ((Pure,
+         Element_Decl,
+         Element_Access,
+         Classifications,
+         Casts,
+         Visit));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (Program_Elements, Public_Part);
@@ -317,7 +350,12 @@ package body Meta.Writes is
       Unit : constant Ada_Pretty.Node_Access :=
         F.New_Compilation_Unit
           (Root,
-           Get_With_Clauses (F'Access, Vector, Is_Limited => True));
+           F.New_List
+             (Get_With_Clauses (F'Access, Vector, Is_Limited => True),
+              F.New_With
+                (F.New_Selected_Name
+                     (Get_Package_Name (Element_Visitor)),
+                 Is_Limited => True)));
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
@@ -669,7 +707,7 @@ package body Meta.Writes is
         Get_Package_Name (Item.Name);
 
       Element_Name : constant League.Strings.Universal_String :=
-        (if Item.Name = +"Pragma" then +"Pragma_Element" else Item.Name);
+        To_Element_Name (Item.Name);
 
       Type_Name : constant Ada_Pretty.Node_Access := F.New_Name (Element_Name);
 
@@ -725,5 +763,91 @@ package body Meta.Writes is
 
       Ada.Wide_Wide_Text_IO.Close (Output);
    end Write_One_Element;
+
+   --------------------
+   -- Write_Visitors --
+   --------------------
+
+   procedure Write_Visitors (Vector : Meta.Read.Class_Vectors.Vector) is
+
+      function Methods return Ada_Pretty.Node_Access;
+
+      Package_Name : constant League.Strings.Universal_String :=
+        Get_Package_Name (Element_Visitor);
+
+      F : aliased Ada_Pretty.Factory;
+
+      Pure : constant Ada_Pretty.Node_Access :=
+        F.New_Pragma
+          (F.New_Name (+"Pure"), F.New_Selected_Name (Package_Name));
+
+      Type_Name : constant Ada_Pretty.Node_Access :=
+        F.New_Name (Element_Visitor);
+
+      Type_Decl : constant Ada_Pretty.Node_Access :=
+        F.New_Type
+          (Type_Name,
+           Definition => F.New_Interface
+             (Is_Limited => True));
+
+      function Methods return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
+      begin
+         for Item of Vector loop
+            if not Item.Is_Abstract then
+               declare
+                  Element_Name : constant League.Strings.Universal_String :=
+                    To_Element_Name (Item.Name);
+
+                  Funct : constant Ada_Pretty.Node_Access :=
+                    F.New_Subprogram_Declaration
+                      (F.New_Subprogram_Specification
+                         (Name          => F.New_Name (Element_Name),
+                          Parameters    => F.New_List
+                            (F.New_Parameter
+                              (Name            => F.New_Name (+"Self"),
+                               Is_In           => True,
+                               Is_Out          => True,
+                               Type_Definition => F.New_Name
+                                 (Element_Visitor)),
+                             F.New_Parameter
+                               (Name            => F.New_Name (Element),
+                                Type_Definition => F.New_Null_Exclusion
+                                  (F.New_Selected_Name
+                                       (Full_Record_Name
+                                            (Item.Name) & "_Access"))))),
+                       Is_Null => True);
+               begin
+                  Result := F.New_List (Result, Funct);
+               end;
+            end if;
+         end loop;
+
+         return Result;
+      end Methods;
+
+      Public_Part : constant Ada_Pretty.Node_Access :=
+        F.New_List ((Pure, Type_Decl, Methods));
+
+      Root : constant Ada_Pretty.Node_Access :=
+        F.New_Package (F.New_Selected_Name (Package_Name), Public_Part);
+
+      Unit : constant Ada_Pretty.Node_Access :=
+        F.New_Compilation_Unit
+          (Root,
+           Get_With_Clauses
+             (F'Access, Vector, Is_Limited => False, With_Abstract => False));
+
+      Output : Ada.Wide_Wide_Text_IO.File_Type;
+   begin
+      Open_File (Output, Package_Name);
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (Output,
+         F.To_Text (Unit).Join (Ada.Characters.Wide_Wide_Latin_1.LF)
+         .To_Wide_Wide_String);
+
+      Ada.Wide_Wide_Text_IO.Close (Output);
+   end Write_Visitors;
 
 end Meta.Writes;
