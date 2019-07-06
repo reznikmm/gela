@@ -190,6 +190,7 @@ limited with Program.Elements.Record_Representation_Clauses;
 limited with Program.Elements.At_Clauses;
 limited with Program.Elements.Exception_Handlers;
 limited with Program.Element_Visitors;
+with Program.Element_Iterators;
 
 package Program.Elements is
 
@@ -198,6 +199,9 @@ package Program.Elements is
    type Element is limited interface;
 
    type Element_Access is access all Element'Class with Storage_Size => 0;
+
+   function Assigned (Self : access Element'Class) return Boolean
+     is (Self /= null);
 
    not overriding function Is_Pragma (Self : Element) return Boolean
      is abstract;
@@ -2209,10 +2213,21 @@ package Program.Elements is
 
    not overriding procedure Visit
     (Self    : not null access Element;
-     Visitor : in out Program.Element_Visitors.Element_Visitor) is abstract;
+     Visitor : in out Program.Element_Visitors.Element_Visitor'Class)
+     is abstract;
 
    not overriding function Enclosing_Element
     (Self : Element)
       return Program.Elements.Element_Access is abstract;
+
+   function Each_Enclosing_Element
+    (Self : not null access Element'Class)
+      return Program.Element_Iterators.Enclosing_Element_Iterator
+     renames Program.Element_Iterators.To_Enclosing_Element_Iterator;
+
+   function Each_Child
+    (Self : not null access Element'Class)
+      return Program.Element_Iterators.Child_Iterator
+     renames Program.Element_Iterators.To_Child_Iterator;
 
 end Program.Elements;

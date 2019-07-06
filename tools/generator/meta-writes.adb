@@ -51,6 +51,9 @@ package body Meta.Writes is
    Element_Visitor : constant League.Strings.Universal_String :=
      +"Element_Visitor";
 
+   Element_Iterator : constant League.Strings.Universal_String :=
+     +"Element_Iterator";
+
    Token : constant League.Strings.Universal_String := +"Token";
 
    function Is_Element
@@ -180,7 +183,9 @@ package body Meta.Writes is
    begin
       Result.Append ("Program");
 
-      if Type_Name not in Element_Vector | Token | Element_Visitor then
+      if Type_Name not in
+        Element_Vector | Token | Element_Visitor | Element_Iterator
+      then
          Result.Append (".Elements");
       end if;
 
@@ -392,18 +397,69 @@ package body Meta.Writes is
                  F.New_Parameter
                    (Name            => F.New_Name (+"Visitor"),
                     Type_Definition => F.New_Selected_Name
-                      (Full_Record_Name (Element_Visitor)),
+                      (Full_Record_Name (Element_Visitor) & "'Class"),
                     Is_In => True,
                     Is_Out => True))),
            Is_Abstract => True);
+
+      Each_Enclosing : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"Each_Enclosing_Element"),
+              Parameters    => F.New_Parameter
+                (Name            => F.New_Name (+"Self"),
+                 Type_Definition => F.New_Null_Exclusion
+                   (F.New_Access
+                        (Is_All => False,
+                         Target => Element_Class))),
+              Result => F.New_Selected_Name
+                (Get_Package_Name (Element_Iterator) &
+                   ".Enclosing_Element_Iterator")),
+           Renamed => F.New_Selected_Name
+                (Get_Package_Name (Element_Iterator) &
+                   ".To_Enclosing_Element_Iterator"));
+
+      Each_Child : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"Each_Child"),
+              Parameters    => F.New_Parameter
+                (Name            => F.New_Name (+"Self"),
+                 Type_Definition => F.New_Null_Exclusion
+                   (F.New_Access
+                        (Is_All => False,
+                         Target => Element_Class))),
+              Result => F.New_Selected_Name
+                (Get_Package_Name (Element_Iterator) &
+                   ".Child_Iterator")),
+           Renamed => F.New_Selected_Name
+                (Get_Package_Name (Element_Iterator) &
+                   ".To_Child_Iterator"));
+
+      Assigned : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"Assigned"),
+              Parameters    => F.New_Parameter
+                (Name            => F.New_Name (+"Self"),
+                 Type_Definition => F.New_Access
+                        (Is_All => False,
+                         Target => Element_Class)),
+              Result => F.New_Name (+"Boolean")),
+           Expression => F.New_List
+                (F.New_Name (+"Self"),
+                 F.New_Infix (+"/=", F.New_Name (+"null"))));
 
       Public_Part : constant Ada_Pretty.Node_Access := F.New_List
         ((Pure,
          Element_Decl,
          Element_Access,
+         Assigned,
          Classifications,
          Casts,
-         Get_Props (F, Vector.First_Element, Visit)));
+         Get_Props (F, Vector.First_Element, Visit),
+         Each_Enclosing,
+         Each_Child));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (Program_Elements, Public_Part);
@@ -412,11 +468,14 @@ package body Meta.Writes is
         F.New_Compilation_Unit
           (Root,
            F.New_List
-             (Get_With_Clauses (F'Access, Vector, Is_Limited => True),
+             ((Get_With_Clauses (F'Access, Vector, Is_Limited => True),
               F.New_With
-                (F.New_Selected_Name
+                 (F.New_Selected_Name
                      (Get_Package_Name (Element_Visitor)),
-                 Is_Limited => True)));
+                 Is_Limited => True),
+              F.New_With
+                 (F.New_Selected_Name
+                     (Get_Package_Name (Element_Iterator))))));
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
