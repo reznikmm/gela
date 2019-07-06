@@ -61,6 +61,16 @@ package body Program.Element_Iterators is
          return Self.Element /= null;
       end Has_Element;
 
+      ---------------------------
+      -- Has_Enclosing_Element --
+      ---------------------------
+
+      function Has_Enclosing_Element
+        (Self : Enclosing_Element_Cursor) return Boolean is
+      begin
+         return Self.Element not in null;
+      end Has_Enclosing_Element;
+
       --------------
       -- Property --
       --------------
@@ -141,9 +151,9 @@ package body Program.Element_Iterators is
 
    overriding function First
      (Self : Enclosing_Element_Iterator)
-      return Program.Elements.Element_Access is
+      return Cursors.Enclosing_Element_Cursor is
    begin
-      return Program.Elements.Element_Access (Self.First);
+      return (Element => Self.First, Level => 1);
    end First;
 
    --------------------
@@ -172,28 +182,19 @@ package body Program.Element_Iterators is
       return Program.Elements.Element_Access (Result);
    end Generic_Child;
 
-   ---------------------------
-   -- Has_Enclosing_Element --
-   ---------------------------
-
-   function Has_Enclosing_Element
-     (Self : Program.Elements.Element_Access) return Boolean is
-   begin
-      return Self not in null;
-   end Has_Enclosing_Element;
-
    ----------
    -- Next --
    ----------
 
    overriding function Next
      (Self     : Enclosing_Element_Iterator;
-      Position : Program.Elements.Element_Access)
-        return Program.Elements.Element_Access
+      Position : Cursors.Enclosing_Element_Cursor)
+      return Cursors.Enclosing_Element_Cursor
    is
       pragma Unreferenced (Self);
    begin
-      return Position.Enclosing_Element;
+      return (Element => Position.Element.Enclosing_Element,
+              Level   => Position.Level + 1);
    end Next;
 
    ----------

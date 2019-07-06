@@ -192,6 +192,16 @@ with Program.Elements.Exception_Handlers;
 
 package body Program.Elements is
 
+   function Each_Enclosing_Element
+    (Self : not null access Element'Class)
+      return Program.Element_Iterators.Enclosing_Element_Iterator
+     renames Program.Element_Iterators.To_Enclosing_Element_Iterator;
+
+   function Each_Child
+    (Self : not null access Element'Class)
+      return Program.Element_Iterators.Child_Iterator
+     renames Program.Element_Iterators.To_Child_Iterator;
+
    function To_Pragma
     (Self : access Element'Class)
       return Program.Elements.Pragmas.Pragma_Access is

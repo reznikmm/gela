@@ -12,28 +12,6 @@ limited with Program.Element_Vectors;
 package Program.Element_Iterators is
    pragma Pure (Program.Element_Iterators);
 
-   function Has_Enclosing_Element
-     (Self : Program.Elements.Element_Access) return Boolean;
-
-   package Enclosing_Element_Iterators is new Ada.Iterator_Interfaces
-     (Program.Elements.Element_Access, Has_Enclosing_Element);
-
-   type Enclosing_Element_Iterator is
-     new Enclosing_Element_Iterators.Forward_Iterator with private;
-
-   function To_Enclosing_Element_Iterator
-     (Parent : not null access Program.Elements.Element'Class)
-      return Enclosing_Element_Iterator;
-
-   overriding function First
-     (Self : Enclosing_Element_Iterator)
-      return Program.Elements.Element_Access;
-
-   overriding function Next
-     (Self     : Enclosing_Element_Iterator;
-      Position : Program.Elements.Element_Access)
-      return Program.Elements.Element_Access;
-
    type Child_Iterator is tagged;
 
    type Property_Name is
@@ -150,6 +128,15 @@ package Program.Element_Iterators is
       Visible_Declarations);
 
    package Cursors is
+
+      type Enclosing_Element_Cursor is record
+         Element : access Program.Elements.Element'Class;
+         Level   : Positive;
+      end record;
+
+      function Has_Enclosing_Element
+        (Self : Enclosing_Element_Cursor) return Boolean;
+
       type Child_Cursor is tagged private;
 
       function Has_Element (Self : Child_Cursor) return Boolean;
@@ -178,6 +165,25 @@ package Program.Element_Iterators is
       end record;
 
    end Cursors;
+
+   package Enclosing_Element_Iterators is new Ada.Iterator_Interfaces
+     (Cursors.Enclosing_Element_Cursor, Cursors.Has_Enclosing_Element);
+
+   type Enclosing_Element_Iterator is
+     new Enclosing_Element_Iterators.Forward_Iterator with private;
+
+   function To_Enclosing_Element_Iterator
+     (Parent : not null access Program.Elements.Element'Class)
+         return Enclosing_Element_Iterator;
+
+   overriding function First
+     (Self : Enclosing_Element_Iterator)
+      return Cursors.Enclosing_Element_Cursor;
+
+   overriding function Next
+     (Self     : Enclosing_Element_Iterator;
+      Position : Cursors.Enclosing_Element_Cursor)
+      return Cursors.Enclosing_Element_Cursor;
 
    package Child_Iterators is
      new Ada.Iterator_Interfaces (Cursors.Child_Cursor, Cursors.Has_Element);
