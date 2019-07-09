@@ -74,6 +74,10 @@ package body Meta.Writes is
      (Name : League.Strings.Universal_String) return Boolean is
        (Name = Token);
 
+   function Is_Boolean
+     (Name : League.Strings.Universal_String) return Boolean is
+       (Name = +"Boolean");
+
    function Get_Props
      (F         : aliased in out Ada_Pretty.Factory;
       Item      : Meta.Classes.Class;
@@ -89,7 +93,10 @@ package body Meta.Writes is
    is
       Result : League.Strings.Universal_String := Get_Package_Name (Type_Name);
    begin
-      Result.Append (".");
+      if not Result.Is_Empty then
+         Result.Append (".");
+      end if;
+
       Result.Append (To_Element_Name (Type_Name));
       return Result;
    end Full_Record_Name;
@@ -152,7 +159,10 @@ package body Meta.Writes is
       Props  : constant Meta.Classes.Property_Array := Item.Properties;
    begin
       for P of Props loop
-         if P.Capacity in Just_One | Zero_Or_One then
+         if Is_Boolean (P.Type_Name) then
+            R_Type := F.New_Name (P.Type_Name);
+
+         elsif P.Capacity in Just_One | Zero_Or_One then
             R_Type := F.New_Selected_Name (Full_Access_Name (P.Type_Name));
 
          elsif Is_Element (P.Type_Name) then
@@ -167,6 +177,7 @@ package body Meta.Writes is
 
          if P.Capacity /= Zero_Or_One
            and then not Is_Token (P.Type_Name)
+           and then not Is_Boolean (P.Type_Name)
          then
             R_Type := F.New_Null_Exclusion (R_Type);
          end if;
@@ -229,6 +240,10 @@ package body Meta.Writes is
    is
       Result : League.Strings.Universal_String;
    begin
+      if Is_Boolean (Type_Name) then
+         return League.Strings.Empty_Universal_String;
+      end if;
+
       Result.Append ("Program");
 
       if Type_Name not in

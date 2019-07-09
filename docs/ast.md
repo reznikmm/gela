@@ -21,6 +21,9 @@
  * [Exception_Handler]
 
  - Enclosing_Element            : _[Element]_?
+ - Is_Part_Of_Implicit          : Boolean
+ - Is_Part_Of_Inherited         : Boolean
+ - Is_Part_Of_Instance          : Boolean
 
 ## Pragma
 > _[Element]_

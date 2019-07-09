@@ -2220,6 +2220,15 @@ package Program.Elements is
     (Self : Element)
       return Program.Elements.Element_Access is abstract;
 
+   not overriding function Is_Part_Of_Implicit (Self : Element) return Boolean
+     is abstract;
+
+   not overriding function Is_Part_Of_Inherited (Self : Element) return Boolean
+     is abstract;
+
+   not overriding function Is_Part_Of_Instance (Self : Element) return Boolean
+     is abstract;
+
    function Each_Enclosing_Element
     (Self : not null access Element'Class)
       return Program.Element_Iterators.Enclosing_Element_Iterator;
