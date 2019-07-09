@@ -64,6 +64,9 @@ package body Meta.Writes is
    Element_Iterator : constant League.Strings.Universal_String :=
      +"Element_Iterator";
 
+   Lexical_Element : constant League.Strings.Universal_String :=
+     +"Lexical_Element";
+
    Token : constant League.Strings.Universal_String := +"Token";
 
    function Is_Element
@@ -150,6 +153,11 @@ package body Meta.Writes is
    is
       use all type Meta.Classes.Capacity_Kind;
 
+      function Is_Not_A_Token (P : Classes.Property) return Boolean is
+        (not Is_Token (P.Type_Name));
+
+      function Skip_Tokens is new Classes.Generic_Filter (Is_Not_A_Token);
+
       Element_Name : constant League.Strings.Universal_String :=
         To_Element_Name (Item.Name);
 
@@ -158,7 +166,7 @@ package body Meta.Writes is
       Result : Ada_Pretty.Node_Access := Prefix;
       Props  : constant Meta.Classes.Property_Array := Item.Properties;
    begin
-      for P of Props loop
+      for P of Skip_Tokens (Props) loop
          if Is_Boolean (P.Type_Name) then
             R_Type := F.New_Name (P.Type_Name);
 
@@ -248,6 +256,7 @@ package body Meta.Writes is
 
       if Type_Name not in
         Element_Vector | Token | Element_Visitor | Element_Iterator
+          | Lexical_Element
       then
          Result.Append (".Elements");
       end if;
@@ -1016,6 +1025,16 @@ package body Meta.Writes is
          Element_Access : Ada_Pretty.Node_Access)
           return Ada_Pretty.Node_Access;
 
+      function Get_Text
+        (Prefix, Element : Ada_Pretty.Node_Access)
+         return Ada_Pretty.Node_Access;
+      --  Append text related types and getters
+
+      function Is_A_Token (P : Classes.Property) return Boolean is
+        (Is_Token (P.Type_Name));
+
+      function Only_Tokens is new Classes.Generic_Filter (Is_A_Token);
+
       -------------------
       -- Append_Vector --
       -------------------
@@ -1110,33 +1129,46 @@ package body Meta.Writes is
       function Get_Clauses return Ada_Pretty.Node_Access is
          use all type Meta.Classes.Capacity_Kind;
 
+         procedure Append (Value : League.Strings.Universal_String);
+
+         List    : League.String_Vectors.Universal_String_Vector;
+
+         ------------
+         -- Append --
+         ------------
+
+         procedure Append (Value : League.Strings.Universal_String) is
+         begin
+            if List.Index (Value) = 0 then
+               List.Append (Value);
+            end if;
+         end Append;
+
          Parents : constant League.String_Vectors.Universal_String_Vector :=
            Item.Parents;
          Result  : Ada_Pretty.Node_Access;
          Each    : Ada_Pretty.Node_Access;
-         List    : League.String_Vectors.Universal_String_Vector;
          Props   : constant Meta.Classes.Property_Array := Item.Properties;
       begin
          if With_List then
-            List.Append (Element_Vector);
+            Append (Element_Vector);
          end if;
 
          for J in 1 .. Parents.Length loop
             if not Is_Element (Parents.Element (J)) then
-               List.Append (Parents.Element (J));
+               Append (Parents.Element (J));
             end if;
          end loop;
 
          for P of Props loop
-            if P.Capacity in One_Or_More | Zero_Or_More
-              and then List.Index (Element_Vector) = 0
+            if Is_Token (P.Type_Name) then
+               Append (Lexical_Element);
+            elsif P.Capacity in One_Or_More | Zero_Or_More
               and then Is_Element (P.Type_Name)
             then
-               List.Append (Element_Vector);
-            elsif List.Index (P.Type_Name) = 0
-              and then not Is_Element (P.Type_Name)
-            then
-               List.Append (P.Type_Name);
+               Append (Element_Vector);
+            elsif not Is_Element (P.Type_Name) then
+               Append (P.Type_Name);
             end if;
          end loop;
 
@@ -1172,6 +1204,89 @@ package body Meta.Writes is
 
          return Result;
       end Get_Parents;
+
+      --------------
+      -- Get_Text --
+      --------------
+
+      function Get_Text
+        (Prefix, Element : Ada_Pretty.Node_Access)
+         return Ada_Pretty.Node_Access is
+      begin
+         if Item.Is_Abstract then
+            return Prefix;
+         end if;
+
+         declare
+            Text_Type : constant League.Strings.Universal_String :=
+              Item.Name & "_Text";
+
+            Type_Name : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Text_Type);
+
+            Type_Class  : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Text_Type & "'Class");
+
+            Access_Name : constant Ada_Pretty.Node_Access :=
+              F.New_Name (Text_Type & "_Access");
+
+            Type_Decl : constant Ada_Pretty.Node_Access :=
+              F.New_Type
+                (Type_Name,
+                 Definition => F.New_Interface
+                   (Is_Limited => True));
+
+            Text_Access : constant Ada_Pretty.Node_Access :=
+              F.New_Type
+                (Access_Name,
+                 Definition => F.New_Access
+                   (Modifier => Access_All,
+                    Target   => Type_Class),
+                 Aspects => F.New_Aspect
+                   (Name  => F.New_Name (+"Storage_Size"),
+                    Value => F.New_Literal (0)));
+
+            To_Text : constant Ada_Pretty.Node_Access :=
+              F.New_Subprogram_Declaration
+                (Specification => F.New_Subprogram_Specification
+                   (Is_Overriding => Ada_Pretty.False,
+                    Name          => F.New_Name ("To_" & Text_Type),
+                    Parameters    => F.New_Parameter
+                      (Name            => F.New_Name (+"Self"),
+                       Type_Definition => Element,
+                       Is_Aliased      => True),
+                    Result        => Access_Name),
+                 Is_Abstract   => True);
+
+            R_Type : array (Boolean) of Ada_Pretty.Node_Access :=
+              (False => F.New_Selected_Name
+                 (Full_Access_Name (Lexical_Element)),
+               True => null);
+
+            Next : Ada_Pretty.Node_Access;
+
+            Result : Ada_Pretty.Node_Access :=
+              F.New_List ((Prefix, Type_Decl, Text_Access, To_Text));
+         begin
+            R_Type (True) := F.New_Null_Exclusion (R_Type (False));
+
+            for P of Only_Tokens (Item.Properties) loop
+               Next := F.New_Subprogram_Declaration
+                 (Specification => F.New_Subprogram_Specification
+                    (Is_Overriding => Ada_Pretty.False,
+                     Name          => F.New_Name (P.Name),
+                     Parameters    => F.New_Parameter
+                       (Name            => F.New_Name (+"Self"),
+                        Type_Definition => Type_Name),
+                     Result        => R_Type (P.Capacity in Classes.Just_One)),
+                  Is_Abstract   => True);
+
+               Result := F.New_List (Result, Next);
+            end loop;
+
+            return Result;
+         end;
+      end Get_Text;
 
       Package_Name : constant League.Strings.Universal_String :=
         Get_Package_Name (Item.Name);
@@ -1213,7 +1328,7 @@ package body Meta.Writes is
           (F.New_List
              ((Pure,
               Type_Decl,
-              Get_Props (F, Item, Element_Access))),
+              Get_Text (Get_Props (F, Item, Element_Access), Type_Name))),
            Element_Access => Access_Name);
 
       Root : constant Ada_Pretty.Node_Access :=

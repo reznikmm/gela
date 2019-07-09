@@ -29,6 +29,24 @@ package body Meta.Classes is
       Self.Properties (Self.Last_Prop) := Value;
    end Add_Property;
 
+   --------------------
+   -- Generic_Filter --
+   --------------------
+
+   function Generic_Filter (List : Property_Array) return Property_Array is
+      Result : Property_Array (List'Range);
+      Last : Natural := Result'First - 1;
+   begin
+      for J in List'Range loop
+         if Pass (List (J)) then
+            Last := Last + 1;
+            Result (Last) := List (J);
+         end if;
+      end loop;
+
+      return Result (Result'First .. Last);
+   end Generic_Filter;
+
    ----------------
    -- Initialize --
    ----------------

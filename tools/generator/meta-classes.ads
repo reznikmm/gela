@@ -48,6 +48,10 @@ package Meta.Classes is
      (Self  : in out Class;
       Value : Property);
 
+   generic
+      with function Pass (Value : Property) return Boolean;
+   function Generic_Filter (List : Property_Array) return Property_Array;
+
 private
 
    type Class is tagged record
