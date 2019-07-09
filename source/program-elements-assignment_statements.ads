@@ -6,7 +6,7 @@
 
 with Program.Elements.Statements;
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Assignment_Statements is
 
@@ -23,17 +23,28 @@ package Program.Elements.Assignment_Statements is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Assignment_Token
-    (Self : Assignment_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Expression
     (Self : Assignment_Statement)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   type Assignment_Statement_Text is limited interface;
+
+   type Assignment_Statement_Text_Access is
+     access all Assignment_Statement_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Assignment_Statement_Text
+    (Self : aliased Assignment_Statement)
+      return Assignment_Statement_Text_Access is abstract;
+
+   not overriding function Assignment_Token
+    (Self : Assignment_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Semicolon_Token
-    (Self : Assignment_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Assignment_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Assignment_Statements;

@@ -6,7 +6,7 @@
 
 with Program.Elements.Statements;
 with Program.Elements.Defining_Identifiers;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Element_Vectors;
 with Program.Elements.Identifiers;
 
@@ -25,33 +25,46 @@ package Program.Elements.Loop_Statements is
       return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
      is abstract;
 
-   not overriding function Colon_Token
-    (Self : Loop_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Loop_Token
-    (Self : Loop_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Statements
     (Self : Loop_Statement)
       return not null Program.Element_Vectors.Element_Vector_Access
      is abstract;
 
-   not overriding function End_Token
-    (Self : Loop_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Loop_Token_2
-    (Self : Loop_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function End_Statement_Identifier
     (Self : Loop_Statement)
       return Program.Elements.Identifiers.Identifier_Access is abstract;
 
+   type Loop_Statement_Text is limited interface;
+
+   type Loop_Statement_Text_Access is access all Loop_Statement_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Loop_Statement_Text
+    (Self : aliased Loop_Statement)
+      return Loop_Statement_Text_Access is abstract;
+
+   not overriding function Colon_Token
+    (Self : Loop_Statement_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Loop_Token
+    (Self : Loop_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function End_Token
+    (Self : Loop_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Loop_Token_2
+    (Self : Loop_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Semicolon_Token
-    (Self : Loop_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Loop_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Loop_Statements;

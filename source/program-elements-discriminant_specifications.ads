@@ -7,7 +7,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Declarations;
 with Program.Elements.Defining_Identifiers;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
 package Program.Elements.Discriminant_Specifications is
@@ -25,33 +25,44 @@ package Program.Elements.Discriminant_Specifications is
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Vector_Access is abstract;
 
-   not overriding function Colon_Token
-    (Self : Discriminant_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Not_Token
-    (Self : Discriminant_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Null_Token
-    (Self : Discriminant_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Object_Subtype
     (Self : Discriminant_Specification)
       return not null Program.Elements.Element_Access is abstract;
-
-   not overriding function Assignment_Token
-    (Self : Discriminant_Specification)
-      return Program.Tokens.Token_Access is abstract;
 
    not overriding function Default_Expression
     (Self : Discriminant_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   type Discriminant_Specification_Text is limited interface;
+
+   type Discriminant_Specification_Text_Access is
+     access all Discriminant_Specification_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Discriminant_Specification_Text
+    (Self : aliased Discriminant_Specification)
+      return Discriminant_Specification_Text_Access is abstract;
+
+   not overriding function Colon_Token
+    (Self : Discriminant_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Not_Token
+    (Self : Discriminant_Specification_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Null_Token
+    (Self : Discriminant_Specification_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Assignment_Token
+    (Self : Discriminant_Specification_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
    not overriding function Semicolon_Token
-    (Self : Discriminant_Specification)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Discriminant_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    type Discriminant_Specification_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Array_Component_Associations;
 
 package Program.Elements.Array_Aggregates is
@@ -18,17 +18,28 @@ package Program.Elements.Array_Aggregates is
    type Array_Aggregate_Access is access all Array_Aggregate'Class
      with Storage_Size => 0;
 
-   not overriding function Left_Bracket_Token
-    (Self : Array_Aggregate)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Components
     (Self : Array_Aggregate)
       return not null Program.Elements.Array_Component_Associations
           .Array_Component_Association_Vector_Access is abstract;
 
+   type Array_Aggregate_Text is limited interface;
+
+   type Array_Aggregate_Text_Access is access all Array_Aggregate_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Array_Aggregate_Text
+    (Self : aliased Array_Aggregate)
+      return Array_Aggregate_Text_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Array_Aggregate_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Right_Bracket_Token
-    (Self : Array_Aggregate)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Array_Aggregate_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Array_Aggregates;

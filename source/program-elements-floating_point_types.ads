@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 with Program.Elements.Real_Range_Specifications;
 
@@ -19,10 +19,6 @@ package Program.Elements.Floating_Point_Types is
    type Floating_Point_Type_Access is access all Floating_Point_Type'Class
      with Storage_Size => 0;
 
-   not overriding function Digits_Token
-    (Self : Floating_Point_Type)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Digits_Expression
     (Self : Floating_Point_Type)
       return not null Program.Elements.Expressions.Expression_Access
@@ -32,5 +28,19 @@ package Program.Elements.Floating_Point_Types is
     (Self : Floating_Point_Type)
       return Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Access is abstract;
+
+   type Floating_Point_Type_Text is limited interface;
+
+   type Floating_Point_Type_Text_Access is
+     access all Floating_Point_Type_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Floating_Point_Type_Text
+    (Self : aliased Floating_Point_Type)
+      return Floating_Point_Type_Text_Access is abstract;
+
+   not overriding function Digits_Token
+    (Self : Floating_Point_Type_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Floating_Point_Types;

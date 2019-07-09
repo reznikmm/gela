@@ -6,7 +6,7 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Associations;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
 package Program.Elements.Record_Component_Associations is
@@ -24,17 +24,26 @@ package Program.Elements.Record_Component_Associations is
       return not null Program.Element_Vectors.Element_Vector_Access
      is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Record_Component_Association)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Expression
     (Self : Record_Component_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   type Record_Component_Association_Text is limited interface;
+
+   type Record_Component_Association_Text_Access is
+     access all Record_Component_Association_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Record_Component_Association_Text
+    (Self : aliased Record_Component_Association)
+      return Record_Component_Association_Text_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Record_Component_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
    not overriding function Box_Token
-    (Self : Record_Component_Association)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Record_Component_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    type Record_Component_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

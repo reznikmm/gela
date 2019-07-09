@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 with Program.Elements.Case_Paths;
 
@@ -19,34 +19,48 @@ package Program.Elements.Case_Statements is
    type Case_Statement_Access is access all Case_Statement'Class
      with Storage_Size => 0;
 
-   not overriding function Case_Token
-    (Self : Case_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Selecting_Expression
     (Self : Case_Statement)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
-
-   not overriding function Is_Token
-    (Self : Case_Statement)
-      return Program.Tokens.Token_Access is abstract;
 
    not overriding function Paths
     (Self : Case_Statement)
       return not null Program.Elements.Case_Paths.Case_Path_Vector_Access
      is abstract;
 
+   type Case_Statement_Text is limited interface;
+
+   type Case_Statement_Text_Access is access all Case_Statement_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Case_Statement_Text
+    (Self : aliased Case_Statement)
+      return Case_Statement_Text_Access is abstract;
+
+   not overriding function Case_Token
+    (Self : Case_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Is_Token
+    (Self : Case_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function End_Token
-    (Self : Case_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Case_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Case_Token_2
-    (Self : Case_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Case_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Semicolon_Token
-    (Self : Case_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Case_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Case_Statements;

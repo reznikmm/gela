@@ -7,7 +7,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Definitions;
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Aspect_Specifications is
 
@@ -24,13 +24,23 @@ package Program.Elements.Aspect_Specifications is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Aspect_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Aspect_Definition
     (Self : Aspect_Specification)
       return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
+
+   type Aspect_Specification_Text is limited interface;
+
+   type Aspect_Specification_Text_Access is
+     access all Aspect_Specification_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Aspect_Specification_Text
+    (Self : aliased Aspect_Specification)
+      return Aspect_Specification_Text_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Aspect_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
      is abstract;
 
    type Aspect_Specification_Vector is

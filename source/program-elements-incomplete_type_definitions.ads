@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Incomplete_Type_Definitions is
 
@@ -17,8 +17,17 @@ package Program.Elements.Incomplete_Type_Definitions is
    type Incomplete_Type_Definition_Access is
      access all Incomplete_Type_Definition'Class with Storage_Size => 0;
 
+   type Incomplete_Type_Definition_Text is limited interface;
+
+   type Incomplete_Type_Definition_Text_Access is
+     access all Incomplete_Type_Definition_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Incomplete_Type_Definition_Text
+    (Self : aliased Incomplete_Type_Definition)
+      return Incomplete_Type_Definition_Text_Access is abstract;
+
    not overriding function Tagged_Token
-    (Self : Incomplete_Type_Definition)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Incomplete_Type_Definition_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Incomplete_Type_Definitions;

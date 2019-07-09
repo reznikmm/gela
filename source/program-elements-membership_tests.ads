@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Element_Vectors;
 
 package Program.Elements.Membership_Tests is
@@ -23,17 +23,27 @@ package Program.Elements.Membership_Tests is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Not_Token
-    (Self : Membership_Test)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function In_Token
-    (Self : Membership_Test)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Choices
     (Self : Membership_Test)
       return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
+   type Membership_Test_Text is limited interface;
+
+   type Membership_Test_Text_Access is access all Membership_Test_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Membership_Test_Text
+    (Self : aliased Membership_Test)
+      return Membership_Test_Text_Access is abstract;
+
+   not overriding function Not_Token
+    (Self : Membership_Test_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function In_Token
+    (Self : Membership_Test_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
      is abstract;
 
 end Program.Elements.Membership_Tests;

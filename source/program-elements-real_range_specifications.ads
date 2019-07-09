@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
 package Program.Elements.Real_Range_Specifications is
@@ -18,22 +18,33 @@ package Program.Elements.Real_Range_Specifications is
    type Real_Range_Specification_Access is
      access all Real_Range_Specification'Class with Storage_Size => 0;
 
-   not overriding function Range_Token
-    (Self : Real_Range_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Lower_Bound
     (Self : Real_Range_Specification)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Double_Dot_Token
-    (Self : Real_Range_Specification)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Upper_Bound
     (Self : Real_Range_Specification)
       return not null Program.Elements.Expressions.Expression_Access
+     is abstract;
+
+   type Real_Range_Specification_Text is limited interface;
+
+   type Real_Range_Specification_Text_Access is
+     access all Real_Range_Specification_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Real_Range_Specification_Text
+    (Self : aliased Real_Range_Specification)
+      return Real_Range_Specification_Text_Access is abstract;
+
+   not overriding function Range_Token
+    (Self : Real_Range_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Double_Dot_Token
+    (Self : Real_Range_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
      is abstract;
 
 end Program.Elements.Real_Range_Specifications;

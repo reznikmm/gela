@@ -13,4 +13,13 @@ package Program.Elements.Definitions is
    type Definition_Access is access all Definition'Class
      with Storage_Size => 0;
 
+   type Definition_Text is limited interface;
+
+   type Definition_Text_Access is access all Definition_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Definition_Text
+    (Self : aliased Definition)
+      return Definition_Text_Access is abstract;
+
 end Program.Elements.Definitions;

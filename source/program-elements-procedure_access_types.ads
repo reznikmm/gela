@@ -7,7 +7,7 @@
 with Program.Elements.Access_Types;
 with Program.Elements.Formal_Access_Types;
 with Program.Elements.Anonymous_Access_Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Parameter_Specifications;
 
 package Program.Elements.Procedure_Access_Types is
@@ -23,37 +23,48 @@ package Program.Elements.Procedure_Access_Types is
    type Procedure_Access_Type_Access is access all Procedure_Access_Type'Class
      with Storage_Size => 0;
 
-   not overriding function Not_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Null_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Access_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Protected_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Procedure_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Left_Bracket_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Parameters
     (Self : Procedure_Access_Type)
       return not null Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
+   type Procedure_Access_Type_Text is limited interface;
+
+   type Procedure_Access_Type_Text_Access is
+     access all Procedure_Access_Type_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Procedure_Access_Type_Text
+    (Self : aliased Procedure_Access_Type)
+      return Procedure_Access_Type_Text_Access is abstract;
+
+   not overriding function Not_Token
+    (Self : Procedure_Access_Type_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Null_Token
+    (Self : Procedure_Access_Type_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Access_Token
+    (Self : Procedure_Access_Type_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Protected_Token
+    (Self : Procedure_Access_Type_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Procedure_Token
+    (Self : Procedure_Access_Type_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Procedure_Access_Type_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
    not overriding function Right_Bracket_Token
-    (Self : Procedure_Access_Type)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Procedure_Access_Type_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Procedure_Access_Types;

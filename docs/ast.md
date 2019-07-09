@@ -1360,7 +1360,7 @@
 > _[Clause]_
  - Limited_Token              : Token?
  - Private_Token              : Token?
- - With_Token                 : Token?
+ - With_Token                 : Token
  - Clause_Names               : _[Expression]_+
  - Semicolon_Token            : Token
 

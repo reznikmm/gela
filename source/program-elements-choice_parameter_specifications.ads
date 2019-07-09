@@ -6,7 +6,7 @@
 
 with Program.Elements.Declarations;
 with Program.Elements.Defining_Identifiers;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Choice_Parameter_Specifications is
 
@@ -23,8 +23,19 @@ package Program.Elements.Choice_Parameter_Specifications is
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access is abstract;
 
+   type Choice_Parameter_Specification_Text is limited interface;
+
+   type Choice_Parameter_Specification_Text_Access is
+     access all Choice_Parameter_Specification_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Choice_Parameter_Specification_Text
+    (Self : aliased Choice_Parameter_Specification)
+      return Choice_Parameter_Specification_Text_Access is abstract;
+
    not overriding function Colon_Token
-    (Self : Choice_Parameter_Specification)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Choice_Parameter_Specification_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Choice_Parameter_Specifications;

@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Private_Type_Definitions is
 
@@ -17,20 +17,30 @@ package Program.Elements.Private_Type_Definitions is
    type Private_Type_Definition_Access is
      access all Private_Type_Definition'Class with Storage_Size => 0;
 
+   type Private_Type_Definition_Text is limited interface;
+
+   type Private_Type_Definition_Text_Access is
+     access all Private_Type_Definition_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Private_Type_Definition_Text
+    (Self : aliased Private_Type_Definition)
+      return Private_Type_Definition_Text_Access is abstract;
+
    not overriding function Abstract_Token
-    (Self : Private_Type_Definition)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Private_Type_Definition_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Tagged_Token
-    (Self : Private_Type_Definition)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Private_Type_Definition_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Limited_Token
-    (Self : Private_Type_Definition)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Private_Type_Definition_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Private_Token
-    (Self : Private_Type_Definition)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Private_Type_Definition_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Private_Type_Definitions;

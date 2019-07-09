@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
 package Program.Elements.Delay_Statements is
@@ -18,21 +18,33 @@ package Program.Elements.Delay_Statements is
    type Delay_Statement_Access is access all Delay_Statement'Class
      with Storage_Size => 0;
 
-   not overriding function Delay_Token
-    (Self : Delay_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Until_Token
-    (Self : Delay_Statement)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Expression
     (Self : Delay_Statement)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   type Delay_Statement_Text is limited interface;
+
+   type Delay_Statement_Text_Access is access all Delay_Statement_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Delay_Statement_Text
+    (Self : aliased Delay_Statement)
+      return Delay_Statement_Text_Access is abstract;
+
+   not overriding function Delay_Token
+    (Self : Delay_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Until_Token
+    (Self : Delay_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Semicolon_Token
-    (Self : Delay_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Delay_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Delay_Statements;

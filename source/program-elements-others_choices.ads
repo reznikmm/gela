@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Others_Choices is
 
@@ -17,8 +17,18 @@ package Program.Elements.Others_Choices is
    type Others_Choice_Access is access all Others_Choice'Class
      with Storage_Size => 0;
 
+   type Others_Choice_Text is limited interface;
+
+   type Others_Choice_Text_Access is access all Others_Choice_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Others_Choice_Text
+    (Self : aliased Others_Choice)
+      return Others_Choice_Text_Access is abstract;
+
    not overriding function Others_Token
-    (Self : Others_Choice)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Others_Choice_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Others_Choices;

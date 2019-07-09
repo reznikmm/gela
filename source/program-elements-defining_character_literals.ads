@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Defining_Names;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Defining_Character_Literals is
 
@@ -17,8 +17,18 @@ package Program.Elements.Defining_Character_Literals is
    type Defining_Character_Literal_Access is
      access all Defining_Character_Literal'Class with Storage_Size => 0;
 
+   type Defining_Character_Literal_Text is limited interface;
+
+   type Defining_Character_Literal_Text_Access is
+     access all Defining_Character_Literal_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Defining_Character_Literal_Text
+    (Self : aliased Defining_Character_Literal)
+      return Defining_Character_Literal_Text_Access is abstract;
+
    not overriding function Character_Literal_Token
-    (Self : Defining_Character_Literal)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Defining_Character_Literal_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Defining_Character_Literals;

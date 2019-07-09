@@ -15,4 +15,13 @@ package Program.Elements.Root_Types is
 
    type Root_Type_Access is access all Root_Type'Class with Storage_Size => 0;
 
+   type Root_Type_Text is limited interface;
+
+   type Root_Type_Text_Access is access all Root_Type_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Root_Type_Text
+    (Self : aliased Root_Type)
+      return Root_Type_Text_Access is abstract;
+
 end Program.Elements.Root_Types;

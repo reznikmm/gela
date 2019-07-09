@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Qualified_Expressions;
 
@@ -18,21 +18,9 @@ package Program.Elements.Allocators is
 
    type Allocator_Access is access all Allocator'Class with Storage_Size => 0;
 
-   not overriding function New_Token
-    (Self : Allocator)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Left_Bracket_Token
-    (Self : Allocator)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Subpool_Name
     (Self : Allocator)
       return Program.Elements.Expressions.Expression_Access is abstract;
-
-   not overriding function Right_Bracket_Token
-    (Self : Allocator)
-      return Program.Tokens.Token_Access is abstract;
 
    not overriding function Subtype_Indication
     (Self : Allocator)
@@ -43,5 +31,27 @@ package Program.Elements.Allocators is
     (Self : Allocator)
       return Program.Elements.Qualified_Expressions.Qualified_Expression_Access
      is abstract;
+
+   type Allocator_Text is limited interface;
+
+   type Allocator_Text_Access is access all Allocator_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Allocator_Text
+    (Self : aliased Allocator)
+      return Allocator_Text_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Allocator_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Allocator_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Right_Bracket_Token
+    (Self : Allocator_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Allocators;

@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Type_Conversions is
 
@@ -22,17 +22,28 @@ package Program.Elements.Type_Conversions is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Left_Bracket_Token
-    (Self : Type_Conversion)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Operand
     (Self : Type_Conversion)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   type Type_Conversion_Text is limited interface;
+
+   type Type_Conversion_Text_Access is access all Type_Conversion_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Type_Conversion_Text
+    (Self : aliased Type_Conversion)
+      return Type_Conversion_Text_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Type_Conversion_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Right_Bracket_Token
-    (Self : Type_Conversion)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Type_Conversion_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Type_Conversions;

@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.String_Literals is
 
@@ -17,8 +17,18 @@ package Program.Elements.String_Literals is
    type String_Literal_Access is access all String_Literal'Class
      with Storage_Size => 0;
 
+   type String_Literal_Text is limited interface;
+
+   type String_Literal_Text_Access is access all String_Literal_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_String_Literal_Text
+    (Self : aliased String_Literal)
+      return String_Literal_Text_Access is abstract;
+
    not overriding function String_Literal_Token
-    (Self : String_Literal)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : String_Literal_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.String_Literals;

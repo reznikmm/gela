@@ -7,7 +7,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Associations;
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Parameter_Associations is
 
@@ -23,14 +23,23 @@ package Program.Elements.Parameter_Associations is
     (Self : Parameter_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Parameter_Association)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Actual_Parameter
     (Self : Parameter_Association)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
+
+   type Parameter_Association_Text is limited interface;
+
+   type Parameter_Association_Text_Access is
+     access all Parameter_Association_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Parameter_Association_Text
+    (Self : aliased Parameter_Association)
+      return Parameter_Association_Text_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Parameter_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    type Parameter_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

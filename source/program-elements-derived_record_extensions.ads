@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 with Program.Elements.Definitions;
 
@@ -19,39 +19,50 @@ package Program.Elements.Derived_Record_Extensions is
    type Derived_Record_Extension_Access is
      access all Derived_Record_Extension'Class with Storage_Size => 0;
 
-   not overriding function Abstract_Token
-    (Self : Derived_Record_Extension)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Limited_Token
-    (Self : Derived_Record_Extension)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function New_Token
-    (Self : Derived_Record_Extension)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Parent
     (Self : Derived_Record_Extension)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
-
-   not overriding function And_Token
-    (Self : Derived_Record_Extension)
-      return Program.Tokens.Token_Access is abstract;
 
    not overriding function Progenitors
     (Self : Derived_Record_Extension)
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
-   not overriding function With_Token
-    (Self : Derived_Record_Extension)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Record_Definition
     (Self : Derived_Record_Extension)
       return not null Program.Elements.Definitions.Definition_Access
+     is abstract;
+
+   type Derived_Record_Extension_Text is limited interface;
+
+   type Derived_Record_Extension_Text_Access is
+     access all Derived_Record_Extension_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Derived_Record_Extension_Text
+    (Self : aliased Derived_Record_Extension)
+      return Derived_Record_Extension_Text_Access is abstract;
+
+   not overriding function Abstract_Token
+    (Self : Derived_Record_Extension_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Limited_Token
+    (Self : Derived_Record_Extension_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function New_Token
+    (Self : Derived_Record_Extension_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function And_Token
+    (Self : Derived_Record_Extension_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function With_Token
+    (Self : Derived_Record_Extension_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
      is abstract;
 
 end Program.Elements.Derived_Record_Extensions;

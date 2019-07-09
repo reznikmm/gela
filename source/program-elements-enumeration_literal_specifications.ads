@@ -23,6 +23,16 @@ package Program.Elements.Enumeration_Literal_Specifications is
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access is abstract;
 
+   type Enumeration_Literal_Specification_Text is limited interface;
+
+   type Enumeration_Literal_Specification_Text_Access is
+     access all Enumeration_Literal_Specification_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Enumeration_Literal_Specification_Text
+    (Self : aliased Enumeration_Literal_Specification)
+      return Enumeration_Literal_Specification_Text_Access is abstract;
+
    type Enumeration_Literal_Specification_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;
 

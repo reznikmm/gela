@@ -12,4 +12,13 @@ package Program.Elements.Clauses is
 
    type Clause_Access is access all Clause'Class with Storage_Size => 0;
 
+   type Clause_Text is limited interface;
+
+   type Clause_Text_Access is access all Clause_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Clause_Text
+    (Self : aliased Clause)
+      return Clause_Text_Access is abstract;
+
 end Program.Elements.Clauses;

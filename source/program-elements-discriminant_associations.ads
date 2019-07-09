@@ -7,7 +7,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Associations;
 with Program.Elements.Identifiers;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
 package Program.Elements.Discriminant_Associations is
@@ -25,14 +25,23 @@ package Program.Elements.Discriminant_Associations is
       return not null Program.Elements.Identifiers.Identifier_Vector_Access
      is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Discriminant_Association)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Expression
     (Self : Discriminant_Association)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
+
+   type Discriminant_Association_Text is limited interface;
+
+   type Discriminant_Association_Text_Access is
+     access all Discriminant_Association_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Discriminant_Association_Text
+    (Self : aliased Discriminant_Association)
+      return Discriminant_Association_Text_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Discriminant_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    type Discriminant_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

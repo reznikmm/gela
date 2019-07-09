@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Operator_Symbols is
 
@@ -17,8 +17,18 @@ package Program.Elements.Operator_Symbols is
    type Operator_Symbol_Access is access all Operator_Symbol'Class
      with Storage_Size => 0;
 
+   type Operator_Symbol_Text is limited interface;
+
+   type Operator_Symbol_Text_Access is access all Operator_Symbol_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Operator_Symbol_Text
+    (Self : aliased Operator_Symbol)
+      return Operator_Symbol_Text_Access is abstract;
+
    not overriding function Operator_Symbol_Token
-    (Self : Operator_Symbol)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Operator_Symbol_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Operator_Symbols;

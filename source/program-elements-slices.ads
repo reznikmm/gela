@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 with Program.Elements.Discrete_Ranges;
 
 package Program.Elements.Slices is
@@ -21,17 +21,28 @@ package Program.Elements.Slices is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Left_Bracket_Token
-    (Self : Slice)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Slice_Range
     (Self : Slice)
       return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access
      is abstract;
 
+   type Slice_Text is limited interface;
+
+   type Slice_Text_Access is access all Slice_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Slice_Text
+    (Self : aliased Slice)
+      return Slice_Text_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Slice_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Right_Bracket_Token
-    (Self : Slice)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Slice_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Slices;

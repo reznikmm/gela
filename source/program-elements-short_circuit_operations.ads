@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Short_Circuit_Operations is
 
@@ -22,25 +22,34 @@ package Program.Elements.Short_Circuit_Operations is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function And_Token
-    (Self : Short_Circuit_Operation)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Then_Token
-    (Self : Short_Circuit_Operation)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Or_Token
-    (Self : Short_Circuit_Operation)
-      return Program.Tokens.Token_Access is abstract;
-
-   not overriding function Else_Token
-    (Self : Short_Circuit_Operation)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Right
     (Self : Short_Circuit_Operation)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
+
+   type Short_Circuit_Operation_Text is limited interface;
+
+   type Short_Circuit_Operation_Text_Access is
+     access all Short_Circuit_Operation_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Short_Circuit_Operation_Text
+    (Self : aliased Short_Circuit_Operation)
+      return Short_Circuit_Operation_Text_Access is abstract;
+
+   not overriding function And_Token
+    (Self : Short_Circuit_Operation_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Then_Token
+    (Self : Short_Circuit_Operation_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Or_Token
+    (Self : Short_Circuit_Operation_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
+   not overriding function Else_Token
+    (Self : Short_Circuit_Operation_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Short_Circuit_Operations;

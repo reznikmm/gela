@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Statements;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Terminate_Alternative_Statements is
 
@@ -17,12 +17,24 @@ package Program.Elements.Terminate_Alternative_Statements is
    type Terminate_Alternative_Statement_Access is
      access all Terminate_Alternative_Statement'Class with Storage_Size => 0;
 
+   type Terminate_Alternative_Statement_Text is limited interface;
+
+   type Terminate_Alternative_Statement_Text_Access is
+     access all Terminate_Alternative_Statement_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Terminate_Alternative_Statement_Text
+    (Self : aliased Terminate_Alternative_Statement)
+      return Terminate_Alternative_Statement_Text_Access is abstract;
+
    not overriding function Terminate_Token
-    (Self : Terminate_Alternative_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Terminate_Alternative_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Semicolon_Token
-    (Self : Terminate_Alternative_Statement)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Terminate_Alternative_Statement_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Terminate_Alternative_Statements;

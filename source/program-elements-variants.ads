@@ -6,7 +6,7 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Definitions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Variants is
 
@@ -17,22 +17,33 @@ package Program.Elements.Variants is
 
    type Variant_Access is access all Variant'Class with Storage_Size => 0;
 
-   not overriding function When_Token
-    (Self : Variant)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Choices
     (Self : Variant)
       return not null Program.Element_Vectors.Element_Vector_Access
      is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Variant)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Components
     (Self : Variant)
       return not null Program.Element_Vectors.Element_Vector_Access
+     is abstract;
+
+   type Variant_Text is limited interface;
+
+   type Variant_Text_Access is access all Variant_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Variant_Text
+    (Self : aliased Variant)
+      return Variant_Text_Access is abstract;
+
+   not overriding function When_Token
+    (Self : Variant_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Variant_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
      is abstract;
 
    type Variant_Vector is

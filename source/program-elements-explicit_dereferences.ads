@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Explicit_Dereferences is
 
@@ -22,12 +22,23 @@ package Program.Elements.Explicit_Dereferences is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   type Explicit_Dereference_Text is limited interface;
+
+   type Explicit_Dereference_Text_Access is
+     access all Explicit_Dereference_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Explicit_Dereference_Text
+    (Self : aliased Explicit_Dereference)
+      return Explicit_Dereference_Text_Access is abstract;
+
    not overriding function Dot_Token
-    (Self : Explicit_Dereference)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Explicit_Dereference_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function All_Token
-    (Self : Explicit_Dereference)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Explicit_Dereference_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Explicit_Dereferences;

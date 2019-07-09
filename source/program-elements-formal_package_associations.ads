@@ -7,7 +7,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Associations;
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Formal_Package_Associations is
 
@@ -23,17 +23,26 @@ package Program.Elements.Formal_Package_Associations is
     (Self : Formal_Package_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
-   not overriding function Arrow_Token
-    (Self : Formal_Package_Association)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Actual_Parameter
     (Self : Formal_Package_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   type Formal_Package_Association_Text is limited interface;
+
+   type Formal_Package_Association_Text_Access is
+     access all Formal_Package_Association_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Formal_Package_Association_Text
+    (Self : aliased Formal_Package_Association)
+      return Formal_Package_Association_Text_Access is abstract;
+
+   not overriding function Arrow_Token
+    (Self : Formal_Package_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+
    not overriding function Box_Token
-    (Self : Formal_Package_Association)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Formal_Package_Association_Text)
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    type Formal_Package_Association_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

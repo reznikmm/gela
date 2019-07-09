@@ -6,7 +6,7 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Identifiers is
 
@@ -18,9 +18,19 @@ package Program.Elements.Identifiers is
    type Identifier_Access is access all Identifier'Class
      with Storage_Size => 0;
 
+   type Identifier_Text is limited interface;
+
+   type Identifier_Text_Access is access all Identifier_Text'Class
+     with Storage_Size => 0;
+
+   not overriding function To_Identifier_Text
+    (Self : aliased Identifier)
+      return Identifier_Text_Access is abstract;
+
    not overriding function Identifier_Token
-    (Self : Identifier)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Identifier_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    type Identifier_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

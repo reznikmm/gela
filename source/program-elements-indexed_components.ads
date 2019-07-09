@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Elements.Expressions;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Indexed_Components is
 
@@ -22,17 +22,28 @@ package Program.Elements.Indexed_Components is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
-   not overriding function Left_Bracket_Token
-    (Self : Indexed_Component)
-      return Program.Tokens.Token_Access is abstract;
-
    not overriding function Expressions
     (Self : Indexed_Component)
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   type Indexed_Component_Text is limited interface;
+
+   type Indexed_Component_Text_Access is
+     access all Indexed_Component_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Indexed_Component_Text
+    (Self : aliased Indexed_Component)
+      return Indexed_Component_Text_Access is abstract;
+
+   not overriding function Left_Bracket_Token
+    (Self : Indexed_Component_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
+
    not overriding function Right_Bracket_Token
-    (Self : Indexed_Component)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Indexed_Component_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Indexed_Components;

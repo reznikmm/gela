@@ -6,7 +6,7 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Defining_Names;
-with Program.Tokens;
+with Program.Lexical_Elements;
 
 package Program.Elements.Defining_Identifiers is
 
@@ -18,9 +18,19 @@ package Program.Elements.Defining_Identifiers is
    type Defining_Identifier_Access is access all Defining_Identifier'Class
      with Storage_Size => 0;
 
+   type Defining_Identifier_Text is limited interface;
+
+   type Defining_Identifier_Text_Access is
+     access all Defining_Identifier_Text'Class with Storage_Size => 0;
+
+   not overriding function To_Defining_Identifier_Text
+    (Self : aliased Defining_Identifier)
+      return Defining_Identifier_Text_Access is abstract;
+
    not overriding function Identifier_Token
-    (Self : Defining_Identifier)
-      return Program.Tokens.Token_Access is abstract;
+    (Self : Defining_Identifier_Text)
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    type Defining_Identifier_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;
