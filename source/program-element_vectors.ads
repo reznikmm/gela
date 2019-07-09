@@ -32,13 +32,13 @@ package Program.Element_Vectors is
      return not null Program.Elements.Element_Access is abstract;
    --  Return an element of the vector
 
-   not overriding function Separator
+   not overriding function Delimiter
      (Self  : Element_Vector;
       Index : Positive)
      return Program.Tokens.Token_Access is abstract
        with Post'Class =>
-         (if Index = Self.Length then Separator'Result in null);
-   --  Return a separator token after an element of the vector
+         (if Index = Self.Length then Delimiter'Result in null);
+   --  Return a delimiter token after an element of the vector
 
    type Element_Cursor
      (Vector : not null access Element_Vector'Class) is tagged
@@ -60,10 +60,10 @@ package Program.Element_Vectors is
        is (Self.Vector.Element (Self.Position));
    --  Return an element of the vector for given cursor
 
-   function Separator (Self : Element_Cursor'Class)
+   function Delimiter (Self : Element_Cursor'Class)
      return Program.Tokens.Token_Access
-       is (Self.Vector.Separator (Self.Position));
-   --  Return a separator after the element pointed by the cursor
+       is (Self.Vector.Delimiter (Self.Position));
+   --  Return a delimiter after the element pointed by the cursor
 
    package Iterators is new Ada.Iterator_Interfaces
      (Element_Cursor, Has_Element);
