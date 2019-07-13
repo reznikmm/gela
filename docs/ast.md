@@ -80,7 +80,6 @@
  - Aspects               : [Aspect_Specification]*
  - Is_Token              : Token
  - New_Token             : Token?
- - And_Token             : Token?
  - Progenitors           : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2          : Token?
  - Definition            : [Task_Definition]
@@ -123,6 +122,8 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Aliased                : Boolean
+ - Has_Constant               : Boolean
 
 ### Single_Task_Declaration
 > _[Declaration]_
@@ -147,7 +148,7 @@
  - New_Token                  : Token?
  - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token_2               : Token?
- - Definition                : [Protected_Definition]
+ - Definition                 : [Protected_Definition]
  - Semicolon_Token            : Token
 
 ### Number_Declaration
@@ -173,6 +174,7 @@
  - Assignment_Token           : Token?
  - Default_Expression         : _[Expression]_?
  - Semicolon_Token            : Token
+ - Has_Not_Null               : Boolean
 
 ### Component_Declaration
 > _[Declaration]_
@@ -191,6 +193,7 @@
  - In_Token                   : Token
  - Reverse_Token              : Token?
  - Definition                 : _[Discrete_Subtype_Definition]_
+ - Has_Reverse                : Boolean
 
 ### Generalized_Iterator_Specification
 > _[Declaration]_
@@ -198,6 +201,7 @@
  - In_Token                   : Token
  - Reverse_Token              : Token?
  - Iterator_Name              : _[Expression]_
+ - Has_Reverse                : Boolean
 
 ### Element_Iterator_Specification
 > _[Declaration]_
@@ -207,6 +211,7 @@
  - Of_Token                   : Token
  - Reverse_Token              : Token?
  - Iterable_Name              : _[Expression]_
+ - Has_Reverse                : Boolean
 
 ### Procedure_Declaration
 > _[Declaration]_
@@ -222,6 +227,9 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
+ - Has_Abstract               : Boolean
 
 ### Function_Declaration
 > _[Declaration]_
@@ -242,6 +250,10 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
+ - Has_Abstract               : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Parameter_Specification
 > _[Declaration]_
@@ -255,6 +267,10 @@
  - Parameter_Subtype          : _[Element]_ {[Constrained_Array_Type],[Subtype_Indication],_[Anonymous_Access_Definition]_,[Identifier],[Selected_Component],[Attribute_Reference]}
  - Assignment_Token           : Token?
  - Default_Expression         : _[Expression]_?
+ - Has_Aliased                : Boolean
+ - Has_In                     : Boolean
+ - Has_Out                    : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Procedure_Body_Declaration
 > _[Declaration]_
@@ -276,6 +292,8 @@
  - End_Token                  : Token
  - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component]}
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Function_Body_Declaration
 > _[Declaration]_
@@ -301,6 +319,9 @@
  - End_Token                  : Token
  - End_Name                   : _[Expression]_? {[Identifier],[Selected_Component],[Operator_Symbol]}
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Return_Object_Specification
 > _[Declaration]_
@@ -311,6 +332,8 @@
  - Object_Subtype             : _[Element]_ {[Subtype_Indication],_[Anonymous_Access_Definition]_}
  - Assignment_Token           : Token?
  - Expression                 : _[Expression]_?
+ - Has_Aliased                : Boolean
+ - Has_Constant               : Boolean
 
 ### Package_Declaration
 > _[Declaration]_
@@ -355,6 +378,7 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not_Null               : Boolean
 
 ### Exception_Renaming_Declaration
 > _[Declaration]_
@@ -381,6 +405,8 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Function_Renaming_Declaration
 > _[Declaration]_
@@ -400,6 +426,9 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Package_Renaming_Declaration
 > _[Declaration]_
@@ -489,6 +518,8 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Entry_Body_Declaration
 > _[Declaration]_
@@ -528,11 +559,13 @@
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
- - Is_Token                   : Token?
- - Separate_Token             : Token?
+ - Is_Token                   : Token
+ - Separate_Token             : Token
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Function_Body_Stub
 > _[Declaration]_
@@ -547,11 +580,14 @@
  - Not_Token_2                : Token?
  - Null_Token                 : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
- - Is_Token                   : Token?
- - Separate_Token             : Token?
+ - Is_Token                   : Token
+ - Separate_Token             : Token
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Package_Body_Stub
 > _[Declaration]_
@@ -645,6 +681,7 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not_Null               : Boolean
 
 ### Package_Instantiation
 > _[Declaration]_
@@ -662,35 +699,39 @@
 
 ### Procedure_Instantiation
 > _[Declaration]_
- - Not_Token                      : Token?
- - Overriding_Token               : Token?
- - Procedure_Token                : Token
- - Name                           : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
- - Is_Token                       : Token
- - New_Token                      : Token
- - Generic_Procedure_Name         : _[Expression]_ {[Identifier],[Selected_Component]}
- - Left_Bracket_Token             : Token?
- - Parameters                     : [Parameter_Association]*
- - Right_Bracket_Token            : Token?
- - With_Token                     : Token?
- - Aspects                        : [Aspect_Specification]*
- - Semicolon_Token                : Token
+ - Not_Token                  : Token?
+ - Overriding_Token           : Token?
+ - Procedure_Token            : Token
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name]}
+ - Is_Token                   : Token
+ - New_Token                  : Token
+ - Generic_Procedure_Name     : _[Expression]_ {[Identifier],[Selected_Component]}
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Association]*
+ - Right_Bracket_Token        : Token?
+ - With_Token                 : Token?
+ - Aspects                    : [Aspect_Specification]*
+ - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Function_Instantiation
 > _[Declaration]_
- - Not_Token                      : Token?
- - Overriding_Token               : Token?
- - Function_Token                 : Token
- - Name                           : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
- - Is_Token                       : Token
- - New_Token                      : Token
- - Generic_Function_Name          : _[Expression]_ {[Identifier],[Selected_Component]}
- - Left_Bracket_Token             : Token?
- - Parameters                     : [Parameter_Association]*
- - Right_Bracket_Token            : Token?
- - With_Token                     : Token?
- - Aspects                        : [Aspect_Specification]*
- - Semicolon_Token                : Token
+ - Not_Token                  : Token?
+ - Overriding_Token           : Token?
+ - Function_Token             : Token
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Expanded_Name],[Defining_Operator_Symbol]}
+ - Is_Token                   : Token
+ - New_Token                  : Token
+ - Generic_Function_Name      : _[Expression]_ {[Identifier],[Selected_Component]}
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Association]*
+ - Right_Bracket_Token        : Token?
+ - With_Token                 : Token?
+ - Aspects                    : [Aspect_Specification]*
+ - Semicolon_Token            : Token
+ - Has_Not                    : Boolean
+ - Has_Overriding             : Boolean
 
 ### Formal_Object_Declaration
 > _[Declaration]_
@@ -706,6 +747,9 @@
  - With_Token                 : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_In                     : Boolean
+ - Has_Out                    : Boolean
+ - Has_Not_Null               : Boolean
 
 ### Formal_Type_Declaration
 > _[Declaration]_
@@ -734,6 +778,9 @@
  - With_Token_2               : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Abstract               : Boolean
+ - Has_Null                   : Boolean
+ - Has_Box                    : Boolean
 
 ### Formal_Function_Declaration
 > _[Declaration]_
@@ -754,6 +801,9 @@
  - With_Token_2               : Token?
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
+ - Has_Not_Null               : Boolean
+ - Has_Abstract               : Boolean
+ - Has_Box                    : Boolean
 
 ### Formal_Package_Declaration
 > _[Declaration]_
@@ -782,6 +832,7 @@
  - Null_Token                 : Token?
  - Subtype_Mark               : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Constraint                 : _[Constraint]_?
+ - Has_Not_Null               : Boolean
 
 ### _Constraint_
 > _[Definition]_
@@ -790,6 +841,7 @@
 > _[Definition]_
  - Aliased_Token              : Token?
  - Subtype_Indication         : _[Element]_ {[Subtype_Indication],_[Anonymous_Access_Definition]_}
+ - Has_Aliased                : Boolean
 
 ### _Discrete_Subtype_Definition_
 > _[Definition]_
@@ -851,22 +903,29 @@
  - Tagged_Token               : Token?
  - Limited_Token              : Token?
  - Private_Token              : Token
+ - Has_Abstract               : Boolean
+ - Has_Tagged                 : Boolean
+ - Has_Limited                : Boolean
 
 ### Private_Extension_Definition
 > _[Definition]_
- - Abstract_Token              : Token?
- - Limited_Token               : Token?
- - Synchronized_Token          : Token?
- - New_Token                   : Token
- - Ancestor                    : [Subtype_Indication]
- - And_Token                   : Token?
- - Progenitors                 : _[Expression]_* {[Identifier],[Selected_Component]}
- - With_Token                  : Token
- - Private_Token               : Token
+ - Abstract_Token             : Token?
+ - Limited_Token              : Token?
+ - Synchronized_Token         : Token?
+ - New_Token                  : Token
+ - Ancestor                   : [Subtype_Indication]
+ - And_Token                  : Token?
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
+ - With_Token                 : Token
+ - Private_Token              : Token
+ - Has_Abstract               : Boolean
+ - Has_Limited                : Boolean
+ - Has_Synchronized           : Boolean
 
 ### Incomplete_Type_Definition
 > _[Definition]_
- - Tagged_Token                : Token?
+ - Tagged_Token               : Token?
+ - Has_Tagged                 : Boolean
 
 ### Task_Definition
 > _[Definition]_
@@ -993,6 +1052,8 @@
  - Or_Token         : Token?
  - Else_Token       : Token?
  - Right            : _[Expression]_
+ - Has_And_Then     : Boolean
+ - Has_Or_Else      : Boolean
 
 ### Membership_Test
 > _[Expression]_
@@ -1000,6 +1061,7 @@
  - Not_Token                  : Token?
  - In_Token                   : Token
  - Choices                    : _[Element]_+ {[Simple_Expression_Range],[Attribute_Reference],^[Membership_Test]}
+ - Has_Not                    : Boolean
 
 ### Null_Literal
 > _[Expression]_
@@ -1061,14 +1123,16 @@
 
 ### Quantified_Expression
 > _[Expression]_
- - For_Token                    : Token
- - All_Token                    : Token?
- - Some_Token                   : Token?
- - Parameter                    : [Loop_Parameter_Specification]?
- - Generalized_Iterator         : [Generalized_Iterator_Specification]?
- - Element_Iterator             : [Element_Iterator_Specification]?
- - Arrow_Token                  : Token
- - Predicate                    : _[Expression]_
+ - For_Token                  : Token
+ - All_Token                  : Token?
+ - Some_Token                 : Token?
+ - Parameter                  : [Loop_Parameter_Specification]?
+ - Generalized_Iterator       : [Generalized_Iterator_Specification]?
+ - Element_Iterator           : [Element_Iterator_Specification]?
+ - Arrow_Token                : Token
+ - Predicate                  : _[Expression]_
+ - Has_All                    : Boolean
+ - Has_Some                   : Boolean
 
 ## Association
 > _[Element]_
@@ -1262,6 +1326,7 @@
  - With_Token                   : Token?
  - Abort_Token                  : Token?
  - Semicolon_Token              : Token
+ - Has_With_Abort               : Boolean
 
 ### Delay_Statement
 > _[Statement]_
@@ -1284,7 +1349,7 @@
  - Then_Abort_Statements        : _[Element]_* {[Pragma],_[Statement]_}
  - Else_Token                   : Token?
  - Else_Statements              : _[Element]_* {[Pragma],_[Statement]_}
- - End_Token                    : Token?
+ - End_Token                    : Token
  - Select_Token_2               : Token
  - Semicolon_Token              : Token
 
@@ -1335,7 +1400,7 @@
 > _[Path]_
  - When_Token                 : Token
  - Choices                    : _[Element]_+ {_[Expression]_,[Subtype_Indication],_[Discrete_Range]_,[Others_Choice]}
- - Arrow_Token                : Token?
+ - Arrow_Token                : Token
  - Expression                 : _[Expression]_
 
 ### Elsif_Expression_Path
@@ -1355,6 +1420,8 @@
  - Type_Token                 : Token?
  - Clause_Names               : _[Expression]_+
  - Semicolon_Token            : Token
+ - Has_All                    : Boolean
+ - Has_Type                   : Boolean
 
 ### With_Clause
 > _[Clause]_
@@ -1363,6 +1430,8 @@
  - With_Token                 : Token
  - Clause_Names               : _[Expression]_+
  - Semicolon_Token            : Token
+ - Has_Limited                : Boolean
+ - Has_Private                : Boolean
 
 ### _Representation_Clause_
 > _[Clause]_
@@ -1382,6 +1451,8 @@
  - Limited_Token              : Token?
  - New_Token                  : Token
  - Parent                     : _[Expression]_
+ - Has_Abstract               : Boolean
+ - Has_Limited                : Boolean
 
 ### Derived_Record_Extension
 > _[Type_Definition]_
@@ -1393,6 +1464,8 @@
  - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                 : Token
  - Record_Definition          : _[Definition]_
+ - Has_Abstract               : Boolean
+ - Has_Limited                : Boolean
 
 ### Enumeration_Type
 > _[Type_Definition]_
@@ -1440,8 +1513,8 @@
  - Array_Token                   : Token
  - Left_Bracket_Token            : Token
  - Index_Subtypes                : _[Expression]_+
- - Right_Bracket_Token           : Token?
- - Of_Token                      : Token?
+ - Right_Bracket_Token           : Token
+ - Of_Token                      : Token
  - Component_Definition          : [Component_Definition]
 
 ### Constrained_Array_Type
@@ -1449,8 +1522,8 @@
  - Array_Token                   : Token
  - Left_Bracket_Token            : Token
  - Index_Subtypes                : _[Discrete_Subtype_Definition]_+
- - Right_Bracket_Token           : Token?
- - Of_Token                      : Token?
+ - Right_Bracket_Token           : Token
+ - Of_Token                      : Token
  - Component_Definition          : [Component_Definition]
 
 ### Record_Type
@@ -1462,21 +1535,29 @@
 
 ### Interface_Type
 > _[Type_Definition]_,_[Formal_Type_Definition]_
- - Limited_Token                 : Token?
- - Task_Token                    : Token?
- - Protected_Token               : Token?
- - Synchronized_Token            : Token?
- - Interface_Token               : Token?
- - And_Token                     : Token?
- - Progenitors                   : _[Expression]_* {[Identifier],[Selected_Component]}
+ - Limited_Token              : Token?
+ - Task_Token                 : Token?
+ - Protected_Token            : Token?
+ - Synchronized_Token         : Token?
+ - Interface_Token            : Token?
+ - And_Token                  : Token?
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
+ - Has_Limited                : Boolean
+ - Has_Task                   : Boolean
+ - Has_Protected              : Boolean
+ - Has_Synchronized           : Boolean
 
 ### Object_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
+ - Access_Token               : Token
  - All_Token                  : Token?
  - Constant_Token             : Token?
  - Subtype_Indication         : [Subtype_Indication]
+ - Has_Not_Null               : Boolean
+ - Has_All                    : Boolean
+ - Has_Constant               : Boolean
 
 ### Procedure_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
@@ -1488,6 +1569,8 @@
  - Left_Bracket_Token         : Token?
  - Parameters                 : [Parameter_Specification]*
  - Right_Bracket_Token        : Token?
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
 
 ### Function_Access_Type
 > _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
@@ -1503,6 +1586,9 @@
  - Not_Token_2                : Token?
  - Null_Token_2               : Token?
  - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
+ - Has_Not_Null_2             : Boolean
 
 ### Formal_Private_Type_Definition
 > _[Formal_Type_Definition]_
@@ -1510,6 +1596,9 @@
  - Tagged_Token               : Token?
  - Limited_Token              : Token?
  - Private_Token              : Token
+ - Has_Abstract               : Boolean
+ - Has_Tagged                 : Boolean
+ - Has_Limited                : Boolean
 
 ### Formal_Derived_Type_Definition
 > _[Formal_Type_Definition]_
@@ -1522,6 +1611,10 @@
  - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                 : Token?
  - Private_Token              : Token?
+ - Has_Abstract               : Boolean
+ - Has_Limited                : Boolean
+ - Has_Synchronized           : Boolean
+ - Has_With_Private           : Boolean
 
 ### Formal_Discrete_Type_Definition
 > _[Formal_Type_Definition]_
@@ -1583,7 +1676,7 @@
 > _[Constraint]_
  - Delta_Token             : Token
  - Delta_Expression        : _[Expression]_
- - Range_Token             : Token_
+ - Range_Token             : Token_?
  - Real_Range_Constraint   : _[Constraint]_? {[Simple_Expression_Range],[Range_Attribute_Reference]}
 
 ### Index_Constraint
@@ -1594,9 +1687,9 @@
 
 ### Discriminant_Constraint
 > _[Constraint]_
- - Left_Bracket_Token        : Token?
+ - Left_Bracket_Token        : Token
  - Discriminants             : [Discriminant_Association]+
- - Right_Bracket_Token       : Token?
+ - Right_Bracket_Token       : Token
 
 ### Attribute_Definition_Clause
 > _[Representation_Clause]_

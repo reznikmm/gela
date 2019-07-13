@@ -729,6 +729,11 @@ package body Meta.Writes is
 
       function Get_Name (Index : Natural) return Wide_Wide_String;
 
+      function Only_Object (P : Classes.Property) return Boolean is
+        (not Is_Token (P.Type_Name) and not Is_Boolean (P.Type_Name));
+
+      function Only_Objects is new Classes.Generic_Filter (Only_Object);
+
       Count : Positive := 1;
 
       function Get_Name (Index : Natural) return Wide_Wide_String is
@@ -885,7 +890,7 @@ package body Meta.Writes is
             if not Item.Is_Abstract then
                declare
                   Props : constant Meta.Classes.Property_Array :=
-                    Item.Properties;
+                    Only_Objects (Item.Properties);
 
                   Funct : constant Ada_Pretty.Node_Access :=
                     F.New_Subprogram_Body
@@ -902,28 +907,26 @@ package body Meta.Writes is
                   List : Ada_Pretty.Node_Access;
                begin
                   for P of Props loop
-                     if not Is_Token (P.Type_Name) then
-                        declare
-                           Inst : constant Ada_Pretty.Node_Access :=
-                             F.New_Subprogram_Declaration
-                               (Get_Inst (Item, P, Index));
-                           Data : constant Ada_Pretty.Node_Access_Array :=
-                             (Map (Is_Vector (P)),
-                              F.New_Name (P.Name),
-                              F.New_Name (+Get_Name (Index) & "'Access"));
-                        begin
-                           Bodies := F.New_List (Bodies, Inst);
+                     declare
+                        Inst : constant Ada_Pretty.Node_Access :=
+                          F.New_Subprogram_Declaration
+                            (Get_Inst (Item, P, Index));
+                        Data : constant Ada_Pretty.Node_Access_Array :=
+                          (Map (Is_Vector (P)),
+                           F.New_Name (P.Name),
+                           F.New_Name (+Get_Name (Index) & "'Access"));
+                     begin
+                        Bodies := F.New_List (Bodies, Inst);
 
-                           List := F.New_List
-                             (List, F.New_Component_Association
-                                (Choices => F.New_Literal (Index),
-                                 Value   => F.New_Parentheses
-                                   (F.New_List (Data))
-                                 ));
+                        List := F.New_List
+                          (List, F.New_Component_Association
+                             (Choices => F.New_Literal (Index),
+                              Value   => F.New_Parentheses
+                                (F.New_List (Data))
+                             ));
 
-                           Index := Index + 1;
-                        end;
-                     end if;
+                        Index := Index + 1;
+                     end;
                   end loop;
 
                   if Index > 1 then
@@ -1167,7 +1170,9 @@ package body Meta.Writes is
               and then Is_Element (P.Type_Name)
             then
                Append (Element_Vector);
-            elsif not Is_Element (P.Type_Name) then
+            elsif not Is_Element (P.Type_Name)
+              and not Is_Boolean (P.Type_Name)
+            then
                Append (P.Type_Name);
             end if;
          end loop;
