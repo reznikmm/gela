@@ -47,7 +47,7 @@ package Program.Elements.Single_Task_Declarations is
      access all Single_Task_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Single_Task_Declaration_Text
-    (Self : aliased Single_Task_Declaration)
+    (Self : aliased in out Single_Task_Declaration)
       return Single_Task_Declaration_Text_Access is abstract;
 
    not overriding function Task_Token

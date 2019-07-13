@@ -47,7 +47,7 @@ package Program.Elements.Private_Extension_Definitions is
      access all Private_Extension_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Private_Extension_Definition_Text
-    (Self : aliased Private_Extension_Definition)
+    (Self : aliased in out Private_Extension_Definition)
       return Private_Extension_Definition_Text_Access is abstract;
 
    not overriding function Abstract_Token

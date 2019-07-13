@@ -34,7 +34,7 @@ package Program.Elements.With_Clauses is
      with Storage_Size => 0;
 
    not overriding function To_With_Clause_Text
-    (Self : aliased With_Clause)
+    (Self : aliased in out With_Clause)
       return With_Clause_Text_Access is abstract;
 
    not overriding function Limited_Token

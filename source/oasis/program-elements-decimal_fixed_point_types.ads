@@ -40,7 +40,7 @@ package Program.Elements.Decimal_Fixed_Point_Types is
      access all Decimal_Fixed_Point_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Decimal_Fixed_Point_Type_Text
-    (Self : aliased Decimal_Fixed_Point_Type)
+    (Self : aliased in out Decimal_Fixed_Point_Type)
       return Decimal_Fixed_Point_Type_Text_Access is abstract;
 
    not overriding function Delta_Token

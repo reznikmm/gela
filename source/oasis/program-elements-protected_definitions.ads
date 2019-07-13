@@ -39,7 +39,7 @@ package Program.Elements.Protected_Definitions is
      access all Protected_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Protected_Definition_Text
-    (Self : aliased Protected_Definition)
+    (Self : aliased in out Protected_Definition)
       return Protected_Definition_Text_Access is abstract;
 
    not overriding function Private_Token

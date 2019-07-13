@@ -58,7 +58,7 @@ package Program.Elements.For_Loop_Statements is
      access all For_Loop_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_For_Loop_Statement_Text
-    (Self : aliased For_Loop_Statement)
+    (Self : aliased in out For_Loop_Statement)
       return For_Loop_Statement_Text_Access is abstract;
 
    not overriding function Colon_Token

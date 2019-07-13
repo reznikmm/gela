@@ -32,7 +32,7 @@ package Program.Elements.Exit_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Exit_Statement_Text
-    (Self : aliased Exit_Statement)
+    (Self : aliased in out Exit_Statement)
       return Exit_Statement_Text_Access is abstract;
 
    not overriding function Exit_Token

@@ -71,7 +71,7 @@ package Program.Elements.Procedure_Body_Declarations is
      access all Procedure_Body_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Procedure_Body_Declaration_Text
-    (Self : aliased Procedure_Body_Declaration)
+    (Self : aliased in out Procedure_Body_Declaration)
       return Procedure_Body_Declaration_Text_Access is abstract;
 
    not overriding function Not_Token

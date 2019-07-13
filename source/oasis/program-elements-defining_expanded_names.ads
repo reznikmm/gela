@@ -35,7 +35,7 @@ package Program.Elements.Defining_Expanded_Names is
      access all Defining_Expanded_Name_Text'Class with Storage_Size => 0;
 
    not overriding function To_Defining_Expanded_Name_Text
-    (Self : aliased Defining_Expanded_Name)
+    (Self : aliased in out Defining_Expanded_Name)
       return Defining_Expanded_Name_Text_Access is abstract;
 
    not overriding function Dot_Token

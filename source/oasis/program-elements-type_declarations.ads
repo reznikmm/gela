@@ -45,7 +45,7 @@ package Program.Elements.Type_Declarations is
      with Storage_Size => 0;
 
    not overriding function To_Type_Declaration_Text
-    (Self : aliased Type_Declaration)
+    (Self : aliased in out Type_Declaration)
       return Type_Declaration_Text_Access is abstract;
 
    not overriding function Type_Token

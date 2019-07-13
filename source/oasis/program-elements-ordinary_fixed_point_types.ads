@@ -35,7 +35,7 @@ package Program.Elements.Ordinary_Fixed_Point_Types is
      access all Ordinary_Fixed_Point_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Ordinary_Fixed_Point_Type_Text
-    (Self : aliased Ordinary_Fixed_Point_Type)
+    (Self : aliased in out Ordinary_Fixed_Point_Type)
       return Ordinary_Fixed_Point_Type_Text_Access is abstract;
 
    not overriding function Delta_Token

@@ -35,7 +35,7 @@ package Program.Elements.Case_Expression_Paths is
      access all Case_Expression_Path_Text'Class with Storage_Size => 0;
 
    not overriding function To_Case_Expression_Path_Text
-    (Self : aliased Case_Expression_Path)
+    (Self : aliased in out Case_Expression_Path)
       return Case_Expression_Path_Text_Access is abstract;
 
    not overriding function When_Token

@@ -55,7 +55,7 @@ package Program.Elements.Parameter_Specifications is
      access all Parameter_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Parameter_Specification_Text
-    (Self : aliased Parameter_Specification)
+    (Self : aliased in out Parameter_Specification)
       return Parameter_Specification_Text_Access is abstract;
 
    not overriding function Colon_Token

@@ -39,7 +39,7 @@ package Program.Elements.Task_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Task_Definition_Text
-    (Self : aliased Task_Definition)
+    (Self : aliased in out Task_Definition)
       return Task_Definition_Text_Access is abstract;
 
    not overriding function Private_Token

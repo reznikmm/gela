@@ -42,7 +42,7 @@ package Program.Elements.Exception_Renaming_Declarations is
      with Storage_Size => 0;
 
    not overriding function To_Exception_Renaming_Declaration_Text
-    (Self : aliased Exception_Renaming_Declaration)
+    (Self : aliased in out Exception_Renaming_Declaration)
       return Exception_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

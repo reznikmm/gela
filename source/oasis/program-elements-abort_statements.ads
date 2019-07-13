@@ -29,7 +29,7 @@ package Program.Elements.Abort_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Abort_Statement_Text
-    (Self : aliased Abort_Statement)
+    (Self : aliased in out Abort_Statement)
       return Abort_Statement_Text_Access is abstract;
 
    not overriding function Abort_Token

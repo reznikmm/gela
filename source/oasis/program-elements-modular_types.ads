@@ -29,7 +29,7 @@ package Program.Elements.Modular_Types is
      with Storage_Size => 0;
 
    not overriding function To_Modular_Type_Text
-    (Self : aliased Modular_Type)
+    (Self : aliased in out Modular_Type)
       return Modular_Type_Text_Access is abstract;
 
    not overriding function Mod_Token

@@ -1259,7 +1259,9 @@ package body Meta.Writes is
                     Parameters    => F.New_Parameter
                       (Name            => F.New_Name (+"Self"),
                        Type_Definition => Element,
-                       Is_Aliased      => True),
+                       Is_Aliased      => True,
+                       Is_In           => True,
+                       Is_Out          => True),
                     Result        => Access_Name),
                  Is_Abstract   => True);
 

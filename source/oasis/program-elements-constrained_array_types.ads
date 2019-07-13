@@ -37,7 +37,7 @@ package Program.Elements.Constrained_Array_Types is
      access all Constrained_Array_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Constrained_Array_Type_Text
-    (Self : aliased Constrained_Array_Type)
+    (Self : aliased in out Constrained_Array_Type)
       return Constrained_Array_Type_Text_Access is abstract;
 
    not overriding function Array_Token

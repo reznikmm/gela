@@ -53,7 +53,7 @@ package Program.Elements.Protected_Type_Declarations is
      access all Protected_Type_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Protected_Type_Declaration_Text
-    (Self : aliased Protected_Type_Declaration)
+    (Self : aliased in out Protected_Type_Declaration)
       return Protected_Type_Declaration_Text_Access is abstract;
 
    not overriding function Protected_Token

@@ -34,7 +34,7 @@ package Program.Elements.Function_Calls is
      with Storage_Size => 0;
 
    not overriding function To_Function_Call_Text
-    (Self : aliased Function_Call)
+    (Self : aliased in out Function_Call)
       return Function_Call_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

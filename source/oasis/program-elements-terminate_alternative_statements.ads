@@ -24,7 +24,7 @@ package Program.Elements.Terminate_Alternative_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Terminate_Alternative_Statement_Text
-    (Self : aliased Terminate_Alternative_Statement)
+    (Self : aliased in out Terminate_Alternative_Statement)
       return Terminate_Alternative_Statement_Text_Access is abstract;
 
    not overriding function Terminate_Token

@@ -35,7 +35,7 @@ package Program.Elements.At_Clauses is
      with Storage_Size => 0;
 
    not overriding function To_At_Clause_Text
-    (Self : aliased At_Clause)
+    (Self : aliased in out At_Clause)
       return At_Clause_Text_Access is abstract;
 
    not overriding function For_Token

@@ -55,7 +55,7 @@ package Program.Elements.Procedure_Renaming_Declarations is
      with Storage_Size => 0;
 
    not overriding function To_Procedure_Renaming_Declaration_Text
-    (Self : aliased Procedure_Renaming_Declaration)
+    (Self : aliased in out Procedure_Renaming_Declaration)
       return Procedure_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Not_Token

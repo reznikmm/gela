@@ -32,7 +32,7 @@ package Program.Elements.Raise_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Raise_Statement_Text
-    (Self : aliased Raise_Statement)
+    (Self : aliased in out Raise_Statement)
       return Raise_Statement_Text_Access is abstract;
 
    not overriding function Raise_Token

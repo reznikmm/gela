@@ -46,7 +46,7 @@ package Program.Elements.Component_Declarations is
      access all Component_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Component_Declaration_Text
-    (Self : aliased Component_Declaration)
+    (Self : aliased in out Component_Declaration)
       return Component_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

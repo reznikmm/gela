@@ -30,7 +30,7 @@ package Program.Elements.Enumeration_Literal_Specifications is
      with Storage_Size => 0;
 
    not overriding function To_Enumeration_Literal_Specification_Text
-    (Self : aliased Enumeration_Literal_Specification)
+    (Self : aliased in out Enumeration_Literal_Specification)
       return Enumeration_Literal_Specification_Text_Access is abstract;
 
    type Enumeration_Literal_Specification_Vector is

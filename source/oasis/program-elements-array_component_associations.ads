@@ -34,7 +34,7 @@ package Program.Elements.Array_Component_Associations is
      access all Array_Component_Association_Text'Class with Storage_Size => 0;
 
    not overriding function To_Array_Component_Association_Text
-    (Self : aliased Array_Component_Association)
+    (Self : aliased in out Array_Component_Association)
       return Array_Component_Association_Text_Access is abstract;
 
    not overriding function Arrow_Token

@@ -27,7 +27,7 @@ package Program.Elements.Incomplete_Type_Definitions is
      access all Incomplete_Type_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Incomplete_Type_Definition_Text
-    (Self : aliased Incomplete_Type_Definition)
+    (Self : aliased in out Incomplete_Type_Definition)
       return Incomplete_Type_Definition_Text_Access is abstract;
 
    not overriding function Tagged_Token

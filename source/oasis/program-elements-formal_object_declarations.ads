@@ -56,7 +56,7 @@ package Program.Elements.Formal_Object_Declarations is
      access all Formal_Object_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Object_Declaration_Text
-    (Self : aliased Formal_Object_Declaration)
+    (Self : aliased in out Formal_Object_Declaration)
       return Formal_Object_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

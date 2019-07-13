@@ -21,7 +21,7 @@ package Program.Elements.Root_Types is
      with Storage_Size => 0;
 
    not overriding function To_Root_Type_Text
-    (Self : aliased Root_Type)
+    (Self : aliased in out Root_Type)
       return Root_Type_Text_Access is abstract;
 
 end Program.Elements.Root_Types;

@@ -35,7 +35,7 @@ package Program.Elements.Call_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Call_Statement_Text
-    (Self : aliased Call_Statement)
+    (Self : aliased in out Call_Statement)
       return Call_Statement_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

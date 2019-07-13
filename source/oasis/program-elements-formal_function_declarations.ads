@@ -62,7 +62,7 @@ package Program.Elements.Formal_Function_Declarations is
      access all Formal_Function_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Function_Declaration_Text
-    (Self : aliased Formal_Function_Declaration)
+    (Self : aliased in out Formal_Function_Declaration)
       return Formal_Function_Declaration_Text_Access is abstract;
 
    not overriding function With_Token

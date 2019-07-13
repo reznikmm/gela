@@ -23,7 +23,7 @@ package Program.Elements.Null_Components is
      with Storage_Size => 0;
 
    not overriding function To_Null_Component_Text
-    (Self : aliased Null_Component)
+    (Self : aliased in out Null_Component)
       return Null_Component_Text_Access is abstract;
 
    not overriding function Null_Token

@@ -43,7 +43,7 @@ package Program.Elements.If_Expressions is
      with Storage_Size => 0;
 
    not overriding function To_If_Expression_Text
-    (Self : aliased If_Expression)
+    (Self : aliased in out If_Expression)
       return If_Expression_Text_Access is abstract;
 
    not overriding function If_Token

@@ -19,7 +19,7 @@ package Program.Elements.Associations is
      with Storage_Size => 0;
 
    not overriding function To_Association_Text
-    (Self : aliased Association)
+    (Self : aliased in out Association)
       return Association_Text_Access is abstract;
 
 end Program.Elements.Associations;

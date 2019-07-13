@@ -24,7 +24,7 @@ package Program.Elements.Defining_Identifiers is
      access all Defining_Identifier_Text'Class with Storage_Size => 0;
 
    not overriding function To_Defining_Identifier_Text
-    (Self : aliased Defining_Identifier)
+    (Self : aliased in out Defining_Identifier)
       return Defining_Identifier_Text_Access is abstract;
 
    not overriding function Identifier_Token

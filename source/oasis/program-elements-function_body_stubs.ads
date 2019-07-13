@@ -56,7 +56,7 @@ package Program.Elements.Function_Body_Stubs is
      access all Function_Body_Stub_Text'Class with Storage_Size => 0;
 
    not overriding function To_Function_Body_Stub_Text
-    (Self : aliased Function_Body_Stub)
+    (Self : aliased in out Function_Body_Stub)
       return Function_Body_Stub_Text_Access is abstract;
 
    not overriding function Not_Token

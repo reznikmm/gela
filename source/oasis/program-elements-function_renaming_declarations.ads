@@ -63,7 +63,7 @@ package Program.Elements.Function_Renaming_Declarations is
      with Storage_Size => 0;
 
    not overriding function To_Function_Renaming_Declaration_Text
-    (Self : aliased Function_Renaming_Declaration)
+    (Self : aliased in out Function_Renaming_Declaration)
       return Function_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Not_Token

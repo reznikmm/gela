@@ -34,7 +34,7 @@ package Program.Elements.Extension_Aggregates is
      access all Extension_Aggregate_Text'Class with Storage_Size => 0;
 
    not overriding function To_Extension_Aggregate_Text
-    (Self : aliased Extension_Aggregate)
+    (Self : aliased in out Extension_Aggregate)
       return Extension_Aggregate_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

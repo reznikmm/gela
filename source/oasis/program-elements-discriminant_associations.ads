@@ -36,7 +36,7 @@ package Program.Elements.Discriminant_Associations is
      access all Discriminant_Association_Text'Class with Storage_Size => 0;
 
    not overriding function To_Discriminant_Association_Text
-    (Self : aliased Discriminant_Association)
+    (Self : aliased in out Discriminant_Association)
       return Discriminant_Association_Text_Access is abstract;
 
    not overriding function Arrow_Token

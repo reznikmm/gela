@@ -54,7 +54,7 @@ package Program.Elements.Quantified_Expressions is
      access all Quantified_Expression_Text'Class with Storage_Size => 0;
 
    not overriding function To_Quantified_Expression_Text
-    (Self : aliased Quantified_Expression)
+    (Self : aliased in out Quantified_Expression)
       return Quantified_Expression_Text_Access is abstract;
 
    not overriding function For_Token

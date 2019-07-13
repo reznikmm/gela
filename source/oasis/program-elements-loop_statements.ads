@@ -40,7 +40,7 @@ package Program.Elements.Loop_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Loop_Statement_Text
-    (Self : aliased Loop_Statement)
+    (Self : aliased in out Loop_Statement)
       return Loop_Statement_Text_Access is abstract;
 
    not overriding function Colon_Token

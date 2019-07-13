@@ -51,7 +51,7 @@ package Program.Elements.Package_Declarations is
      access all Package_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Package_Declaration_Text
-    (Self : aliased Package_Declaration)
+    (Self : aliased in out Package_Declaration)
       return Package_Declaration_Text_Access is abstract;
 
    not overriding function Package_Token

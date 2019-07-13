@@ -43,7 +43,7 @@ package Program.Elements.Subtype_Indications is
      access all Subtype_Indication_Text'Class with Storage_Size => 0;
 
    not overriding function To_Subtype_Indication_Text
-    (Self : aliased Subtype_Indication)
+    (Self : aliased in out Subtype_Indication)
       return Subtype_Indication_Text_Access is abstract;
 
    not overriding function Not_Token

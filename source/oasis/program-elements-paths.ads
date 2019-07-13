@@ -17,7 +17,7 @@ package Program.Elements.Paths is
    type Path_Text_Access is access all Path_Text'Class with Storage_Size => 0;
 
    not overriding function To_Path_Text
-    (Self : aliased Path)
+    (Self : aliased in out Path)
       return Path_Text_Access is abstract;
 
 end Program.Elements.Paths;

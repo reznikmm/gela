@@ -33,7 +33,7 @@ package Program.Elements.Type_Conversions is
      with Storage_Size => 0;
 
    not overriding function To_Type_Conversion_Text
-    (Self : aliased Type_Conversion)
+    (Self : aliased in out Type_Conversion)
       return Type_Conversion_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

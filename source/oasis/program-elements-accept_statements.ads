@@ -56,7 +56,7 @@ package Program.Elements.Accept_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Accept_Statement_Text
-    (Self : aliased Accept_Statement)
+    (Self : aliased in out Accept_Statement)
       return Accept_Statement_Text_Access is abstract;
 
    not overriding function Accept_Token

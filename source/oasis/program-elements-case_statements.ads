@@ -35,7 +35,7 @@ package Program.Elements.Case_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Case_Statement_Text
-    (Self : aliased Case_Statement)
+    (Self : aliased in out Case_Statement)
       return Case_Statement_Text_Access is abstract;
 
    not overriding function Case_Token

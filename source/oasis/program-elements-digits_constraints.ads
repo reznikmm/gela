@@ -33,7 +33,7 @@ package Program.Elements.Digits_Constraints is
      access all Digits_Constraint_Text'Class with Storage_Size => 0;
 
    not overriding function To_Digits_Constraint_Text
-    (Self : aliased Digits_Constraint)
+    (Self : aliased in out Digits_Constraint)
       return Digits_Constraint_Text_Access is abstract;
 
    not overriding function Digits_Token

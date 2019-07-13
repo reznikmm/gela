@@ -48,7 +48,7 @@ package Program.Elements.Procedure_Body_Stubs is
      access all Procedure_Body_Stub_Text'Class with Storage_Size => 0;
 
    not overriding function To_Procedure_Body_Stub_Text
-    (Self : aliased Procedure_Body_Stub)
+    (Self : aliased in out Procedure_Body_Stub)
       return Procedure_Body_Stub_Text_Access is abstract;
 
    not overriding function Not_Token

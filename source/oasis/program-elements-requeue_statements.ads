@@ -33,7 +33,7 @@ package Program.Elements.Requeue_Statements is
      access all Requeue_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_Requeue_Statement_Text
-    (Self : aliased Requeue_Statement)
+    (Self : aliased in out Requeue_Statement)
       return Requeue_Statement_Text_Access is abstract;
 
    not overriding function Requeue_Token

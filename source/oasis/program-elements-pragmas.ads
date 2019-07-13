@@ -33,7 +33,7 @@ package Program.Elements.Pragmas is
      with Storage_Size => 0;
 
    not overriding function To_Pragma_Text
-    (Self : aliased Pragma_Element)
+    (Self : aliased in out Pragma_Element)
       return Pragma_Text_Access is abstract;
 
    not overriding function Pragma_Token

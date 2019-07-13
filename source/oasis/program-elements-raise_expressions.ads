@@ -32,7 +32,7 @@ package Program.Elements.Raise_Expressions is
      with Storage_Size => 0;
 
    not overriding function To_Raise_Expression_Text
-    (Self : aliased Raise_Expression)
+    (Self : aliased in out Raise_Expression)
       return Raise_Expression_Text_Access is abstract;
 
    not overriding function Raise_Token

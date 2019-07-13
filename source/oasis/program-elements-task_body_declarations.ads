@@ -57,7 +57,7 @@ package Program.Elements.Task_Body_Declarations is
      access all Task_Body_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Task_Body_Declaration_Text
-    (Self : aliased Task_Body_Declaration)
+    (Self : aliased in out Task_Body_Declaration)
       return Task_Body_Declaration_Text_Access is abstract;
 
    not overriding function Task_Token

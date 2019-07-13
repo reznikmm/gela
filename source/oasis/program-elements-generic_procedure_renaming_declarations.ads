@@ -43,7 +43,7 @@ package Program.Elements.Generic_Procedure_Renaming_Declarations is
      with Storage_Size => 0;
 
    not overriding function To_Generic_Procedure_Renaming_Declaration_Text
-    (Self : aliased Generic_Procedure_Renaming_Declaration)
+    (Self : aliased in out Generic_Procedure_Renaming_Declaration)
       return Generic_Procedure_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Generic_Token

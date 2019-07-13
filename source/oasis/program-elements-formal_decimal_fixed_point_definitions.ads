@@ -26,7 +26,7 @@ package Program.Elements.Formal_Decimal_Fixed_Point_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Decimal_Fixed_Point_Definition_Text
-    (Self : aliased Formal_Decimal_Fixed_Point_Definition)
+    (Self : aliased in out Formal_Decimal_Fixed_Point_Definition)
       return Formal_Decimal_Fixed_Point_Definition_Text_Access is abstract;
 
    not overriding function Delta_Token

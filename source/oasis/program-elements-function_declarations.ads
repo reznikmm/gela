@@ -66,7 +66,7 @@ package Program.Elements.Function_Declarations is
      access all Function_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Function_Declaration_Text
-    (Self : aliased Function_Declaration)
+    (Self : aliased in out Function_Declaration)
       return Function_Declaration_Text_Access is abstract;
 
    not overriding function Not_Token

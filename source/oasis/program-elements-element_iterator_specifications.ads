@@ -46,7 +46,7 @@ package Program.Elements.Element_Iterator_Specifications is
      with Storage_Size => 0;
 
    not overriding function To_Element_Iterator_Specification_Text
-    (Self : aliased Element_Iterator_Specification)
+    (Self : aliased in out Element_Iterator_Specification)
       return Element_Iterator_Specification_Text_Access is abstract;
 
    not overriding function Colon_Token

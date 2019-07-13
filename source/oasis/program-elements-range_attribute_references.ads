@@ -33,7 +33,7 @@ package Program.Elements.Range_Attribute_References is
      access all Range_Attribute_Reference_Text'Class with Storage_Size => 0;
 
    not overriding function To_Range_Attribute_Reference_Text
-    (Self : aliased Range_Attribute_Reference)
+    (Self : aliased in out Range_Attribute_Reference)
       return Range_Attribute_Reference_Text_Access is abstract;
 
 end Program.Elements.Range_Attribute_References;

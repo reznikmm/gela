@@ -34,7 +34,7 @@ package Program.Elements.Assignment_Statements is
      access all Assignment_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_Assignment_Statement_Text
-    (Self : aliased Assignment_Statement)
+    (Self : aliased in out Assignment_Statement)
       return Assignment_Statement_Text_Access is abstract;
 
    not overriding function Assignment_Token

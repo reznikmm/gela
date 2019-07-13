@@ -23,7 +23,7 @@ package Program.Elements.String_Literals is
      with Storage_Size => 0;
 
    not overriding function To_String_Literal_Text
-    (Self : aliased String_Literal)
+    (Self : aliased in out String_Literal)
       return String_Literal_Text_Access is abstract;
 
    not overriding function String_Literal_Token

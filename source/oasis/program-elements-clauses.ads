@@ -18,7 +18,7 @@ package Program.Elements.Clauses is
      with Storage_Size => 0;
 
    not overriding function To_Clause_Text
-    (Self : aliased Clause)
+    (Self : aliased in out Clause)
       return Clause_Text_Access is abstract;
 
 end Program.Elements.Clauses;

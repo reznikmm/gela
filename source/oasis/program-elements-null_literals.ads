@@ -23,7 +23,7 @@ package Program.Elements.Null_Literals is
      with Storage_Size => 0;
 
    not overriding function To_Null_Literal_Text
-    (Self : aliased Null_Literal)
+    (Self : aliased in out Null_Literal)
       return Null_Literal_Text_Access is abstract;
 
    not overriding function Null_Literal_Token

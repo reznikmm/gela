@@ -39,7 +39,7 @@ package Program.Elements.Simple_Expression_Ranges is
      access all Simple_Expression_Range_Text'Class with Storage_Size => 0;
 
    not overriding function To_Simple_Expression_Range_Text
-    (Self : aliased Simple_Expression_Range)
+    (Self : aliased in out Simple_Expression_Range)
       return Simple_Expression_Range_Text_Access is abstract;
 
    not overriding function Double_Dot_Token

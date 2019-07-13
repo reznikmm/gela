@@ -48,7 +48,7 @@ package Program.Elements.Derived_Record_Extensions is
      access all Derived_Record_Extension_Text'Class with Storage_Size => 0;
 
    not overriding function To_Derived_Record_Extension_Text
-    (Self : aliased Derived_Record_Extension)
+    (Self : aliased in out Derived_Record_Extension)
       return Derived_Record_Extension_Text_Access is abstract;
 
    not overriding function Abstract_Token

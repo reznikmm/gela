@@ -46,7 +46,7 @@ package Program.Elements.Protected_Body_Declarations is
      access all Protected_Body_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Protected_Body_Declaration_Text
-    (Self : aliased Protected_Body_Declaration)
+    (Self : aliased in out Protected_Body_Declaration)
       return Protected_Body_Declaration_Text_Access is abstract;
 
    not overriding function Protected_Token

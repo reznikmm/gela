@@ -35,7 +35,7 @@ package Program.Elements.Variant_Parts is
      with Storage_Size => 0;
 
    not overriding function To_Variant_Part_Text
-    (Self : aliased Variant_Part)
+    (Self : aliased in out Variant_Part)
       return Variant_Part_Text_Access is abstract;
 
    not overriding function Case_Token

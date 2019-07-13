@@ -25,7 +25,7 @@ package Program.Elements.Formal_Floating_Point_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Floating_Point_Definition_Text
-    (Self : aliased Formal_Floating_Point_Definition)
+    (Self : aliased in out Formal_Floating_Point_Definition)
       return Formal_Floating_Point_Definition_Text_Access is abstract;
 
    not overriding function Digits_Token

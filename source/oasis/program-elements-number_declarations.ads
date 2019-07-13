@@ -35,7 +35,7 @@ package Program.Elements.Number_Declarations is
      access all Number_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Number_Declaration_Text
-    (Self : aliased Number_Declaration)
+    (Self : aliased in out Number_Declaration)
       return Number_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

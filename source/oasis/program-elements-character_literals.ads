@@ -23,7 +23,7 @@ package Program.Elements.Character_Literals is
      access all Character_Literal_Text'Class with Storage_Size => 0;
 
    not overriding function To_Character_Literal_Text
-    (Self : aliased Character_Literal)
+    (Self : aliased in out Character_Literal)
       return Character_Literal_Text_Access is abstract;
 
    not overriding function Character_Literal_Token

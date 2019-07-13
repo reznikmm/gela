@@ -41,7 +41,7 @@ package Program.Elements.Extended_Return_Statements is
      access all Extended_Return_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_Extended_Return_Statement_Text
-    (Self : aliased Extended_Return_Statement)
+    (Self : aliased in out Extended_Return_Statement)
       return Extended_Return_Statement_Text_Access is abstract;
 
    not overriding function Return_Token

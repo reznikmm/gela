@@ -33,7 +33,7 @@ package Program.Elements.Indexed_Components is
      access all Indexed_Component_Text'Class with Storage_Size => 0;
 
    not overriding function To_Indexed_Component_Text
-    (Self : aliased Indexed_Component)
+    (Self : aliased in out Indexed_Component)
       return Indexed_Component_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

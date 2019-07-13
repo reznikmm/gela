@@ -54,7 +54,7 @@ package Program.Elements.Entry_Declarations is
      access all Entry_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Entry_Declaration_Text
-    (Self : aliased Entry_Declaration)
+    (Self : aliased in out Entry_Declaration)
       return Entry_Declaration_Text_Access is abstract;
 
    not overriding function Not_Token

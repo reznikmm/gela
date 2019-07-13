@@ -58,7 +58,7 @@ package Program.Elements.Formal_Procedure_Declarations is
      access all Formal_Procedure_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Procedure_Declaration_Text
-    (Self : aliased Formal_Procedure_Declaration)
+    (Self : aliased in out Formal_Procedure_Declaration)
       return Formal_Procedure_Declaration_Text_Access is abstract;
 
    not overriding function With_Token

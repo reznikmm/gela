@@ -69,7 +69,7 @@ package Program.Elements.Entry_Body_Declarations is
      access all Entry_Body_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Entry_Body_Declaration_Text
-    (Self : aliased Entry_Body_Declaration)
+    (Self : aliased in out Entry_Body_Declaration)
       return Entry_Body_Declaration_Text_Access is abstract;
 
    not overriding function Entry_Token

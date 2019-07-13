@@ -37,7 +37,7 @@ package Program.Elements.Membership_Tests is
      with Storage_Size => 0;
 
    not overriding function To_Membership_Test_Text
-    (Self : aliased Membership_Test)
+    (Self : aliased in out Membership_Test)
       return Membership_Test_Text_Access is abstract;
 
    not overriding function Not_Token

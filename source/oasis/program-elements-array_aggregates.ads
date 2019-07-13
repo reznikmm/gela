@@ -29,7 +29,7 @@ package Program.Elements.Array_Aggregates is
      with Storage_Size => 0;
 
    not overriding function To_Array_Aggregate_Text
-    (Self : aliased Array_Aggregate)
+    (Self : aliased in out Array_Aggregate)
       return Array_Aggregate_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

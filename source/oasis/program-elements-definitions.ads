@@ -19,7 +19,7 @@ package Program.Elements.Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Definition_Text
-    (Self : aliased Definition)
+    (Self : aliased in out Definition)
       return Definition_Text_Access is abstract;
 
 end Program.Elements.Definitions;

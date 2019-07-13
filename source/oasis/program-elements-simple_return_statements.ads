@@ -28,7 +28,7 @@ package Program.Elements.Simple_Return_Statements is
      access all Simple_Return_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_Simple_Return_Statement_Text
-    (Self : aliased Simple_Return_Statement)
+    (Self : aliased in out Simple_Return_Statement)
       return Simple_Return_Statement_Text_Access is abstract;
 
    not overriding function Return_Token

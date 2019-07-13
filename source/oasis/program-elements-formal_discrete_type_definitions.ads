@@ -25,7 +25,7 @@ package Program.Elements.Formal_Discrete_Type_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Discrete_Type_Definition_Text
-    (Self : aliased Formal_Discrete_Type_Definition)
+    (Self : aliased in out Formal_Discrete_Type_Definition)
       return Formal_Discrete_Type_Definition_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

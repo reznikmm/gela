@@ -38,7 +38,7 @@ package Program.Elements.Attribute_References is
      access all Attribute_Reference_Text'Class with Storage_Size => 0;
 
    not overriding function To_Attribute_Reference_Text
-    (Self : aliased Attribute_Reference)
+    (Self : aliased in out Attribute_Reference)
       return Attribute_Reference_Text_Access is abstract;
 
    not overriding function Apostrophe_Token

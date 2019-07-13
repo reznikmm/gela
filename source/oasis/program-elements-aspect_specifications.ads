@@ -35,7 +35,7 @@ package Program.Elements.Aspect_Specifications is
      access all Aspect_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Aspect_Specification_Text
-    (Self : aliased Aspect_Specification)
+    (Self : aliased in out Aspect_Specification)
       return Aspect_Specification_Text_Access is abstract;
 
    not overriding function Arrow_Token

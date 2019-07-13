@@ -25,7 +25,7 @@ package Program.Elements.Formal_Modular_Type_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Modular_Type_Definition_Text
-    (Self : aliased Formal_Modular_Type_Definition)
+    (Self : aliased in out Formal_Modular_Type_Definition)
       return Formal_Modular_Type_Definition_Text_Access is abstract;
 
    not overriding function Mod_Token

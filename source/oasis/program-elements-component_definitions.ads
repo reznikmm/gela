@@ -31,7 +31,7 @@ package Program.Elements.Component_Definitions is
      access all Component_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Component_Definition_Text
-    (Self : aliased Component_Definition)
+    (Self : aliased in out Component_Definition)
       return Component_Definition_Text_Access is abstract;
 
    not overriding function Aliased_Token

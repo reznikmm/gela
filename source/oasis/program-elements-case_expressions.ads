@@ -34,7 +34,7 @@ package Program.Elements.Case_Expressions is
      with Storage_Size => 0;
 
    not overriding function To_Case_Expression_Text
-    (Self : aliased Case_Expression)
+    (Self : aliased in out Case_Expression)
       return Case_Expression_Text_Access is abstract;
 
    not overriding function Case_Token

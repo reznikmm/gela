@@ -29,7 +29,7 @@ package Program.Elements.Code_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Code_Statement_Text
-    (Self : aliased Code_Statement)
+    (Self : aliased in out Code_Statement)
       return Code_Statement_Text_Access is abstract;
 
    not overriding function Semicolon_Token

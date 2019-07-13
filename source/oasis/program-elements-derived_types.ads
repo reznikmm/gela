@@ -35,7 +35,7 @@ package Program.Elements.Derived_Types is
      with Storage_Size => 0;
 
    not overriding function To_Derived_Type_Text
-    (Self : aliased Derived_Type)
+    (Self : aliased in out Derived_Type)
       return Derived_Type_Text_Access is abstract;
 
    not overriding function Abstract_Token

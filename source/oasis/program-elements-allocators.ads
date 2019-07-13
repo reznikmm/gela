@@ -38,7 +38,7 @@ package Program.Elements.Allocators is
      with Storage_Size => 0;
 
    not overriding function To_Allocator_Text
-    (Self : aliased Allocator)
+    (Self : aliased in out Allocator)
       return Allocator_Text_Access is abstract;
 
    not overriding function New_Token

@@ -37,7 +37,7 @@ package Program.Elements.Unconstrained_Array_Types is
      access all Unconstrained_Array_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Unconstrained_Array_Type_Text
-    (Self : aliased Unconstrained_Array_Type)
+    (Self : aliased in out Unconstrained_Array_Type)
       return Unconstrained_Array_Type_Text_Access is abstract;
 
    not overriding function Array_Token

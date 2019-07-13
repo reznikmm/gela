@@ -34,7 +34,7 @@ package Program.Elements.Use_Clauses is
      with Storage_Size => 0;
 
    not overriding function To_Use_Clause_Text
-    (Self : aliased Use_Clause)
+    (Self : aliased in out Use_Clause)
       return Use_Clause_Text_Access is abstract;
 
    not overriding function Use_Token

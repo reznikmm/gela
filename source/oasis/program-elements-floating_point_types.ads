@@ -35,7 +35,7 @@ package Program.Elements.Floating_Point_Types is
      access all Floating_Point_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Floating_Point_Type_Text
-    (Self : aliased Floating_Point_Type)
+    (Self : aliased in out Floating_Point_Type)
       return Floating_Point_Type_Text_Access is abstract;
 
    not overriding function Digits_Token

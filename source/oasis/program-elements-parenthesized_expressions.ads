@@ -28,7 +28,7 @@ package Program.Elements.Parenthesized_Expressions is
      access all Parenthesized_Expression_Text'Class with Storage_Size => 0;
 
    not overriding function To_Parenthesized_Expression_Text
-    (Self : aliased Parenthesized_Expression)
+    (Self : aliased in out Parenthesized_Expression)
       return Parenthesized_Expression_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

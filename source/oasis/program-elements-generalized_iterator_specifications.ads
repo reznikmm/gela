@@ -41,7 +41,7 @@ package Program.Elements.Generalized_Iterator_Specifications is
      with Storage_Size => 0;
 
    not overriding function To_Generalized_Iterator_Specification_Text
-    (Self : aliased Generalized_Iterator_Specification)
+    (Self : aliased in out Generalized_Iterator_Specification)
       return Generalized_Iterator_Specification_Text_Access is abstract;
 
    not overriding function In_Token

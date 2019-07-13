@@ -55,7 +55,7 @@ package Program.Elements.Procedure_Instantiations is
      access all Procedure_Instantiation_Text'Class with Storage_Size => 0;
 
    not overriding function To_Procedure_Instantiation_Text
-    (Self : aliased Procedure_Instantiation)
+    (Self : aliased in out Procedure_Instantiation)
       return Procedure_Instantiation_Text_Access is abstract;
 
    not overriding function Not_Token

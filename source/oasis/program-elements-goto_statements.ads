@@ -29,7 +29,7 @@ package Program.Elements.Goto_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Goto_Statement_Text
-    (Self : aliased Goto_Statement)
+    (Self : aliased in out Goto_Statement)
       return Goto_Statement_Text_Access is abstract;
 
    not overriding function Goto_Token

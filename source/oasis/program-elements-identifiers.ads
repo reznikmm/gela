@@ -24,7 +24,7 @@ package Program.Elements.Identifiers is
      with Storage_Size => 0;
 
    not overriding function To_Identifier_Text
-    (Self : aliased Identifier)
+    (Self : aliased in out Identifier)
       return Identifier_Text_Access is abstract;
 
    not overriding function Identifier_Token

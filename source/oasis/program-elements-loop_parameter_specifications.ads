@@ -39,7 +39,7 @@ package Program.Elements.Loop_Parameter_Specifications is
      access all Loop_Parameter_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Loop_Parameter_Specification_Text
-    (Self : aliased Loop_Parameter_Specification)
+    (Self : aliased in out Loop_Parameter_Specification)
       return Loop_Parameter_Specification_Text_Access is abstract;
 
    not overriding function In_Token

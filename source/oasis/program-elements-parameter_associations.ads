@@ -34,7 +34,7 @@ package Program.Elements.Parameter_Associations is
      access all Parameter_Association_Text'Class with Storage_Size => 0;
 
    not overriding function To_Parameter_Association_Text
-    (Self : aliased Parameter_Association)
+    (Self : aliased in out Parameter_Association)
       return Parameter_Association_Text_Access is abstract;
 
    not overriding function Arrow_Token

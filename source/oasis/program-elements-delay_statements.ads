@@ -29,7 +29,7 @@ package Program.Elements.Delay_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Delay_Statement_Text
-    (Self : aliased Delay_Statement)
+    (Self : aliased in out Delay_Statement)
       return Delay_Statement_Text_Access is abstract;
 
    not overriding function Delay_Token

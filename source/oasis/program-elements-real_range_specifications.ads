@@ -34,7 +34,7 @@ package Program.Elements.Real_Range_Specifications is
      access all Real_Range_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Real_Range_Specification_Text
-    (Self : aliased Real_Range_Specification)
+    (Self : aliased in out Real_Range_Specification)
       return Real_Range_Specification_Text_Access is abstract;
 
    not overriding function Range_Token

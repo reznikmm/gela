@@ -29,7 +29,7 @@ package Program.Elements.Record_Aggregates is
      with Storage_Size => 0;
 
    not overriding function To_Record_Aggregate_Text
-    (Self : aliased Record_Aggregate)
+    (Self : aliased in out Record_Aggregate)
       return Record_Aggregate_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

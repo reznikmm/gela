@@ -33,7 +33,7 @@ package Program.Elements.Formal_Package_Associations is
      access all Formal_Package_Association_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Package_Association_Text
-    (Self : aliased Formal_Package_Association)
+    (Self : aliased in out Formal_Package_Association)
       return Formal_Package_Association_Text_Access is abstract;
 
    not overriding function Arrow_Token

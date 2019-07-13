@@ -34,7 +34,7 @@ package Program.Elements.Elsif_Paths is
      with Storage_Size => 0;
 
    not overriding function To_Elsif_Path_Text
-    (Self : aliased Elsif_Path)
+    (Self : aliased in out Elsif_Path)
       return Elsif_Path_Text_Access is abstract;
 
    not overriding function Elsif_Token

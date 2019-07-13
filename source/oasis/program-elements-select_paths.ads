@@ -33,7 +33,7 @@ package Program.Elements.Select_Paths is
      with Storage_Size => 0;
 
    not overriding function To_Select_Path_Text
-    (Self : aliased Select_Path)
+    (Self : aliased in out Select_Path)
       return Select_Path_Text_Access is abstract;
 
    not overriding function When_Token

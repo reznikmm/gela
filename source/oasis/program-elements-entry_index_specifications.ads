@@ -35,7 +35,7 @@ package Program.Elements.Entry_Index_Specifications is
      access all Entry_Index_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Entry_Index_Specification_Text
-    (Self : aliased Entry_Index_Specification)
+    (Self : aliased in out Entry_Index_Specification)
       return Entry_Index_Specification_Text_Access is abstract;
 
    not overriding function For_Token

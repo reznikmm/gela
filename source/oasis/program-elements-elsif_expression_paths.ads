@@ -34,7 +34,7 @@ package Program.Elements.Elsif_Expression_Paths is
      access all Elsif_Expression_Path_Text'Class with Storage_Size => 0;
 
    not overriding function To_Elsif_Expression_Path_Text
-    (Self : aliased Elsif_Expression_Path)
+    (Self : aliased in out Elsif_Expression_Path)
       return Elsif_Expression_Path_Text_Access is abstract;
 
    not overriding function Elsif_Token

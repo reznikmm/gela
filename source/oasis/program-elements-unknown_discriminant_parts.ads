@@ -23,7 +23,7 @@ package Program.Elements.Unknown_Discriminant_Parts is
      access all Unknown_Discriminant_Part_Text'Class with Storage_Size => 0;
 
    not overriding function To_Unknown_Discriminant_Part_Text
-    (Self : aliased Unknown_Discriminant_Part)
+    (Self : aliased in out Unknown_Discriminant_Part)
       return Unknown_Discriminant_Part_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token
