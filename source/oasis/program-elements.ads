@@ -957,7 +957,8 @@ package Program.Elements is
 
    not overriding function Is_Use_Clause (Self : Element) return Boolean
      is abstract
-     with Post'Class => (if Is_Use_Clause'Result then Self.Is_Clause);
+     with Post'Class => (if Is_Use_Clause'Result
+                           then Element'Class (Self).Is_Clause);
 
    not overriding function Is_With_Clause (Self : Element) return Boolean
      is abstract
@@ -967,11 +968,13 @@ package Program.Elements is
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Representation_Clause'Result then Self.Is_Clause);
+       (if Is_Representation_Clause'Result
+          then Element'Class (Self).Is_Clause);
 
    not overriding function Is_Component_Clause (Self : Element) return Boolean
      is abstract
-     with Post'Class => (if Is_Component_Clause'Result then Self.Is_Clause);
+     with Post'Class => (if Is_Component_Clause'Result
+                           then Element'Class (Self).Is_Clause);
 
    not overriding function Is_Derived_Type (Self : Element) return Boolean
      is abstract
