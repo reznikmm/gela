@@ -44,6 +44,18 @@ package Program.Elements.Formal_Function_Declarations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not_Null
+    (Self : Formal_Function_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Abstract
+    (Self : Formal_Function_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Box
+    (Self : Formal_Function_Declaration)
+      return Boolean is abstract;
+
    type Formal_Function_Declaration_Text is limited interface;
 
    type Formal_Function_Declaration_Text_Access is

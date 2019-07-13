@@ -43,7 +43,6 @@ package Program.Elements.Delta_Constraints is
 
    not overriding function Range_Token
     (Self : Delta_Constraint_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Delta_Constraints;

@@ -38,6 +38,18 @@ package Program.Elements.Formal_Object_Declarations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_In
+    (Self : Formal_Object_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Out
+    (Self : Formal_Object_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Not_Null
+    (Self : Formal_Object_Declaration)
+      return Boolean is abstract;
+
    type Formal_Object_Declaration_Text is limited interface;
 
    type Formal_Object_Declaration_Text_Access is

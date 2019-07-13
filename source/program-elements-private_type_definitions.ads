@@ -17,6 +17,18 @@ package Program.Elements.Private_Type_Definitions is
    type Private_Type_Definition_Access is
      access all Private_Type_Definition'Class with Storage_Size => 0;
 
+   not overriding function Has_Abstract
+    (Self : Private_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Tagged
+    (Self : Private_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Limited
+    (Self : Private_Type_Definition)
+      return Boolean is abstract;
+
    type Private_Type_Definition_Text is limited interface;
 
    type Private_Type_Definition_Text_Access is

@@ -29,6 +29,18 @@ package Program.Elements.Private_Extension_Definitions is
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   not overriding function Has_Abstract
+    (Self : Private_Extension_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Limited
+    (Self : Private_Extension_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Synchronized
+    (Self : Private_Extension_Definition)
+      return Boolean is abstract;
+
    type Private_Extension_Definition_Text is limited interface;
 
    type Private_Extension_Definition_Text_Access is

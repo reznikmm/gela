@@ -33,6 +33,10 @@ package Program.Elements.Discriminant_Specifications is
     (Self : Discriminant_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   not overriding function Has_Not_Null
+    (Self : Discriminant_Specification)
+      return Boolean is abstract;
+
    type Discriminant_Specification_Text is limited interface;
 
    type Discriminant_Specification_Text_Access is

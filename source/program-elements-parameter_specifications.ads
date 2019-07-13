@@ -33,6 +33,22 @@ package Program.Elements.Parameter_Specifications is
     (Self : Parameter_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   not overriding function Has_Aliased
+    (Self : Parameter_Specification)
+      return Boolean is abstract;
+
+   not overriding function Has_In
+    (Self : Parameter_Specification)
+      return Boolean is abstract;
+
+   not overriding function Has_Out
+    (Self : Parameter_Specification)
+      return Boolean is abstract;
+
+   not overriding function Has_Not_Null
+    (Self : Parameter_Specification)
+      return Boolean is abstract;
+
    type Parameter_Specification_Text is limited interface;
 
    type Parameter_Specification_Text_Access is

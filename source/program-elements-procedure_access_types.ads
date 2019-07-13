@@ -28,6 +28,14 @@ package Program.Elements.Procedure_Access_Types is
       return not null Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not_Null
+    (Self : Procedure_Access_Type)
+      return Boolean is abstract;
+
+   not overriding function Has_Protected
+    (Self : Procedure_Access_Type)
+      return Boolean is abstract;
+
    type Procedure_Access_Type_Text is limited interface;
 
    type Procedure_Access_Type_Text_Access is

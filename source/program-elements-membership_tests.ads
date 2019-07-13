@@ -28,6 +28,9 @@ package Program.Elements.Membership_Tests is
       return not null Program.Element_Vectors.Element_Vector_Access
      is abstract;
 
+   not overriding function Has_Not (Self : Membership_Test) return Boolean
+     is abstract;
+
    type Membership_Test_Text is limited interface;
 
    type Membership_Test_Text_Access is access all Membership_Test_Text'Class

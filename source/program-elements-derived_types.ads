@@ -23,6 +23,12 @@ package Program.Elements.Derived_Types is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   not overriding function Has_Abstract (Self : Derived_Type) return Boolean
+     is abstract;
+
+   not overriding function Has_Limited (Self : Derived_Type) return Boolean
+     is abstract;
+
    type Derived_Type_Text is limited interface;
 
    type Derived_Type_Text_Access is access all Derived_Type_Text'Class

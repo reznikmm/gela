@@ -34,10 +34,12 @@ package Program.Elements.Discriminant_Constraints is
 
    not overriding function Left_Bracket_Token
     (Self : Discriminant_Constraint_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Discriminant_Constraint_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Discriminant_Constraints;

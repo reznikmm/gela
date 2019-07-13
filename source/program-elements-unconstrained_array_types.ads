@@ -52,10 +52,12 @@ package Program.Elements.Unconstrained_Array_Types is
 
    not overriding function Right_Bracket_Token
     (Self : Unconstrained_Array_Type_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Of_Token
     (Self : Unconstrained_Array_Type_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
 end Program.Elements.Unconstrained_Array_Types;

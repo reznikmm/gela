@@ -32,6 +32,18 @@ package Program.Elements.Function_Access_Types is
     (Self : Function_Access_Type)
       return not null Program.Elements.Element_Access is abstract;
 
+   not overriding function Has_Not_Null
+    (Self : Function_Access_Type)
+      return Boolean is abstract;
+
+   not overriding function Has_Protected
+    (Self : Function_Access_Type)
+      return Boolean is abstract;
+
+   not overriding function Has_Not_Null_2
+    (Self : Function_Access_Type)
+      return Boolean is abstract;
+
    type Function_Access_Type_Text is limited interface;
 
    type Function_Access_Type_Text_Access is

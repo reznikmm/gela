@@ -34,6 +34,14 @@ package Program.Elements.Derived_Record_Extensions is
       return not null Program.Elements.Definitions.Definition_Access
      is abstract;
 
+   not overriding function Has_Abstract
+    (Self : Derived_Record_Extension)
+      return Boolean is abstract;
+
+   not overriding function Has_Limited
+    (Self : Derived_Record_Extension)
+      return Boolean is abstract;
+
    type Derived_Record_Extension_Text is limited interface;
 
    type Derived_Record_Extension_Text_Access is

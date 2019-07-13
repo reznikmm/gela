@@ -27,6 +27,14 @@ package Program.Elements.Short_Circuit_Operations is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   not overriding function Has_And_Then
+    (Self : Short_Circuit_Operation)
+      return Boolean is abstract;
+
+   not overriding function Has_Or_Else
+    (Self : Short_Circuit_Operation)
+      return Boolean is abstract;
+
    type Short_Circuit_Operation_Text is limited interface;
 
    type Short_Circuit_Operation_Text_Access is

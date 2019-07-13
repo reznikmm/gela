@@ -22,6 +22,12 @@ package Program.Elements.With_Clauses is
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   not overriding function Has_Limited (Self : With_Clause) return Boolean
+     is abstract;
+
+   not overriding function Has_Private (Self : With_Clause) return Boolean
+     is abstract;
+
    type With_Clause_Text is limited interface;
 
    type With_Clause_Text_Access is access all With_Clause_Text'Class

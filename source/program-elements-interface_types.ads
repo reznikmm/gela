@@ -25,6 +25,19 @@ package Program.Elements.Interface_Types is
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   not overriding function Has_Limited (Self : Interface_Type) return Boolean
+     is abstract;
+
+   not overriding function Has_Task (Self : Interface_Type) return Boolean
+     is abstract;
+
+   not overriding function Has_Protected (Self : Interface_Type) return Boolean
+     is abstract;
+
+   not overriding function Has_Synchronized
+    (Self : Interface_Type)
+      return Boolean is abstract;
+
    type Interface_Type_Text is limited interface;
 
    type Interface_Type_Text_Access is access all Interface_Type_Text'Class

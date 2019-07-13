@@ -21,6 +21,10 @@ package Program.Elements.Component_Definitions is
     (Self : Component_Definition)
       return not null Program.Elements.Element_Access is abstract;
 
+   not overriding function Has_Aliased
+    (Self : Component_Definition)
+      return Boolean is abstract;
+
    type Component_Definition_Text is limited interface;
 
    type Component_Definition_Text_Access is

@@ -32,6 +32,14 @@ package Program.Elements.Return_Object_Specifications is
     (Self : Return_Object_Specification)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   not overriding function Has_Aliased
+    (Self : Return_Object_Specification)
+      return Boolean is abstract;
+
+   not overriding function Has_Constant
+    (Self : Return_Object_Specification)
+      return Boolean is abstract;
+
    type Return_Object_Specification_Text is limited interface;
 
    type Return_Object_Specification_Text_Access is

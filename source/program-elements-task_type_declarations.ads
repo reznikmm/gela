@@ -79,10 +79,6 @@ package Program.Elements.Task_Type_Declarations is
     (Self : Task_Type_Declaration_Text)
       return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
-   not overriding function And_Token
-    (Self : Task_Type_Declaration_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
-
    not overriding function With_Token_2
     (Self : Task_Type_Declaration_Text)
       return Program.Lexical_Elements.Lexical_Element_Access is abstract;

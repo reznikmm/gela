@@ -40,6 +40,14 @@ package Program.Elements.Quantified_Expressions is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   not overriding function Has_All
+    (Self : Quantified_Expression)
+      return Boolean is abstract;
+
+   not overriding function Has_Some
+    (Self : Quantified_Expression)
+      return Boolean is abstract;
+
    type Quantified_Expression_Text is limited interface;
 
    type Quantified_Expression_Text_Access is

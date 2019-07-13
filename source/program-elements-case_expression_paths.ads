@@ -45,7 +45,8 @@ package Program.Elements.Case_Expression_Paths is
 
    not overriding function Arrow_Token
     (Self : Case_Expression_Path_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    type Case_Expression_Path_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;

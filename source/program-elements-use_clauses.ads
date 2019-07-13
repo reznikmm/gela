@@ -22,6 +22,12 @@ package Program.Elements.Use_Clauses is
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   not overriding function Has_All (Self : Use_Clause) return Boolean
+     is abstract;
+
+   not overriding function Has_Type (Self : Use_Clause) return Boolean
+     is abstract;
+
    type Use_Clause_Text is limited interface;
 
    type Use_Clause_Text_Access is access all Use_Clause_Text'Class

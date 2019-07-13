@@ -41,6 +41,14 @@ package Program.Elements.Function_Instantiations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not
+    (Self : Function_Instantiation)
+      return Boolean is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Function_Instantiation)
+      return Boolean is abstract;
+
    type Function_Instantiation_Text is limited interface;
 
    type Function_Instantiation_Text_Access is

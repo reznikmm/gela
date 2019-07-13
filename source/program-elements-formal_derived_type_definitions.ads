@@ -29,6 +29,22 @@ package Program.Elements.Formal_Derived_Type_Definitions is
       return not null Program.Elements.Expressions.Expression_Vector_Access
      is abstract;
 
+   not overriding function Has_Abstract
+    (Self : Formal_Derived_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Limited
+    (Self : Formal_Derived_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Synchronized
+    (Self : Formal_Derived_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_With_Private
+    (Self : Formal_Derived_Type_Definition)
+      return Boolean is abstract;
+
    type Formal_Derived_Type_Definition_Text is limited interface;
 
    type Formal_Derived_Type_Definition_Text_Access is

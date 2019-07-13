@@ -61,6 +61,18 @@ package Program.Elements.Function_Body_Declarations is
     (Self : Function_Body_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   not overriding function Has_Not
+    (Self : Function_Body_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Function_Body_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Not_Null
+    (Self : Function_Body_Declaration)
+      return Boolean is abstract;
+
    type Function_Body_Declaration_Text is limited interface;
 
    type Function_Body_Declaration_Text_Access is

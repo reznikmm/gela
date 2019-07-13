@@ -29,6 +29,10 @@ package Program.Elements.Loop_Parameter_Specifications is
       return not null Program.Elements.Discrete_Subtype_Definitions
           .Discrete_Subtype_Definition_Access is abstract;
 
+   not overriding function Has_Reverse
+    (Self : Loop_Parameter_Specification)
+      return Boolean is abstract;
+
    type Loop_Parameter_Specification_Text is limited interface;
 
    type Loop_Parameter_Specification_Text_Access is

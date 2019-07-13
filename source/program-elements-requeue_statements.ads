@@ -23,6 +23,10 @@ package Program.Elements.Requeue_Statements is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   not overriding function Has_With_Abort
+    (Self : Requeue_Statement)
+      return Boolean is abstract;
+
    type Requeue_Statement_Text is limited interface;
 
    type Requeue_Statement_Text_Access is

@@ -35,6 +35,10 @@ package Program.Elements.Element_Iterator_Specifications is
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;
 
+   not overriding function Has_Reverse
+    (Self : Element_Iterator_Specification)
+      return Boolean is abstract;
+
    type Element_Iterator_Specification_Text is limited interface;
 
    type Element_Iterator_Specification_Text_Access is

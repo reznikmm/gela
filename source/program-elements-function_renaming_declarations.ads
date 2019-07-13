@@ -44,6 +44,18 @@ package Program.Elements.Function_Renaming_Declarations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not
+    (Self : Function_Renaming_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Function_Renaming_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Not_Null
+    (Self : Function_Renaming_Declaration)
+      return Boolean is abstract;
+
    type Function_Renaming_Declaration_Text is limited interface;
 
    type Function_Renaming_Declaration_Text_Access is

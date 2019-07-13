@@ -41,6 +41,13 @@ package Program.Elements.Entry_Declarations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not (Self : Entry_Declaration) return Boolean
+     is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Entry_Declaration)
+      return Boolean is abstract;
+
    type Entry_Declaration_Text is limited interface;
 
    type Entry_Declaration_Text_Access is

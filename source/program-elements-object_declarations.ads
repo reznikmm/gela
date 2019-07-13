@@ -40,6 +40,14 @@ package Program.Elements.Object_Declarations is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Aliased
+    (Self : Object_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Constant
+    (Self : Object_Declaration)
+      return Boolean is abstract;
+
    type Object_Declaration_Text is limited interface;
 
    type Object_Declaration_Text_Access is

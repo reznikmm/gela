@@ -35,6 +35,13 @@ package Program.Elements.Procedure_Body_Stubs is
       return not null Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
+   not overriding function Has_Not (Self : Procedure_Body_Stub) return Boolean
+     is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Procedure_Body_Stub)
+      return Boolean is abstract;
+
    type Procedure_Body_Stub_Text is limited interface;
 
    type Procedure_Body_Stub_Text_Access is
@@ -67,11 +74,13 @@ package Program.Elements.Procedure_Body_Stubs is
 
    not overriding function Is_Token
     (Self : Procedure_Body_Stub_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Separate_Token
     (Self : Procedure_Body_Stub_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function With_Token
     (Self : Procedure_Body_Stub_Text)

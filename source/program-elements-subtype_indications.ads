@@ -33,6 +33,10 @@ package Program.Elements.Subtype_Indications is
     (Self : Subtype_Indication)
       return Program.Elements.Constraints.Constraint_Access is abstract;
 
+   not overriding function Has_Not_Null
+    (Self : Subtype_Indication)
+      return Boolean is abstract;
+
    type Subtype_Indication_Text is limited interface;
 
    type Subtype_Indication_Text_Access is

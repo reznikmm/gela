@@ -57,6 +57,14 @@ package Program.Elements.Procedure_Body_Declarations is
     (Self : Procedure_Body_Declaration)
       return Program.Elements.Expressions.Expression_Access is abstract;
 
+   not overriding function Has_Not
+    (Self : Procedure_Body_Declaration)
+      return Boolean is abstract;
+
+   not overriding function Has_Overriding
+    (Self : Procedure_Body_Declaration)
+      return Boolean is abstract;
+
    type Procedure_Body_Declaration_Text is limited interface;
 
    type Procedure_Body_Declaration_Text_Access is

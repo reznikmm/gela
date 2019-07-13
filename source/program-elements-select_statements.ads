@@ -62,7 +62,8 @@ package Program.Elements.Select_Statements is
 
    not overriding function End_Token
     (Self : Select_Statement_Text)
-      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+      return not null Program.Lexical_Elements.Lexical_Element_Access
+     is abstract;
 
    not overriding function Select_Token_2
     (Self : Select_Statement_Text)

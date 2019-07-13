@@ -18,6 +18,18 @@ package Program.Elements.Formal_Private_Type_Definitions is
    type Formal_Private_Type_Definition_Access is
      access all Formal_Private_Type_Definition'Class with Storage_Size => 0;
 
+   not overriding function Has_Abstract
+    (Self : Formal_Private_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Tagged
+    (Self : Formal_Private_Type_Definition)
+      return Boolean is abstract;
+
+   not overriding function Has_Limited
+    (Self : Formal_Private_Type_Definition)
+      return Boolean is abstract;
+
    type Formal_Private_Type_Definition_Text is limited interface;
 
    type Formal_Private_Type_Definition_Text_Access is

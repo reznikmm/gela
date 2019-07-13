@@ -17,6 +17,10 @@ package Program.Elements.Incomplete_Type_Definitions is
    type Incomplete_Type_Definition_Access is
      access all Incomplete_Type_Definition'Class with Storage_Size => 0;
 
+   not overriding function Has_Tagged
+    (Self : Incomplete_Type_Definition)
+      return Boolean is abstract;
+
    type Incomplete_Type_Definition_Text is limited interface;
 
    type Incomplete_Type_Definition_Text_Access is
