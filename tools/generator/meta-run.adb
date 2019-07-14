@@ -39,5 +39,10 @@ begin
       Meta.Writes.Write_One_Element
         (Class_List (J),
          With_List => Lists.Index (Class_List (J).Name) > 0);
+
+      if not Class_List (J).Is_Abstract then
+         Meta.Writes.Write_One_Node (Class_List, Class_List (J));
+         Meta.Writes.Write_One_Node_Body (Class_List, Class_List (J));
+      end if;
    end loop;
 end Meta.Run;

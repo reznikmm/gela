@@ -12,12 +12,4 @@ package Program.Elements.Paths is
 
    type Path_Access is access all Path'Class with Storage_Size => 0;
 
-   type Path_Text is limited interface;
-
-   type Path_Text_Access is access all Path_Text'Class with Storage_Size => 0;
-
-   not overriding function To_Path_Text
-    (Self : aliased in out Path)
-      return Path_Text_Access is abstract;
-
 end Program.Elements.Paths;

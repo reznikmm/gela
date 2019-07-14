@@ -18,4 +18,12 @@ package Meta.Writes is
      (Item      : Meta.Classes.Class;
       With_List : Boolean);
 
+   procedure Write_One_Node
+     (Vector : Meta.Read.Class_Vectors.Vector;
+      Item   : Meta.Classes.Class);
+
+   procedure Write_One_Node_Body
+     (Vector : Meta.Read.Class_Vectors.Vector;
+      Item   : Meta.Classes.Class);
+
 end Meta.Writes;

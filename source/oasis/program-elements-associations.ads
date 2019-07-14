@@ -13,13 +13,4 @@ package Program.Elements.Associations is
    type Association_Access is access all Association'Class
      with Storage_Size => 0;
 
-   type Association_Text is limited interface;
-
-   type Association_Text_Access is access all Association_Text'Class
-     with Storage_Size => 0;
-
-   not overriding function To_Association_Text
-    (Self : aliased in out Association)
-      return Association_Text_Access is abstract;
-
 end Program.Elements.Associations;

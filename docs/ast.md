@@ -820,7 +820,7 @@
  - Aspects                    : [Aspect_Specification]*
  - Semicolon_Token            : Token
 
-## Definition
+## _Definition_
 > _[Element]_
 
 ### _Type_Definition_
@@ -1134,7 +1134,7 @@
  - Has_All                    : Boolean
  - Has_Some                   : Boolean
 
-## Association
+## _Association_
 > _[Element]_
 
 ### Discriminant_Association
@@ -1372,7 +1372,7 @@
  - Expression                   : [Qualified_Expression]
  - Semicolon_Token              : Token
 
-## Path
+## _Path_
 > _[Element]_
 
 ### Elsif_Path
@@ -1410,7 +1410,7 @@
  - Then_Token                 : Token
  - Expression                 : _[Expression]_
 
-## Clause
+## _Clause_
 > _[Element]_
 
 ### Use_Clause
