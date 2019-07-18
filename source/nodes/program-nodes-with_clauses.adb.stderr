@@ -1,0 +1,16 @@
+program-nodes-with_clauses.ads:7:06: file "program.ads" not found
+program-nodes-with_clauses.ads:7:06: "Program.Nodes.With_Clauses (body)" depends on "Program.Nodes.With_Clauses (spec)"
+program-nodes-with_clauses.ads:7:06: "Program.Nodes.With_Clauses (spec)" depends on "Program (spec)"
+program-nodes-with_clauses.ads:8:06: file "program.ads" not found
+program-nodes-with_clauses.ads:8:06: "Program.Nodes.With_Clauses (body)" depends on "Program.Nodes.With_Clauses (spec)"
+program-nodes-with_clauses.ads:8:06: "Program.Nodes.With_Clauses (spec)" depends on "Program (spec)"
+program-nodes-with_clauses.ads:9:06: file "program.ads" not found
+program-nodes-with_clauses.ads:9:06: "Program.Nodes.With_Clauses (body)" depends on "Program.Nodes.With_Clauses (spec)"
+program-nodes-with_clauses.ads:9:06: "Program.Nodes.With_Clauses (spec)" depends on "Program (spec)"
+program-nodes-with_clauses.ads:10:06: file "program.ads" not found
+program-nodes-with_clauses.ads:10:06: "Program.Nodes.With_Clauses (body)" depends on "Program.Nodes.With_Clauses (spec)"
+program-nodes-with_clauses.ads:10:06: "Program.Nodes.With_Clauses (spec)" depends on "Program (spec)"
+program-nodes-with_clauses.ads:12:22: file "program.ads" not found
+program-nodes-with_clauses.ads:12:22: "Program.Nodes.With_Clauses (body)" depends on "Program.Nodes.With_Clauses (spec)"
+program-nodes-with_clauses.ads:12:22: "Program.Nodes.With_Clauses (spec)" depends on "Program.Nodes (spec)"
+program-nodes-with_clauses.ads:12:22: "Program.Nodes (spec)" depends on "Program (spec)"
