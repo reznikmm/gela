@@ -71,10 +71,23 @@ package body Meta.Writes is
      (F    : aliased in out Ada_Pretty.Factory;
       Prop : Classes.Property) return Ada_Pretty.Node_Access;
 
+   function Prop_Check_Spec
+     (F    : aliased in out Ada_Pretty.Factory;
+      Name : League.Strings.Universal_String;
+      Base_Name : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
+
    function To_Text_Spec
      (F    : aliased in out Ada_Pretty.Factory;
       Item : Classes.Class;
       Name : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access;
+
+   type String_Array is array (Positive range <>)
+     of League.Strings.Universal_String;
+
+   function All_Parents
+      (Item   : Classes.Class;
+       Vector : Meta.Read.Class_Vectors.Vector)
+       return String_Array;
 
    Element : constant League.Strings.Universal_String := +"Element";
 
@@ -151,6 +164,56 @@ package body Meta.Writes is
          Item : T) return Ada_Pretty.Node_Access;
       F : in out Ada_Pretty.Factory;
    function Generic_List_Reduce (List : T_Array) return Ada_Pretty.Node_Access;
+
+   -----------------
+   -- All_Parents --
+   -----------------
+
+   function All_Parents
+      (Item   : Classes.Class;
+       Vector : Meta.Read.Class_Vectors.Vector) return String_Array
+   is
+      procedure Collect
+        (Result  : in out League.String_Vectors.Universal_String_Vector;
+         Item    : Meta.Classes.Class);
+
+      procedure Collect
+        (Result  : in out League.String_Vectors.Universal_String_Vector;
+         Item    : Meta.Classes.Class) is
+      begin
+         if Is_Element (Item.Name) then
+            return;
+         end if;
+
+         if Result.Index (Item.Name) = 0 then
+            Result.Append (Item.Name);
+
+            for J in 1 .. Item.Parents.Length loop
+               declare
+                  Parent : constant League.Strings.Universal_String :=
+                    Item.Parents.Element (J);
+               begin
+                  for Next of Vector loop
+                     if Next.Name = Parent then
+                        Collect (Result, Next);
+                        exit;
+                     end if;
+                  end loop;
+               end;
+            end loop;
+         end if;
+      end Collect;
+
+      Result  : League.String_Vectors.Universal_String_Vector;
+   begin
+      Collect (Result, Item);
+
+      return List : String_Array (1 .. Result.Length) do
+         for J in List'Range loop
+            List (J) := Result (J);
+         end loop;
+      end return;
+   end All_Parents;
 
    -------------------------
    -- Generic_List_Reduce --
@@ -261,6 +324,21 @@ package body Meta.Writes is
             Type_Definition => Property_Type (F, Prop));
       end if;
    end Prop_Parameter;
+
+   function Prop_Check_Spec
+     (F    : aliased in out Ada_Pretty.Factory;
+      Name : League.Strings.Universal_String;
+      Base_Name : Ada_Pretty.Node_Access) return Ada_Pretty.Node_Access is
+   begin
+      return F.New_Subprogram_Specification
+        (Is_Overriding => Ada_Pretty.True,
+         Name          => F.New_Name ("Is_" & Name),
+         Parameters    => F.New_Parameter
+           (Name            => F.New_Name (+"Self"),
+            Type_Definition => Base_Name),
+         Result        => F.New_Name (+"Boolean"));
+   end Prop_Check_Spec;
+
 
    -------------------
    -- Property_Type --
@@ -1535,6 +1613,13 @@ package body Meta.Writes is
       function Prop_Parameters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Prop_Parameter, F);
 
+      function Prop_Check
+        (F    : aliased in out Ada_Pretty.Factory;
+         Name : League.Strings.Universal_String) return Ada_Pretty.Node_Access;
+
+      function Prop_Checks is new Generic_List_Reduce
+        (League.Strings.Universal_String, String_Array, Prop_Check, F);
+
       -------------------
       -- Prop_Variable --
       -------------------
@@ -1576,6 +1661,19 @@ package body Meta.Writes is
       Base_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Base_" & Item.Name);
 
+      ----------------
+      -- Prop_Check --
+      ----------------
+
+      function Prop_Check
+        (F    : aliased in out Ada_Pretty.Factory;
+         Name : League.Strings.Universal_String) return Ada_Pretty.Node_Access
+      is
+      begin
+         return F.New_Subprogram_Declaration
+           (Specification => Prop_Check_Spec (F, Name, Base_Name));
+      end Prop_Check;
+
       Base_Props : constant Ada_Pretty.Node_Access :=
         Prop_Variables (Only_Objects (Item.Properties));
 
@@ -1608,12 +1706,14 @@ package body Meta.Writes is
         F.New_Subprogram_Declaration
           (Visit_Spec (F, Base_Name, False));
 
-      Base_List : constant Ada_Pretty.Node_Access :=
-        Get_Props (F,
-                   Base_Name,
-                   Only_Objects (Item.Properties),
-                   F.New_List ((Base, Base_Init, Visit)),
-                   Is_Abstr => False);
+      Base_List : constant Ada_Pretty.Node_Access := F.New_List
+        (Get_Props
+           (F,
+            Base_Name,
+            Only_Objects (Item.Properties),
+            F.New_List ((Base, Base_Init, Visit)),
+            Is_Abstr => False),
+         Prop_Checks (All_Parents (Item, Vector)));
 
       Node_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name (To_Element_Name (Item.Name));
@@ -1779,6 +1879,13 @@ package body Meta.Writes is
         (F    : aliased in out Ada_Pretty.Factory;
          Prop : Classes.Property) return Ada_Pretty.Node_Access;
 
+      function Prop_Check
+        (F    : aliased in out Ada_Pretty.Factory;
+         Name : League.Strings.Universal_String) return Ada_Pretty.Node_Access;
+
+      function Prop_Checks is new Generic_List_Reduce
+        (League.Strings.Universal_String, String_Array, Prop_Check, F);
+
       generic
          Type_Name : Ada_Pretty.Node_Access;
          Is_Node   : Boolean;
@@ -1880,10 +1987,29 @@ package body Meta.Writes is
       function Prop_Set_Enclosings is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Prop_Set_Enclosing, F);
 
+      Unreferenced : constant Ada_Pretty.Node_Access := F.New_Pragma
+        (Name      => F.New_Name (+"Unreferenced"),
+         Arguments => F.New_Name (+"Self"));
+
       Base_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Base_" & Item.Name);
 
       function Base_Getter is new Prop_Getter (Base_Name, False);
+
+      ----------------
+      -- Prop_Check --
+      ----------------
+
+      function Prop_Check
+        (F    : aliased in out Ada_Pretty.Factory;
+         Name : League.Strings.Universal_String) return Ada_Pretty.Node_Access
+      is
+      begin
+         return F.New_Subprogram_Body
+           (Specification => Prop_Check_Spec (F, Name, Base_Name),
+            Declarations  => Unreferenced,
+            Statements    => F.New_Return (F.New_Name (+"True")));
+      end Prop_Check;
 
       Package_Name : constant League.Strings.Universal_String :=
         "Program.Nodes." & Item.Name & "s";
@@ -2002,9 +2128,7 @@ package body Meta.Writes is
       Implicit_To_Text : constant Ada_Pretty.Node_Access :=
         F.New_Subprogram_Body
           (Specification => To_Text_Spec (F, Item, Implicit_Name),
-           Declarations  => F.New_Pragma
-             (Name      => F.New_Name (+"Unreferenced"),
-              Arguments => F.New_Name (+"Self")),
+           Declarations  => Unreferenced,
            Statements    => F.New_Return
              (F.New_Name (+"null")));
 
@@ -2013,6 +2137,7 @@ package body Meta.Writes is
          F.New_List (BG,
            F.New_List (NG,
              F.New_List (IG, Base_Init))),
+         Prop_Checks (All_Parents (Item, Vector)),
          Visit,
          Node_To_Text,
          Implicit_To_Text);
