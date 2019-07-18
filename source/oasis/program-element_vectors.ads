@@ -41,13 +41,13 @@ package Program.Element_Vectors is
    --  Return a delimiter token after an element of the vector
 
    type Element_Cursor
-     (Vector : not null access Element_Vector'Class) is tagged
+     (Vector : not null access constant Element_Vector'Class) is tagged
    record
-      Position : Natural := 0;
+      Position : Positive;
    end record;
 
    not overriding function Has_Element (Self : Element_Cursor) return Boolean
-     is (Self.Position /= 0);
+     is (Self.Position <= Self.Vector.Length);
    --  Check if the cursor points an element
 
    function Is_Last

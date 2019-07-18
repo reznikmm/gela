@@ -166,7 +166,7 @@ package body Program.Nodes.Function_Access_Types is
     (Self : Function_Access_Type)
       return Boolean is
    begin
-      return Self.Null_2_Token.Assigned;
+      return Self.Null_Token_2.Assigned;
    end Has_Not_Null_2;
 
    overriding function Is_Part_Of_Implicit

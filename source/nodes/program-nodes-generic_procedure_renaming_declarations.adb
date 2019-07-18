@@ -136,7 +136,8 @@ package body Program.Nodes.Generic_Procedure_Renaming_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Procedure_Renaming_Declaration'Class) is
+    (Self : aliased in out
+        Base_Generic_Procedure_Renaming_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Renamed_Procedure, Self'Unchecked_Access);

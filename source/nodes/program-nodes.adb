@@ -2028,7 +2028,7 @@ package body Program.Nodes is
    ---------------------------
 
    procedure Set_Enclosing_Element
-     (Self  : not null Program.Elements.Element_Access;
+     (Self  : access Program.Elements.Element'Class;
       Value : access Program.Elements.Element'Class) is
    begin
       if Self.all in Node'Class then

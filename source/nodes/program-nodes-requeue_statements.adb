@@ -83,7 +83,7 @@ package body Program.Nodes.Requeue_Statements is
     (Self : Requeue_Statement)
       return Boolean is
    begin
-      return Self.With_Abort_Token.Assigned;
+      return Self.With_Token.Assigned;
    end Has_With_Abort;
 
    overriding function Is_Part_Of_Implicit

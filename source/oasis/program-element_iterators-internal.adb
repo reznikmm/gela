@@ -7,10 +7,7 @@
 with Program.Elements.Pragmas;
 with Program.Elements.Defining_Names;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Defining_Character_Literals;
-with Program.Elements.Defining_Operator_Symbols;
 with Program.Elements.Defining_Expanded_Names;
-with Program.Elements.Declarations;
 with Program.Elements.Type_Declarations;
 with Program.Elements.Task_Type_Declarations;
 with Program.Elements.Protected_Type_Declarations;
@@ -65,34 +62,23 @@ with Program.Elements.Formal_Procedure_Declarations;
 with Program.Elements.Formal_Function_Declarations;
 with Program.Elements.Formal_Package_Declarations;
 with Program.Elements.Definitions;
-with Program.Elements.Type_Definitions;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Constraints;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Discrete_Subtype_Definitions;
 with Program.Elements.Discrete_Ranges;
-with Program.Elements.Unknown_Discriminant_Parts;
 with Program.Elements.Known_Discriminant_Parts;
 with Program.Elements.Record_Definitions;
-with Program.Elements.Null_Components;
 with Program.Elements.Variant_Parts;
 with Program.Elements.Variants;
-with Program.Elements.Others_Choices;
-with Program.Elements.Anonymous_Access_Definitions;
-with Program.Elements.Private_Type_Definitions;
 with Program.Elements.Private_Extension_Definitions;
-with Program.Elements.Incomplete_Type_Definitions;
 with Program.Elements.Task_Definitions;
 with Program.Elements.Protected_Definitions;
 with Program.Elements.Formal_Type_Definitions;
 with Program.Elements.Aspect_Specifications;
 with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Expressions;
-with Program.Elements.Numeric_Literals;
-with Program.Elements.String_Literals;
 with Program.Elements.Identifiers;
-with Program.Elements.Operator_Symbols;
-with Program.Elements.Character_Literals;
 with Program.Elements.Explicit_Dereferences;
 with Program.Elements.Function_Calls;
 with Program.Elements.Indexed_Components;
@@ -104,7 +90,6 @@ with Program.Elements.Extension_Aggregates;
 with Program.Elements.Array_Aggregates;
 with Program.Elements.Short_Circuit_Operations;
 with Program.Elements.Membership_Tests;
-with Program.Elements.Null_Literals;
 with Program.Elements.Parenthesized_Expressions;
 with Program.Elements.Raise_Expressions;
 with Program.Elements.Type_Conversions;
@@ -113,14 +98,11 @@ with Program.Elements.Allocators;
 with Program.Elements.Case_Expressions;
 with Program.Elements.If_Expressions;
 with Program.Elements.Quantified_Expressions;
-with Program.Elements.Associations;
 with Program.Elements.Discriminant_Associations;
 with Program.Elements.Record_Component_Associations;
 with Program.Elements.Array_Component_Associations;
 with Program.Elements.Parameter_Associations;
 with Program.Elements.Formal_Package_Associations;
-with Program.Elements.Statements;
-with Program.Elements.Null_Statements;
 with Program.Elements.Assignment_Statements;
 with Program.Elements.If_Statements;
 with Program.Elements.Case_Statements;
@@ -136,28 +118,23 @@ with Program.Elements.Extended_Return_Statements;
 with Program.Elements.Accept_Statements;
 with Program.Elements.Requeue_Statements;
 with Program.Elements.Delay_Statements;
-with Program.Elements.Terminate_Alternative_Statements;
 with Program.Elements.Select_Statements;
 with Program.Elements.Abort_Statements;
 with Program.Elements.Raise_Statements;
 with Program.Elements.Code_Statements;
-with Program.Elements.Paths;
 with Program.Elements.Elsif_Paths;
 with Program.Elements.Case_Paths;
 with Program.Elements.Select_Paths;
 with Program.Elements.Case_Expression_Paths;
 with Program.Elements.Elsif_Expression_Paths;
-with Program.Elements.Clauses;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
-with Program.Elements.Representation_Clauses;
 with Program.Elements.Component_Clauses;
 with Program.Elements.Derived_Types;
 with Program.Elements.Derived_Record_Extensions;
 with Program.Elements.Enumeration_Types;
 with Program.Elements.Signed_Integer_Types;
 with Program.Elements.Modular_Types;
-with Program.Elements.Root_Types;
 with Program.Elements.Floating_Point_Types;
 with Program.Elements.Ordinary_Fixed_Point_Types;
 with Program.Elements.Decimal_Fixed_Point_Types;
@@ -168,16 +145,7 @@ with Program.Elements.Interface_Types;
 with Program.Elements.Object_Access_Types;
 with Program.Elements.Procedure_Access_Types;
 with Program.Elements.Function_Access_Types;
-with Program.Elements.Formal_Private_Type_Definitions;
 with Program.Elements.Formal_Derived_Type_Definitions;
-with Program.Elements.Formal_Discrete_Type_Definitions;
-with Program.Elements.Formal_Signed_Integer_Type_Definitions;
-with Program.Elements.Formal_Modular_Type_Definitions;
-with Program.Elements.Formal_Floating_Point_Definitions;
-with Program.Elements.Formal_Ordinary_Fixed_Point_Definitions;
-with Program.Elements.Formal_Decimal_Fixed_Point_Definitions;
-with Program.Elements.Formal_Access_Types;
-with Program.Elements.Access_Types;
 with Program.Elements.Range_Attribute_References;
 with Program.Elements.Simple_Expression_Ranges;
 with Program.Elements.Digits_Constraints;
@@ -920,8 +888,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Pragmas.Arguments);
 
    F1   : aliased constant Getter_Array :=
-     (1 => (False      , Name       , F1_1'Access),
-      2 => (True       , Arguments  , F1_2'Access));
+     (1 => (False, Name, F1_1'Access),
+      2 => (True, Arguments, F1_2'Access));
 
    overriding procedure Pragma_Element
     (Self    : in out Visitor;
@@ -948,8 +916,8 @@ package body Internal is
       Get_Child    => Program.Elements.Defining_Expanded_Names.Selector);
 
    F5   : aliased constant Getter_Array :=
-     (1 => (False      , Prefix     , F5_1'Access),
-      2 => (False      , Selector   , F5_2'Access));
+     (1 => (False, Prefix, F5_1'Access),
+      2 => (False, Selector, F5_2'Access));
 
    overriding procedure Defining_Expanded_Name
     (Self    : in out Visitor;
@@ -990,10 +958,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Type_Declarations.Aspects);
 
    F6   : aliased constant Getter_Array :=
-     (1 => (False      , Name       , F6_1'Access),
-      2 => (False            , Discriminant_Part, F6_2'Access      ),
-      3 => (False      , Definition , F6_3'Access),
-      4 => (True       , Aspects    , F6_4'Access));
+     (1 => (False, Name, F6_1'Access),
+      2 => (False, Discriminant_Part, F6_2'Access),
+      3 => (False, Definition, F6_3'Access),
+      4 => (True, Aspects, F6_4'Access));
 
    overriding procedure Type_Declaration
     (Self    : in out Visitor;
@@ -1049,11 +1017,11 @@ package body Internal is
       Get_Child    => Program.Elements.Task_Type_Declarations.Definition);
 
    F7   : aliased constant Getter_Array :=
-     (1 => (False      , Name       , F7_1'Access),
-      2 => (False            , Discriminant_Part, F7_2'Access      ),
-      3 => (True       , Aspects    , F7_3'Access),
-      4 => (True       , Progenitors, F7_4'Access),
-      5 => (False      , Definition , F7_5'Access));
+     (1 => (False, Name, F7_1'Access),
+      2 => (False, Discriminant_Part, F7_2'Access),
+      3 => (True, Aspects, F7_3'Access),
+      4 => (True, Progenitors, F7_4'Access),
+      5 => (False, Definition, F7_5'Access));
 
    overriding procedure Task_Type_Declaration
     (Self    : in out Visitor;
@@ -1117,11 +1085,11 @@ package body Internal is
       Get_Child    => Program.Elements.Protected_Type_Declarations.Definition);
 
    F8   : aliased constant Getter_Array :=
-     (1 => (False      , Name       , F8_1'Access),
-      2 => (False            , Discriminant_Part, F8_2'Access      ),
-      3 => (True       , Aspects    , F8_3'Access),
-      4 => (True       , Progenitors, F8_4'Access),
-      5 => (False      , Definition , F8_5'Access));
+     (1 => (False, Name, F8_1'Access),
+      2 => (False, Discriminant_Part, F8_2'Access),
+      3 => (True, Aspects, F8_3'Access),
+      4 => (True, Progenitors, F8_4'Access),
+      5 => (False, Definition, F8_5'Access));
 
    overriding procedure Protected_Type_Declaration
     (Self    : in out Visitor;
@@ -1161,9 +1129,9 @@ package body Internal is
       Get_Vector    => Program.Elements.Subtype_Declarations.Aspects);
 
    F9   : aliased constant Getter_Array :=
-     (1 => (False      , Name       , F9_1'Access),
-      2 => (False             , Subtype_Indication, F9_2'Access       ),
-      3 => (True       , Aspects    , F9_3'Access));
+     (1 => (False, Name, F9_1'Access),
+      2 => (False, Subtype_Indication, F9_2'Access),
+      3 => (True, Aspects, F9_3'Access));
 
    overriding procedure Subtype_Declaration
     (Self    : in out Visitor;
@@ -1206,13 +1174,13 @@ package body Internal is
       Get_Vector    => Program.Elements.Object_Declarations.Aspects);
 
    F10  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F10_1'Access),
-      2 => (False         , Object_Subtype, F10_2'Access  ),
+     (1 => (True, Names, F10_1'Access),
+      2 => (False, Object_Subtype, F10_2'Access),
       3 =>
-        (False                    ,
+        (False,
          Initialization_Expression,
-         F10_3'Access             ),
-      4 => (True        , Aspects     , F10_4'Access));
+         F10_3'Access),
+      4 => (True, Aspects, F10_4'Access));
 
    overriding procedure Object_Declaration
     (Self    : in out Visitor;
@@ -1257,10 +1225,10 @@ package body Internal is
       Get_Child    => Program.Elements.Single_Task_Declarations.Definition);
 
    F11  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F11_1'Access),
-      2 => (True        , Aspects     , F11_2'Access),
-      3 => (True        , Progenitors , F11_3'Access),
-      4 => (False       , Definition  , F11_4'Access));
+     (1 => (False, Name, F11_1'Access),
+      2 => (True, Aspects, F11_2'Access),
+      3 => (True, Progenitors, F11_3'Access),
+      4 => (False, Definition, F11_4'Access));
 
    overriding procedure Single_Task_Declaration
     (Self    : in out Visitor;
@@ -1313,10 +1281,10 @@ package body Internal is
         Program.Elements.Single_Protected_Declarations.Definition);
 
    F12  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F12_1'Access),
-      2 => (True        , Aspects     , F12_2'Access),
-      3 => (True        , Progenitors , F12_3'Access),
-      4 => (False       , Definition  , F12_4'Access));
+     (1 => (False, Name, F12_1'Access),
+      2 => (True, Aspects, F12_2'Access),
+      3 => (True, Progenitors, F12_3'Access),
+      4 => (False, Definition, F12_4'Access));
 
    overriding procedure Single_Protected_Declaration
     (Self    : in out Visitor;
@@ -1343,8 +1311,8 @@ package body Internal is
       Get_Child    => Program.Elements.Number_Declarations.Expression);
 
    F13  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F13_1'Access),
-      2 => (False       , Expression  , F13_2'Access));
+     (1 => (True, Names, F13_1'Access),
+      2 => (False, Expression, F13_2'Access));
 
    overriding procedure Number_Declaration
     (Self    : in out Visitor;
@@ -1367,7 +1335,7 @@ package body Internal is
         Program.Elements.Enumeration_Literal_Specifications.Name);
 
    F14  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F14_1'Access));
+     (1 => (False, Name, F14_1'Access));
 
    overriding procedure Enumeration_Literal_Specification
     (Self    : in out Visitor;
@@ -1408,9 +1376,9 @@ package body Internal is
         Program.Elements.Discriminant_Specifications.Default_Expression);
 
    F15  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F15_1'Access),
-      2 => (False         , Object_Subtype, F15_2'Access  ),
-      3 => (False             , Default_Expression, F15_3'Access      ));
+     (1 => (True, Names, F15_1'Access),
+      2 => (False, Object_Subtype, F15_2'Access),
+      3 => (False, Default_Expression, F15_3'Access));
 
    overriding procedure Discriminant_Specification
     (Self    : in out Visitor;
@@ -1459,10 +1427,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Component_Declarations.Aspects);
 
    F16  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F16_1'Access),
-      2 => (False         , Object_Subtype, F16_2'Access  ),
-      3 => (False             , Default_Expression, F16_3'Access      ),
-      4 => (True        , Aspects     , F16_4'Access));
+     (1 => (True, Names, F16_1'Access),
+      2 => (False, Object_Subtype, F16_2'Access),
+      3 => (False, Default_Expression, F16_3'Access),
+      4 => (True, Aspects, F16_4'Access));
 
    overriding procedure Component_Declaration
     (Self    : in out Visitor;
@@ -1497,8 +1465,8 @@ package body Internal is
         Program.Elements.Loop_Parameter_Specifications.Definition);
 
    F17  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F17_1'Access),
-      2 => (False       , Definition  , F17_2'Access));
+     (1 => (False, Name, F17_1'Access),
+      2 => (False, Definition, F17_2'Access));
 
    overriding procedure Loop_Parameter_Specification
     (Self    : in out Visitor;
@@ -1530,8 +1498,8 @@ package body Internal is
         Program.Elements.Generalized_Iterator_Specifications.Iterator_Name);
 
    F18  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F18_1'Access),
-      2 => (False        , Iterator_Name, F18_2'Access ));
+     (1 => (False, Name, F18_1'Access),
+      2 => (False, Iterator_Name, F18_2'Access));
 
    overriding procedure Generalized_Iterator_Specification
     (Self    : in out Visitor;
@@ -1572,9 +1540,9 @@ package body Internal is
         Program.Elements.Element_Iterator_Specifications.Iterable_Name);
 
    F19  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F19_1'Access),
-      2 => (False             , Subtype_Indication, F19_2'Access      ),
-      3 => (False        , Iterable_Name, F19_3'Access ));
+     (1 => (False, Name, F19_1'Access),
+      2 => (False, Subtype_Indication, F19_2'Access),
+      3 => (False, Iterable_Name, F19_3'Access));
 
    overriding procedure Element_Iterator_Specification
     (Self    : in out Visitor;
@@ -1614,9 +1582,9 @@ package body Internal is
       Get_Vector    => Program.Elements.Procedure_Declarations.Aspects);
 
    F20  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F20_1'Access),
-      2 => (True        , Parameters  , F20_2'Access),
-      3 => (True        , Aspects     , F20_3'Access));
+     (1 => (False, Name, F20_1'Access),
+      2 => (True, Parameters, F20_2'Access),
+      3 => (True, Aspects, F20_3'Access));
 
    overriding procedure Procedure_Declaration
     (Self    : in out Visitor;
@@ -1674,11 +1642,11 @@ package body Internal is
       Get_Vector    => Program.Elements.Function_Declarations.Aspects);
 
    F21  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F21_1'Access),
-      2 => (True        , Parameters  , F21_2'Access),
-      3 => (False         , Result_Subtype, F21_3'Access  ),
-      4 => (False            , Result_Expression, F21_4'Access     ),
-      5 => (True        , Aspects     , F21_5'Access));
+     (1 => (False, Name, F21_1'Access),
+      2 => (True, Parameters, F21_2'Access),
+      3 => (False, Result_Subtype, F21_3'Access),
+      4 => (False, Result_Expression, F21_4'Access),
+      5 => (True, Aspects, F21_5'Access));
 
    overriding procedure Function_Declaration
     (Self    : in out Visitor;
@@ -1716,9 +1684,9 @@ package body Internal is
         Program.Elements.Parameter_Specifications.Default_Expression);
 
    F22  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F22_1'Access),
-      2 => (False            , Parameter_Subtype, F22_2'Access     ),
-      3 => (False             , Default_Expression, F22_3'Access      ));
+     (1 => (True, Names, F22_1'Access),
+      2 => (False, Parameter_Subtype, F22_2'Access),
+      3 => (False, Default_Expression, F22_3'Access));
 
    overriding procedure Parameter_Specification
     (Self    : in out Visitor;
@@ -1799,13 +1767,13 @@ package body Internal is
       Get_Child    => Program.Elements.Procedure_Body_Declarations.End_Name);
 
    F23  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F23_1'Access),
-      2 => (True        , Parameters  , F23_2'Access),
-      3 => (True        , Aspects     , F23_3'Access),
-      4 => (True        , Declarations, F23_4'Access),
-      5 => (True        , Statements  , F23_5'Access),
-      6 => (True              , Exception_Handlers, F23_6'Access      ),
-      7 => (False       , End_Name    , F23_7'Access));
+     (1 => (False, Name, F23_1'Access),
+      2 => (True, Parameters, F23_2'Access),
+      3 => (True, Aspects, F23_3'Access),
+      4 => (True, Declarations, F23_4'Access),
+      5 => (True, Statements, F23_5'Access),
+      6 => (True, Exception_Handlers, F23_6'Access),
+      7 => (False, End_Name, F23_7'Access));
 
    overriding procedure Procedure_Body_Declaration
     (Self    : in out Visitor;
@@ -1885,14 +1853,14 @@ package body Internal is
       Get_Child    => Program.Elements.Function_Body_Declarations.End_Name);
 
    F24  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F24_1'Access),
-      2 => (True        , Parameters  , F24_2'Access),
-      3 => (False         , Result_Subtype, F24_3'Access  ),
-      4 => (True        , Aspects     , F24_4'Access),
-      5 => (True        , Declarations, F24_5'Access),
-      6 => (True        , Statements  , F24_6'Access),
-      7 => (True              , Exception_Handlers, F24_7'Access      ),
-      8 => (False       , End_Name    , F24_8'Access));
+     (1 => (False, Name, F24_1'Access),
+      2 => (True, Parameters, F24_2'Access),
+      3 => (False, Result_Subtype, F24_3'Access),
+      4 => (True, Aspects, F24_4'Access),
+      5 => (True, Declarations, F24_5'Access),
+      6 => (True, Statements, F24_6'Access),
+      7 => (True, Exception_Handlers, F24_7'Access),
+      8 => (False, End_Name, F24_8'Access));
 
    overriding procedure Function_Body_Declaration
     (Self    : in out Visitor;
@@ -1932,9 +1900,9 @@ package body Internal is
         Program.Elements.Return_Object_Specifications.Expression);
 
    F25  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F25_1'Access),
-      2 => (False         , Object_Subtype, F25_2'Access  ),
-      3 => (False       , Expression  , F25_3'Access));
+     (1 => (False, Name, F25_1'Access),
+      2 => (False, Object_Subtype, F25_2'Access),
+      3 => (False, Expression, F25_3'Access));
 
    overriding procedure Return_Object_Specification
     (Self    : in out Visitor;
@@ -1986,11 +1954,11 @@ package body Internal is
       Get_Child    => Program.Elements.Package_Declarations.End_Name);
 
    F26  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F26_1'Access),
-      2 => (True        , Aspects     , F26_2'Access),
-      3 => (True                , Visible_Declarations, F26_3'Access        ),
-      4 => (True                , Private_Declarations, F26_4'Access        ),
-      5 => (False       , End_Name    , F26_5'Access));
+     (1 => (False, Name, F26_1'Access),
+      2 => (True, Aspects, F26_2'Access),
+      3 => (True, Visible_Declarations, F26_3'Access),
+      4 => (True, Private_Declarations, F26_4'Access),
+      5 => (False, End_Name, F26_5'Access));
 
    overriding procedure Package_Declaration
     (Self    : in out Visitor;
@@ -2051,12 +2019,12 @@ package body Internal is
       Get_Child    => Program.Elements.Package_Body_Declarations.End_Name);
 
    F27  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F27_1'Access),
-      2 => (True        , Aspects     , F27_2'Access),
-      3 => (True        , Declarations, F27_3'Access),
-      4 => (True        , Statements  , F27_4'Access),
-      5 => (True              , Exception_Handlers, F27_5'Access      ),
-      6 => (False       , End_Name    , F27_6'Access));
+     (1 => (False, Name, F27_1'Access),
+      2 => (True, Aspects, F27_2'Access),
+      3 => (True, Declarations, F27_3'Access),
+      4 => (True, Statements, F27_4'Access),
+      5 => (True, Exception_Handlers, F27_5'Access),
+      6 => (False, End_Name, F27_6'Access));
 
    overriding procedure Package_Body_Declaration
     (Self    : in out Visitor;
@@ -2108,10 +2076,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Object_Renaming_Declarations.Aspects);
 
    F28  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F28_1'Access),
-      2 => (False         , Object_Subtype, F28_2'Access  ),
-      3 => (False         , Renamed_Object, F28_3'Access  ),
-      4 => (True        , Aspects     , F28_4'Access));
+     (1 => (True, Names, F28_1'Access),
+      2 => (False, Object_Subtype, F28_2'Access),
+      3 => (False, Renamed_Object, F28_3'Access),
+      4 => (True, Aspects, F28_4'Access));
 
    overriding procedure Object_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2155,9 +2123,9 @@ package body Internal is
         Program.Elements.Exception_Renaming_Declarations.Aspects);
 
    F29  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F29_1'Access),
-      2 => (False            , Renamed_Exception, F29_2'Access     ),
-      3 => (True        , Aspects     , F29_3'Access));
+     (1 => (True, Names, F29_1'Access),
+      2 => (False, Renamed_Exception, F29_2'Access),
+      3 => (True, Aspects, F29_3'Access));
 
    overriding procedure Exception_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2211,10 +2179,10 @@ package body Internal is
         Program.Elements.Procedure_Renaming_Declarations.Aspects);
 
    F30  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F30_1'Access),
-      2 => (True        , Parameters  , F30_2'Access),
-      3 => (False            , Renamed_Procedure, F30_3'Access     ),
-      4 => (True        , Aspects     , F30_4'Access));
+     (1 => (False, Name, F30_1'Access),
+      2 => (True, Parameters, F30_2'Access),
+      3 => (False, Renamed_Procedure, F30_3'Access),
+      4 => (True, Aspects, F30_4'Access));
 
    overriding procedure Procedure_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2277,11 +2245,11 @@ package body Internal is
         Program.Elements.Function_Renaming_Declarations.Aspects);
 
    F31  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F31_1'Access),
-      2 => (True        , Parameters  , F31_2'Access),
-      3 => (False         , Result_Subtype, F31_3'Access  ),
-      4 => (False           , Renamed_Function, F31_4'Access    ),
-      5 => (True        , Aspects     , F31_5'Access));
+     (1 => (False, Name, F31_1'Access),
+      2 => (True, Parameters, F31_2'Access),
+      3 => (False, Result_Subtype, F31_3'Access),
+      4 => (False, Renamed_Function, F31_4'Access),
+      5 => (True, Aspects, F31_5'Access));
 
    overriding procedure Function_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2321,9 +2289,9 @@ package body Internal is
       Get_Vector    => Program.Elements.Package_Renaming_Declarations.Aspects);
 
    F32  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F32_1'Access),
-      2 => (False          , Renamed_Package, F32_2'Access   ),
-      3 => (True        , Aspects     , F32_3'Access));
+     (1 => (False, Name, F32_1'Access),
+      2 => (False, Renamed_Package, F32_2'Access),
+      3 => (True, Aspects, F32_3'Access));
 
    overriding procedure Package_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2366,9 +2334,9 @@ package body Internal is
         Program.Elements.Generic_Package_Renaming_Declarations.Aspects);
 
    F33  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F33_1'Access),
-      2 => (False          , Renamed_Package, F33_2'Access   ),
-      3 => (True        , Aspects     , F33_3'Access));
+     (1 => (False, Name, F33_1'Access),
+      2 => (False, Renamed_Package, F33_2'Access),
+      3 => (True, Aspects, F33_3'Access));
 
    overriding procedure Generic_Package_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2411,9 +2379,9 @@ package body Internal is
         Program.Elements.Generic_Procedure_Renaming_Declarations.Aspects);
 
    F34  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F34_1'Access),
-      2 => (False            , Renamed_Procedure, F34_2'Access     ),
-      3 => (True        , Aspects     , F34_3'Access));
+     (1 => (False, Name, F34_1'Access),
+      2 => (False, Renamed_Procedure, F34_2'Access),
+      3 => (True, Aspects, F34_3'Access));
 
    overriding procedure Generic_Procedure_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2457,9 +2425,9 @@ package body Internal is
         Program.Elements.Generic_Function_Renaming_Declarations.Aspects);
 
    F35  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F35_1'Access),
-      2 => (False           , Renamed_Function, F35_2'Access    ),
-      3 => (True        , Aspects     , F35_3'Access));
+     (1 => (False, Name, F35_1'Access),
+      2 => (False, Renamed_Function, F35_2'Access),
+      3 => (True, Aspects, F35_3'Access));
 
    overriding procedure Generic_Function_Renaming_Declaration
     (Self    : in out Visitor;
@@ -2521,12 +2489,12 @@ package body Internal is
       Get_Child    => Program.Elements.Task_Body_Declarations.End_Name);
 
    F36  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F36_1'Access),
-      2 => (True        , Aspects     , F36_2'Access),
-      3 => (True        , Declarations, F36_3'Access),
-      4 => (True        , Statements  , F36_4'Access),
-      5 => (True              , Exception_Handlers, F36_5'Access      ),
-      6 => (False       , End_Name    , F36_6'Access));
+     (1 => (False, Name, F36_1'Access),
+      2 => (True, Aspects, F36_2'Access),
+      3 => (True, Declarations, F36_3'Access),
+      4 => (True, Statements, F36_4'Access),
+      5 => (True, Exception_Handlers, F36_5'Access),
+      6 => (False, End_Name, F36_6'Access));
 
    overriding procedure Task_Body_Declaration
     (Self    : in out Visitor;
@@ -2576,10 +2544,10 @@ package body Internal is
       Get_Child    => Program.Elements.Protected_Body_Declarations.End_Name);
 
    F37  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F37_1'Access),
-      2 => (True        , Aspects     , F37_2'Access),
-      3 => (True                , Protected_Operations, F37_3'Access        ),
-      4 => (False       , End_Name    , F37_4'Access));
+     (1 => (False, Name, F37_1'Access),
+      2 => (True, Aspects, F37_2'Access),
+      3 => (True, Protected_Operations, F37_3'Access),
+      4 => (False, End_Name, F37_4'Access));
 
    overriding procedure Protected_Body_Declaration
     (Self    : in out Visitor;
@@ -2629,13 +2597,13 @@ package body Internal is
       Get_Vector    => Program.Elements.Entry_Declarations.Aspects);
 
    F38  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F38_1'Access),
+     (1 => (False, Name, F38_1'Access),
       2 =>
-        (False                  ,
+        (False,
          Entry_Family_Definition,
-         F38_2'Access           ),
-      3 => (True        , Parameters  , F38_3'Access),
-      4 => (True        , Aspects     , F38_4'Access));
+         F38_2'Access),
+      3 => (True, Parameters, F38_3'Access),
+      4 => (True, Aspects, F38_4'Access));
 
    overriding procedure Entry_Declaration
     (Self    : in out Visitor;
@@ -2715,14 +2683,14 @@ package body Internal is
       Get_Child    => Program.Elements.Entry_Body_Declarations.End_Name);
 
    F39  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F39_1'Access),
-      2 => (False       , Entry_Index , F39_2'Access),
-      3 => (True        , Parameters  , F39_3'Access),
-      4 => (False        , Entry_Barrier, F39_4'Access ),
-      5 => (True        , Declarations, F39_5'Access),
-      6 => (True        , Statements  , F39_6'Access),
-      7 => (True              , Exception_Handlers, F39_7'Access      ),
-      8 => (False       , End_Name    , F39_8'Access));
+     (1 => (False, Name, F39_1'Access),
+      2 => (False, Entry_Index, F39_2'Access),
+      3 => (True, Parameters, F39_3'Access),
+      4 => (False, Entry_Barrier, F39_4'Access),
+      5 => (True, Declarations, F39_5'Access),
+      6 => (True, Statements, F39_6'Access),
+      7 => (True, Exception_Handlers, F39_7'Access),
+      8 => (False, End_Name, F39_8'Access));
 
    overriding procedure Entry_Body_Declaration
     (Self    : in out Visitor;
@@ -2755,8 +2723,8 @@ package body Internal is
         Program.Elements.Entry_Index_Specifications.Entry_Index_Subtype);
 
    F40  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F40_1'Access),
-      2 => (False              , Entry_Index_Subtype, F40_2'Access       ));
+     (1 => (False, Name, F40_1'Access),
+      2 => (False, Entry_Index_Subtype, F40_2'Access));
 
    overriding procedure Entry_Index_Specification
     (Self    : in out Visitor;
@@ -2798,9 +2766,9 @@ package body Internal is
       Get_Vector    => Program.Elements.Procedure_Body_Stubs.Aspects);
 
    F41  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F41_1'Access),
-      2 => (True        , Parameters  , F41_2'Access),
-      3 => (True        , Aspects     , F41_3'Access));
+     (1 => (False, Name, F41_1'Access),
+      2 => (True, Parameters, F41_2'Access),
+      3 => (True, Aspects, F41_3'Access));
 
    overriding procedure Procedure_Body_Stub
     (Self    : in out Visitor;
@@ -2845,10 +2813,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Function_Body_Stubs.Aspects);
 
    F42  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F42_1'Access),
-      2 => (True        , Parameters  , F42_2'Access),
-      3 => (False         , Result_Subtype, F42_3'Access  ),
-      4 => (True        , Aspects     , F42_4'Access));
+     (1 => (False, Name, F42_1'Access),
+      2 => (True, Parameters, F42_2'Access),
+      3 => (False, Result_Subtype, F42_3'Access),
+      4 => (True, Aspects, F42_4'Access));
 
    overriding procedure Function_Body_Stub
     (Self    : in out Visitor;
@@ -2877,8 +2845,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Package_Body_Stubs.Aspects);
 
    F43  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F43_1'Access),
-      2 => (True        , Aspects     , F43_2'Access));
+     (1 => (False, Name, F43_1'Access),
+      2 => (True, Aspects, F43_2'Access));
 
    overriding procedure Package_Body_Stub
     (Self    : in out Visitor;
@@ -2907,8 +2875,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Task_Body_Stubs.Aspects);
 
    F44  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F44_1'Access),
-      2 => (True        , Aspects     , F44_2'Access));
+     (1 => (False, Name, F44_1'Access),
+      2 => (True, Aspects, F44_2'Access));
 
    overriding procedure Task_Body_Stub
     (Self    : in out Visitor;
@@ -2939,8 +2907,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Protected_Body_Stubs.Aspects);
 
    F45  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F45_1'Access),
-      2 => (True        , Aspects     , F45_2'Access));
+     (1 => (False, Name, F45_1'Access),
+      2 => (True, Aspects, F45_2'Access));
 
    overriding procedure Protected_Body_Stub
     (Self    : in out Visitor;
@@ -2972,8 +2940,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Exception_Declarations.Aspects);
 
    F46  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F46_1'Access),
-      2 => (True        , Aspects     , F46_2'Access));
+     (1 => (True, Names, F46_1'Access),
+      2 => (True, Aspects, F46_2'Access));
 
    overriding procedure Exception_Declaration
     (Self    : in out Visitor;
@@ -2995,7 +2963,7 @@ package body Internal is
       Get_Child    => Program.Elements.Choice_Parameter_Specifications.Name);
 
    F47  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F47_1'Access));
+     (1 => (False, Name, F47_1'Access));
 
    overriding procedure Choice_Parameter_Specification
     (Self    : in out Visitor;
@@ -3061,12 +3029,12 @@ package body Internal is
       Get_Child    => Program.Elements.Generic_Package_Declarations.End_Name);
 
    F48  : aliased constant Getter_Array :=
-     (1 => (True             , Formal_Parameters, F48_1'Access     ),
-      2 => (False       , Name        , F48_2'Access),
-      3 => (True        , Aspects     , F48_3'Access),
-      4 => (True                , Visible_Declarations, F48_4'Access        ),
-      5 => (True                , Private_Declarations, F48_5'Access        ),
-      6 => (False       , End_Name    , F48_6'Access));
+     (1 => (True, Formal_Parameters, F48_1'Access),
+      2 => (False, Name, F48_2'Access),
+      3 => (True, Aspects, F48_3'Access),
+      4 => (True, Visible_Declarations, F48_4'Access),
+      5 => (True, Private_Declarations, F48_5'Access),
+      6 => (False, End_Name, F48_6'Access));
 
    overriding procedure Generic_Package_Declaration
     (Self    : in out Visitor;
@@ -3120,10 +3088,10 @@ package body Internal is
         Program.Elements.Generic_Procedure_Declarations.Aspects);
 
    F49  : aliased constant Getter_Array :=
-     (1 => (True             , Formal_Parameters, F49_1'Access     ),
-      2 => (False       , Name        , F49_2'Access),
-      3 => (True        , Parameters  , F49_3'Access),
-      4 => (True        , Aspects     , F49_4'Access));
+     (1 => (True, Formal_Parameters, F49_1'Access),
+      2 => (False, Name, F49_2'Access),
+      3 => (True, Parameters, F49_3'Access),
+      4 => (True, Aspects, F49_4'Access));
 
    overriding procedure Generic_Procedure_Declaration
     (Self    : in out Visitor;
@@ -3185,11 +3153,11 @@ package body Internal is
       Get_Vector    => Program.Elements.Generic_Function_Declarations.Aspects);
 
    F50  : aliased constant Getter_Array :=
-     (1 => (True             , Formal_Parameters, F50_1'Access     ),
-      2 => (False       , Name        , F50_2'Access),
-      3 => (True        , Parameters  , F50_3'Access),
-      4 => (False         , Result_Subtype, F50_4'Access  ),
-      5 => (True        , Aspects     , F50_5'Access));
+     (1 => (True, Formal_Parameters, F50_1'Access),
+      2 => (False, Name, F50_2'Access),
+      3 => (True, Parameters, F50_3'Access),
+      4 => (False, Result_Subtype, F50_4'Access),
+      5 => (True, Aspects, F50_5'Access));
 
    overriding procedure Generic_Function_Declaration
     (Self    : in out Visitor;
@@ -3236,10 +3204,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Package_Instantiations.Aspects);
 
    F51  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F51_1'Access),
-      2 => (False               , Generic_Package_Name, F51_2'Access        ),
-      3 => (True        , Parameters  , F51_3'Access),
-      4 => (True        , Aspects     , F51_4'Access));
+     (1 => (False, Name, F51_1'Access),
+      2 => (False, Generic_Package_Name, F51_2'Access),
+      3 => (True, Parameters, F51_3'Access),
+      4 => (True, Aspects, F51_4'Access));
 
    overriding procedure Package_Instantiation
     (Self    : in out Visitor;
@@ -3286,13 +3254,13 @@ package body Internal is
       Get_Vector    => Program.Elements.Procedure_Instantiations.Aspects);
 
    F52  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F52_1'Access),
+     (1 => (False, Name, F52_1'Access),
       2 =>
-        (False                 ,
+        (False,
          Generic_Procedure_Name,
-         F52_2'Access          ),
-      3 => (True        , Parameters  , F52_3'Access),
-      4 => (True        , Aspects     , F52_4'Access));
+         F52_2'Access),
+      3 => (True, Parameters, F52_3'Access),
+      4 => (True, Aspects, F52_4'Access));
 
    overriding procedure Procedure_Instantiation
     (Self    : in out Visitor;
@@ -3339,11 +3307,11 @@ package body Internal is
       Get_Vector    => Program.Elements.Function_Instantiations.Aspects);
 
    F53  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F53_1'Access),
+     (1 => (False, Name, F53_1'Access),
       2 =>
-        (False                , Generic_Function_Name, F53_2'Access         ),
-      3 => (True        , Parameters  , F53_3'Access),
-      4 => (True        , Aspects     , F53_4'Access));
+        (False, Generic_Function_Name, F53_2'Access),
+      3 => (True, Parameters, F53_3'Access),
+      4 => (True, Aspects, F53_4'Access));
 
    overriding procedure Function_Instantiation
     (Self    : in out Visitor;
@@ -3391,10 +3359,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Formal_Object_Declarations.Aspects);
 
    F54  : aliased constant Getter_Array :=
-     (1 => (True        , Names       , F54_1'Access),
-      2 => (False         , Object_Subtype, F54_2'Access  ),
-      3 => (False             , Default_Expression, F54_3'Access      ),
-      4 => (True        , Aspects     , F54_4'Access));
+     (1 => (True, Names, F54_1'Access),
+      2 => (False, Object_Subtype, F54_2'Access),
+      3 => (False, Default_Expression, F54_3'Access),
+      4 => (True, Aspects, F54_4'Access));
 
    overriding procedure Formal_Object_Declaration
     (Self    : in out Visitor;
@@ -3442,10 +3410,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Formal_Type_Declarations.Aspects);
 
    F55  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F55_1'Access),
-      2 => (False            , Discriminant_Part, F55_2'Access     ),
-      3 => (False       , Definition  , F55_3'Access),
-      4 => (True        , Aspects     , F55_4'Access));
+     (1 => (False, Name, F55_1'Access),
+      2 => (False, Discriminant_Part, F55_2'Access),
+      3 => (False, Definition, F55_3'Access),
+      4 => (True, Aspects, F55_4'Access));
 
    overriding procedure Formal_Type_Declaration
     (Self    : in out Visitor;
@@ -3500,10 +3468,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Formal_Procedure_Declarations.Aspects);
 
    F56  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F56_1'Access),
-      2 => (True        , Parameters  , F56_2'Access),
-      3 => (False             , Subprogram_Default, F56_3'Access      ),
-      4 => (True        , Aspects     , F56_4'Access));
+     (1 => (False, Name, F56_1'Access),
+      2 => (True, Parameters, F56_2'Access),
+      3 => (False, Subprogram_Default, F56_3'Access),
+      4 => (True, Aspects, F56_4'Access));
 
    overriding procedure Formal_Procedure_Declaration
     (Self    : in out Visitor;
@@ -3565,11 +3533,11 @@ package body Internal is
       Get_Vector    => Program.Elements.Formal_Function_Declarations.Aspects);
 
    F57  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F57_1'Access),
-      2 => (True        , Parameters  , F57_2'Access),
-      3 => (False         , Result_Subtype, F57_3'Access  ),
-      4 => (False             , Subprogram_Default, F57_4'Access      ),
-      5 => (True        , Aspects     , F57_5'Access));
+     (1 => (False, Name, F57_1'Access),
+      2 => (True, Parameters, F57_2'Access),
+      3 => (False, Result_Subtype, F57_3'Access),
+      4 => (False, Subprogram_Default, F57_4'Access),
+      5 => (True, Aspects, F57_5'Access));
 
    overriding procedure Formal_Function_Declaration
     (Self    : in out Visitor;
@@ -3624,10 +3592,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Formal_Package_Declarations.Aspects);
 
    F58  : aliased constant Getter_Array :=
-     (1 => (False       , Name        , F58_1'Access),
-      2 => (False               , Generic_Package_Name, F58_2'Access        ),
-      3 => (True        , Parameters  , F58_3'Access),
-      4 => (True        , Aspects     , F58_4'Access));
+     (1 => (False, Name, F58_1'Access),
+      2 => (False, Generic_Package_Name, F58_2'Access),
+      3 => (True, Parameters, F58_3'Access),
+      4 => (True, Aspects, F58_4'Access));
 
    overriding procedure Formal_Package_Declaration
     (Self    : in out Visitor;
@@ -3651,8 +3619,8 @@ package body Internal is
       Get_Child    => Program.Elements.Subtype_Indications.Constraint);
 
    F59  : aliased constant Getter_Array :=
-     (1 => (False       , Subtype_Mark, F59_1'Access),
-      2 => (False       , Constraint  , F59_2'Access));
+     (1 => (False, Subtype_Mark, F59_1'Access),
+      2 => (False, Constraint, F59_2'Access));
 
    overriding procedure Subtype_Indication
     (Self    : in out Visitor;
@@ -3672,7 +3640,7 @@ package body Internal is
         Program.Elements.Component_Definitions.Subtype_Indication);
 
    F60  : aliased constant Getter_Array :=
-     (1 => (False             , Subtype_Indication, F60_1'Access      ));
+     (1 => (False, Subtype_Indication, F60_1'Access));
 
    overriding procedure Component_Definition
     (Self    : in out Visitor;
@@ -3696,7 +3664,7 @@ package body Internal is
         Program.Elements.Known_Discriminant_Parts.Discriminants);
 
    F62  : aliased constant Getter_Array :=
-     (1 => (True         , Discriminants, F62_1'Access ));
+     (1 => (True, Discriminants, F62_1'Access));
 
    overriding procedure Known_Discriminant_Part
     (Self    : in out Visitor;
@@ -3714,7 +3682,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Record_Definitions.Components);
 
    F63  : aliased constant Getter_Array :=
-     (1 => (True        , Components  , F63_1'Access));
+     (1 => (True, Components, F63_1'Access));
 
    overriding procedure Record_Definition
     (Self    : in out Visitor;
@@ -3738,8 +3706,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Variant_Parts.Variants);
 
    F65  : aliased constant Getter_Array :=
-     (1 => (False       , Discriminant, F65_1'Access),
-      2 => (True        , Variants    , F65_2'Access));
+     (1 => (False, Discriminant, F65_1'Access),
+      2 => (True, Variants, F65_2'Access));
 
    overriding procedure Variant_Part
     (Self    : in out Visitor;
@@ -3762,8 +3730,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Variants.Components);
 
    F66  : aliased constant Getter_Array :=
-     (1 => (True        , Choices     , F66_1'Access),
-      2 => (True        , Components  , F66_2'Access));
+     (1 => (True, Choices, F66_1'Access),
+      2 => (True, Components, F66_2'Access));
 
    overriding procedure Variant
     (Self    : in out Visitor;
@@ -3792,8 +3760,8 @@ package body Internal is
         Program.Elements.Private_Extension_Definitions.Progenitors);
 
    F69  : aliased constant Getter_Array :=
-     (1 => (False       , Ancestor    , F69_1'Access),
-      2 => (True        , Progenitors , F69_2'Access));
+     (1 => (False, Ancestor, F69_1'Access),
+      2 => (True, Progenitors, F69_2'Access));
 
    overriding procedure Private_Extension_Definition
     (Self    : in out Visitor;
@@ -3823,9 +3791,9 @@ package body Internal is
       Get_Child    => Program.Elements.Task_Definitions.End_Name);
 
    F71  : aliased constant Getter_Array :=
-     (1 => (True                , Visible_Declarations, F71_1'Access        ),
-      2 => (True                , Private_Declarations, F71_2'Access        ),
-      3 => (False       , End_Name    , F71_3'Access));
+     (1 => (True, Visible_Declarations, F71_1'Access),
+      2 => (True, Private_Declarations, F71_2'Access),
+      3 => (False, End_Name, F71_3'Access));
 
    overriding procedure Task_Definition
     (Self    : in out Visitor;
@@ -3860,9 +3828,9 @@ package body Internal is
       Get_Child    => Program.Elements.Protected_Definitions.End_Name);
 
    F72  : aliased constant Getter_Array :=
-     (1 => (True                , Visible_Declarations, F72_1'Access        ),
-      2 => (True                , Private_Declarations, F72_2'Access        ),
-      3 => (False       , End_Name    , F72_3'Access));
+     (1 => (True, Visible_Declarations, F72_1'Access),
+      2 => (True, Private_Declarations, F72_2'Access),
+      3 => (False, End_Name, F72_3'Access));
 
    overriding procedure Protected_Definition
     (Self    : in out Visitor;
@@ -3889,8 +3857,8 @@ package body Internal is
         Program.Elements.Aspect_Specifications.Aspect_Definition);
 
    F73  : aliased constant Getter_Array :=
-     (1 => (False       , Aspect_Mark , F73_1'Access),
-      2 => (False            , Aspect_Definition, F73_2'Access     ));
+     (1 => (False, Aspect_Mark, F73_1'Access),
+      2 => (False, Aspect_Definition, F73_2'Access));
 
    overriding procedure Aspect_Specification
     (Self    : in out Visitor;
@@ -3916,8 +3884,8 @@ package body Internal is
       Get_Child    => Program.Elements.Real_Range_Specifications.Upper_Bound);
 
    F74  : aliased constant Getter_Array :=
-     (1 => (False       , Lower_Bound , F74_1'Access),
-      2 => (False       , Upper_Bound , F74_2'Access));
+     (1 => (False, Lower_Bound, F74_1'Access),
+      2 => (False, Upper_Bound, F74_2'Access));
 
    overriding procedure Real_Range_Specification
     (Self    : in out Visitor;
@@ -3936,7 +3904,7 @@ package body Internal is
       Get_Child    => Program.Elements.Explicit_Dereferences.Prefix);
 
    F80  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F80_1'Access));
+     (1 => (False, Prefix, F80_1'Access));
 
    overriding procedure Explicit_Dereference
     (Self    : in out Visitor;
@@ -3963,8 +3931,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Function_Calls.Parameters);
 
    F81  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F81_1'Access),
-      2 => (True        , Parameters  , F81_2'Access));
+     (1 => (False, Prefix, F81_1'Access),
+      2 => (True, Parameters, F81_2'Access));
 
    overriding procedure Function_Call
     (Self    : in out Visitor;
@@ -3988,8 +3956,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Indexed_Components.Expressions);
 
    F82  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F82_1'Access),
-      2 => (True        , Expressions , F82_2'Access));
+     (1 => (False, Prefix, F82_1'Access),
+      2 => (True, Expressions, F82_2'Access));
 
    overriding procedure Indexed_Component
     (Self    : in out Visitor;
@@ -4013,8 +3981,8 @@ package body Internal is
       Get_Child    => Program.Elements.Slices.Slice_Range);
 
    F83  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F83_1'Access),
-      2 => (False       , Slice_Range , F83_2'Access));
+     (1 => (False, Prefix, F83_1'Access),
+      2 => (False, Slice_Range, F83_2'Access));
 
    overriding procedure Slice
     (Self    : in out Visitor;
@@ -4037,8 +4005,8 @@ package body Internal is
       Get_Child    => Program.Elements.Selected_Components.Selector);
 
    F84  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F84_1'Access),
-      2 => (False       , Selector    , F84_2'Access));
+     (1 => (False, Prefix, F84_1'Access),
+      2 => (False, Selector, F84_2'Access));
 
    overriding procedure Selected_Component
     (Self    : in out Visitor;
@@ -4072,9 +4040,9 @@ package body Internal is
       Get_Child    => Program.Elements.Attribute_References.Expressions);
 
    F85  : aliased constant Getter_Array :=
-     (1 => (False       , Prefix      , F85_1'Access),
-      2 => (False               , Attribute_Designator, F85_2'Access        ),
-      3 => (False       , Expressions , F85_3'Access));
+     (1 => (False, Prefix, F85_1'Access),
+      2 => (False, Attribute_Designator, F85_2'Access),
+      3 => (False, Expressions, F85_3'Access));
 
    overriding procedure Attribute_Reference
     (Self    : in out Visitor;
@@ -4096,7 +4064,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Record_Aggregates.Components);
 
    F86  : aliased constant Getter_Array :=
-     (1 => (True        , Components  , F86_1'Access));
+     (1 => (True, Components, F86_1'Access));
 
    overriding procedure Record_Aggregate
     (Self    : in out Visitor;
@@ -4126,8 +4094,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Extension_Aggregates.Components);
 
    F87  : aliased constant Getter_Array :=
-     (1 => (False       , Ancestor    , F87_1'Access),
-      2 => (True        , Components  , F87_2'Access));
+     (1 => (False, Ancestor, F87_1'Access),
+      2 => (True, Components, F87_2'Access));
 
    overriding procedure Extension_Aggregate
     (Self    : in out Visitor;
@@ -4149,7 +4117,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Array_Aggregates.Components);
 
    F88  : aliased constant Getter_Array :=
-     (1 => (True        , Components  , F88_1'Access));
+     (1 => (True, Components, F88_1'Access));
 
    overriding procedure Array_Aggregate
     (Self    : in out Visitor;
@@ -4175,8 +4143,8 @@ package body Internal is
       Get_Child    => Program.Elements.Short_Circuit_Operations.Right);
 
    F89  : aliased constant Getter_Array :=
-     (1 => (False       , Left        , F89_1'Access),
-      2 => (False       , Right       , F89_2'Access));
+     (1 => (False, Left, F89_1'Access),
+      2 => (False, Right, F89_2'Access));
 
    overriding procedure Short_Circuit_Operation
     (Self    : in out Visitor;
@@ -4200,8 +4168,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Membership_Tests.Choices);
 
    F90  : aliased constant Getter_Array :=
-     (1 => (False       , Expression  , F90_1'Access),
-      2 => (True        , Choices     , F90_2'Access));
+     (1 => (False, Expression, F90_1'Access),
+      2 => (True, Choices, F90_2'Access));
 
    overriding procedure Membership_Test
     (Self    : in out Visitor;
@@ -4220,7 +4188,7 @@ package body Internal is
       Get_Child    => Program.Elements.Parenthesized_Expressions.Expression);
 
    F92  : aliased constant Getter_Array :=
-     (1 => (False       , Expression  , F92_1'Access));
+     (1 => (False, Expression, F92_1'Access));
 
    overriding procedure Parenthesized_Expression
     (Self    : in out Visitor;
@@ -4244,8 +4212,8 @@ package body Internal is
       Get_Child    => Program.Elements.Raise_Expressions.Associated_Message);
 
    F93  : aliased constant Getter_Array :=
-     (1 => (False         , Exception_Name, F93_1'Access  ),
-      2 => (False             , Associated_Message, F93_2'Access      ));
+     (1 => (False, Exception_Name, F93_1'Access),
+      2 => (False, Associated_Message, F93_2'Access));
 
    overriding procedure Raise_Expression
     (Self    : in out Visitor;
@@ -4269,8 +4237,8 @@ package body Internal is
       Get_Child    => Program.Elements.Type_Conversions.Operand);
 
    F94  : aliased constant Getter_Array :=
-     (1 => (False       , Subtype_Mark, F94_1'Access),
-      2 => (False       , Operand     , F94_2'Access));
+     (1 => (False, Subtype_Mark, F94_1'Access),
+      2 => (False, Operand, F94_2'Access));
 
    overriding procedure Type_Conversion
     (Self    : in out Visitor;
@@ -4296,8 +4264,8 @@ package body Internal is
       Get_Child    => Program.Elements.Qualified_Expressions.Operand);
 
    F95  : aliased constant Getter_Array :=
-     (1 => (False       , Subtype_Mark, F95_1'Access),
-      2 => (False       , Operand     , F95_2'Access));
+     (1 => (False, Subtype_Mark, F95_1'Access),
+      2 => (False, Operand, F95_2'Access));
 
    overriding procedure Qualified_Expression
     (Self    : in out Visitor;
@@ -4330,9 +4298,9 @@ package body Internal is
       Get_Child    => Program.Elements.Allocators.Qualified_Expression);
 
    F96  : aliased constant Getter_Array :=
-     (1 => (False       , Subpool_Name, F96_1'Access),
-      2 => (False             , Subtype_Indication, F96_2'Access      ),
-      3 => (False               , Qualified_Expression, F96_3'Access        ));
+     (1 => (False, Subpool_Name, F96_1'Access),
+      2 => (False, Subtype_Indication, F96_2'Access),
+      3 => (False, Qualified_Expression, F96_3'Access));
 
    overriding procedure Allocator
     (Self    : in out Visitor;
@@ -4358,8 +4326,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Case_Expressions.Paths);
 
    F97  : aliased constant Getter_Array :=
-     (1 => (False               , Selecting_Expression, F97_1'Access        ),
-      2 => (True        , Paths       , F97_2'Access));
+     (1 => (False, Selecting_Expression, F97_1'Access),
+      2 => (True, Paths, F97_2'Access));
 
    overriding procedure Case_Expression
     (Self    : in out Visitor;
@@ -4395,10 +4363,10 @@ package body Internal is
       Get_Child    => Program.Elements.If_Expressions.Else_Expression);
 
    F98  : aliased constant Getter_Array :=
-     (1 => (False       , Condition   , F98_1'Access),
-      2 => (False          , Then_Expression, F98_2'Access   ),
-      3 => (True        , Elsif_Paths , F98_3'Access),
-      4 => (False          , Else_Expression, F98_4'Access   ));
+     (1 => (False, Condition, F98_1'Access),
+      2 => (False, Then_Expression, F98_2'Access),
+      3 => (True, Elsif_Paths, F98_3'Access),
+      4 => (False, Else_Expression, F98_4'Access));
 
    overriding procedure If_Expression
     (Self    : in out Visitor;
@@ -4452,10 +4420,10 @@ package body Internal is
       Get_Child    => Program.Elements.Quantified_Expressions.Predicate);
 
    F99  : aliased constant Getter_Array :=
-     (1 => (False       , Parameter   , F99_1'Access),
-      2 => (False               , Generalized_Iterator, F99_2'Access        ),
-      3 => (False           , Element_Iterator, F99_3'Access    ),
-      4 => (False       , Predicate   , F99_4'Access));
+     (1 => (False, Parameter, F99_1'Access),
+      2 => (False, Generalized_Iterator, F99_2'Access),
+      3 => (False, Element_Iterator, F99_3'Access),
+      4 => (False, Predicate, F99_4'Access));
 
    overriding procedure Quantified_Expression
     (Self    : in out Visitor;
@@ -4482,8 +4450,8 @@ package body Internal is
       Get_Child    => Program.Elements.Discriminant_Associations.Expression);
 
    F100 : aliased constant Getter_Array :=
-     (1 => (True          , Selector_Names, F100_1'Access ),
-      2 => (False        , Expression   , F100_2'Access));
+     (1 => (True, Selector_Names, F100_1'Access),
+      2 => (False, Expression, F100_2'Access));
 
    overriding procedure Discriminant_Association
     (Self    : in out Visitor;
@@ -4512,8 +4480,8 @@ package body Internal is
         Program.Elements.Record_Component_Associations.Expression);
 
    F101 : aliased constant Getter_Array :=
-     (1 => (True         , Choices      , F101_1'Access),
-      2 => (False        , Expression   , F101_2'Access));
+     (1 => (True, Choices, F101_1'Access),
+      2 => (False, Expression, F101_2'Access));
 
    overriding procedure Record_Component_Association
     (Self    : in out Visitor;
@@ -4542,8 +4510,8 @@ package body Internal is
         Program.Elements.Array_Component_Associations.Expression);
 
    F102 : aliased constant Getter_Array :=
-     (1 => (True         , Choices      , F102_1'Access),
-      2 => (False        , Expression   , F102_2'Access));
+     (1 => (True, Choices, F102_1'Access),
+      2 => (False, Expression, F102_2'Access));
 
    overriding procedure Array_Component_Association
     (Self    : in out Visitor;
@@ -4571,8 +4539,8 @@ package body Internal is
         Program.Elements.Parameter_Associations.Actual_Parameter);
 
    F103 : aliased constant Getter_Array :=
-     (1 => (False           , Formal_Parameter, F103_1'Access   ),
-      2 => (False           , Actual_Parameter, F103_2'Access   ));
+     (1 => (False, Formal_Parameter, F103_1'Access),
+      2 => (False, Actual_Parameter, F103_2'Access));
 
    overriding procedure Parameter_Association
     (Self    : in out Visitor;
@@ -4602,8 +4570,8 @@ package body Internal is
         Program.Elements.Formal_Package_Associations.Actual_Parameter);
 
    F104 : aliased constant Getter_Array :=
-     (1 => (False           , Formal_Parameter, F104_1'Access   ),
-      2 => (False           , Actual_Parameter, F104_2'Access   ));
+     (1 => (False, Formal_Parameter, F104_1'Access),
+      2 => (False, Actual_Parameter, F104_2'Access));
 
    overriding procedure Formal_Package_Association
     (Self    : in out Visitor;
@@ -4629,8 +4597,8 @@ package body Internal is
       Get_Child    => Program.Elements.Assignment_Statements.Expression);
 
    F106 : aliased constant Getter_Array :=
-     (1 => (False        , Variable_Name, F106_1'Access),
-      2 => (False        , Expression   , F106_2'Access));
+     (1 => (False, Variable_Name, F106_1'Access),
+      2 => (False, Expression, F106_2'Access));
 
    overriding procedure Assignment_Statement
     (Self    : in out Visitor;
@@ -4666,10 +4634,10 @@ package body Internal is
       Get_Vector    => Program.Elements.If_Statements.Else_Statements);
 
    F107 : aliased constant Getter_Array :=
-     (1 => (False        , Condition    , F107_1'Access),
-      2 => (True           , Then_Statements, F107_2'Access  ),
-      3 => (True         , Elsif_Paths  , F107_3'Access),
-      4 => (True           , Else_Statements, F107_4'Access  ));
+     (1 => (False, Condition, F107_1'Access),
+      2 => (True, Then_Statements, F107_2'Access),
+      3 => (True, Elsif_Paths, F107_3'Access),
+      4 => (True, Else_Statements, F107_4'Access));
 
    overriding procedure If_Statement
     (Self    : in out Visitor;
@@ -4692,8 +4660,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Case_Statements.Paths);
 
    F108 : aliased constant Getter_Array :=
-     (1 => (False               , Selecting_Expression, F108_1'Access       ),
-      2 => (True         , Paths        , F108_2'Access));
+     (1 => (False, Selecting_Expression, F108_1'Access),
+      2 => (True, Paths, F108_2'Access));
 
    overriding procedure Case_Statement
     (Self    : in out Visitor;
@@ -4726,12 +4694,12 @@ package body Internal is
         Program.Elements.Loop_Statements.End_Statement_Identifier);
 
    F109 : aliased constant Getter_Array :=
-     (1 => (False               , Statement_Identifier, F109_1'Access       ),
-      2 => (True         , Statements   , F109_2'Access),
+     (1 => (False, Statement_Identifier, F109_1'Access),
+      2 => (True, Statements, F109_2'Access),
       3 =>
-        (False                   ,
+        (False,
          End_Statement_Identifier,
-         F109_3'Access           ));
+         F109_3'Access));
 
    overriding procedure Loop_Statement
     (Self    : in out Visitor;
@@ -4775,13 +4743,13 @@ package body Internal is
         Program.Elements.While_Loop_Statements.End_Statement_Identifier);
 
    F110 : aliased constant Getter_Array :=
-     (1 => (False               , Statement_Identifier, F110_1'Access       ),
-      2 => (False        , Condition    , F110_2'Access),
-      3 => (True         , Statements   , F110_3'Access),
+     (1 => (False, Statement_Identifier, F110_1'Access),
+      2 => (False, Condition, F110_2'Access),
+      3 => (True, Statements, F110_3'Access),
       4 =>
-        (False                   ,
+        (False,
          End_Statement_Identifier,
-         F110_4'Access           ));
+         F110_4'Access));
 
    overriding procedure While_Loop_Statement
     (Self    : in out Visitor;
@@ -4846,15 +4814,15 @@ package body Internal is
         Program.Elements.For_Loop_Statements.End_Statement_Identifier);
 
    F111 : aliased constant Getter_Array :=
-     (1 => (False               , Statement_Identifier, F111_1'Access       ),
-      2 => (False         , Loop_Parameter, F111_2'Access ),
-      3 => (False               , Generalized_Iterator, F111_3'Access       ),
-      4 => (False           , Element_Iterator, F111_4'Access   ),
-      5 => (True         , Statements   , F111_5'Access),
+     (1 => (False, Statement_Identifier, F111_1'Access),
+      2 => (False, Loop_Parameter, F111_2'Access),
+      3 => (False, Generalized_Iterator, F111_3'Access),
+      4 => (False, Element_Iterator, F111_4'Access),
+      5 => (True, Statements, F111_5'Access),
       6 =>
-        (False                   ,
+        (False,
          End_Statement_Identifier,
-         F111_6'Access           ));
+         F111_6'Access));
 
    overriding procedure For_Loop_Statement
     (Self    : in out Visitor;
@@ -4901,14 +4869,14 @@ package body Internal is
         Program.Elements.Block_Statements.End_Statement_Identifier);
 
    F112 : aliased constant Getter_Array :=
-     (1 => (False               , Statement_Identifier, F112_1'Access       ),
-      2 => (True         , Declarations , F112_2'Access),
-      3 => (True         , Statements   , F112_3'Access),
-      4 => (True              , Exception_Handlers, F112_4'Access     ),
+     (1 => (False, Statement_Identifier, F112_1'Access),
+      2 => (True, Declarations, F112_2'Access),
+      3 => (True, Statements, F112_3'Access),
+      4 => (True, Exception_Handlers, F112_4'Access),
       5 =>
-        (False                   ,
+        (False,
          End_Statement_Identifier,
-         F112_5'Access           ));
+         F112_5'Access));
 
    overriding procedure Block_Statement
     (Self    : in out Visitor;
@@ -4932,8 +4900,8 @@ package body Internal is
       Get_Child    => Program.Elements.Exit_Statements.Condition);
 
    F113 : aliased constant Getter_Array :=
-     (1 => (False         , Exit_Loop_Name, F113_1'Access ),
-      2 => (False        , Condition    , F113_2'Access));
+     (1 => (False, Exit_Loop_Name, F113_1'Access),
+      2 => (False, Condition, F113_2'Access));
 
    overriding procedure Exit_Statement
     (Self    : in out Visitor;
@@ -4951,7 +4919,7 @@ package body Internal is
       Get_Child    => Program.Elements.Goto_Statements.Goto_Label);
 
    F114 : aliased constant Getter_Array :=
-     (1 => (False        , Goto_Label   , F114_1'Access));
+     (1 => (False, Goto_Label, F114_1'Access));
 
    overriding procedure Goto_Statement
     (Self    : in out Visitor;
@@ -4978,8 +4946,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Call_Statements.Parameters);
 
    F115 : aliased constant Getter_Array :=
-     (1 => (False        , Called_Name  , F115_1'Access),
-      2 => (True         , Parameters   , F115_2'Access));
+     (1 => (False, Called_Name, F115_1'Access),
+      2 => (True, Parameters, F115_2'Access));
 
    overriding procedure Call_Statement
     (Self    : in out Visitor;
@@ -4998,7 +4966,7 @@ package body Internal is
       Get_Child    => Program.Elements.Simple_Return_Statements.Expression);
 
    F116 : aliased constant Getter_Array :=
-     (1 => (False        , Expression   , F116_1'Access));
+     (1 => (False, Expression, F116_1'Access));
 
    overriding procedure Simple_Return_Statement
     (Self    : in out Visitor;
@@ -5039,9 +5007,9 @@ package body Internal is
         Program.Elements.Extended_Return_Statements.Exception_Handlers);
 
    F117 : aliased constant Getter_Array :=
-     (1 => (False        , Return_Object, F117_1'Access),
-      2 => (True         , Statements   , F117_2'Access),
-      3 => (True              , Exception_Handlers, F117_3'Access     ));
+     (1 => (False, Return_Object, F117_1'Access),
+      2 => (True, Statements, F117_2'Access),
+      3 => (True, Exception_Handlers, F117_3'Access));
 
    overriding procedure Extended_Return_Statement
     (Self    : in out Visitor;
@@ -5096,15 +5064,15 @@ package body Internal is
         Program.Elements.Accept_Statements.End_Statement_Identifier);
 
    F118 : aliased constant Getter_Array :=
-     (1 => (False        , Entry_Name   , F118_1'Access),
-      2 => (False        , Entry_Index  , F118_2'Access),
-      3 => (True         , Parameters   , F118_3'Access),
-      4 => (True         , Statements   , F118_4'Access),
-      5 => (True              , Exception_Handlers, F118_5'Access     ),
+     (1 => (False, Entry_Name, F118_1'Access),
+      2 => (False, Entry_Index, F118_2'Access),
+      3 => (True, Parameters, F118_3'Access),
+      4 => (True, Statements, F118_4'Access),
+      5 => (True, Exception_Handlers, F118_5'Access),
       6 =>
-        (False                   ,
+        (False,
          End_Statement_Identifier,
-         F118_6'Access           ));
+         F118_6'Access));
 
    overriding procedure Accept_Statement
     (Self    : in out Visitor;
@@ -5122,7 +5090,7 @@ package body Internal is
       Get_Child    => Program.Elements.Requeue_Statements.Entry_Name);
 
    F119 : aliased constant Getter_Array :=
-     (1 => (False        , Entry_Name   , F119_1'Access));
+     (1 => (False, Entry_Name, F119_1'Access));
 
    overriding procedure Requeue_Statement
     (Self    : in out Visitor;
@@ -5140,7 +5108,7 @@ package body Internal is
       Get_Child    => Program.Elements.Delay_Statements.Expression);
 
    F120 : aliased constant Getter_Array :=
-     (1 => (False        , Expression   , F120_1'Access));
+     (1 => (False, Expression, F120_1'Access));
 
    overriding procedure Delay_Statement
     (Self    : in out Visitor;
@@ -5171,10 +5139,10 @@ package body Internal is
       Get_Vector    => Program.Elements.Select_Statements.Else_Statements);
 
    F122 : aliased constant Getter_Array :=
-     (1 => (True         , Paths        , F122_1'Access),
+     (1 => (True, Paths, F122_1'Access),
       2 =>
-        (True                 , Then_Abort_Statements, F122_2'Access        ),
-      3 => (True           , Else_Statements, F122_3'Access  ));
+        (True, Then_Abort_Statements, F122_2'Access),
+      3 => (True, Else_Statements, F122_3'Access));
 
    overriding procedure Select_Statement
     (Self    : in out Visitor;
@@ -5192,7 +5160,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Abort_Statements.Aborted_Tasks);
 
    F123 : aliased constant Getter_Array :=
-     (1 => (True         , Aborted_Tasks, F123_1'Access));
+     (1 => (True, Aborted_Tasks, F123_1'Access));
 
    overriding procedure Abort_Statement
     (Self    : in out Visitor;
@@ -5216,8 +5184,8 @@ package body Internal is
       Get_Child    => Program.Elements.Raise_Statements.Associated_Message);
 
    F124 : aliased constant Getter_Array :=
-     (1 => (False           , Raised_Exception, F124_1'Access   ),
-      2 => (False             , Associated_Message, F124_2'Access     ));
+     (1 => (False, Raised_Exception, F124_1'Access),
+      2 => (False, Associated_Message, F124_2'Access));
 
    overriding procedure Raise_Statement
     (Self    : in out Visitor;
@@ -5237,7 +5205,7 @@ package body Internal is
       Get_Child    => Program.Elements.Code_Statements.Expression);
 
    F125 : aliased constant Getter_Array :=
-     (1 => (False        , Expression   , F125_1'Access));
+     (1 => (False, Expression, F125_1'Access));
 
    overriding procedure Code_Statement
     (Self    : in out Visitor;
@@ -5261,8 +5229,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Elsif_Paths.Statements);
 
    F126 : aliased constant Getter_Array :=
-     (1 => (False        , Condition    , F126_1'Access),
-      2 => (True         , Statements   , F126_2'Access));
+     (1 => (False, Condition, F126_1'Access),
+      2 => (True, Statements, F126_2'Access));
 
    overriding procedure Elsif_Path
     (Self    : in out Visitor;
@@ -5285,8 +5253,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Case_Paths.Statements);
 
    F127 : aliased constant Getter_Array :=
-     (1 => (True         , Choices      , F127_1'Access),
-      2 => (True         , Statements   , F127_2'Access));
+     (1 => (True, Choices, F127_1'Access),
+      2 => (True, Statements, F127_2'Access));
 
    overriding procedure Case_Path
     (Self    : in out Visitor;
@@ -5309,8 +5277,8 @@ package body Internal is
       Get_Vector    => Program.Elements.Select_Paths.Statements);
 
    F128 : aliased constant Getter_Array :=
-     (1 => (False        , Guard        , F128_1'Access),
-      2 => (True         , Statements   , F128_2'Access));
+     (1 => (False, Guard, F128_1'Access),
+      2 => (True, Statements, F128_2'Access));
 
    overriding procedure Select_Path
     (Self    : in out Visitor;
@@ -5335,8 +5303,8 @@ package body Internal is
       Get_Child    => Program.Elements.Case_Expression_Paths.Expression);
 
    F129 : aliased constant Getter_Array :=
-     (1 => (True         , Choices      , F129_1'Access),
-      2 => (False        , Expression   , F129_2'Access));
+     (1 => (True, Choices, F129_1'Access),
+      2 => (False, Expression, F129_2'Access));
 
    overriding procedure Case_Expression_Path
     (Self    : in out Visitor;
@@ -5362,8 +5330,8 @@ package body Internal is
       Get_Child    => Program.Elements.Elsif_Expression_Paths.Expression);
 
    F130 : aliased constant Getter_Array :=
-     (1 => (False        , Condition    , F130_1'Access),
-      2 => (False        , Expression   , F130_2'Access));
+     (1 => (False, Condition, F130_1'Access),
+      2 => (False, Expression, F130_2'Access));
 
    overriding procedure Elsif_Expression_Path
     (Self    : in out Visitor;
@@ -5381,7 +5349,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Use_Clauses.Clause_Names);
 
    F131 : aliased constant Getter_Array :=
-     (1 => (True         , Clause_Names , F131_1'Access));
+     (1 => (True, Clause_Names, F131_1'Access));
 
    overriding procedure Use_Clause
     (Self    : in out Visitor;
@@ -5398,7 +5366,7 @@ package body Internal is
       Get_Vector    => Program.Elements.With_Clauses.Clause_Names);
 
    F132 : aliased constant Getter_Array :=
-     (1 => (True         , Clause_Names , F132_1'Access));
+     (1 => (True, Clause_Names, F132_1'Access));
 
    overriding procedure With_Clause
     (Self    : in out Visitor;
@@ -5430,9 +5398,9 @@ package body Internal is
       Get_Child    => Program.Elements.Component_Clauses.Clause_Range);
 
    F133 : aliased constant Getter_Array :=
-     (1 => (False        , Clause_Name  , F133_1'Access),
-      2 => (False        , Position     , F133_2'Access),
-      3 => (False        , Clause_Range , F133_3'Access));
+     (1 => (False, Clause_Name, F133_1'Access),
+      2 => (False, Position, F133_2'Access),
+      3 => (False, Clause_Range, F133_3'Access));
 
    overriding procedure Component_Clause
     (Self    : in out Visitor;
@@ -5450,7 +5418,7 @@ package body Internal is
       Get_Child    => Program.Elements.Derived_Types.Parent);
 
    F134 : aliased constant Getter_Array :=
-     (1 => (False        , Parent       , F134_1'Access));
+     (1 => (False, Parent, F134_1'Access));
 
    overriding procedure Derived_Type
     (Self    : in out Visitor;
@@ -5483,9 +5451,9 @@ package body Internal is
         Program.Elements.Derived_Record_Extensions.Record_Definition);
 
    F135 : aliased constant Getter_Array :=
-     (1 => (False        , Parent       , F135_1'Access),
-      2 => (True         , Progenitors  , F135_2'Access),
-      3 => (False            , Record_Definition, F135_3'Access    ));
+     (1 => (False, Parent, F135_1'Access),
+      2 => (True, Progenitors, F135_2'Access),
+      3 => (False, Record_Definition, F135_3'Access));
 
    overriding procedure Derived_Record_Extension
     (Self    : in out Visitor;
@@ -5507,7 +5475,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Enumeration_Types.Literals);
 
    F136 : aliased constant Getter_Array :=
-     (1 => (True         , Literals     , F136_1'Access));
+     (1 => (True, Literals, F136_1'Access));
 
    overriding procedure Enumeration_Type
     (Self    : in out Visitor;
@@ -5533,8 +5501,8 @@ package body Internal is
       Get_Child    => Program.Elements.Signed_Integer_Types.Upper_Bound);
 
    F137 : aliased constant Getter_Array :=
-     (1 => (False        , Lower_Bound  , F137_1'Access),
-      2 => (False        , Upper_Bound  , F137_2'Access));
+     (1 => (False, Lower_Bound, F137_1'Access),
+      2 => (False, Upper_Bound, F137_2'Access));
 
    overriding procedure Signed_Integer_Type
     (Self    : in out Visitor;
@@ -5552,7 +5520,7 @@ package body Internal is
       Get_Child    => Program.Elements.Modular_Types.Modulus);
 
    F138 : aliased constant Getter_Array :=
-     (1 => (False        , Modulus      , F138_1'Access));
+     (1 => (False, Modulus, F138_1'Access));
 
    overriding procedure Modular_Type
     (Self    : in out Visitor;
@@ -5580,8 +5548,8 @@ package body Internal is
       Get_Child    => Program.Elements.Floating_Point_Types.Real_Range);
 
    F140 : aliased constant Getter_Array :=
-     (1 => (False            , Digits_Expression, F140_1'Access    ),
-      2 => (False        , Real_Range   , F140_2'Access));
+     (1 => (False, Digits_Expression, F140_1'Access),
+      2 => (False, Real_Range, F140_2'Access));
 
    overriding procedure Floating_Point_Type
     (Self    : in out Visitor;
@@ -5611,8 +5579,8 @@ package body Internal is
       Get_Child    => Program.Elements.Ordinary_Fixed_Point_Types.Real_Range);
 
    F141 : aliased constant Getter_Array :=
-     (1 => (False           , Delta_Expression, F141_1'Access   ),
-      2 => (False        , Real_Range   , F141_2'Access));
+     (1 => (False, Delta_Expression, F141_1'Access),
+      2 => (False, Real_Range, F141_2'Access));
 
    overriding procedure Ordinary_Fixed_Point_Type
     (Self    : in out Visitor;
@@ -5650,9 +5618,9 @@ package body Internal is
       Get_Child    => Program.Elements.Decimal_Fixed_Point_Types.Real_Range);
 
    F142 : aliased constant Getter_Array :=
-     (1 => (False           , Delta_Expression, F142_1'Access   ),
-      2 => (False            , Digits_Expression, F142_2'Access    ),
-      3 => (False        , Real_Range   , F142_3'Access));
+     (1 => (False, Delta_Expression, F142_1'Access),
+      2 => (False, Digits_Expression, F142_2'Access),
+      3 => (False, Real_Range, F142_3'Access));
 
    overriding procedure Decimal_Fixed_Point_Type
     (Self    : in out Visitor;
@@ -5682,8 +5650,8 @@ package body Internal is
         Program.Elements.Unconstrained_Array_Types.Component_Definition);
 
    F143 : aliased constant Getter_Array :=
-     (1 => (True          , Index_Subtypes, F143_1'Access ),
-      2 => (False               , Component_Definition, F143_2'Access       ));
+     (1 => (True, Index_Subtypes, F143_1'Access),
+      2 => (False, Component_Definition, F143_2'Access));
 
    overriding procedure Unconstrained_Array_Type
     (Self    : in out Visitor;
@@ -5717,8 +5685,8 @@ package body Internal is
         Program.Elements.Constrained_Array_Types.Component_Definition);
 
    F144 : aliased constant Getter_Array :=
-     (1 => (True          , Index_Subtypes, F144_1'Access ),
-      2 => (False               , Component_Definition, F144_2'Access       ));
+     (1 => (True, Index_Subtypes, F144_1'Access),
+      2 => (False, Component_Definition, F144_2'Access));
 
    overriding procedure Constrained_Array_Type
     (Self    : in out Visitor;
@@ -5736,7 +5704,7 @@ package body Internal is
       Get_Child    => Program.Elements.Record_Types.Record_Definition);
 
    F145 : aliased constant Getter_Array :=
-     (1 => (False            , Record_Definition, F145_1'Access    ));
+     (1 => (False, Record_Definition, F145_1'Access));
 
    overriding procedure Record_Type
     (Self    : in out Visitor;
@@ -5753,7 +5721,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Interface_Types.Progenitors);
 
    F146 : aliased constant Getter_Array :=
-     (1 => (True         , Progenitors  , F146_1'Access));
+     (1 => (True, Progenitors, F146_1'Access));
 
    overriding procedure Interface_Type
     (Self    : in out Visitor;
@@ -5772,7 +5740,7 @@ package body Internal is
       Get_Child    => Program.Elements.Object_Access_Types.Subtype_Indication);
 
    F147 : aliased constant Getter_Array :=
-     (1 => (False             , Subtype_Indication, F147_1'Access     ));
+     (1 => (False, Subtype_Indication, F147_1'Access));
 
    overriding procedure Object_Access_Type
     (Self    : in out Visitor;
@@ -5795,7 +5763,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Procedure_Access_Types.Parameters);
 
    F148 : aliased constant Getter_Array :=
-     (1 => (True         , Parameters   , F148_1'Access));
+     (1 => (True, Parameters, F148_1'Access));
 
    overriding procedure Procedure_Access_Type
     (Self    : in out Visitor;
@@ -5825,8 +5793,8 @@ package body Internal is
       Get_Child    => Program.Elements.Function_Access_Types.Result_Subtype);
 
    F149 : aliased constant Getter_Array :=
-     (1 => (True         , Parameters   , F149_1'Access),
-      2 => (False         , Result_Subtype, F149_2'Access ));
+     (1 => (True, Parameters, F149_1'Access),
+      2 => (False, Result_Subtype, F149_2'Access));
 
    overriding procedure Function_Access_Type
     (Self    : in out Visitor;
@@ -5856,8 +5824,8 @@ package body Internal is
         Program.Elements.Formal_Derived_Type_Definitions.Progenitors);
 
    F151 : aliased constant Getter_Array :=
-     (1 => (False        , Subtype_Mark , F151_1'Access),
-      2 => (True         , Progenitors  , F151_2'Access));
+     (1 => (False, Subtype_Mark, F151_1'Access),
+      2 => (True, Progenitors, F151_2'Access));
 
    overriding procedure Formal_Derived_Type_Definition
     (Self    : in out Visitor;
@@ -5879,7 +5847,7 @@ package body Internal is
         Program.Elements.Range_Attribute_References.Range_Attribute);
 
    F158 : aliased constant Getter_Array :=
-     (1 => (False          , Range_Attribute, F158_1'Access  ));
+     (1 => (False, Range_Attribute, F158_1'Access));
 
    overriding procedure Range_Attribute_Reference
     (Self    : in out Visitor;
@@ -5905,8 +5873,8 @@ package body Internal is
       Get_Child    => Program.Elements.Simple_Expression_Ranges.Upper_Bound);
 
    F159 : aliased constant Getter_Array :=
-     (1 => (False        , Lower_Bound  , F159_1'Access),
-      2 => (False        , Upper_Bound  , F159_2'Access));
+     (1 => (False, Lower_Bound, F159_1'Access),
+      2 => (False, Upper_Bound, F159_2'Access));
 
    overriding procedure Simple_Expression_Range
     (Self    : in out Visitor;
@@ -5931,9 +5899,9 @@ package body Internal is
         Program.Elements.Digits_Constraints.Real_Range_Constraint);
 
    F160 : aliased constant Getter_Array :=
-     (1 => (False            , Digits_Expression, F160_1'Access    ),
+     (1 => (False, Digits_Expression, F160_1'Access),
       2 =>
-        (False                , Real_Range_Constraint, F160_2'Access        ));
+        (False, Real_Range_Constraint, F160_2'Access));
 
    overriding procedure Digits_Constraint
     (Self    : in out Visitor;
@@ -5958,9 +5926,9 @@ package body Internal is
         Program.Elements.Delta_Constraints.Real_Range_Constraint);
 
    F161 : aliased constant Getter_Array :=
-     (1 => (False           , Delta_Expression, F161_1'Access   ),
+     (1 => (False, Delta_Expression, F161_1'Access),
       2 =>
-        (False                , Real_Range_Constraint, F161_2'Access        ));
+        (False, Real_Range_Constraint, F161_2'Access));
 
    overriding procedure Delta_Constraint
     (Self    : in out Visitor;
@@ -5979,7 +5947,7 @@ package body Internal is
       Get_Vector    => Program.Elements.Index_Constraints.Ranges);
 
    F162 : aliased constant Getter_Array :=
-     (1 => (True         , Ranges       , F162_1'Access));
+     (1 => (True, Ranges, F162_1'Access));
 
    overriding procedure Index_Constraint
     (Self    : in out Visitor;
@@ -6003,7 +5971,7 @@ package body Internal is
         Program.Elements.Discriminant_Constraints.Discriminants);
 
    F163 : aliased constant Getter_Array :=
-     (1 => (True         , Discriminants, F163_1'Access));
+     (1 => (True, Discriminants, F163_1'Access));
 
    overriding procedure Discriminant_Constraint
     (Self    : in out Visitor;
@@ -6032,8 +6000,8 @@ package body Internal is
         Program.Elements.Attribute_Definition_Clauses.Expression);
 
    F164 : aliased constant Getter_Array :=
-     (1 => (False        , Name         , F164_1'Access),
-      2 => (False        , Expression   , F164_2'Access));
+     (1 => (False, Name, F164_1'Access),
+      2 => (False, Expression, F164_2'Access));
 
    overriding procedure Attribute_Definition_Clause
     (Self    : in out Visitor;
@@ -6063,8 +6031,8 @@ package body Internal is
         Program.Elements.Enumeration_Representation_Clauses.Expression);
 
    F165 : aliased constant Getter_Array :=
-     (1 => (False        , Name         , F165_1'Access),
-      2 => (False        , Expression   , F165_2'Access));
+     (1 => (False, Name, F165_1'Access),
+      2 => (False, Expression, F165_2'Access));
 
    overriding procedure Enumeration_Representation_Clause
     (Self    : in out Visitor;
@@ -6104,10 +6072,10 @@ package body Internal is
         Program.Elements.Record_Representation_Clauses.Component_Clauses);
 
    F166 : aliased constant Getter_Array :=
-     (1 => (False        , Name         , F166_1'Access),
+     (1 => (False, Name, F166_1'Access),
       2 =>
-        (False                , Mod_Clause_Expression, F166_2'Access        ),
-      3 => (True             , Component_Clauses, F166_3'Access    ));
+        (False, Mod_Clause_Expression, F166_2'Access),
+      3 => (True, Component_Clauses, F166_3'Access));
 
    overriding procedure Record_Representation_Clause
     (Self    : in out Visitor;
@@ -6131,8 +6099,8 @@ package body Internal is
       Get_Child    => Program.Elements.At_Clauses.Expression);
 
    F167 : aliased constant Getter_Array :=
-     (1 => (False        , Name         , F167_1'Access),
-      2 => (False        , Expression   , F167_2'Access));
+     (1 => (False, Name, F167_1'Access),
+      2 => (False, Expression, F167_2'Access));
 
    overriding procedure At_Clause
     (Self    : in out Visitor;
@@ -6165,9 +6133,9 @@ package body Internal is
       Get_Vector    => Program.Elements.Exception_Handlers.Statements);
 
    F168 : aliased constant Getter_Array :=
-     (1 => (False           , Choice_Parameter, F168_1'Access   ),
-      2 => (True         , Choices      , F168_2'Access),
-      3 => (True         , Statements   , F168_3'Access));
+     (1 => (False, Choice_Parameter, F168_1'Access),
+      2 => (True, Choices, F168_2'Access),
+      3 => (True, Statements, F168_3'Access));
 
    overriding procedure Exception_Handler
     (Self    : in out Visitor;

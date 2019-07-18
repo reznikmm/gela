@@ -94,14 +94,14 @@ package body Program.Nodes.Short_Circuit_Operations is
     (Self : Short_Circuit_Operation)
       return Boolean is
    begin
-      return Self.And_Then_Token.Assigned;
+      return Self.And_Token.Assigned;
    end Has_And_Then;
 
    overriding function Has_Or_Else
     (Self : Short_Circuit_Operation)
       return Boolean is
    begin
-      return Self.Or_Else_Token.Assigned;
+      return Self.Or_Token.Assigned;
    end Has_Or_Else;
 
    overriding function Is_Part_Of_Implicit

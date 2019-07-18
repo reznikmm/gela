@@ -147,7 +147,7 @@ package body Program.Nodes.Formal_Derived_Type_Definitions is
     (Self : Formal_Derived_Type_Definition)
       return Boolean is
    begin
-      return Self.With_Private_Token.Assigned;
+      return Self.With_Token.Assigned;
    end Has_With_Private;
 
    overriding function Is_Part_Of_Implicit
