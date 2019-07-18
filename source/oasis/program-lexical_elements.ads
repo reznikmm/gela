@@ -13,6 +13,9 @@ package Program.Lexical_Elements is
    type Lexical_Element_Access is
      access all Lexical_Element'Class with Storage_Size => 0;
 
+   function Assigned (Self : access Lexical_Element'Class) return Boolean
+     is (Self /= null);
+
    type Lexical_Element_Vector is limited interface;
    --  Vector of lexical elements.
 

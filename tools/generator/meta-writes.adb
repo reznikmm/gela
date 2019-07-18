@@ -33,9 +33,10 @@ package body Meta.Writes is
       Skip          : Natural := 1) return Ada_Pretty.Node_Access;
 
    function Get_With_Clauses
-     (F         : access Ada_Pretty.Factory;
-      Item      : Classes.Class;
-      With_List : Boolean) return Ada_Pretty.Node_Access;
+     (F           : access Ada_Pretty.Factory;
+      Item        : Classes.Class;
+      With_List   : Boolean;
+      With_Parent : Boolean := True) return Ada_Pretty.Node_Access;
 
    function Property_Type
      (F : aliased in out Ada_Pretty.Factory;
@@ -368,9 +369,10 @@ package body Meta.Writes is
    ----------------------
 
    function Get_With_Clauses
-     (F         : access Ada_Pretty.Factory;
-      Item      : Classes.Class;
-      With_List : Boolean) return Ada_Pretty.Node_Access
+     (F           : access Ada_Pretty.Factory;
+      Item        : Classes.Class;
+      With_List   : Boolean;
+      With_Parent : Boolean := True) return Ada_Pretty.Node_Access
    is
       use all type Meta.Classes.Capacity_Kind;
 
@@ -399,11 +401,13 @@ package body Meta.Writes is
          Append (Element_Vector);
       end if;
 
-      for J in 1 .. Parents.Length loop
-         if not Is_Element (Parents.Element (J)) then
-            Append (Parents.Element (J));
-         end if;
-      end loop;
+      if With_Parent then
+         for J in 1 .. Parents.Length loop
+            if not Is_Element (Parents.Element (J)) then
+               Append (Parents.Element (J));
+            end if;
+         end loop;
+      end if;
 
       for P of Props loop
          if Is_Token (P.Type_Name) then
@@ -1722,7 +1726,10 @@ package body Meta.Writes is
           (F.New_Selected_Name (Package_Name), Public_Part, Private_Part);
 
       With_Clauses_1 : constant Ada_Pretty.Node_Access :=
-        Get_With_Clauses (F'Access, Item, False);
+        Get_With_Clauses
+          (F'Access, Item,
+           With_List   => False,
+           With_Parent => False);
 
       With_Clauses_2 : constant not null Ada_Pretty.Node_Access :=
         F.New_With (F.New_Selected_Name (Element_Package_Name));
@@ -1774,14 +1781,35 @@ package body Meta.Writes is
 
       generic
          Type_Name : Ada_Pretty.Node_Access;
+         Is_Node   : Boolean;
       function Prop_Getter
         (F    : aliased in out Ada_Pretty.Factory;
          Prop : Classes.Property) return Ada_Pretty.Node_Access;
 
+      -----------------
+      -- Prop_Getter --
+      -----------------
+
       function Prop_Getter
         (F    : aliased in out Ada_Pretty.Factory;
-         Prop : Classes.Property) return Ada_Pretty.Node_Access is
+         Prop : Classes.Property) return Ada_Pretty.Node_Access
+      is
+         Return_Expr : Ada_Pretty.Node_Access;
+         Token       : League.Strings.Universal_String;
       begin
+         if Is_Node and then Prop.Name.Starts_With ("Has_") then
+            if Prop.Name.Starts_With ("Has_Not_Null") then
+               Token := Prop.Name.Tail_From (9);  --  Null or Null_2
+            else
+               Token := Prop.Name.Tail_From (5);
+            end if;
+
+            Return_Expr := F.New_Selected_Name
+              ("Self." & Token & "_Token.Assigned");
+         else
+            Return_Expr := F.New_Selected_Name ("Self." & Prop.Name);
+         end if;
+
          return F.New_Subprogram_Body
            (Specification => F.New_Subprogram_Specification
               (Is_Overriding => Ada_Pretty.True,
@@ -1790,8 +1818,7 @@ package body Meta.Writes is
                  (Name            => F.New_Name (+"Self"),
                   Type_Definition => Type_Name),
                Result        => Property_Type (F, Prop)),
-            Statements => F.New_Return
-             (F.New_Selected_Name ("Self." & Prop.Name)));
+            Statements => F.New_Return (Return_Expr));
       end Prop_Getter;
 
       Set_Enclosing_Element :  constant Ada_Pretty.Node_Access :=
@@ -1856,7 +1883,7 @@ package body Meta.Writes is
       Base_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Base_" & Item.Name);
 
-      function Base_Getter is new Prop_Getter (Base_Name);
+      function Base_Getter is new Prop_Getter (Base_Name, False);
 
       Package_Name : constant League.Strings.Universal_String :=
         "Program.Nodes." & Item.Name & "s";
@@ -1864,12 +1891,12 @@ package body Meta.Writes is
       Node_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name (To_Element_Name (Item.Name));
 
-      function Node_Getter is new Prop_Getter (Node_Name);
+      function Node_Getter is new Prop_Getter (Node_Name, True);
 
       Implicit_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Implicit_" & Item.Name);
 
-      function Impl_Getter is new Prop_Getter (Implicit_Name);
+      function Impl_Getter is new Prop_Getter (Implicit_Name, False);
 
       Elem : constant Classes.Class := Vector.First_Element;
 

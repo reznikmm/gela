@@ -62,7 +62,6 @@ with Program.Elements.Formal_Type_Declarations;
 with Program.Elements.Formal_Procedure_Declarations;
 with Program.Elements.Formal_Function_Declarations;
 with Program.Elements.Formal_Package_Declarations;
-with Program.Elements.Definitions;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Unknown_Discriminant_Parts;
@@ -104,7 +103,6 @@ with Program.Elements.Allocators;
 with Program.Elements.Case_Expressions;
 with Program.Elements.If_Expressions;
 with Program.Elements.Quantified_Expressions;
-with Program.Elements.Associations;
 with Program.Elements.Discriminant_Associations;
 with Program.Elements.Record_Component_Associations;
 with Program.Elements.Array_Component_Associations;
@@ -131,13 +129,11 @@ with Program.Elements.Select_Statements;
 with Program.Elements.Abort_Statements;
 with Program.Elements.Raise_Statements;
 with Program.Elements.Code_Statements;
-with Program.Elements.Paths;
 with Program.Elements.Elsif_Paths;
 with Program.Elements.Case_Paths;
 with Program.Elements.Select_Paths;
 with Program.Elements.Case_Expression_Paths;
 with Program.Elements.Elsif_Expression_Paths;
-with Program.Elements.Clauses;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
 with Program.Elements.Component_Clauses;
@@ -473,11 +469,6 @@ package Program.Element_Visitors is
      Element : not null Program.Elements.Formal_Package_Declarations
          .Formal_Package_Declaration_Access) is null;
 
-   procedure Definition
-    (Self    : in out Element_Visitor;
-     Element : not null Program.Elements.Definitions.Definition_Access)
-     is null;
-
    procedure Subtype_Indication
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Subtype_Indications
@@ -680,11 +671,6 @@ package Program.Element_Visitors is
      Element : not null Program.Elements.Quantified_Expressions
          .Quantified_Expression_Access) is null;
 
-   procedure Association
-    (Self    : in out Element_Visitor;
-     Element : not null Program.Elements.Associations.Association_Access)
-     is null;
-
    procedure Discriminant_Association
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Discriminant_Associations
@@ -815,10 +801,6 @@ package Program.Element_Visitors is
      Element : not null Program.Elements.Code_Statements.Code_Statement_Access)
      is null;
 
-   procedure Path
-    (Self    : in out Element_Visitor;
-     Element : not null Program.Elements.Paths.Path_Access) is null;
-
    procedure Elsif_Path
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Elsif_Paths.Elsif_Path_Access)
@@ -842,10 +824,6 @@ package Program.Element_Visitors is
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Elsif_Expression_Paths
          .Elsif_Expression_Path_Access) is null;
-
-   procedure Clause
-    (Self    : in out Element_Visitor;
-     Element : not null Program.Elements.Clauses.Clause_Access) is null;
 
    procedure Use_Clause
     (Self    : in out Element_Visitor;
