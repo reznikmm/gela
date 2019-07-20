@@ -4,6 +4,7 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with System.Storage_Pools.Subpools;
 with Program.Elements.Pragmas;
 with Program.Elements.Defining_Names;
 with Program.Elements.Defining_Identifiers;
@@ -179,7 +180,6 @@ with Program.Elements.Enumeration_Representation_Clauses;
 with Program.Elements.Record_Representation_Clauses;
 with Program.Elements.At_Clauses;
 with Program.Elements.Exception_Handlers;
-with System.Storage_Pools.Subpools;
 with Program.Lexical_Elements;
 with Program.Element_Vectors;
 
