@@ -46,6 +46,10 @@ package body Meta.Writes is
      (Type_Name : League.Strings.Universal_String)
       return League.Strings.Universal_String;
 
+   function Node_Package_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String;
+
    function Full_Record_Name
      (Type_Name : League.Strings.Universal_String)
       return League.Strings.Universal_String;
@@ -542,6 +546,17 @@ package body Meta.Writes is
       return Result;
    end Get_Package_Name;
 
+   -----------------------
+   -- Node_Package_Name --
+   -----------------------
+
+   function Node_Package_Name
+     (Type_Name : League.Strings.Universal_String)
+      return League.Strings.Universal_String is
+   begin
+      return "Program.Nodes." & Type_Name & "s";
+   end Node_Package_Name;
+
    ---------------
    -- Open_File --
    ---------------
@@ -980,6 +995,327 @@ package body Meta.Writes is
 
       Ada.Wide_Wide_Text_IO.Close (Output);
    end Write_Elements_Body;
+
+   ---------------------
+   -- Write_Factories --
+   ---------------------
+
+   procedure Write_Factories (Vector : Meta.Read.Class_Vectors.Vector) is
+
+      function Methods return Ada_Pretty.Node_Access;
+
+      Package_Name : constant League.Strings.Universal_String :=
+        +"Program.Element_Factories";
+
+      F : aliased Ada_Pretty.Factory;
+
+      Preelaborate : constant Ada_Pretty.Node_Access :=
+        F.New_Pragma
+          (F.New_Name (+"Preelaborate"), F.New_Selected_Name (Package_Name));
+
+      Type_Name : constant Ada_Pretty.Node_Access :=
+        F.New_Name (+"Element_Factory");
+
+      Subpool : constant Ada_Pretty.Node_Access := F.New_Name (+"Subpool");
+
+      Type_Decl : constant Ada_Pretty.Node_Access :=
+        F.New_Type
+          (Type_Name,
+           Discriminants => F.New_Parameter
+             (Name            => Subpool,
+              Type_Definition => F.New_Null_Exclusion
+                (F.New_Selected_Name
+                   (+"System.Storage_Pools.Subpools.Subpool_Handle"))),
+           Definition => F.New_Private_Record
+             (Is_Limited => True));
+
+      function Prop_Parameters is new Generic_List_Reduce
+        (Classes.Property, Classes.Property_Array, Prop_Parameter, F);
+
+      function Get_Params
+        (Item : Classes.Class) return Ada_Pretty.Node_Access;
+
+      ----------------
+      -- Get_Params --
+      ----------------
+
+      function Get_Params
+        (Item : Classes.Class) return Ada_Pretty.Node_Access
+      is
+         List : constant Ada_Pretty.Node_Access :=
+           Prop_Parameters (Skip_Booleans (Item.Properties));
+         Self : constant Ada_Pretty.Node_Access := F.New_Parameter
+           (Name            => F.New_Name (+"Self"),
+            Type_Definition => Type_Name);
+      begin
+         if List in null then
+            return Self;
+         else
+            return F.New_List (Self, List);
+         end if;
+      end Get_Params;
+
+      function Methods return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
+      begin
+         for Item of Vector loop
+            if not Item.Is_Abstract then
+               declare
+                  Funct : constant Ada_Pretty.Node_Access :=
+                    F.New_Subprogram_Declaration
+                      (F.New_Subprogram_Specification
+                         (Name          => F.New_Name
+                            ("Create_" & Item.Name),
+                          Parameters    => Get_Params (Item),
+                          Result => F.New_Null_Exclusion
+                            (F.New_Selected_Name
+                                 (Full_Access_Name (Item.Name)))));
+               begin
+                  Result := F.New_List (Result, Funct);
+               end;
+            end if;
+         end loop;
+
+         return Result;
+      end Methods;
+
+      Public_Part : constant Ada_Pretty.Node_Access :=
+        F.New_List ((Preelaborate, Type_Decl, Methods));
+
+      Full_Type_Decl : constant Ada_Pretty.Node_Access :=
+        F.New_Type
+          (Type_Name,
+           Discriminants => F.New_Parameter
+             (Name            => Subpool,
+              Type_Definition => F.New_Null_Exclusion
+                (F.New_Selected_Name
+                   (+"System.Storage_Pools.Subpools.Subpool_Handle"))),
+           Definition => F.New_Record
+             (Is_Limited => True));
+
+      Root : constant Ada_Pretty.Node_Access :=
+        F.New_Package
+          (F.New_Selected_Name (Package_Name), Public_Part, Full_Type_Decl);
+
+      With_Clauses : constant Ada_Pretty.Node_Access_Array :=
+        (Get_With_Clauses
+           (F'Access, Vector, Is_Limited => False),
+         F.New_With (F.New_Selected_Name (+"System.Storage_Pools.Subpools")),
+         F.New_With
+           (F.New_Selected_Name (Get_Package_Name (Lexical_Element))),
+         F.New_With
+           (F.New_Selected_Name (Get_Package_Name (Element_Vector))));
+
+      Unit : constant Ada_Pretty.Node_Access :=
+        F.New_Compilation_Unit
+          (Root,
+           F.New_List (With_Clauses));
+
+      Output : Ada.Wide_Wide_Text_IO.File_Type;
+   begin
+      Open_File (Output, Package_Name);
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (Output,
+         F.To_Text (Unit).Join (Ada.Characters.Wide_Wide_Latin_1.LF)
+         .To_Wide_Wide_String);
+
+      Ada.Wide_Wide_Text_IO.Close (Output);
+   end Write_Factories;
+
+   --------------------------
+   -- Write_Factories_Body --
+   --------------------------
+
+   procedure Write_Factories_Body (Vector : Meta.Read.Class_Vectors.Vector) is
+      function Methods return Ada_Pretty.Node_Access;
+
+      Package_Name : constant League.Strings.Universal_String :=
+        +"Program.Element_Factories";
+
+      F : aliased Ada_Pretty.Factory;
+
+      Type_Name : constant Ada_Pretty.Node_Access :=
+        F.New_Name (+"Element_Factory");
+
+--      Subpool : constant Ada_Pretty.Node_Access := F.New_Name (+"Subpool");
+
+      function Prop_Parameters is new Generic_List_Reduce
+        (Classes.Property, Classes.Property_Array, Prop_Parameter, F);
+
+      function Prop_Arguments is new Generic_List_Reduce
+        (Classes.Property, Classes.Property_Array, Prop_Argument, F);
+
+      function Get_Params
+        (Item : Classes.Class) return Ada_Pretty.Node_Access;
+
+      function Allocator_Args
+        (Item : Classes.Class) return Ada_Pretty.Node_Access;
+
+      function Get_With_Clauses return Ada_Pretty.Node_Access;
+      function Access_Types return Ada_Pretty.Node_Access;
+
+      ------------------
+      -- Access_Types --
+      ------------------
+
+      function Access_Types return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
+      begin
+         for Item of Vector loop
+            if not Item.Is_Abstract then
+               declare
+                  Node_Name : constant League.Strings.Universal_String :=
+                    To_Element_Name (Item.Name);
+                  Def : constant Ada_Pretty.Node_Access := F.New_Access
+                    (Target => F.New_Selected_Name
+                       (F.New_Selected_Name (Node_Package_Name (Item.Name)),
+                        F.New_Name (Node_Name)));
+               begin
+                  Result := F.New_List
+                    (Result,
+                     F.New_Type
+                       (F.New_Name (Item.Name & "_Access"),
+                        Definition => F.New_Null_Exclusion (Def)));
+               end;
+            end if;
+         end loop;
+
+         return Result;
+      end Access_Types;
+
+      ----------------------
+      -- Get_With_Clauses --
+      ----------------------
+
+      function Get_With_Clauses return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
+      begin
+         for Item of Vector loop
+            if not Item.Is_Abstract then
+               Result := F.New_List
+                 (Result,
+                  F.New_With
+                    (F.New_Selected_Name (Node_Package_Name (Item.Name))));
+            end if;
+         end loop;
+
+         return Result;
+      end Get_With_Clauses;
+
+      ----------------
+      -- Get_Params --
+      ----------------
+
+      function Get_Params
+        (Item : Classes.Class) return Ada_Pretty.Node_Access
+      is
+         List : constant Ada_Pretty.Node_Access :=
+           Prop_Parameters (Skip_Booleans (Item.Properties));
+         Self : constant Ada_Pretty.Node_Access := F.New_Parameter
+           (Name            => F.New_Name (+"Self"),
+            Type_Definition => Type_Name);
+      begin
+         if List in null then
+            return Self;
+         else
+            return F.New_List (Self, List);
+         end if;
+      end Get_Params;
+
+      function Allocator_Args
+        (Item : Classes.Class) return Ada_Pretty.Node_Access
+      is
+         Element_Name : constant League.Strings.Universal_String :=
+           To_Element_Name (Item.Name);
+
+         Node_Package : constant League.Strings.Universal_String :=
+           Node_Package_Name (Item.Name);
+
+         List : constant Ada_Pretty.Node_Access := Prop_Arguments
+           (Skip_Booleans (Item.Properties));
+
+      begin
+         if List in null then
+            return F.New_Selected_Name (Node_Package & "." & Element_Name);
+         else
+            return F.New_Apply
+              (F.New_Selected_Name
+                 (Node_Package & "." & Element_Name & "'"),
+               F.New_Apply
+                 (F.New_Selected_Name
+                    (F.New_Selected_Name (Node_Package),
+                     F.New_Name (+"Create")),
+                  List));
+         end if;
+      end Allocator_Args;
+
+      -------------
+      -- Methods --
+      -------------
+
+      function Methods return Ada_Pretty.Node_Access is
+         Result : Ada_Pretty.Node_Access;
+      begin
+         for Item of Vector loop
+            if not Item.Is_Abstract then
+               declare
+                  RT : constant Ada_Pretty.Node_Access :=
+                    F.New_Selected_Name
+                      (Full_Access_Name (Item.Name));
+
+                  Res : constant Ada_Pretty.Node_Access :=
+                    F.New_Name (+"Result");
+
+                  Funct : constant Ada_Pretty.Node_Access :=
+                    F.New_Subprogram_Body
+                      (F.New_Subprogram_Specification
+                         (Name          => F.New_Name
+                            ("Create_" & Item.Name),
+                          Parameters    => Get_Params (Item),
+                          Result => F.New_Null_Exclusion (RT)),
+                       Declarations => F.New_Variable
+                         (Name            => Res,
+                          Type_Definition => F.New_Name
+                            (Item.Name & "_Access"),
+                          Initialization  => F.New_Infix
+                            (Operator => +"new (Self.Subpool)",
+                             Left     => Allocator_Args (Item)),
+                          Is_Constant     => True),
+                       Statements   => F.New_Return
+                         (F.New_Apply
+                            (Prefix    => RT,
+                             Arguments => Res)));
+               begin
+                  Result := F.New_List (Result, Funct);
+               end;
+            end if;
+         end loop;
+
+         return Result;
+      end Methods;
+
+      Root : constant Ada_Pretty.Node_Access :=
+        F.New_Package_Body
+          (F.New_Selected_Name (Package_Name),
+           F.New_List (Access_Types, Methods));
+
+      Unit : constant Ada_Pretty.Node_Access :=
+        F.New_Compilation_Unit
+          (Root,
+           Get_With_Clauses);
+
+      Output : Ada.Wide_Wide_Text_IO.File_Type;
+   begin
+      Open_File (Output, Package_Name, Spec => False);
+
+      Ada.Wide_Wide_Text_IO.Put_Line
+        (Output,
+         F.To_Text (Unit).Join (Ada.Characters.Wide_Wide_Latin_1.LF)
+         .To_Wide_Wide_String);
+
+      Ada.Wide_Wide_Text_IO.Close (Output);
+   end Write_Factories_Body;
 
    ------------------
    -- Write_Header --
@@ -1649,7 +1985,7 @@ package body Meta.Writes is
         Prop_Variables (Bool_Props);
 
       Package_Name : constant League.Strings.Universal_String :=
-        "Program.Nodes." & Item.Name & "s";
+        Node_Package_Name (Item.Name);
 
       Element_Package_Name : constant League.Strings.Universal_String :=
         Get_Package_Name (Item.Name);
@@ -2012,7 +2348,7 @@ package body Meta.Writes is
       end Prop_Check;
 
       Package_Name : constant League.Strings.Universal_String :=
-        "Program.Nodes." & Item.Name & "s";
+        Node_Package_Name (Item.Name);
 
       Node_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name (To_Element_Name (Item.Name));
