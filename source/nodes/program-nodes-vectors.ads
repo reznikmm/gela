@@ -29,10 +29,11 @@ with Program.Elements.Select_Paths;
 with Program.Elements.Variants;
 
 package Program.Nodes.Vectors is
+   pragma Pure (Program.Nodes.Vectors);
 
    type Vector;
 
-   function Create_Vector
+   function Create
     (Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
       return Vector;
 

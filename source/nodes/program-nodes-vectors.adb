@@ -7,6 +7,7 @@
 package body Program.Nodes.Vectors is
 
    package Iterators is
+
       type Iterator is new Program.Element_Vectors.Iterators.Forward_Iterator
       with record
          Vector : not null access constant
@@ -20,6 +21,7 @@ package body Program.Nodes.Vectors is
         (Self   : Iterator;
          Cursor : Program.Element_Vectors.Element_Cursor)
          return Program.Element_Vectors.Element_Cursor;
+
    end Iterators;
 
    ---------------
@@ -35,7 +37,14 @@ package body Program.Nodes.Vectors is
       overriding function First
         (Self : Iterator) return Program.Element_Vectors.Element_Cursor is
       begin
-         return Program.Element_Vectors.Element_Cursor'(Self.Vector, 1);
+         if Self.Vector.Is_Empty then
+            return (null, null, 1, False);
+         else
+            return (Self.Vector.Element (1),
+                    Self.Vector.Delimiter (1),
+                    1,
+                    Self.Vector.Length = 1);
+         end if;
       end First;
 
       ----------
@@ -47,16 +56,23 @@ package body Program.Nodes.Vectors is
          Cursor : Program.Element_Vectors.Element_Cursor)
          return Program.Element_Vectors.Element_Cursor is
       begin
-         return Program.Element_Vectors.Element_Cursor'
-           (Self.Vector, Cursor.Position);
+         if Cursor.Index >= Self.Vector.Length then
+            return (null, null, Self.Vector.Length + 1, False);
+         else
+            return (Self.Vector.Element (Cursor.Index + 1),
+                    Self.Vector.Delimiter (Cursor.Index + 1),
+                    Cursor.Index + 1,
+                    Self.Vector.Length = Cursor.Index + 1);
+         end if;
       end Next;
+
    end Iterators;
 
    -------------------
    -- Create_Vector --
    -------------------
 
-   function Create_Vector
+   function Create
      (Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
       return Vector
    is
@@ -87,7 +103,7 @@ package body Program.Nodes.Vectors is
             Index := Index + 1;
          end loop;
       end return;
-   end Create_Vector;
+   end Create;
 
    ---------------
    -- Delimiter --

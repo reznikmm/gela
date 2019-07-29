@@ -1,5 +1,3 @@
-with Interfaces;
-
 generic
    type Object is limited private;
    type Object_Access is access all Object;
@@ -11,6 +9,6 @@ package Program.Relative_Access_Types is
    function "-" (Value : Relative_Access) return Object_Access with Inline;
 
 private
-   type Relative_Access is new Interfaces.Integer_32;
+   type Relative_Access is range -2 ** 31 .. 2 ** 31 - 1;
 
 end Program.Relative_Access_Types;

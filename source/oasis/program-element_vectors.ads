@@ -40,30 +40,23 @@ package Program.Element_Vectors is
          (if Index = Self.Length then Delimiter'Result in null);
    --  Return a delimiter token after an element of the vector
 
-   type Element_Cursor
-     (Vector : not null access constant Element_Vector'Class) is tagged
-   record
-      Position : Positive;
+   type Element_Cursor is record
+      Element  : Program.Elements.Element_Access;
+      --  An element of the vector for given cursor
+
+      Delimiter : Program.Lexical_Elements.Lexical_Element_Access;
+      --  A delimiter after the element pointed by the cursor
+
+      Index     : Positive;
+      --  Position in the vector
+
+      Is_Last   : Boolean;
+      --  Set if the cursor points to the last element in the list
    end record;
 
-   not overriding function Has_Element (Self : Element_Cursor) return Boolean
-     is (Self.Position <= Self.Vector.Length);
+   function Has_Element (Self : Element_Cursor) return Boolean
+     is (Self.Element.Assigned);
    --  Check if the cursor points an element
-
-   function Is_Last
-     (Self : Element_Cursor'Class) return Boolean is
-       (Self.Position = Self.Vector.Length);
-   --  Check if the cursor points the last element in the list
-
-   function Element (Self : Element_Cursor'Class)
-     return not null Program.Elements.Element_Access
-       is (Self.Vector.Element (Self.Position));
-   --  Return an element of the vector for given cursor
-
-   function Delimiter (Self : Element_Cursor'Class)
-     return Program.Lexical_Elements.Lexical_Element_Access
-       is (Self.Vector.Delimiter (Self.Position));
-   --  Return a delimiter after the element pointed by the cursor
 
    package Iterators is new Ada.Iterator_Interfaces
      (Element_Cursor, Has_Element);
