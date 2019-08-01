@@ -4,6 +4,7 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Storage_Pools;
 with Program.Nodes.Pragmas;
 with Program.Nodes.Defining_Identifiers;
 with Program.Nodes.Defining_Character_Literals;
@@ -175,586 +176,740 @@ with Program.Nodes.Exception_Handlers;
 
 package body Program.Element_Factories is
 
-   type Pragma_Access is not null access Program.Nodes.Pragmas.Pragma_Element;
+   type Pragma_Access is not null access Program.Nodes.Pragmas.Pragma_Element
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Defining_Identifier_Access is
-     not null access Program.Nodes.Defining_Identifiers.Defining_Identifier;
+     not null access Program.Nodes.Defining_Identifiers.Defining_Identifier
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Defining_Character_Literal_Access is
      not null access Program.Nodes.Defining_Character_Literals
-       .Defining_Character_Literal;
+       .Defining_Character_Literal
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Defining_Operator_Symbol_Access is
      not null access Program.Nodes.Defining_Operator_Symbols
-       .Defining_Operator_Symbol;
+       .Defining_Operator_Symbol
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Defining_Expanded_Name_Access is
      not null access Program.Nodes.Defining_Expanded_Names
-       .Defining_Expanded_Name;
+       .Defining_Expanded_Name with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Type_Declaration_Access is
-     not null access Program.Nodes.Type_Declarations.Type_Declaration;
+     not null access Program.Nodes.Type_Declarations.Type_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Task_Type_Declaration_Access is
-     not null access Program.Nodes.Task_Type_Declarations
-       .Task_Type_Declaration;
+     not null access Program.Nodes.Task_Type_Declarations.Task_Type_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Protected_Type_Declaration_Access is
      not null access Program.Nodes.Protected_Type_Declarations
-       .Protected_Type_Declaration;
+       .Protected_Type_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Subtype_Declaration_Access is
-     not null access Program.Nodes.Subtype_Declarations.Subtype_Declaration;
+     not null access Program.Nodes.Subtype_Declarations.Subtype_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Object_Declaration_Access is
-     not null access Program.Nodes.Object_Declarations.Object_Declaration;
+     not null access Program.Nodes.Object_Declarations.Object_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Single_Task_Declaration_Access is
      not null access Program.Nodes.Single_Task_Declarations
-       .Single_Task_Declaration;
+       .Single_Task_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Single_Protected_Declaration_Access is
      not null access Program.Nodes.Single_Protected_Declarations
-       .Single_Protected_Declaration;
+       .Single_Protected_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Number_Declaration_Access is
-     not null access Program.Nodes.Number_Declarations.Number_Declaration;
+     not null access Program.Nodes.Number_Declarations.Number_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Enumeration_Literal_Specification_Access is
      not null access Program.Nodes.Enumeration_Literal_Specifications
-       .Enumeration_Literal_Specification;
+       .Enumeration_Literal_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Discriminant_Specification_Access is
      not null access Program.Nodes.Discriminant_Specifications
-       .Discriminant_Specification;
+       .Discriminant_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Component_Declaration_Access is
-     not null access Program.Nodes.Component_Declarations
-       .Component_Declaration;
+     not null access Program.Nodes.Component_Declarations.Component_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Loop_Parameter_Specification_Access is
      not null access Program.Nodes.Loop_Parameter_Specifications
-       .Loop_Parameter_Specification;
+       .Loop_Parameter_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generalized_Iterator_Specification_Access is
      not null access Program.Nodes.Generalized_Iterator_Specifications
-       .Generalized_Iterator_Specification;
+       .Generalized_Iterator_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Element_Iterator_Specification_Access is
      not null access Program.Nodes.Element_Iterator_Specifications
-       .Element_Iterator_Specification;
+       .Element_Iterator_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Declaration_Access is
-     not null access Program.Nodes.Procedure_Declarations
-       .Procedure_Declaration;
+     not null access Program.Nodes.Procedure_Declarations.Procedure_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Declaration_Access is
-     not null access Program.Nodes.Function_Declarations.Function_Declaration;
+     not null access Program.Nodes.Function_Declarations.Function_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Parameter_Specification_Access is
      not null access Program.Nodes.Parameter_Specifications
-       .Parameter_Specification;
+       .Parameter_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Body_Declaration_Access is
      not null access Program.Nodes.Procedure_Body_Declarations
-       .Procedure_Body_Declaration;
+       .Procedure_Body_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Body_Declaration_Access is
      not null access Program.Nodes.Function_Body_Declarations
-       .Function_Body_Declaration;
+       .Function_Body_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Return_Object_Specification_Access is
      not null access Program.Nodes.Return_Object_Specifications
-       .Return_Object_Specification;
+       .Return_Object_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Package_Declaration_Access is
-     not null access Program.Nodes.Package_Declarations.Package_Declaration;
+     not null access Program.Nodes.Package_Declarations.Package_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Package_Body_Declaration_Access is
      not null access Program.Nodes.Package_Body_Declarations
-       .Package_Body_Declaration;
+       .Package_Body_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Object_Renaming_Declaration_Access is
      not null access Program.Nodes.Object_Renaming_Declarations
-       .Object_Renaming_Declaration;
+       .Object_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Exception_Renaming_Declaration_Access is
      not null access Program.Nodes.Exception_Renaming_Declarations
-       .Exception_Renaming_Declaration;
+       .Exception_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Renaming_Declaration_Access is
      not null access Program.Nodes.Procedure_Renaming_Declarations
-       .Procedure_Renaming_Declaration;
+       .Procedure_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Renaming_Declaration_Access is
      not null access Program.Nodes.Function_Renaming_Declarations
-       .Function_Renaming_Declaration;
+       .Function_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Package_Renaming_Declaration_Access is
      not null access Program.Nodes.Package_Renaming_Declarations
-       .Package_Renaming_Declaration;
+       .Package_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Package_Renaming_Declaration_Access is
      not null access Program.Nodes.Generic_Package_Renaming_Declarations
-       .Generic_Package_Renaming_Declaration;
+       .Generic_Package_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Procedure_Renaming_Declaration_Access is
      not null access Program.Nodes.Generic_Procedure_Renaming_Declarations
-       .Generic_Procedure_Renaming_Declaration;
+       .Generic_Procedure_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Function_Renaming_Declaration_Access is
      not null access Program.Nodes.Generic_Function_Renaming_Declarations
-       .Generic_Function_Renaming_Declaration;
+       .Generic_Function_Renaming_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Task_Body_Declaration_Access is
-     not null access Program.Nodes.Task_Body_Declarations
-       .Task_Body_Declaration;
+     not null access Program.Nodes.Task_Body_Declarations.Task_Body_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Protected_Body_Declaration_Access is
      not null access Program.Nodes.Protected_Body_Declarations
-       .Protected_Body_Declaration;
+       .Protected_Body_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Entry_Declaration_Access is
-     not null access Program.Nodes.Entry_Declarations.Entry_Declaration;
+     not null access Program.Nodes.Entry_Declarations.Entry_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Entry_Body_Declaration_Access is
      not null access Program.Nodes.Entry_Body_Declarations
-       .Entry_Body_Declaration;
+       .Entry_Body_Declaration with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Entry_Index_Specification_Access is
      not null access Program.Nodes.Entry_Index_Specifications
-       .Entry_Index_Specification;
+       .Entry_Index_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Body_Stub_Access is
-     not null access Program.Nodes.Procedure_Body_Stubs.Procedure_Body_Stub;
+     not null access Program.Nodes.Procedure_Body_Stubs.Procedure_Body_Stub
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Body_Stub_Access is
-     not null access Program.Nodes.Function_Body_Stubs.Function_Body_Stub;
+     not null access Program.Nodes.Function_Body_Stubs.Function_Body_Stub
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Package_Body_Stub_Access is
-     not null access Program.Nodes.Package_Body_Stubs.Package_Body_Stub;
+     not null access Program.Nodes.Package_Body_Stubs.Package_Body_Stub
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Task_Body_Stub_Access is
-     not null access Program.Nodes.Task_Body_Stubs.Task_Body_Stub;
+     not null access Program.Nodes.Task_Body_Stubs.Task_Body_Stub
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Protected_Body_Stub_Access is
-     not null access Program.Nodes.Protected_Body_Stubs.Protected_Body_Stub;
+     not null access Program.Nodes.Protected_Body_Stubs.Protected_Body_Stub
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Exception_Declaration_Access is
-     not null access Program.Nodes.Exception_Declarations
-       .Exception_Declaration;
+     not null access Program.Nodes.Exception_Declarations.Exception_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Choice_Parameter_Specification_Access is
      not null access Program.Nodes.Choice_Parameter_Specifications
-       .Choice_Parameter_Specification;
+       .Choice_Parameter_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Package_Declaration_Access is
      not null access Program.Nodes.Generic_Package_Declarations
-       .Generic_Package_Declaration;
+       .Generic_Package_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Procedure_Declaration_Access is
      not null access Program.Nodes.Generic_Procedure_Declarations
-       .Generic_Procedure_Declaration;
+       .Generic_Procedure_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Generic_Function_Declaration_Access is
      not null access Program.Nodes.Generic_Function_Declarations
-       .Generic_Function_Declaration;
+       .Generic_Function_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Package_Instantiation_Access is
-     not null access Program.Nodes.Package_Instantiations
-       .Package_Instantiation;
+     not null access Program.Nodes.Package_Instantiations.Package_Instantiation
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Instantiation_Access is
      not null access Program.Nodes.Procedure_Instantiations
-       .Procedure_Instantiation;
+       .Procedure_Instantiation
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Instantiation_Access is
      not null access Program.Nodes.Function_Instantiations
-       .Function_Instantiation;
+       .Function_Instantiation with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Object_Declaration_Access is
      not null access Program.Nodes.Formal_Object_Declarations
-       .Formal_Object_Declaration;
+       .Formal_Object_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Type_Declaration_Access is
      not null access Program.Nodes.Formal_Type_Declarations
-       .Formal_Type_Declaration;
+       .Formal_Type_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Procedure_Declaration_Access is
      not null access Program.Nodes.Formal_Procedure_Declarations
-       .Formal_Procedure_Declaration;
+       .Formal_Procedure_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Function_Declaration_Access is
      not null access Program.Nodes.Formal_Function_Declarations
-       .Formal_Function_Declaration;
+       .Formal_Function_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Package_Declaration_Access is
      not null access Program.Nodes.Formal_Package_Declarations
-       .Formal_Package_Declaration;
+       .Formal_Package_Declaration
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Subtype_Indication_Access is
-     not null access Program.Nodes.Subtype_Indications.Subtype_Indication;
+     not null access Program.Nodes.Subtype_Indications.Subtype_Indication
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Component_Definition_Access is
-     not null access Program.Nodes.Component_Definitions.Component_Definition;
+     not null access Program.Nodes.Component_Definitions.Component_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Unknown_Discriminant_Part_Access is
      not null access Program.Nodes.Unknown_Discriminant_Parts
-       .Unknown_Discriminant_Part;
+       .Unknown_Discriminant_Part
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Known_Discriminant_Part_Access is
      not null access Program.Nodes.Known_Discriminant_Parts
-       .Known_Discriminant_Part;
+       .Known_Discriminant_Part
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Record_Definition_Access is
-     not null access Program.Nodes.Record_Definitions.Record_Definition;
+     not null access Program.Nodes.Record_Definitions.Record_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Null_Component_Access is
-     not null access Program.Nodes.Null_Components.Null_Component;
+     not null access Program.Nodes.Null_Components.Null_Component
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Variant_Part_Access is
-     not null access Program.Nodes.Variant_Parts.Variant_Part;
+     not null access Program.Nodes.Variant_Parts.Variant_Part
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type Variant_Access is not null access Program.Nodes.Variants.Variant;
+   type Variant_Access is not null access Program.Nodes.Variants.Variant
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Others_Choice_Access is
-     not null access Program.Nodes.Others_Choices.Others_Choice;
+     not null access Program.Nodes.Others_Choices.Others_Choice
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Private_Type_Definition_Access is
      not null access Program.Nodes.Private_Type_Definitions
-       .Private_Type_Definition;
+       .Private_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Private_Extension_Definition_Access is
      not null access Program.Nodes.Private_Extension_Definitions
-       .Private_Extension_Definition;
+       .Private_Extension_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Incomplete_Type_Definition_Access is
      not null access Program.Nodes.Incomplete_Type_Definitions
-       .Incomplete_Type_Definition;
+       .Incomplete_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Task_Definition_Access is
-     not null access Program.Nodes.Task_Definitions.Task_Definition;
+     not null access Program.Nodes.Task_Definitions.Task_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Protected_Definition_Access is
-     not null access Program.Nodes.Protected_Definitions.Protected_Definition;
+     not null access Program.Nodes.Protected_Definitions.Protected_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Aspect_Specification_Access is
-     not null access Program.Nodes.Aspect_Specifications.Aspect_Specification;
+     not null access Program.Nodes.Aspect_Specifications.Aspect_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Real_Range_Specification_Access is
      not null access Program.Nodes.Real_Range_Specifications
-       .Real_Range_Specification;
+       .Real_Range_Specification
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Numeric_Literal_Access is
-     not null access Program.Nodes.Numeric_Literals.Numeric_Literal;
+     not null access Program.Nodes.Numeric_Literals.Numeric_Literal
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type String_Literal_Access is
-     not null access Program.Nodes.String_Literals.String_Literal;
+     not null access Program.Nodes.String_Literals.String_Literal
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Identifier_Access is
-     not null access Program.Nodes.Identifiers.Identifier;
+     not null access Program.Nodes.Identifiers.Identifier
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Operator_Symbol_Access is
-     not null access Program.Nodes.Operator_Symbols.Operator_Symbol;
+     not null access Program.Nodes.Operator_Symbols.Operator_Symbol
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Character_Literal_Access is
-     not null access Program.Nodes.Character_Literals.Character_Literal;
+     not null access Program.Nodes.Character_Literals.Character_Literal
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Explicit_Dereference_Access is
-     not null access Program.Nodes.Explicit_Dereferences.Explicit_Dereference;
+     not null access Program.Nodes.Explicit_Dereferences.Explicit_Dereference
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Call_Access is
-     not null access Program.Nodes.Function_Calls.Function_Call;
+     not null access Program.Nodes.Function_Calls.Function_Call
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Indexed_Component_Access is
-     not null access Program.Nodes.Indexed_Components.Indexed_Component;
+     not null access Program.Nodes.Indexed_Components.Indexed_Component
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type Slice_Access is not null access Program.Nodes.Slices.Slice;
+   type Slice_Access is not null access Program.Nodes.Slices.Slice
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Selected_Component_Access is
-     not null access Program.Nodes.Selected_Components.Selected_Component;
+     not null access Program.Nodes.Selected_Components.Selected_Component
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Attribute_Reference_Access is
-     not null access Program.Nodes.Attribute_References.Attribute_Reference;
+     not null access Program.Nodes.Attribute_References.Attribute_Reference
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Record_Aggregate_Access is
-     not null access Program.Nodes.Record_Aggregates.Record_Aggregate;
+     not null access Program.Nodes.Record_Aggregates.Record_Aggregate
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Extension_Aggregate_Access is
-     not null access Program.Nodes.Extension_Aggregates.Extension_Aggregate;
+     not null access Program.Nodes.Extension_Aggregates.Extension_Aggregate
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Array_Aggregate_Access is
-     not null access Program.Nodes.Array_Aggregates.Array_Aggregate;
+     not null access Program.Nodes.Array_Aggregates.Array_Aggregate
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Short_Circuit_Operation_Access is
      not null access Program.Nodes.Short_Circuit_Operations
-       .Short_Circuit_Operation;
+       .Short_Circuit_Operation
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Membership_Test_Access is
-     not null access Program.Nodes.Membership_Tests.Membership_Test;
+     not null access Program.Nodes.Membership_Tests.Membership_Test
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Null_Literal_Access is
-     not null access Program.Nodes.Null_Literals.Null_Literal;
+     not null access Program.Nodes.Null_Literals.Null_Literal
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Parenthesized_Expression_Access is
      not null access Program.Nodes.Parenthesized_Expressions
-       .Parenthesized_Expression;
+       .Parenthesized_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Raise_Expression_Access is
-     not null access Program.Nodes.Raise_Expressions.Raise_Expression;
+     not null access Program.Nodes.Raise_Expressions.Raise_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Type_Conversion_Access is
-     not null access Program.Nodes.Type_Conversions.Type_Conversion;
+     not null access Program.Nodes.Type_Conversions.Type_Conversion
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Qualified_Expression_Access is
-     not null access Program.Nodes.Qualified_Expressions.Qualified_Expression;
+     not null access Program.Nodes.Qualified_Expressions.Qualified_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type Allocator_Access is not null access Program.Nodes.Allocators.Allocator;
+   type Allocator_Access is not null access Program.Nodes.Allocators.Allocator
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Case_Expression_Access is
-     not null access Program.Nodes.Case_Expressions.Case_Expression;
+     not null access Program.Nodes.Case_Expressions.Case_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type If_Expression_Access is
-     not null access Program.Nodes.If_Expressions.If_Expression;
+     not null access Program.Nodes.If_Expressions.If_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Quantified_Expression_Access is
-     not null access Program.Nodes.Quantified_Expressions
-       .Quantified_Expression;
+     not null access Program.Nodes.Quantified_Expressions.Quantified_Expression
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Discriminant_Association_Access is
      not null access Program.Nodes.Discriminant_Associations
-       .Discriminant_Association;
+       .Discriminant_Association
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Record_Component_Association_Access is
      not null access Program.Nodes.Record_Component_Associations
-       .Record_Component_Association;
+       .Record_Component_Association
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Array_Component_Association_Access is
      not null access Program.Nodes.Array_Component_Associations
-       .Array_Component_Association;
+       .Array_Component_Association
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Parameter_Association_Access is
-     not null access Program.Nodes.Parameter_Associations
-       .Parameter_Association;
+     not null access Program.Nodes.Parameter_Associations.Parameter_Association
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Package_Association_Access is
      not null access Program.Nodes.Formal_Package_Associations
-       .Formal_Package_Association;
+       .Formal_Package_Association
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Null_Statement_Access is
-     not null access Program.Nodes.Null_Statements.Null_Statement;
+     not null access Program.Nodes.Null_Statements.Null_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Assignment_Statement_Access is
-     not null access Program.Nodes.Assignment_Statements.Assignment_Statement;
+     not null access Program.Nodes.Assignment_Statements.Assignment_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type If_Statement_Access is
-     not null access Program.Nodes.If_Statements.If_Statement;
+     not null access Program.Nodes.If_Statements.If_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Case_Statement_Access is
-     not null access Program.Nodes.Case_Statements.Case_Statement;
+     not null access Program.Nodes.Case_Statements.Case_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Loop_Statement_Access is
-     not null access Program.Nodes.Loop_Statements.Loop_Statement;
+     not null access Program.Nodes.Loop_Statements.Loop_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type While_Loop_Statement_Access is
-     not null access Program.Nodes.While_Loop_Statements.While_Loop_Statement;
+     not null access Program.Nodes.While_Loop_Statements.While_Loop_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type For_Loop_Statement_Access is
-     not null access Program.Nodes.For_Loop_Statements.For_Loop_Statement;
+     not null access Program.Nodes.For_Loop_Statements.For_Loop_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Block_Statement_Access is
-     not null access Program.Nodes.Block_Statements.Block_Statement;
+     not null access Program.Nodes.Block_Statements.Block_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Exit_Statement_Access is
-     not null access Program.Nodes.Exit_Statements.Exit_Statement;
+     not null access Program.Nodes.Exit_Statements.Exit_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Goto_Statement_Access is
-     not null access Program.Nodes.Goto_Statements.Goto_Statement;
+     not null access Program.Nodes.Goto_Statements.Goto_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Call_Statement_Access is
-     not null access Program.Nodes.Call_Statements.Call_Statement;
+     not null access Program.Nodes.Call_Statements.Call_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Simple_Return_Statement_Access is
      not null access Program.Nodes.Simple_Return_Statements
-       .Simple_Return_Statement;
+       .Simple_Return_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Extended_Return_Statement_Access is
      not null access Program.Nodes.Extended_Return_Statements
-       .Extended_Return_Statement;
+       .Extended_Return_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Accept_Statement_Access is
-     not null access Program.Nodes.Accept_Statements.Accept_Statement;
+     not null access Program.Nodes.Accept_Statements.Accept_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Requeue_Statement_Access is
-     not null access Program.Nodes.Requeue_Statements.Requeue_Statement;
+     not null access Program.Nodes.Requeue_Statements.Requeue_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Delay_Statement_Access is
-     not null access Program.Nodes.Delay_Statements.Delay_Statement;
+     not null access Program.Nodes.Delay_Statements.Delay_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Terminate_Alternative_Statement_Access is
      not null access Program.Nodes.Terminate_Alternative_Statements
-       .Terminate_Alternative_Statement;
+       .Terminate_Alternative_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Select_Statement_Access is
-     not null access Program.Nodes.Select_Statements.Select_Statement;
+     not null access Program.Nodes.Select_Statements.Select_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Abort_Statement_Access is
-     not null access Program.Nodes.Abort_Statements.Abort_Statement;
+     not null access Program.Nodes.Abort_Statements.Abort_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Raise_Statement_Access is
-     not null access Program.Nodes.Raise_Statements.Raise_Statement;
+     not null access Program.Nodes.Raise_Statements.Raise_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Code_Statement_Access is
-     not null access Program.Nodes.Code_Statements.Code_Statement;
+     not null access Program.Nodes.Code_Statements.Code_Statement
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Elsif_Path_Access is
-     not null access Program.Nodes.Elsif_Paths.Elsif_Path;
+     not null access Program.Nodes.Elsif_Paths.Elsif_Path
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type Case_Path_Access is not null access Program.Nodes.Case_Paths.Case_Path;
+   type Case_Path_Access is not null access Program.Nodes.Case_Paths.Case_Path
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Select_Path_Access is
-     not null access Program.Nodes.Select_Paths.Select_Path;
+     not null access Program.Nodes.Select_Paths.Select_Path
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Case_Expression_Path_Access is
-     not null access Program.Nodes.Case_Expression_Paths.Case_Expression_Path;
+     not null access Program.Nodes.Case_Expression_Paths.Case_Expression_Path
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Elsif_Expression_Path_Access is
-     not null access Program.Nodes.Elsif_Expression_Paths
-       .Elsif_Expression_Path;
+     not null access Program.Nodes.Elsif_Expression_Paths.Elsif_Expression_Path
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Use_Clause_Access is
-     not null access Program.Nodes.Use_Clauses.Use_Clause;
+     not null access Program.Nodes.Use_Clauses.Use_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type With_Clause_Access is
-     not null access Program.Nodes.With_Clauses.With_Clause;
+     not null access Program.Nodes.With_Clauses.With_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Component_Clause_Access is
-     not null access Program.Nodes.Component_Clauses.Component_Clause;
+     not null access Program.Nodes.Component_Clauses.Component_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Derived_Type_Access is
-     not null access Program.Nodes.Derived_Types.Derived_Type;
+     not null access Program.Nodes.Derived_Types.Derived_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Derived_Record_Extension_Access is
      not null access Program.Nodes.Derived_Record_Extensions
-       .Derived_Record_Extension;
+       .Derived_Record_Extension
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Enumeration_Type_Access is
-     not null access Program.Nodes.Enumeration_Types.Enumeration_Type;
+     not null access Program.Nodes.Enumeration_Types.Enumeration_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Signed_Integer_Type_Access is
-     not null access Program.Nodes.Signed_Integer_Types.Signed_Integer_Type;
+     not null access Program.Nodes.Signed_Integer_Types.Signed_Integer_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Modular_Type_Access is
-     not null access Program.Nodes.Modular_Types.Modular_Type;
+     not null access Program.Nodes.Modular_Types.Modular_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type Root_Type_Access is not null access Program.Nodes.Root_Types.Root_Type;
+   type Root_Type_Access is not null access Program.Nodes.Root_Types.Root_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Floating_Point_Type_Access is
-     not null access Program.Nodes.Floating_Point_Types.Floating_Point_Type;
+     not null access Program.Nodes.Floating_Point_Types.Floating_Point_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Ordinary_Fixed_Point_Type_Access is
      not null access Program.Nodes.Ordinary_Fixed_Point_Types
-       .Ordinary_Fixed_Point_Type;
+       .Ordinary_Fixed_Point_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Decimal_Fixed_Point_Type_Access is
      not null access Program.Nodes.Decimal_Fixed_Point_Types
-       .Decimal_Fixed_Point_Type;
+       .Decimal_Fixed_Point_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Unconstrained_Array_Type_Access is
      not null access Program.Nodes.Unconstrained_Array_Types
-       .Unconstrained_Array_Type;
+       .Unconstrained_Array_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Constrained_Array_Type_Access is
      not null access Program.Nodes.Constrained_Array_Types
-       .Constrained_Array_Type;
+       .Constrained_Array_Type with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Record_Type_Access is
-     not null access Program.Nodes.Record_Types.Record_Type;
+     not null access Program.Nodes.Record_Types.Record_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Interface_Type_Access is
-     not null access Program.Nodes.Interface_Types.Interface_Type;
+     not null access Program.Nodes.Interface_Types.Interface_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Object_Access_Type_Access is
-     not null access Program.Nodes.Object_Access_Types.Object_Access_Type;
+     not null access Program.Nodes.Object_Access_Types.Object_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Procedure_Access_Type_Access is
-     not null access Program.Nodes.Procedure_Access_Types
-       .Procedure_Access_Type;
+     not null access Program.Nodes.Procedure_Access_Types.Procedure_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Access_Type_Access is
-     not null access Program.Nodes.Function_Access_Types.Function_Access_Type;
+     not null access Program.Nodes.Function_Access_Types.Function_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Private_Type_Definition_Access is
      not null access Program.Nodes.Formal_Private_Type_Definitions
-       .Formal_Private_Type_Definition;
+       .Formal_Private_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Derived_Type_Definition_Access is
      not null access Program.Nodes.Formal_Derived_Type_Definitions
-       .Formal_Derived_Type_Definition;
+       .Formal_Derived_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Discrete_Type_Definition_Access is
      not null access Program.Nodes.Formal_Discrete_Type_Definitions
-       .Formal_Discrete_Type_Definition;
+       .Formal_Discrete_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Signed_Integer_Type_Definition_Access is
      not null access Program.Nodes.Formal_Signed_Integer_Type_Definitions
-       .Formal_Signed_Integer_Type_Definition;
+       .Formal_Signed_Integer_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Modular_Type_Definition_Access is
      not null access Program.Nodes.Formal_Modular_Type_Definitions
-       .Formal_Modular_Type_Definition;
+       .Formal_Modular_Type_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Floating_Point_Definition_Access is
      not null access Program.Nodes.Formal_Floating_Point_Definitions
-       .Formal_Floating_Point_Definition;
+       .Formal_Floating_Point_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Ordinary_Fixed_Point_Definition_Access is
      not null access Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions
-       .Formal_Ordinary_Fixed_Point_Definition;
+       .Formal_Ordinary_Fixed_Point_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Formal_Decimal_Fixed_Point_Definition_Access is
      not null access Program.Nodes.Formal_Decimal_Fixed_Point_Definitions
-       .Formal_Decimal_Fixed_Point_Definition;
+       .Formal_Decimal_Fixed_Point_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Range_Attribute_Reference_Access is
      not null access Program.Nodes.Range_Attribute_References
-       .Range_Attribute_Reference;
+       .Range_Attribute_Reference
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Simple_Expression_Range_Access is
      not null access Program.Nodes.Simple_Expression_Ranges
-       .Simple_Expression_Range;
+       .Simple_Expression_Range
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Digits_Constraint_Access is
-     not null access Program.Nodes.Digits_Constraints.Digits_Constraint;
+     not null access Program.Nodes.Digits_Constraints.Digits_Constraint
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Delta_Constraint_Access is
-     not null access Program.Nodes.Delta_Constraints.Delta_Constraint;
+     not null access Program.Nodes.Delta_Constraints.Delta_Constraint
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Index_Constraint_Access is
-     not null access Program.Nodes.Index_Constraints.Index_Constraint;
+     not null access Program.Nodes.Index_Constraints.Index_Constraint
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Discriminant_Constraint_Access is
      not null access Program.Nodes.Discriminant_Constraints
-       .Discriminant_Constraint;
+       .Discriminant_Constraint
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Attribute_Definition_Clause_Access is
      not null access Program.Nodes.Attribute_Definition_Clauses
-       .Attribute_Definition_Clause;
+       .Attribute_Definition_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Enumeration_Representation_Clause_Access is
      not null access Program.Nodes.Enumeration_Representation_Clauses
-       .Enumeration_Representation_Clause;
+       .Enumeration_Representation_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Record_Representation_Clause_Access is
      not null access Program.Nodes.Record_Representation_Clauses
-       .Record_Representation_Clause;
+       .Record_Representation_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   type At_Clause_Access is not null access Program.Nodes.At_Clauses.At_Clause;
+   type At_Clause_Access is not null access Program.Nodes.At_Clauses.At_Clause
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Exception_Handler_Access is
-     not null access Program.Nodes.Exception_Handlers.Exception_Handler;
+     not null access Program.Nodes.Exception_Handlers.Exception_Handler
+     with Storage_Pool => Program.Storage_Pools.Pool;
 
-   function Create_Pragma
+   not overriding function Create_Pragma
     (Self : Element_Factory;
      Pragma_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -780,7 +935,7 @@ package body Program.Element_Factories is
       return Program.Elements.Pragmas.Pragma_Access (Result);
    end Create_Pragma;
 
-   function Create_Defining_Identifier
+   not overriding function Create_Defining_Identifier
     (Self             : Element_Factory;
      Identifier_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -797,7 +952,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Defining_Identifier;
 
-   function Create_Defining_Character_Literal
+   not overriding function Create_Defining_Character_Literal
     (Self                    : Element_Factory;
      Character_Literal_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -815,7 +970,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Defining_Character_Literal;
 
-   function Create_Defining_Operator_Symbol
+   not overriding function Create_Defining_Operator_Symbol
     (Self                  : Element_Factory;
      Operator_Symbol_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -833,7 +988,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Defining_Operator_Symbol;
 
-   function Create_Defining_Expanded_Name
+   not overriding function Create_Defining_Expanded_Name
     (Self : Element_Factory;
      Prefix    : not null Program.Elements.Expressions.Expression_Access;
      Dot_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
@@ -854,7 +1009,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Defining_Expanded_Name;
 
-   function Create_Type_Declaration
+   not overriding function Create_Type_Declaration
     (Self : Element_Factory;
      Type_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -885,7 +1040,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Type_Declaration;
 
-   function Create_Task_Type_Declaration
+   not overriding function Create_Task_Type_Declaration
     (Self : Element_Factory;
      Task_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -927,7 +1082,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Task_Type_Declaration;
 
-   function Create_Protected_Type_Declaration
+   not overriding function Create_Protected_Type_Declaration
     (Self : Element_Factory;
      Protected_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -969,7 +1124,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Protected_Type_Declaration;
 
-   function Create_Subtype_Declaration
+   not overriding function Create_Subtype_Declaration
     (Self : Element_Factory;
      Subtype_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1000,7 +1155,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Subtype_Declaration;
 
-   function Create_Object_Declaration
+   not overriding function Create_Object_Declaration
     (Self : Element_Factory;
      Names                     : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1042,7 +1197,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Object_Declaration;
 
-   function Create_Single_Task_Declaration
+   not overriding function Create_Single_Task_Declaration
     (Self : Element_Factory;
      Task_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1079,7 +1234,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Single_Task_Declaration;
 
-   function Create_Single_Protected_Declaration
+   not overriding function Create_Single_Protected_Declaration
     (Self : Element_Factory;
      Protected_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1116,7 +1271,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Single_Protected_Declaration;
 
-   function Create_Number_Declaration
+   not overriding function Create_Number_Declaration
     (Self : Element_Factory;
      Names            : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1146,7 +1301,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Number_Declaration;
 
-   function Create_Enumeration_Literal_Specification
+   not overriding function Create_Enumeration_Literal_Specification
     (Self : Element_Factory;
      Name : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access)
@@ -1164,7 +1319,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Enumeration_Literal_Specification;
 
-   function Create_Discriminant_Specification
+   not overriding function Create_Discriminant_Specification
     (Self : Element_Factory;
      Names              : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1196,7 +1351,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Discriminant_Specification;
 
-   function Create_Component_Declaration
+   not overriding function Create_Component_Declaration
     (Self : Element_Factory;
      Names              : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1230,7 +1385,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Component_Declaration;
 
-   function Create_Loop_Parameter_Specification
+   not overriding function Create_Loop_Parameter_Specification
     (Self : Element_Factory;
      Name          : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -1253,7 +1408,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Loop_Parameter_Specification;
 
-   function Create_Generalized_Iterator_Specification
+   not overriding function Create_Generalized_Iterator_Specification
     (Self : Element_Factory;
      Name          : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -1276,7 +1431,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generalized_Iterator_Specification;
 
-   function Create_Element_Iterator_Specification
+   not overriding function Create_Element_Iterator_Specification
     (Self : Element_Factory;
      Name               : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -1306,7 +1461,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Element_Iterator_Specification;
 
-   function Create_Procedure_Declaration
+   not overriding function Create_Procedure_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1346,7 +1501,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Declaration;
 
-   function Create_Function_Declaration
+   not overriding function Create_Function_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1394,7 +1549,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Declaration;
 
-   function Create_Parameter_Specification
+   not overriding function Create_Parameter_Specification
     (Self : Element_Factory;
      Names              : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1428,7 +1583,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Parameter_Specification;
 
-   function Create_Procedure_Body_Declaration
+   not overriding function Create_Procedure_Body_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1484,7 +1639,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Body_Declaration;
 
-   function Create_Function_Body_Declaration
+   not overriding function Create_Function_Body_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1547,7 +1702,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Body_Declaration;
 
-   function Create_Return_Object_Specification
+   not overriding function Create_Return_Object_Specification
     (Self : Element_Factory;
      Name             : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -1577,7 +1732,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Return_Object_Specification;
 
-   function Create_Package_Declaration
+   not overriding function Create_Package_Declaration
     (Self : Element_Factory;
      Package_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1618,7 +1773,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Package_Declaration;
 
-   function Create_Package_Body_Declaration
+   not overriding function Create_Package_Body_Declaration
     (Self : Element_Factory;
      Package_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1666,7 +1821,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Package_Body_Declaration;
 
-   function Create_Object_Renaming_Declaration
+   not overriding function Create_Object_Renaming_Declaration
     (Self : Element_Factory;
      Names           : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1702,7 +1857,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Object_Renaming_Declaration;
 
-   function Create_Exception_Renaming_Declaration
+   not overriding function Create_Exception_Renaming_Declaration
     (Self : Element_Factory;
      Names             : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -1738,7 +1893,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Exception_Renaming_Declaration;
 
-   function Create_Procedure_Renaming_Declaration
+   not overriding function Create_Procedure_Renaming_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1779,7 +1934,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Renaming_Declaration;
 
-   function Create_Function_Renaming_Declaration
+   not overriding function Create_Function_Renaming_Declaration
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1826,7 +1981,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Renaming_Declaration;
 
-   function Create_Package_Renaming_Declaration
+   not overriding function Create_Package_Renaming_Declaration
     (Self : Element_Factory;
      Package_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1857,7 +2012,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Package_Renaming_Declaration;
 
-   function Create_Generic_Package_Renaming_Declaration
+   not overriding function Create_Generic_Package_Renaming_Declaration
     (Self : Element_Factory;
      Generic_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1891,7 +2046,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Package_Renaming_Declaration;
 
-   function Create_Generic_Procedure_Renaming_Declaration
+   not overriding function Create_Generic_Procedure_Renaming_Declaration
     (Self : Element_Factory;
      Generic_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1928,7 +2083,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Procedure_Renaming_Declaration;
 
-   function Create_Generic_Function_Renaming_Declaration
+   not overriding function Create_Generic_Function_Renaming_Declaration
     (Self : Element_Factory;
      Generic_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1964,7 +2119,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Function_Renaming_Declaration;
 
-   function Create_Task_Body_Declaration
+   not overriding function Create_Task_Body_Declaration
     (Self : Element_Factory;
      Task_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2012,7 +2167,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Task_Body_Declaration;
 
-   function Create_Protected_Body_Declaration
+   not overriding function Create_Protected_Body_Declaration
     (Self : Element_Factory;
      Protected_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2051,7 +2206,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Protected_Body_Declaration;
 
-   function Create_Entry_Declaration
+   not overriding function Create_Entry_Declaration
     (Self : Element_Factory;
      Not_Token               : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token        : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2094,7 +2249,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Entry_Declaration;
 
-   function Create_Entry_Body_Declaration
+   not overriding function Create_Entry_Body_Declaration
     (Self : Element_Factory;
      Entry_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2155,7 +2310,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Entry_Body_Declaration;
 
-   function Create_Entry_Index_Specification
+   not overriding function Create_Entry_Index_Specification
     (Self : Element_Factory;
      For_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2180,7 +2335,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Entry_Index_Specification;
 
-   function Create_Procedure_Body_Stub
+   not overriding function Create_Procedure_Body_Stub
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2221,7 +2376,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Body_Stub;
 
-   function Create_Function_Body_Stub
+   not overriding function Create_Function_Body_Stub
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token    : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2269,7 +2424,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Body_Stub;
 
-   function Create_Package_Body_Stub
+   not overriding function Create_Package_Body_Stub
     (Self : Element_Factory;
      Package_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2302,7 +2457,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Package_Body_Stub;
 
-   function Create_Task_Body_Stub
+   not overriding function Create_Task_Body_Stub
     (Self : Element_Factory;
      Task_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2332,7 +2487,7 @@ package body Program.Element_Factories is
       return Program.Elements.Task_Body_Stubs.Task_Body_Stub_Access (Result);
    end Create_Task_Body_Stub;
 
-   function Create_Protected_Body_Stub
+   not overriding function Create_Protected_Body_Stub
     (Self : Element_Factory;
      Protected_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2365,7 +2520,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Protected_Body_Stub;
 
-   function Create_Exception_Declaration
+   not overriding function Create_Exception_Declaration
     (Self : Element_Factory;
      Names           : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -2394,7 +2549,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Exception_Declaration;
 
-   function Create_Choice_Parameter_Specification
+   not overriding function Create_Choice_Parameter_Specification
     (Self : Element_Factory;
      Name        : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -2413,7 +2568,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Choice_Parameter_Specification;
 
-   function Create_Generic_Package_Declaration
+   not overriding function Create_Generic_Package_Declaration
     (Self : Element_Factory;
      Generic_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2461,7 +2616,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Package_Declaration;
 
-   function Create_Generic_Procedure_Declaration
+   not overriding function Create_Generic_Procedure_Declaration
     (Self : Element_Factory;
      Generic_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2501,7 +2656,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Procedure_Declaration;
 
-   function Create_Generic_Function_Declaration
+   not overriding function Create_Generic_Function_Declaration
     (Self : Element_Factory;
      Generic_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2548,7 +2703,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Generic_Function_Declaration;
 
-   function Create_Package_Instantiation
+   not overriding function Create_Package_Instantiation
     (Self : Element_Factory;
      Package_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2590,7 +2745,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Package_Instantiation;
 
-   function Create_Procedure_Instantiation
+   not overriding function Create_Procedure_Instantiation
     (Self : Element_Factory;
      Not_Token              : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token       : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2635,7 +2790,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Instantiation;
 
-   function Create_Function_Instantiation
+   not overriding function Create_Function_Instantiation
     (Self : Element_Factory;
      Not_Token             : Program.Lexical_Elements.Lexical_Element_Access;
      Overriding_Token      : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2680,7 +2835,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Instantiation;
 
-   function Create_Formal_Object_Declaration
+   not overriding function Create_Formal_Object_Declaration
     (Self : Element_Factory;
      Names              : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
@@ -2719,7 +2874,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Object_Declaration;
 
-   function Create_Formal_Type_Declaration
+   not overriding function Create_Formal_Type_Declaration
     (Self : Element_Factory;
      Type_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2752,7 +2907,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Type_Declaration;
 
-   function Create_Formal_Procedure_Declaration
+   not overriding function Create_Formal_Procedure_Declaration
     (Self : Element_Factory;
      With_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2796,7 +2951,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Procedure_Declaration;
 
-   function Create_Formal_Function_Declaration
+   not overriding function Create_Formal_Function_Declaration
     (Self : Element_Factory;
      With_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2845,7 +3000,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Function_Declaration;
 
-   function Create_Formal_Package_Declaration
+   not overriding function Create_Formal_Package_Declaration
     (Self : Element_Factory;
      With_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2889,7 +3044,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Package_Declaration;
 
-   function Create_Subtype_Indication
+   not overriding function Create_Subtype_Indication
     (Self : Element_Factory;
      Not_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Null_Token   : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2909,7 +3064,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Subtype_Indication;
 
-   function Create_Component_Definition
+   not overriding function Create_Component_Definition
     (Self : Element_Factory;
      Aliased_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      Subtype_Indication : not null Program.Elements.Element_Access)
@@ -2927,7 +3082,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Component_Definition;
 
-   function Create_Unknown_Discriminant_Part
+   not overriding function Create_Unknown_Discriminant_Part
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2951,7 +3106,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Unknown_Discriminant_Part;
 
-   function Create_Known_Discriminant_Part
+   not overriding function Create_Known_Discriminant_Part
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2975,7 +3130,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Known_Discriminant_Part;
 
-   function Create_Record_Definition
+   not overriding function Create_Record_Definition
     (Self : Element_Factory;
      Record_Token   : not null Program.Lexical_Elements.Lexical_Element_Access;
      Components     : not null Program.Element_Vectors.Element_Vector_Access;
@@ -2995,7 +3150,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Record_Definition;
 
-   function Create_Null_Component
+   not overriding function Create_Null_Component
     (Self : Element_Factory;
      Null_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3011,7 +3166,7 @@ package body Program.Element_Factories is
       return Program.Elements.Null_Components.Null_Component_Access (Result);
    end Create_Null_Component;
 
-   function Create_Variant_Part
+   not overriding function Create_Variant_Part
     (Self : Element_Factory;
      Case_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3039,7 +3194,7 @@ package body Program.Element_Factories is
       return Program.Elements.Variant_Parts.Variant_Part_Access (Result);
    end Create_Variant_Part;
 
-   function Create_Variant
+   not overriding function Create_Variant
     (Self : Element_Factory;
      When_Token  : not null Program.Lexical_Elements.Lexical_Element_Access;
      Choices     : not null Program.Element_Vectors.Element_Vector_Access;
@@ -3056,7 +3211,7 @@ package body Program.Element_Factories is
       return Program.Elements.Variants.Variant_Access (Result);
    end Create_Variant;
 
-   function Create_Others_Choice
+   not overriding function Create_Others_Choice
     (Self         : Element_Factory;
      Others_Token : not null Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Others_Choices.Others_Choice_Access is
@@ -3069,7 +3224,7 @@ package body Program.Element_Factories is
       return Program.Elements.Others_Choices.Others_Choice_Access (Result);
    end Create_Others_Choice;
 
-   function Create_Private_Type_Definition
+   not overriding function Create_Private_Type_Definition
     (Self : Element_Factory;
      Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Tagged_Token   : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3091,7 +3246,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Private_Type_Definition;
 
-   function Create_Private_Extension_Definition
+   not overriding function Create_Private_Extension_Definition
     (Self : Element_Factory;
      Abstract_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token      : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3126,7 +3281,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Private_Extension_Definition;
 
-   function Create_Incomplete_Type_Definition
+   not overriding function Create_Incomplete_Type_Definition
     (Self         : Element_Factory;
      Tagged_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Incomplete_Type_Definitions
@@ -3143,7 +3298,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Incomplete_Type_Definition;
 
-   function Create_Task_Definition
+   not overriding function Create_Task_Definition
     (Self : Element_Factory;
      Visible_Declarations : not null Program.Element_Vectors
          .Element_Vector_Access;
@@ -3168,7 +3323,7 @@ package body Program.Element_Factories is
       return Program.Elements.Task_Definitions.Task_Definition_Access (Result);
    end Create_Task_Definition;
 
-   function Create_Protected_Definition
+   not overriding function Create_Protected_Definition
     (Self : Element_Factory;
      Visible_Declarations : not null Program.Element_Vectors
          .Element_Vector_Access;
@@ -3195,7 +3350,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Protected_Definition;
 
-   function Create_Aspect_Specification
+   not overriding function Create_Aspect_Specification
     (Self : Element_Factory;
      Aspect_Mark       : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3217,7 +3372,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Aspect_Specification;
 
-   function Create_Real_Range_Specification
+   not overriding function Create_Real_Range_Specification
     (Self : Element_Factory;
      Range_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3243,7 +3398,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Real_Range_Specification;
 
-   function Create_Numeric_Literal
+   not overriding function Create_Numeric_Literal
     (Self                  : Element_Factory;
      Numeric_Literal_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3258,7 +3413,7 @@ package body Program.Element_Factories is
       return Program.Elements.Numeric_Literals.Numeric_Literal_Access (Result);
    end Create_Numeric_Literal;
 
-   function Create_String_Literal
+   not overriding function Create_String_Literal
     (Self                 : Element_Factory;
      String_Literal_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3272,7 +3427,7 @@ package body Program.Element_Factories is
       return Program.Elements.String_Literals.String_Literal_Access (Result);
    end Create_String_Literal;
 
-   function Create_Identifier
+   not overriding function Create_Identifier
     (Self             : Element_Factory;
      Identifier_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3286,7 +3441,7 @@ package body Program.Element_Factories is
       return Program.Elements.Identifiers.Identifier_Access (Result);
    end Create_Identifier;
 
-   function Create_Operator_Symbol
+   not overriding function Create_Operator_Symbol
     (Self                  : Element_Factory;
      Operator_Symbol_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3301,7 +3456,7 @@ package body Program.Element_Factories is
       return Program.Elements.Operator_Symbols.Operator_Symbol_Access (Result);
    end Create_Operator_Symbol;
 
-   function Create_Character_Literal
+   not overriding function Create_Character_Literal
     (Self                    : Element_Factory;
      Character_Literal_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3318,7 +3473,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Character_Literal;
 
-   function Create_Explicit_Dereference
+   not overriding function Create_Explicit_Dereference
     (Self : Element_Factory;
      Prefix    : not null Program.Elements.Expressions.Expression_Access;
      Dot_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
@@ -3337,7 +3492,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Explicit_Dereference;
 
-   function Create_Function_Call
+   not overriding function Create_Function_Call
     (Self : Element_Factory;
      Prefix              : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3357,7 +3512,7 @@ package body Program.Element_Factories is
       return Program.Elements.Function_Calls.Function_Call_Access (Result);
    end Create_Function_Call;
 
-   function Create_Indexed_Component
+   not overriding function Create_Indexed_Component
     (Self : Element_Factory;
      Prefix              : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3382,7 +3537,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Indexed_Component;
 
-   function Create_Slice
+   not overriding function Create_Slice
     (Self : Element_Factory;
      Prefix              : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3404,7 +3559,7 @@ package body Program.Element_Factories is
       return Program.Elements.Slices.Slice_Access (Result);
    end Create_Slice;
 
-   function Create_Selected_Component
+   not overriding function Create_Selected_Component
     (Self : Element_Factory;
      Prefix    : not null Program.Elements.Expressions.Expression_Access;
      Dot_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
@@ -3423,7 +3578,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Selected_Component;
 
-   function Create_Attribute_Reference
+   not overriding function Create_Attribute_Reference
     (Self : Element_Factory;
      Prefix               : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3453,7 +3608,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Attribute_Reference;
 
-   function Create_Record_Aggregate
+   not overriding function Create_Record_Aggregate
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3476,7 +3631,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Record_Aggregate;
 
-   function Create_Extension_Aggregate
+   not overriding function Create_Extension_Aggregate
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3504,7 +3659,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Extension_Aggregate;
 
-   function Create_Array_Aggregate
+   not overriding function Create_Array_Aggregate
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3526,7 +3681,7 @@ package body Program.Element_Factories is
       return Program.Elements.Array_Aggregates.Array_Aggregate_Access (Result);
    end Create_Array_Aggregate;
 
-   function Create_Short_Circuit_Operation
+   not overriding function Create_Short_Circuit_Operation
     (Self : Element_Factory;
      Left       : not null Program.Elements.Expressions.Expression_Access;
      And_Token  : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3550,7 +3705,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Short_Circuit_Operation;
 
-   function Create_Membership_Test
+   not overriding function Create_Membership_Test
     (Self : Element_Factory;
      Expression : not null Program.Elements.Expressions.Expression_Access;
      Not_Token  : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3568,7 +3723,7 @@ package body Program.Element_Factories is
       return Program.Elements.Membership_Tests.Membership_Test_Access (Result);
    end Create_Membership_Test;
 
-   function Create_Null_Literal
+   not overriding function Create_Null_Literal
     (Self               : Element_Factory;
      Null_Literal_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -3582,7 +3737,7 @@ package body Program.Element_Factories is
       return Program.Elements.Null_Literals.Null_Literal_Access (Result);
    end Create_Null_Literal;
 
-   function Create_Parenthesized_Expression
+   not overriding function Create_Parenthesized_Expression
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3606,7 +3761,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Parenthesized_Expression;
 
-   function Create_Raise_Expression
+   not overriding function Create_Raise_Expression
     (Self : Element_Factory;
      Raise_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3628,7 +3783,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Raise_Expression;
 
-   function Create_Type_Conversion
+   not overriding function Create_Type_Conversion
     (Self : Element_Factory;
      Subtype_Mark        : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3651,7 +3806,7 @@ package body Program.Element_Factories is
       return Program.Elements.Type_Conversions.Type_Conversion_Access (Result);
    end Create_Type_Conversion;
 
-   function Create_Qualified_Expression
+   not overriding function Create_Qualified_Expression
     (Self : Element_Factory;
      Subtype_Mark        : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3679,7 +3834,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Qualified_Expression;
 
-   function Create_Allocator
+   not overriding function Create_Allocator
     (Self : Element_Factory;
      New_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3705,7 +3860,7 @@ package body Program.Element_Factories is
       return Program.Elements.Allocators.Allocator_Access (Result);
    end Create_Allocator;
 
-   function Create_Case_Expression
+   not overriding function Create_Case_Expression
     (Self : Element_Factory;
      Case_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3728,7 +3883,7 @@ package body Program.Element_Factories is
       return Program.Elements.Case_Expressions.Case_Expression_Access (Result);
    end Create_Case_Expression;
 
-   function Create_If_Expression
+   not overriding function Create_If_Expression
     (Self : Element_Factory;
      If_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3753,7 +3908,7 @@ package body Program.Element_Factories is
       return Program.Elements.If_Expressions.If_Expression_Access (Result);
    end Create_If_Expression;
 
-   function Create_Quantified_Expression
+   not overriding function Create_Quantified_Expression
     (Self : Element_Factory;
      For_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3788,7 +3943,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Quantified_Expression;
 
-   function Create_Discriminant_Association
+   not overriding function Create_Discriminant_Association
     (Self : Element_Factory;
      Selector_Names : not null Program.Elements.Identifiers
          .Identifier_Vector_Access;
@@ -3809,7 +3964,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Discriminant_Association;
 
-   function Create_Record_Component_Association
+   not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
      Choices     : not null Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3830,7 +3985,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Record_Component_Association;
 
-   function Create_Array_Component_Association
+   not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
      Choices     : not null Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3851,7 +4006,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Array_Component_Association;
 
-   function Create_Parameter_Association
+   not overriding function Create_Parameter_Association
     (Self : Element_Factory;
      Formal_Parameter : Program.Elements.Expressions.Expression_Access;
      Arrow_Token      : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3873,7 +4028,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Parameter_Association;
 
-   function Create_Formal_Package_Association
+   not overriding function Create_Formal_Package_Association
     (Self : Element_Factory;
      Formal_Parameter : Program.Elements.Expressions.Expression_Access;
      Arrow_Token      : Program.Lexical_Elements.Lexical_Element_Access;
@@ -3895,7 +4050,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Package_Association;
 
-   function Create_Null_Statement
+   not overriding function Create_Null_Statement
     (Self : Element_Factory;
      Null_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3911,7 +4066,7 @@ package body Program.Element_Factories is
       return Program.Elements.Null_Statements.Null_Statement_Access (Result);
    end Create_Null_Statement;
 
-   function Create_Assignment_Statement
+   not overriding function Create_Assignment_Statement
     (Self : Element_Factory;
      Variable_Name    : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3936,7 +4091,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Assignment_Statement;
 
-   function Create_If_Statement
+   not overriding function Create_If_Statement
     (Self : Element_Factory;
      If_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3968,7 +4123,7 @@ package body Program.Element_Factories is
       return Program.Elements.If_Statements.If_Statement_Access (Result);
    end Create_If_Statement;
 
-   function Create_Case_Statement
+   not overriding function Create_Case_Statement
     (Self : Element_Factory;
      Case_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -3998,7 +4153,7 @@ package body Program.Element_Factories is
       return Program.Elements.Case_Statements.Case_Statement_Access (Result);
    end Create_Case_Statement;
 
-   function Create_Loop_Statement
+   not overriding function Create_Loop_Statement
     (Self : Element_Factory;
      Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -4030,7 +4185,7 @@ package body Program.Element_Factories is
       return Program.Elements.Loop_Statements.Loop_Statement_Access (Result);
    end Create_Loop_Statement;
 
-   function Create_While_Loop_Statement
+   not overriding function Create_While_Loop_Statement
     (Self : Element_Factory;
      Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -4070,7 +4225,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_While_Loop_Statement;
 
-   function Create_For_Loop_Statement
+   not overriding function Create_For_Loop_Statement
     (Self : Element_Factory;
      Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -4118,7 +4273,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_For_Loop_Statement;
 
-   function Create_Block_Statement
+   not overriding function Create_Block_Statement
     (Self : Element_Factory;
      Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
@@ -4159,7 +4314,7 @@ package body Program.Element_Factories is
       return Program.Elements.Block_Statements.Block_Statement_Access (Result);
    end Create_Block_Statement;
 
-   function Create_Exit_Statement
+   not overriding function Create_Exit_Statement
     (Self : Element_Factory;
      Exit_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4180,7 +4335,7 @@ package body Program.Element_Factories is
       return Program.Elements.Exit_Statements.Exit_Statement_Access (Result);
    end Create_Exit_Statement;
 
-   function Create_Goto_Statement
+   not overriding function Create_Goto_Statement
     (Self : Element_Factory;
      Goto_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4198,7 +4353,7 @@ package body Program.Element_Factories is
       return Program.Elements.Goto_Statements.Goto_Statement_Access (Result);
    end Create_Goto_Statement;
 
-   function Create_Call_Statement
+   not overriding function Create_Call_Statement
     (Self : Element_Factory;
      Called_Name         : not null Program.Elements.Expressions
          .Expression_Access;
@@ -4222,7 +4377,7 @@ package body Program.Element_Factories is
       return Program.Elements.Call_Statements.Call_Statement_Access (Result);
    end Create_Call_Statement;
 
-   function Create_Simple_Return_Statement
+   not overriding function Create_Simple_Return_Statement
     (Self : Element_Factory;
      Return_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4244,7 +4399,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Simple_Return_Statement;
 
-   function Create_Extended_Return_Statement
+   not overriding function Create_Extended_Return_Statement
     (Self : Element_Factory;
      Return_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4279,7 +4434,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Extended_Return_Statement;
 
-   function Create_Accept_Statement
+   not overriding function Create_Accept_Statement
     (Self : Element_Factory;
      Accept_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4333,7 +4488,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Accept_Statement;
 
-   function Create_Requeue_Statement
+   not overriding function Create_Requeue_Statement
     (Self : Element_Factory;
      Requeue_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4357,7 +4512,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Requeue_Statement;
 
-   function Create_Delay_Statement
+   not overriding function Create_Delay_Statement
     (Self : Element_Factory;
      Delay_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4378,7 +4533,7 @@ package body Program.Element_Factories is
       return Program.Elements.Delay_Statements.Delay_Statement_Access (Result);
    end Create_Delay_Statement;
 
-   function Create_Terminate_Alternative_Statement
+   not overriding function Create_Terminate_Alternative_Statement
     (Self : Element_Factory;
      Terminate_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4399,7 +4554,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Terminate_Alternative_Statement;
 
-   function Create_Select_Statement
+   not overriding function Create_Select_Statement
     (Self : Element_Factory;
      Select_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4435,7 +4590,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Select_Statement;
 
-   function Create_Abort_Statement
+   not overriding function Create_Abort_Statement
     (Self : Element_Factory;
      Abort_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4455,7 +4610,7 @@ package body Program.Element_Factories is
       return Program.Elements.Abort_Statements.Abort_Statement_Access (Result);
    end Create_Abort_Statement;
 
-   function Create_Raise_Statement
+   not overriding function Create_Raise_Statement
     (Self : Element_Factory;
      Raise_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4478,7 +4633,7 @@ package body Program.Element_Factories is
       return Program.Elements.Raise_Statements.Raise_Statement_Access (Result);
    end Create_Raise_Statement;
 
-   function Create_Code_Statement
+   not overriding function Create_Code_Statement
     (Self : Element_Factory;
      Expression      : not null Program.Elements.Qualified_Expressions
          .Qualified_Expression_Access;
@@ -4494,7 +4649,7 @@ package body Program.Element_Factories is
       return Program.Elements.Code_Statements.Code_Statement_Access (Result);
    end Create_Code_Statement;
 
-   function Create_Elsif_Path
+   not overriding function Create_Elsif_Path
     (Self : Element_Factory;
      Elsif_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Condition   : not null Program.Elements.Expressions.Expression_Access;
@@ -4511,7 +4666,7 @@ package body Program.Element_Factories is
       return Program.Elements.Elsif_Paths.Elsif_Path_Access (Result);
    end Create_Elsif_Path;
 
-   function Create_Case_Path
+   not overriding function Create_Case_Path
     (Self : Element_Factory;
      When_Token  : not null Program.Lexical_Elements.Lexical_Element_Access;
      Choices     : not null Program.Element_Vectors.Element_Vector_Access;
@@ -4528,7 +4683,7 @@ package body Program.Element_Factories is
       return Program.Elements.Case_Paths.Case_Path_Access (Result);
    end Create_Case_Path;
 
-   function Create_Select_Path
+   not overriding function Create_Select_Path
     (Self : Element_Factory;
      When_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      Guard       : Program.Elements.Expressions.Expression_Access;
@@ -4545,7 +4700,7 @@ package body Program.Element_Factories is
       return Program.Elements.Select_Paths.Select_Path_Access (Result);
    end Create_Select_Path;
 
-   function Create_Case_Expression_Path
+   not overriding function Create_Case_Expression_Path
     (Self : Element_Factory;
      When_Token  : not null Program.Lexical_Elements.Lexical_Element_Access;
      Choices     : not null Program.Element_Vectors.Element_Vector_Access;
@@ -4565,7 +4720,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Case_Expression_Path;
 
-   function Create_Elsif_Expression_Path
+   not overriding function Create_Elsif_Expression_Path
     (Self : Element_Factory;
      Elsif_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Condition   : not null Program.Elements.Expressions.Expression_Access;
@@ -4586,7 +4741,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Elsif_Expression_Path;
 
-   function Create_Use_Clause
+   not overriding function Create_Use_Clause
     (Self : Element_Factory;
      Use_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4608,7 +4763,7 @@ package body Program.Element_Factories is
       return Program.Elements.Use_Clauses.Use_Clause_Access (Result);
    end Create_Use_Clause;
 
-   function Create_With_Clause
+   not overriding function Create_With_Clause
     (Self : Element_Factory;
      Limited_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Private_Token   : Program.Lexical_Elements.Lexical_Element_Access;
@@ -4630,7 +4785,7 @@ package body Program.Element_Factories is
       return Program.Elements.With_Clauses.With_Clause_Access (Result);
    end Create_With_Clause;
 
-   function Create_Component_Clause
+   not overriding function Create_Component_Clause
     (Self : Element_Factory;
      Clause_Name     : not null Program.Elements.Identifiers.Identifier_Access;
      At_Token        : not null Program.Lexical_Elements
@@ -4657,7 +4812,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Component_Clause;
 
-   function Create_Derived_Type
+   not overriding function Create_Derived_Type
     (Self : Element_Factory;
      Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token  : Program.Lexical_Elements.Lexical_Element_Access;
@@ -4675,7 +4830,7 @@ package body Program.Element_Factories is
       return Program.Elements.Derived_Types.Derived_Type_Access (Result);
    end Create_Derived_Type;
 
-   function Create_Derived_Record_Extension
+   not overriding function Create_Derived_Record_Extension
     (Self : Element_Factory;
      Abstract_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
@@ -4708,7 +4863,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Derived_Record_Extension;
 
-   function Create_Enumeration_Type
+   not overriding function Create_Enumeration_Type
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4730,7 +4885,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Enumeration_Type;
 
-   function Create_Signed_Integer_Type
+   not overriding function Create_Signed_Integer_Type
     (Self : Element_Factory;
      Range_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4755,7 +4910,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Signed_Integer_Type;
 
-   function Create_Modular_Type
+   not overriding function Create_Modular_Type
     (Self : Element_Factory;
      Mod_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Modulus   : not null Program.Elements.Expressions.Expression_Access)
@@ -4769,7 +4924,7 @@ package body Program.Element_Factories is
       return Program.Elements.Modular_Types.Modular_Type_Access (Result);
    end Create_Modular_Type;
 
-   function Create_Root_Type
+   not overriding function Create_Root_Type
     (Self : Element_Factory)
       return not null Program.Elements.Root_Types.Root_Type_Access is
       Result : constant Root_Type_Access :=
@@ -4778,7 +4933,7 @@ package body Program.Element_Factories is
       return Program.Elements.Root_Types.Root_Type_Access (Result);
    end Create_Root_Type;
 
-   function Create_Floating_Point_Type
+   not overriding function Create_Floating_Point_Type
     (Self : Element_Factory;
      Digits_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4801,7 +4956,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Floating_Point_Type;
 
-   function Create_Ordinary_Fixed_Point_Type
+   not overriding function Create_Ordinary_Fixed_Point_Type
     (Self : Element_Factory;
      Delta_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4825,7 +4980,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Ordinary_Fixed_Point_Type;
 
-   function Create_Decimal_Fixed_Point_Type
+   not overriding function Create_Decimal_Fixed_Point_Type
     (Self : Element_Factory;
      Delta_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4855,7 +5010,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Decimal_Fixed_Point_Type;
 
-   function Create_Unconstrained_Array_Type
+   not overriding function Create_Unconstrained_Array_Type
     (Self : Element_Factory;
      Array_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4888,7 +5043,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Unconstrained_Array_Type;
 
-   function Create_Constrained_Array_Type
+   not overriding function Create_Constrained_Array_Type
     (Self : Element_Factory;
      Array_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4922,7 +5077,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Constrained_Array_Type;
 
-   function Create_Record_Type
+   not overriding function Create_Record_Type
     (Self : Element_Factory;
      Abstract_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -4944,7 +5099,7 @@ package body Program.Element_Factories is
       return Program.Elements.Record_Types.Record_Type_Access (Result);
    end Create_Record_Type;
 
-   function Create_Interface_Type
+   not overriding function Create_Interface_Type
     (Self : Element_Factory;
      Limited_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      Task_Token         : Program.Lexical_Elements.Lexical_Element_Access;
@@ -4968,7 +5123,7 @@ package body Program.Element_Factories is
       return Program.Elements.Interface_Types.Interface_Type_Access (Result);
    end Create_Interface_Type;
 
-   function Create_Object_Access_Type
+   not overriding function Create_Object_Access_Type
     (Self : Element_Factory;
      Not_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
@@ -4994,7 +5149,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Object_Access_Type;
 
-   function Create_Procedure_Access_Type
+   not overriding function Create_Procedure_Access_Type
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
@@ -5027,7 +5182,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Procedure_Access_Type;
 
-   function Create_Function_Access_Type
+   not overriding function Create_Function_Access_Type
     (Self : Element_Factory;
      Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
@@ -5067,7 +5222,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Function_Access_Type;
 
-   function Create_Formal_Private_Type_Definition
+   not overriding function Create_Formal_Private_Type_Definition
     (Self : Element_Factory;
      Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Tagged_Token   : Program.Lexical_Elements.Lexical_Element_Access;
@@ -5089,7 +5244,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Private_Type_Definition;
 
-   function Create_Formal_Derived_Type_Definition
+   not overriding function Create_Formal_Derived_Type_Definition
     (Self : Element_Factory;
      Abstract_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token      : Program.Lexical_Elements.Lexical_Element_Access;
@@ -5122,7 +5277,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Derived_Type_Definition;
 
-   function Create_Formal_Discrete_Type_Definition
+   not overriding function Create_Formal_Discrete_Type_Definition
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5146,7 +5301,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Discrete_Type_Definition;
 
-   function Create_Formal_Signed_Integer_Type_Definition
+   not overriding function Create_Formal_Signed_Integer_Type_Definition
     (Self : Element_Factory;
      Range_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Box_Token   : not null Program.Lexical_Elements.Lexical_Element_Access)
@@ -5165,7 +5320,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Signed_Integer_Type_Definition;
 
-   function Create_Formal_Modular_Type_Definition
+   not overriding function Create_Formal_Modular_Type_Definition
     (Self : Element_Factory;
      Mod_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Box_Token : not null Program.Lexical_Elements.Lexical_Element_Access)
@@ -5183,7 +5338,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Modular_Type_Definition;
 
-   function Create_Formal_Floating_Point_Definition
+   not overriding function Create_Formal_Floating_Point_Definition
     (Self : Element_Factory;
      Digits_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Box_Token    : not null Program.Lexical_Elements.Lexical_Element_Access)
@@ -5201,7 +5356,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Floating_Point_Definition;
 
-   function Create_Formal_Ordinary_Fixed_Point_Definition
+   not overriding function Create_Formal_Ordinary_Fixed_Point_Definition
     (Self : Element_Factory;
      Delta_Token : not null Program.Lexical_Elements.Lexical_Element_Access;
      Box_Token   : not null Program.Lexical_Elements.Lexical_Element_Access)
@@ -5220,7 +5375,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Ordinary_Fixed_Point_Definition;
 
-   function Create_Formal_Decimal_Fixed_Point_Definition
+   not overriding function Create_Formal_Decimal_Fixed_Point_Definition
     (Self : Element_Factory;
      Delta_Token  : not null Program.Lexical_Elements.Lexical_Element_Access;
      Box_Token    : not null Program.Lexical_Elements.Lexical_Element_Access;
@@ -5242,7 +5397,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Formal_Decimal_Fixed_Point_Definition;
 
-   function Create_Range_Attribute_Reference
+   not overriding function Create_Range_Attribute_Reference
     (Self            : Element_Factory;
      Range_Attribute : not null Program.Elements.Attribute_References
          .Attribute_Reference_Access)
@@ -5260,7 +5415,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Range_Attribute_Reference;
 
-   function Create_Simple_Expression_Range
+   not overriding function Create_Simple_Expression_Range
     (Self : Element_Factory;
      Lower_Bound      : not null Program.Elements.Expressions
          .Expression_Access;
@@ -5284,7 +5439,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Simple_Expression_Range;
 
-   function Create_Digits_Constraint
+   not overriding function Create_Digits_Constraint
     (Self : Element_Factory;
      Digits_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5308,7 +5463,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Digits_Constraint;
 
-   function Create_Delta_Constraint
+   not overriding function Create_Delta_Constraint
     (Self : Element_Factory;
      Delta_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5331,7 +5486,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Delta_Constraint;
 
-   function Create_Index_Constraint
+   not overriding function Create_Index_Constraint
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5352,7 +5507,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Index_Constraint;
 
-   function Create_Discriminant_Constraint
+   not overriding function Create_Discriminant_Constraint
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5376,7 +5531,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Discriminant_Constraint;
 
-   function Create_Attribute_Definition_Clause
+   not overriding function Create_Attribute_Definition_Clause
     (Self : Element_Factory;
      For_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5401,7 +5556,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Attribute_Definition_Clause;
 
-   function Create_Enumeration_Representation_Clause
+   not overriding function Create_Enumeration_Representation_Clause
     (Self : Element_Factory;
      For_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5427,7 +5582,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Enumeration_Representation_Clause;
 
-   function Create_Record_Representation_Clause
+   not overriding function Create_Record_Representation_Clause
     (Self : Element_Factory;
      For_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5465,7 +5620,7 @@ package body Program.Element_Factories is
         (Result);
    end Create_Record_Representation_Clause;
 
-   function Create_At_Clause
+   not overriding function Create_At_Clause
     (Self : Element_Factory;
      For_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -5489,7 +5644,7 @@ package body Program.Element_Factories is
       return Program.Elements.At_Clauses.At_Clause_Access (Result);
    end Create_At_Clause;
 
-   function Create_Exception_Handler
+   not overriding function Create_Exception_Handler
     (Self : Element_Factory;
      When_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;

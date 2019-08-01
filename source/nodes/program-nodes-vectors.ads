@@ -71,11 +71,6 @@ package Program.Nodes.Vectors is
 
 private
 
-   type Item is record
-      Element : Program.Elements.Element_Access;
-      Token   : Program.Lexical_Elements.Lexical_Element_Access;
-   end record;
-
    type Element_Array is array (Positive range <>)
      of Program.Elements.Element_Access;
 
