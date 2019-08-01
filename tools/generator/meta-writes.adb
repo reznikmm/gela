@@ -1012,10 +1012,6 @@ package body Meta.Writes is
 
       F : aliased Ada_Pretty.Factory;
 
-      Preelaborate : constant Ada_Pretty.Node_Access :=
-        F.New_Pragma
-          (F.New_Name (+"Preelaborate"), F.New_Selected_Name (Package_Name));
-
       Type_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name (+"Element_Factory");
 
@@ -1030,7 +1026,7 @@ package body Meta.Writes is
                 (F.New_Selected_Name
                    (+"System.Storage_Pools.Subpools.Subpool_Handle"))),
            Definition => F.New_Private_Record
-             (Is_Limited => True));
+             (Is_Limited => True, Is_Tagged => True));
 
       function Prop_Parameters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Prop_Parameter, F);
@@ -1073,8 +1069,8 @@ package body Meta.Writes is
                   Funct : constant Ada_Pretty.Node_Access :=
                     F.New_Subprogram_Declaration
                       (F.New_Subprogram_Specification
-                         (Name          => F.New_Name
-                            ("Create_" & Item.Name),
+                         (Is_Overriding => Ada_Pretty.False,
+                          Name          => F.New_Name ("Create_" & Item.Name),
                           Parameters    => Get_Params (Item),
                           Result => F.New_Null_Exclusion
                             (F.New_Selected_Name
@@ -1106,7 +1102,7 @@ package body Meta.Writes is
       end Prop_List;
 
       Public_Part : constant Ada_Pretty.Node_Access :=
-        F.New_List ((Preelaborate, Type_Decl, Methods));
+        F.New_List ((Type_Decl, Methods));
 
       Full_Type_Decl : constant Ada_Pretty.Node_Access :=
         F.New_Type
@@ -1117,7 +1113,7 @@ package body Meta.Writes is
                 (F.New_Selected_Name
                    (+"System.Storage_Pools.Subpools.Subpool_Handle"))),
            Definition => F.New_Record
-             (Is_Limited => True));
+             (Is_Limited => True, Is_Tagged => True));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package
@@ -1208,7 +1204,11 @@ package body Meta.Writes is
                     (Result,
                      F.New_Type
                        (F.New_Name (Item.Name & "_Access"),
-                        Definition => F.New_Null_Exclusion (Def)));
+                        Definition => F.New_Null_Exclusion (Def),
+                        Aspects => F.New_Aspect
+                          (F.New_Name (+"Storage_Pool"),
+                           F.New_Selected_Name
+                             (+"Program.Storage_Pools.Pool"))));
                end;
             end if;
          end loop;
@@ -1221,7 +1221,8 @@ package body Meta.Writes is
       ----------------------
 
       function Get_With_Clauses return Ada_Pretty.Node_Access is
-         Result : Ada_Pretty.Node_Access;
+         Result : Ada_Pretty.Node_Access :=
+           F.New_With (F.New_Selected_Name (+"Program.Storage_Pools"));
       begin
          for Item of Vector loop
             if not Item.Is_Abstract then
@@ -1303,8 +1304,8 @@ package body Meta.Writes is
                   Funct : constant Ada_Pretty.Node_Access :=
                     F.New_Subprogram_Body
                       (F.New_Subprogram_Specification
-                         (Name          => F.New_Name
-                            ("Create_" & Item.Name),
+                         (Is_Overriding => Ada_Pretty.False,
+                          Name          => F.New_Name ("Create_" & Item.Name),
                           Parameters    => Get_Params (Item),
                           Result => F.New_Null_Exclusion (RT)),
                        Declarations => F.New_Variable
