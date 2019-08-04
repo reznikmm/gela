@@ -845,6 +845,7 @@
 
 ### _Discrete_Range_
 > _[Definition]_
+ - Is_Discrete_Subtype_Definition : Boolean
 
 ### Discrete_Subtype_Indication
 > _[Discrete_Range]_

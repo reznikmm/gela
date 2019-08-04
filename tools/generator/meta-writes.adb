@@ -93,6 +93,11 @@ package body Meta.Writes is
        Vector : Meta.Read.Class_Vectors.Vector)
        return String_Array;
 
+   function Get_Parent_Props
+     (Item : Classes.Class;
+      Vector : Meta.Read.Class_Vectors.Vector)
+      return Classes.Property_Array;
+
    Element : constant League.Strings.Universal_String := +"Element";
 
    Element_Vector : constant League.Strings.Universal_String :=
@@ -293,6 +298,31 @@ package body Meta.Writes is
       Result.Append ("_Access");
       return Result;
    end Full_Access_Name;
+
+   ----------------------
+   -- Get_Parent_Props --
+   ----------------------
+
+   function Get_Parent_Props
+     (Item : Classes.Class;
+      Vector : Meta.Read.Class_Vectors.Vector)
+      return Classes.Property_Array
+   is
+      Parent : constant League.Strings.Universal_String :=
+        Item.Parents.Element (1);
+   begin
+      if Is_Element (Parent) then
+         return (1 .. 0 => <>);
+      end if;
+
+      for Next of Vector loop
+         if Next.Name = Parent then
+            return Next.Properties;
+         end if;
+      end loop;
+
+      raise Program_Error;
+   end Get_Parent_Props;
 
    -------------------
    -- Prop_Argument --
@@ -1092,12 +1122,17 @@ package body Meta.Writes is
         (Item : Classes.Class) return Classes.Property_Array
       is
          use type Classes.Property_Array;
+
+         Parent_Props : constant Classes.Property_Array :=
+           Get_Parent_Props (Item, Vector);
+
       begin
          if Implicit then
             return Skip_Tokens (Item.Properties)
-              & Only_Booleans (Vector.First_Element.Properties);
+              & Only_Booleans (Vector.First_Element.Properties)
+              & Parent_Props;
          else
-            return Skip_Booleans (Item.Properties);
+            return Skip_Booleans (Item.Properties) & Parent_Props;
          end if;
       end Prop_List;
 
@@ -1337,12 +1372,17 @@ package body Meta.Writes is
         (Item : Classes.Class) return Classes.Property_Array
       is
          use type Classes.Property_Array;
+
+         Parent_Props : constant Classes.Property_Array :=
+           Get_Parent_Props (Item, Vector);
+
       begin
          if Implicit then
             return Skip_Tokens (Item.Properties)
-              & Only_Booleans (Vector.First_Element.Properties);
+              & Only_Booleans (Vector.First_Element.Properties)
+              & Parent_Props;
          else
-            return Skip_Booleans (Item.Properties);
+            return Skip_Booleans (Item.Properties) & Parent_Props;
          end if;
       end Prop_List;
 
@@ -2032,6 +2072,9 @@ package body Meta.Writes is
       Bool_Props : constant Classes.Property_Array :=
         Only_Booleans (Elem.Properties & Item.Properties);
 
+      Parent_Props : constant Classes.Property_Array :=
+        Get_Parent_Props (Item, Vector);
+
       Bool_Vars : constant Ada_Pretty.Node_Access :=
         Prop_Variables (Bool_Props);
 
@@ -2062,7 +2105,7 @@ package body Meta.Writes is
       end Prop_Check;
 
       Base_Props : constant Ada_Pretty.Node_Access :=
-        Prop_Variables (Only_Objects (Item.Properties));
+        Prop_Variables (Only_Objects (Item.Properties) & Parent_Props);
 
       Base : constant Ada_Pretty.Node_Access :=
         F.New_Type
@@ -2097,7 +2140,7 @@ package body Meta.Writes is
         (Get_Props
            (F,
             Base_Name,
-            Only_Objects (Item.Properties),
+            Only_Objects (Item.Properties) & Parent_Props,
             F.New_List ((Base, Base_Init, Visit)),
             Is_Abstr => False),
          Prop_Checks (All_Parents (Item, Vector)));
@@ -2135,7 +2178,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Booleans (Item.Properties)),
+                (Skip_Booleans (Item.Properties) & Parent_Props),
               Result        => Node_Name));
 
       Node_To_Text : constant Ada_Pretty.Node_Access :=
@@ -2196,7 +2239,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Only_Objects (Item.Properties) & Bool_Props),
+                (Only_Objects (Item.Properties) & Bool_Props & Parent_Props),
               Result        => Implicit_Name),
            Aspects       => F.New_Aspect
              (Name  => F.New_Name (+"Pre"),
@@ -2416,6 +2459,9 @@ package body Meta.Writes is
       Bool_Props : constant Classes.Property_Array :=
         Only_Booleans (Elem.Properties & Item.Properties);
 
+      Parent_Props : constant Classes.Property_Array :=
+        Get_Parent_Props (Item, Vector);
+
       Result : constant Ada_Pretty.Node_Access := F.New_Name (+"Result");
 
       Initialize : constant Ada_Pretty.Node_Access :=
@@ -2426,7 +2472,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Booleans (Item.Properties)),
+                (Skip_Booleans (Item.Properties) & Parent_Props),
               Result        => Node_Name),
            Statements => F.New_Extended_Return
              (Name            => Result,
@@ -2434,7 +2480,7 @@ package body Meta.Writes is
               Initialization  => F.New_Parentheses
                 (F.New_List
                   (Prop_Arguments
-                     (Skip_Booleans (Item.Properties)),
+                     (Skip_Booleans (Item.Properties) & Parent_Props),
                    F.New_Component_Association
                      (Choices => F.New_Name (+"Enclosing_Element"),
                       Value   => F.New_Name (+"null")))),
@@ -2448,7 +2494,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Only_Objects (Item.Properties) & Bool_Props),
+                (Only_Objects (Item.Properties) & Bool_Props & Parent_Props),
               Result        => Implicit_Name),
            Statements => F.New_Extended_Return
              (Name            => Result,
@@ -2456,7 +2502,8 @@ package body Meta.Writes is
               Initialization  => F.New_Parentheses
                 (F.New_List
                   (Prop_Arguments
-                     (Only_Objects (Item.Properties) & Bool_Props),
+                     (Only_Objects (Item.Properties)
+                        & Bool_Props & Parent_Props),
                    F.New_Component_Association
                      (Choices => F.New_Name (+"Enclosing_Element"),
                       Value   => F.New_Name (+"null")))),
@@ -2484,7 +2531,7 @@ package body Meta.Writes is
         (Classes.Property, Classes.Property_Array, Base_Getter, F);
 
       BG : constant Ada_Pretty.Node_Access :=
-        Base_Getters (Only_Objects (Item.Properties));
+        Base_Getters (Only_Objects (Item.Properties) & Parent_Props);
 
       function Node_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Node_Getter, F);
