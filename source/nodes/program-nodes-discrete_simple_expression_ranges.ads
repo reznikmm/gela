@@ -22,12 +22,13 @@ package Program.Nodes.Discrete_Simple_Expression_Ranges is
      with private;
 
    function Create
-    (Lower_Bound      : not null Program.Elements.Expressions
+    (Lower_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Double_Dot_Token : not null Program.Lexical_Elements
+     Double_Dot_Token               : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Upper_Bound      : not null Program.Elements.Expressions
-         .Expression_Access)
+     Upper_Bound                    : not null Program.Elements.Expressions
+         .Expression_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Discrete_Simple_Expression_Range;
 
    type Implicit_Discrete_Simple_Expression_Range is
@@ -37,13 +38,14 @@ package Program.Nodes.Discrete_Simple_Expression_Ranges is
      with private;
 
    function Create
-    (Lower_Bound          : not null Program.Elements.Expressions
+    (Lower_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Upper_Bound          : not null Program.Elements.Expressions
+     Upper_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Implicit_Discrete_Simple_Expression_Range
      with Pre =>
        Is_Part_Of_Implicit or Is_Part_Of_Inherited or Is_Part_Of_Instance;
@@ -54,8 +56,11 @@ private
        and Program.Elements.Discrete_Simple_Expression_Ranges
          .Discrete_Simple_Expression_Range
      with record
-        Lower_Bound : not null Program.Elements.Expressions.Expression_Access;
-        Upper_Bound : not null Program.Elements.Expressions.Expression_Access;
+        Lower_Bound                    : not null Program.Elements.Expressions
+          .Expression_Access;
+        Upper_Bound                    : not null Program.Elements.Expressions
+          .Expression_Access;
+        Is_Discrete_Subtype_Definition : Boolean;
      end record;
 
    procedure Initialize
@@ -72,6 +77,10 @@ private
    overriding function Upper_Bound
     (Self : Base_Discrete_Simple_Expression_Range)
       return not null Program.Elements.Expressions.Expression_Access;
+
+   overriding function Is_Discrete_Subtype_Definition
+    (Self : Base_Discrete_Simple_Expression_Range)
+      return Boolean;
 
    overriding function Is_Discrete_Simple_Expression_Range
     (Self : Base_Discrete_Simple_Expression_Range)

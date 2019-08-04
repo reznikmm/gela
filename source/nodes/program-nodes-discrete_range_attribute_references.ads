@@ -21,8 +21,9 @@ package Program.Nodes.Discrete_Range_Attribute_References is
      with private;
 
    function Create
-    (Range_Attribute : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access)
+    (Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Discrete_Range_Attribute_Reference;
 
    type Implicit_Discrete_Range_Attribute_Reference is
@@ -32,11 +33,12 @@ package Program.Nodes.Discrete_Range_Attribute_References is
      with private;
 
    function Create
-    (Range_Attribute      : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+    (Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Implicit_Discrete_Range_Attribute_Reference
      with Pre =>
        Is_Part_Of_Implicit or Is_Part_Of_Inherited or Is_Part_Of_Instance;
@@ -47,8 +49,9 @@ private
        and Program.Elements.Discrete_Range_Attribute_References
          .Discrete_Range_Attribute_Reference
      with record
-        Range_Attribute : not null Program.Elements.Attribute_References
-          .Attribute_Reference_Access;
+        Range_Attribute                : not null Program.Elements
+          .Attribute_References.Attribute_Reference_Access;
+        Is_Discrete_Subtype_Definition : Boolean;
      end record;
 
    procedure Initialize
@@ -62,6 +65,10 @@ private
     (Self : Base_Discrete_Range_Attribute_Reference)
       return not null Program.Elements.Attribute_References
           .Attribute_Reference_Access;
+
+   overriding function Is_Discrete_Subtype_Definition
+    (Self : Base_Discrete_Range_Attribute_Reference)
+      return Boolean;
 
    overriding function Is_Discrete_Range_Attribute_Reference
     (Self : Base_Discrete_Range_Attribute_Reference)

@@ -3155,8 +3155,11 @@ package body Program.Element_Factories is
 
    not overriding function Create_Discrete_Subtype_Indication
     (Self : Element_Factory;
-     Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
-     Constraint   : Program.Elements.Constraints.Constraint_Access)
+     Subtype_Mark                   : not null Program.Elements.Expressions
+         .Expression_Access;
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Subtype_Indications
           .Discrete_Subtype_Indication_Access is
       Result : constant Discrete_Subtype_Indication_Access :=
@@ -3164,7 +3167,9 @@ package body Program.Element_Factories is
           new (Self.Subpool) Program.Nodes.Discrete_Subtype_Indications
             .Discrete_Subtype_Indication'
             (Program.Nodes.Discrete_Subtype_Indications.Create
-               (Subtype_Mark => Subtype_Mark, Constraint => Constraint));
+               (Subtype_Mark => Subtype_Mark, Constraint => Constraint,
+                Is_Discrete_Subtype_Definition =>
+                  Is_Discrete_Subtype_Definition));
    begin
       return Program.Elements.Discrete_Subtype_Indications
         .Discrete_Subtype_Indication_Access
@@ -3172,9 +3177,10 @@ package body Program.Element_Factories is
    end Create_Discrete_Subtype_Indication;
 
    not overriding function Create_Discrete_Range_Attribute_Reference
-    (Self            : Element_Factory;
-     Range_Attribute : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access)
+    (Self : Element_Factory;
+     Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Range_Attribute_References
           .Discrete_Range_Attribute_Reference_Access is
       Result : constant Discrete_Range_Attribute_Reference_Access :=
@@ -3182,7 +3188,9 @@ package body Program.Element_Factories is
           new (Self.Subpool) Program.Nodes.Discrete_Range_Attribute_References
             .Discrete_Range_Attribute_Reference'
             (Program.Nodes.Discrete_Range_Attribute_References.Create
-               (Range_Attribute => Range_Attribute));
+               (Range_Attribute => Range_Attribute,
+                Is_Discrete_Subtype_Definition =>
+                  Is_Discrete_Subtype_Definition));
    begin
       return Program.Elements.Discrete_Range_Attribute_References
         .Discrete_Range_Attribute_Reference_Access
@@ -3191,12 +3199,13 @@ package body Program.Element_Factories is
 
    not overriding function Create_Discrete_Simple_Expression_Range
     (Self : Element_Factory;
-     Lower_Bound      : not null Program.Elements.Expressions
+     Lower_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Double_Dot_Token : not null Program.Lexical_Elements
+     Double_Dot_Token               : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Upper_Bound      : not null Program.Elements.Expressions
-         .Expression_Access)
+     Upper_Bound                    : not null Program.Elements.Expressions
+         .Expression_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Simple_Expression_Ranges
           .Discrete_Simple_Expression_Range_Access is
       Result : constant Discrete_Simple_Expression_Range_Access :=
@@ -3206,7 +3215,9 @@ package body Program.Element_Factories is
             (Program.Nodes.Discrete_Simple_Expression_Ranges.Create
                (Lower_Bound => Lower_Bound,
                 Double_Dot_Token => Double_Dot_Token,
-                Upper_Bound => Upper_Bound));
+                Upper_Bound => Upper_Bound,
+                Is_Discrete_Subtype_Definition =>
+                  Is_Discrete_Subtype_Definition));
    begin
       return Program.Elements.Discrete_Simple_Expression_Ranges
         .Discrete_Simple_Expression_Range_Access

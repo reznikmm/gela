@@ -7,12 +7,16 @@
 package body Program.Nodes.Discrete_Subtype_Indications is
 
    function Create
-    (Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
-     Constraint   : Program.Elements.Constraints.Constraint_Access)
+    (Subtype_Mark                   : not null Program.Elements.Expressions
+         .Expression_Access;
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Discrete_Subtype_Indication is
    begin
       return Result : Discrete_Subtype_Indication :=
         (Subtype_Mark => Subtype_Mark, Constraint => Constraint,
+         Is_Discrete_Subtype_Definition => Is_Discrete_Subtype_Definition,
          Enclosing_Element => null)
       do
          Initialize (Result);
@@ -20,19 +24,23 @@ package body Program.Nodes.Discrete_Subtype_Indications is
    end Create;
 
    function Create
-    (Subtype_Mark         : not null Program.Elements.Expressions
+    (Subtype_Mark                   : not null Program.Elements.Expressions
          .Expression_Access;
-     Constraint           : Program.Elements.Constraints.Constraint_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Implicit_Discrete_Subtype_Indication is
    begin
       return Result : Implicit_Discrete_Subtype_Indication :=
         (Subtype_Mark => Subtype_Mark, Constraint => Constraint,
          Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
-         Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
+         Is_Part_Of_Instance => Is_Part_Of_Instance,
+         Is_Discrete_Subtype_Definition => Is_Discrete_Subtype_Definition,
+         Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
@@ -51,6 +59,13 @@ package body Program.Nodes.Discrete_Subtype_Indications is
    begin
       return Self.Constraint;
    end Constraint;
+
+   overriding function Is_Discrete_Subtype_Definition
+    (Self : Base_Discrete_Subtype_Indication)
+      return Boolean is
+   begin
+      return Self.Is_Discrete_Subtype_Definition;
+   end Is_Discrete_Subtype_Definition;
 
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Discrete_Subtype_Indication)

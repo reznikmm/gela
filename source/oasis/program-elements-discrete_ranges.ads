@@ -17,6 +17,10 @@ package Program.Elements.Discrete_Ranges is
    type Discrete_Range_Access is access all Discrete_Range'Class
      with Storage_Size => 0;
 
+   not overriding function Is_Discrete_Subtype_Definition
+    (Self : Discrete_Range)
+      return Boolean is abstract;
+
    type Discrete_Range_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;
 

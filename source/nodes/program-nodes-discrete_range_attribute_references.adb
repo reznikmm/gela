@@ -7,30 +7,36 @@
 package body Program.Nodes.Discrete_Range_Attribute_References is
 
    function Create
-    (Range_Attribute : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access)
+    (Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Discrete_Range_Attribute_Reference is
    begin
       return Result : Discrete_Range_Attribute_Reference :=
-        (Range_Attribute => Range_Attribute, Enclosing_Element => null)
+        (Range_Attribute => Range_Attribute,
+         Is_Discrete_Subtype_Definition => Is_Discrete_Subtype_Definition,
+         Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
    end Create;
 
    function Create
-    (Range_Attribute      : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+    (Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Implicit_Discrete_Range_Attribute_Reference is
    begin
       return Result : Implicit_Discrete_Range_Attribute_Reference :=
         (Range_Attribute => Range_Attribute,
          Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
-         Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
+         Is_Part_Of_Instance => Is_Part_Of_Instance,
+         Is_Discrete_Subtype_Definition => Is_Discrete_Subtype_Definition,
+         Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
@@ -43,6 +49,13 @@ package body Program.Nodes.Discrete_Range_Attribute_References is
    begin
       return Self.Range_Attribute;
    end Range_Attribute;
+
+   overriding function Is_Discrete_Subtype_Definition
+    (Self : Base_Discrete_Range_Attribute_Reference)
+      return Boolean is
+   begin
+      return Self.Is_Discrete_Subtype_Definition;
+   end Is_Discrete_Subtype_Definition;
 
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Discrete_Range_Attribute_Reference)

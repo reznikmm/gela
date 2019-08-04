@@ -22,8 +22,11 @@ package Program.Nodes.Discrete_Subtype_Indications is
      with private;
 
    function Create
-    (Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
-     Constraint   : Program.Elements.Constraints.Constraint_Access)
+    (Subtype_Mark                   : not null Program.Elements.Expressions
+         .Expression_Access;
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Discrete_Subtype_Indication;
 
    type Implicit_Discrete_Subtype_Indication is
@@ -33,12 +36,14 @@ package Program.Nodes.Discrete_Subtype_Indications is
      with private;
 
    function Create
-    (Subtype_Mark         : not null Program.Elements.Expressions
+    (Subtype_Mark                   : not null Program.Elements.Expressions
          .Expression_Access;
-     Constraint           : Program.Elements.Constraints.Constraint_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return Implicit_Discrete_Subtype_Indication
      with Pre =>
        Is_Part_Of_Implicit or Is_Part_Of_Inherited or Is_Part_Of_Instance;
@@ -49,8 +54,11 @@ private
        and Program.Elements.Discrete_Subtype_Indications
          .Discrete_Subtype_Indication
      with record
-        Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
-        Constraint   : Program.Elements.Constraints.Constraint_Access;
+        Subtype_Mark                   : not null Program.Elements.Expressions
+          .Expression_Access;
+        Constraint                     : Program.Elements.Constraints
+          .Constraint_Access;
+        Is_Discrete_Subtype_Definition : Boolean;
      end record;
 
    procedure Initialize
@@ -67,6 +75,10 @@ private
    overriding function Constraint
     (Self : Base_Discrete_Subtype_Indication)
       return Program.Elements.Constraints.Constraint_Access;
+
+   overriding function Is_Discrete_Subtype_Definition
+    (Self : Base_Discrete_Subtype_Indication)
+      return Boolean;
 
    overriding function Is_Discrete_Subtype_Indication
     (Self : Base_Discrete_Subtype_Indication)

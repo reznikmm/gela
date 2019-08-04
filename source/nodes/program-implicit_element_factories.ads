@@ -1118,34 +1118,38 @@ package Program.Implicit_Element_Factories is
 
    not overriding function Create_Discrete_Subtype_Indication
     (Self : Element_Factory;
-     Subtype_Mark         : not null Program.Elements.Expressions
+     Subtype_Mark                   : not null Program.Elements.Expressions
          .Expression_Access;
-     Constraint           : Program.Elements.Constraints.Constraint_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Constraint                     : Program.Elements.Constraints
+         .Constraint_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Subtype_Indications
           .Discrete_Subtype_Indication_Access;
 
    not overriding function Create_Discrete_Range_Attribute_Reference
     (Self : Element_Factory;
-     Range_Attribute      : not null Program.Elements.Attribute_References
-         .Attribute_Reference_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Range_Attribute                : not null Program.Elements
+         .Attribute_References.Attribute_Reference_Access;
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Range_Attribute_References
           .Discrete_Range_Attribute_Reference_Access;
 
    not overriding function Create_Discrete_Simple_Expression_Range
     (Self : Element_Factory;
-     Lower_Bound          : not null Program.Elements.Expressions
+     Lower_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Upper_Bound          : not null Program.Elements.Expressions
+     Upper_Bound                    : not null Program.Elements.Expressions
          .Expression_Access;
-     Is_Part_Of_Implicit  : Boolean := False;
-     Is_Part_Of_Inherited : Boolean := False;
-     Is_Part_Of_Instance  : Boolean := False)
+     Is_Part_Of_Implicit            : Boolean := False;
+     Is_Part_Of_Inherited           : Boolean := False;
+     Is_Part_Of_Instance            : Boolean := False;
+     Is_Discrete_Subtype_Definition : Boolean := False)
       return not null Program.Elements.Discrete_Simple_Expression_Ranges
           .Discrete_Simple_Expression_Range_Access;
 
