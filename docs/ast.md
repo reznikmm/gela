@@ -192,7 +192,7 @@
  - Name                       : [Defining_Identifier]
  - In_Token                   : Token
  - Reverse_Token              : Token?
- - Definition                 : _[Discrete_Subtype_Definition]_
+ - Definition                 : _[Discrete_Range]_ {Is_Discrete_Subtype_Definition}
  - Has_Reverse                : Boolean
 
 ### Generalized_Iterator_Specification
@@ -510,7 +510,7 @@
  - Entry_Token                : Token
  - Name                       : [Defining_Identifier]
  - Left_Bracket_Token         : Token?
- - Entry_Family_Definition    : _[Discrete_Subtype_Definition]_?
+ - Entry_Family_Definition    : _[Discrete_Range]_? {Is_Discrete_Subtype_Definition}
  - Right_Bracket_Token        : Token?
  - Left_Bracket_Token_2       : Token?
  - Parameters                 : [Parameter_Specification]*
@@ -548,7 +548,7 @@
  - For_Token                  : Token
  - Name                       : [Defining_Identifier]
  - In_Token                   : Token
- - Entry_Index_Subtype        : _[Discrete_Subtype_Definition]_
+ - Entry_Index_Subtype        : _[Discrete_Range]_ {Is_Discrete_Subtype_Definition}
 
 ### Procedure_Body_Stub
 > _[Declaration]_
@@ -827,7 +827,7 @@
 > _[Definition]_
 
 ### Subtype_Indication
-> _[Definition]_,_[Discrete_Subtype_Definition]_,_[Discrete_Range]_
+> _[Definition]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
  - Subtype_Mark               : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
@@ -843,11 +843,23 @@
  - Subtype_Indication         : _[Element]_ {[Subtype_Indication],_[Anonymous_Access_Definition]_}
  - Has_Aliased                : Boolean
 
-### _Discrete_Subtype_Definition_
-> _[Definition]_
-
 ### _Discrete_Range_
 > _[Definition]_
+
+### Discrete_Subtype_Indication
+> _[Discrete_Range]_
+ - Subtype_Mark               : _[Expression]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
+ - Constraint                 : _[Constraint]_?
+
+### Discrete_Range_Attribute_Reference
+> _[Discrete_Range]_
+ - Range_Attribute   : [Attribute_Reference]
+
+### Discrete_Simple_Expression_Range
+> _[Discrete_Range]_
+ - Lower_Bound       : _[Expression]_
+ - Double_Dot_Token  : Token
+ - Upper_Bound       : _[Expression]_
 
 ### Unknown_Discriminant_Part
 > _[Definition]_
@@ -896,6 +908,49 @@
 
 ### _Anonymous_Access_Definition_
 > _[Definition]_
+
+### Anonymous_Access_To_Object
+> _[Anonymous_Access_Definition]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - All_Token                  : Token?
+ - Constant_Token             : Token?
+ - Subtype_Indication         : [Subtype_Indication]
+ - Has_Not_Null               : Boolean
+ - Has_All                    : Boolean
+ - Has_Constant               : Boolean
+
+### Anonymous_Access_To_Procedure
+> _[Anonymous_Access_Definition]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - Protected_Token            : Token?
+ - Procedure_Token            : Token
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Specification]*
+ - Right_Bracket_Token        : Token?
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
+
+### Anonymous_Access_To_Function
+> _[Anonymous_Access_Definition]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - Protected_Token            : Token?
+ - Function_Token             : Token
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Specification]*
+ - Right_Bracket_Token        : Token?
+ - Return_Token               : Token
+ - Not_Token_2                : Token?
+ - Null_Token_2               : Token?
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
+ - Has_Not_Null_2             : Boolean
 
 ### Private_Type_Definition
 > _[Definition]_
@@ -1509,7 +1564,7 @@
  - Real_Range                    : [Real_Range_Specification]?
 
 ### Unconstrained_Array_Type
-> _[Type_Definition]_,_[Formal_Type_Definition]_
+> _[Type_Definition]_
  - Array_Token                   : Token
  - Left_Bracket_Token            : Token
  - Index_Subtypes                : _[Expression]_+
@@ -1518,10 +1573,10 @@
  - Component_Definition          : [Component_Definition]
 
 ### Constrained_Array_Type
-> _[Type_Definition]_,_[Formal_Type_Definition]_
+> _[Type_Definition]_
  - Array_Token                   : Token
  - Left_Bracket_Token            : Token
- - Index_Subtypes                : _[Discrete_Subtype_Definition]_+
+ - Index_Subtypes                : _[Discrete_Range]_+ {Is_Discrete_Subtype_Definition}
  - Right_Bracket_Token           : Token
  - Of_Token                      : Token
  - Component_Definition          : [Component_Definition]
@@ -1534,7 +1589,7 @@
  - Record_Definition             : _[Definition]_
 
 ### Interface_Type
-> _[Type_Definition]_,_[Formal_Type_Definition]_
+> _[Type_Definition]_
  - Limited_Token              : Token?
  - Task_Token                 : Token?
  - Protected_Token            : Token?
@@ -1548,7 +1603,7 @@
  - Has_Synchronized           : Boolean
 
 ### Object_Access_Type
-> _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
+> _[Access_Type]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
  - Access_Token               : Token
@@ -1560,7 +1615,7 @@
  - Has_Constant               : Boolean
 
 ### Procedure_Access_Type
-> _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
+> _[Access_Type]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
  - Access_Token               : Token
@@ -1573,7 +1628,7 @@
  - Has_Protected              : Boolean
 
 ### Function_Access_Type
-> _[Access_Type]_,_[Formal_Access_Type]_,_[Anonymous_Access_Definition]_
+> _[Access_Type]_
  - Not_Token                  : Token?
  - Null_Token                 : Token?
  - Access_Token               : Token
@@ -1649,18 +1704,93 @@
  - Digits_Token               : Token
  - Box_Token_2                : Token
 
+### Formal_Unconstrained_Array_Type
+> _[Formal_Type_Definition]_
+ - Array_Token                   : Token
+ - Left_Bracket_Token            : Token
+ - Index_Subtypes                : _[Expression]_+
+ - Right_Bracket_Token           : Token
+ - Of_Token                      : Token
+ - Component_Definition          : [Component_Definition]
+
+### Formal_Constrained_Array_Type
+> _[Formal_Type_Definition]_
+ - Array_Token                   : Token
+ - Left_Bracket_Token            : Token
+ - Index_Subtypes                : _[Discrete_Range]_+ {Is_Discrete_Subtype_Definition}
+ - Right_Bracket_Token           : Token
+ - Of_Token                      : Token
+ - Component_Definition          : [Component_Definition]
+
 ## _Formal_Access_Type_
 > _[Formal_Type_Definition]_
+
+### Formal_Object_Access_Type
+> _[Formal_Access_Type]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - All_Token                  : Token?
+ - Constant_Token             : Token?
+ - Subtype_Indication         : [Subtype_Indication]
+ - Has_Not_Null               : Boolean
+ - Has_All                    : Boolean
+ - Has_Constant               : Boolean
+
+### Formal_Procedure_Access_Type
+> _[Formal_Access_Type]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - Protected_Token            : Token?
+ - Procedure_Token            : Token
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Specification]*
+ - Right_Bracket_Token        : Token?
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
+
+### Formal_Function_Access_Type
+> _[Formal_Access_Type]_
+ - Not_Token                  : Token?
+ - Null_Token                 : Token?
+ - Access_Token               : Token
+ - Protected_Token            : Token?
+ - Function_Token             : Token
+ - Left_Bracket_Token         : Token?
+ - Parameters                 : [Parameter_Specification]*
+ - Right_Bracket_Token        : Token?
+ - Return_Token               : Token
+ - Not_Token_2                : Token?
+ - Null_Token_2               : Token?
+ - Result_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference],_[Anonymous_Access_Definition]_}
+ - Has_Not_Null               : Boolean
+ - Has_Protected              : Boolean
+ - Has_Not_Null_2             : Boolean
+
+### Formal_Interface_Type
+> _[Formal_Type_Definition]_
+ - Limited_Token              : Token?
+ - Task_Token                 : Token?
+ - Protected_Token            : Token?
+ - Synchronized_Token         : Token?
+ - Interface_Token            : Token?
+ - And_Token                  : Token?
+ - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
+ - Has_Limited                : Boolean
+ - Has_Task                   : Boolean
+ - Has_Protected              : Boolean
+ - Has_Synchronized           : Boolean
 
 ## _Access_Type_
 > _[Type_Definition]_
 
 ### Range_Attribute_Reference
-> _[Constraint]_,_[Discrete_Subtype_Definition]_,_[Discrete_Range]_
+> _[Constraint]_
  - Range_Attribute   : [Attribute_Reference]
 
 ### Simple_Expression_Range
-> _[Constraint]_,_[Discrete_Subtype_Definition]_,_[Discrete_Range]_
+> _[Constraint]_
  - Lower_Bound       : _[Expression]_
  - Double_Dot_Token  : Token
  - Upper_Bound       : _[Expression]_
@@ -1745,6 +1875,9 @@
 [Access_Type]: ast.md#Access_Type
 [Allocator]: ast.md#Allocator
 [Anonymous_Access_Definition]: ast.md#Anonymous_Access_Definition
+[Anonymous_Access_To_Function]: ast.md#Anonymous_Access_To_Function
+[Anonymous_Access_To_Object]: ast.md#Anonymous_Access_To_Object
+[Anonymous_Access_To_Procedure]: ast.md#Anonymous_Access_To_Procedure
 [Array_Aggregate]: ast.md#Array_Aggregate
 [Array_Component_Association]: ast.md#Array_Component_Association
 [Aspect_Specification]: ast.md#Aspect_Specification
@@ -1781,8 +1914,10 @@
 [Derived_Record_Extension]: ast.md#Derived_Record_Extension
 [Derived_Type]: ast.md#Derived_Type
 [Digits_Constraint]: ast.md#Digits_Constraint
+[Discrete_Range_Attribute_Reference]: ast.md#Discrete_Range_Attribute_Reference
 [Discrete_Range]: ast.md#Discrete_Range
-[Discrete_Subtype_Definition]: ast.md#Discrete_Subtype_Definition
+[Discrete_Simple_Expression_Range]: ast.md#Discrete_Simple_Expression_Range
+[Discrete_Subtype_Indication]: ast.md#Discrete_Subtype_Indication
 [Discriminant_Association]: ast.md#Discriminant_Association
 [Discriminant_Constraint]: ast.md#Discriminant_Constraint
 [Discriminant_Specification]: ast.md#Discriminant_Specification
@@ -1806,21 +1941,27 @@
 [Floating_Point_Type]: ast.md#Floating_Point_Type
 [For_Loop_Statement]: ast.md#For_Loop_Statement
 [Formal_Access_Type]: ast.md#Formal_Access_Type
+[Formal_Constrained_Array_Type]: ast.md#Formal_Constrained_Array_Type
 [Formal_Decimal_Fixed_Point_Definition]: ast.md#Formal_Decimal_Fixed_Point_Definition
 [Formal_Derived_Type_Definition]: ast.md#Formal_Derived_Type_Definition
 [Formal_Discrete_Type_Definition]: ast.md#Formal_Discrete_Type_Definition
 [Formal_Floating_Point_Definition]: ast.md#Formal_Floating_Point_Definition
+[Formal_Function_Access_Type]: ast.md#Formal_Function_Access_Type
 [Formal_Function_Declaration]: ast.md#Formal_Function_Declaration
+[Formal_Interface_Type]: ast.md#Formal_Interface_Type
 [Formal_Modular_Type_Definition]: ast.md#Formal_Modular_Type_Definition
+[Formal_Object_Access_Type]: ast.md#Formal_Object_Access_Type
 [Formal_Object_Declaration]: ast.md#Formal_Object_Declaration
 [Formal_Ordinary_Fixed_Point_Definition]: ast.md#Formal_Ordinary_Fixed_Point_Definition
 [Formal_Package_Association]: ast.md#Formal_Package_Association
 [Formal_Package_Declaration]: ast.md#Formal_Package_Declaration
 [Formal_Private_Type_Definition]: ast.md#Formal_Private_Type_Definition
+[Formal_Procedure_Access_Type]: ast.md#Formal_Procedure_Access_Type
 [Formal_Procedure_Declaration]: ast.md#Formal_Procedure_Declaration
 [Formal_Signed_Integer_Type_Definition]: ast.md#Formal_Signed_Integer_Type_Definition
 [Formal_Type_Declaration]: ast.md#Formal_Type_Declaration
 [Formal_Type_Definition]: ast.md#Formal_Type_Definition
+[Formal_Unconstrained_Array_Type]: ast.md#Formal_Unconstrained_Array_Type
 [Function_Access_Type]: ast.md#Function_Access_Type
 [Function_Body_Declaration]: ast.md#Function_Body_Declaration
 [Function_Call]: ast.md#Function_Call
