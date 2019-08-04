@@ -117,22 +117,6 @@ package body Program.Nodes.Simple_Expression_Ranges is
       return True;
    end Is_Definition;
 
-   overriding function Is_Discrete_Subtype_Definition
-    (Self : Base_Simple_Expression_Range)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Discrete_Subtype_Definition;
-
-   overriding function Is_Discrete_Range
-    (Self : Base_Simple_Expression_Range)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Discrete_Range;
-
    overriding procedure Visit
     (Self    : not null access Base_Simple_Expression_Range;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class) is

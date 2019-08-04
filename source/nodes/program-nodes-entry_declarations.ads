@@ -6,7 +6,7 @@
 
 with Program.Lexical_Elements;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Parameter_Specifications;
 with Program.Elements.Aspect_Specifications;
 with Program.Elements.Entry_Declarations;
@@ -30,8 +30,8 @@ package Program.Nodes.Entry_Declarations is
      Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Right_Bracket_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Parameters              : not null Program.Elements
@@ -52,8 +52,8 @@ package Program.Nodes.Entry_Declarations is
    function Create
     (Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Parameters              : not null Program.Elements
          .Parameter_Specifications.Parameter_Specification_Vector_Access;
      Aspects                 : not null Program.Elements.Aspect_Specifications
@@ -74,8 +74,8 @@ private
      with record
         Name                    : not null Program.Elements
           .Defining_Identifiers.Defining_Identifier_Access;
-        Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access;
+        Entry_Family_Definition : Program.Elements.Discrete_Ranges
+          .Discrete_Range_Access;
         Parameters              : not null Program.Elements
           .Parameter_Specifications.Parameter_Specification_Vector_Access;
         Aspects                 : not null Program.Elements
@@ -95,8 +95,7 @@ private
 
    overriding function Entry_Family_Definition
     (Self : Base_Entry_Declaration)
-      return Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access;
+      return Program.Elements.Discrete_Ranges.Discrete_Range_Access;
 
    overriding function Parameters
     (Self : Base_Entry_Declaration)

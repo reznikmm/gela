@@ -11,9 +11,8 @@ package body Program.Nodes.Constrained_Array_Types is
          .Lexical_Element_Access;
      Left_Bracket_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Right_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Of_Token             : not null Program.Lexical_Elements
@@ -34,9 +33,8 @@ package body Program.Nodes.Constrained_Array_Types is
    end Create;
 
    function Create
-    (Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+    (Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Component_Definition : not null Program.Elements.Component_Definitions
          .Component_Definition_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -57,8 +55,8 @@ package body Program.Nodes.Constrained_Array_Types is
 
    overriding function Index_Subtypes
     (Self : Base_Constrained_Array_Type)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Vector_Access is
+      return not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Vector_Access is
    begin
       return Self.Index_Subtypes;
    end Index_Subtypes;
@@ -153,14 +151,6 @@ package body Program.Nodes.Constrained_Array_Types is
    begin
       return True;
    end Is_Definition;
-
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Constrained_Array_Type)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Formal_Type_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Constrained_Array_Type;

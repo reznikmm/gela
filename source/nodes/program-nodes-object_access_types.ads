@@ -84,18 +84,6 @@ private
     (Self : Base_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Access_Type
-    (Self : Base_Object_Access_Type)
-      return Boolean;
-
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Object_Access_Type)
-      return Boolean;
-
-   overriding function Is_Anonymous_Access_Definition
-    (Self : Base_Object_Access_Type)
-      return Boolean;
-
    type Object_Access_Type is
      new Base_Object_Access_Type
        and Program.Elements.Object_Access_Types.Object_Access_Type_Text

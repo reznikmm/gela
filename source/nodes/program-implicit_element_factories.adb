@@ -65,6 +65,9 @@ with Program.Nodes.Formal_Function_Declarations;
 with Program.Nodes.Formal_Package_Declarations;
 with Program.Nodes.Subtype_Indications;
 with Program.Nodes.Component_Definitions;
+with Program.Nodes.Discrete_Subtype_Indications;
+with Program.Nodes.Discrete_Range_Attribute_References;
+with Program.Nodes.Discrete_Simple_Expression_Ranges;
 with Program.Nodes.Unknown_Discriminant_Parts;
 with Program.Nodes.Known_Discriminant_Parts;
 with Program.Nodes.Record_Definitions;
@@ -72,6 +75,9 @@ with Program.Nodes.Null_Components;
 with Program.Nodes.Variant_Parts;
 with Program.Nodes.Variants;
 with Program.Nodes.Others_Choices;
+with Program.Nodes.Anonymous_Access_To_Objects;
+with Program.Nodes.Anonymous_Access_To_Procedures;
+with Program.Nodes.Anonymous_Access_To_Functions;
 with Program.Nodes.Private_Type_Definitions;
 with Program.Nodes.Private_Extension_Definitions;
 with Program.Nodes.Incomplete_Type_Definitions;
@@ -162,6 +168,12 @@ with Program.Nodes.Formal_Modular_Type_Definitions;
 with Program.Nodes.Formal_Floating_Point_Definitions;
 with Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions;
 with Program.Nodes.Formal_Decimal_Fixed_Point_Definitions;
+with Program.Nodes.Formal_Unconstrained_Array_Types;
+with Program.Nodes.Formal_Constrained_Array_Types;
+with Program.Nodes.Formal_Object_Access_Types;
+with Program.Nodes.Formal_Procedure_Access_Types;
+with Program.Nodes.Formal_Function_Access_Types;
+with Program.Nodes.Formal_Interface_Types;
 with Program.Nodes.Range_Attribute_References;
 with Program.Nodes.Simple_Expression_Ranges;
 with Program.Nodes.Digits_Constraints;
@@ -472,6 +484,21 @@ package body Program.Implicit_Element_Factories is
        .Implicit_Component_Definition
      with Storage_Pool => Program.Storage_Pools.Pool;
 
+   type Discrete_Subtype_Indication_Access is
+     not null access Program.Nodes.Discrete_Subtype_Indications
+       .Implicit_Discrete_Subtype_Indication
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Discrete_Range_Attribute_Reference_Access is
+     not null access Program.Nodes.Discrete_Range_Attribute_References
+       .Implicit_Discrete_Range_Attribute_Reference
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Discrete_Simple_Expression_Range_Access is
+     not null access Program.Nodes.Discrete_Simple_Expression_Ranges
+       .Implicit_Discrete_Simple_Expression_Range
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
    type Unknown_Discriminant_Part_Access is
      not null access Program.Nodes.Unknown_Discriminant_Parts
        .Implicit_Unknown_Discriminant_Part
@@ -501,6 +528,21 @@ package body Program.Implicit_Element_Factories is
 
    type Others_Choice_Access is
      not null access Program.Nodes.Others_Choices.Implicit_Others_Choice
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Object_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Objects
+       .Implicit_Anonymous_Access_To_Object
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Procedure_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Procedures
+       .Implicit_Anonymous_Access_To_Procedure
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Function_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Functions
+       .Implicit_Anonymous_Access_To_Function
      with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Private_Type_Definition_Access is
@@ -908,6 +950,36 @@ package body Program.Implicit_Element_Factories is
    type Formal_Decimal_Fixed_Point_Definition_Access is
      not null access Program.Nodes.Formal_Decimal_Fixed_Point_Definitions
        .Implicit_Formal_Decimal_Fixed_Point_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Unconstrained_Array_Type_Access is
+     not null access Program.Nodes.Formal_Unconstrained_Array_Types
+       .Implicit_Formal_Unconstrained_Array_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Constrained_Array_Type_Access is
+     not null access Program.Nodes.Formal_Constrained_Array_Types
+       .Implicit_Formal_Constrained_Array_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Object_Access_Type_Access is
+     not null access Program.Nodes.Formal_Object_Access_Types
+       .Implicit_Formal_Object_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Procedure_Access_Type_Access is
+     not null access Program.Nodes.Formal_Procedure_Access_Types
+       .Implicit_Formal_Procedure_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Function_Access_Type_Access is
+     not null access Program.Nodes.Formal_Function_Access_Types
+       .Implicit_Formal_Function_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Interface_Type_Access is
+     not null access Program.Nodes.Formal_Interface_Types
+       .Implicit_Formal_Interface_Type
      with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Range_Attribute_Reference_Access is
@@ -1403,8 +1475,8 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Definition           : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+     Definition           : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Has_Reverse          : Boolean := False;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2086,8 +2158,8 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Parameters              : not null Program.Elements
          .Parameter_Specifications.Parameter_Specification_Vector_Access;
      Aspects                 : not null Program.Elements.Aspect_Specifications
@@ -2160,8 +2232,8 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Entry_Index_Subtype  : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+     Entry_Index_Subtype  : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -2784,6 +2856,81 @@ package body Program.Implicit_Element_Factories is
         (Result);
    end Create_Component_Definition;
 
+   not overriding function Create_Discrete_Subtype_Indication
+    (Self : Element_Factory;
+     Subtype_Mark         : not null Program.Elements.Expressions
+         .Expression_Access;
+     Constraint           : Program.Elements.Constraints.Constraint_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Discrete_Subtype_Indications
+          .Discrete_Subtype_Indication_Access is
+      Result : constant Discrete_Subtype_Indication_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Subtype_Indications
+            .Implicit_Discrete_Subtype_Indication'
+            (Program.Nodes.Discrete_Subtype_Indications.Create
+               (Subtype_Mark => Subtype_Mark, Constraint => Constraint,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Discrete_Subtype_Indications
+        .Discrete_Subtype_Indication_Access
+        (Result);
+   end Create_Discrete_Subtype_Indication;
+
+   not overriding function Create_Discrete_Range_Attribute_Reference
+    (Self : Element_Factory;
+     Range_Attribute      : not null Program.Elements.Attribute_References
+         .Attribute_Reference_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Discrete_Range_Attribute_References
+          .Discrete_Range_Attribute_Reference_Access is
+      Result : constant Discrete_Range_Attribute_Reference_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Range_Attribute_References
+            .Implicit_Discrete_Range_Attribute_Reference'
+            (Program.Nodes.Discrete_Range_Attribute_References.Create
+               (Range_Attribute => Range_Attribute,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Discrete_Range_Attribute_References
+        .Discrete_Range_Attribute_Reference_Access
+        (Result);
+   end Create_Discrete_Range_Attribute_Reference;
+
+   not overriding function Create_Discrete_Simple_Expression_Range
+    (Self : Element_Factory;
+     Lower_Bound          : not null Program.Elements.Expressions
+         .Expression_Access;
+     Upper_Bound          : not null Program.Elements.Expressions
+         .Expression_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Discrete_Simple_Expression_Ranges
+          .Discrete_Simple_Expression_Range_Access is
+      Result : constant Discrete_Simple_Expression_Range_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Simple_Expression_Ranges
+            .Implicit_Discrete_Simple_Expression_Range'
+            (Program.Nodes.Discrete_Simple_Expression_Ranges.Create
+               (Lower_Bound => Lower_Bound, Upper_Bound => Upper_Bound,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Discrete_Simple_Expression_Ranges
+        .Discrete_Simple_Expression_Range_Access
+        (Result);
+   end Create_Discrete_Simple_Expression_Range;
+
    not overriding function Create_Unknown_Discriminant_Part
     (Self : Element_Factory;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -2931,6 +3078,92 @@ package body Program.Implicit_Element_Factories is
    begin
       return Program.Elements.Others_Choices.Others_Choice_Access (Result);
    end Create_Others_Choice;
+
+   not overriding function Create_Anonymous_Access_To_Object
+    (Self : Element_Factory;
+     Subtype_Indication   : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_All              : Boolean := False;
+     Has_Constant         : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Anonymous_Access_To_Objects
+          .Anonymous_Access_To_Object_Access is
+      Result : constant Anonymous_Access_To_Object_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Objects
+            .Implicit_Anonymous_Access_To_Object'
+            (Program.Nodes.Anonymous_Access_To_Objects.Create
+               (Subtype_Indication => Subtype_Indication,
+                Has_Not_Null => Has_Not_Null, Has_All => Has_All,
+                Has_Constant => Has_Constant,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Anonymous_Access_To_Objects
+        .Anonymous_Access_To_Object_Access
+        (Result);
+   end Create_Anonymous_Access_To_Object;
+
+   not overriding function Create_Anonymous_Access_To_Procedure
+    (Self : Element_Factory;
+     Parameters           : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_Protected        : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Anonymous_Access_To_Procedures
+          .Anonymous_Access_To_Procedure_Access is
+      Result : constant Anonymous_Access_To_Procedure_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Procedures
+            .Implicit_Anonymous_Access_To_Procedure'
+            (Program.Nodes.Anonymous_Access_To_Procedures.Create
+               (Parameters => Parameters, Has_Not_Null => Has_Not_Null,
+                Has_Protected => Has_Protected,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Anonymous_Access_To_Procedures
+        .Anonymous_Access_To_Procedure_Access
+        (Result);
+   end Create_Anonymous_Access_To_Procedure;
+
+   not overriding function Create_Anonymous_Access_To_Function
+    (Self : Element_Factory;
+     Parameters           : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Result_Subtype       : not null Program.Elements.Element_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_Protected        : Boolean := False;
+     Has_Not_Null_2       : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Anonymous_Access_To_Functions
+          .Anonymous_Access_To_Function_Access is
+      Result : constant Anonymous_Access_To_Function_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Functions
+            .Implicit_Anonymous_Access_To_Function'
+            (Program.Nodes.Anonymous_Access_To_Functions.Create
+               (Parameters => Parameters, Result_Subtype => Result_Subtype,
+                Has_Not_Null => Has_Not_Null, Has_Protected => Has_Protected,
+                Has_Not_Null_2 => Has_Not_Null_2,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Anonymous_Access_To_Functions
+        .Anonymous_Access_To_Function_Access
+        (Result);
+   end Create_Anonymous_Access_To_Function;
 
    not overriding function Create_Private_Type_Definition
     (Self : Element_Factory;
@@ -4809,9 +5042,8 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Constrained_Array_Type
     (Self : Element_Factory;
-     Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Component_Definition : not null Program.Elements.Component_Definitions
          .Component_Definition_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -5153,6 +5385,176 @@ package body Program.Implicit_Element_Factories is
         .Formal_Decimal_Fixed_Point_Definition_Access
         (Result);
    end Create_Formal_Decimal_Fixed_Point_Definition;
+
+   not overriding function Create_Formal_Unconstrained_Array_Type
+    (Self : Element_Factory;
+     Index_Subtypes       : not null Program.Elements.Expressions
+         .Expression_Vector_Access;
+     Component_Definition : not null Program.Elements.Component_Definitions
+         .Component_Definition_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Unconstrained_Array_Types
+          .Formal_Unconstrained_Array_Type_Access is
+      Result : constant Formal_Unconstrained_Array_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Unconstrained_Array_Types
+            .Implicit_Formal_Unconstrained_Array_Type'
+            (Program.Nodes.Formal_Unconstrained_Array_Types.Create
+               (Index_Subtypes => Index_Subtypes,
+                Component_Definition => Component_Definition,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Unconstrained_Array_Types
+        .Formal_Unconstrained_Array_Type_Access
+        (Result);
+   end Create_Formal_Unconstrained_Array_Type;
+
+   not overriding function Create_Formal_Constrained_Array_Type
+    (Self : Element_Factory;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
+     Component_Definition : not null Program.Elements.Component_Definitions
+         .Component_Definition_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Constrained_Array_Types
+          .Formal_Constrained_Array_Type_Access is
+      Result : constant Formal_Constrained_Array_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Constrained_Array_Types
+            .Implicit_Formal_Constrained_Array_Type'
+            (Program.Nodes.Formal_Constrained_Array_Types.Create
+               (Index_Subtypes => Index_Subtypes,
+                Component_Definition => Component_Definition,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Constrained_Array_Types
+        .Formal_Constrained_Array_Type_Access
+        (Result);
+   end Create_Formal_Constrained_Array_Type;
+
+   not overriding function Create_Formal_Object_Access_Type
+    (Self : Element_Factory;
+     Subtype_Indication   : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_All              : Boolean := False;
+     Has_Constant         : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Object_Access_Types
+          .Formal_Object_Access_Type_Access is
+      Result : constant Formal_Object_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Object_Access_Types
+            .Implicit_Formal_Object_Access_Type'
+            (Program.Nodes.Formal_Object_Access_Types.Create
+               (Subtype_Indication => Subtype_Indication,
+                Has_Not_Null => Has_Not_Null, Has_All => Has_All,
+                Has_Constant => Has_Constant,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Object_Access_Types
+        .Formal_Object_Access_Type_Access
+        (Result);
+   end Create_Formal_Object_Access_Type;
+
+   not overriding function Create_Formal_Procedure_Access_Type
+    (Self : Element_Factory;
+     Parameters           : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_Protected        : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Procedure_Access_Types
+          .Formal_Procedure_Access_Type_Access is
+      Result : constant Formal_Procedure_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Procedure_Access_Types
+            .Implicit_Formal_Procedure_Access_Type'
+            (Program.Nodes.Formal_Procedure_Access_Types.Create
+               (Parameters => Parameters, Has_Not_Null => Has_Not_Null,
+                Has_Protected => Has_Protected,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Procedure_Access_Types
+        .Formal_Procedure_Access_Type_Access
+        (Result);
+   end Create_Formal_Procedure_Access_Type;
+
+   not overriding function Create_Formal_Function_Access_Type
+    (Self : Element_Factory;
+     Parameters           : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Result_Subtype       : not null Program.Elements.Element_Access;
+     Has_Not_Null         : Boolean := False;
+     Has_Protected        : Boolean := False;
+     Has_Not_Null_2       : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Function_Access_Types
+          .Formal_Function_Access_Type_Access is
+      Result : constant Formal_Function_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Function_Access_Types
+            .Implicit_Formal_Function_Access_Type'
+            (Program.Nodes.Formal_Function_Access_Types.Create
+               (Parameters => Parameters, Result_Subtype => Result_Subtype,
+                Has_Not_Null => Has_Not_Null, Has_Protected => Has_Protected,
+                Has_Not_Null_2 => Has_Not_Null_2,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Function_Access_Types
+        .Formal_Function_Access_Type_Access
+        (Result);
+   end Create_Formal_Function_Access_Type;
+
+   not overriding function Create_Formal_Interface_Type
+    (Self : Element_Factory;
+     Progenitors          : not null Program.Elements.Expressions
+         .Expression_Vector_Access;
+     Has_Limited          : Boolean := False;
+     Has_Task             : Boolean := False;
+     Has_Protected        : Boolean := False;
+     Has_Synchronized     : Boolean := False;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Formal_Interface_Types
+          .Formal_Interface_Type_Access is
+      Result : constant Formal_Interface_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Interface_Types
+            .Implicit_Formal_Interface_Type'
+            (Program.Nodes.Formal_Interface_Types.Create
+               (Progenitors => Progenitors, Has_Limited => Has_Limited,
+                Has_Task => Has_Task, Has_Protected => Has_Protected,
+                Has_Synchronized => Has_Synchronized,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Formal_Interface_Types
+        .Formal_Interface_Type_Access
+        (Result);
+   end Create_Formal_Interface_Type;
 
    not overriding function Create_Range_Attribute_Reference
     (Self : Element_Factory;

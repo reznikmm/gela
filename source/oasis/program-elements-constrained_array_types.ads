@@ -5,9 +5,8 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
-with Program.Elements.Formal_Type_Definitions;
 with Program.Lexical_Elements;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Component_Definitions;
 
 package Program.Elements.Constrained_Array_Types is
@@ -15,16 +14,15 @@ package Program.Elements.Constrained_Array_Types is
    pragma Pure (Program.Elements.Constrained_Array_Types);
 
    type Constrained_Array_Type is
-     limited interface and Program.Elements.Type_Definitions.Type_Definition
-       and Program.Elements.Formal_Type_Definitions.Formal_Type_Definition;
+     limited interface and Program.Elements.Type_Definitions.Type_Definition;
 
    type Constrained_Array_Type_Access is
      access all Constrained_Array_Type'Class with Storage_Size => 0;
 
    not overriding function Index_Subtypes
     (Self : Constrained_Array_Type)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Vector_Access is abstract;
+      return not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Vector_Access is abstract;
 
    not overriding function Component_Definition
     (Self : Constrained_Array_Type)

@@ -6,7 +6,7 @@
 
 with Program.Elements.Defining_Identifiers;
 with Program.Lexical_Elements;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Loop_Parameter_Specifications;
 with Program.Element_Visitors;
 
@@ -27,8 +27,8 @@ package Program.Nodes.Loop_Parameter_Specifications is
          .Defining_Identifier_Access;
      In_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
      Reverse_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Definition    : not null Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access)
+     Definition    : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access)
       return Loop_Parameter_Specification;
 
    type Implicit_Loop_Parameter_Specification is
@@ -40,8 +40,8 @@ package Program.Nodes.Loop_Parameter_Specifications is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Definition           : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+     Definition           : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False;
@@ -58,8 +58,8 @@ private
      with record
         Name       : not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Definition : not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access;
+        Definition : not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Access;
      end record;
 
    procedure Initialize
@@ -76,8 +76,7 @@ private
 
    overriding function Definition
     (Self : Base_Loop_Parameter_Specification)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access;
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access;
 
    overriding function Is_Loop_Parameter_Specification
     (Self : Base_Loop_Parameter_Specification)

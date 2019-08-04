@@ -5,8 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Definitions;
-with Program.Elements.Discrete_Subtype_Definitions;
-with Program.Elements.Discrete_Ranges;
 with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 with Program.Elements.Constraints;
@@ -16,10 +14,7 @@ package Program.Elements.Subtype_Indications is
    pragma Pure (Program.Elements.Subtype_Indications);
 
    type Subtype_Indication is
-     limited interface and Program.Elements.Definitions.Definition
-       and Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition
-       and Program.Elements.Discrete_Ranges.Discrete_Range;
+     limited interface and Program.Elements.Definitions.Definition;
 
    type Subtype_Indication_Access is access all Subtype_Indication'Class
      with Storage_Size => 0;

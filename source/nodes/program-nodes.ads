@@ -192,10 +192,16 @@ private
 
    overriding function Is_Component_Definition (Self : Node) return Boolean;
 
-   overriding function Is_Discrete_Subtype_Definition
+   overriding function Is_Discrete_Range (Self : Node) return Boolean;
+
+   overriding function Is_Discrete_Subtype_Indication
      (Self : Node) return Boolean;
 
-   overriding function Is_Discrete_Range (Self : Node) return Boolean;
+   overriding function Is_Discrete_Range_Attribute_Reference
+     (Self : Node) return Boolean;
+
+   overriding function Is_Discrete_Simple_Expression_Range
+     (Self : Node) return Boolean;
 
    overriding function Is_Unknown_Discriminant_Part
      (Self : Node) return Boolean;
@@ -213,6 +219,15 @@ private
    overriding function Is_Others_Choice (Self : Node) return Boolean;
 
    overriding function Is_Anonymous_Access_Definition
+     (Self : Node) return Boolean;
+
+   overriding function Is_Anonymous_Access_To_Object
+     (Self : Node) return Boolean;
+
+   overriding function Is_Anonymous_Access_To_Procedure
+     (Self : Node) return Boolean;
+
+   overriding function Is_Anonymous_Access_To_Function
      (Self : Node) return Boolean;
 
    overriding function Is_Private_Type_Definition (Self : Node) return Boolean;
@@ -431,7 +446,24 @@ private
    overriding function Is_Formal_Decimal_Fixed_Point_Definition
      (Self : Node) return Boolean;
 
+   overriding function Is_Formal_Unconstrained_Array_Type
+     (Self : Node) return Boolean;
+
+   overriding function Is_Formal_Constrained_Array_Type
+     (Self : Node) return Boolean;
+
    overriding function Is_Formal_Access_Type (Self : Node) return Boolean;
+
+   overriding function Is_Formal_Object_Access_Type
+     (Self : Node) return Boolean;
+
+   overriding function Is_Formal_Procedure_Access_Type
+     (Self : Node) return Boolean;
+
+   overriding function Is_Formal_Function_Access_Type
+     (Self : Node) return Boolean;
+
+   overriding function Is_Formal_Interface_Type (Self : Node) return Boolean;
 
    overriding function Is_Access_Type (Self : Node) return Boolean;
 

@@ -5,8 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Constraints;
-with Program.Elements.Discrete_Subtype_Definitions;
-with Program.Elements.Discrete_Ranges;
 with Program.Elements.Expressions;
 with Program.Lexical_Elements;
 
@@ -15,10 +13,7 @@ package Program.Elements.Simple_Expression_Ranges is
    pragma Pure (Program.Elements.Simple_Expression_Ranges);
 
    type Simple_Expression_Range is
-     limited interface and Program.Elements.Constraints.Constraint
-       and Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition
-       and Program.Elements.Discrete_Ranges.Discrete_Range;
+     limited interface and Program.Elements.Constraints.Constraint;
 
    type Simple_Expression_Range_Access is
      access all Simple_Expression_Range'Class with Storage_Size => 0;

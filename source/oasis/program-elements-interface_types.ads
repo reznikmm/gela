@@ -5,7 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
-with Program.Elements.Formal_Type_Definitions;
 with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 
@@ -14,8 +13,7 @@ package Program.Elements.Interface_Types is
    pragma Pure (Program.Elements.Interface_Types);
 
    type Interface_Type is
-     limited interface and Program.Elements.Type_Definitions.Type_Definition
-       and Program.Elements.Formal_Type_Definitions.Formal_Type_Definition;
+     limited interface and Program.Elements.Type_Definitions.Type_Definition;
 
    type Interface_Type_Access is access all Interface_Type'Class
      with Storage_Size => 0;

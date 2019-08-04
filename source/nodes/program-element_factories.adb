@@ -65,6 +65,9 @@ with Program.Nodes.Formal_Function_Declarations;
 with Program.Nodes.Formal_Package_Declarations;
 with Program.Nodes.Subtype_Indications;
 with Program.Nodes.Component_Definitions;
+with Program.Nodes.Discrete_Subtype_Indications;
+with Program.Nodes.Discrete_Range_Attribute_References;
+with Program.Nodes.Discrete_Simple_Expression_Ranges;
 with Program.Nodes.Unknown_Discriminant_Parts;
 with Program.Nodes.Known_Discriminant_Parts;
 with Program.Nodes.Record_Definitions;
@@ -72,6 +75,9 @@ with Program.Nodes.Null_Components;
 with Program.Nodes.Variant_Parts;
 with Program.Nodes.Variants;
 with Program.Nodes.Others_Choices;
+with Program.Nodes.Anonymous_Access_To_Objects;
+with Program.Nodes.Anonymous_Access_To_Procedures;
+with Program.Nodes.Anonymous_Access_To_Functions;
 with Program.Nodes.Private_Type_Definitions;
 with Program.Nodes.Private_Extension_Definitions;
 with Program.Nodes.Incomplete_Type_Definitions;
@@ -162,6 +168,12 @@ with Program.Nodes.Formal_Modular_Type_Definitions;
 with Program.Nodes.Formal_Floating_Point_Definitions;
 with Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions;
 with Program.Nodes.Formal_Decimal_Fixed_Point_Definitions;
+with Program.Nodes.Formal_Unconstrained_Array_Types;
+with Program.Nodes.Formal_Constrained_Array_Types;
+with Program.Nodes.Formal_Object_Access_Types;
+with Program.Nodes.Formal_Procedure_Access_Types;
+with Program.Nodes.Formal_Function_Access_Types;
+with Program.Nodes.Formal_Interface_Types;
 with Program.Nodes.Range_Attribute_References;
 with Program.Nodes.Simple_Expression_Ranges;
 with Program.Nodes.Digits_Constraints;
@@ -450,6 +462,21 @@ package body Program.Element_Factories is
      not null access Program.Nodes.Component_Definitions.Component_Definition
      with Storage_Pool => Program.Storage_Pools.Pool;
 
+   type Discrete_Subtype_Indication_Access is
+     not null access Program.Nodes.Discrete_Subtype_Indications
+       .Discrete_Subtype_Indication
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Discrete_Range_Attribute_Reference_Access is
+     not null access Program.Nodes.Discrete_Range_Attribute_References
+       .Discrete_Range_Attribute_Reference
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Discrete_Simple_Expression_Range_Access is
+     not null access Program.Nodes.Discrete_Simple_Expression_Ranges
+       .Discrete_Simple_Expression_Range
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
    type Unknown_Discriminant_Part_Access is
      not null access Program.Nodes.Unknown_Discriminant_Parts
        .Unknown_Discriminant_Part
@@ -477,6 +504,21 @@ package body Program.Element_Factories is
 
    type Others_Choice_Access is
      not null access Program.Nodes.Others_Choices.Others_Choice
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Object_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Objects
+       .Anonymous_Access_To_Object
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Procedure_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Procedures
+       .Anonymous_Access_To_Procedure
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Anonymous_Access_To_Function_Access is
+     not null access Program.Nodes.Anonymous_Access_To_Functions
+       .Anonymous_Access_To_Function
      with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Private_Type_Definition_Access is
@@ -858,6 +900,35 @@ package body Program.Element_Factories is
    type Formal_Decimal_Fixed_Point_Definition_Access is
      not null access Program.Nodes.Formal_Decimal_Fixed_Point_Definitions
        .Formal_Decimal_Fixed_Point_Definition
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Unconstrained_Array_Type_Access is
+     not null access Program.Nodes.Formal_Unconstrained_Array_Types
+       .Formal_Unconstrained_Array_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Constrained_Array_Type_Access is
+     not null access Program.Nodes.Formal_Constrained_Array_Types
+       .Formal_Constrained_Array_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Object_Access_Type_Access is
+     not null access Program.Nodes.Formal_Object_Access_Types
+       .Formal_Object_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Procedure_Access_Type_Access is
+     not null access Program.Nodes.Formal_Procedure_Access_Types
+       .Formal_Procedure_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Function_Access_Type_Access is
+     not null access Program.Nodes.Formal_Function_Access_Types
+       .Formal_Function_Access_Type
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Formal_Interface_Type_Access is
+     not null access Program.Nodes.Formal_Interface_Types.Formal_Interface_Type
      with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Range_Attribute_Reference_Access is
@@ -1391,8 +1462,8 @@ package body Program.Element_Factories is
          .Defining_Identifier_Access;
      In_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
      Reverse_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Definition    : not null Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access)
+     Definition    : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access)
       return not null Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Access is
       Result : constant Loop_Parameter_Specification_Access :=
@@ -2215,8 +2286,8 @@ package body Program.Element_Factories is
      Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Right_Bracket_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Parameters              : not null Program.Elements
@@ -2318,8 +2389,8 @@ package body Program.Element_Factories is
          .Defining_Identifier_Access;
      In_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Entry_Index_Subtype : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access)
+     Entry_Index_Subtype : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access)
       return not null Program.Elements.Entry_Index_Specifications
           .Entry_Index_Specification_Access is
       Result : constant Entry_Index_Specification_Access :=
@@ -3082,6 +3153,66 @@ package body Program.Element_Factories is
         (Result);
    end Create_Component_Definition;
 
+   not overriding function Create_Discrete_Subtype_Indication
+    (Self : Element_Factory;
+     Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
+     Constraint   : Program.Elements.Constraints.Constraint_Access)
+      return not null Program.Elements.Discrete_Subtype_Indications
+          .Discrete_Subtype_Indication_Access is
+      Result : constant Discrete_Subtype_Indication_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Subtype_Indications
+            .Discrete_Subtype_Indication'
+            (Program.Nodes.Discrete_Subtype_Indications.Create
+               (Subtype_Mark => Subtype_Mark, Constraint => Constraint));
+   begin
+      return Program.Elements.Discrete_Subtype_Indications
+        .Discrete_Subtype_Indication_Access
+        (Result);
+   end Create_Discrete_Subtype_Indication;
+
+   not overriding function Create_Discrete_Range_Attribute_Reference
+    (Self            : Element_Factory;
+     Range_Attribute : not null Program.Elements.Attribute_References
+         .Attribute_Reference_Access)
+      return not null Program.Elements.Discrete_Range_Attribute_References
+          .Discrete_Range_Attribute_Reference_Access is
+      Result : constant Discrete_Range_Attribute_Reference_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Range_Attribute_References
+            .Discrete_Range_Attribute_Reference'
+            (Program.Nodes.Discrete_Range_Attribute_References.Create
+               (Range_Attribute => Range_Attribute));
+   begin
+      return Program.Elements.Discrete_Range_Attribute_References
+        .Discrete_Range_Attribute_Reference_Access
+        (Result);
+   end Create_Discrete_Range_Attribute_Reference;
+
+   not overriding function Create_Discrete_Simple_Expression_Range
+    (Self : Element_Factory;
+     Lower_Bound      : not null Program.Elements.Expressions
+         .Expression_Access;
+     Double_Dot_Token : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Upper_Bound      : not null Program.Elements.Expressions
+         .Expression_Access)
+      return not null Program.Elements.Discrete_Simple_Expression_Ranges
+          .Discrete_Simple_Expression_Range_Access is
+      Result : constant Discrete_Simple_Expression_Range_Access :=
+
+          new (Self.Subpool) Program.Nodes.Discrete_Simple_Expression_Ranges
+            .Discrete_Simple_Expression_Range'
+            (Program.Nodes.Discrete_Simple_Expression_Ranges.Create
+               (Lower_Bound => Lower_Bound,
+                Double_Dot_Token => Double_Dot_Token,
+                Upper_Bound => Upper_Bound));
+   begin
+      return Program.Elements.Discrete_Simple_Expression_Ranges
+        .Discrete_Simple_Expression_Range_Access
+        (Result);
+   end Create_Discrete_Simple_Expression_Range;
+
    not overriding function Create_Unknown_Discriminant_Part
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
@@ -3223,6 +3354,107 @@ package body Program.Element_Factories is
    begin
       return Program.Elements.Others_Choices.Others_Choice_Access (Result);
    end Create_Others_Choice;
+
+   not overriding function Create_Anonymous_Access_To_Object
+    (Self : Element_Factory;
+     Not_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token       : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     All_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Constant_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Subtype_Indication : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
+      return not null Program.Elements.Anonymous_Access_To_Objects
+          .Anonymous_Access_To_Object_Access is
+      Result : constant Anonymous_Access_To_Object_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Objects
+            .Anonymous_Access_To_Object'
+            (Program.Nodes.Anonymous_Access_To_Objects.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token, All_Token => All_Token,
+                Constant_Token => Constant_Token,
+                Subtype_Indication => Subtype_Indication));
+   begin
+      return Program.Elements.Anonymous_Access_To_Objects
+        .Anonymous_Access_To_Object_Access
+        (Result);
+   end Create_Anonymous_Access_To_Object;
+
+   not overriding function Create_Anonymous_Access_To_Procedure
+    (Self : Element_Factory;
+     Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Protected_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Procedure_Token     : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
+     Parameters          : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
+      return not null Program.Elements.Anonymous_Access_To_Procedures
+          .Anonymous_Access_To_Procedure_Access is
+      Result : constant Anonymous_Access_To_Procedure_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Procedures
+            .Anonymous_Access_To_Procedure'
+            (Program.Nodes.Anonymous_Access_To_Procedures.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token,
+                Protected_Token => Protected_Token,
+                Procedure_Token => Procedure_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Parameters => Parameters,
+                Right_Bracket_Token => Right_Bracket_Token));
+   begin
+      return Program.Elements.Anonymous_Access_To_Procedures
+        .Anonymous_Access_To_Procedure_Access
+        (Result);
+   end Create_Anonymous_Access_To_Procedure;
+
+   not overriding function Create_Anonymous_Access_To_Function
+    (Self : Element_Factory;
+     Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Protected_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Function_Token      : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
+     Parameters          : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
+     Return_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Not_Token_2         : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token_2        : Program.Lexical_Elements.Lexical_Element_Access;
+     Result_Subtype      : not null Program.Elements.Element_Access)
+      return not null Program.Elements.Anonymous_Access_To_Functions
+          .Anonymous_Access_To_Function_Access is
+      Result : constant Anonymous_Access_To_Function_Access :=
+
+          new (Self.Subpool) Program.Nodes.Anonymous_Access_To_Functions
+            .Anonymous_Access_To_Function'
+            (Program.Nodes.Anonymous_Access_To_Functions.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token,
+                Protected_Token => Protected_Token,
+                Function_Token => Function_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Parameters => Parameters,
+                Right_Bracket_Token => Right_Bracket_Token,
+                Return_Token => Return_Token, Not_Token_2 => Not_Token_2,
+                Null_Token_2 => Null_Token_2,
+                Result_Subtype => Result_Subtype));
+   begin
+      return Program.Elements.Anonymous_Access_To_Functions
+        .Anonymous_Access_To_Function_Access
+        (Result);
+   end Create_Anonymous_Access_To_Function;
 
    not overriding function Create_Private_Type_Definition
     (Self : Element_Factory;
@@ -5049,9 +5281,8 @@ package body Program.Element_Factories is
          .Lexical_Element_Access;
      Left_Bracket_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Right_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Of_Token             : not null Program.Lexical_Elements
@@ -5396,6 +5627,201 @@ package body Program.Element_Factories is
         .Formal_Decimal_Fixed_Point_Definition_Access
         (Result);
    end Create_Formal_Decimal_Fixed_Point_Definition;
+
+   not overriding function Create_Formal_Unconstrained_Array_Type
+    (Self : Element_Factory;
+     Array_Token          : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token   : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Index_Subtypes       : not null Program.Elements.Expressions
+         .Expression_Vector_Access;
+     Right_Bracket_Token  : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Of_Token             : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Component_Definition : not null Program.Elements.Component_Definitions
+         .Component_Definition_Access)
+      return not null Program.Elements.Formal_Unconstrained_Array_Types
+          .Formal_Unconstrained_Array_Type_Access is
+      Result : constant Formal_Unconstrained_Array_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Unconstrained_Array_Types
+            .Formal_Unconstrained_Array_Type'
+            (Program.Nodes.Formal_Unconstrained_Array_Types.Create
+               (Array_Token => Array_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Index_Subtypes => Index_Subtypes,
+                Right_Bracket_Token => Right_Bracket_Token,
+                Of_Token => Of_Token,
+                Component_Definition => Component_Definition));
+   begin
+      return Program.Elements.Formal_Unconstrained_Array_Types
+        .Formal_Unconstrained_Array_Type_Access
+        (Result);
+   end Create_Formal_Unconstrained_Array_Type;
+
+   not overriding function Create_Formal_Constrained_Array_Type
+    (Self : Element_Factory;
+     Array_Token          : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token   : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
+     Right_Bracket_Token  : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Of_Token             : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Component_Definition : not null Program.Elements.Component_Definitions
+         .Component_Definition_Access)
+      return not null Program.Elements.Formal_Constrained_Array_Types
+          .Formal_Constrained_Array_Type_Access is
+      Result : constant Formal_Constrained_Array_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Constrained_Array_Types
+            .Formal_Constrained_Array_Type'
+            (Program.Nodes.Formal_Constrained_Array_Types.Create
+               (Array_Token => Array_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Index_Subtypes => Index_Subtypes,
+                Right_Bracket_Token => Right_Bracket_Token,
+                Of_Token => Of_Token,
+                Component_Definition => Component_Definition));
+   begin
+      return Program.Elements.Formal_Constrained_Array_Types
+        .Formal_Constrained_Array_Type_Access
+        (Result);
+   end Create_Formal_Constrained_Array_Type;
+
+   not overriding function Create_Formal_Object_Access_Type
+    (Self : Element_Factory;
+     Not_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token       : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     All_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Constant_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Subtype_Indication : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
+      return not null Program.Elements.Formal_Object_Access_Types
+          .Formal_Object_Access_Type_Access is
+      Result : constant Formal_Object_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Object_Access_Types
+            .Formal_Object_Access_Type'
+            (Program.Nodes.Formal_Object_Access_Types.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token, All_Token => All_Token,
+                Constant_Token => Constant_Token,
+                Subtype_Indication => Subtype_Indication));
+   begin
+      return Program.Elements.Formal_Object_Access_Types
+        .Formal_Object_Access_Type_Access
+        (Result);
+   end Create_Formal_Object_Access_Type;
+
+   not overriding function Create_Formal_Procedure_Access_Type
+    (Self : Element_Factory;
+     Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Protected_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Procedure_Token     : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
+     Parameters          : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
+      return not null Program.Elements.Formal_Procedure_Access_Types
+          .Formal_Procedure_Access_Type_Access is
+      Result : constant Formal_Procedure_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Procedure_Access_Types
+            .Formal_Procedure_Access_Type'
+            (Program.Nodes.Formal_Procedure_Access_Types.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token,
+                Protected_Token => Protected_Token,
+                Procedure_Token => Procedure_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Parameters => Parameters,
+                Right_Bracket_Token => Right_Bracket_Token));
+   begin
+      return Program.Elements.Formal_Procedure_Access_Types
+        .Formal_Procedure_Access_Type_Access
+        (Result);
+   end Create_Formal_Procedure_Access_Type;
+
+   not overriding function Create_Formal_Function_Access_Type
+    (Self : Element_Factory;
+     Not_Token           : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Access_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Protected_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Function_Token      : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
+     Parameters          : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
+     Return_Token        : not null Program.Lexical_Elements
+         .Lexical_Element_Access;
+     Not_Token_2         : Program.Lexical_Elements.Lexical_Element_Access;
+     Null_Token_2        : Program.Lexical_Elements.Lexical_Element_Access;
+     Result_Subtype      : not null Program.Elements.Element_Access)
+      return not null Program.Elements.Formal_Function_Access_Types
+          .Formal_Function_Access_Type_Access is
+      Result : constant Formal_Function_Access_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Function_Access_Types
+            .Formal_Function_Access_Type'
+            (Program.Nodes.Formal_Function_Access_Types.Create
+               (Not_Token => Not_Token, Null_Token => Null_Token,
+                Access_Token => Access_Token,
+                Protected_Token => Protected_Token,
+                Function_Token => Function_Token,
+                Left_Bracket_Token => Left_Bracket_Token,
+                Parameters => Parameters,
+                Right_Bracket_Token => Right_Bracket_Token,
+                Return_Token => Return_Token, Not_Token_2 => Not_Token_2,
+                Null_Token_2 => Null_Token_2,
+                Result_Subtype => Result_Subtype));
+   begin
+      return Program.Elements.Formal_Function_Access_Types
+        .Formal_Function_Access_Type_Access
+        (Result);
+   end Create_Formal_Function_Access_Type;
+
+   not overriding function Create_Formal_Interface_Type
+    (Self : Element_Factory;
+     Limited_Token      : Program.Lexical_Elements.Lexical_Element_Access;
+     Task_Token         : Program.Lexical_Elements.Lexical_Element_Access;
+     Protected_Token    : Program.Lexical_Elements.Lexical_Element_Access;
+     Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
+     Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
+     And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
+     Progenitors        : not null Program.Elements.Expressions
+         .Expression_Vector_Access)
+      return not null Program.Elements.Formal_Interface_Types
+          .Formal_Interface_Type_Access is
+      Result : constant Formal_Interface_Type_Access :=
+
+          new (Self.Subpool) Program.Nodes.Formal_Interface_Types
+            .Formal_Interface_Type'
+            (Program.Nodes.Formal_Interface_Types.Create
+               (Limited_Token => Limited_Token, Task_Token => Task_Token,
+                Protected_Token => Protected_Token,
+                Synchronized_Token => Synchronized_Token,
+                Interface_Token => Interface_Token, And_Token => And_Token,
+                Progenitors => Progenitors));
+   begin
+      return Program.Elements.Formal_Interface_Types
+        .Formal_Interface_Type_Access
+        (Result);
+   end Create_Formal_Interface_Type;
 
    not overriding function Create_Range_Attribute_Reference
     (Self            : Element_Factory;

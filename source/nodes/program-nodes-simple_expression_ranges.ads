@@ -82,14 +82,6 @@ private
     (Self : Base_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Discrete_Subtype_Definition
-    (Self : Base_Simple_Expression_Range)
-      return Boolean;
-
-   overriding function Is_Discrete_Range
-    (Self : Base_Simple_Expression_Range)
-      return Boolean;
-
    type Simple_Expression_Range is
      new Base_Simple_Expression_Range
        and Program.Elements.Simple_Expression_Ranges

@@ -5,8 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Access_Types;
-with Program.Elements.Formal_Access_Types;
-with Program.Elements.Anonymous_Access_Definitions;
 with Program.Lexical_Elements;
 with Program.Elements.Subtype_Indications;
 
@@ -15,10 +13,7 @@ package Program.Elements.Object_Access_Types is
    pragma Pure (Program.Elements.Object_Access_Types);
 
    type Object_Access_Type is
-     limited interface and Program.Elements.Access_Types.Access_Type
-       and Program.Elements.Formal_Access_Types.Formal_Access_Type
-       and Program.Elements.Anonymous_Access_Definitions
-         .Anonymous_Access_Definition;
+     limited interface and Program.Elements.Access_Types.Access_Type;
 
    type Object_Access_Type_Access is access all Object_Access_Type'Class
      with Storage_Size => 0;

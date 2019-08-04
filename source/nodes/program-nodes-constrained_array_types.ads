@@ -5,7 +5,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Constrained_Array_Types;
 with Program.Element_Visitors;
@@ -26,9 +26,8 @@ package Program.Nodes.Constrained_Array_Types is
          .Lexical_Element_Access;
      Left_Bracket_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+     Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Right_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Of_Token             : not null Program.Lexical_Elements
@@ -43,9 +42,8 @@ package Program.Nodes.Constrained_Array_Types is
      with private;
 
    function Create
-    (Index_Subtypes       : not null Program.Elements
-         .Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Vector_Access;
+    (Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Vector_Access;
      Component_Definition : not null Program.Elements.Component_Definitions
          .Component_Definition_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -60,9 +58,8 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Constrained_Array_Types.Constrained_Array_Type
      with record
-        Index_Subtypes       : not null Program.Elements
-          .Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Vector_Access;
+        Index_Subtypes       : not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Vector_Access;
         Component_Definition : not null Program.Elements.Component_Definitions
           .Component_Definition_Access;
      end record;
@@ -76,8 +73,8 @@ private
 
    overriding function Index_Subtypes
     (Self : Base_Constrained_Array_Type)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Vector_Access;
+      return not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Vector_Access;
 
    overriding function Component_Definition
     (Self : Base_Constrained_Array_Type)
@@ -93,10 +90,6 @@ private
       return Boolean;
 
    overriding function Is_Definition
-    (Self : Base_Constrained_Array_Type)
-      return Boolean;
-
-   overriding function Is_Formal_Type_Definition
     (Self : Base_Constrained_Array_Type)
       return Boolean;
 

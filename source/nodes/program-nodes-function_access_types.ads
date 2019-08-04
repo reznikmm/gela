@@ -99,18 +99,6 @@ private
     (Self : Base_Function_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Access_Type
-    (Self : Base_Function_Access_Type)
-      return Boolean;
-
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Function_Access_Type)
-      return Boolean;
-
-   overriding function Is_Anonymous_Access_Definition
-    (Self : Base_Function_Access_Type)
-      return Boolean;
-
    type Function_Access_Type is
      new Base_Function_Access_Type
        and Program.Elements.Function_Access_Types.Function_Access_Type_Text

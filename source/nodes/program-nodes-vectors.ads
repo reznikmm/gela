@@ -14,7 +14,6 @@ with Program.Elements.Case_Paths;
 with Program.Elements.Component_Clauses;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Discrete_Ranges;
-with Program.Elements.Discrete_Subtype_Definitions;
 with Program.Elements.Discriminant_Associations;
 with Program.Elements.Discriminant_Specifications;
 with Program.Elements.Elsif_Paths;
@@ -46,8 +45,6 @@ package Program.Nodes.Vectors is
      and Program.Elements.Component_Clauses.Component_Clause_Vector
      and Program.Elements.Defining_Identifiers.Defining_Identifier_Vector
      and Program.Elements.Discrete_Ranges.Discrete_Range_Vector
-     and Program.Elements.Discrete_Subtype_Definitions
-       .Discrete_Subtype_Definition_Vector
      and Program.Elements.Discriminant_Associations
        .Discriminant_Association_Vector
      and Program.Elements.Discriminant_Specifications
@@ -87,8 +84,6 @@ private
      and Program.Elements.Component_Clauses.Component_Clause_Vector
      and Program.Elements.Defining_Identifiers.Defining_Identifier_Vector
      and Program.Elements.Discrete_Ranges.Discrete_Range_Vector
-     and Program.Elements.Discrete_Subtype_Definitions
-       .Discrete_Subtype_Definition_Vector
      and Program.Elements.Discriminant_Associations
        .Discriminant_Association_Vector
      and Program.Elements.Discriminant_Specifications

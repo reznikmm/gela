@@ -7,7 +7,7 @@
 with Program.Elements.Declarations;
 with Program.Elements.Defining_Identifiers;
 with Program.Lexical_Elements;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 
 package Program.Elements.Loop_Parameter_Specifications is
 
@@ -26,8 +26,8 @@ package Program.Elements.Loop_Parameter_Specifications is
 
    not overriding function Definition
     (Self : Loop_Parameter_Specification)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is abstract;
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access
+     is abstract;
 
    not overriding function Has_Reverse
     (Self : Loop_Parameter_Specification)

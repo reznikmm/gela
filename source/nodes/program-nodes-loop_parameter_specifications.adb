@@ -11,8 +11,8 @@ package body Program.Nodes.Loop_Parameter_Specifications is
          .Defining_Identifier_Access;
      In_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
      Reverse_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Definition    : not null Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access)
+     Definition    : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access)
       return Loop_Parameter_Specification is
    begin
       return Result : Loop_Parameter_Specification :=
@@ -26,8 +26,8 @@ package body Program.Nodes.Loop_Parameter_Specifications is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Definition           : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+     Definition           : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False;
@@ -55,8 +55,7 @@ package body Program.Nodes.Loop_Parameter_Specifications is
 
    overriding function Definition
     (Self : Base_Loop_Parameter_Specification)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access is
    begin
       return Self.Definition;
    end Definition;

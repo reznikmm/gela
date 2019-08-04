@@ -68,6 +68,42 @@ package body Program.Nodes is
       return False;
    end Is_Anonymous_Access_Definition;
 
+   -----------------------------------
+   -- Is_Anonymous_Access_To_Object --
+   -----------------------------------
+
+   overriding function Is_Anonymous_Access_To_Object
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Anonymous_Access_To_Object;
+
+   --------------------------------------
+   -- Is_Anonymous_Access_To_Procedure --
+   --------------------------------------
+
+   overriding function Is_Anonymous_Access_To_Procedure
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Anonymous_Access_To_Procedure;
+
+   -------------------------------------
+   -- Is_Anonymous_Access_To_Function --
+   -------------------------------------
+
+   overriding function Is_Anonymous_Access_To_Function
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Anonymous_Access_To_Function;
+
    ------------------------
    -- Is_Array_Aggregate --
    ------------------------
@@ -451,17 +487,40 @@ package body Program.Nodes is
       return False;
    end Is_Discrete_Range;
 
-   ------------------------------------
-   -- Is_Discrete_Subtype_Definition --
-   ------------------------------------
+   -------------------------------------------
+   -- Is_Discrete_Range_Attribute_Reference --
+   -------------------------------------------
 
-   overriding function Is_Discrete_Subtype_Definition
+   overriding function Is_Discrete_Range_Attribute_Reference
+     (Self : Node) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Discrete_Range_Attribute_Reference;
+
+   -----------------------------------------
+   -- Is_Discrete_Simple_Expression_Range --
+   -----------------------------------------
+
+   overriding function Is_Discrete_Simple_Expression_Range
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discrete_Subtype_Definition;
+   end Is_Discrete_Simple_Expression_Range;
+
+   ------------------------------------
+   -- Is_Discrete_Subtype_Indication --
+   ------------------------------------
+
+   overriding function Is_Discrete_Subtype_Indication
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Discrete_Subtype_Indication;
 
    ---------------------------------
    -- Is_Discriminant_Association --
@@ -710,6 +769,18 @@ package body Program.Nodes is
       return False;
    end Is_Formal_Access_Type;
 
+   --------------------------------------
+   -- Is_Formal_Constrained_Array_Type --
+   --------------------------------------
+
+   overriding function Is_Formal_Constrained_Array_Type
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Constrained_Array_Type;
+
    ----------------------------------------------
    -- Is_Formal_Decimal_Fixed_Point_Definition --
    ----------------------------------------------
@@ -781,6 +852,52 @@ package body Program.Nodes is
    begin
       return False;
    end Is_Formal_Modular_Type_Definition;
+
+   ----------------------------------
+   -- Is_Formal_Object_Access_Type --
+   ----------------------------------
+
+   overriding function Is_Formal_Object_Access_Type
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Object_Access_Type;
+
+   -------------------------------------
+   -- Is_Formal_Procedure_Access_Type --
+   -------------------------------------
+
+   overriding function Is_Formal_Procedure_Access_Type
+     (Self : Node)  return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Procedure_Access_Type;
+
+   ------------------------------------
+   -- Is_Formal_Function_Access_Type --
+   ------------------------------------
+
+   overriding function Is_Formal_Function_Access_Type
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Function_Access_Type;
+
+   ------------------------------
+   -- Is_Formal_Interface_Type --
+   ------------------------------
+
+   overriding function Is_Formal_Interface_Type (Self : Node) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Interface_Type;
 
    ----------------------------------
    -- Is_Formal_Object_Declaration --
@@ -887,6 +1004,18 @@ package body Program.Nodes is
    begin
       return False;
    end Is_Formal_Type_Definition;
+
+   ----------------------------------------
+   -- Is_Formal_Unconstrained_Array_Type --
+   ----------------------------------------
+
+   overriding function Is_Formal_Unconstrained_Array_Type
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Formal_Unconstrained_Array_Type;
 
    -----------------------------
    -- Is_Function_Access_Type --

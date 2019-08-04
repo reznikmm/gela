@@ -7,7 +7,7 @@
 with Program.Elements.Declarations;
 with Program.Lexical_Elements;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 
 package Program.Elements.Entry_Index_Specifications is
 
@@ -26,8 +26,8 @@ package Program.Elements.Entry_Index_Specifications is
 
    not overriding function Entry_Index_Subtype
     (Self : Entry_Index_Specification)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is abstract;
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access
+     is abstract;
 
    type Entry_Index_Specification_Text is limited interface;
 

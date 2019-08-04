@@ -5,8 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Access_Types;
-with Program.Elements.Formal_Access_Types;
-with Program.Elements.Anonymous_Access_Definitions;
 with Program.Lexical_Elements;
 with Program.Elements.Parameter_Specifications;
 
@@ -15,10 +13,7 @@ package Program.Elements.Function_Access_Types is
    pragma Pure (Program.Elements.Function_Access_Types);
 
    type Function_Access_Type is
-     limited interface and Program.Elements.Access_Types.Access_Type
-       and Program.Elements.Formal_Access_Types.Formal_Access_Type
-       and Program.Elements.Anonymous_Access_Definitions
-         .Anonymous_Access_Definition;
+     limited interface and Program.Elements.Access_Types.Access_Type;
 
    type Function_Access_Type_Access is access all Function_Access_Type'Class
      with Storage_Size => 0;

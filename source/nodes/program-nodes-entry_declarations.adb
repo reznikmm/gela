@@ -14,8 +14,8 @@ package body Program.Nodes.Entry_Declarations is
      Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Right_Bracket_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Parameters              : not null Program.Elements
@@ -47,8 +47,8 @@ package body Program.Nodes.Entry_Declarations is
    function Create
     (Name                    : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Entry_Family_Definition : Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition_Access;
+     Entry_Family_Definition : Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Parameters              : not null Program.Elements
          .Parameter_Specifications.Parameter_Specification_Vector_Access;
      Aspects                 : not null Program.Elements.Aspect_Specifications
@@ -82,8 +82,7 @@ package body Program.Nodes.Entry_Declarations is
 
    overriding function Entry_Family_Definition
     (Self : Base_Entry_Declaration)
-      return Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is
+      return Program.Elements.Discrete_Ranges.Discrete_Range_Access is
    begin
       return Self.Entry_Family_Definition;
    end Entry_Family_Definition;

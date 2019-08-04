@@ -87,18 +87,6 @@ private
     (Self : Base_Procedure_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Access_Type
-    (Self : Base_Procedure_Access_Type)
-      return Boolean;
-
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Procedure_Access_Type)
-      return Boolean;
-
-   overriding function Is_Anonymous_Access_Definition
-    (Self : Base_Procedure_Access_Type)
-      return Boolean;
-
    type Procedure_Access_Type is
      new Base_Procedure_Access_Type
        and Program.Elements.Procedure_Access_Types.Procedure_Access_Type_Text

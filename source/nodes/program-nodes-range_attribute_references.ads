@@ -75,14 +75,6 @@ private
     (Self : Base_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Discrete_Subtype_Definition
-    (Self : Base_Range_Attribute_Reference)
-      return Boolean;
-
-   overriding function Is_Discrete_Range
-    (Self : Base_Range_Attribute_Reference)
-      return Boolean;
-
    type Range_Attribute_Reference is
      new Base_Range_Attribute_Reference
        and Program.Elements.Range_Attribute_References

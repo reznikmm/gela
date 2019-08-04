@@ -6,7 +6,7 @@
 
 with Program.Lexical_Elements;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Entry_Index_Specifications;
 with Program.Element_Visitors;
 
@@ -29,8 +29,8 @@ package Program.Nodes.Entry_Index_Specifications is
          .Defining_Identifier_Access;
      In_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Entry_Index_Subtype : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access)
+     Entry_Index_Subtype : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access)
       return Entry_Index_Specification;
 
    type Implicit_Entry_Index_Specification is
@@ -42,8 +42,8 @@ package Program.Nodes.Entry_Index_Specifications is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Entry_Index_Subtype  : not null Program.Elements
-         .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+     Entry_Index_Subtype  : not null Program.Elements.Discrete_Ranges
+         .Discrete_Range_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -59,8 +59,8 @@ private
      with record
         Name                : not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Entry_Index_Subtype : not null Program.Elements
-          .Discrete_Subtype_Definitions.Discrete_Subtype_Definition_Access;
+        Entry_Index_Subtype : not null Program.Elements.Discrete_Ranges
+          .Discrete_Range_Access;
      end record;
 
    procedure Initialize
@@ -77,8 +77,7 @@ private
 
    overriding function Entry_Index_Subtype
     (Self : Base_Entry_Index_Specification)
-      return not null Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access;
+      return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access;
 
    overriding function Is_Entry_Index_Specification
     (Self : Base_Entry_Index_Specification)

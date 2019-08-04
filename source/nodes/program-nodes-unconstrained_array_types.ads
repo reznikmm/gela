@@ -94,10 +94,6 @@ private
     (Self : Base_Unconstrained_Array_Type)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Unconstrained_Array_Type)
-      return Boolean;
-
    type Unconstrained_Array_Type is
      new Base_Unconstrained_Array_Type
        and Program.Elements.Unconstrained_Array_Types

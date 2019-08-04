@@ -5,8 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Constraints;
-with Program.Elements.Discrete_Subtype_Definitions;
-with Program.Elements.Discrete_Ranges;
 with Program.Elements.Attribute_References;
 
 package Program.Elements.Range_Attribute_References is
@@ -14,10 +12,7 @@ package Program.Elements.Range_Attribute_References is
    pragma Pure (Program.Elements.Range_Attribute_References);
 
    type Range_Attribute_Reference is
-     limited interface and Program.Elements.Constraints.Constraint
-       and Program.Elements.Discrete_Subtype_Definitions
-         .Discrete_Subtype_Definition
-       and Program.Elements.Discrete_Ranges.Discrete_Range;
+     limited interface and Program.Elements.Constraints.Constraint;
 
    type Range_Attribute_Reference_Access is
      access all Range_Attribute_Reference'Class with Storage_Size => 0;

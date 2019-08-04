@@ -70,8 +70,8 @@ package body Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-     (Self : aliased in out
-        Base_Formal_Ordinary_Fixed_Point_Definition'Class) is
+     (Self : aliased in out Base_Formal_Ordinary_Fixed_Point_Definition'Class)
+   is
    begin
       null;
    end Initialize;

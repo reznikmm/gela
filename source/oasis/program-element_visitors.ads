@@ -64,6 +64,9 @@ with Program.Elements.Formal_Function_Declarations;
 with Program.Elements.Formal_Package_Declarations;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Component_Definitions;
+with Program.Elements.Discrete_Subtype_Indications;
+with Program.Elements.Discrete_Range_Attribute_References;
+with Program.Elements.Discrete_Simple_Expression_Ranges;
 with Program.Elements.Unknown_Discriminant_Parts;
 with Program.Elements.Known_Discriminant_Parts;
 with Program.Elements.Record_Definitions;
@@ -71,6 +74,9 @@ with Program.Elements.Null_Components;
 with Program.Elements.Variant_Parts;
 with Program.Elements.Variants;
 with Program.Elements.Others_Choices;
+with Program.Elements.Anonymous_Access_To_Objects;
+with Program.Elements.Anonymous_Access_To_Procedures;
+with Program.Elements.Anonymous_Access_To_Functions;
 with Program.Elements.Private_Type_Definitions;
 with Program.Elements.Private_Extension_Definitions;
 with Program.Elements.Incomplete_Type_Definitions;
@@ -161,6 +167,12 @@ with Program.Elements.Formal_Modular_Type_Definitions;
 with Program.Elements.Formal_Floating_Point_Definitions;
 with Program.Elements.Formal_Ordinary_Fixed_Point_Definitions;
 with Program.Elements.Formal_Decimal_Fixed_Point_Definitions;
+with Program.Elements.Formal_Unconstrained_Array_Types;
+with Program.Elements.Formal_Constrained_Array_Types;
+with Program.Elements.Formal_Object_Access_Types;
+with Program.Elements.Formal_Procedure_Access_Types;
+with Program.Elements.Formal_Function_Access_Types;
+with Program.Elements.Formal_Interface_Types;
 with Program.Elements.Range_Attribute_References;
 with Program.Elements.Simple_Expression_Ranges;
 with Program.Elements.Digits_Constraints;
@@ -479,6 +491,21 @@ package Program.Element_Visitors is
      Element : not null Program.Elements.Component_Definitions
          .Component_Definition_Access) is null;
 
+   procedure Discrete_Subtype_Indication
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Discrete_Subtype_Indications
+         .Discrete_Subtype_Indication_Access) is null;
+
+   procedure Discrete_Range_Attribute_Reference
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Discrete_Range_Attribute_References
+         .Discrete_Range_Attribute_Reference_Access) is null;
+
+   procedure Discrete_Simple_Expression_Range
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+         .Discrete_Simple_Expression_Range_Access) is null;
+
    procedure Unknown_Discriminant_Part
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Unknown_Discriminant_Parts
@@ -512,6 +539,21 @@ package Program.Element_Visitors is
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Others_Choices.Others_Choice_Access)
      is null;
+
+   procedure Anonymous_Access_To_Object
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Anonymous_Access_To_Objects
+         .Anonymous_Access_To_Object_Access) is null;
+
+   procedure Anonymous_Access_To_Procedure
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Anonymous_Access_To_Procedures
+         .Anonymous_Access_To_Procedure_Access) is null;
+
+   procedure Anonymous_Access_To_Function
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Anonymous_Access_To_Functions
+         .Anonymous_Access_To_Function_Access) is null;
 
    procedure Private_Type_Definition
     (Self    : in out Element_Visitor;
@@ -959,6 +1001,36 @@ package Program.Element_Visitors is
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Formal_Decimal_Fixed_Point_Definitions
          .Formal_Decimal_Fixed_Point_Definition_Access) is null;
+
+   procedure Formal_Unconstrained_Array_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Unconstrained_Array_Types
+         .Formal_Unconstrained_Array_Type_Access) is null;
+
+   procedure Formal_Constrained_Array_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Constrained_Array_Types
+         .Formal_Constrained_Array_Type_Access) is null;
+
+   procedure Formal_Object_Access_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Object_Access_Types
+         .Formal_Object_Access_Type_Access) is null;
+
+   procedure Formal_Procedure_Access_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Procedure_Access_Types
+         .Formal_Procedure_Access_Type_Access) is null;
+
+   procedure Formal_Function_Access_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Function_Access_Types
+         .Formal_Function_Access_Type_Access) is null;
+
+   procedure Formal_Interface_Type
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Formal_Interface_Types
+         .Formal_Interface_Type_Access) is null;
 
    procedure Range_Attribute_Reference
     (Self    : in out Element_Visitor;

@@ -5,7 +5,6 @@
 -------------------------------------------------------------
 
 with Program.Elements.Type_Definitions;
-with Program.Elements.Formal_Type_Definitions;
 with Program.Lexical_Elements;
 with Program.Elements.Expressions;
 with Program.Elements.Component_Definitions;
@@ -15,8 +14,7 @@ package Program.Elements.Unconstrained_Array_Types is
    pragma Pure (Program.Elements.Unconstrained_Array_Types);
 
    type Unconstrained_Array_Type is
-     limited interface and Program.Elements.Type_Definitions.Type_Definition
-       and Program.Elements.Formal_Type_Definitions.Formal_Type_Definition;
+     limited interface and Program.Elements.Type_Definitions.Type_Definition;
 
    type Unconstrained_Array_Type_Access is
      access all Unconstrained_Array_Type'Class with Storage_Size => 0;

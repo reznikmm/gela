@@ -7,7 +7,7 @@
 with Program.Elements.Declarations;
 with Program.Lexical_Elements;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Discrete_Subtype_Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Parameter_Specifications;
 with Program.Elements.Aspect_Specifications;
 
@@ -28,8 +28,8 @@ package Program.Elements.Entry_Declarations is
 
    not overriding function Entry_Family_Definition
     (Self : Entry_Declaration)
-      return Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is abstract;
+      return Program.Elements.Discrete_Ranges.Discrete_Range_Access
+     is abstract;
 
    not overriding function Parameters
     (Self : Entry_Declaration)

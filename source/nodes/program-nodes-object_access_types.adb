@@ -193,30 +193,6 @@ package body Program.Nodes.Object_Access_Types is
       return True;
    end Is_Definition;
 
-   overriding function Is_Formal_Access_Type
-    (Self : Base_Object_Access_Type)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Formal_Access_Type;
-
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Object_Access_Type)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Formal_Type_Definition;
-
-   overriding function Is_Anonymous_Access_Definition
-    (Self : Base_Object_Access_Type)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Anonymous_Access_Definition;
-
    overriding procedure Visit
     (Self    : not null access Base_Object_Access_Type;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class) is

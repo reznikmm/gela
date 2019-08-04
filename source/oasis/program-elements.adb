@@ -69,8 +69,10 @@ with Program.Elements.Type_Definitions;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Constraints;
 with Program.Elements.Component_Definitions;
-with Program.Elements.Discrete_Subtype_Definitions;
 with Program.Elements.Discrete_Ranges;
+with Program.Elements.Discrete_Subtype_Indications;
+with Program.Elements.Discrete_Range_Attribute_References;
+with Program.Elements.Discrete_Simple_Expression_Ranges;
 with Program.Elements.Unknown_Discriminant_Parts;
 with Program.Elements.Known_Discriminant_Parts;
 with Program.Elements.Record_Definitions;
@@ -79,6 +81,9 @@ with Program.Elements.Variant_Parts;
 with Program.Elements.Variants;
 with Program.Elements.Others_Choices;
 with Program.Elements.Anonymous_Access_Definitions;
+with Program.Elements.Anonymous_Access_To_Objects;
+with Program.Elements.Anonymous_Access_To_Procedures;
+with Program.Elements.Anonymous_Access_To_Functions;
 with Program.Elements.Private_Type_Definitions;
 with Program.Elements.Private_Extension_Definitions;
 with Program.Elements.Incomplete_Type_Definitions;
@@ -176,7 +181,13 @@ with Program.Elements.Formal_Modular_Type_Definitions;
 with Program.Elements.Formal_Floating_Point_Definitions;
 with Program.Elements.Formal_Ordinary_Fixed_Point_Definitions;
 with Program.Elements.Formal_Decimal_Fixed_Point_Definitions;
+with Program.Elements.Formal_Unconstrained_Array_Types;
+with Program.Elements.Formal_Constrained_Array_Types;
 with Program.Elements.Formal_Access_Types;
+with Program.Elements.Formal_Object_Access_Types;
+with Program.Elements.Formal_Procedure_Access_Types;
+with Program.Elements.Formal_Function_Access_Types;
+with Program.Elements.Formal_Interface_Types;
 with Program.Elements.Access_Types;
 with Program.Elements.Range_Attribute_References;
 with Program.Elements.Simple_Expression_Ranges;
@@ -809,22 +820,42 @@ package body Program.Elements is
         (Self);
    end To_Component_Definition;
 
-   function To_Discrete_Subtype_Definition
-    (Self : access Element'Class)
-      return Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access is
-   begin
-      return Program.Elements.Discrete_Subtype_Definitions
-        .Discrete_Subtype_Definition_Access
-        (Self);
-   end To_Discrete_Subtype_Definition;
-
    function To_Discrete_Range
     (Self : access Element'Class)
       return Program.Elements.Discrete_Ranges.Discrete_Range_Access is
    begin
       return Program.Elements.Discrete_Ranges.Discrete_Range_Access (Self);
    end To_Discrete_Range;
+
+   function To_Discrete_Subtype_Indication
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Subtype_Indications
+          .Discrete_Subtype_Indication_Access is
+   begin
+      return Program.Elements.Discrete_Subtype_Indications
+        .Discrete_Subtype_Indication_Access
+        (Self);
+   end To_Discrete_Subtype_Indication;
+
+   function To_Discrete_Range_Attribute_Reference
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Range_Attribute_References
+          .Discrete_Range_Attribute_Reference_Access is
+   begin
+      return Program.Elements.Discrete_Range_Attribute_References
+        .Discrete_Range_Attribute_Reference_Access
+        (Self);
+   end To_Discrete_Range_Attribute_Reference;
+
+   function To_Discrete_Simple_Expression_Range
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Simple_Expression_Ranges
+          .Discrete_Simple_Expression_Range_Access is
+   begin
+      return Program.Elements.Discrete_Simple_Expression_Ranges
+        .Discrete_Simple_Expression_Range_Access
+        (Self);
+   end To_Discrete_Simple_Expression_Range;
 
    function To_Unknown_Discriminant_Part
     (Self : access Element'Class)
@@ -891,6 +922,36 @@ package body Program.Elements is
         .Anonymous_Access_Definition_Access
         (Self);
    end To_Anonymous_Access_Definition;
+
+   function To_Anonymous_Access_To_Object
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Objects
+          .Anonymous_Access_To_Object_Access is
+   begin
+      return Program.Elements.Anonymous_Access_To_Objects
+        .Anonymous_Access_To_Object_Access
+        (Self);
+   end To_Anonymous_Access_To_Object;
+
+   function To_Anonymous_Access_To_Procedure
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Procedures
+          .Anonymous_Access_To_Procedure_Access is
+   begin
+      return Program.Elements.Anonymous_Access_To_Procedures
+        .Anonymous_Access_To_Procedure_Access
+        (Self);
+   end To_Anonymous_Access_To_Procedure;
+
+   function To_Anonymous_Access_To_Function
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Functions
+          .Anonymous_Access_To_Function_Access is
+   begin
+      return Program.Elements.Anonymous_Access_To_Functions
+        .Anonymous_Access_To_Function_Access
+        (Self);
+   end To_Anonymous_Access_To_Function;
 
    function To_Private_Type_Definition
     (Self : access Element'Class)
@@ -1697,6 +1758,26 @@ package body Program.Elements is
         (Self);
    end To_Formal_Decimal_Fixed_Point_Definition;
 
+   function To_Formal_Unconstrained_Array_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Unconstrained_Array_Types
+          .Formal_Unconstrained_Array_Type_Access is
+   begin
+      return Program.Elements.Formal_Unconstrained_Array_Types
+        .Formal_Unconstrained_Array_Type_Access
+        (Self);
+   end To_Formal_Unconstrained_Array_Type;
+
+   function To_Formal_Constrained_Array_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Constrained_Array_Types
+          .Formal_Constrained_Array_Type_Access is
+   begin
+      return Program.Elements.Formal_Constrained_Array_Types
+        .Formal_Constrained_Array_Type_Access
+        (Self);
+   end To_Formal_Constrained_Array_Type;
+
    function To_Formal_Access_Type
     (Self : access Element'Class)
       return Program.Elements.Formal_Access_Types.Formal_Access_Type_Access is
@@ -1704,6 +1785,46 @@ package body Program.Elements is
       return Program.Elements.Formal_Access_Types.Formal_Access_Type_Access
         (Self);
    end To_Formal_Access_Type;
+
+   function To_Formal_Object_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Object_Access_Types
+          .Formal_Object_Access_Type_Access is
+   begin
+      return Program.Elements.Formal_Object_Access_Types
+        .Formal_Object_Access_Type_Access
+        (Self);
+   end To_Formal_Object_Access_Type;
+
+   function To_Formal_Procedure_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Procedure_Access_Types
+          .Formal_Procedure_Access_Type_Access is
+   begin
+      return Program.Elements.Formal_Procedure_Access_Types
+        .Formal_Procedure_Access_Type_Access
+        (Self);
+   end To_Formal_Procedure_Access_Type;
+
+   function To_Formal_Function_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Function_Access_Types
+          .Formal_Function_Access_Type_Access is
+   begin
+      return Program.Elements.Formal_Function_Access_Types
+        .Formal_Function_Access_Type_Access
+        (Self);
+   end To_Formal_Function_Access_Type;
+
+   function To_Formal_Interface_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Interface_Types
+          .Formal_Interface_Type_Access is
+   begin
+      return Program.Elements.Formal_Interface_Types
+        .Formal_Interface_Type_Access
+        (Self);
+   end To_Formal_Interface_Type;
 
    function To_Access_Type
     (Self : access Element'Class)

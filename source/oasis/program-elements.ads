@@ -69,8 +69,10 @@ limited with Program.Elements.Type_Definitions;
 limited with Program.Elements.Subtype_Indications;
 limited with Program.Elements.Constraints;
 limited with Program.Elements.Component_Definitions;
-limited with Program.Elements.Discrete_Subtype_Definitions;
 limited with Program.Elements.Discrete_Ranges;
+limited with Program.Elements.Discrete_Subtype_Indications;
+limited with Program.Elements.Discrete_Range_Attribute_References;
+limited with Program.Elements.Discrete_Simple_Expression_Ranges;
 limited with Program.Elements.Unknown_Discriminant_Parts;
 limited with Program.Elements.Known_Discriminant_Parts;
 limited with Program.Elements.Record_Definitions;
@@ -79,6 +81,9 @@ limited with Program.Elements.Variant_Parts;
 limited with Program.Elements.Variants;
 limited with Program.Elements.Others_Choices;
 limited with Program.Elements.Anonymous_Access_Definitions;
+limited with Program.Elements.Anonymous_Access_To_Objects;
+limited with Program.Elements.Anonymous_Access_To_Procedures;
+limited with Program.Elements.Anonymous_Access_To_Functions;
 limited with Program.Elements.Private_Type_Definitions;
 limited with Program.Elements.Private_Extension_Definitions;
 limited with Program.Elements.Incomplete_Type_Definitions;
@@ -176,7 +181,13 @@ limited with Program.Elements.Formal_Modular_Type_Definitions;
 limited with Program.Elements.Formal_Floating_Point_Definitions;
 limited with Program.Elements.Formal_Ordinary_Fixed_Point_Definitions;
 limited with Program.Elements.Formal_Decimal_Fixed_Point_Definitions;
+limited with Program.Elements.Formal_Unconstrained_Array_Types;
+limited with Program.Elements.Formal_Constrained_Array_Types;
 limited with Program.Elements.Formal_Access_Types;
+limited with Program.Elements.Formal_Object_Access_Types;
+limited with Program.Elements.Formal_Procedure_Access_Types;
+limited with Program.Elements.Formal_Function_Access_Types;
+limited with Program.Elements.Formal_Interface_Types;
 limited with Program.Elements.Access_Types;
 limited with Program.Elements.Range_Attribute_References;
 limited with Program.Elements.Simple_Expression_Ranges;
@@ -565,9 +576,7 @@ package Program.Elements is
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Subtype_Indication'Result
-          then Self.Is_Definition or Self.Is_Discrete_Subtype_Definition
-            or Self.Is_Discrete_Range);
+       (if Is_Subtype_Indication'Result then Self.Is_Definition);
 
    not overriding function Is_Constraint (Self : Element) return Boolean
      is abstract
@@ -579,15 +588,29 @@ package Program.Elements is
      with Post'Class =>
        (if Is_Component_Definition'Result then Self.Is_Definition);
 
-   not overriding function Is_Discrete_Subtype_Definition
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Discrete_Subtype_Definition'Result then Self.Is_Definition);
-
    not overriding function Is_Discrete_Range (Self : Element) return Boolean
      is abstract
      with Post'Class => (if Is_Discrete_Range'Result then Self.Is_Definition);
+
+   not overriding function Is_Discrete_Subtype_Indication
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discrete_Subtype_Indication'Result then Self.Is_Discrete_Range);
+
+   not overriding function Is_Discrete_Range_Attribute_Reference
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discrete_Range_Attribute_Reference'Result
+          then Self.Is_Discrete_Range);
+
+   not overriding function Is_Discrete_Simple_Expression_Range
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discrete_Simple_Expression_Range'Result
+          then Self.Is_Discrete_Range);
 
    not overriding function Is_Unknown_Discriminant_Part
     (Self : Element)
@@ -627,6 +650,27 @@ package Program.Elements is
       return Boolean is abstract
      with Post'Class =>
        (if Is_Anonymous_Access_Definition'Result then Self.Is_Definition);
+
+   not overriding function Is_Anonymous_Access_To_Object
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Anonymous_Access_To_Object'Result
+          then Self.Is_Anonymous_Access_Definition);
+
+   not overriding function Is_Anonymous_Access_To_Procedure
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Anonymous_Access_To_Procedure'Result
+          then Self.Is_Anonymous_Access_Definition);
+
+   not overriding function Is_Anonymous_Access_To_Function
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Anonymous_Access_To_Function'Result
+          then Self.Is_Anonymous_Access_Definition);
 
    not overriding function Is_Private_Type_Definition
     (Self : Element)
@@ -1026,15 +1070,13 @@ package Program.Elements is
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Unconstrained_Array_Type'Result
-          then Self.Is_Type_Definition or Self.Is_Formal_Type_Definition);
+       (if Is_Unconstrained_Array_Type'Result then Self.Is_Type_Definition);
 
    not overriding function Is_Constrained_Array_Type
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Constrained_Array_Type'Result
-          then Self.Is_Type_Definition or Self.Is_Formal_Type_Definition);
+       (if Is_Constrained_Array_Type'Result then Self.Is_Type_Definition);
 
    not overriding function Is_Record_Type (Self : Element) return Boolean
      is abstract
@@ -1044,32 +1086,25 @@ package Program.Elements is
    not overriding function Is_Interface_Type (Self : Element) return Boolean
      is abstract
      with Post'Class =>
-       (if Is_Interface_Type'Result
-          then Self.Is_Type_Definition or Self.Is_Formal_Type_Definition);
+       (if Is_Interface_Type'Result then Self.Is_Type_Definition);
 
    not overriding function Is_Object_Access_Type
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Object_Access_Type'Result
-          then Self.Is_Access_Type or Self.Is_Formal_Access_Type
-            or Self.Is_Anonymous_Access_Definition);
+       (if Is_Object_Access_Type'Result then Self.Is_Access_Type);
 
    not overriding function Is_Procedure_Access_Type
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Procedure_Access_Type'Result
-          then Self.Is_Access_Type or Self.Is_Formal_Access_Type
-            or Self.Is_Anonymous_Access_Definition);
+       (if Is_Procedure_Access_Type'Result then Self.Is_Access_Type);
 
    not overriding function Is_Function_Access_Type
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Function_Access_Type'Result
-          then Self.Is_Access_Type or Self.Is_Formal_Access_Type
-            or Self.Is_Anonymous_Access_Definition);
+       (if Is_Function_Access_Type'Result then Self.Is_Access_Type);
 
    not overriding function Is_Formal_Private_Type_Definition
     (Self : Element)
@@ -1127,11 +1162,53 @@ package Program.Elements is
        (if Is_Formal_Decimal_Fixed_Point_Definition'Result
           then Self.Is_Formal_Type_Definition);
 
+   not overriding function Is_Formal_Unconstrained_Array_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Unconstrained_Array_Type'Result
+          then Self.Is_Formal_Type_Definition);
+
+   not overriding function Is_Formal_Constrained_Array_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Constrained_Array_Type'Result
+          then Self.Is_Formal_Type_Definition);
+
    not overriding function Is_Formal_Access_Type
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
        (if Is_Formal_Access_Type'Result then Self.Is_Formal_Type_Definition);
+
+   not overriding function Is_Formal_Object_Access_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Object_Access_Type'Result
+          then Self.Is_Formal_Access_Type);
+
+   not overriding function Is_Formal_Procedure_Access_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Procedure_Access_Type'Result
+          then Self.Is_Formal_Access_Type);
+
+   not overriding function Is_Formal_Function_Access_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Function_Access_Type'Result
+          then Self.Is_Formal_Access_Type);
+
+   not overriding function Is_Formal_Interface_Type
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Interface_Type'Result
+          then Self.Is_Formal_Type_Definition);
 
    not overriding function Is_Access_Type (Self : Element) return Boolean
      is abstract
@@ -1142,17 +1219,13 @@ package Program.Elements is
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Range_Attribute_Reference'Result
-          then Self.Is_Constraint or Self.Is_Discrete_Subtype_Definition
-            or Self.Is_Discrete_Range);
+       (if Is_Range_Attribute_Reference'Result then Self.Is_Constraint);
 
    not overriding function Is_Simple_Expression_Range
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Simple_Expression_Range'Result
-          then Self.Is_Constraint or Self.Is_Discrete_Subtype_Definition
-            or Self.Is_Discrete_Range);
+       (if Is_Simple_Expression_Range'Result then Self.Is_Constraint);
 
    not overriding function Is_Digits_Constraint (Self : Element) return Boolean
      is abstract
@@ -1572,16 +1645,28 @@ package Program.Elements is
       return Program.Elements.Component_Definitions.Component_Definition_Access
      with Pre => Self.Is_Component_Definition;
 
-   function To_Discrete_Subtype_Definition
-    (Self : access Element'Class)
-      return Program.Elements.Discrete_Subtype_Definitions
-          .Discrete_Subtype_Definition_Access
-     with Pre => Self.Is_Discrete_Subtype_Definition;
-
    function To_Discrete_Range
     (Self : access Element'Class)
       return Program.Elements.Discrete_Ranges.Discrete_Range_Access
      with Pre => Self.Is_Discrete_Range;
+
+   function To_Discrete_Subtype_Indication
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Subtype_Indications
+          .Discrete_Subtype_Indication_Access
+     with Pre => Self.Is_Discrete_Subtype_Indication;
+
+   function To_Discrete_Range_Attribute_Reference
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Range_Attribute_References
+          .Discrete_Range_Attribute_Reference_Access
+     with Pre => Self.Is_Discrete_Range_Attribute_Reference;
+
+   function To_Discrete_Simple_Expression_Range
+    (Self : access Element'Class)
+      return Program.Elements.Discrete_Simple_Expression_Ranges
+          .Discrete_Simple_Expression_Range_Access
+     with Pre => Self.Is_Discrete_Simple_Expression_Range;
 
    function To_Unknown_Discriminant_Part
     (Self : access Element'Class)
@@ -1625,6 +1710,24 @@ package Program.Elements is
       return Program.Elements.Anonymous_Access_Definitions
           .Anonymous_Access_Definition_Access
      with Pre => Self.Is_Anonymous_Access_Definition;
+
+   function To_Anonymous_Access_To_Object
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Objects
+          .Anonymous_Access_To_Object_Access
+     with Pre => Self.Is_Anonymous_Access_To_Object;
+
+   function To_Anonymous_Access_To_Procedure
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Procedures
+          .Anonymous_Access_To_Procedure_Access
+     with Pre => Self.Is_Anonymous_Access_To_Procedure;
+
+   function To_Anonymous_Access_To_Function
+    (Self : access Element'Class)
+      return Program.Elements.Anonymous_Access_To_Functions
+          .Anonymous_Access_To_Function_Access
+     with Pre => Self.Is_Anonymous_Access_To_Function;
 
    function To_Private_Type_Definition
     (Self : access Element'Class)
@@ -2140,10 +2243,46 @@ package Program.Elements is
           .Formal_Decimal_Fixed_Point_Definition_Access
      with Pre => Self.Is_Formal_Decimal_Fixed_Point_Definition;
 
+   function To_Formal_Unconstrained_Array_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Unconstrained_Array_Types
+          .Formal_Unconstrained_Array_Type_Access
+     with Pre => Self.Is_Formal_Unconstrained_Array_Type;
+
+   function To_Formal_Constrained_Array_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Constrained_Array_Types
+          .Formal_Constrained_Array_Type_Access
+     with Pre => Self.Is_Formal_Constrained_Array_Type;
+
    function To_Formal_Access_Type
     (Self : access Element'Class)
       return Program.Elements.Formal_Access_Types.Formal_Access_Type_Access
      with Pre => Self.Is_Formal_Access_Type;
+
+   function To_Formal_Object_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Object_Access_Types
+          .Formal_Object_Access_Type_Access
+     with Pre => Self.Is_Formal_Object_Access_Type;
+
+   function To_Formal_Procedure_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Procedure_Access_Types
+          .Formal_Procedure_Access_Type_Access
+     with Pre => Self.Is_Formal_Procedure_Access_Type;
+
+   function To_Formal_Function_Access_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Function_Access_Types
+          .Formal_Function_Access_Type_Access
+     with Pre => Self.Is_Formal_Function_Access_Type;
+
+   function To_Formal_Interface_Type
+    (Self : access Element'Class)
+      return Program.Elements.Formal_Interface_Types
+          .Formal_Interface_Type_Access
+     with Pre => Self.Is_Formal_Interface_Type;
 
    function To_Access_Type
     (Self : access Element'Class)

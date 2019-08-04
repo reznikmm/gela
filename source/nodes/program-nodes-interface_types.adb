@@ -205,14 +205,6 @@ package body Program.Nodes.Interface_Types is
       return True;
    end Is_Definition;
 
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Interface_Type)
-      return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Formal_Type_Definition;
-
    overriding procedure Visit
     (Self    : not null access Base_Interface_Type;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class) is

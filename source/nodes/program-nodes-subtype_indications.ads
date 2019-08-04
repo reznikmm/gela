@@ -75,14 +75,6 @@ private
     (Self : Base_Subtype_Indication)
       return Boolean;
 
-   overriding function Is_Discrete_Subtype_Definition
-    (Self : Base_Subtype_Indication)
-      return Boolean;
-
-   overriding function Is_Discrete_Range
-    (Self : Base_Subtype_Indication)
-      return Boolean;
-
    type Subtype_Indication is
      new Base_Subtype_Indication
        and Program.Elements.Subtype_Indications.Subtype_Indication_Text

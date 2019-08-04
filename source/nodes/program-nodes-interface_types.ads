@@ -78,10 +78,6 @@ private
     (Self : Base_Interface_Type)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition
-    (Self : Base_Interface_Type)
-      return Boolean;
-
    type Interface_Type is
      new Base_Interface_Type
        and Program.Elements.Interface_Types.Interface_Type_Text
