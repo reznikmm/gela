@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Discrete_Subtype_Indications is
 
-   pragma Pure (Program.Nodes.Discrete_Subtype_Indications);
+   pragma Preelaborate;
 
    type Discrete_Subtype_Indication is
      new Program.Nodes.Node

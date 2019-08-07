@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Case_Statements is
 
-   pragma Pure (Program.Nodes.Case_Statements);
+   pragma Preelaborate;
 
    type Case_Statement is
      new Program.Nodes.Node and Program.Elements.Case_Statements.Case_Statement

@@ -15,7 +15,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Accept_Statements is
 
-   pragma Pure (Program.Nodes.Accept_Statements);
+   pragma Preelaborate;
 
    type Accept_Statement is
      new Program.Nodes.Node

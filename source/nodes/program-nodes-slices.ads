@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Slices is
 
-   pragma Pure (Program.Nodes.Slices);
+   pragma Preelaborate;
 
    type Slice is
      new Program.Nodes.Node and Program.Elements.Slices.Slice

@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Record_Component_Associations is
 
-   pragma Pure (Program.Nodes.Record_Component_Associations);
+   pragma Preelaborate;
 
    type Record_Component_Association is
      new Program.Nodes.Node

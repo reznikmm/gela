@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Subtype_Indications is
 
-   pragma Pure (Program.Nodes.Subtype_Indications);
+   pragma Preelaborate;
 
    type Subtype_Indication is
      new Program.Nodes.Node

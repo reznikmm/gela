@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Simple_Return_Statements is
 
-   pragma Pure (Program.Nodes.Simple_Return_Statements);
+   pragma Preelaborate;
 
    type Simple_Return_Statement is
      new Program.Nodes.Node

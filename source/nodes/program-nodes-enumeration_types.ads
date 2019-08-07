@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Enumeration_Types is
 
-   pragma Pure (Program.Nodes.Enumeration_Types);
+   pragma Preelaborate;
 
    type Enumeration_Type is
      new Program.Nodes.Node

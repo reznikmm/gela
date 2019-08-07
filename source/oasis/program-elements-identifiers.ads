@@ -18,6 +18,8 @@ package Program.Elements.Identifiers is
    type Identifier_Access is access all Identifier'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Identifier) return Text is abstract;
+
    type Identifier_Text is limited interface;
 
    type Identifier_Text_Access is access all Identifier_Text'Class

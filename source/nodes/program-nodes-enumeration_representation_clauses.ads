@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Enumeration_Representation_Clauses is
 
-   pragma Pure (Program.Nodes.Enumeration_Representation_Clauses);
+   pragma Preelaborate;
 
    type Enumeration_Representation_Clause is
      new Program.Nodes.Node

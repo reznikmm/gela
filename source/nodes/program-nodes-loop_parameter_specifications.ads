@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Loop_Parameter_Specifications is
 
-   pragma Pure (Program.Nodes.Loop_Parameter_Specifications);
+   pragma Preelaborate;
 
    type Loop_Parameter_Specification is
      new Program.Nodes.Node

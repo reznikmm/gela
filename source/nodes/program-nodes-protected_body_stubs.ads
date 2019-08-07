@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Protected_Body_Stubs is
 
-   pragma Pure (Program.Nodes.Protected_Body_Stubs);
+   pragma Preelaborate;
 
    type Protected_Body_Stub is
      new Program.Nodes.Node

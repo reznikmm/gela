@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Choice_Parameter_Specifications is
 
-   pragma Pure (Program.Nodes.Choice_Parameter_Specifications);
+   pragma Preelaborate;
 
    type Choice_Parameter_Specification is
      new Program.Nodes.Node

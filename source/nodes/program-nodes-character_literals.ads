@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Character_Literals is
 
-   pragma Pure (Program.Nodes.Character_Literals);
+   pragma Preelaborate;
 
    type Character_Literal is
      new Program.Nodes.Node
@@ -72,6 +72,8 @@ private
     (Self : Character_Literal)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
 
+   overriding function Image (Self : Character_Literal) return Text;
+
    type Implicit_Character_Literal is
      new Base_Character_Literal
      with record
@@ -95,5 +97,7 @@ private
    overriding function Is_Part_Of_Instance
     (Self : Implicit_Character_Literal)
       return Boolean;
+
+   overriding function Image (Self : Implicit_Character_Literal) return Text;
 
 end Program.Nodes.Character_Literals;

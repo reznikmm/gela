@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Anonymous_Access_To_Objects is
 
-   pragma Pure (Program.Nodes.Anonymous_Access_To_Objects);
+   pragma Preelaborate;
 
    type Anonymous_Access_To_Object is
      new Program.Nodes.Node

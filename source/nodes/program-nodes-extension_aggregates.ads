@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Extension_Aggregates is
 
-   pragma Pure (Program.Nodes.Extension_Aggregates);
+   pragma Preelaborate;
 
    type Extension_Aggregate is
      new Program.Nodes.Node

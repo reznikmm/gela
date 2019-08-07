@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Assignment_Statements is
 
-   pragma Pure (Program.Nodes.Assignment_Statements);
+   pragma Preelaborate;
 
    type Assignment_Statement is
      new Program.Nodes.Node

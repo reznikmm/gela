@@ -17,6 +17,9 @@ package Program.Elements.String_Literals is
    type String_Literal_Access is access all String_Literal'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : String_Literal) return Text
+     is abstract;
+
    type String_Literal_Text is limited interface;
 
    type String_Literal_Text_Access is access all String_Literal_Text'Class

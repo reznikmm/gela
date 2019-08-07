@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Ordinary_Fixed_Point_Types is
 
-   pragma Pure (Program.Nodes.Ordinary_Fixed_Point_Types);
+   pragma Preelaborate;
 
    type Ordinary_Fixed_Point_Type is
      new Program.Nodes.Node

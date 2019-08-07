@@ -8,7 +8,7 @@ with Program.Elements;
 
 package Program.Nodes is
 
-   pragma Pure (Program.Nodes);
+   pragma Preelaborate;
 
    type Node is abstract limited new Program.Elements.Element with private;
 

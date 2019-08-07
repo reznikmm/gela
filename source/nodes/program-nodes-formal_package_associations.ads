@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Package_Associations is
 
-   pragma Pure (Program.Nodes.Formal_Package_Associations);
+   pragma Preelaborate;
 
    type Formal_Package_Association is
      new Program.Nodes.Node

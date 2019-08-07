@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Defining_Expanded_Names is
 
-   pragma Pure (Program.Nodes.Defining_Expanded_Names);
+   pragma Preelaborate;
 
    type Defining_Expanded_Name is
      new Program.Nodes.Node
@@ -95,6 +95,8 @@ private
     (Self : Defining_Expanded_Name)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
 
+   overriding function Image (Self : Defining_Expanded_Name) return Text;
+
    type Implicit_Defining_Expanded_Name is
      new Base_Defining_Expanded_Name
      with record
@@ -119,5 +121,9 @@ private
    overriding function Is_Part_Of_Instance
     (Self : Implicit_Defining_Expanded_Name)
       return Boolean;
+
+   overriding function Image
+    (Self : Implicit_Defining_Expanded_Name)
+      return Text;
 
 end Program.Nodes.Defining_Expanded_Names;

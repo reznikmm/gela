@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Terminate_Alternative_Statements is
 
-   pragma Pure (Program.Nodes.Terminate_Alternative_Statements);
+   pragma Preelaborate;
 
    type Terminate_Alternative_Statement is
      new Program.Nodes.Node

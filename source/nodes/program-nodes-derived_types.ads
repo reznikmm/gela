@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Derived_Types is
 
-   pragma Pure (Program.Nodes.Derived_Types);
+   pragma Preelaborate;
 
    type Derived_Type is
      new Program.Nodes.Node and Program.Elements.Derived_Types.Derived_Type

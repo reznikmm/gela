@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Others_Choices is
 
-   pragma Pure (Program.Nodes.Others_Choices);
+   pragma Preelaborate;
 
    type Others_Choice is
      new Program.Nodes.Node and Program.Elements.Others_Choices.Others_Choice

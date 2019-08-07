@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Return_Object_Specifications is
 
-   pragma Pure (Program.Nodes.Return_Object_Specifications);
+   pragma Preelaborate;
 
    type Return_Object_Specification is
      new Program.Nodes.Node

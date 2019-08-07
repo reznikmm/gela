@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Null_Components is
 
-   pragma Pure (Program.Nodes.Null_Components);
+   pragma Preelaborate;
 
    type Null_Component is
      new Program.Nodes.Node and Program.Elements.Null_Components.Null_Component

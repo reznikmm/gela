@@ -17,6 +17,9 @@ package Program.Elements.Numeric_Literals is
    type Numeric_Literal_Access is access all Numeric_Literal'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Numeric_Literal) return Text
+     is abstract;
+
    type Numeric_Literal_Text is limited interface;
 
    type Numeric_Literal_Text_Access is access all Numeric_Literal_Text'Class

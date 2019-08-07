@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Incomplete_Type_Definitions is
 
-   pragma Pure (Program.Nodes.Incomplete_Type_Definitions);
+   pragma Preelaborate;
 
    type Incomplete_Type_Definition is
      new Program.Nodes.Node

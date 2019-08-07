@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Array_Aggregates is
 
-   pragma Pure (Program.Nodes.Array_Aggregates);
+   pragma Preelaborate;
 
    type Array_Aggregate is
      new Program.Nodes.Node

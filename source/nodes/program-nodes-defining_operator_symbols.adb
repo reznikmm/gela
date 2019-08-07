@@ -41,6 +41,11 @@ package body Program.Nodes.Defining_Operator_Symbols is
       return Self.Operator_Symbol_Token;
    end Operator_Symbol_Token;
 
+   overriding function Image (Self : Defining_Operator_Symbol) return Text is
+   begin
+      return Self.Operator_Symbol_Token.Image;
+   end Image;
+
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Defining_Operator_Symbol)
       return Boolean is
@@ -61,6 +66,14 @@ package body Program.Nodes.Defining_Operator_Symbols is
    begin
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
+
+   overriding function Image
+    (Self : Implicit_Defining_Operator_Symbol)
+      return Text is
+      pragma Unreferenced (Self);
+   begin
+      return "";
+   end Image;
 
    procedure Initialize
     (Self : aliased in out Base_Defining_Operator_Symbol'Class) is

@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Qualified_Expressions is
 
-   pragma Pure (Program.Nodes.Qualified_Expressions);
+   pragma Preelaborate;
 
    type Qualified_Expression is
      new Program.Nodes.Node

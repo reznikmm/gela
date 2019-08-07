@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Record_Representation_Clauses is
 
-   pragma Pure (Program.Nodes.Record_Representation_Clauses);
+   pragma Preelaborate;
 
    type Record_Representation_Clause is
      new Program.Nodes.Node

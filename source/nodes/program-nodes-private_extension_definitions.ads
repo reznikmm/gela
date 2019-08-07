@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Private_Extension_Definitions is
 
-   pragma Pure (Program.Nodes.Private_Extension_Definitions);
+   pragma Preelaborate;
 
    type Private_Extension_Definition is
      new Program.Nodes.Node

@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions is
 
-   pragma Pure (Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions);
+   pragma Preelaborate;
 
    type Formal_Ordinary_Fixed_Point_Definition is
      new Program.Nodes.Node

@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Parameter_Associations is
 
-   pragma Pure (Program.Nodes.Parameter_Associations);
+   pragma Preelaborate;
 
    type Parameter_Association is
      new Program.Nodes.Node

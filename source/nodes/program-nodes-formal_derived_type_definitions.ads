@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Derived_Type_Definitions is
 
-   pragma Pure (Program.Nodes.Formal_Derived_Type_Definitions);
+   pragma Preelaborate;
 
    type Formal_Derived_Type_Definition is
      new Program.Nodes.Node

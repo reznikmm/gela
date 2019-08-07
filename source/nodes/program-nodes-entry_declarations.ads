@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Entry_Declarations is
 
-   pragma Pure (Program.Nodes.Entry_Declarations);
+   pragma Preelaborate;
 
    type Entry_Declaration is
      new Program.Nodes.Node

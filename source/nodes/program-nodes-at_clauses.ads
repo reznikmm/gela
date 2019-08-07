@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.At_Clauses is
 
-   pragma Pure (Program.Nodes.At_Clauses);
+   pragma Preelaborate;
 
    type At_Clause is
      new Program.Nodes.Node and Program.Elements.At_Clauses.At_Clause

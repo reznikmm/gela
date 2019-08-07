@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Type_Conversions is
 
-   pragma Pure (Program.Nodes.Type_Conversions);
+   pragma Preelaborate;
 
    type Type_Conversion is
      new Program.Nodes.Node

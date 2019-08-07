@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Generalized_Iterator_Specifications is
 
-   pragma Pure (Program.Nodes.Generalized_Iterator_Specifications);
+   pragma Preelaborate;
 
    type Generalized_Iterator_Specification is
      new Program.Nodes.Node

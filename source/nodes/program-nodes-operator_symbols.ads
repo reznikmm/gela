@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Operator_Symbols is
 
-   pragma Pure (Program.Nodes.Operator_Symbols);
+   pragma Preelaborate;
 
    type Operator_Symbol is
      new Program.Nodes.Node
@@ -72,6 +72,8 @@ private
     (Self : Operator_Symbol)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
 
+   overriding function Image (Self : Operator_Symbol) return Text;
+
    type Implicit_Operator_Symbol is
      new Base_Operator_Symbol
      with record
@@ -95,5 +97,7 @@ private
    overriding function Is_Part_Of_Instance
     (Self : Implicit_Operator_Symbol)
       return Boolean;
+
+   overriding function Image (Self : Implicit_Operator_Symbol) return Text;
 
 end Program.Nodes.Operator_Symbols;

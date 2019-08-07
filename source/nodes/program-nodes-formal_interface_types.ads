@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Interface_Types is
 
-   pragma Pure (Program.Nodes.Formal_Interface_Types);
+   pragma Preelaborate;
 
    type Formal_Interface_Type is
      new Program.Nodes.Node

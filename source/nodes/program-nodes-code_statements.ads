@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Code_Statements is
 
-   pragma Pure (Program.Nodes.Code_Statements);
+   pragma Preelaborate;
 
    type Code_Statement is
      new Program.Nodes.Node and Program.Elements.Code_Statements.Code_Statement

@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Real_Range_Specifications is
 
-   pragma Pure (Program.Nodes.Real_Range_Specifications);
+   pragma Preelaborate;
 
    type Real_Range_Specification is
      new Program.Nodes.Node

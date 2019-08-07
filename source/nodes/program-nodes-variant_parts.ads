@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Variant_Parts is
 
-   pragma Pure (Program.Nodes.Variant_Parts);
+   pragma Preelaborate;
 
    type Variant_Part is
      new Program.Nodes.Node and Program.Elements.Variant_Parts.Variant_Part

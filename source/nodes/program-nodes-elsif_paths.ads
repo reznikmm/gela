@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Elsif_Paths is
 
-   pragma Pure (Program.Nodes.Elsif_Paths);
+   pragma Preelaborate;
 
    type Elsif_Path is
      new Program.Nodes.Node and Program.Elements.Elsif_Paths.Elsif_Path

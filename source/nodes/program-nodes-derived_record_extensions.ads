@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Derived_Record_Extensions is
 
-   pragma Pure (Program.Nodes.Derived_Record_Extensions);
+   pragma Preelaborate;
 
    type Derived_Record_Extension is
      new Program.Nodes.Node

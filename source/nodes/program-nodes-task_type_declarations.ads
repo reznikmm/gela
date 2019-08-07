@@ -15,7 +15,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Task_Type_Declarations is
 
-   pragma Pure (Program.Nodes.Task_Type_Declarations);
+   pragma Preelaborate;
 
    type Task_Type_Declaration is
      new Program.Nodes.Node

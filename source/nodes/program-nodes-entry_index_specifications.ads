@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Entry_Index_Specifications is
 
-   pragma Pure (Program.Nodes.Entry_Index_Specifications);
+   pragma Preelaborate;
 
    type Entry_Index_Specification is
      new Program.Nodes.Node

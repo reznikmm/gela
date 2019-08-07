@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Short_Circuit_Operations is
 
-   pragma Pure (Program.Nodes.Short_Circuit_Operations);
+   pragma Preelaborate;
 
    type Short_Circuit_Operation is
      new Program.Nodes.Node

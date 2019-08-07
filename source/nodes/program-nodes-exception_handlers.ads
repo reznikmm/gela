@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Exception_Handlers is
 
-   pragma Pure (Program.Nodes.Exception_Handlers);
+   pragma Preelaborate;
 
    type Exception_Handler is
      new Program.Nodes.Node

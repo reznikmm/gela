@@ -28,7 +28,7 @@ with Program.Elements.Select_Paths;
 with Program.Elements.Variants;
 
 package Program.Nodes.Vectors is
-   pragma Pure (Program.Nodes.Vectors);
+   pragma Preelaborate;
 
    type Vector;
 

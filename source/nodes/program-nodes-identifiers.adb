@@ -40,6 +40,11 @@ package body Program.Nodes.Identifiers is
       return Self.Identifier_Token;
    end Identifier_Token;
 
+   overriding function Image (Self : Identifier) return Text is
+   begin
+      return Self.Identifier_Token.Image;
+   end Image;
+
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Identifier)
       return Boolean is
@@ -60,6 +65,12 @@ package body Program.Nodes.Identifiers is
    begin
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
+
+   overriding function Image (Self : Implicit_Identifier) return Text is
+      pragma Unreferenced (Self);
+   begin
+      return "";
+   end Image;
 
    procedure Initialize (Self : aliased in out Base_Identifier'Class) is
    begin

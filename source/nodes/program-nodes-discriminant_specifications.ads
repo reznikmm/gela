@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Discriminant_Specifications is
 
-   pragma Pure (Program.Nodes.Discriminant_Specifications);
+   pragma Preelaborate;
 
    type Discriminant_Specification is
      new Program.Nodes.Node

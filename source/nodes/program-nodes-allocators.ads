@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Allocators is
 
-   pragma Pure (Program.Nodes.Allocators);
+   pragma Preelaborate;
 
    type Allocator is
      new Program.Nodes.Node and Program.Elements.Allocators.Allocator

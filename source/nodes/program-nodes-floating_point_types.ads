@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Floating_Point_Types is
 
-   pragma Pure (Program.Nodes.Floating_Point_Types);
+   pragma Preelaborate;
 
    type Floating_Point_Type is
      new Program.Nodes.Node

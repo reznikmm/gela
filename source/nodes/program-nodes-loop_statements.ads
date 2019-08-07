@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Loop_Statements is
 
-   pragma Pure (Program.Nodes.Loop_Statements);
+   pragma Preelaborate;
 
    type Loop_Statement is
      new Program.Nodes.Node and Program.Elements.Loop_Statements.Loop_Statement

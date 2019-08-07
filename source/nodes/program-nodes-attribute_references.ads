@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Attribute_References is
 
-   pragma Pure (Program.Nodes.Attribute_References);
+   pragma Preelaborate;
 
    type Attribute_Reference is
      new Program.Nodes.Node

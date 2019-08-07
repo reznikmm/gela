@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Interface_Types is
 
-   pragma Pure (Program.Nodes.Interface_Types);
+   pragma Preelaborate;
 
    type Interface_Type is
      new Program.Nodes.Node and Program.Elements.Interface_Types.Interface_Type

@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Null_Literals is
 
-   pragma Pure (Program.Nodes.Null_Literals);
+   pragma Preelaborate;
 
    type Null_Literal is
      new Program.Nodes.Node and Program.Elements.Null_Literals.Null_Literal

@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Unconstrained_Array_Types is
 
-   pragma Pure (Program.Nodes.Unconstrained_Array_Types);
+   pragma Preelaborate;
 
    type Unconstrained_Array_Type is
      new Program.Nodes.Node

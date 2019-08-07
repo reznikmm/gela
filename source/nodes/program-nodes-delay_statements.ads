@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Delay_Statements is
 
-   pragma Pure (Program.Nodes.Delay_Statements);
+   pragma Preelaborate;
 
    type Delay_Statement is
      new Program.Nodes.Node

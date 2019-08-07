@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Select_Paths is
 
-   pragma Pure (Program.Nodes.Select_Paths);
+   pragma Preelaborate;
 
    type Select_Path is
      new Program.Nodes.Node and Program.Elements.Select_Paths.Select_Path

@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Private_Type_Definitions is
 
-   pragma Pure (Program.Nodes.Formal_Private_Type_Definitions);
+   pragma Preelaborate;
 
    type Formal_Private_Type_Definition is
      new Program.Nodes.Node

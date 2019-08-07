@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Aspect_Specifications is
 
-   pragma Pure (Program.Nodes.Aspect_Specifications);
+   pragma Preelaborate;
 
    type Aspect_Specification is
      new Program.Nodes.Node

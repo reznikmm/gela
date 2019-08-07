@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.While_Loop_Statements is
 
-   pragma Pure (Program.Nodes.While_Loop_Statements);
+   pragma Preelaborate;
 
    type While_Loop_Statement is
      new Program.Nodes.Node

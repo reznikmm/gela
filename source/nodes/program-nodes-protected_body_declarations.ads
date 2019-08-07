@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Protected_Body_Declarations is
 
-   pragma Pure (Program.Nodes.Protected_Body_Declarations);
+   pragma Preelaborate;
 
    type Protected_Body_Declaration is
      new Program.Nodes.Node

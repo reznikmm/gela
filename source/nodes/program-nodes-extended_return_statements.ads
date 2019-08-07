@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Extended_Return_Statements is
 
-   pragma Pure (Program.Nodes.Extended_Return_Statements);
+   pragma Preelaborate;
 
    type Extended_Return_Statement is
      new Program.Nodes.Node

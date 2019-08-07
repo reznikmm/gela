@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Object_Access_Types is
 
-   pragma Pure (Program.Nodes.Formal_Object_Access_Types);
+   pragma Preelaborate;
 
    type Formal_Object_Access_Type is
      new Program.Nodes.Node

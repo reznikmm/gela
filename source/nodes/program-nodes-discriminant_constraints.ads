@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Discriminant_Constraints is
 
-   pragma Pure (Program.Nodes.Discriminant_Constraints);
+   pragma Preelaborate;
 
    type Discriminant_Constraint is
      new Program.Nodes.Node

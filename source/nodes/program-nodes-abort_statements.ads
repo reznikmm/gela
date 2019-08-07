@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Abort_Statements is
 
-   pragma Pure (Program.Nodes.Abort_Statements);
+   pragma Preelaborate;
 
    type Abort_Statement is
      new Program.Nodes.Node

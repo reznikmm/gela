@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Element_Iterator_Specifications is
 
-   pragma Pure (Program.Nodes.Element_Iterator_Specifications);
+   pragma Preelaborate;
 
    type Element_Iterator_Specification is
      new Program.Nodes.Node

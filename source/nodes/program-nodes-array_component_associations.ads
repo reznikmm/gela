@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Array_Component_Associations is
 
-   pragma Pure (Program.Nodes.Array_Component_Associations);
+   pragma Preelaborate;
 
    type Array_Component_Association is
      new Program.Nodes.Node

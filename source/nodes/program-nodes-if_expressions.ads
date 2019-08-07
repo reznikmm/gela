@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.If_Expressions is
 
-   pragma Pure (Program.Nodes.If_Expressions);
+   pragma Preelaborate;
 
    type If_Expression is
      new Program.Nodes.Node and Program.Elements.If_Expressions.If_Expression

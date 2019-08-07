@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Selected_Components is
 
-   pragma Pure (Program.Nodes.Selected_Components);
+   pragma Preelaborate;
 
    type Selected_Component is
      new Program.Nodes.Node

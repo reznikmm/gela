@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Task_Definitions is
 
-   pragma Pure (Program.Nodes.Task_Definitions);
+   pragma Preelaborate;
 
    type Task_Definition is
      new Program.Nodes.Node

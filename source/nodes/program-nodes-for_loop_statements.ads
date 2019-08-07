@@ -16,7 +16,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.For_Loop_Statements is
 
-   pragma Pure (Program.Nodes.For_Loop_Statements);
+   pragma Preelaborate;
 
    type For_Loop_Statement is
      new Program.Nodes.Node

@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Identifiers is
 
-   pragma Pure (Program.Nodes.Identifiers);
+   pragma Preelaborate;
 
    type Identifier is
      new Program.Nodes.Node and Program.Elements.Identifiers.Identifier
@@ -65,6 +65,8 @@ private
     (Self : Identifier)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
 
+   overriding function Image (Self : Identifier) return Text;
+
    type Implicit_Identifier is
      new Base_Identifier
      with record
@@ -88,5 +90,7 @@ private
    overriding function Is_Part_Of_Instance
     (Self : Implicit_Identifier)
       return Boolean;
+
+   overriding function Image (Self : Implicit_Identifier) return Text;
 
 end Program.Nodes.Identifiers;

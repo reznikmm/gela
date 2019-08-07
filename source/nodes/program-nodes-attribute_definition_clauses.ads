@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Attribute_Definition_Clauses is
 
-   pragma Pure (Program.Nodes.Attribute_Definition_Clauses);
+   pragma Preelaborate;
 
    type Attribute_Definition_Clause is
      new Program.Nodes.Node

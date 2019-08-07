@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Indexed_Components is
 
-   pragma Pure (Program.Nodes.Indexed_Components);
+   pragma Preelaborate;
 
    type Indexed_Component is
      new Program.Nodes.Node

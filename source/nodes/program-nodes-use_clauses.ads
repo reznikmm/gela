@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Use_Clauses is
 
-   pragma Pure (Program.Nodes.Use_Clauses);
+   pragma Preelaborate;
 
    type Use_Clause is
      new Program.Nodes.Node and Program.Elements.Use_Clauses.Use_Clause

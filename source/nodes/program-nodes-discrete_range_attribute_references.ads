@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Discrete_Range_Attribute_References is
 
-   pragma Pure (Program.Nodes.Discrete_Range_Attribute_References);
+   pragma Preelaborate;
 
    type Discrete_Range_Attribute_Reference is
      new Program.Nodes.Node

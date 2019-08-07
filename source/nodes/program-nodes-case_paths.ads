@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Case_Paths is
 
-   pragma Pure (Program.Nodes.Case_Paths);
+   pragma Preelaborate;
 
    type Case_Path is
      new Program.Nodes.Node and Program.Elements.Case_Paths.Case_Path

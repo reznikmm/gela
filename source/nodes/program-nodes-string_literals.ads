@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.String_Literals is
 
-   pragma Pure (Program.Nodes.String_Literals);
+   pragma Preelaborate;
 
    type String_Literal is
      new Program.Nodes.Node and Program.Elements.String_Literals.String_Literal
@@ -70,6 +70,8 @@ private
     (Self : String_Literal)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
 
+   overriding function Image (Self : String_Literal) return Text;
+
    type Implicit_String_Literal is
      new Base_String_Literal
      with record
@@ -93,5 +95,7 @@ private
    overriding function Is_Part_Of_Instance
     (Self : Implicit_String_Literal)
       return Boolean;
+
+   overriding function Image (Self : Implicit_String_Literal) return Text;
 
 end Program.Nodes.String_Literals;

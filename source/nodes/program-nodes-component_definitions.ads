@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Component_Definitions is
 
-   pragma Pure (Program.Nodes.Component_Definitions);
+   pragma Preelaborate;
 
    type Component_Definition is
      new Program.Nodes.Node

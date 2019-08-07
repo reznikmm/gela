@@ -41,6 +41,11 @@ package body Program.Nodes.Numeric_Literals is
       return Self.Numeric_Literal_Token;
    end Numeric_Literal_Token;
 
+   overriding function Image (Self : Numeric_Literal) return Text is
+   begin
+      return Self.Numeric_Literal_Token.Image;
+   end Image;
+
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Numeric_Literal)
       return Boolean is
@@ -61,6 +66,12 @@ package body Program.Nodes.Numeric_Literals is
    begin
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
+
+   overriding function Image (Self : Implicit_Numeric_Literal) return Text is
+      pragma Unreferenced (Self);
+   begin
+      return "";
+   end Image;
 
    procedure Initialize (Self : aliased in out Base_Numeric_Literal'Class) is
    begin

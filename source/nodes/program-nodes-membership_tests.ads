@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Membership_Tests is
 
-   pragma Pure (Program.Nodes.Membership_Tests);
+   pragma Preelaborate;
 
    type Membership_Test is
      new Program.Nodes.Node

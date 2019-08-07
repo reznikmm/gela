@@ -18,6 +18,9 @@ package Program.Elements.Defining_Identifiers is
    type Defining_Identifier_Access is access all Defining_Identifier'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Defining_Identifier) return Text
+     is abstract;
+
    type Defining_Identifier_Text is limited interface;
 
    type Defining_Identifier_Text_Access is

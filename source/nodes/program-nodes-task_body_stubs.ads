@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Task_Body_Stubs is
 
-   pragma Pure (Program.Nodes.Task_Body_Stubs);
+   pragma Preelaborate;
 
    type Task_Body_Stub is
      new Program.Nodes.Node and Program.Elements.Task_Body_Stubs.Task_Body_Stub

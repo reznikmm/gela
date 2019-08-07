@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Null_Statements is
 
-   pragma Pure (Program.Nodes.Null_Statements);
+   pragma Preelaborate;
 
    type Null_Statement is
      new Program.Nodes.Node and Program.Elements.Null_Statements.Null_Statement

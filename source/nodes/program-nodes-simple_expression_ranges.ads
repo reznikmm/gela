@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Simple_Expression_Ranges is
 
-   pragma Pure (Program.Nodes.Simple_Expression_Ranges);
+   pragma Preelaborate;
 
    type Simple_Expression_Range is
      new Program.Nodes.Node

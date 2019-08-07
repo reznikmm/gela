@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Parenthesized_Expressions is
 
-   pragma Pure (Program.Nodes.Parenthesized_Expressions);
+   pragma Preelaborate;
 
    type Parenthesized_Expression is
      new Program.Nodes.Node

@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Function_Calls is
 
-   pragma Pure (Program.Nodes.Function_Calls);
+   pragma Preelaborate;
 
    type Function_Call is
      new Program.Nodes.Node and Program.Elements.Function_Calls.Function_Call

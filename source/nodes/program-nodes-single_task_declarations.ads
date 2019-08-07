@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Single_Task_Declarations is
 
-   pragma Pure (Program.Nodes.Single_Task_Declarations);
+   pragma Preelaborate;
 
    type Single_Task_Declaration is
      new Program.Nodes.Node

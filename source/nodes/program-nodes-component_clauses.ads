@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Component_Clauses is
 
-   pragma Pure (Program.Nodes.Component_Clauses);
+   pragma Preelaborate;
 
    type Component_Clause is
      new Program.Nodes.Node

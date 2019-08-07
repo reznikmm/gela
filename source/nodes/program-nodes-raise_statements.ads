@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Raise_Statements is
 
-   pragma Pure (Program.Nodes.Raise_Statements);
+   pragma Preelaborate;
 
    type Raise_Statement is
      new Program.Nodes.Node

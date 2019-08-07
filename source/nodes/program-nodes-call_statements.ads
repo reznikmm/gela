@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Call_Statements is
 
-   pragma Pure (Program.Nodes.Call_Statements);
+   pragma Preelaborate;
 
    type Call_Statement is
      new Program.Nodes.Node and Program.Elements.Call_Statements.Call_Statement

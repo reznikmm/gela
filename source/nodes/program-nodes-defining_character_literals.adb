@@ -41,6 +41,11 @@ package body Program.Nodes.Defining_Character_Literals is
       return Self.Character_Literal_Token;
    end Character_Literal_Token;
 
+   overriding function Image (Self : Defining_Character_Literal) return Text is
+   begin
+      return Self.Character_Literal_Token.Image;
+   end Image;
+
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Defining_Character_Literal)
       return Boolean is
@@ -61,6 +66,14 @@ package body Program.Nodes.Defining_Character_Literals is
    begin
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
+
+   overriding function Image
+    (Self : Implicit_Defining_Character_Literal)
+      return Text is
+      pragma Unreferenced (Self);
+   begin
+      return "";
+   end Image;
 
    procedure Initialize
     (Self : aliased in out Base_Defining_Character_Literal'Class) is

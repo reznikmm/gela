@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Known_Discriminant_Parts is
 
-   pragma Pure (Program.Nodes.Known_Discriminant_Parts);
+   pragma Preelaborate;
 
    type Known_Discriminant_Part is
      new Program.Nodes.Node

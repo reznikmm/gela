@@ -63,6 +63,11 @@ package body Program.Nodes.Defining_Expanded_Names is
       return Self.Dot_Token;
    end Dot_Token;
 
+   overriding function Image (Self : Defining_Expanded_Name) return Text is
+   begin
+      return Self.Dot_Token.Image;
+   end Image;
+
    overriding function Is_Part_Of_Implicit
     (Self : Implicit_Defining_Expanded_Name)
       return Boolean is
@@ -83,6 +88,14 @@ package body Program.Nodes.Defining_Expanded_Names is
    begin
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
+
+   overriding function Image
+    (Self : Implicit_Defining_Expanded_Name)
+      return Text is
+      pragma Unreferenced (Self);
+   begin
+      return "";
+   end Image;
 
    procedure Initialize
     (Self : aliased in out Base_Defining_Expanded_Name'Class) is

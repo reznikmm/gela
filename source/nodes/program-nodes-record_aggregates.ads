@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Record_Aggregates is
 
-   pragma Pure (Program.Nodes.Record_Aggregates);
+   pragma Preelaborate;
 
    type Record_Aggregate is
      new Program.Nodes.Node

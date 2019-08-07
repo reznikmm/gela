@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.If_Statements is
 
-   pragma Pure (Program.Nodes.If_Statements);
+   pragma Preelaborate;
 
    type If_Statement is
      new Program.Nodes.Node and Program.Elements.If_Statements.If_Statement

@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Requeue_Statements is
 
-   pragma Pure (Program.Nodes.Requeue_Statements);
+   pragma Preelaborate;
 
    type Requeue_Statement is
      new Program.Nodes.Node

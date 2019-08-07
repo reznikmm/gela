@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Goto_Statements is
 
-   pragma Pure (Program.Nodes.Goto_Statements);
+   pragma Preelaborate;
 
    type Goto_Statement is
      new Program.Nodes.Node and Program.Elements.Goto_Statements.Goto_Statement

@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Delta_Constraints is
 
-   pragma Pure (Program.Nodes.Delta_Constraints);
+   pragma Preelaborate;
 
    type Delta_Constraint is
      new Program.Nodes.Node

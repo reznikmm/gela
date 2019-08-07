@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Index_Constraints is
 
-   pragma Pure (Program.Nodes.Index_Constraints);
+   pragma Preelaborate;
 
    type Index_Constraint is
      new Program.Nodes.Node

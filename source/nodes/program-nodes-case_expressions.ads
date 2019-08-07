@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Case_Expressions is
 
-   pragma Pure (Program.Nodes.Case_Expressions);
+   pragma Preelaborate;
 
    type Case_Expression is
      new Program.Nodes.Node

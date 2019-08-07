@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Case_Expression_Paths is
 
-   pragma Pure (Program.Nodes.Case_Expression_Paths);
+   pragma Preelaborate;
 
    type Case_Expression_Path is
      new Program.Nodes.Node

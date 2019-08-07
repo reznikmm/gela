@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Procedure_Access_Types is
 
-   pragma Pure (Program.Nodes.Procedure_Access_Types);
+   pragma Preelaborate;
 
    type Procedure_Access_Type is
      new Program.Nodes.Node

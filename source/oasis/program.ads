@@ -6,4 +6,8 @@
 
 package Program is
    pragma Pure (Program);
+
+   subtype Text is Wide_Wide_String;
+   --  Representation of program text
+
 end Program;

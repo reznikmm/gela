@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Select_Statements is
 
-   pragma Pure (Program.Nodes.Select_Statements);
+   pragma Preelaborate;
 
    type Select_Statement is
      new Program.Nodes.Node

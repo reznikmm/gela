@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Exit_Statements is
 
-   pragma Pure (Program.Nodes.Exit_Statements);
+   pragma Preelaborate;
 
    type Exit_Statement is
      new Program.Nodes.Node and Program.Elements.Exit_Statements.Exit_Statement

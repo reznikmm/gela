@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Explicit_Dereferences is
 
-   pragma Pure (Program.Nodes.Explicit_Dereferences);
+   pragma Preelaborate;
 
    type Explicit_Dereference is
      new Program.Nodes.Node

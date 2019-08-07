@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Package_Instantiations is
 
-   pragma Pure (Program.Nodes.Package_Instantiations);
+   pragma Preelaborate;
 
    type Package_Instantiation is
      new Program.Nodes.Node

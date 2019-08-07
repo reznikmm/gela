@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Generic_Function_Declarations is
 
-   pragma Pure (Program.Nodes.Generic_Function_Declarations);
+   pragma Preelaborate;
 
    type Generic_Function_Declaration is
      new Program.Nodes.Node

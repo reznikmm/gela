@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Pragmas is
 
-   pragma Pure (Program.Nodes.Pragmas);
+   pragma Preelaborate;
 
    type Pragma_Element is
      new Program.Nodes.Node and Program.Elements.Pragmas.Pragma_Element

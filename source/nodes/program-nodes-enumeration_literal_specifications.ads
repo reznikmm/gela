@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Enumeration_Literal_Specifications is
 
-   pragma Pure (Program.Nodes.Enumeration_Literal_Specifications);
+   pragma Preelaborate;
 
    type Enumeration_Literal_Specification is
      new Program.Nodes.Node

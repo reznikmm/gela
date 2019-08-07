@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Function_Access_Types is
 
-   pragma Pure (Program.Nodes.Function_Access_Types);
+   pragma Preelaborate;
 
    type Function_Access_Type is
      new Program.Nodes.Node

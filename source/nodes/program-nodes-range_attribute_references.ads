@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Range_Attribute_References is
 
-   pragma Pure (Program.Nodes.Range_Attribute_References);
+   pragma Preelaborate;
 
    type Range_Attribute_Reference is
      new Program.Nodes.Node

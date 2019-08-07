@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Package_Renaming_Declarations is
 
-   pragma Pure (Program.Nodes.Package_Renaming_Declarations);
+   pragma Preelaborate;
 
    type Package_Renaming_Declaration is
      new Program.Nodes.Node

@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Record_Types is
 
-   pragma Pure (Program.Nodes.Record_Types);
+   pragma Preelaborate;
 
    type Record_Type is
      new Program.Nodes.Node and Program.Elements.Record_Types.Record_Type

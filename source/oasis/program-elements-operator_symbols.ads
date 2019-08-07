@@ -17,6 +17,9 @@ package Program.Elements.Operator_Symbols is
    type Operator_Symbol_Access is access all Operator_Symbol'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Operator_Symbol) return Text
+     is abstract;
+
    type Operator_Symbol_Text is limited interface;
 
    type Operator_Symbol_Text_Access is access all Operator_Symbol_Text'Class

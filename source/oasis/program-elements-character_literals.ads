@@ -17,6 +17,9 @@ package Program.Elements.Character_Literals is
    type Character_Literal_Access is access all Character_Literal'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Character_Literal) return Text
+     is abstract;
+
    type Character_Literal_Text is limited interface;
 
    type Character_Literal_Text_Access is

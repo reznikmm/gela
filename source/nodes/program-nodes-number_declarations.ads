@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Number_Declarations is
 
-   pragma Pure (Program.Nodes.Number_Declarations);
+   pragma Preelaborate;
 
    type Number_Declaration is
      new Program.Nodes.Node

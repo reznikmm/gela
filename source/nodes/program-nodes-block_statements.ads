@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Block_Statements is
 
-   pragma Pure (Program.Nodes.Block_Statements);
+   pragma Preelaborate;
 
    type Block_Statement is
      new Program.Nodes.Node

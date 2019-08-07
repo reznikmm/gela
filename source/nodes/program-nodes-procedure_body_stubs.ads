@@ -13,7 +13,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Procedure_Body_Stubs is
 
-   pragma Pure (Program.Nodes.Procedure_Body_Stubs);
+   pragma Preelaborate;
 
    type Procedure_Body_Stub is
      new Program.Nodes.Node

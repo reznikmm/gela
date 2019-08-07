@@ -10,7 +10,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Unknown_Discriminant_Parts is
 
-   pragma Pure (Program.Nodes.Unknown_Discriminant_Parts);
+   pragma Preelaborate;
 
    type Unknown_Discriminant_Part is
      new Program.Nodes.Node

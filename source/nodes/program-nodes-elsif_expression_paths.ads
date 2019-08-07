@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Elsif_Expression_Paths is
 
-   pragma Pure (Program.Nodes.Elsif_Expression_Paths);
+   pragma Preelaborate;
 
    type Elsif_Expression_Path is
      new Program.Nodes.Node

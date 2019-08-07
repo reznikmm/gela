@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Formal_Type_Declarations is
 
-   pragma Pure (Program.Nodes.Formal_Type_Declarations);
+   pragma Preelaborate;
 
    type Formal_Type_Declaration is
      new Program.Nodes.Node

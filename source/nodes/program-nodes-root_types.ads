@@ -9,7 +9,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Root_Types is
 
-   pragma Pure (Program.Nodes.Root_Types);
+   pragma Preelaborate;
 
    type Root_Type is
      new Program.Nodes.Node and Program.Elements.Root_Types.Root_Type

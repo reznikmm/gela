@@ -14,7 +14,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Procedure_Renaming_Declarations is
 
-   pragma Pure (Program.Nodes.Procedure_Renaming_Declarations);
+   pragma Preelaborate;
 
    type Procedure_Renaming_Declaration is
      new Program.Nodes.Node

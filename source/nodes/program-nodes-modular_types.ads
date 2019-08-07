@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Modular_Types is
 
-   pragma Pure (Program.Nodes.Modular_Types);
+   pragma Preelaborate;
 
    type Modular_Type is
      new Program.Nodes.Node and Program.Elements.Modular_Types.Modular_Type

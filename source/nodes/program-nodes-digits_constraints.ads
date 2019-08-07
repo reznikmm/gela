@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Digits_Constraints is
 
-   pragma Pure (Program.Nodes.Digits_Constraints);
+   pragma Preelaborate;
 
    type Digits_Constraint is
      new Program.Nodes.Node

@@ -15,7 +15,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Package_Body_Declarations is
 
-   pragma Pure (Program.Nodes.Package_Body_Declarations);
+   pragma Preelaborate;
 
    type Package_Body_Declaration is
      new Program.Nodes.Node

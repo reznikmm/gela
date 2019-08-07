@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Variants is
 
-   pragma Pure (Program.Nodes.Variants);
+   pragma Preelaborate;
 
    type Variant is
      new Program.Nodes.Node and Program.Elements.Variants.Variant

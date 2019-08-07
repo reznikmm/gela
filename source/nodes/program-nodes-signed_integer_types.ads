@@ -11,7 +11,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Signed_Integer_Types is
 
-   pragma Pure (Program.Nodes.Signed_Integer_Types);
+   pragma Preelaborate;
 
    type Signed_Integer_Type is
      new Program.Nodes.Node

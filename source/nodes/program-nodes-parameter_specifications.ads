@@ -12,7 +12,7 @@ with Program.Element_Visitors;
 
 package Program.Nodes.Parameter_Specifications is
 
-   pragma Pure (Program.Nodes.Parameter_Specifications);
+   pragma Preelaborate;
 
    type Parameter_Specification is
      new Program.Nodes.Node
