@@ -33,13 +33,12 @@ package Program.Nodes.Task_Type_Declarations is
      Discriminant_Part : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2      : Program.Lexical_Elements.Lexical_Element_Access;
      Definition        : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -57,9 +56,9 @@ package Program.Nodes.Task_Type_Declarations is
          .Defining_Identifier_Access;
      Discriminant_Part    : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -79,9 +78,9 @@ private
           .Defining_Identifier_Access;
         Discriminant_Part : Program.Elements.Known_Discriminant_Parts
           .Known_Discriminant_Part_Access;
-        Aspects           : not null Program.Elements.Aspect_Specifications
+        Aspects           : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
-        Progenitors       : not null Program.Elements.Expressions
+        Progenitors       : Program.Elements.Expressions
           .Expression_Vector_Access;
         Definition        : not null Program.Elements.Task_Definitions
           .Task_Definition_Access;
@@ -106,12 +105,12 @@ private
 
    overriding function Aspects
     (Self : Base_Task_Type_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Progenitors
     (Self : Base_Task_Type_Declaration)
-      return not null Program.Elements.Expressions.Expression_Vector_Access;
+      return Program.Elements.Expressions.Expression_Vector_Access;
 
    overriding function Definition
     (Self : Base_Task_Type_Declaration)

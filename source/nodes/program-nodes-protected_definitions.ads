@@ -21,12 +21,10 @@ package Program.Nodes.Protected_Definitions is
      with private;
 
    function Create
-    (Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access)
@@ -38,10 +36,8 @@ package Program.Nodes.Protected_Definitions is
      with private;
 
    function Create
-    (Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -55,10 +51,8 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Protected_Definitions.Protected_Definition
      with record
-        Visible_Declarations : not null Program.Element_Vectors
-          .Element_Vector_Access;
-        Private_Declarations : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+        Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
         End_Name             : Program.Elements.Identifiers.Identifier_Access;
      end record;
 
@@ -71,11 +65,11 @@ private
 
    overriding function Visible_Declarations
     (Self : Base_Protected_Definition)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Private_Declarations
     (Self : Base_Protected_Definition)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function End_Name
     (Self : Base_Protected_Definition)

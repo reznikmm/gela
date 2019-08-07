@@ -143,7 +143,7 @@ package body Program.Nodes.Loop_Statements is
          Set_Enclosing_Element
            (Self.Statement_Identifier, Self'Unchecked_Access);
       end if;
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Statement_Identifier.Assigned then

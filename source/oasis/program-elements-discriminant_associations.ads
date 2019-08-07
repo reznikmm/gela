@@ -22,8 +22,7 @@ package Program.Elements.Discriminant_Associations is
 
    not overriding function Selector_Names
     (Self : Discriminant_Association)
-      return not null Program.Elements.Identifiers.Identifier_Vector_Access
-     is abstract;
+      return Program.Elements.Identifiers.Identifier_Vector_Access is abstract;
 
    not overriding function Expression
     (Self : Discriminant_Association)

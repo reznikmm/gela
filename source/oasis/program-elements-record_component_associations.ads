@@ -21,8 +21,7 @@ package Program.Elements.Record_Component_Associations is
 
    not overriding function Choices
     (Self : Record_Component_Association)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Expression
     (Self : Record_Component_Association)

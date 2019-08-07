@@ -21,7 +21,7 @@ package Program.Elements.Formal_Function_Access_Types is
 
    not overriding function Parameters
     (Self : Formal_Function_Access_Type)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Result_Subtype

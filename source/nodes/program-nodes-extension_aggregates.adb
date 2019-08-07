@@ -13,8 +13,7 @@ package body Program.Nodes.Extension_Aggregates is
          .Expression_Access;
      With_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Record_Component_Associations
+     Components          : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -32,8 +31,7 @@ package body Program.Nodes.Extension_Aggregates is
    function Create
     (Ancestor             : not null Program.Elements.Expressions
          .Expression_Access;
-     Components           : not null Program.Elements
-         .Record_Component_Associations
+     Components           : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -59,7 +57,7 @@ package body Program.Nodes.Extension_Aggregates is
 
    overriding function Components
     (Self : Base_Extension_Aggregate)
-      return not null Program.Elements.Record_Component_Associations
+      return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access is
    begin
       return Self.Components;
@@ -111,7 +109,7 @@ package body Program.Nodes.Extension_Aggregates is
     (Self : aliased in out Base_Extension_Aggregate'Class) is
    begin
       Set_Enclosing_Element (Self.Ancestor, Self'Unchecked_Access);
-      for Item in Self.Components.Each loop
+      for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

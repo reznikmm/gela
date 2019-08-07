@@ -13,15 +13,14 @@ package body Program.Nodes.Block_Statements is
          .Lexical_Element_Access;
      Declare_Token            : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token              : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token          : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token                : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -46,11 +45,10 @@ package body Program.Nodes.Block_Statements is
    function Create
     (Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Statement_Identifier : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit      : Boolean := False;
@@ -81,7 +79,7 @@ package body Program.Nodes.Block_Statements is
 
    overriding function Declarations
     (Self : Base_Block_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Declarations;
    end Declarations;
@@ -95,7 +93,7 @@ package body Program.Nodes.Block_Statements is
 
    overriding function Exception_Handlers
     (Self : Base_Block_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is
    begin
       return Self.Exception_Handlers;
@@ -177,13 +175,13 @@ package body Program.Nodes.Block_Statements is
          Set_Enclosing_Element
            (Self.Statement_Identifier, Self'Unchecked_Access);
       end if;
-      for Item in Self.Declarations.Each loop
+      for Item in Self.Declarations.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Exception_Handlers.Each loop
+      for Item in Self.Exception_Handlers.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Statement_Identifier.Assigned then

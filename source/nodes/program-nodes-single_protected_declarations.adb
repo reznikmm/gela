@@ -12,13 +12,12 @@ package body Program.Nodes.Single_Protected_Declarations is
      Name            : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors     : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors     : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Definition      : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -40,9 +39,9 @@ package body Program.Nodes.Single_Protected_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -71,7 +70,7 @@ package body Program.Nodes.Single_Protected_Declarations is
 
    overriding function Aspects
     (Self : Base_Single_Protected_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -79,7 +78,7 @@ package body Program.Nodes.Single_Protected_Declarations is
 
    overriding function Progenitors
     (Self : Base_Single_Protected_Declaration)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Progenitors;
    end Progenitors;
@@ -159,10 +158,10 @@ package body Program.Nodes.Single_Protected_Declarations is
     (Self : aliased in out Base_Single_Protected_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Progenitors.Each loop
+      for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Definition, Self'Unchecked_Access);

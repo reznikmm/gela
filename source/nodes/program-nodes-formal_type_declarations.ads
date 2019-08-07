@@ -34,7 +34,7 @@ package Program.Nodes.Formal_Type_Declarations is
      Definition        : not null Program.Elements.Formal_Type_Definitions
          .Formal_Type_Definition_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -51,7 +51,7 @@ package Program.Nodes.Formal_Type_Declarations is
      Discriminant_Part    : Program.Elements.Definitions.Definition_Access;
      Definition           : not null Program.Elements.Formal_Type_Definitions
          .Formal_Type_Definition_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -70,7 +70,7 @@ private
         Discriminant_Part : Program.Elements.Definitions.Definition_Access;
         Definition        : not null Program.Elements.Formal_Type_Definitions
           .Formal_Type_Definition_Access;
-        Aspects           : not null Program.Elements.Aspect_Specifications
+        Aspects           : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
      end record;
 
@@ -97,7 +97,7 @@ private
 
    overriding function Aspects
     (Self : Base_Formal_Type_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Is_Formal_Type_Declaration

@@ -32,13 +32,11 @@ package Program.Elements.If_Statements is
 
    not overriding function Elsif_Paths
     (Self : If_Statement)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access
-     is abstract;
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is abstract;
 
    not overriding function Else_Statements
     (Self : If_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    type If_Statement_Text is limited interface;
 

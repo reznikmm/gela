@@ -85,7 +85,7 @@ package body Program.Nodes.Abort_Statements is
 
    procedure Initialize (Self : aliased in out Base_Abort_Statement'Class) is
    begin
-      for Item in Self.Aborted_Tasks.Each loop
+      for Item in Self.Aborted_Tasks.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

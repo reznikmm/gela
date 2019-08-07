@@ -125,7 +125,7 @@ package body Program.Nodes.Variant_Parts is
    procedure Initialize (Self : aliased in out Base_Variant_Part'Class) is
    begin
       Set_Enclosing_Element (Self.Discriminant, Self'Unchecked_Access);
-      for Item in Self.Variants.Each loop
+      for Item in Self.Variants.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

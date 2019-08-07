@@ -32,7 +32,7 @@ package Program.Elements.Package_Renaming_Declarations is
 
    not overriding function Aspects
     (Self : Package_Renaming_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Package_Renaming_Declaration_Text is limited interface;

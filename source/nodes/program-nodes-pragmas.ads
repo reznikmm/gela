@@ -25,7 +25,7 @@ package Program.Nodes.Pragmas is
      Name                : not null Program.Elements.Identifiers
          .Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Arguments           : not null Program.Elements.Parameter_Associations
+     Arguments           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -39,7 +39,7 @@ package Program.Nodes.Pragmas is
    function Create
     (Name                 : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Arguments            : not null Program.Elements.Parameter_Associations
+     Arguments            : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -54,7 +54,7 @@ private
        and Program.Elements.Pragmas.Pragma_Element
      with record
         Name      : not null Program.Elements.Identifiers.Identifier_Access;
-        Arguments : not null Program.Elements.Parameter_Associations
+        Arguments : Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
      end record;
 
@@ -70,7 +70,7 @@ private
 
    overriding function Arguments
     (Self : Base_Pragma)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
    overriding function Is_Pragma (Self : Base_Pragma) return Boolean;

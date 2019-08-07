@@ -30,8 +30,7 @@ package Program.Elements.If_Expressions is
 
    not overriding function Elsif_Paths
     (Self : If_Expression)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access
-     is abstract;
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is abstract;
 
    not overriding function Else_Expression
     (Self : If_Expression)

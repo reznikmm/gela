@@ -10,7 +10,7 @@ package body Program.Nodes.Call_Statements is
     (Called_Name         : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Associations
+     Parameters          : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -29,7 +29,7 @@ package body Program.Nodes.Call_Statements is
    function Create
     (Called_Name          : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -55,7 +55,7 @@ package body Program.Nodes.Call_Statements is
 
    overriding function Parameters
     (Self : Base_Call_Statement)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is
    begin
       return Self.Parameters;
@@ -106,7 +106,7 @@ package body Program.Nodes.Call_Statements is
    procedure Initialize (Self : aliased in out Base_Call_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Called_Name, Self'Unchecked_Access);
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -107,7 +107,7 @@ package body Program.Nodes.Membership_Tests is
    procedure Initialize (Self : aliased in out Base_Membership_Test'Class) is
    begin
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
-      for Item in Self.Choices.Each loop
+      for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

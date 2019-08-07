@@ -14,7 +14,7 @@ package body Program.Nodes.Formal_Function_Declarations is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -27,7 +27,7 @@ package body Program.Nodes.Formal_Function_Declarations is
      Subprogram_Default  : Program.Elements.Expressions.Expression_Access;
      Box_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token_2        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -51,11 +51,11 @@ package body Program.Nodes.Formal_Function_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Subprogram_Default   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -88,7 +88,7 @@ package body Program.Nodes.Formal_Function_Declarations is
 
    overriding function Parameters
     (Self : Base_Formal_Function_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -110,7 +110,7 @@ package body Program.Nodes.Formal_Function_Declarations is
 
    overriding function Aspects
     (Self : Base_Formal_Function_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -267,7 +267,7 @@ package body Program.Nodes.Formal_Function_Declarations is
     (Self : aliased in out Base_Formal_Function_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Result_Subtype, Self'Unchecked_Access);
@@ -275,7 +275,7 @@ package body Program.Nodes.Formal_Function_Declarations is
          Set_Enclosing_Element
            (Self.Subprogram_Default, Self'Unchecked_Access);
       end if;
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

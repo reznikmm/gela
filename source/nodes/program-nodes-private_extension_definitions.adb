@@ -15,7 +15,7 @@ package body Program.Nodes.Private_Extension_Definitions is
      Ancestor           : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access;
      With_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -37,7 +37,7 @@ package body Program.Nodes.Private_Extension_Definitions is
    function Create
     (Ancestor             : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -69,7 +69,7 @@ package body Program.Nodes.Private_Extension_Definitions is
 
    overriding function Progenitors
     (Self : Base_Private_Extension_Definition)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Progenitors;
    end Progenitors;
@@ -190,7 +190,7 @@ package body Program.Nodes.Private_Extension_Definitions is
     (Self : aliased in out Base_Private_Extension_Definition'Class) is
    begin
       Set_Enclosing_Element (Self.Ancestor, Self'Unchecked_Access);
-      for Item in Self.Progenitors.Each loop
+      for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

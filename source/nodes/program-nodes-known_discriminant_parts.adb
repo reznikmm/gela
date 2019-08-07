@@ -9,8 +9,8 @@ package body Program.Nodes.Known_Discriminant_Parts is
    function Create
     (Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Discriminants       : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+     Discriminants       : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
       return Known_Discriminant_Part is
@@ -25,8 +25,8 @@ package body Program.Nodes.Known_Discriminant_Parts is
    end Create;
 
    function Create
-    (Discriminants        : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+    (Discriminants        : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -44,7 +44,7 @@ package body Program.Nodes.Known_Discriminant_Parts is
 
    overriding function Discriminants
     (Self : Base_Known_Discriminant_Part)
-      return not null Program.Elements.Discriminant_Specifications
+      return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Vector_Access is
    begin
       return Self.Discriminants;
@@ -88,7 +88,7 @@ package body Program.Nodes.Known_Discriminant_Parts is
    procedure Initialize
     (Self : aliased in out Base_Known_Discriminant_Part'Class) is
    begin
-      for Item in Self.Discriminants.Each loop
+      for Item in Self.Discriminants.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

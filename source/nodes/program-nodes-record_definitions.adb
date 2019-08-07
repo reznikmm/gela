@@ -90,7 +90,7 @@ package body Program.Nodes.Record_Definitions is
 
    procedure Initialize (Self : aliased in out Base_Record_Definition'Class) is
    begin
-      for Item in Self.Components.Each loop
+      for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -27,8 +27,7 @@ package Program.Nodes.Extension_Aggregates is
          .Expression_Access;
      With_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Record_Component_Associations
+     Components          : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -42,8 +41,7 @@ package Program.Nodes.Extension_Aggregates is
    function Create
     (Ancestor             : not null Program.Elements.Expressions
          .Expression_Access;
-     Components           : not null Program.Elements
-         .Record_Component_Associations
+     Components           : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -58,7 +56,7 @@ private
        and Program.Elements.Extension_Aggregates.Extension_Aggregate
      with record
         Ancestor   : not null Program.Elements.Expressions.Expression_Access;
-        Components : not null Program.Elements.Record_Component_Associations
+        Components : Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access;
      end record;
 
@@ -74,7 +72,7 @@ private
 
    overriding function Components
     (Self : Base_Extension_Aggregate)
-      return not null Program.Elements.Record_Component_Associations
+      return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access;
 
    overriding function Is_Extension_Aggregate

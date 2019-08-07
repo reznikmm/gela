@@ -94,7 +94,7 @@ package body Program.Nodes.Elsif_Paths is
    procedure Initialize (Self : aliased in out Base_Elsif_Path'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -14,13 +14,13 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Renames_Token       : Program.Lexical_Elements.Lexical_Element_Access;
      Renamed_Procedure   : Program.Elements.Expressions.Expression_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -43,10 +43,10 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Renamed_Procedure    : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -76,7 +76,7 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
 
    overriding function Parameters
     (Self : Base_Procedure_Renaming_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -91,7 +91,7 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
 
    overriding function Aspects
     (Self : Base_Procedure_Renaming_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -206,13 +206,13 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
     (Self : aliased in out Base_Procedure_Renaming_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.Renamed_Procedure.Assigned then
          Set_Enclosing_Element (Self.Renamed_Procedure, Self'Unchecked_Access);
       end if;
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

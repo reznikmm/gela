@@ -18,17 +18,16 @@ package body Program.Nodes.Accept_Statements is
          .Lexical_Element_Access;
      Left_Bracket_Token_2     : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Parameters               : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
+     Parameters               : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
      Right_Bracket_Token_2    : Program.Lexical_Elements
          .Lexical_Element_Access;
      Do_Token                 : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Statements               : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements               : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token          : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token                : Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -57,11 +56,10 @@ package body Program.Nodes.Accept_Statements is
     (Entry_Name               : not null Program.Elements.Identifiers
          .Identifier_Access;
      Entry_Index              : Program.Elements.Expressions.Expression_Access;
-     Parameters               : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
-     Statements               : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Parameters               : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Statements               : Program.Element_Vectors.Element_Vector_Access;
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Statement_Identifier : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit      : Boolean := False;
@@ -98,7 +96,7 @@ package body Program.Nodes.Accept_Statements is
 
    overriding function Parameters
     (Self : Base_Accept_Statement)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -106,14 +104,14 @@ package body Program.Nodes.Accept_Statements is
 
    overriding function Statements
     (Self : Base_Accept_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Statements;
    end Statements;
 
    overriding function Exception_Handlers
     (Self : Base_Accept_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is
    begin
       return Self.Exception_Handlers;
@@ -216,13 +214,13 @@ package body Program.Nodes.Accept_Statements is
       if Self.Entry_Index.Assigned then
          Set_Enclosing_Element (Self.Entry_Index, Self'Unchecked_Access);
       end if;
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Exception_Handlers.Each loop
+      for Item in Self.Exception_Handlers.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Statement_Identifier.Assigned then

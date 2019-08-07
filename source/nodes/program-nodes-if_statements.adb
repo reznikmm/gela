@@ -13,10 +13,9 @@ package body Program.Nodes.If_Statements is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Statements : not null Program.Element_Vectors.Element_Vector_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements : not null Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements : Program.Element_Vectors.Element_Vector_Access;
      End_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      If_Token_2      : not null Program.Lexical_Elements
@@ -42,10 +41,9 @@ package body Program.Nodes.If_Statements is
          .Expression_Access;
      Then_Statements      : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
-     Else_Statements      : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements      : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -78,14 +76,14 @@ package body Program.Nodes.If_Statements is
 
    overriding function Elsif_Paths
     (Self : Base_If_Statement)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is
    begin
       return Self.Elsif_Paths;
    end Elsif_Paths;
 
    overriding function Else_Statements
     (Self : Base_If_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Else_Statements;
    end Else_Statements;
@@ -156,13 +154,13 @@ package body Program.Nodes.If_Statements is
    procedure Initialize (Self : aliased in out Base_If_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
-      for Item in Self.Then_Statements.Each loop
+      for Item in Self.Then_Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Elsif_Paths.Each loop
+      for Item in Self.Elsif_Paths.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Else_Statements.Each loop
+      for Item in Self.Else_Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

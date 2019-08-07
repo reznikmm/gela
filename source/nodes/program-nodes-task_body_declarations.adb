@@ -14,18 +14,17 @@ package body Program.Nodes.Task_Body_Declarations is
      Name               : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations       : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements         : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers : not null Program.Elements.Exception_Handlers
+     Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -50,13 +49,12 @@ package body Program.Nodes.Task_Body_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -85,7 +83,7 @@ package body Program.Nodes.Task_Body_Declarations is
 
    overriding function Aspects
     (Self : Base_Task_Body_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -93,7 +91,7 @@ package body Program.Nodes.Task_Body_Declarations is
 
    overriding function Declarations
     (Self : Base_Task_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Declarations;
    end Declarations;
@@ -107,7 +105,7 @@ package body Program.Nodes.Task_Body_Declarations is
 
    overriding function Exception_Handlers
     (Self : Base_Task_Body_Declaration)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is
    begin
       return Self.Exception_Handlers;
@@ -201,16 +199,16 @@ package body Program.Nodes.Task_Body_Declarations is
     (Self : aliased in out Base_Task_Body_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Declarations.Each loop
+      for Item in Self.Declarations.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Exception_Handlers.Each loop
+      for Item in Self.Exception_Handlers.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Name.Assigned then

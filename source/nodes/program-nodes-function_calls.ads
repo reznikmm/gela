@@ -23,7 +23,7 @@ package Program.Nodes.Function_Calls is
     (Prefix              : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Associations
+     Parameters          : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return Function_Call;
@@ -35,7 +35,7 @@ package Program.Nodes.Function_Calls is
    function Create
     (Prefix               : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -50,7 +50,7 @@ private
        and Program.Elements.Function_Calls.Function_Call
      with record
         Prefix     : not null Program.Elements.Expressions.Expression_Access;
-        Parameters : not null Program.Elements.Parameter_Associations
+        Parameters : Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
      end record;
 
@@ -66,7 +66,7 @@ private
 
    overriding function Parameters
     (Self : Base_Function_Call)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
    overriding function Is_Function_Call

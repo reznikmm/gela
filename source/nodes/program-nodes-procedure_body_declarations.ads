@@ -34,22 +34,21 @@ package Program.Nodes.Procedure_Body_Declarations is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations        : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations        : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements          : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token     : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers  : not null Program.Elements.Exception_Handlers
+     Exception_Handlers  : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -67,15 +66,14 @@ package Program.Nodes.Procedure_Body_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -95,15 +93,14 @@ private
      with record
         Name               : not null Program.Elements.Defining_Names
           .Defining_Name_Access;
-        Parameters         : not null Program.Elements.Parameter_Specifications
+        Parameters         : Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
-        Aspects            : not null Program.Elements.Aspect_Specifications
+        Aspects            : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
-        Declarations       : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Declarations       : Program.Element_Vectors.Element_Vector_Access;
         Statements         : not null Program.Element_Vectors
           .Element_Vector_Access;
-        Exception_Handlers : not null Program.Elements.Exception_Handlers
+        Exception_Handlers : Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
         End_Name           : Program.Elements.Expressions.Expression_Access;
      end record;
@@ -121,17 +118,17 @@ private
 
    overriding function Parameters
     (Self : Base_Procedure_Body_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
    overriding function Aspects
     (Self : Base_Procedure_Body_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Declarations
     (Self : Base_Procedure_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Statements
     (Self : Base_Procedure_Body_Declaration)
@@ -139,7 +136,7 @@ private
 
    overriding function Exception_Handlers
     (Self : Base_Procedure_Body_Declaration)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
 
    overriding function End_Name

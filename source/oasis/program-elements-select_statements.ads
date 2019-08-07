@@ -26,13 +26,11 @@ package Program.Elements.Select_Statements is
 
    not overriding function Then_Abort_Statements
     (Self : Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Else_Statements
     (Self : Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    type Select_Statement_Text is limited interface;
 

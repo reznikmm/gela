@@ -34,11 +34,11 @@ package Program.Nodes.Package_Instantiations is
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -54,9 +54,9 @@ package Program.Nodes.Package_Instantiations is
          .Defining_Name_Access;
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -74,9 +74,9 @@ private
           .Defining_Name_Access;
         Generic_Package_Name : not null Program.Elements.Expressions
           .Expression_Access;
-        Parameters           : not null Program.Elements.Parameter_Associations
+        Parameters           : Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
-        Aspects              : not null Program.Elements.Aspect_Specifications
+        Aspects              : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
      end record;
 
@@ -97,12 +97,12 @@ private
 
    overriding function Parameters
     (Self : Base_Package_Instantiation)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
    overriding function Aspects
     (Self : Base_Package_Instantiation)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Is_Package_Instantiation

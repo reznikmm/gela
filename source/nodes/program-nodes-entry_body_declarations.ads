@@ -36,7 +36,7 @@ package Program.Nodes.Entry_Body_Declarations is
          .Entry_Index_Specifications.Entry_Index_Specification_Access;
      Right_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters            : not null Program.Elements.Parameter_Specifications
+     Parameters            : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token_2 : Program.Lexical_Elements.Lexical_Element_Access;
      When_Token            : not null Program.Lexical_Elements
@@ -45,14 +45,13 @@ package Program.Nodes.Entry_Body_Declarations is
          .Expression_Access;
      Is_Token              : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations          : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations          : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements            : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers    : not null Program.Elements.Exception_Handlers
+     Exception_Handlers    : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -71,15 +70,14 @@ package Program.Nodes.Entry_Body_Declarations is
          .Defining_Identifier_Access;
      Entry_Index          : not null Program.Elements
          .Entry_Index_Specifications.Entry_Index_Specification_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Entry_Barrier        : not null Program.Elements.Expressions
          .Expression_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -98,15 +96,14 @@ private
           .Defining_Identifier_Access;
         Entry_Index        : not null Program.Elements
           .Entry_Index_Specifications.Entry_Index_Specification_Access;
-        Parameters         : not null Program.Elements.Parameter_Specifications
+        Parameters         : Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
         Entry_Barrier      : not null Program.Elements.Expressions
           .Expression_Access;
-        Declarations       : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Declarations       : Program.Element_Vectors.Element_Vector_Access;
         Statements         : not null Program.Element_Vectors
           .Element_Vector_Access;
-        Exception_Handlers : not null Program.Elements.Exception_Handlers
+        Exception_Handlers : Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
         End_Name           : Program.Elements.Identifiers.Identifier_Access;
      end record;
@@ -130,7 +127,7 @@ private
 
    overriding function Parameters
     (Self : Base_Entry_Body_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
    overriding function Entry_Barrier
@@ -139,7 +136,7 @@ private
 
    overriding function Declarations
     (Self : Base_Entry_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Statements
     (Self : Base_Entry_Body_Declaration)
@@ -147,7 +144,7 @@ private
 
    overriding function Exception_Handlers
     (Self : Base_Entry_Body_Declaration)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
 
    overriding function End_Name

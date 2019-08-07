@@ -11,7 +11,7 @@ package body Program.Nodes.Indexed_Components is
          .Expression_Access;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Expressions         : not null Program.Elements.Expressions
+     Expressions         : Program.Elements.Expressions
          .Expression_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -29,7 +29,7 @@ package body Program.Nodes.Indexed_Components is
    function Create
     (Prefix               : not null Program.Elements.Expressions
          .Expression_Access;
-     Expressions          : not null Program.Elements.Expressions
+     Expressions          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -55,7 +55,7 @@ package body Program.Nodes.Indexed_Components is
 
    overriding function Expressions
     (Self : Base_Indexed_Component)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Expressions;
    end Expressions;
@@ -98,7 +98,7 @@ package body Program.Nodes.Indexed_Components is
    procedure Initialize (Self : aliased in out Base_Indexed_Component'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
-      for Item in Self.Expressions.Each loop
+      for Item in Self.Expressions.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

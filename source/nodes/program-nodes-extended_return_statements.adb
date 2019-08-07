@@ -12,10 +12,9 @@ package body Program.Nodes.Extended_Return_Statements is
      Return_Object      : not null Program.Elements
          .Return_Object_Specifications.Return_Object_Specification_Access;
      Do_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Statements         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements         : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers : not null Program.Elements.Exception_Handlers
+     Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token_2     : Program.Lexical_Elements.Lexical_Element_Access;
@@ -38,9 +37,8 @@ package body Program.Nodes.Extended_Return_Statements is
    function Create
     (Return_Object        : not null Program.Elements
          .Return_Object_Specifications.Return_Object_Specification_Access;
-     Statements           : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Statements           : Program.Element_Vectors.Element_Vector_Access;
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -68,14 +66,14 @@ package body Program.Nodes.Extended_Return_Statements is
 
    overriding function Statements
     (Self : Base_Extended_Return_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Statements;
    end Statements;
 
    overriding function Exception_Handlers
     (Self : Base_Extended_Return_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is
    begin
       return Self.Exception_Handlers;
@@ -148,10 +146,10 @@ package body Program.Nodes.Extended_Return_Statements is
     (Self : aliased in out Base_Extended_Return_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Return_Object, Self'Unchecked_Access);
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Exception_Handlers.Each loop
+      for Item in Self.Exception_Handlers.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

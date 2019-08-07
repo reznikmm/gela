@@ -28,8 +28,7 @@ package Program.Elements.Block_Statements is
 
    not overriding function Declarations
     (Self : Block_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Statements
     (Self : Block_Statement)
@@ -38,7 +37,7 @@ package Program.Elements.Block_Statements is
 
    not overriding function Exception_Handlers
     (Self : Block_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Statement_Identifier

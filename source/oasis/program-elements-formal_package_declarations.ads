@@ -33,12 +33,12 @@ package Program.Elements.Formal_Package_Declarations is
 
    not overriding function Parameters
     (Self : Formal_Package_Declaration)
-      return not null Program.Elements.Formal_Package_Associations
+      return Program.Elements.Formal_Package_Associations
           .Formal_Package_Association_Vector_Access is abstract;
 
    not overriding function Aspects
     (Self : Formal_Package_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Formal_Package_Declaration_Text is limited interface;

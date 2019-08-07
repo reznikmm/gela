@@ -30,18 +30,17 @@ package Program.Elements.Procedure_Body_Declarations is
 
    not overriding function Parameters
     (Self : Procedure_Body_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Aspects
     (Self : Procedure_Body_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Declarations
     (Self : Procedure_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Statements
     (Self : Procedure_Body_Declaration)
@@ -50,7 +49,7 @@ package Program.Elements.Procedure_Body_Declarations is
 
    not overriding function Exception_Handlers
     (Self : Procedure_Body_Declaration)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Name

@@ -28,7 +28,7 @@ package Program.Nodes.Procedure_Access_Types is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return Procedure_Access_Type;
@@ -39,7 +39,7 @@ package Program.Nodes.Procedure_Access_Types is
      with private;
 
    function Create
-    (Parameters           : not null Program.Elements.Parameter_Specifications
+    (Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -55,7 +55,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Procedure_Access_Types.Procedure_Access_Type
      with record
-        Parameters : not null Program.Elements.Parameter_Specifications
+        Parameters : Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
      end record;
 
@@ -68,7 +68,7 @@ private
 
    overriding function Parameters
     (Self : Base_Procedure_Access_Type)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
    overriding function Is_Procedure_Access_Type

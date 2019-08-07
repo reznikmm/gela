@@ -9,18 +9,17 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    function Create
     (Generic_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Formal_Parameters   : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters   : Program.Element_Vectors.Element_Vector_Access;
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -40,13 +39,12 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    end Create;
 
    function Create
-    (Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -66,7 +64,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
 
    overriding function Formal_Parameters
     (Self : Base_Generic_Procedure_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Formal_Parameters;
    end Formal_Parameters;
@@ -80,7 +78,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
 
    overriding function Parameters
     (Self : Base_Generic_Procedure_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -88,7 +86,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
 
    overriding function Aspects
     (Self : Base_Generic_Procedure_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -160,14 +158,14 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    procedure Initialize
     (Self : aliased in out Base_Generic_Procedure_Declaration'Class) is
    begin
-      for Item in Self.Formal_Parameters.Each loop
+      for Item in Self.Formal_Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -85,7 +85,7 @@ package body Program.Nodes.Index_Constraints is
 
    procedure Initialize (Self : aliased in out Base_Index_Constraint'Class) is
    begin
-      for Item in Self.Ranges.Each loop
+      for Item in Self.Ranges.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

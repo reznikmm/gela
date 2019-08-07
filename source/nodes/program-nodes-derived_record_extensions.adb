@@ -14,8 +14,7 @@ package body Program.Nodes.Derived_Record_Extensions is
      Parent            : not null Program.Elements.Expressions
          .Expression_Access;
      And_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Record_Definition : not null Program.Elements.Definitions
@@ -35,7 +34,7 @@ package body Program.Nodes.Derived_Record_Extensions is
    function Create
     (Parent               : not null Program.Elements.Expressions
          .Expression_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Record_Definition    : not null Program.Elements.Definitions
          .Definition_Access;
@@ -68,7 +67,7 @@ package body Program.Nodes.Derived_Record_Extensions is
 
    overriding function Progenitors
     (Self : Base_Derived_Record_Extension)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Progenitors;
    end Progenitors;
@@ -168,7 +167,7 @@ package body Program.Nodes.Derived_Record_Extensions is
     (Self : aliased in out Base_Derived_Record_Extension'Class) is
    begin
       Set_Enclosing_Element (Self.Parent, Self'Unchecked_Access);
-      for Item in Self.Progenitors.Each loop
+      for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Record_Definition, Self'Unchecked_Access);

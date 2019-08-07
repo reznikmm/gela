@@ -87,7 +87,7 @@ package body Program.Nodes.Enumeration_Types is
 
    procedure Initialize (Self : aliased in out Base_Enumeration_Type'Class) is
    begin
-      for Item in Self.Literals.Each loop
+      for Item in Self.Literals.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

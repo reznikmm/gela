@@ -26,8 +26,7 @@ package Program.Elements.Derived_Record_Extensions is
 
    not overriding function Progenitors
     (Self : Derived_Record_Extension)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Record_Definition
     (Self : Derived_Record_Extension)

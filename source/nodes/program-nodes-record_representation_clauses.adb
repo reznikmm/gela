@@ -160,7 +160,7 @@ package body Program.Nodes.Record_Representation_Clauses is
          Set_Enclosing_Element
            (Self.Mod_Clause_Expression, Self'Unchecked_Access);
       end if;
-      for Item in Self.Component_Clauses.Each loop
+      for Item in Self.Component_Clauses.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -24,7 +24,7 @@ package Program.Elements.Pragmas is
 
    not overriding function Arguments
     (Self : Pragma_Element)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is abstract;
 
    type Pragma_Text is limited interface;

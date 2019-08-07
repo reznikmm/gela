@@ -22,7 +22,7 @@ package Program.Elements.Anonymous_Access_To_Procedures is
 
    not overriding function Parameters
     (Self : Anonymous_Access_To_Procedure)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Has_Not_Null

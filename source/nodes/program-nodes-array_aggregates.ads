@@ -22,8 +22,7 @@ package Program.Nodes.Array_Aggregates is
    function Create
     (Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Array_Component_Associations
+     Components          : Program.Elements.Array_Component_Associations
          .Array_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -35,8 +34,7 @@ package Program.Nodes.Array_Aggregates is
      with private;
 
    function Create
-    (Components           : not null Program.Elements
-         .Array_Component_Associations
+    (Components           : Program.Elements.Array_Component_Associations
          .Array_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -50,7 +48,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Array_Aggregates.Array_Aggregate
      with record
-        Components : not null Program.Elements.Array_Component_Associations
+        Components : Program.Elements.Array_Component_Associations
           .Array_Component_Association_Vector_Access;
      end record;
 
@@ -62,7 +60,7 @@ private
 
    overriding function Components
     (Self : Base_Array_Aggregate)
-      return not null Program.Elements.Array_Component_Associations
+      return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Vector_Access;
 
    overriding function Is_Array_Aggregate

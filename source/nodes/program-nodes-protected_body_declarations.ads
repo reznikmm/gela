@@ -32,7 +32,7 @@ package Program.Nodes.Protected_Body_Declarations is
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -54,7 +54,7 @@ package Program.Nodes.Protected_Body_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Protected_Operations : not null Program.Element_Vectors
          .Element_Vector_Access;
@@ -74,7 +74,7 @@ private
      with record
         Name                 : not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Aspects              : not null Program.Elements.Aspect_Specifications
+        Aspects              : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
         Protected_Operations : not null Program.Element_Vectors
           .Element_Vector_Access;
@@ -95,7 +95,7 @@ private
 
    overriding function Aspects
     (Self : Base_Protected_Body_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Protected_Operations

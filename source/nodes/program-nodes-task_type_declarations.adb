@@ -16,13 +16,12 @@ package body Program.Nodes.Task_Type_Declarations is
      Discriminant_Part : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2      : Program.Lexical_Elements.Lexical_Element_Access;
      Definition        : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -47,9 +46,9 @@ package body Program.Nodes.Task_Type_Declarations is
          .Defining_Identifier_Access;
      Discriminant_Part    : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -87,7 +86,7 @@ package body Program.Nodes.Task_Type_Declarations is
 
    overriding function Aspects
     (Self : Base_Task_Type_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -95,7 +94,7 @@ package body Program.Nodes.Task_Type_Declarations is
 
    overriding function Progenitors
     (Self : Base_Task_Type_Declaration)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Progenitors;
    end Progenitors;
@@ -185,10 +184,10 @@ package body Program.Nodes.Task_Type_Declarations is
       if Self.Discriminant_Part.Assigned then
          Set_Enclosing_Element (Self.Discriminant_Part, Self'Unchecked_Access);
       end if;
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Progenitors.Each loop
+      for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Definition, Self'Unchecked_Access);

@@ -13,7 +13,7 @@ package body Program.Nodes.Interface_Types is
      Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access)
       return Interface_Type is
    begin
@@ -29,7 +29,7 @@ package body Program.Nodes.Interface_Types is
    end Create;
 
    function Create
-    (Progenitors          : not null Program.Elements.Expressions
+    (Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -55,7 +55,7 @@ package body Program.Nodes.Interface_Types is
 
    overriding function Progenitors
     (Self : Base_Interface_Type)
-      return not null Program.Elements.Expressions.Expression_Vector_Access is
+      return Program.Elements.Expressions.Expression_Vector_Access is
    begin
       return Self.Progenitors;
    end Progenitors;
@@ -175,7 +175,7 @@ package body Program.Nodes.Interface_Types is
 
    procedure Initialize (Self : aliased in out Base_Interface_Type'Class) is
    begin
-      for Item in Self.Progenitors.Each loop
+      for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

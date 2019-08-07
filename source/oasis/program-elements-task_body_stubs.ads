@@ -26,7 +26,7 @@ package Program.Elements.Task_Body_Stubs is
 
    not overriding function Aspects
     (Self : Task_Body_Stub)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Task_Body_Stub_Text is limited interface;

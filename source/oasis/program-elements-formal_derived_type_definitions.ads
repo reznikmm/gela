@@ -26,8 +26,7 @@ package Program.Elements.Formal_Derived_Type_Definitions is
 
    not overriding function Progenitors
     (Self : Formal_Derived_Type_Definition)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Has_Abstract
     (Self : Formal_Derived_Type_Definition)

@@ -23,8 +23,7 @@ package Program.Elements.Generic_Procedure_Declarations is
 
    not overriding function Formal_Parameters
     (Self : Generic_Procedure_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Name
     (Self : Generic_Procedure_Declaration)
@@ -33,12 +32,12 @@ package Program.Elements.Generic_Procedure_Declarations is
 
    not overriding function Parameters
     (Self : Generic_Procedure_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Aspects
     (Self : Generic_Procedure_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Generic_Procedure_Declaration_Text is limited interface;

@@ -13,8 +13,7 @@ package body Program.Nodes.If_Expressions is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Expression : not null Program.Elements.Expressions.Expression_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      Else_Expression : Program.Elements.Expressions.Expression_Access)
       return If_Expression is
@@ -34,7 +33,7 @@ package body Program.Nodes.If_Expressions is
          .Expression_Access;
      Then_Expression      : not null Program.Elements.Expressions
          .Expression_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
      Else_Expression      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -69,7 +68,7 @@ package body Program.Nodes.If_Expressions is
 
    overriding function Elsif_Paths
     (Self : Base_If_Expression)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access is
    begin
       return Self.Elsif_Paths;
    end Elsif_Paths;
@@ -127,7 +126,7 @@ package body Program.Nodes.If_Expressions is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Then_Expression, Self'Unchecked_Access);
-      for Item in Self.Elsif_Paths.Each loop
+      for Item in Self.Elsif_Paths.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.Else_Expression.Assigned then

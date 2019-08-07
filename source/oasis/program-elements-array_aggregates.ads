@@ -20,7 +20,7 @@ package Program.Elements.Array_Aggregates is
 
    not overriding function Components
     (Self : Array_Aggregate)
-      return not null Program.Elements.Array_Component_Associations
+      return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Vector_Access is abstract;
 
    type Array_Aggregate_Text is limited interface;

@@ -21,8 +21,7 @@ package Program.Elements.Formal_Interface_Types is
 
    not overriding function Progenitors
     (Self : Formal_Interface_Type)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Has_Limited
     (Self : Formal_Interface_Type)

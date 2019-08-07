@@ -88,7 +88,7 @@ package body Program.Nodes.Discriminant_Constraints is
    procedure Initialize
     (Self : aliased in out Base_Discriminant_Constraint'Class) is
    begin
-      for Item in Self.Discriminants.Each loop
+      for Item in Self.Discriminants.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

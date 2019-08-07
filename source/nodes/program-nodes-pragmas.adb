@@ -12,7 +12,7 @@ package body Program.Nodes.Pragmas is
      Name                : not null Program.Elements.Identifiers
          .Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Arguments           : not null Program.Elements.Parameter_Associations
+     Arguments           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -32,7 +32,7 @@ package body Program.Nodes.Pragmas is
    function Create
     (Name                 : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Arguments            : not null Program.Elements.Parameter_Associations
+     Arguments            : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -58,7 +58,7 @@ package body Program.Nodes.Pragmas is
 
    overriding function Arguments
     (Self : Base_Pragma)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is
    begin
       return Self.Arguments;
@@ -116,7 +116,7 @@ package body Program.Nodes.Pragmas is
    procedure Initialize (Self : aliased in out Base_Pragma'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Arguments.Each loop
+      for Item in Self.Arguments.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

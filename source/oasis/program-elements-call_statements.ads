@@ -26,7 +26,7 @@ package Program.Elements.Call_Statements is
 
    not overriding function Parameters
     (Self : Call_Statement)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is abstract;
 
    type Call_Statement_Text is limited interface;

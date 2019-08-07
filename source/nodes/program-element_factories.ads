@@ -206,7 +206,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Identifiers
          .Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Arguments           : not null Program.Elements.Parameter_Associations
+     Arguments           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -255,7 +255,7 @@ package Program.Element_Factories is
      Definition        : not null Program.Elements.Definitions
          .Definition_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -273,13 +273,12 @@ package Program.Element_Factories is
      Discriminant_Part : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2      : Program.Lexical_Elements.Lexical_Element_Access;
      Definition        : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -299,13 +298,12 @@ package Program.Element_Factories is
      Discriminant_Part : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2      : Program.Lexical_Elements.Lexical_Element_Access;
      Definition        : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -325,7 +323,7 @@ package Program.Element_Factories is
      Subtype_Indication : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -350,8 +348,8 @@ package Program.Element_Factories is
          .Expression_Access;
      With_Token                : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Aspects                   : not null Program.Elements
-         .Aspect_Specifications.Aspect_Specification_Vector_Access;
+     Aspects                   : Program.Elements.Aspect_Specifications
+         .Aspect_Specification_Vector_Access;
      Semicolon_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access)
       return not null Program.Elements.Object_Declarations
@@ -364,13 +362,12 @@ package Program.Element_Factories is
      Name            : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors     : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors     : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Definition      : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -386,13 +383,12 @@ package Program.Element_Factories is
      Name            : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      New_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors     : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors     : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
      Definition      : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -452,7 +448,7 @@ package Program.Element_Factories is
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Default_Expression : Program.Elements.Expressions.Expression_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -505,13 +501,13 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Is_Token            : Program.Lexical_Elements.Lexical_Element_Access;
      Abstract_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -527,7 +523,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -540,7 +536,7 @@ package Program.Element_Factories is
          .Parenthesized_Expression_Access;
      Abstract_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -573,22 +569,21 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations        : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations        : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements          : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token     : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers  : not null Program.Elements.Exception_Handlers
+     Exception_Handlers  : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -607,7 +602,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -616,18 +611,17 @@ package Program.Element_Factories is
      Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Result_Subtype      : not null Program.Elements.Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations        : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations        : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements          : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token     : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers  : not null Program.Elements.Exception_Handlers
+     Exception_Handlers  : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -658,15 +652,13 @@ package Program.Element_Factories is
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -684,18 +676,17 @@ package Program.Element_Factories is
      Name               : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations       : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements         : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers : not null Program.Elements.Exception_Handlers
+     Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -718,7 +709,7 @@ package Program.Element_Factories is
          .Lexical_Element_Access;
      Renamed_Object  : not null Program.Elements.Expressions.Expression_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -738,7 +729,7 @@ package Program.Element_Factories is
      Renamed_Exception : not null Program.Elements.Expressions
          .Expression_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -754,13 +745,13 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Renames_Token       : Program.Lexical_Elements.Lexical_Element_Access;
      Renamed_Procedure   : Program.Elements.Expressions.Expression_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -776,7 +767,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -787,7 +778,7 @@ package Program.Element_Factories is
      Renames_Token       : Program.Lexical_Elements.Lexical_Element_Access;
      Renamed_Function    : Program.Elements.Expressions.Expression_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -804,7 +795,7 @@ package Program.Element_Factories is
          .Lexical_Element_Access;
      Renamed_Package : not null Program.Elements.Expressions.Expression_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -823,7 +814,7 @@ package Program.Element_Factories is
          .Lexical_Element_Access;
      Renamed_Package : not null Program.Elements.Expressions.Expression_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -843,7 +834,7 @@ package Program.Element_Factories is
      Renamed_Procedure : not null Program.Elements.Expressions
          .Expression_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -863,7 +854,7 @@ package Program.Element_Factories is
      Renamed_Function : not null Program.Elements.Expressions
          .Expression_Access;
      With_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects          : not null Program.Elements.Aspect_Specifications
+     Aspects          : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -879,18 +870,17 @@ package Program.Element_Factories is
      Name               : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations       : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements         : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers : not null Program.Elements.Exception_Handlers
+     Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -909,7 +899,7 @@ package Program.Element_Factories is
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -936,11 +926,11 @@ package Program.Element_Factories is
          .Discrete_Range_Access;
      Right_Bracket_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2    : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters              : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
+     Parameters              : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
      Right_Bracket_Token_2   : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token              : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects                 : not null Program.Elements.Aspect_Specifications
+     Aspects                 : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -958,7 +948,7 @@ package Program.Element_Factories is
          .Entry_Index_Specifications.Entry_Index_Specification_Access;
      Right_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Left_Bracket_Token_2  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters            : not null Program.Elements.Parameter_Specifications
+     Parameters            : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token_2 : Program.Lexical_Elements.Lexical_Element_Access;
      When_Token            : not null Program.Lexical_Elements
@@ -967,14 +957,13 @@ package Program.Element_Factories is
          .Expression_Access;
      Is_Token              : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations          : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations          : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements            : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token       : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers    : not null Program.Elements.Exception_Handlers
+     Exception_Handlers    : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1006,7 +995,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Is_Token            : not null Program.Lexical_Elements
@@ -1014,7 +1003,7 @@ package Program.Element_Factories is
      Separate_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1030,7 +1019,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -1043,7 +1032,7 @@ package Program.Element_Factories is
      Separate_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1063,7 +1052,7 @@ package Program.Element_Factories is
      Separate_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1083,7 +1072,7 @@ package Program.Element_Factories is
      Separate_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1102,7 +1091,7 @@ package Program.Element_Factories is
      Separate_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1118,7 +1107,7 @@ package Program.Element_Factories is
      Exception_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1137,22 +1126,19 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Generic_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Package_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -1165,18 +1151,17 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Generic_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Formal_Parameters   : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters   : Program.Element_Vectors.Element_Vector_Access;
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1187,14 +1172,13 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Generic_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Formal_Parameters   : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters   : Program.Element_Vectors.Element_Vector_Access;
      Function_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -1203,7 +1187,7 @@ package Program.Element_Factories is
      Null_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Result_Subtype      : not null Program.Elements.Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1223,11 +1207,11 @@ package Program.Element_Factories is
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1249,11 +1233,11 @@ package Program.Element_Factories is
      Generic_Procedure_Name : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token     : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters             : not null Program.Elements.Parameter_Associations
+     Parameters             : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token             : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects                : not null Program.Elements.Aspect_Specifications
+     Aspects                : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1275,11 +1259,11 @@ package Program.Element_Factories is
      Generic_Function_Name : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters            : not null Program.Elements.Parameter_Associations
+     Parameters            : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token            : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects               : not null Program.Elements.Aspect_Specifications
+     Aspects               : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1300,7 +1284,7 @@ package Program.Element_Factories is
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Default_Expression : Program.Elements.Expressions.Expression_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1319,7 +1303,7 @@ package Program.Element_Factories is
      Definition        : not null Program.Elements.Formal_Type_Definitions
          .Formal_Type_Definition_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects           : not null Program.Elements.Aspect_Specifications
+     Aspects           : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token   : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1335,7 +1319,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Is_Token            : Program.Lexical_Elements.Lexical_Element_Access;
@@ -1344,7 +1328,7 @@ package Program.Element_Factories is
      Subprogram_Default  : Program.Elements.Expressions.Expression_Access;
      Box_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token_2        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1360,7 +1344,7 @@ package Program.Element_Factories is
      Name                : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -1373,7 +1357,7 @@ package Program.Element_Factories is
      Subprogram_Default  : Program.Elements.Expressions.Expression_Access;
      Box_Token           : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token_2        : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1395,11 +1379,11 @@ package Program.Element_Factories is
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters           : not null Program.Elements
-         .Formal_Package_Associations.Formal_Package_Association_Vector_Access;
+     Parameters           : Program.Elements.Formal_Package_Associations
+         .Formal_Package_Association_Vector_Access;
      Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      With_Token_2         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1467,8 +1451,8 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Discriminants       : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+     Discriminants       : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
       return not null Program.Elements.Known_Discriminant_Parts
@@ -1544,7 +1528,7 @@ package Program.Element_Factories is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Anonymous_Access_To_Procedures
@@ -1560,7 +1544,7 @@ package Program.Element_Factories is
      Function_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -1590,7 +1574,7 @@ package Program.Element_Factories is
      Ancestor           : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access;
      With_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -1607,12 +1591,10 @@ package Program.Element_Factories is
 
    not overriding function Create_Task_Definition
     (Self : Element_Factory;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access)
@@ -1620,12 +1602,10 @@ package Program.Element_Factories is
 
    not overriding function Create_Protected_Definition
     (Self : Element_Factory;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access)
@@ -1700,7 +1680,7 @@ package Program.Element_Factories is
      Prefix              : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Associations
+     Parameters          : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Function_Calls.Function_Call_Access;
@@ -1711,7 +1691,7 @@ package Program.Element_Factories is
          .Expression_Access;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Expressions         : not null Program.Elements.Expressions
+     Expressions         : Program.Elements.Expressions
          .Expression_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1758,8 +1738,7 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Record_Component_Associations
+     Components          : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1774,8 +1753,7 @@ package Program.Element_Factories is
          .Expression_Access;
      With_Token          : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Record_Component_Associations
+     Components          : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1786,8 +1764,7 @@ package Program.Element_Factories is
     (Self : Element_Factory;
      Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Array_Component_Associations
+     Components          : Program.Elements.Array_Component_Associations
          .Array_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -1900,8 +1877,7 @@ package Program.Element_Factories is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Expression : not null Program.Elements.Expressions.Expression_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      Else_Expression : Program.Elements.Expressions.Expression_Access)
       return not null Program.Elements.If_Expressions.If_Expression_Access;
@@ -1928,8 +1904,7 @@ package Program.Element_Factories is
 
    not overriding function Create_Discriminant_Association
     (Self : Element_Factory;
-     Selector_Names : not null Program.Elements.Identifiers
-         .Identifier_Vector_Access;
+     Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
      Arrow_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Expression     : not null Program.Elements.Expressions.Expression_Access)
       return not null Program.Elements.Discriminant_Associations
@@ -1937,7 +1912,7 @@ package Program.Element_Factories is
 
    not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
-     Choices     : not null Program.Element_Vectors.Element_Vector_Access;
+     Choices     : Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Expression  : Program.Elements.Expressions.Expression_Access;
      Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
@@ -1946,7 +1921,7 @@ package Program.Element_Factories is
 
    not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
-     Choices     : not null Program.Element_Vectors.Element_Vector_Access;
+     Choices     : Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Expression  : Program.Elements.Expressions.Expression_Access;
      Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
@@ -2000,10 +1975,9 @@ package Program.Element_Factories is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Statements : not null Program.Element_Vectors.Element_Vector_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements : not null Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements : Program.Element_Vectors.Element_Vector_Access;
      End_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      If_Token_2      : not null Program.Lexical_Elements
@@ -2111,15 +2085,14 @@ package Program.Element_Factories is
          .Lexical_Element_Access;
      Declare_Token            : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token              : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token          : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token                : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2153,7 +2126,7 @@ package Program.Element_Factories is
      Called_Name         : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Associations
+     Parameters          : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -2177,10 +2150,9 @@ package Program.Element_Factories is
      Return_Object      : not null Program.Elements
          .Return_Object_Specifications.Return_Object_Specification_Access;
      Do_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Statements         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements         : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Exception_Handlers : not null Program.Elements.Exception_Handlers
+     Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token_2     : Program.Lexical_Elements.Lexical_Element_Access;
@@ -2202,17 +2174,16 @@ package Program.Element_Factories is
          .Lexical_Element_Access;
      Left_Bracket_Token_2     : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Parameters               : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
+     Parameters               : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
      Right_Bracket_Token_2    : Program.Lexical_Elements
          .Lexical_Element_Access;
      Do_Token                 : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Statements               : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements               : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token          : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token                : Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -2262,11 +2233,9 @@ package Program.Element_Factories is
          .Select_Path_Vector_Access;
      Then_Token            : Program.Lexical_Elements.Lexical_Element_Access;
      Abort_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
      Else_Token            : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      End_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Select_Token_2        : not null Program.Lexical_Elements
@@ -2403,8 +2372,7 @@ package Program.Element_Factories is
      Parent            : not null Program.Elements.Expressions
          .Expression_Access;
      And_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors       : not null Program.Elements.Expressions
-         .Expression_Vector_Access;
+     Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Record_Definition : not null Program.Elements.Definitions
@@ -2538,7 +2506,7 @@ package Program.Element_Factories is
      Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access)
       return not null Program.Elements.Interface_Types.Interface_Type_Access;
 
@@ -2565,7 +2533,7 @@ package Program.Element_Factories is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Procedure_Access_Types
@@ -2581,7 +2549,7 @@ package Program.Element_Factories is
      Function_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -2611,7 +2579,7 @@ package Program.Element_Factories is
      Subtype_Mark       : not null Program.Elements.Expressions
          .Expression_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Private_Token      : Program.Lexical_Elements.Lexical_Element_Access)
@@ -2723,7 +2691,7 @@ package Program.Element_Factories is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Formal_Procedure_Access_Types
@@ -2739,7 +2707,7 @@ package Program.Element_Factories is
      Function_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -2758,7 +2726,7 @@ package Program.Element_Factories is
      Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access)
       return not null Program.Elements.Formal_Interface_Types
           .Formal_Interface_Type_Access;

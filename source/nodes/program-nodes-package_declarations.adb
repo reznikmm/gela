@@ -12,15 +12,13 @@ package body Program.Nodes.Package_Declarations is
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -44,12 +42,10 @@ package body Program.Nodes.Package_Declarations is
    function Create
     (Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -77,7 +73,7 @@ package body Program.Nodes.Package_Declarations is
 
    overriding function Aspects
     (Self : Base_Package_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -85,14 +81,14 @@ package body Program.Nodes.Package_Declarations is
 
    overriding function Visible_Declarations
     (Self : Base_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Visible_Declarations;
    end Visible_Declarations;
 
    overriding function Private_Declarations
     (Self : Base_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Private_Declarations;
    end Private_Declarations;
@@ -171,13 +167,13 @@ package body Program.Nodes.Package_Declarations is
     (Self : aliased in out Base_Package_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Visible_Declarations.Each loop
+      for Item in Self.Visible_Declarations.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Private_Declarations.Each loop
+      for Item in Self.Private_Declarations.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Name.Assigned then

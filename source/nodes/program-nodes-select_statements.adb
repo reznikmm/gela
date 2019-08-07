@@ -13,11 +13,9 @@ package body Program.Nodes.Select_Statements is
          .Select_Path_Vector_Access;
      Then_Token            : Program.Lexical_Elements.Lexical_Element_Access;
      Abort_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
      Else_Token            : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      End_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Select_Token_2        : not null Program.Lexical_Elements
@@ -41,10 +39,8 @@ package body Program.Nodes.Select_Statements is
    function Create
     (Paths                 : not null Program.Elements.Select_Paths
          .Select_Path_Vector_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit   : Boolean := False;
      Is_Part_Of_Inherited  : Boolean := False;
      Is_Part_Of_Instance   : Boolean := False)
@@ -71,14 +67,14 @@ package body Program.Nodes.Select_Statements is
 
    overriding function Then_Abort_Statements
     (Self : Base_Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Then_Abort_Statements;
    end Then_Abort_Statements;
 
    overriding function Else_Statements
     (Self : Base_Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Else_Statements;
    end Else_Statements;
@@ -155,13 +151,13 @@ package body Program.Nodes.Select_Statements is
 
    procedure Initialize (Self : aliased in out Base_Select_Statement'Class) is
    begin
-      for Item in Self.Paths.Each loop
+      for Item in Self.Paths.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Then_Abort_Statements.Each loop
+      for Item in Self.Then_Abort_Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Else_Statements.Each loop
+      for Item in Self.Else_Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

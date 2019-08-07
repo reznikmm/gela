@@ -211,7 +211,7 @@ package body Program.Nodes.Parameter_Specifications is
    procedure Initialize
     (Self : aliased in out Base_Parameter_Specification'Class) is
    begin
-      for Item in Self.Names.Each loop
+      for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Parameter_Subtype, Self'Unchecked_Access);

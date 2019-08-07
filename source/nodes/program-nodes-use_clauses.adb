@@ -125,7 +125,7 @@ package body Program.Nodes.Use_Clauses is
 
    procedure Initialize (Self : aliased in out Base_Use_Clause'Class) is
    begin
-      for Item in Self.Clause_Names.Each loop
+      for Item in Self.Clause_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

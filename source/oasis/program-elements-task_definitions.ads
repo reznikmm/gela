@@ -21,13 +21,11 @@ package Program.Elements.Task_Definitions is
 
    not overriding function Visible_Declarations
     (Self : Task_Definition)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Private_Declarations
     (Self : Task_Definition)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function End_Name
     (Self : Task_Definition)

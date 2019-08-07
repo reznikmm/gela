@@ -28,7 +28,7 @@ package Program.Elements.Formal_Procedure_Declarations is
 
    not overriding function Parameters
     (Self : Formal_Procedure_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Subprogram_Default
@@ -37,7 +37,7 @@ package Program.Elements.Formal_Procedure_Declarations is
 
    not overriding function Aspects
     (Self : Formal_Procedure_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Has_Abstract

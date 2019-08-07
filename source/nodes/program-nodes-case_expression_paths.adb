@@ -94,7 +94,7 @@ package body Program.Nodes.Case_Expression_Paths is
    procedure Initialize
     (Self : aliased in out Base_Case_Expression_Path'Class) is
    begin
-      for Item in Self.Choices.Each loop
+      for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);

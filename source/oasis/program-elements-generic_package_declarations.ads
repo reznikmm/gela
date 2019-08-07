@@ -23,8 +23,7 @@ package Program.Elements.Generic_Package_Declarations is
 
    not overriding function Formal_Parameters
     (Self : Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Name
     (Self : Generic_Package_Declaration)
@@ -33,18 +32,16 @@ package Program.Elements.Generic_Package_Declarations is
 
    not overriding function Aspects
     (Self : Generic_Package_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Visible_Declarations
     (Self : Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Private_Declarations
     (Self : Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function End_Name
     (Self : Generic_Package_Declaration)

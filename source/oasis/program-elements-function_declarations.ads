@@ -28,7 +28,7 @@ package Program.Elements.Function_Declarations is
 
    not overriding function Parameters
     (Self : Function_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Result_Subtype
@@ -42,7 +42,7 @@ package Program.Elements.Function_Declarations is
 
    not overriding function Aspects
     (Self : Function_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Has_Not (Self : Function_Declaration) return Boolean

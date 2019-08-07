@@ -25,7 +25,7 @@ package Program.Elements.Extension_Aggregates is
 
    not overriding function Components
     (Self : Extension_Aggregate)
-      return not null Program.Elements.Record_Component_Associations
+      return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access is abstract;
 
    type Extension_Aggregate_Text is limited interface;

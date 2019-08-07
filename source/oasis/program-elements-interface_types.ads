@@ -20,8 +20,7 @@ package Program.Elements.Interface_Types is
 
    not overriding function Progenitors
     (Self : Interface_Type)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Has_Limited (Self : Interface_Type) return Boolean
      is abstract;

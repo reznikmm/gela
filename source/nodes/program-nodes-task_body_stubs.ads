@@ -31,7 +31,7 @@ package Program.Nodes.Task_Body_Stubs is
      Separate_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -44,7 +44,7 @@ package Program.Nodes.Task_Body_Stubs is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -60,7 +60,7 @@ private
      with record
         Name    : not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Aspects : not null Program.Elements.Aspect_Specifications
+        Aspects : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
      end record;
 
@@ -77,7 +77,7 @@ private
 
    overriding function Aspects
     (Self : Base_Task_Body_Stub)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Is_Task_Body_Stub

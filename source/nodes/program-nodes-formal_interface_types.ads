@@ -26,7 +26,7 @@ package Program.Nodes.Formal_Interface_Types is
      Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access)
       return Formal_Interface_Type;
 
@@ -36,7 +36,7 @@ package Program.Nodes.Formal_Interface_Types is
      with private;
 
    function Create
-    (Progenitors          : not null Program.Elements.Expressions
+    (Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -54,8 +54,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Formal_Interface_Types.Formal_Interface_Type
      with record
-        Progenitors : not null Program.Elements.Expressions
-          .Expression_Vector_Access;
+        Progenitors : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
    procedure Initialize
@@ -67,7 +66,7 @@ private
 
    overriding function Progenitors
     (Self : Base_Formal_Interface_Type)
-      return not null Program.Elements.Expressions.Expression_Vector_Access;
+      return Program.Elements.Expressions.Expression_Vector_Access;
 
    overriding function Is_Formal_Interface_Type
     (Self : Base_Formal_Interface_Type)

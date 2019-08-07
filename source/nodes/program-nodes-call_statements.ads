@@ -23,7 +23,7 @@ package Program.Nodes.Call_Statements is
     (Called_Name         : not null Program.Elements.Expressions
          .Expression_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Associations
+     Parameters          : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
@@ -37,7 +37,7 @@ package Program.Nodes.Call_Statements is
    function Create
     (Called_Name          : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -52,7 +52,7 @@ private
        and Program.Elements.Call_Statements.Call_Statement
      with record
         Called_Name : not null Program.Elements.Expressions.Expression_Access;
-        Parameters  : not null Program.Elements.Parameter_Associations
+        Parameters  : Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
      end record;
 
@@ -68,7 +68,7 @@ private
 
    overriding function Parameters
     (Self : Base_Call_Statement)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
    overriding function Is_Call_Statement

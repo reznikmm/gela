@@ -37,7 +37,7 @@ package Program.Elements.Component_Declarations is
 
    not overriding function Aspects
     (Self : Component_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Component_Declaration_Text is limited interface;

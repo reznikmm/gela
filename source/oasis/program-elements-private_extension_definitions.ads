@@ -26,8 +26,7 @@ package Program.Elements.Private_Extension_Definitions is
 
    not overriding function Progenitors
     (Self : Private_Extension_Definition)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Has_Abstract
     (Self : Private_Extension_Definition)

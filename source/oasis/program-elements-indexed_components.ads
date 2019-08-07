@@ -24,8 +24,7 @@ package Program.Elements.Indexed_Components is
 
    not overriding function Expressions
     (Self : Indexed_Component)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    type Indexed_Component_Text is limited interface;
 

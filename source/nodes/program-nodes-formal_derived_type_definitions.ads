@@ -30,7 +30,7 @@ package Program.Nodes.Formal_Derived_Type_Definitions is
      Subtype_Mark       : not null Program.Elements.Expressions
          .Expression_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Private_Token      : Program.Lexical_Elements.Lexical_Element_Access)
@@ -45,7 +45,7 @@ package Program.Nodes.Formal_Derived_Type_Definitions is
    function Create
     (Subtype_Mark         : not null Program.Elements.Expressions
          .Expression_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -65,8 +65,7 @@ private
          .Formal_Derived_Type_Definition
      with record
         Subtype_Mark : not null Program.Elements.Expressions.Expression_Access;
-        Progenitors  : not null Program.Elements.Expressions
-          .Expression_Vector_Access;
+        Progenitors  : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
    procedure Initialize
@@ -82,7 +81,7 @@ private
 
    overriding function Progenitors
     (Self : Base_Formal_Derived_Type_Definition)
-      return not null Program.Elements.Expressions.Expression_Vector_Access;
+      return Program.Elements.Expressions.Expression_Vector_Access;
 
    overriding function Is_Formal_Derived_Type_Definition
     (Self : Base_Formal_Derived_Type_Definition)

@@ -23,8 +23,7 @@ package Program.Nodes.Discriminant_Associations is
      with private;
 
    function Create
-    (Selector_Names : not null Program.Elements.Identifiers
-         .Identifier_Vector_Access;
+    (Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
      Arrow_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Expression     : not null Program.Elements.Expressions.Expression_Access)
       return Discriminant_Association;
@@ -36,7 +35,7 @@ package Program.Nodes.Discriminant_Associations is
      with private;
 
    function Create
-    (Selector_Names       : not null Program.Elements.Identifiers
+    (Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
      Expression           : not null Program.Elements.Expressions
          .Expression_Access;
@@ -52,8 +51,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Discriminant_Associations.Discriminant_Association
      with record
-        Selector_Names : not null Program.Elements.Identifiers
-          .Identifier_Vector_Access;
+        Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
         Expression     : not null Program.Elements.Expressions
           .Expression_Access;
      end record;
@@ -67,7 +65,7 @@ private
 
    overriding function Selector_Names
     (Self : Base_Discriminant_Association)
-      return not null Program.Elements.Identifiers.Identifier_Vector_Access;
+      return Program.Elements.Identifiers.Identifier_Vector_Access;
 
    overriding function Expression
     (Self : Base_Discriminant_Association)

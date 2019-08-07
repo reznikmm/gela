@@ -20,7 +20,7 @@ package Program.Elements.Known_Discriminant_Parts is
 
    not overriding function Discriminants
     (Self : Known_Discriminant_Part)
-      return not null Program.Elements.Discriminant_Specifications
+      return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Vector_Access is abstract;
 
    type Known_Discriminant_Part_Text is limited interface;

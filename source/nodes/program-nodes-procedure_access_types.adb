@@ -15,7 +15,7 @@ package body Program.Nodes.Procedure_Access_Types is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return Procedure_Access_Type is
@@ -32,7 +32,7 @@ package body Program.Nodes.Procedure_Access_Types is
    end Create;
 
    function Create
-    (Parameters           : not null Program.Elements.Parameter_Specifications
+    (Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -54,7 +54,7 @@ package body Program.Nodes.Procedure_Access_Types is
 
    overriding function Parameters
     (Self : Base_Procedure_Access_Type)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -161,7 +161,7 @@ package body Program.Nodes.Procedure_Access_Types is
    procedure Initialize
     (Self : aliased in out Base_Procedure_Access_Type'Class) is
    begin
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

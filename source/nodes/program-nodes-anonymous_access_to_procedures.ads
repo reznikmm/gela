@@ -30,7 +30,7 @@ package Program.Nodes.Anonymous_Access_To_Procedures is
      Procedure_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return Anonymous_Access_To_Procedure;
@@ -42,7 +42,7 @@ package Program.Nodes.Anonymous_Access_To_Procedures is
      with private;
 
    function Create
-    (Parameters           : not null Program.Elements.Parameter_Specifications
+    (Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -59,7 +59,7 @@ private
        and Program.Elements.Anonymous_Access_To_Procedures
          .Anonymous_Access_To_Procedure
      with record
-        Parameters : not null Program.Elements.Parameter_Specifications
+        Parameters : Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
      end record;
 
@@ -72,7 +72,7 @@ private
 
    overriding function Parameters
     (Self : Base_Anonymous_Access_To_Procedure)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
    overriding function Is_Anonymous_Access_To_Procedure

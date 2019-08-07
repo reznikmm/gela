@@ -36,7 +36,7 @@ package Program.Elements.Entry_Body_Declarations is
 
    not overriding function Parameters
     (Self : Entry_Body_Declaration)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Entry_Barrier
@@ -46,8 +46,7 @@ package Program.Elements.Entry_Body_Declarations is
 
    not overriding function Declarations
     (Self : Entry_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Statements
     (Self : Entry_Body_Declaration)
@@ -56,7 +55,7 @@ package Program.Elements.Entry_Body_Declarations is
 
    not overriding function Exception_Handlers
     (Self : Entry_Body_Declaration)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Name

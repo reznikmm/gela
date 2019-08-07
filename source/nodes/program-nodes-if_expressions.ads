@@ -26,8 +26,7 @@ package Program.Nodes.If_Expressions is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Expression : not null Program.Elements.Expressions.Expression_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
      Else_Expression : Program.Elements.Expressions.Expression_Access)
       return If_Expression;
@@ -41,7 +40,7 @@ package Program.Nodes.If_Expressions is
          .Expression_Access;
      Then_Expression      : not null Program.Elements.Expressions
          .Expression_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
      Else_Expression      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -60,7 +59,7 @@ private
           .Expression_Access;
         Then_Expression : not null Program.Elements.Expressions
           .Expression_Access;
-        Elsif_Paths     : not null Program.Elements.Elsif_Paths
+        Elsif_Paths     : Program.Elements.Elsif_Paths
           .Elsif_Path_Vector_Access;
         Else_Expression : Program.Elements.Expressions.Expression_Access;
      end record;
@@ -81,7 +80,7 @@ private
 
    overriding function Elsif_Paths
     (Self : Base_If_Expression)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
 
    overriding function Else_Expression
     (Self : Base_If_Expression)

@@ -33,12 +33,12 @@ package Program.Elements.Package_Instantiations is
 
    not overriding function Parameters
     (Self : Package_Instantiation)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is abstract;
 
    not overriding function Aspects
     (Self : Package_Instantiation)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    type Package_Instantiation_Text is limited interface;

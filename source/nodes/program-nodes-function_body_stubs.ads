@@ -29,7 +29,7 @@ package Program.Nodes.Function_Body_Stubs is
      Name                : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -42,7 +42,7 @@ package Program.Nodes.Function_Body_Stubs is
      Separate_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      With_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects             : not null Program.Elements.Aspect_Specifications
+     Aspects             : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token     : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -56,10 +56,10 @@ package Program.Nodes.Function_Body_Stubs is
    function Create
     (Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -78,10 +78,10 @@ private
      with record
         Name           : not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Parameters     : not null Program.Elements.Parameter_Specifications
+        Parameters     : Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
         Result_Subtype : not null Program.Elements.Element_Access;
-        Aspects        : not null Program.Elements.Aspect_Specifications
+        Aspects        : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
      end record;
 
@@ -98,7 +98,7 @@ private
 
    overriding function Parameters
     (Self : Base_Function_Body_Stub)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
    overriding function Result_Subtype
@@ -107,7 +107,7 @@ private
 
    overriding function Aspects
     (Self : Base_Function_Body_Stub)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Is_Function_Body_Stub

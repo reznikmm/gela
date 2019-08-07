@@ -28,18 +28,16 @@ package Program.Elements.Package_Declarations is
 
    not overriding function Aspects
     (Self : Package_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Visible_Declarations
     (Self : Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Private_Declarations
     (Self : Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function End_Name
     (Self : Package_Declaration)

@@ -35,7 +35,7 @@ package Program.Nodes.Object_Renaming_Declarations is
          .Lexical_Element_Access;
      Renamed_Object  : not null Program.Elements.Expressions.Expression_Access;
      With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects         : not null Program.Elements.Aspect_Specifications
+     Aspects         : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -53,7 +53,7 @@ package Program.Nodes.Object_Renaming_Declarations is
      Object_Subtype       : not null Program.Elements.Element_Access;
      Renamed_Object       : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -74,7 +74,7 @@ private
         Object_Subtype : not null Program.Elements.Element_Access;
         Renamed_Object : not null Program.Elements.Expressions
           .Expression_Access;
-        Aspects        : not null Program.Elements.Aspect_Specifications
+        Aspects        : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
      end record;
 
@@ -100,7 +100,7 @@ private
 
    overriding function Aspects
     (Self : Base_Object_Renaming_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Is_Object_Renaming_Declaration

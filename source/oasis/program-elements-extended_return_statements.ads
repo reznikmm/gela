@@ -27,12 +27,11 @@ package Program.Elements.Extended_Return_Statements is
 
    not overriding function Statements
     (Self : Extended_Return_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Exception_Handlers
     (Self : Extended_Return_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is abstract;
 
    type Extended_Return_Statement_Text is limited interface;

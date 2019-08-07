@@ -94,7 +94,7 @@ package body Program.Nodes.Select_Paths is
       if Self.Guard.Assigned then
          Set_Enclosing_Element (Self.Guard, Self'Unchecked_Access);
       end if;
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

@@ -16,7 +16,7 @@ package body Program.Nodes.Component_Declarations is
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Default_Expression : Program.Elements.Expressions.Expression_Access;
      With_Token         : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects            : not null Program.Elements.Aspect_Specifications
+     Aspects            : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Semicolon_Token    : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -40,7 +40,7 @@ package body Program.Nodes.Component_Declarations is
      Object_Subtype       : not null Program.Elements.Component_Definitions
          .Component_Definition_Access;
      Default_Expression   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -83,7 +83,7 @@ package body Program.Nodes.Component_Declarations is
 
    overriding function Aspects
     (Self : Base_Component_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is
    begin
       return Self.Aspects;
@@ -141,7 +141,7 @@ package body Program.Nodes.Component_Declarations is
    procedure Initialize
     (Self : aliased in out Base_Component_Declaration'Class) is
    begin
-      for Item in Self.Names.Each loop
+      for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Object_Subtype, Self'Unchecked_Access);
@@ -149,7 +149,7 @@ package body Program.Nodes.Component_Declarations is
          Set_Enclosing_Element
            (Self.Default_Expression, Self'Unchecked_Access);
       end if;
-      for Item in Self.Aspects.Each loop
+      for Item in Self.Aspects.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

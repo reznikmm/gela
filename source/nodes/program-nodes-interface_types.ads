@@ -25,7 +25,7 @@ package Program.Nodes.Interface_Types is
      Synchronized_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Interface_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      And_Token          : Program.Lexical_Elements.Lexical_Element_Access;
-     Progenitors        : not null Program.Elements.Expressions
+     Progenitors        : Program.Elements.Expressions
          .Expression_Vector_Access)
       return Interface_Type;
 
@@ -34,7 +34,7 @@ package Program.Nodes.Interface_Types is
      with private;
 
    function Create
-    (Progenitors          : not null Program.Elements.Expressions
+    (Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -52,8 +52,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Interface_Types.Interface_Type
      with record
-        Progenitors : not null Program.Elements.Expressions
-          .Expression_Vector_Access;
+        Progenitors : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
    procedure Initialize (Self : aliased in out Base_Interface_Type'Class);
@@ -64,7 +63,7 @@ private
 
    overriding function Progenitors
     (Self : Base_Interface_Type)
-      return not null Program.Elements.Expressions.Expression_Vector_Access;
+      return Program.Elements.Expressions.Expression_Vector_Access;
 
    overriding function Is_Interface_Type
     (Self : Base_Interface_Type)

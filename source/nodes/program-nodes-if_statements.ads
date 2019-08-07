@@ -27,10 +27,9 @@ package Program.Nodes.If_Statements is
      Then_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Then_Statements : not null Program.Element_Vectors.Element_Vector_Access;
-     Elsif_Paths     : not null Program.Elements.Elsif_Paths
-         .Elsif_Path_Vector_Access;
+     Elsif_Paths     : Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
      Else_Token      : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements : not null Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements : Program.Element_Vectors.Element_Vector_Access;
      End_Token       : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      If_Token_2      : not null Program.Lexical_Elements
@@ -48,10 +47,9 @@ package Program.Nodes.If_Statements is
          .Expression_Access;
      Then_Statements      : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
-     Else_Statements      : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements      : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -68,10 +66,9 @@ private
           .Expression_Access;
         Then_Statements : not null Program.Element_Vectors
           .Element_Vector_Access;
-        Elsif_Paths     : not null Program.Elements.Elsif_Paths
+        Elsif_Paths     : Program.Elements.Elsif_Paths
           .Elsif_Path_Vector_Access;
-        Else_Statements : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Else_Statements : Program.Element_Vectors.Element_Vector_Access;
      end record;
 
    procedure Initialize (Self : aliased in out Base_If_Statement'Class);
@@ -90,11 +87,11 @@ private
 
    overriding function Elsif_Paths
     (Self : Base_If_Statement)
-      return not null Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
+      return Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access;
 
    overriding function Else_Statements
     (Self : Base_If_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Is_If_Statement
     (Self : Base_If_Statement)

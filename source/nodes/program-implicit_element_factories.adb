@@ -1038,7 +1038,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Arguments            : not null Program.Elements.Parameter_Associations
+     Arguments            : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1151,7 +1151,7 @@ package body Program.Implicit_Element_Factories is
      Discriminant_Part    : Program.Elements.Definitions.Definition_Access;
      Definition           : not null Program.Elements.Definitions
          .Definition_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1179,9 +1179,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Discriminant_Part    : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -1213,9 +1213,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Discriminant_Part    : Program.Elements.Known_Discriminant_Parts
          .Known_Discriminant_Part_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -1247,7 +1247,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Subtype_Indication   : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1276,8 +1276,8 @@ package body Program.Implicit_Element_Factories is
          .Definition_Access;
      Initialization_Expression : Program.Elements.Expressions
          .Expression_Access;
-     Aspects                   : not null Program.Elements
-         .Aspect_Specifications.Aspect_Specification_Vector_Access;
+     Aspects                   : Program.Elements.Aspect_Specifications
+         .Aspect_Specification_Vector_Access;
      Has_Aliased               : Boolean := False;
      Has_Constant              : Boolean := False;
      Is_Part_Of_Implicit       : Boolean := False;
@@ -1306,9 +1306,9 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Task_Definitions
          .Task_Definition_Access;
@@ -1337,9 +1337,9 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Definition           : not null Program.Elements.Protected_Definitions
          .Protected_Definition_Access;
@@ -1448,7 +1448,7 @@ package body Program.Implicit_Element_Factories is
      Object_Subtype       : not null Program.Elements.Component_Definitions
          .Component_Definition_Access;
      Default_Expression   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1561,9 +1561,9 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -1594,12 +1594,12 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Result_Expression    : Program.Elements.Parenthesized_Expressions
          .Parenthesized_Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -1665,15 +1665,14 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Has_Not              : Boolean := False;
@@ -1705,16 +1704,15 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Has_Not              : Boolean := False;
@@ -1779,12 +1777,10 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1812,13 +1808,12 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -1850,7 +1845,7 @@ package body Program.Implicit_Element_Factories is
      Object_Subtype       : not null Program.Elements.Element_Access;
      Renamed_Object       : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -1881,7 +1876,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Vector_Access;
      Renamed_Exception    : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1907,10 +1902,10 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Renamed_Procedure    : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -1940,11 +1935,11 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Renamed_Function     : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -1979,7 +1974,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Renamed_Package      : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2007,7 +2002,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Renamed_Package      : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2036,7 +2031,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Renamed_Procedure    : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2065,7 +2060,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Renamed_Function     : not null Program.Elements.Expressions
          .Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2092,13 +2087,12 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -2127,7 +2121,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Protected_Operations : not null Program.Element_Vectors
          .Element_Vector_Access;
@@ -2160,9 +2154,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Entry_Family_Definition : Program.Elements.Discrete_Ranges
          .Discrete_Range_Access;
-     Parameters              : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
-     Aspects                 : not null Program.Elements.Aspect_Specifications
+     Parameters              : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Aspects                 : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not                 : Boolean := False;
      Has_Overriding          : Boolean := False;
@@ -2194,15 +2188,14 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Entry_Index          : not null Program.Elements
          .Entry_Index_Specifications.Entry_Index_Specification_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Entry_Barrier        : not null Program.Elements.Expressions
          .Expression_Access;
-     Declarations         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations         : Program.Element_Vectors.Element_Vector_Access;
      Statements           : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -2258,9 +2251,9 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -2288,10 +2281,10 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not              : Boolean := False;
      Has_Overriding       : Boolean := False;
@@ -2322,7 +2315,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2347,7 +2340,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2370,7 +2363,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2395,7 +2388,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Names                : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2442,16 +2435,13 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Generic_Package_Declaration
     (Self : Element_Factory;
-     Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2479,13 +2469,12 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Generic_Procedure_Declaration
     (Self : Element_Factory;
-     Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2510,14 +2499,13 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Generic_Function_Declaration
     (Self : Element_Factory;
-     Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -2548,9 +2536,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2579,9 +2567,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Generic_Procedure_Name : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters             : not null Program.Elements.Parameter_Associations
+     Parameters             : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
-     Aspects                : not null Program.Elements.Aspect_Specifications
+     Aspects                : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not                : Boolean := False;
      Has_Overriding         : Boolean := False;
@@ -2613,9 +2601,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Name_Access;
      Generic_Function_Name : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters            : not null Program.Elements.Parameter_Associations
+     Parameters            : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
-     Aspects               : not null Program.Elements.Aspect_Specifications
+     Aspects               : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not               : Boolean := False;
      Has_Overriding        : Boolean := False;
@@ -2647,7 +2635,7 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Vector_Access;
      Object_Subtype       : not null Program.Elements.Element_Access;
      Default_Expression   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_In               : Boolean := False;
      Has_Out              : Boolean := False;
@@ -2682,7 +2670,7 @@ package body Program.Implicit_Element_Factories is
      Discriminant_Part    : Program.Elements.Definitions.Definition_Access;
      Definition           : not null Program.Elements.Formal_Type_Definitions
          .Formal_Type_Definition_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2709,10 +2697,10 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Subprogram_Default   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Abstract         : Boolean := False;
      Has_Null             : Boolean := False;
@@ -2743,11 +2731,11 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Subprogram_Default   : Program.Elements.Expressions.Expression_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Has_Abstract         : Boolean := False;
@@ -2781,9 +2769,9 @@ package body Program.Implicit_Element_Factories is
          .Defining_Identifier_Access;
      Generic_Package_Name : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements
-         .Formal_Package_Associations.Formal_Package_Association_Vector_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Parameters           : Program.Elements.Formal_Package_Associations
+         .Formal_Package_Association_Vector_Access;
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -2964,8 +2952,8 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Known_Discriminant_Part
     (Self : Element_Factory;
-     Discriminants        : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+     Discriminants        : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -3120,7 +3108,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Anonymous_Access_To_Procedure
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Has_Protected        : Boolean := False;
@@ -3147,7 +3135,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Anonymous_Access_To_Function
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Has_Not_Null         : Boolean := False;
@@ -3205,7 +3193,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Ancestor             : not null Program.Elements.Subtype_Indications
          .Subtype_Indication_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Has_Abstract         : Boolean := False;
      Has_Limited          : Boolean := False;
@@ -3257,10 +3245,8 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Task_Definition
     (Self : Element_Factory;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3284,10 +3270,8 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Protected_Definition
     (Self : Element_Factory;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3481,7 +3465,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Prefix               : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3504,7 +3488,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Prefix               : not null Program.Elements.Expressions
          .Expression_Access;
-     Expressions          : not null Program.Elements.Expressions
+     Expressions          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3601,8 +3585,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Record_Aggregate
     (Self : Element_Factory;
-     Components           : not null Program.Elements
-         .Record_Component_Associations
+     Components           : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3627,8 +3610,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Ancestor             : not null Program.Elements.Expressions
          .Expression_Access;
-     Components           : not null Program.Elements
-         .Record_Component_Associations
+     Components           : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3651,8 +3633,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Array_Aggregate
     (Self : Element_Factory;
-     Components           : not null Program.Elements
-         .Array_Component_Associations
+     Components           : Program.Elements.Array_Component_Associations
          .Array_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3896,7 +3877,7 @@ package body Program.Implicit_Element_Factories is
          .Expression_Access;
      Then_Expression      : not null Program.Elements.Expressions
          .Expression_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
      Else_Expression      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -3955,7 +3936,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Discriminant_Association
     (Self : Element_Factory;
-     Selector_Names       : not null Program.Elements.Identifiers
+     Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
      Expression           : not null Program.Elements.Expressions
          .Expression_Access;
@@ -3981,8 +3962,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
-     Choices              : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Choices              : Program.Element_Vectors.Element_Vector_Access;
      Expression           : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -4006,8 +3986,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
-     Choices              : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Choices              : Program.Element_Vectors.Element_Vector_Access;
      Expression           : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -4129,10 +4108,9 @@ package body Program.Implicit_Element_Factories is
          .Expression_Access;
      Then_Statements      : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Elsif_Paths          : not null Program.Elements.Elsif_Paths
+     Elsif_Paths          : Program.Elements.Elsif_Paths
          .Elsif_Path_Vector_Access;
-     Else_Statements      : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements      : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -4271,11 +4249,10 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Statement_Identifier : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit      : Boolean := False;
@@ -4345,7 +4322,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Called_Name          : not null Program.Elements.Expressions
          .Expression_Access;
-     Parameters           : not null Program.Elements.Parameter_Associations
+     Parameters           : Program.Elements.Parameter_Associations
          .Parameter_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -4391,9 +4368,8 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Return_Object        : not null Program.Elements
          .Return_Object_Specifications.Return_Object_Specification_Access;
-     Statements           : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Exception_Handlers   : not null Program.Elements.Exception_Handlers
+     Statements           : Program.Element_Vectors.Element_Vector_Access;
+     Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -4421,11 +4397,10 @@ package body Program.Implicit_Element_Factories is
      Entry_Name               : not null Program.Elements.Identifiers
          .Identifier_Access;
      Entry_Index              : Program.Elements.Expressions.Expression_Access;
-     Parameters               : not null Program.Elements
-         .Parameter_Specifications.Parameter_Specification_Vector_Access;
-     Statements               : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Parameters               : Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Vector_Access;
+     Statements               : Program.Element_Vectors.Element_Vector_Access;
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Statement_Identifier : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit      : Boolean := False;
@@ -4521,10 +4496,8 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Paths                 : not null Program.Elements.Select_Paths
          .Select_Path_Vector_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit   : Boolean := False;
      Is_Part_Of_Inherited  : Boolean := False;
      Is_Part_Of_Instance   : Boolean := False)
@@ -4828,7 +4801,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Parent               : not null Program.Elements.Expressions
          .Expression_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Record_Definition    : not null Program.Elements.Definitions
          .Definition_Access;
@@ -5099,7 +5072,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Interface_Type
     (Self : Element_Factory;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Has_Limited          : Boolean := False;
      Has_Task             : Boolean := False;
@@ -5154,7 +5127,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Procedure_Access_Type
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Has_Protected        : Boolean := False;
@@ -5181,7 +5154,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Function_Access_Type
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Has_Not_Null         : Boolean := False;
@@ -5238,7 +5211,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Subtype_Mark         : not null Program.Elements.Expressions
          .Expression_Access;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Has_Abstract         : Boolean := False;
      Has_Limited          : Boolean := False;
@@ -5481,7 +5454,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Formal_Procedure_Access_Type
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Has_Not_Null         : Boolean := False;
      Has_Protected        : Boolean := False;
@@ -5508,7 +5481,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Formal_Function_Access_Type
     (Self : Element_Factory;
-     Parameters           : not null Program.Elements.Parameter_Specifications
+     Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Has_Not_Null         : Boolean := False;
@@ -5538,7 +5511,7 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Formal_Interface_Type
     (Self : Element_Factory;
-     Progenitors          : not null Program.Elements.Expressions
+     Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Has_Limited          : Boolean := False;
      Has_Task             : Boolean := False;

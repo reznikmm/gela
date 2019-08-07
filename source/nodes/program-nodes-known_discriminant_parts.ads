@@ -23,8 +23,8 @@ package Program.Nodes.Known_Discriminant_Parts is
    function Create
     (Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Discriminants       : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+     Discriminants       : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
       return Known_Discriminant_Part;
@@ -35,8 +35,8 @@ package Program.Nodes.Known_Discriminant_Parts is
      with private;
 
    function Create
-    (Discriminants        : not null Program.Elements
-         .Discriminant_Specifications.Discriminant_Specification_Vector_Access;
+    (Discriminants        : Program.Elements.Discriminant_Specifications
+         .Discriminant_Specification_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -49,7 +49,7 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Known_Discriminant_Parts.Known_Discriminant_Part
      with record
-        Discriminants : not null Program.Elements.Discriminant_Specifications
+        Discriminants : Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Vector_Access;
      end record;
 
@@ -62,7 +62,7 @@ private
 
    overriding function Discriminants
     (Self : Base_Known_Discriminant_Part)
-      return not null Program.Elements.Discriminant_Specifications
+      return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Vector_Access;
 
    overriding function Is_Known_Discriminant_Part

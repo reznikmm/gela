@@ -93,10 +93,10 @@ package body Program.Nodes.Variants is
 
    procedure Initialize (Self : aliased in out Base_Variant'Class) is
    begin
-      for Item in Self.Choices.Each loop
+      for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      for Item in Self.Components.Each loop
+      for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

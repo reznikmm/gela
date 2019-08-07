@@ -9,8 +9,7 @@ package body Program.Nodes.Record_Aggregates is
    function Create
     (Left_Bracket_Token  : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Components          : not null Program.Elements
-         .Record_Component_Associations
+     Components          : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Right_Bracket_Token : not null Program.Lexical_Elements
          .Lexical_Element_Access)
@@ -25,8 +24,7 @@ package body Program.Nodes.Record_Aggregates is
    end Create;
 
    function Create
-    (Components           : not null Program.Elements
-         .Record_Component_Associations
+    (Components           : Program.Elements.Record_Component_Associations
          .Record_Component_Association_Vector_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -44,7 +42,7 @@ package body Program.Nodes.Record_Aggregates is
 
    overriding function Components
     (Self : Base_Record_Aggregate)
-      return not null Program.Elements.Record_Component_Associations
+      return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access is
    begin
       return Self.Components;
@@ -87,7 +85,7 @@ package body Program.Nodes.Record_Aggregates is
 
    procedure Initialize (Self : aliased in out Base_Record_Aggregate'Class) is
    begin
-      for Item in Self.Components.Each loop
+      for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

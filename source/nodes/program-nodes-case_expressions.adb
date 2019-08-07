@@ -99,7 +99,7 @@ package body Program.Nodes.Case_Expressions is
    procedure Initialize (Self : aliased in out Base_Case_Expression'Class) is
    begin
       Set_Enclosing_Element (Self.Selecting_Expression, Self'Unchecked_Access);
-      for Item in Self.Paths.Each loop
+      for Item in Self.Paths.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

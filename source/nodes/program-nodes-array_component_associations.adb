@@ -7,7 +7,7 @@
 package body Program.Nodes.Array_Component_Associations is
 
    function Create
-    (Choices     : not null Program.Element_Vectors.Element_Vector_Access;
+    (Choices     : Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Expression  : Program.Elements.Expressions.Expression_Access;
      Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
@@ -23,8 +23,7 @@ package body Program.Nodes.Array_Component_Associations is
    end Create;
 
    function Create
-    (Choices              : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Choices              : Program.Element_Vectors.Element_Vector_Access;
      Expression           : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -43,7 +42,7 @@ package body Program.Nodes.Array_Component_Associations is
 
    overriding function Choices
     (Self : Base_Array_Component_Association)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Choices;
    end Choices;
@@ -93,7 +92,7 @@ package body Program.Nodes.Array_Component_Associations is
    procedure Initialize
     (Self : aliased in out Base_Array_Component_Association'Class) is
    begin
-      for Item in Self.Choices.Each loop
+      for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.Expression.Assigned then

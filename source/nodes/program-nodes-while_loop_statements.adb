@@ -166,7 +166,7 @@ package body Program.Nodes.While_Loop_Statements is
            (Self.Statement_Identifier, Self'Unchecked_Access);
       end if;
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
-      for Item in Self.Statements.Each loop
+      for Item in Self.Statements.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       if Self.End_Statement_Identifier.Assigned then

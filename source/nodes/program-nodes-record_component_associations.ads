@@ -23,7 +23,7 @@ package Program.Nodes.Record_Component_Associations is
      with private;
 
    function Create
-    (Choices     : not null Program.Element_Vectors.Element_Vector_Access;
+    (Choices     : Program.Element_Vectors.Element_Vector_Access;
      Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Expression  : Program.Elements.Expressions.Expression_Access;
      Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
@@ -36,8 +36,7 @@ package Program.Nodes.Record_Component_Associations is
      with private;
 
    function Create
-    (Choices              : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Choices              : Program.Element_Vectors.Element_Vector_Access;
      Expression           : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -52,7 +51,7 @@ private
        and Program.Elements.Record_Component_Associations
          .Record_Component_Association
      with record
-        Choices    : not null Program.Element_Vectors.Element_Vector_Access;
+        Choices    : Program.Element_Vectors.Element_Vector_Access;
         Expression : Program.Elements.Expressions.Expression_Access;
      end record;
 
@@ -65,7 +64,7 @@ private
 
    overriding function Choices
     (Self : Base_Record_Component_Association)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Expression
     (Self : Base_Record_Component_Association)

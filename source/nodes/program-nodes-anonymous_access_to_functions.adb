@@ -15,7 +15,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
      Function_Token      : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
-     Parameters          : not null Program.Elements.Parameter_Specifications
+     Parameters          : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Return_Token        : not null Program.Lexical_Elements
@@ -40,7 +40,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
    end Create;
 
    function Create
-    (Parameters           : not null Program.Elements.Parameter_Specifications
+    (Parameters           : Program.Elements.Parameter_Specifications
          .Parameter_Specification_Vector_Access;
      Result_Subtype       : not null Program.Elements.Element_Access;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -65,7 +65,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
 
    overriding function Parameters
     (Self : Base_Anonymous_Access_To_Function)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is
    begin
       return Self.Parameters;
@@ -214,7 +214,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
    procedure Initialize
     (Self : aliased in out Base_Anonymous_Access_To_Function'Class) is
    begin
-      for Item in Self.Parameters.Each loop
+      for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Result_Subtype, Self'Unchecked_Access);

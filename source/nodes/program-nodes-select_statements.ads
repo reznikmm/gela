@@ -27,11 +27,9 @@ package Program.Nodes.Select_Statements is
          .Select_Path_Vector_Access;
      Then_Token            : Program.Lexical_Elements.Lexical_Element_Access;
      Abort_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
      Else_Token            : Program.Lexical_Elements.Lexical_Element_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      End_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Select_Token_2        : not null Program.Lexical_Elements
@@ -48,10 +46,8 @@ package Program.Nodes.Select_Statements is
    function Create
     (Paths                 : not null Program.Elements.Select_Paths
          .Select_Path_Vector_Access;
-     Then_Abort_Statements : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Else_Statements       : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
+     Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      Is_Part_Of_Implicit   : Boolean := False;
      Is_Part_Of_Inherited  : Boolean := False;
      Is_Part_Of_Instance   : Boolean := False)
@@ -66,10 +62,8 @@ private
      with record
         Paths                 : not null Program.Elements.Select_Paths
           .Select_Path_Vector_Access;
-        Then_Abort_Statements : not null Program.Element_Vectors
-          .Element_Vector_Access;
-        Else_Statements       : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Then_Abort_Statements : Program.Element_Vectors.Element_Vector_Access;
+        Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      end record;
 
    procedure Initialize (Self : aliased in out Base_Select_Statement'Class);
@@ -84,11 +78,11 @@ private
 
    overriding function Then_Abort_Statements
     (Self : Base_Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Else_Statements
     (Self : Base_Select_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Is_Select_Statement
     (Self : Base_Select_Statement)

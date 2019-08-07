@@ -33,17 +33,16 @@ package Program.Elements.Accept_Statements is
 
    not overriding function Parameters
     (Self : Accept_Statement)
-      return not null Program.Elements.Parameter_Specifications
+      return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access is abstract;
 
    not overriding function Statements
     (Self : Accept_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Exception_Handlers
     (Self : Accept_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access is abstract;
 
    not overriding function End_Statement_Identifier

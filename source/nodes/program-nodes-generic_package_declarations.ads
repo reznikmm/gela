@@ -27,22 +27,19 @@ package Program.Nodes.Generic_Package_Declarations is
    function Create
     (Generic_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Package_Token        : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
      With_Token           : Program.Lexical_Elements.Lexical_Element_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Is_Token             : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
      Private_Token        : Program.Lexical_Elements.Lexical_Element_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Token            : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -57,16 +54,13 @@ package Program.Nodes.Generic_Package_Declarations is
      with private;
 
    function Create
-    (Formal_Parameters    : not null Program.Element_Vectors
-         .Element_Vector_Access;
+    (Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
      Name                 : not null Program.Elements.Defining_Names
          .Defining_Name_Access;
-     Aspects              : not null Program.Elements.Aspect_Specifications
+     Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
-     Visible_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
-     Private_Declarations : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+     Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -81,16 +75,13 @@ private
        and Program.Elements.Generic_Package_Declarations
          .Generic_Package_Declaration
      with record
-        Formal_Parameters    : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Formal_Parameters    : Program.Element_Vectors.Element_Vector_Access;
         Name                 : not null Program.Elements.Defining_Names
           .Defining_Name_Access;
-        Aspects              : not null Program.Elements.Aspect_Specifications
+        Aspects              : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
-        Visible_Declarations : not null Program.Element_Vectors
-          .Element_Vector_Access;
-        Private_Declarations : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Visible_Declarations : Program.Element_Vectors.Element_Vector_Access;
+        Private_Declarations : Program.Element_Vectors.Element_Vector_Access;
         End_Name             : Program.Elements.Expressions.Expression_Access;
      end record;
 
@@ -103,7 +94,7 @@ private
 
    overriding function Formal_Parameters
     (Self : Base_Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Name
     (Self : Base_Generic_Package_Declaration)
@@ -111,16 +102,16 @@ private
 
    overriding function Aspects
     (Self : Base_Generic_Package_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
    overriding function Visible_Declarations
     (Self : Base_Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Private_Declarations
     (Self : Base_Generic_Package_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function End_Name
     (Self : Base_Generic_Package_Declaration)

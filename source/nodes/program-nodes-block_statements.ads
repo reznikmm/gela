@@ -29,15 +29,14 @@ package Program.Nodes.Block_Statements is
          .Lexical_Element_Access;
      Declare_Token            : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Begin_Token              : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
      Exception_Token          : Program.Lexical_Elements
          .Lexical_Element_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Token                : not null Program.Lexical_Elements
          .Lexical_Element_Access;
@@ -54,11 +53,10 @@ package Program.Nodes.Block_Statements is
    function Create
     (Statement_Identifier     : Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
-     Declarations             : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Declarations             : Program.Element_Vectors.Element_Vector_Access;
      Statements               : not null Program.Element_Vectors
          .Element_Vector_Access;
-     Exception_Handlers       : not null Program.Elements.Exception_Handlers
+     Exception_Handlers       : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Statement_Identifier : Program.Elements.Identifiers.Identifier_Access;
      Is_Part_Of_Implicit      : Boolean := False;
@@ -75,11 +73,11 @@ private
      with record
         Statement_Identifier     : Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
-        Declarations             : not null Program.Element_Vectors
+        Declarations             : Program.Element_Vectors
           .Element_Vector_Access;
         Statements               : not null Program.Element_Vectors
           .Element_Vector_Access;
-        Exception_Handlers       : not null Program.Elements.Exception_Handlers
+        Exception_Handlers       : Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
         End_Statement_Identifier : Program.Elements.Identifiers
           .Identifier_Access;
@@ -97,7 +95,7 @@ private
 
    overriding function Declarations
     (Self : Base_Block_Statement)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Statements
     (Self : Base_Block_Statement)
@@ -105,7 +103,7 @@ private
 
    overriding function Exception_Handlers
     (Self : Base_Block_Statement)
-      return not null Program.Elements.Exception_Handlers
+      return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
 
    overriding function End_Statement_Identifier

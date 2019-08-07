@@ -118,7 +118,7 @@ package body Program.Nodes.Number_Declarations is
    procedure Initialize
     (Self : aliased in out Base_Number_Declaration'Class) is
    begin
-      for Item in Self.Names.Each loop
+      for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);

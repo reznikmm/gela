@@ -28,7 +28,7 @@ package Program.Elements.Protected_Body_Declarations is
 
    not overriding function Aspects
     (Self : Protected_Body_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Protected_Operations

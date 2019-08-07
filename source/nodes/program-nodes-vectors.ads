@@ -108,7 +108,7 @@ private
       Token_List   : Lexical_Element_Array (1 .. Tokens);
    end record;
 
-   overriding function Length (Self : Vector) return Natural;
+   overriding function Get_Length (Self : Vector) return Positive;
 
    overriding function Element
      (Self  : Vector;
@@ -119,8 +119,5 @@ private
      (Self  : Vector;
       Index : Positive)
      return Program.Lexical_Elements.Lexical_Element_Access;
-
-   overriding function Each (Self : aliased Vector)
-     return Program.Element_Vectors.Iterators.Forward_Iterator'Class;
 
 end Program.Nodes.Vectors;

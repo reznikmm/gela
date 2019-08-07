@@ -7,8 +7,7 @@
 package body Program.Nodes.Discriminant_Associations is
 
    function Create
-    (Selector_Names : not null Program.Elements.Identifiers
-         .Identifier_Vector_Access;
+    (Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
      Arrow_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Expression     : not null Program.Elements.Expressions.Expression_Access)
       return Discriminant_Association is
@@ -22,7 +21,7 @@ package body Program.Nodes.Discriminant_Associations is
    end Create;
 
    function Create
-    (Selector_Names       : not null Program.Elements.Identifiers
+    (Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
      Expression           : not null Program.Elements.Expressions
          .Expression_Access;
@@ -43,7 +42,7 @@ package body Program.Nodes.Discriminant_Associations is
 
    overriding function Selector_Names
     (Self : Base_Discriminant_Association)
-      return not null Program.Elements.Identifiers.Identifier_Vector_Access is
+      return Program.Elements.Identifiers.Identifier_Vector_Access is
    begin
       return Self.Selector_Names;
    end Selector_Names;
@@ -86,7 +85,7 @@ package body Program.Nodes.Discriminant_Associations is
    procedure Initialize
     (Self : aliased in out Base_Discriminant_Association'Class) is
    begin
-      for Item in Self.Selector_Names.Each loop
+      for Item in Self.Selector_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);

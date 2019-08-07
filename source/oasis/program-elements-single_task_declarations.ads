@@ -28,13 +28,12 @@ package Program.Elements.Single_Task_Declarations is
 
    not overriding function Aspects
     (Self : Single_Task_Declaration)
-      return not null Program.Elements.Aspect_Specifications
+      return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access is abstract;
 
    not overriding function Progenitors
     (Self : Single_Task_Declaration)
-      return not null Program.Elements.Expressions.Expression_Vector_Access
-     is abstract;
+      return Program.Elements.Expressions.Expression_Vector_Access is abstract;
 
    not overriding function Definition
     (Self : Single_Task_Declaration)

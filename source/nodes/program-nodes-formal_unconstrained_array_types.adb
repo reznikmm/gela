@@ -120,7 +120,7 @@ package body Program.Nodes.Formal_Unconstrained_Array_Types is
    procedure Initialize
     (Self : aliased in out Base_Formal_Unconstrained_Array_Type'Class) is
    begin
-      for Item in Self.Index_Subtypes.Each loop
+      for Item in Self.Index_Subtypes.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       Set_Enclosing_Element (Self.Component_Definition, Self'Unchecked_Access);

@@ -130,7 +130,7 @@ package body Program.Nodes.With_Clauses is
 
    procedure Initialize (Self : aliased in out Base_With_Clause'Class) is
    begin
-      for Item in Self.Clause_Names.Each loop
+      for Item in Self.Clause_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
       null;

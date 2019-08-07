@@ -25,7 +25,7 @@ package Program.Elements.Function_Calls is
 
    not overriding function Parameters
     (Self : Function_Call)
-      return not null Program.Elements.Parameter_Associations
+      return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is abstract;
 
    type Function_Call_Text is limited interface;
