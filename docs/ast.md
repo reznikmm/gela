@@ -40,20 +40,24 @@
 ### Defining_Identifier
 > _[Defining_Name]_
  - Identifier_Token : Token
+ - Image            : Text
  
 ### Defining_Character_Literal
 > _[Defining_Name]_
  - Character_Literal_Token : Token
+ - Image                   : Text
 
 ### Defining_Operator_Symbol
 > _[Defining_Name]_
  - Operator_Symbol_Token : Token
+ - Image                 : Text
 
 ### Defining_Expanded_Name
 > _[Defining_Name]_
  - Prefix                : _[Expression]_ {[Selected_Component],[Identifier]}
  - Dot_Token             : Token
  - Selector              : [Defining_Identifier]
+ - Image                 : Text
 
 ## _Declaration_
 > _[Element]_
@@ -1021,22 +1025,27 @@
 ### Numeric_Literal
 > _[Expression]_
  - Numeric_Literal_Token : Token
+ - Image                 : Text
 
 ### String_Literal
 > _[Expression]_
  - String_Literal_Token : Token
+ - Image                 : Text
 
 ### Identifier
 > _[Expression]_
  - Identifier_Token : Token
+ - Image                 : Text
 
 ### Operator_Symbol
 > _[Expression]_
  - Operator_Symbol_Token : Token
+ - Image                 : Text
 
 ### Character_Literal
 > _[Expression]_
  - Character_Literal_Token : Token
+ - Image                 : Text
 
 ### Explicit_Dereference
 > _[Expression]_

@@ -126,6 +126,10 @@ package body Meta.Writes is
      (Name : League.Strings.Universal_String) return Boolean is
        (Name = +"Boolean");
 
+   function Is_Text
+     (Name : League.Strings.Universal_String) return Boolean is
+       (Name = +"Text");
+
    function Get_Props
      (F         : aliased in out Ada_Pretty.Factory;
       Name      : Ada_Pretty.Node_Access;
@@ -134,7 +138,9 @@ package body Meta.Writes is
       Is_Abstr  : Boolean := True) return Ada_Pretty.Node_Access;
 
    function Only_Object (P : Classes.Property) return Boolean is
-     (not Is_Token (P.Type_Name) and not Is_Boolean (P.Type_Name));
+     (not Is_Token (P.Type_Name)
+      and not Is_Boolean (P.Type_Name)
+      and not Is_Text (P.Type_Name));
 
    function Only_Objects is new Classes.Generic_Filter (Only_Object);
 
@@ -146,7 +152,17 @@ package body Meta.Writes is
    function Is_A_Token (P : Classes.Property) return Boolean is
      (Is_Token (P.Type_Name));
 
+   function Is_Not_A_Text (P : Classes.Property) return Boolean is
+     (not Is_Text (P.Type_Name));
+
+   function Skip_Texts is new Classes.Generic_Filter (Is_Not_A_Text);
+
    function Only_Tokens is new Classes.Generic_Filter (Is_A_Token);
+
+   function Is_A_Text (P : Classes.Property) return Boolean is
+     (Is_Text (P.Type_Name));
+
+   function Only_Texts is new Classes.Generic_Filter (Is_A_Text);
 
    function Is_A_Boolean (P : Classes.Property) return Boolean is
      (Is_Boolean (P.Type_Name));
@@ -386,7 +402,7 @@ package body Meta.Writes is
 
       R_Type : Ada_Pretty.Node_Access;
    begin
-      if Is_Boolean (P.Type_Name) then
+      if Is_Boolean (P.Type_Name) or Is_Text (P.Type_Name) then
          R_Type := F.New_Name (P.Type_Name);
 
       elsif Is_Token (P.Type_Name) then
@@ -407,6 +423,7 @@ package body Meta.Writes is
 
       if P.Capacity in Just_One | One_Or_More
         and then not Is_Boolean (P.Type_Name)
+        and then not Is_Text (P.Type_Name)
       then
          R_Type := F.New_Null_Exclusion (R_Type);
       end if;
@@ -530,6 +547,7 @@ package body Meta.Writes is
             Append (Element_Vector);
          elsif not Is_Element (P.Type_Name)
            and not Is_Boolean (P.Type_Name)
+           and not Is_Text (P.Type_Name)
          then
             Append (P.Type_Name);
          end if;
@@ -554,7 +572,7 @@ package body Meta.Writes is
    is
       Result : League.Strings.Universal_String;
    begin
-      if Is_Boolean (Type_Name) then
+      if Is_Boolean (Type_Name) or Is_Text (Type_Name) then
          return League.Strings.Empty_Universal_String;
       end if;
 
@@ -1128,11 +1146,11 @@ package body Meta.Writes is
 
       begin
          if Implicit then
-            return Skip_Tokens (Item.Properties)
+            return Skip_Texts (Skip_Tokens (Item.Properties))
               & Only_Booleans (Vector.First_Element.Properties)
               & Parent_Props;
          else
-            return Skip_Booleans (Item.Properties) & Parent_Props;
+            return Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props;
          end if;
       end Prop_List;
 
@@ -1378,11 +1396,11 @@ package body Meta.Writes is
 
       begin
          if Implicit then
-            return Skip_Tokens (Item.Properties)
+            return Skip_Texts (Skip_Tokens (Item.Properties))
               & Only_Booleans (Vector.First_Element.Properties)
               & Parent_Props;
          else
-            return Skip_Booleans (Item.Properties) & Parent_Props;
+            return Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props;
          end if;
       end Prop_List;
 
@@ -2085,8 +2103,7 @@ package body Meta.Writes is
         Get_Package_Name (Item.Name);
 
       Pure : constant Ada_Pretty.Node_Access :=
-        F.New_Pragma
-          (F.New_Name (+"Pure"), F.New_Selected_Name (Package_Name));
+        F.New_Pragma (F.New_Name (+"Preelaborate"));
 
       Base_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Base_" & Item.Name);
@@ -2178,7 +2195,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Booleans (Item.Properties) & Parent_Props),
+                (Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props),
               Result        => Node_Name));
 
       Node_To_Text : constant Ada_Pretty.Node_Access :=
@@ -2189,8 +2206,9 @@ package body Meta.Writes is
         Get_Props
           (F,
            Name     => Node_Name,
-           Props    => Only_Tokens (Item.Properties) &
-                          Only_Booleans (Item.Properties),
+           Props    => Only_Tokens (Item.Properties)
+             & Only_Booleans (Item.Properties)
+             & Only_Texts (Item.Properties),
            Prefix   => F.New_List (Node, Node_To_Text),
            Is_Abstr => False);
 
@@ -2201,7 +2219,8 @@ package body Meta.Writes is
         Get_Props
           (F,
            Name     => Implicit_Name,
-           Props    => Bool_Props,
+           Props    => Bool_Props
+             & Only_Texts (Item.Properties),
            Prefix   => null,
            Is_Abstr => False);
 
@@ -2323,6 +2342,10 @@ package body Meta.Writes is
         (F    : aliased in out Ada_Pretty.Factory;
          Prop : Classes.Property) return Ada_Pretty.Node_Access;
 
+      Unreferenced : constant Ada_Pretty.Node_Access := F.New_Pragma
+        (Name      => F.New_Name (+"Unreferenced"),
+         Arguments => F.New_Name (+"Self"));
+
       -----------------
       -- Prop_Getter --
       -----------------
@@ -2331,6 +2354,7 @@ package body Meta.Writes is
         (F    : aliased in out Ada_Pretty.Factory;
          Prop : Classes.Property) return Ada_Pretty.Node_Access
       is
+         Pragmas     : Ada_Pretty.Node_Access;
          Return_Expr : Ada_Pretty.Node_Access;
          Token       : League.Strings.Universal_String;
       begin
@@ -2343,6 +2367,14 @@ package body Meta.Writes is
 
             Return_Expr := F.New_Selected_Name
               ("Self." & Token & "_Token.Assigned");
+         elsif Is_Text (Prop.Type_Name) then
+            if Is_Node then
+               Return_Expr := F.New_Selected_Name
+                 ("Self." & Only_Tokens (Item.Properties) (1).Name & ".Image");
+            else
+               Return_Expr := F.New_Name (+"""""");
+               Pragmas := Unreferenced;
+            end if;
          else
             Return_Expr := F.New_Selected_Name ("Self." & Prop.Name);
          end if;
@@ -2355,6 +2387,7 @@ package body Meta.Writes is
                  (Name            => F.New_Name (+"Self"),
                   Type_Definition => Type_Name),
                Result        => Property_Type (F, Prop)),
+            Declarations => Pragmas,
             Statements => F.New_Return (Return_Expr));
       end Prop_Getter;
 
@@ -2417,10 +2450,6 @@ package body Meta.Writes is
       function Prop_Set_Enclosings is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Prop_Set_Enclosing, F);
 
-      Unreferenced : constant Ada_Pretty.Node_Access := F.New_Pragma
-        (Name      => F.New_Name (+"Unreferenced"),
-         Arguments => F.New_Name (+"Self"));
-
       Base_Name : constant Ada_Pretty.Node_Access :=
         F.New_Name ("Base_" & Item.Name);
 
@@ -2472,7 +2501,7 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Booleans (Item.Properties) & Parent_Props),
+                (Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props),
               Result        => Node_Name),
            Statements => F.New_Extended_Return
              (Name            => Result,
@@ -2480,7 +2509,8 @@ package body Meta.Writes is
               Initialization  => F.New_Parentheses
                 (F.New_List
                   (Prop_Arguments
-                     (Skip_Booleans (Item.Properties) & Parent_Props),
+                     (Skip_Texts (Skip_Booleans (Item.Properties))
+                      & Parent_Props),
                    F.New_Component_Association
                      (Choices => F.New_Name (+"Enclosing_Element"),
                       Value   => F.New_Name (+"null")))),
@@ -2536,14 +2566,16 @@ package body Meta.Writes is
       function Node_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Node_Getter, F);
 
-      NG : constant Ada_Pretty.Node_Access :=
-        Node_Getters (Only_Tokens (Item.Properties) &
-                        Only_Booleans (Item.Properties));
+      NG : constant Ada_Pretty.Node_Access := Node_Getters
+        (Only_Tokens (Item.Properties)
+         & Only_Booleans (Item.Properties)
+         & Only_Texts (Item.Properties));
 
       function Impl_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Impl_Getter, F);
 
-      IG : constant Ada_Pretty.Node_Access := Impl_Getters (Bool_Props);
+      IG : constant Ada_Pretty.Node_Access := Impl_Getters
+        (Bool_Props & Only_Texts (Item.Properties));
 
       Visit : constant Ada_Pretty.Node_Access :=
         F.New_Subprogram_Body
