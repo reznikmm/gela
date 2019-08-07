@@ -18,11 +18,15 @@ package Program.Element_Vectors is
    type Element_Vector_Access is access all Element_Vector'Class
      with Storage_Size => 0;
 
-   not overriding function Length (Self : Element_Vector)
-     return Natural is abstract;
+   not overriding function Get_Length (Self : Element_Vector)
+     return Positive is abstract;
+   --  Number of elements in the vector. Not null vector has at least one item.
+
+   function Length (Self : access Element_Vector'Class)
+     return Natural is (if Self = null then 0 else Self.Get_Length);
    --  Return number of elements in the vector
 
-   function Is_Empty (Self : Element_Vector'Class)
+   function Is_Empty (Self : access Element_Vector'Class)
      return Boolean is (Self.Length = 0);
    --  Check if the vector is empty
 
@@ -37,7 +41,7 @@ package Program.Element_Vectors is
       Index : Positive)
      return Program.Lexical_Elements.Lexical_Element_Access is abstract
        with Post'Class =>
-         (if Index = Self.Length then Delimiter'Result in null);
+         (if Index = Self.Get_Length then Delimiter'Result in null);
    --  Return a delimiter token after an element of the vector
 
    type Element_Cursor is record
@@ -61,8 +65,31 @@ package Program.Element_Vectors is
    package Iterators is new Ada.Iterator_Interfaces
      (Element_Cursor, Has_Element);
 
-   not overriding function Each (Self : aliased Element_Vector)
-     return Iterators.Forward_Iterator'Class is abstract;
+   type Iterator is new Iterators.Reversible_Iterator with private;
+
+   overriding function First
+     (Self : Iterator) return Program.Element_Vectors.Element_Cursor;
+
+   overriding function Next
+     (Self   : Iterator;
+      Cursor : Program.Element_Vectors.Element_Cursor)
+         return Program.Element_Vectors.Element_Cursor;
+
+   overriding function Last
+     (Self : Iterator) return Program.Element_Vectors.Element_Cursor;
+
+   overriding function Previous
+     (Self   : Iterator;
+      Cursor : Program.Element_Vectors.Element_Cursor)
+         return Program.Element_Vectors.Element_Cursor;
+
+   function Each_Element (Self : access Element_Vector'Class) return Iterator;
    --  Return an iterator to enumerate all elements in the Vector
+
+private
+
+   type Iterator is new Iterators.Reversible_Iterator with record
+      Vector : access constant Element_Vector'Class;
+   end record;
 
 end Program.Element_Vectors;

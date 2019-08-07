@@ -405,7 +405,7 @@ package body Meta.Writes is
 
       end if;
 
-      if P.Capacity /= Zero_Or_One
+      if P.Capacity in Just_One | One_Or_More
         and then not Is_Boolean (P.Type_Name)
       then
          R_Type := F.New_Null_Exclusion (R_Type);
@@ -2404,7 +2404,7 @@ package body Meta.Writes is
                  (Name  => F.New_Name (+"Item"),
                   Iterator => F.New_Selected_Name
                     (Prefix   => Attr,
-                     Selector => F.New_Name (+"Each")),
+                     Selector => F.New_Name (+"Each_Element")),
                   Statements => F.New_Statement
                     (F.New_Apply
                       (Set_Enclosing_Element,
