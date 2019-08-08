@@ -27,7 +27,7 @@ package Program.Element_Vectors is
    --  Return number of elements in the vector
 
    function Is_Empty (Self : access Element_Vector'Class)
-     return Boolean is (Self.Length = 0);
+     return Boolean is (Self = null);
    --  Check if the vector is empty
 
    not overriding function Element
@@ -51,8 +51,8 @@ package Program.Element_Vectors is
       Delimiter : Program.Lexical_Elements.Lexical_Element_Access;
       --  A delimiter after the element pointed by the cursor
 
-      Index     : Positive;
-      --  Position in the vector
+      Index     : Natural;
+      --  Position in the vector, starting from one
 
       Is_Last   : Boolean;
       --  Set if the cursor points to the last element in the list
@@ -83,13 +83,20 @@ package Program.Element_Vectors is
       Cursor : Program.Element_Vectors.Element_Cursor)
          return Program.Element_Vectors.Element_Cursor;
 
-   function Each_Element (Self : access Element_Vector'Class) return Iterator;
-   --  Return an iterator to enumerate all elements in the Vector
+   type Element_Checker is access
+     function (Self : Program.Elements.Element'Class) return Boolean;
+
+   function Each_Element
+     (Self         : access Element_Vector'Class;
+      When_Element : Element_Checker := null) return Iterator;
+   --  Return an iterator to enumerate elements in the Vector which satisfy
+   --  given condition, if provided
 
 private
 
    type Iterator is new Iterators.Reversible_Iterator with record
-      Vector : access constant Element_Vector'Class;
+      Vector    : access constant Element_Vector'Class;
+      Condition : Element_Checker;
    end record;
 
 end Program.Element_Vectors;

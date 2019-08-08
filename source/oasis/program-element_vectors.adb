@@ -6,14 +6,21 @@
 
 package body Program.Element_Vectors is
 
+   procedure Skip_Elements
+     (Self  : Iterator;
+      Pos   : in out Element_Cursor;
+      Step  : Integer);
+   --  Find a good Element starting from Pos.Index and set other fields of Pos
+
    ------------------
    -- Each_Element --
    ------------------
 
    function Each_Element
-     (Self : access Element_Vector'Class) return Iterator is
+     (Self         : access Element_Vector'Class;
+      When_Element : Element_Checker := null) return Iterator is
    begin
-      return (Vector => Self);
+      return (Vector => Self, Condition => When_Element);
    end Each_Element;
 
    -----------
@@ -23,14 +30,9 @@ package body Program.Element_Vectors is
    overriding function First
      (Self : Iterator) return Program.Element_Vectors.Element_Cursor is
    begin
-      if Self.Vector = null then
-         return (null, null, 1, False);
-      else
-         return (Self.Vector.Element (1),
-                 Self.Vector.Delimiter (1),
-                 Index   => 1,
-                 Is_Last => Self.Vector.Length = 1);
-      end if;
+      return Result : Element_Cursor := (Index => 1, others => <>) do
+         Self.Skip_Elements (Result, Step => 1);
+      end return;
    end First;
 
    ----------
@@ -40,14 +42,11 @@ package body Program.Element_Vectors is
    overriding function Last
      (Self : Iterator) return Program.Element_Vectors.Element_Cursor is
    begin
-      if Self.Vector = null then
-         return (null, null, 1, False);
-      else
-         return (Self.Vector.Element (Self.Vector.Length),
-                 Self.Vector.Delimiter (Self.Vector.Length),
-                 Index   => Self.Vector.Length,
-                 Is_Last => True);
-      end if;
+      return Result : Element_Cursor :=
+        (Index => Self.Vector.Length, others => <>)
+      do
+         Self.Skip_Elements (Result, Step => -1);
+      end return;
    end Last;
 
    ----------
@@ -59,14 +58,10 @@ package body Program.Element_Vectors is
       Cursor : Program.Element_Vectors.Element_Cursor)
          return Program.Element_Vectors.Element_Cursor is
    begin
-      if Cursor.Index >= Self.Vector.Length then
-         return (null, null, Self.Vector.Length + 1, False);
-      else
-         return (Self.Vector.Element (Cursor.Index + 1),
-                 Self.Vector.Delimiter (Cursor.Index + 1),
-                 Cursor.Index + 1,
-                 Self.Vector.Length = Cursor.Index + 1);
-      end if;
+      return Result : Element_Cursor := Cursor do
+         Result.Index := Result.Index + 1;
+         Self.Skip_Elements (Result, Step => 1);
+      end return;
    end Next;
 
    --------------
@@ -78,14 +73,36 @@ package body Program.Element_Vectors is
       Cursor : Program.Element_Vectors.Element_Cursor)
          return Program.Element_Vectors.Element_Cursor is
    begin
-      if Cursor.Index >= Self.Vector.Length then
-         return (null, null, Self.Vector.Length + 1, False);
-      else
-         return (Self.Vector.Element (Cursor.Index - 1),
-                 Self.Vector.Delimiter (Cursor.Index - 1),
-                 Cursor.Index - 1,
-                 False);
-      end if;
+      return Result : Element_Cursor := Cursor do
+         Result.Index := Result.Index - 1;
+         Self.Skip_Elements (Result, Step => -1);
+      end return;
    end Previous;
+
+   -------------------
+   -- Skip_Elements --
+   -------------------
+
+   procedure Skip_Elements
+     (Self  : Iterator;
+      Pos   : in out Element_Cursor;
+      Step  : Integer) is
+   begin
+      while Pos.Index in 1 .. Self.Vector.Length
+        and then Self.Condition /= null
+        and then not Self.Condition (Self.Vector.Element (Pos.Index).all)
+      loop
+         Pos.Index := Pos.Index + Step;
+      end loop;
+
+      if Pos.Index in 1 .. Self.Vector.Length then
+         Pos := (Self.Vector.Element (Pos.Index),
+                 Self.Vector.Delimiter (Pos.Index),
+                 Pos.Index,
+                 Pos.Index = Self.Vector.Length);
+      else
+         Pos := (null, null, 0, False);
+      end if;
+   end Skip_Elements;
 
 end Program.Element_Vectors;
