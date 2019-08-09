@@ -91,6 +91,7 @@ with Program.Nodes.Identifiers;
 with Program.Nodes.Operator_Symbols;
 with Program.Nodes.Character_Literals;
 with Program.Nodes.Explicit_Dereferences;
+with Program.Nodes.Infix_Operators;
 with Program.Nodes.Function_Calls;
 with Program.Nodes.Indexed_Components;
 with Program.Nodes.Slices;
@@ -603,6 +604,10 @@ package body Program.Implicit_Element_Factories is
    type Explicit_Dereference_Access is
      not null access Program.Nodes.Explicit_Dereferences
        .Implicit_Explicit_Dereference
+     with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Infix_Operator_Access is
+     not null access Program.Nodes.Infix_Operators.Implicit_Infix_Operator
      with Storage_Pool => Program.Storage_Pools.Pool;
 
    type Function_Call_Access is
@@ -3460,6 +3465,30 @@ package body Program.Implicit_Element_Factories is
       return Program.Elements.Explicit_Dereferences.Explicit_Dereference_Access
         (Result);
    end Create_Explicit_Dereference;
+
+   not overriding function Create_Infix_Operator
+    (Self : Element_Factory;
+     Left                 : Program.Elements.Expressions.Expression_Access;
+     Operator             : not null Program.Elements.Operator_Symbols
+         .Operator_Symbol_Access;
+     Right                : not null Program.Elements.Expressions
+         .Expression_Access;
+     Is_Part_Of_Implicit  : Boolean := False;
+     Is_Part_Of_Inherited : Boolean := False;
+     Is_Part_Of_Instance  : Boolean := False)
+      return not null Program.Elements.Infix_Operators.Infix_Operator_Access is
+      Result : constant Infix_Operator_Access :=
+
+          new (Self.Subpool) Program.Nodes.Infix_Operators
+            .Implicit_Infix_Operator'
+            (Program.Nodes.Infix_Operators.Create
+               (Left => Left, Operator => Operator, Right => Right,
+                Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+                Is_Part_Of_Inherited => Is_Part_Of_Inherited,
+                Is_Part_Of_Instance => Is_Part_Of_Instance));
+   begin
+      return Program.Elements.Infix_Operators.Infix_Operator_Access (Result);
+   end Create_Infix_Operator;
 
    not overriding function Create_Function_Call
     (Self : Element_Factory;

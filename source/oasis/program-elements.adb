@@ -99,6 +99,7 @@ with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Character_Literals;
 with Program.Elements.Explicit_Dereferences;
+with Program.Elements.Infix_Operators;
 with Program.Elements.Function_Calls;
 with Program.Elements.Indexed_Components;
 with Program.Elements.Slices;
@@ -1079,6 +1080,13 @@ package body Program.Elements is
       return Program.Elements.Explicit_Dereferences.Explicit_Dereference_Access
         (Self);
    end To_Explicit_Dereference;
+
+   function To_Infix_Operator
+    (Self : access Element'Class)
+      return Program.Elements.Infix_Operators.Infix_Operator_Access is
+   begin
+      return Program.Elements.Infix_Operators.Infix_Operator_Access (Self);
+   end To_Infix_Operator;
 
    function To_Function_Call
     (Self : access Element'Class)

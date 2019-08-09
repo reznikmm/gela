@@ -84,7 +84,9 @@ with Program.Elements.Aspect_Specifications;
 with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Expressions;
 with Program.Elements.Identifiers;
+with Program.Elements.Operator_Symbols;
 with Program.Elements.Explicit_Dereferences;
+with Program.Elements.Infix_Operators;
 with Program.Elements.Function_Calls;
 with Program.Elements.Indexed_Components;
 with Program.Elements.Slices;
@@ -541,6 +543,11 @@ package body Internal is
     (Self    : in out Visitor;
      Element : not null Program.Elements.Explicit_Dereferences
          .Explicit_Dereference_Access);
+
+   overriding procedure Infix_Operator
+    (Self    : in out Visitor;
+     Element : not null Program.Elements.Infix_Operators
+         .Infix_Operator_Access);
 
    overriding procedure Function_Call
     (Self    : in out Visitor;
@@ -4142,12 +4149,44 @@ package body Internal is
    end Explicit_Dereference;
 
    function F87_1 is new Generic_Child
+     (Element      => Program.Elements.Infix_Operators.Infix_Operator,
+      Child        => Program.Elements.Expressions.Expression,
+      Child_Access => Program.Elements.Expressions.Expression_Access,
+      Get_Child    => Program.Elements.Infix_Operators.Left);
+
+   function F87_2 is new Generic_Child
+     (Element      => Program.Elements.Infix_Operators.Infix_Operator,
+      Child        => Program.Elements.Operator_Symbols.Operator_Symbol,
+      Child_Access => Program.Elements.Operator_Symbols.Operator_Symbol_Access,
+      Get_Child    => Program.Elements.Infix_Operators.Operator);
+
+   function F87_3 is new Generic_Child
+     (Element      => Program.Elements.Infix_Operators.Infix_Operator,
+      Child        => Program.Elements.Expressions.Expression,
+      Child_Access => Program.Elements.Expressions.Expression_Access,
+      Get_Child    => Program.Elements.Infix_Operators.Right);
+
+   F87  : aliased constant Getter_Array :=
+     (1 => (False, Left, F87_1'Access),
+      2 => (False, Operator, F87_2'Access),
+      3 => (False, Right, F87_3'Access));
+
+   overriding procedure Infix_Operator
+    (Self    : in out Visitor;
+     Element : not null Program.Elements.Infix_Operators
+         .Infix_Operator_Access) is
+      pragma Unreferenced (Element);
+   begin
+      Self.Result := F87'Access;
+   end Infix_Operator;
+
+   function F88_1 is new Generic_Child
      (Element      => Program.Elements.Function_Calls.Function_Call,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Function_Calls.Prefix);
 
-   function F87_2 is new Generic_Vector
+   function F88_2 is new Generic_Vector
      (Parent        => Program.Elements.Function_Calls.Function_Call,
       Vector        =>
         Program.Elements.Parameter_Associations.Parameter_Association_Vector,
@@ -4156,9 +4195,9 @@ package body Internal is
           .Parameter_Association_Vector_Access,
       Get_Vector    => Program.Elements.Function_Calls.Parameters);
 
-   F87  : aliased constant Getter_Array :=
-     (1 => (False, Prefix, F87_1'Access),
-      2 => (True, Parameters, F87_2'Access));
+   F88  : aliased constant Getter_Array :=
+     (1 => (False, Prefix, F88_1'Access),
+      2 => (True, Parameters, F88_2'Access));
 
    overriding procedure Function_Call
     (Self    : in out Visitor;
@@ -4166,24 +4205,24 @@ package body Internal is
          .Function_Call_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F87'Access;
+      Self.Result := F88'Access;
    end Function_Call;
 
-   function F88_1 is new Generic_Child
+   function F89_1 is new Generic_Child
      (Element      => Program.Elements.Indexed_Components.Indexed_Component,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Indexed_Components.Prefix);
 
-   function F88_2 is new Generic_Vector
+   function F89_2 is new Generic_Vector
      (Parent        => Program.Elements.Indexed_Components.Indexed_Component,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Indexed_Components.Expressions);
 
-   F88  : aliased constant Getter_Array :=
-     (1 => (False, Prefix, F88_1'Access),
-      2 => (True, Expressions, F88_2'Access));
+   F89  : aliased constant Getter_Array :=
+     (1 => (False, Prefix, F89_1'Access),
+      2 => (True, Expressions, F89_2'Access));
 
    overriding procedure Indexed_Component
     (Self    : in out Visitor;
@@ -4191,48 +4230,48 @@ package body Internal is
          .Indexed_Component_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F88'Access;
+      Self.Result := F89'Access;
    end Indexed_Component;
 
-   function F89_1 is new Generic_Child
+   function F90_1 is new Generic_Child
      (Element      => Program.Elements.Slices.Slice,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Slices.Prefix);
 
-   function F89_2 is new Generic_Child
+   function F90_2 is new Generic_Child
      (Element      => Program.Elements.Slices.Slice,
       Child        => Program.Elements.Discrete_Ranges.Discrete_Range,
       Child_Access => Program.Elements.Discrete_Ranges.Discrete_Range_Access,
       Get_Child    => Program.Elements.Slices.Slice_Range);
 
-   F89  : aliased constant Getter_Array :=
-     (1 => (False, Prefix, F89_1'Access),
-      2 => (False, Slice_Range, F89_2'Access));
+   F90  : aliased constant Getter_Array :=
+     (1 => (False, Prefix, F90_1'Access),
+      2 => (False, Slice_Range, F90_2'Access));
 
    overriding procedure Slice
     (Self    : in out Visitor;
      Element : not null Program.Elements.Slices.Slice_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F89'Access;
+      Self.Result := F90'Access;
    end Slice;
 
-   function F90_1 is new Generic_Child
+   function F91_1 is new Generic_Child
      (Element      => Program.Elements.Selected_Components.Selected_Component,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Selected_Components.Prefix);
 
-   function F90_2 is new Generic_Child
+   function F91_2 is new Generic_Child
      (Element      => Program.Elements.Selected_Components.Selected_Component,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Selected_Components.Selector);
 
-   F90  : aliased constant Getter_Array :=
-     (1 => (False, Prefix, F90_1'Access),
-      2 => (False, Selector, F90_2'Access));
+   F91  : aliased constant Getter_Array :=
+     (1 => (False, Prefix, F91_1'Access),
+      2 => (False, Selector, F91_2'Access));
 
    overriding procedure Selected_Component
     (Self    : in out Visitor;
@@ -4240,17 +4279,17 @@ package body Internal is
          .Selected_Component_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F90'Access;
+      Self.Result := F91'Access;
    end Selected_Component;
 
-   function F91_1 is new Generic_Child
+   function F92_1 is new Generic_Child
      (Element      =>
         Program.Elements.Attribute_References.Attribute_Reference,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Attribute_References.Prefix);
 
-   function F91_2 is new Generic_Child
+   function F92_2 is new Generic_Child
      (Element      =>
         Program.Elements.Attribute_References.Attribute_Reference,
       Child        => Program.Elements.Identifiers.Identifier,
@@ -4258,17 +4297,17 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Attribute_References.Attribute_Designator);
 
-   function F91_3 is new Generic_Child
+   function F92_3 is new Generic_Child
      (Element      =>
         Program.Elements.Attribute_References.Attribute_Reference,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Attribute_References.Expressions);
 
-   F91  : aliased constant Getter_Array :=
-     (1 => (False, Prefix, F91_1'Access),
-      2 => (False, Attribute_Designator, F91_2'Access),
-      3 => (False, Expressions, F91_3'Access));
+   F92  : aliased constant Getter_Array :=
+     (1 => (False, Prefix, F92_1'Access),
+      2 => (False, Attribute_Designator, F92_2'Access),
+      3 => (False, Expressions, F92_3'Access));
 
    overriding procedure Attribute_Reference
     (Self    : in out Visitor;
@@ -4276,10 +4315,10 @@ package body Internal is
          .Attribute_Reference_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F91'Access;
+      Self.Result := F92'Access;
    end Attribute_Reference;
 
-   function F92_1 is new Generic_Vector
+   function F93_1 is new Generic_Vector
      (Parent        => Program.Elements.Record_Aggregates.Record_Aggregate,
       Vector        =>
         Program.Elements.Record_Component_Associations
@@ -4289,8 +4328,8 @@ package body Internal is
           .Record_Component_Association_Vector_Access,
       Get_Vector    => Program.Elements.Record_Aggregates.Components);
 
-   F92  : aliased constant Getter_Array :=
-     (1 => (True, Components, F92_1'Access));
+   F93  : aliased constant Getter_Array :=
+     (1 => (True, Components, F93_1'Access));
 
    overriding procedure Record_Aggregate
     (Self    : in out Visitor;
@@ -4298,17 +4337,17 @@ package body Internal is
          .Record_Aggregate_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F92'Access;
+      Self.Result := F93'Access;
    end Record_Aggregate;
 
-   function F93_1 is new Generic_Child
+   function F94_1 is new Generic_Child
      (Element      =>
         Program.Elements.Extension_Aggregates.Extension_Aggregate,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Extension_Aggregates.Ancestor);
 
-   function F93_2 is new Generic_Vector
+   function F94_2 is new Generic_Vector
      (Parent        =>
         Program.Elements.Extension_Aggregates.Extension_Aggregate,
       Vector        =>
@@ -4319,9 +4358,9 @@ package body Internal is
           .Record_Component_Association_Vector_Access,
       Get_Vector    => Program.Elements.Extension_Aggregates.Components);
 
-   F93  : aliased constant Getter_Array :=
-     (1 => (False, Ancestor, F93_1'Access),
-      2 => (True, Components, F93_2'Access));
+   F94  : aliased constant Getter_Array :=
+     (1 => (False, Ancestor, F94_1'Access),
+      2 => (True, Components, F94_2'Access));
 
    overriding procedure Extension_Aggregate
     (Self    : in out Visitor;
@@ -4329,10 +4368,10 @@ package body Internal is
          .Extension_Aggregate_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F93'Access;
+      Self.Result := F94'Access;
    end Extension_Aggregate;
 
-   function F94_1 is new Generic_Vector
+   function F95_1 is new Generic_Vector
      (Parent        => Program.Elements.Array_Aggregates.Array_Aggregate,
       Vector        =>
         Program.Elements.Array_Component_Associations
@@ -4342,8 +4381,8 @@ package body Internal is
           .Array_Component_Association_Vector_Access,
       Get_Vector    => Program.Elements.Array_Aggregates.Components);
 
-   F94  : aliased constant Getter_Array :=
-     (1 => (True, Components, F94_1'Access));
+   F95  : aliased constant Getter_Array :=
+     (1 => (True, Components, F95_1'Access));
 
    overriding procedure Array_Aggregate
     (Self    : in out Visitor;
@@ -4351,26 +4390,26 @@ package body Internal is
          .Array_Aggregate_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F94'Access;
+      Self.Result := F95'Access;
    end Array_Aggregate;
 
-   function F95_1 is new Generic_Child
+   function F96_1 is new Generic_Child
      (Element      =>
         Program.Elements.Short_Circuit_Operations.Short_Circuit_Operation,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Short_Circuit_Operations.Left);
 
-   function F95_2 is new Generic_Child
+   function F96_2 is new Generic_Child
      (Element      =>
         Program.Elements.Short_Circuit_Operations.Short_Circuit_Operation,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Short_Circuit_Operations.Right);
 
-   F95  : aliased constant Getter_Array :=
-     (1 => (False, Left, F95_1'Access),
-      2 => (False, Right, F95_2'Access));
+   F96  : aliased constant Getter_Array :=
+     (1 => (False, Left, F96_1'Access),
+      2 => (False, Right, F96_2'Access));
 
    overriding procedure Short_Circuit_Operation
     (Self    : in out Visitor;
@@ -4378,24 +4417,24 @@ package body Internal is
          .Short_Circuit_Operation_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F95'Access;
+      Self.Result := F96'Access;
    end Short_Circuit_Operation;
 
-   function F96_1 is new Generic_Child
+   function F97_1 is new Generic_Child
      (Element      => Program.Elements.Membership_Tests.Membership_Test,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Membership_Tests.Expression);
 
-   function F96_2 is new Generic_Vector
+   function F97_2 is new Generic_Vector
      (Parent        => Program.Elements.Membership_Tests.Membership_Test,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Membership_Tests.Choices);
 
-   F96  : aliased constant Getter_Array :=
-     (1 => (False, Expression, F96_1'Access),
-      2 => (True, Choices, F96_2'Access));
+   F97  : aliased constant Getter_Array :=
+     (1 => (False, Expression, F97_1'Access),
+      2 => (True, Choices, F97_2'Access));
 
    overriding procedure Membership_Test
     (Self    : in out Visitor;
@@ -4403,18 +4442,18 @@ package body Internal is
          .Membership_Test_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F96'Access;
+      Self.Result := F97'Access;
    end Membership_Test;
 
-   function F98_1 is new Generic_Child
+   function F99_1 is new Generic_Child
      (Element      =>
         Program.Elements.Parenthesized_Expressions.Parenthesized_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Parenthesized_Expressions.Expression);
 
-   F98  : aliased constant Getter_Array :=
-     (1 => (False, Expression, F98_1'Access));
+   F99  : aliased constant Getter_Array :=
+     (1 => (False, Expression, F99_1'Access));
 
    overriding procedure Parenthesized_Expression
     (Self    : in out Visitor;
@@ -4422,24 +4461,24 @@ package body Internal is
          .Parenthesized_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F98'Access;
+      Self.Result := F99'Access;
    end Parenthesized_Expression;
 
-   function F99_1 is new Generic_Child
+   function F100_1 is new Generic_Child
      (Element      => Program.Elements.Raise_Expressions.Raise_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Raise_Expressions.Exception_Name);
 
-   function F99_2 is new Generic_Child
+   function F100_2 is new Generic_Child
      (Element      => Program.Elements.Raise_Expressions.Raise_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Raise_Expressions.Associated_Message);
 
-   F99  : aliased constant Getter_Array :=
-     (1 => (False, Exception_Name, F99_1'Access),
-      2 => (False, Associated_Message, F99_2'Access));
+   F100 : aliased constant Getter_Array :=
+     (1 => (False, Exception_Name, F100_1'Access),
+      2 => (False, Associated_Message, F100_2'Access));
 
    overriding procedure Raise_Expression
     (Self    : in out Visitor;
@@ -4447,24 +4486,24 @@ package body Internal is
          .Raise_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F99'Access;
+      Self.Result := F100'Access;
    end Raise_Expression;
 
-   function F100_1 is new Generic_Child
+   function F101_1 is new Generic_Child
      (Element      => Program.Elements.Type_Conversions.Type_Conversion,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Type_Conversions.Subtype_Mark);
 
-   function F100_2 is new Generic_Child
+   function F101_2 is new Generic_Child
      (Element      => Program.Elements.Type_Conversions.Type_Conversion,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Type_Conversions.Operand);
 
-   F100 : aliased constant Getter_Array :=
-     (1 => (False, Subtype_Mark, F100_1'Access),
-      2 => (False, Operand, F100_2'Access));
+   F101 : aliased constant Getter_Array :=
+     (1 => (False, Subtype_Mark, F101_1'Access),
+      2 => (False, Operand, F101_2'Access));
 
    overriding procedure Type_Conversion
     (Self    : in out Visitor;
@@ -4472,26 +4511,26 @@ package body Internal is
          .Type_Conversion_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F100'Access;
+      Self.Result := F101'Access;
    end Type_Conversion;
 
-   function F101_1 is new Generic_Child
+   function F102_1 is new Generic_Child
      (Element      =>
         Program.Elements.Qualified_Expressions.Qualified_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Qualified_Expressions.Subtype_Mark);
 
-   function F101_2 is new Generic_Child
+   function F102_2 is new Generic_Child
      (Element      =>
         Program.Elements.Qualified_Expressions.Qualified_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Qualified_Expressions.Operand);
 
-   F101 : aliased constant Getter_Array :=
-     (1 => (False, Subtype_Mark, F101_1'Access),
-      2 => (False, Operand, F101_2'Access));
+   F102 : aliased constant Getter_Array :=
+     (1 => (False, Subtype_Mark, F102_1'Access),
+      2 => (False, Operand, F102_2'Access));
 
    overriding procedure Qualified_Expression
     (Self    : in out Visitor;
@@ -4499,23 +4538,23 @@ package body Internal is
          .Qualified_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F101'Access;
+      Self.Result := F102'Access;
    end Qualified_Expression;
 
-   function F102_1 is new Generic_Child
+   function F103_1 is new Generic_Child
      (Element      => Program.Elements.Allocators.Allocator,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Allocators.Subpool_Name);
 
-   function F102_2 is new Generic_Child
+   function F103_2 is new Generic_Child
      (Element      => Program.Elements.Allocators.Allocator,
       Child        => Program.Elements.Subtype_Indications.Subtype_Indication,
       Child_Access =>
         Program.Elements.Subtype_Indications.Subtype_Indication_Access,
       Get_Child    => Program.Elements.Allocators.Subtype_Indication);
 
-   function F102_3 is new Generic_Child
+   function F103_3 is new Generic_Child
      (Element      => Program.Elements.Allocators.Allocator,
       Child        =>
         Program.Elements.Qualified_Expressions.Qualified_Expression,
@@ -4523,26 +4562,26 @@ package body Internal is
         Program.Elements.Qualified_Expressions.Qualified_Expression_Access,
       Get_Child    => Program.Elements.Allocators.Qualified_Expression);
 
-   F102 : aliased constant Getter_Array :=
-     (1 => (False, Subpool_Name, F102_1'Access),
-      2 => (False, Subtype_Indication, F102_2'Access),
-      3 => (False, Qualified_Expression, F102_3'Access));
+   F103 : aliased constant Getter_Array :=
+     (1 => (False, Subpool_Name, F103_1'Access),
+      2 => (False, Subtype_Indication, F103_2'Access),
+      3 => (False, Qualified_Expression, F103_3'Access));
 
    overriding procedure Allocator
     (Self    : in out Visitor;
      Element : not null Program.Elements.Allocators.Allocator_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F102'Access;
+      Self.Result := F103'Access;
    end Allocator;
 
-   function F103_1 is new Generic_Child
+   function F104_1 is new Generic_Child
      (Element      => Program.Elements.Case_Expressions.Case_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Case_Expressions.Selecting_Expression);
 
-   function F103_2 is new Generic_Vector
+   function F104_2 is new Generic_Vector
      (Parent        => Program.Elements.Case_Expressions.Case_Expression,
       Vector        =>
         Program.Elements.Case_Expression_Paths.Case_Expression_Path_Vector,
@@ -4551,9 +4590,9 @@ package body Internal is
           .Case_Expression_Path_Vector_Access,
       Get_Vector    => Program.Elements.Case_Expressions.Paths);
 
-   F103 : aliased constant Getter_Array :=
-     (1 => (False, Selecting_Expression, F103_1'Access),
-      2 => (True, Paths, F103_2'Access));
+   F104 : aliased constant Getter_Array :=
+     (1 => (False, Selecting_Expression, F104_1'Access),
+      2 => (True, Paths, F104_2'Access));
 
    overriding procedure Case_Expression
     (Self    : in out Visitor;
@@ -4561,38 +4600,38 @@ package body Internal is
          .Case_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F103'Access;
+      Self.Result := F104'Access;
    end Case_Expression;
 
-   function F104_1 is new Generic_Child
+   function F105_1 is new Generic_Child
      (Element      => Program.Elements.If_Expressions.If_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.If_Expressions.Condition);
 
-   function F104_2 is new Generic_Child
+   function F105_2 is new Generic_Child
      (Element      => Program.Elements.If_Expressions.If_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.If_Expressions.Then_Expression);
 
-   function F104_3 is new Generic_Vector
+   function F105_3 is new Generic_Vector
      (Parent        => Program.Elements.If_Expressions.If_Expression,
       Vector        => Program.Elements.Elsif_Paths.Elsif_Path_Vector,
       Vector_Access => Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access,
       Get_Vector    => Program.Elements.If_Expressions.Elsif_Paths);
 
-   function F104_4 is new Generic_Child
+   function F105_4 is new Generic_Child
      (Element      => Program.Elements.If_Expressions.If_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.If_Expressions.Else_Expression);
 
-   F104 : aliased constant Getter_Array :=
-     (1 => (False, Condition, F104_1'Access),
-      2 => (False, Then_Expression, F104_2'Access),
-      3 => (True, Elsif_Paths, F104_3'Access),
-      4 => (False, Else_Expression, F104_4'Access));
+   F105 : aliased constant Getter_Array :=
+     (1 => (False, Condition, F105_1'Access),
+      2 => (False, Then_Expression, F105_2'Access),
+      3 => (True, Elsif_Paths, F105_3'Access),
+      4 => (False, Else_Expression, F105_4'Access));
 
    overriding procedure If_Expression
     (Self    : in out Visitor;
@@ -4600,10 +4639,10 @@ package body Internal is
          .If_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F104'Access;
+      Self.Result := F105'Access;
    end If_Expression;
 
-   function F105_1 is new Generic_Child
+   function F106_1 is new Generic_Child
      (Element      =>
         Program.Elements.Quantified_Expressions.Quantified_Expression,
       Child        =>
@@ -4614,7 +4653,7 @@ package body Internal is
           .Loop_Parameter_Specification_Access,
       Get_Child    => Program.Elements.Quantified_Expressions.Parameter);
 
-   function F105_2 is new Generic_Child
+   function F106_2 is new Generic_Child
      (Element      =>
         Program.Elements.Quantified_Expressions.Quantified_Expression,
       Child        =>
@@ -4626,7 +4665,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Quantified_Expressions.Generalized_Iterator);
 
-   function F105_3 is new Generic_Child
+   function F106_3 is new Generic_Child
      (Element      =>
         Program.Elements.Quantified_Expressions.Quantified_Expression,
       Child        =>
@@ -4638,18 +4677,18 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Quantified_Expressions.Element_Iterator);
 
-   function F105_4 is new Generic_Child
+   function F106_4 is new Generic_Child
      (Element      =>
         Program.Elements.Quantified_Expressions.Quantified_Expression,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Quantified_Expressions.Predicate);
 
-   F105 : aliased constant Getter_Array :=
-     (1 => (False, Parameter, F105_1'Access),
-      2 => (False, Generalized_Iterator, F105_2'Access),
-      3 => (False, Element_Iterator, F105_3'Access),
-      4 => (False, Predicate, F105_4'Access));
+   F106 : aliased constant Getter_Array :=
+     (1 => (False, Parameter, F106_1'Access),
+      2 => (False, Generalized_Iterator, F106_2'Access),
+      3 => (False, Element_Iterator, F106_3'Access),
+      4 => (False, Predicate, F106_4'Access));
 
    overriding procedure Quantified_Expression
     (Self    : in out Visitor;
@@ -4657,10 +4696,10 @@ package body Internal is
          .Quantified_Expression_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F105'Access;
+      Self.Result := F106'Access;
    end Quantified_Expression;
 
-   function F106_1 is new Generic_Vector
+   function F107_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Discriminant_Associations.Discriminant_Association,
       Vector        => Program.Elements.Identifiers.Identifier_Vector,
@@ -4668,16 +4707,16 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Discriminant_Associations.Selector_Names);
 
-   function F106_2 is new Generic_Child
+   function F107_2 is new Generic_Child
      (Element      =>
         Program.Elements.Discriminant_Associations.Discriminant_Association,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Discriminant_Associations.Expression);
 
-   F106 : aliased constant Getter_Array :=
-     (1 => (True, Selector_Names, F106_1'Access),
-      2 => (False, Expression, F106_2'Access));
+   F107 : aliased constant Getter_Array :=
+     (1 => (True, Selector_Names, F107_1'Access),
+      2 => (False, Expression, F107_2'Access));
 
    overriding procedure Discriminant_Association
     (Self    : in out Visitor;
@@ -4685,10 +4724,10 @@ package body Internal is
          .Discriminant_Association_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F106'Access;
+      Self.Result := F107'Access;
    end Discriminant_Association;
 
-   function F107_1 is new Generic_Vector
+   function F108_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Record_Component_Associations
           .Record_Component_Association,
@@ -4696,7 +4735,7 @@ package body Internal is
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Record_Component_Associations.Choices);
 
-   function F107_2 is new Generic_Child
+   function F108_2 is new Generic_Child
      (Element      =>
         Program.Elements.Record_Component_Associations
           .Record_Component_Association,
@@ -4705,9 +4744,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Record_Component_Associations.Expression);
 
-   F107 : aliased constant Getter_Array :=
-     (1 => (True, Choices, F107_1'Access),
-      2 => (False, Expression, F107_2'Access));
+   F108 : aliased constant Getter_Array :=
+     (1 => (True, Choices, F108_1'Access),
+      2 => (False, Expression, F108_2'Access));
 
    overriding procedure Record_Component_Association
     (Self    : in out Visitor;
@@ -4715,10 +4754,10 @@ package body Internal is
          .Record_Component_Association_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F107'Access;
+      Self.Result := F108'Access;
    end Record_Component_Association;
 
-   function F108_1 is new Generic_Vector
+   function F109_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Array_Component_Associations
           .Array_Component_Association,
@@ -4726,7 +4765,7 @@ package body Internal is
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Array_Component_Associations.Choices);
 
-   function F108_2 is new Generic_Child
+   function F109_2 is new Generic_Child
      (Element      =>
         Program.Elements.Array_Component_Associations
           .Array_Component_Association,
@@ -4735,9 +4774,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Array_Component_Associations.Expression);
 
-   F108 : aliased constant Getter_Array :=
-     (1 => (True, Choices, F108_1'Access),
-      2 => (False, Expression, F108_2'Access));
+   F109 : aliased constant Getter_Array :=
+     (1 => (True, Choices, F109_1'Access),
+      2 => (False, Expression, F109_2'Access));
 
    overriding procedure Array_Component_Association
     (Self    : in out Visitor;
@@ -4745,10 +4784,10 @@ package body Internal is
          .Array_Component_Association_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F108'Access;
+      Self.Result := F109'Access;
    end Array_Component_Association;
 
-   function F109_1 is new Generic_Child
+   function F110_1 is new Generic_Child
      (Element      =>
         Program.Elements.Parameter_Associations.Parameter_Association,
       Child        => Program.Elements.Expressions.Expression,
@@ -4756,7 +4795,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Parameter_Associations.Formal_Parameter);
 
-   function F109_2 is new Generic_Child
+   function F110_2 is new Generic_Child
      (Element      =>
         Program.Elements.Parameter_Associations.Parameter_Association,
       Child        => Program.Elements.Expressions.Expression,
@@ -4764,9 +4803,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Parameter_Associations.Actual_Parameter);
 
-   F109 : aliased constant Getter_Array :=
-     (1 => (False, Formal_Parameter, F109_1'Access),
-      2 => (False, Actual_Parameter, F109_2'Access));
+   F110 : aliased constant Getter_Array :=
+     (1 => (False, Formal_Parameter, F110_1'Access),
+      2 => (False, Actual_Parameter, F110_2'Access));
 
    overriding procedure Parameter_Association
     (Self    : in out Visitor;
@@ -4774,10 +4813,10 @@ package body Internal is
          .Parameter_Association_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F109'Access;
+      Self.Result := F110'Access;
    end Parameter_Association;
 
-   function F110_1 is new Generic_Child
+   function F111_1 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Package_Associations
           .Formal_Package_Association,
@@ -4786,7 +4825,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Package_Associations.Formal_Parameter);
 
-   function F110_2 is new Generic_Child
+   function F111_2 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Package_Associations
           .Formal_Package_Association,
@@ -4795,9 +4834,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Package_Associations.Actual_Parameter);
 
-   F110 : aliased constant Getter_Array :=
-     (1 => (False, Formal_Parameter, F110_1'Access),
-      2 => (False, Actual_Parameter, F110_2'Access));
+   F111 : aliased constant Getter_Array :=
+     (1 => (False, Formal_Parameter, F111_1'Access),
+      2 => (False, Actual_Parameter, F111_2'Access));
 
    overriding procedure Formal_Package_Association
     (Self    : in out Visitor;
@@ -4805,26 +4844,26 @@ package body Internal is
          .Formal_Package_Association_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F110'Access;
+      Self.Result := F111'Access;
    end Formal_Package_Association;
 
-   function F112_1 is new Generic_Child
+   function F113_1 is new Generic_Child
      (Element      =>
         Program.Elements.Assignment_Statements.Assignment_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Assignment_Statements.Variable_Name);
 
-   function F112_2 is new Generic_Child
+   function F113_2 is new Generic_Child
      (Element      =>
         Program.Elements.Assignment_Statements.Assignment_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Assignment_Statements.Expression);
 
-   F112 : aliased constant Getter_Array :=
-     (1 => (False, Variable_Name, F112_1'Access),
-      2 => (False, Expression, F112_2'Access));
+   F113 : aliased constant Getter_Array :=
+     (1 => (False, Variable_Name, F113_1'Access),
+      2 => (False, Expression, F113_2'Access));
 
    overriding procedure Assignment_Statement
     (Self    : in out Visitor;
@@ -4832,62 +4871,62 @@ package body Internal is
          .Assignment_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F112'Access;
+      Self.Result := F113'Access;
    end Assignment_Statement;
 
-   function F113_1 is new Generic_Child
+   function F114_1 is new Generic_Child
      (Element      => Program.Elements.If_Statements.If_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.If_Statements.Condition);
 
-   function F113_2 is new Generic_Vector
+   function F114_2 is new Generic_Vector
      (Parent        => Program.Elements.If_Statements.If_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.If_Statements.Then_Statements);
 
-   function F113_3 is new Generic_Vector
+   function F114_3 is new Generic_Vector
      (Parent        => Program.Elements.If_Statements.If_Statement,
       Vector        => Program.Elements.Elsif_Paths.Elsif_Path_Vector,
       Vector_Access => Program.Elements.Elsif_Paths.Elsif_Path_Vector_Access,
       Get_Vector    => Program.Elements.If_Statements.Elsif_Paths);
 
-   function F113_4 is new Generic_Vector
+   function F114_4 is new Generic_Vector
      (Parent        => Program.Elements.If_Statements.If_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.If_Statements.Else_Statements);
 
-   F113 : aliased constant Getter_Array :=
-     (1 => (False, Condition, F113_1'Access),
-      2 => (True, Then_Statements, F113_2'Access),
-      3 => (True, Elsif_Paths, F113_3'Access),
-      4 => (True, Else_Statements, F113_4'Access));
+   F114 : aliased constant Getter_Array :=
+     (1 => (False, Condition, F114_1'Access),
+      2 => (True, Then_Statements, F114_2'Access),
+      3 => (True, Elsif_Paths, F114_3'Access),
+      4 => (True, Else_Statements, F114_4'Access));
 
    overriding procedure If_Statement
     (Self    : in out Visitor;
      Element : not null Program.Elements.If_Statements.If_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F113'Access;
+      Self.Result := F114'Access;
    end If_Statement;
 
-   function F114_1 is new Generic_Child
+   function F115_1 is new Generic_Child
      (Element      => Program.Elements.Case_Statements.Case_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Case_Statements.Selecting_Expression);
 
-   function F114_2 is new Generic_Vector
+   function F115_2 is new Generic_Vector
      (Parent        => Program.Elements.Case_Statements.Case_Statement,
       Vector        => Program.Elements.Case_Paths.Case_Path_Vector,
       Vector_Access => Program.Elements.Case_Paths.Case_Path_Vector_Access,
       Get_Vector    => Program.Elements.Case_Statements.Paths);
 
-   F114 : aliased constant Getter_Array :=
-     (1 => (False, Selecting_Expression, F114_1'Access),
-      2 => (True, Paths, F114_2'Access));
+   F115 : aliased constant Getter_Array :=
+     (1 => (False, Selecting_Expression, F115_1'Access),
+      2 => (True, Paths, F115_2'Access));
 
    overriding procedure Case_Statement
     (Self    : in out Visitor;
@@ -4895,10 +4934,10 @@ package body Internal is
          .Case_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F114'Access;
+      Self.Result := F115'Access;
    end Case_Statement;
 
-   function F115_1 is new Generic_Child
+   function F116_1 is new Generic_Child
      (Element      => Program.Elements.Loop_Statements.Loop_Statement,
       Child        =>
         Program.Elements.Defining_Identifiers.Defining_Identifier,
@@ -4906,26 +4945,26 @@ package body Internal is
         Program.Elements.Defining_Identifiers.Defining_Identifier_Access,
       Get_Child    => Program.Elements.Loop_Statements.Statement_Identifier);
 
-   function F115_2 is new Generic_Vector
+   function F116_2 is new Generic_Vector
      (Parent        => Program.Elements.Loop_Statements.Loop_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Loop_Statements.Statements);
 
-   function F115_3 is new Generic_Child
+   function F116_3 is new Generic_Child
      (Element      => Program.Elements.Loop_Statements.Loop_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    =>
         Program.Elements.Loop_Statements.End_Statement_Identifier);
 
-   F115 : aliased constant Getter_Array :=
-     (1 => (False, Statement_Identifier, F115_1'Access),
-      2 => (True, Statements, F115_2'Access),
+   F116 : aliased constant Getter_Array :=
+     (1 => (False, Statement_Identifier, F116_1'Access),
+      2 => (True, Statements, F116_2'Access),
       3 =>
         (False,
          End_Statement_Identifier,
-         F115_3'Access));
+         F116_3'Access));
 
    overriding procedure Loop_Statement
     (Self    : in out Visitor;
@@ -4933,10 +4972,10 @@ package body Internal is
          .Loop_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F115'Access;
+      Self.Result := F116'Access;
    end Loop_Statement;
 
-   function F116_1 is new Generic_Child
+   function F117_1 is new Generic_Child
      (Element      =>
         Program.Elements.While_Loop_Statements.While_Loop_Statement,
       Child        =>
@@ -4946,21 +4985,21 @@ package body Internal is
       Get_Child    =>
         Program.Elements.While_Loop_Statements.Statement_Identifier);
 
-   function F116_2 is new Generic_Child
+   function F117_2 is new Generic_Child
      (Element      =>
         Program.Elements.While_Loop_Statements.While_Loop_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.While_Loop_Statements.Condition);
 
-   function F116_3 is new Generic_Vector
+   function F117_3 is new Generic_Vector
      (Parent        =>
         Program.Elements.While_Loop_Statements.While_Loop_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.While_Loop_Statements.Statements);
 
-   function F116_4 is new Generic_Child
+   function F117_4 is new Generic_Child
      (Element      =>
         Program.Elements.While_Loop_Statements.While_Loop_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
@@ -4968,14 +5007,14 @@ package body Internal is
       Get_Child    =>
         Program.Elements.While_Loop_Statements.End_Statement_Identifier);
 
-   F116 : aliased constant Getter_Array :=
-     (1 => (False, Statement_Identifier, F116_1'Access),
-      2 => (False, Condition, F116_2'Access),
-      3 => (True, Statements, F116_3'Access),
+   F117 : aliased constant Getter_Array :=
+     (1 => (False, Statement_Identifier, F117_1'Access),
+      2 => (False, Condition, F117_2'Access),
+      3 => (True, Statements, F117_3'Access),
       4 =>
         (False,
          End_Statement_Identifier,
-         F116_4'Access));
+         F117_4'Access));
 
    overriding procedure While_Loop_Statement
     (Self    : in out Visitor;
@@ -4983,10 +5022,10 @@ package body Internal is
          .While_Loop_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F116'Access;
+      Self.Result := F117'Access;
    end While_Loop_Statement;
 
-   function F117_1 is new Generic_Child
+   function F118_1 is new Generic_Child
      (Element      => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Child        =>
         Program.Elements.Defining_Identifiers.Defining_Identifier,
@@ -4995,7 +5034,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.For_Loop_Statements.Statement_Identifier);
 
-   function F117_2 is new Generic_Child
+   function F118_2 is new Generic_Child
      (Element      => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Child        =>
         Program.Elements.Loop_Parameter_Specifications
@@ -5005,7 +5044,7 @@ package body Internal is
           .Loop_Parameter_Specification_Access,
       Get_Child    => Program.Elements.For_Loop_Statements.Loop_Parameter);
 
-   function F117_3 is new Generic_Child
+   function F118_3 is new Generic_Child
      (Element      => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Child        =>
         Program.Elements.Generalized_Iterator_Specifications
@@ -5016,7 +5055,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.For_Loop_Statements.Generalized_Iterator);
 
-   function F117_4 is new Generic_Child
+   function F118_4 is new Generic_Child
      (Element      => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Child        =>
         Program.Elements.Element_Iterator_Specifications
@@ -5026,29 +5065,29 @@ package body Internal is
           .Element_Iterator_Specification_Access,
       Get_Child    => Program.Elements.For_Loop_Statements.Element_Iterator);
 
-   function F117_5 is new Generic_Vector
+   function F118_5 is new Generic_Vector
      (Parent        => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.For_Loop_Statements.Statements);
 
-   function F117_6 is new Generic_Child
+   function F118_6 is new Generic_Child
      (Element      => Program.Elements.For_Loop_Statements.For_Loop_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    =>
         Program.Elements.For_Loop_Statements.End_Statement_Identifier);
 
-   F117 : aliased constant Getter_Array :=
-     (1 => (False, Statement_Identifier, F117_1'Access),
-      2 => (False, Loop_Parameter, F117_2'Access),
-      3 => (False, Generalized_Iterator, F117_3'Access),
-      4 => (False, Element_Iterator, F117_4'Access),
-      5 => (True, Statements, F117_5'Access),
+   F118 : aliased constant Getter_Array :=
+     (1 => (False, Statement_Identifier, F118_1'Access),
+      2 => (False, Loop_Parameter, F118_2'Access),
+      3 => (False, Generalized_Iterator, F118_3'Access),
+      4 => (False, Element_Iterator, F118_4'Access),
+      5 => (True, Statements, F118_5'Access),
       6 =>
         (False,
          End_Statement_Identifier,
-         F117_6'Access));
+         F118_6'Access));
 
    overriding procedure For_Loop_Statement
     (Self    : in out Visitor;
@@ -5056,10 +5095,10 @@ package body Internal is
          .For_Loop_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F117'Access;
+      Self.Result := F118'Access;
    end For_Loop_Statement;
 
-   function F118_1 is new Generic_Child
+   function F119_1 is new Generic_Child
      (Element      => Program.Elements.Block_Statements.Block_Statement,
       Child        =>
         Program.Elements.Defining_Identifiers.Defining_Identifier,
@@ -5067,19 +5106,19 @@ package body Internal is
         Program.Elements.Defining_Identifiers.Defining_Identifier_Access,
       Get_Child    => Program.Elements.Block_Statements.Statement_Identifier);
 
-   function F118_2 is new Generic_Vector
+   function F119_2 is new Generic_Vector
      (Parent        => Program.Elements.Block_Statements.Block_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Block_Statements.Declarations);
 
-   function F118_3 is new Generic_Vector
+   function F119_3 is new Generic_Vector
      (Parent        => Program.Elements.Block_Statements.Block_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Block_Statements.Statements);
 
-   function F118_4 is new Generic_Vector
+   function F119_4 is new Generic_Vector
      (Parent        => Program.Elements.Block_Statements.Block_Statement,
       Vector        =>
         Program.Elements.Exception_Handlers.Exception_Handler_Vector,
@@ -5087,22 +5126,22 @@ package body Internal is
         Program.Elements.Exception_Handlers.Exception_Handler_Vector_Access,
       Get_Vector    => Program.Elements.Block_Statements.Exception_Handlers);
 
-   function F118_5 is new Generic_Child
+   function F119_5 is new Generic_Child
      (Element      => Program.Elements.Block_Statements.Block_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    =>
         Program.Elements.Block_Statements.End_Statement_Identifier);
 
-   F118 : aliased constant Getter_Array :=
-     (1 => (False, Statement_Identifier, F118_1'Access),
-      2 => (True, Declarations, F118_2'Access),
-      3 => (True, Statements, F118_3'Access),
-      4 => (True, Exception_Handlers, F118_4'Access),
+   F119 : aliased constant Getter_Array :=
+     (1 => (False, Statement_Identifier, F119_1'Access),
+      2 => (True, Declarations, F119_2'Access),
+      3 => (True, Statements, F119_3'Access),
+      4 => (True, Exception_Handlers, F119_4'Access),
       5 =>
         (False,
          End_Statement_Identifier,
-         F118_5'Access));
+         F119_5'Access));
 
    overriding procedure Block_Statement
     (Self    : in out Visitor;
@@ -5110,24 +5149,24 @@ package body Internal is
          .Block_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F118'Access;
+      Self.Result := F119'Access;
    end Block_Statement;
 
-   function F119_1 is new Generic_Child
+   function F120_1 is new Generic_Child
      (Element      => Program.Elements.Exit_Statements.Exit_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Exit_Statements.Exit_Loop_Name);
 
-   function F119_2 is new Generic_Child
+   function F120_2 is new Generic_Child
      (Element      => Program.Elements.Exit_Statements.Exit_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Exit_Statements.Condition);
 
-   F119 : aliased constant Getter_Array :=
-     (1 => (False, Exit_Loop_Name, F119_1'Access),
-      2 => (False, Condition, F119_2'Access));
+   F120 : aliased constant Getter_Array :=
+     (1 => (False, Exit_Loop_Name, F120_1'Access),
+      2 => (False, Condition, F120_2'Access));
 
    overriding procedure Exit_Statement
     (Self    : in out Visitor;
@@ -5135,17 +5174,17 @@ package body Internal is
          .Exit_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F119'Access;
+      Self.Result := F120'Access;
    end Exit_Statement;
 
-   function F120_1 is new Generic_Child
+   function F121_1 is new Generic_Child
      (Element      => Program.Elements.Goto_Statements.Goto_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Goto_Statements.Goto_Label);
 
-   F120 : aliased constant Getter_Array :=
-     (1 => (False, Goto_Label, F120_1'Access));
+   F121 : aliased constant Getter_Array :=
+     (1 => (False, Goto_Label, F121_1'Access));
 
    overriding procedure Goto_Statement
     (Self    : in out Visitor;
@@ -5153,16 +5192,16 @@ package body Internal is
          .Goto_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F120'Access;
+      Self.Result := F121'Access;
    end Goto_Statement;
 
-   function F121_1 is new Generic_Child
+   function F122_1 is new Generic_Child
      (Element      => Program.Elements.Call_Statements.Call_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Call_Statements.Called_Name);
 
-   function F121_2 is new Generic_Vector
+   function F122_2 is new Generic_Vector
      (Parent        => Program.Elements.Call_Statements.Call_Statement,
       Vector        =>
         Program.Elements.Parameter_Associations.Parameter_Association_Vector,
@@ -5171,9 +5210,9 @@ package body Internal is
           .Parameter_Association_Vector_Access,
       Get_Vector    => Program.Elements.Call_Statements.Parameters);
 
-   F121 : aliased constant Getter_Array :=
-     (1 => (False, Called_Name, F121_1'Access),
-      2 => (True, Parameters, F121_2'Access));
+   F122 : aliased constant Getter_Array :=
+     (1 => (False, Called_Name, F122_1'Access),
+      2 => (True, Parameters, F122_2'Access));
 
    overriding procedure Call_Statement
     (Self    : in out Visitor;
@@ -5181,18 +5220,18 @@ package body Internal is
          .Call_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F121'Access;
+      Self.Result := F122'Access;
    end Call_Statement;
 
-   function F122_1 is new Generic_Child
+   function F123_1 is new Generic_Child
      (Element      =>
         Program.Elements.Simple_Return_Statements.Simple_Return_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Simple_Return_Statements.Expression);
 
-   F122 : aliased constant Getter_Array :=
-     (1 => (False, Expression, F122_1'Access));
+   F123 : aliased constant Getter_Array :=
+     (1 => (False, Expression, F123_1'Access));
 
    overriding procedure Simple_Return_Statement
     (Self    : in out Visitor;
@@ -5200,10 +5239,10 @@ package body Internal is
          .Simple_Return_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F122'Access;
+      Self.Result := F123'Access;
    end Simple_Return_Statement;
 
-   function F123_1 is new Generic_Child
+   function F124_1 is new Generic_Child
      (Element      =>
         Program.Elements.Extended_Return_Statements.Extended_Return_Statement,
       Child        =>
@@ -5215,14 +5254,14 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Extended_Return_Statements.Return_Object);
 
-   function F123_2 is new Generic_Vector
+   function F124_2 is new Generic_Vector
      (Parent        =>
         Program.Elements.Extended_Return_Statements.Extended_Return_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Extended_Return_Statements.Statements);
 
-   function F123_3 is new Generic_Vector
+   function F124_3 is new Generic_Vector
      (Parent        =>
         Program.Elements.Extended_Return_Statements.Extended_Return_Statement,
       Vector        =>
@@ -5232,10 +5271,10 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Extended_Return_Statements.Exception_Handlers);
 
-   F123 : aliased constant Getter_Array :=
-     (1 => (False, Return_Object, F123_1'Access),
-      2 => (True, Statements, F123_2'Access),
-      3 => (True, Exception_Handlers, F123_3'Access));
+   F124 : aliased constant Getter_Array :=
+     (1 => (False, Return_Object, F124_1'Access),
+      2 => (True, Statements, F124_2'Access),
+      3 => (True, Exception_Handlers, F124_3'Access));
 
    overriding procedure Extended_Return_Statement
     (Self    : in out Visitor;
@@ -5243,22 +5282,22 @@ package body Internal is
          .Extended_Return_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F123'Access;
+      Self.Result := F124'Access;
    end Extended_Return_Statement;
 
-   function F124_1 is new Generic_Child
+   function F125_1 is new Generic_Child
      (Element      => Program.Elements.Accept_Statements.Accept_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    => Program.Elements.Accept_Statements.Entry_Name);
 
-   function F124_2 is new Generic_Child
+   function F125_2 is new Generic_Child
      (Element      => Program.Elements.Accept_Statements.Accept_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Accept_Statements.Entry_Index);
 
-   function F124_3 is new Generic_Vector
+   function F125_3 is new Generic_Vector
      (Parent        => Program.Elements.Accept_Statements.Accept_Statement,
       Vector        =>
         Program.Elements.Parameter_Specifications
@@ -5268,13 +5307,13 @@ package body Internal is
           .Parameter_Specification_Vector_Access,
       Get_Vector    => Program.Elements.Accept_Statements.Parameters);
 
-   function F124_4 is new Generic_Vector
+   function F125_4 is new Generic_Vector
      (Parent        => Program.Elements.Accept_Statements.Accept_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Accept_Statements.Statements);
 
-   function F124_5 is new Generic_Vector
+   function F125_5 is new Generic_Vector
      (Parent        => Program.Elements.Accept_Statements.Accept_Statement,
       Vector        =>
         Program.Elements.Exception_Handlers.Exception_Handler_Vector,
@@ -5282,23 +5321,23 @@ package body Internal is
         Program.Elements.Exception_Handlers.Exception_Handler_Vector_Access,
       Get_Vector    => Program.Elements.Accept_Statements.Exception_Handlers);
 
-   function F124_6 is new Generic_Child
+   function F125_6 is new Generic_Child
      (Element      => Program.Elements.Accept_Statements.Accept_Statement,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    =>
         Program.Elements.Accept_Statements.End_Statement_Identifier);
 
-   F124 : aliased constant Getter_Array :=
-     (1 => (False, Entry_Name, F124_1'Access),
-      2 => (False, Entry_Index, F124_2'Access),
-      3 => (True, Parameters, F124_3'Access),
-      4 => (True, Statements, F124_4'Access),
-      5 => (True, Exception_Handlers, F124_5'Access),
+   F125 : aliased constant Getter_Array :=
+     (1 => (False, Entry_Name, F125_1'Access),
+      2 => (False, Entry_Index, F125_2'Access),
+      3 => (True, Parameters, F125_3'Access),
+      4 => (True, Statements, F125_4'Access),
+      5 => (True, Exception_Handlers, F125_5'Access),
       6 =>
         (False,
          End_Statement_Identifier,
-         F124_6'Access));
+         F125_6'Access));
 
    overriding procedure Accept_Statement
     (Self    : in out Visitor;
@@ -5306,17 +5345,17 @@ package body Internal is
          .Accept_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F124'Access;
+      Self.Result := F125'Access;
    end Accept_Statement;
 
-   function F125_1 is new Generic_Child
+   function F126_1 is new Generic_Child
      (Element      => Program.Elements.Requeue_Statements.Requeue_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Requeue_Statements.Entry_Name);
 
-   F125 : aliased constant Getter_Array :=
-     (1 => (False, Entry_Name, F125_1'Access));
+   F126 : aliased constant Getter_Array :=
+     (1 => (False, Entry_Name, F126_1'Access));
 
    overriding procedure Requeue_Statement
     (Self    : in out Visitor;
@@ -5324,17 +5363,17 @@ package body Internal is
          .Requeue_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F125'Access;
+      Self.Result := F126'Access;
    end Requeue_Statement;
 
-   function F126_1 is new Generic_Child
+   function F127_1 is new Generic_Child
      (Element      => Program.Elements.Delay_Statements.Delay_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Delay_Statements.Expression);
 
-   F126 : aliased constant Getter_Array :=
-     (1 => (False, Expression, F126_1'Access));
+   F127 : aliased constant Getter_Array :=
+     (1 => (False, Expression, F127_1'Access));
 
    overriding procedure Delay_Statement
     (Self    : in out Visitor;
@@ -5342,33 +5381,33 @@ package body Internal is
          .Delay_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F126'Access;
+      Self.Result := F127'Access;
    end Delay_Statement;
 
-   function F128_1 is new Generic_Vector
+   function F129_1 is new Generic_Vector
      (Parent        => Program.Elements.Select_Statements.Select_Statement,
       Vector        => Program.Elements.Select_Paths.Select_Path_Vector,
       Vector_Access => Program.Elements.Select_Paths.Select_Path_Vector_Access,
       Get_Vector    => Program.Elements.Select_Statements.Paths);
 
-   function F128_2 is new Generic_Vector
+   function F129_2 is new Generic_Vector
      (Parent        => Program.Elements.Select_Statements.Select_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    =>
         Program.Elements.Select_Statements.Then_Abort_Statements);
 
-   function F128_3 is new Generic_Vector
+   function F129_3 is new Generic_Vector
      (Parent        => Program.Elements.Select_Statements.Select_Statement,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Select_Statements.Else_Statements);
 
-   F128 : aliased constant Getter_Array :=
-     (1 => (True, Paths, F128_1'Access),
+   F129 : aliased constant Getter_Array :=
+     (1 => (True, Paths, F129_1'Access),
       2 =>
-        (True, Then_Abort_Statements, F128_2'Access),
-      3 => (True, Else_Statements, F128_3'Access));
+        (True, Then_Abort_Statements, F129_2'Access),
+      3 => (True, Else_Statements, F129_3'Access));
 
    overriding procedure Select_Statement
     (Self    : in out Visitor;
@@ -5376,17 +5415,17 @@ package body Internal is
          .Select_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F128'Access;
+      Self.Result := F129'Access;
    end Select_Statement;
 
-   function F129_1 is new Generic_Vector
+   function F130_1 is new Generic_Vector
      (Parent        => Program.Elements.Abort_Statements.Abort_Statement,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Abort_Statements.Aborted_Tasks);
 
-   F129 : aliased constant Getter_Array :=
-     (1 => (True, Aborted_Tasks, F129_1'Access));
+   F130 : aliased constant Getter_Array :=
+     (1 => (True, Aborted_Tasks, F130_1'Access));
 
    overriding procedure Abort_Statement
     (Self    : in out Visitor;
@@ -5394,24 +5433,24 @@ package body Internal is
          .Abort_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F129'Access;
+      Self.Result := F130'Access;
    end Abort_Statement;
 
-   function F130_1 is new Generic_Child
+   function F131_1 is new Generic_Child
      (Element      => Program.Elements.Raise_Statements.Raise_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Raise_Statements.Raised_Exception);
 
-   function F130_2 is new Generic_Child
+   function F131_2 is new Generic_Child
      (Element      => Program.Elements.Raise_Statements.Raise_Statement,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Raise_Statements.Associated_Message);
 
-   F130 : aliased constant Getter_Array :=
-     (1 => (False, Raised_Exception, F130_1'Access),
-      2 => (False, Associated_Message, F130_2'Access));
+   F131 : aliased constant Getter_Array :=
+     (1 => (False, Raised_Exception, F131_1'Access),
+      2 => (False, Associated_Message, F131_2'Access));
 
    overriding procedure Raise_Statement
     (Self    : in out Visitor;
@@ -5419,10 +5458,10 @@ package body Internal is
          .Raise_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F130'Access;
+      Self.Result := F131'Access;
    end Raise_Statement;
 
-   function F131_1 is new Generic_Child
+   function F132_1 is new Generic_Child
      (Element      => Program.Elements.Code_Statements.Code_Statement,
       Child        =>
         Program.Elements.Qualified_Expressions.Qualified_Expression,
@@ -5430,8 +5469,8 @@ package body Internal is
         Program.Elements.Qualified_Expressions.Qualified_Expression_Access,
       Get_Child    => Program.Elements.Code_Statements.Expression);
 
-   F131 : aliased constant Getter_Array :=
-     (1 => (False, Expression, F131_1'Access));
+   F132 : aliased constant Getter_Array :=
+     (1 => (False, Expression, F132_1'Access));
 
    overriding procedure Code_Statement
     (Self    : in out Visitor;
@@ -5439,98 +5478,98 @@ package body Internal is
          .Code_Statement_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F131'Access;
+      Self.Result := F132'Access;
    end Code_Statement;
 
-   function F132_1 is new Generic_Child
+   function F133_1 is new Generic_Child
      (Element      => Program.Elements.Elsif_Paths.Elsif_Path,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Elsif_Paths.Condition);
 
-   function F132_2 is new Generic_Vector
+   function F133_2 is new Generic_Vector
      (Parent        => Program.Elements.Elsif_Paths.Elsif_Path,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Elsif_Paths.Statements);
 
-   F132 : aliased constant Getter_Array :=
-     (1 => (False, Condition, F132_1'Access),
-      2 => (True, Statements, F132_2'Access));
+   F133 : aliased constant Getter_Array :=
+     (1 => (False, Condition, F133_1'Access),
+      2 => (True, Statements, F133_2'Access));
 
    overriding procedure Elsif_Path
     (Self    : in out Visitor;
      Element : not null Program.Elements.Elsif_Paths.Elsif_Path_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F132'Access;
+      Self.Result := F133'Access;
    end Elsif_Path;
 
-   function F133_1 is new Generic_Vector
+   function F134_1 is new Generic_Vector
      (Parent        => Program.Elements.Case_Paths.Case_Path,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Case_Paths.Choices);
 
-   function F133_2 is new Generic_Vector
+   function F134_2 is new Generic_Vector
      (Parent        => Program.Elements.Case_Paths.Case_Path,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Case_Paths.Statements);
 
-   F133 : aliased constant Getter_Array :=
-     (1 => (True, Choices, F133_1'Access),
-      2 => (True, Statements, F133_2'Access));
+   F134 : aliased constant Getter_Array :=
+     (1 => (True, Choices, F134_1'Access),
+      2 => (True, Statements, F134_2'Access));
 
    overriding procedure Case_Path
     (Self    : in out Visitor;
      Element : not null Program.Elements.Case_Paths.Case_Path_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F133'Access;
+      Self.Result := F134'Access;
    end Case_Path;
 
-   function F134_1 is new Generic_Child
+   function F135_1 is new Generic_Child
      (Element      => Program.Elements.Select_Paths.Select_Path,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Select_Paths.Guard);
 
-   function F134_2 is new Generic_Vector
+   function F135_2 is new Generic_Vector
      (Parent        => Program.Elements.Select_Paths.Select_Path,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Select_Paths.Statements);
 
-   F134 : aliased constant Getter_Array :=
-     (1 => (False, Guard, F134_1'Access),
-      2 => (True, Statements, F134_2'Access));
+   F135 : aliased constant Getter_Array :=
+     (1 => (False, Guard, F135_1'Access),
+      2 => (True, Statements, F135_2'Access));
 
    overriding procedure Select_Path
     (Self    : in out Visitor;
      Element : not null Program.Elements.Select_Paths.Select_Path_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F134'Access;
+      Self.Result := F135'Access;
    end Select_Path;
 
-   function F135_1 is new Generic_Vector
+   function F136_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Case_Expression_Paths.Case_Expression_Path,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Case_Expression_Paths.Choices);
 
-   function F135_2 is new Generic_Child
+   function F136_2 is new Generic_Child
      (Element      =>
         Program.Elements.Case_Expression_Paths.Case_Expression_Path,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Case_Expression_Paths.Expression);
 
-   F135 : aliased constant Getter_Array :=
-     (1 => (True, Choices, F135_1'Access),
-      2 => (False, Expression, F135_2'Access));
+   F136 : aliased constant Getter_Array :=
+     (1 => (True, Choices, F136_1'Access),
+      2 => (False, Expression, F136_2'Access));
 
    overriding procedure Case_Expression_Path
     (Self    : in out Visitor;
@@ -5538,26 +5577,26 @@ package body Internal is
          .Case_Expression_Path_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F135'Access;
+      Self.Result := F136'Access;
    end Case_Expression_Path;
 
-   function F136_1 is new Generic_Child
+   function F137_1 is new Generic_Child
      (Element      =>
         Program.Elements.Elsif_Expression_Paths.Elsif_Expression_Path,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Elsif_Expression_Paths.Condition);
 
-   function F136_2 is new Generic_Child
+   function F137_2 is new Generic_Child
      (Element      =>
         Program.Elements.Elsif_Expression_Paths.Elsif_Expression_Path,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Elsif_Expression_Paths.Expression);
 
-   F136 : aliased constant Getter_Array :=
-     (1 => (False, Condition, F136_1'Access),
-      2 => (False, Expression, F136_2'Access));
+   F137 : aliased constant Getter_Array :=
+     (1 => (False, Condition, F137_1'Access),
+      2 => (False, Expression, F137_2'Access));
 
    overriding procedure Elsif_Expression_Path
     (Self    : in out Visitor;
@@ -5565,56 +5604,56 @@ package body Internal is
          .Elsif_Expression_Path_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F136'Access;
+      Self.Result := F137'Access;
    end Elsif_Expression_Path;
 
-   function F137_1 is new Generic_Vector
+   function F138_1 is new Generic_Vector
      (Parent        => Program.Elements.Use_Clauses.Use_Clause,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Use_Clauses.Clause_Names);
 
-   F137 : aliased constant Getter_Array :=
-     (1 => (True, Clause_Names, F137_1'Access));
+   F138 : aliased constant Getter_Array :=
+     (1 => (True, Clause_Names, F138_1'Access));
 
    overriding procedure Use_Clause
     (Self    : in out Visitor;
      Element : not null Program.Elements.Use_Clauses.Use_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F137'Access;
+      Self.Result := F138'Access;
    end Use_Clause;
 
-   function F138_1 is new Generic_Vector
+   function F139_1 is new Generic_Vector
      (Parent        => Program.Elements.With_Clauses.With_Clause,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.With_Clauses.Clause_Names);
 
-   F138 : aliased constant Getter_Array :=
-     (1 => (True, Clause_Names, F138_1'Access));
+   F139 : aliased constant Getter_Array :=
+     (1 => (True, Clause_Names, F139_1'Access));
 
    overriding procedure With_Clause
     (Self    : in out Visitor;
      Element : not null Program.Elements.With_Clauses.With_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F138'Access;
+      Self.Result := F139'Access;
    end With_Clause;
 
-   function F139_1 is new Generic_Child
+   function F140_1 is new Generic_Child
      (Element      => Program.Elements.Component_Clauses.Component_Clause,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    => Program.Elements.Component_Clauses.Clause_Name);
 
-   function F139_2 is new Generic_Child
+   function F140_2 is new Generic_Child
      (Element      => Program.Elements.Component_Clauses.Component_Clause,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Component_Clauses.Position);
 
-   function F139_3 is new Generic_Child
+   function F140_3 is new Generic_Child
      (Element      => Program.Elements.Component_Clauses.Component_Clause,
       Child        =>
         Program.Elements.Simple_Expression_Ranges.Simple_Expression_Range,
@@ -5623,10 +5662,10 @@ package body Internal is
           .Simple_Expression_Range_Access,
       Get_Child    => Program.Elements.Component_Clauses.Clause_Range);
 
-   F139 : aliased constant Getter_Array :=
-     (1 => (False, Clause_Name, F139_1'Access),
-      2 => (False, Position, F139_2'Access),
-      3 => (False, Clause_Range, F139_3'Access));
+   F140 : aliased constant Getter_Array :=
+     (1 => (False, Clause_Name, F140_1'Access),
+      2 => (False, Position, F140_2'Access),
+      3 => (False, Clause_Range, F140_3'Access));
 
    overriding procedure Component_Clause
     (Self    : in out Visitor;
@@ -5634,41 +5673,41 @@ package body Internal is
          .Component_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F139'Access;
+      Self.Result := F140'Access;
    end Component_Clause;
 
-   function F140_1 is new Generic_Child
+   function F141_1 is new Generic_Child
      (Element      => Program.Elements.Derived_Types.Derived_Type,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Derived_Types.Parent);
 
-   F140 : aliased constant Getter_Array :=
-     (1 => (False, Parent, F140_1'Access));
+   F141 : aliased constant Getter_Array :=
+     (1 => (False, Parent, F141_1'Access));
 
    overriding procedure Derived_Type
     (Self    : in out Visitor;
      Element : not null Program.Elements.Derived_Types.Derived_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F140'Access;
+      Self.Result := F141'Access;
    end Derived_Type;
 
-   function F141_1 is new Generic_Child
+   function F142_1 is new Generic_Child
      (Element      =>
         Program.Elements.Derived_Record_Extensions.Derived_Record_Extension,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Derived_Record_Extensions.Parent);
 
-   function F141_2 is new Generic_Vector
+   function F142_2 is new Generic_Vector
      (Parent        =>
         Program.Elements.Derived_Record_Extensions.Derived_Record_Extension,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Derived_Record_Extensions.Progenitors);
 
-   function F141_3 is new Generic_Child
+   function F142_3 is new Generic_Child
      (Element      =>
         Program.Elements.Derived_Record_Extensions.Derived_Record_Extension,
       Child        => Program.Elements.Definitions.Definition,
@@ -5676,10 +5715,10 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Derived_Record_Extensions.Record_Definition);
 
-   F141 : aliased constant Getter_Array :=
-     (1 => (False, Parent, F141_1'Access),
-      2 => (True, Progenitors, F141_2'Access),
-      3 => (False, Record_Definition, F141_3'Access));
+   F142 : aliased constant Getter_Array :=
+     (1 => (False, Parent, F142_1'Access),
+      2 => (True, Progenitors, F142_2'Access),
+      3 => (False, Record_Definition, F142_3'Access));
 
    overriding procedure Derived_Record_Extension
     (Self    : in out Visitor;
@@ -5687,10 +5726,10 @@ package body Internal is
          .Derived_Record_Extension_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F141'Access;
+      Self.Result := F142'Access;
    end Derived_Record_Extension;
 
-   function F142_1 is new Generic_Vector
+   function F143_1 is new Generic_Vector
      (Parent        => Program.Elements.Enumeration_Types.Enumeration_Type,
       Vector        =>
         Program.Elements.Enumeration_Literal_Specifications
@@ -5700,8 +5739,8 @@ package body Internal is
           .Enumeration_Literal_Specification_Vector_Access,
       Get_Vector    => Program.Elements.Enumeration_Types.Literals);
 
-   F142 : aliased constant Getter_Array :=
-     (1 => (True, Literals, F142_1'Access));
+   F143 : aliased constant Getter_Array :=
+     (1 => (True, Literals, F143_1'Access));
 
    overriding procedure Enumeration_Type
     (Self    : in out Visitor;
@@ -5709,26 +5748,26 @@ package body Internal is
          .Enumeration_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F142'Access;
+      Self.Result := F143'Access;
    end Enumeration_Type;
 
-   function F143_1 is new Generic_Child
+   function F144_1 is new Generic_Child
      (Element      =>
         Program.Elements.Signed_Integer_Types.Signed_Integer_Type,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Signed_Integer_Types.Lower_Bound);
 
-   function F143_2 is new Generic_Child
+   function F144_2 is new Generic_Child
      (Element      =>
         Program.Elements.Signed_Integer_Types.Signed_Integer_Type,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Signed_Integer_Types.Upper_Bound);
 
-   F143 : aliased constant Getter_Array :=
-     (1 => (False, Lower_Bound, F143_1'Access),
-      2 => (False, Upper_Bound, F143_2'Access));
+   F144 : aliased constant Getter_Array :=
+     (1 => (False, Lower_Bound, F144_1'Access),
+      2 => (False, Upper_Bound, F144_2'Access));
 
    overriding procedure Signed_Integer_Type
     (Self    : in out Visitor;
@@ -5736,34 +5775,34 @@ package body Internal is
          .Signed_Integer_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F143'Access;
+      Self.Result := F144'Access;
    end Signed_Integer_Type;
 
-   function F144_1 is new Generic_Child
+   function F145_1 is new Generic_Child
      (Element      => Program.Elements.Modular_Types.Modular_Type,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Modular_Types.Modulus);
 
-   F144 : aliased constant Getter_Array :=
-     (1 => (False, Modulus, F144_1'Access));
+   F145 : aliased constant Getter_Array :=
+     (1 => (False, Modulus, F145_1'Access));
 
    overriding procedure Modular_Type
     (Self    : in out Visitor;
      Element : not null Program.Elements.Modular_Types.Modular_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F144'Access;
+      Self.Result := F145'Access;
    end Modular_Type;
 
-   function F146_1 is new Generic_Child
+   function F147_1 is new Generic_Child
      (Element      =>
         Program.Elements.Floating_Point_Types.Floating_Point_Type,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Floating_Point_Types.Digits_Expression);
 
-   function F146_2 is new Generic_Child
+   function F147_2 is new Generic_Child
      (Element      =>
         Program.Elements.Floating_Point_Types.Floating_Point_Type,
       Child        =>
@@ -5773,9 +5812,9 @@ package body Internal is
           .Real_Range_Specification_Access,
       Get_Child    => Program.Elements.Floating_Point_Types.Real_Range);
 
-   F146 : aliased constant Getter_Array :=
-     (1 => (False, Digits_Expression, F146_1'Access),
-      2 => (False, Real_Range, F146_2'Access));
+   F147 : aliased constant Getter_Array :=
+     (1 => (False, Digits_Expression, F147_1'Access),
+      2 => (False, Real_Range, F147_2'Access));
 
    overriding procedure Floating_Point_Type
     (Self    : in out Visitor;
@@ -5783,10 +5822,10 @@ package body Internal is
          .Floating_Point_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F146'Access;
+      Self.Result := F147'Access;
    end Floating_Point_Type;
 
-   function F147_1 is new Generic_Child
+   function F148_1 is new Generic_Child
      (Element      =>
         Program.Elements.Ordinary_Fixed_Point_Types.Ordinary_Fixed_Point_Type,
       Child        => Program.Elements.Expressions.Expression,
@@ -5794,7 +5833,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Ordinary_Fixed_Point_Types.Delta_Expression);
 
-   function F147_2 is new Generic_Child
+   function F148_2 is new Generic_Child
      (Element      =>
         Program.Elements.Ordinary_Fixed_Point_Types.Ordinary_Fixed_Point_Type,
       Child        =>
@@ -5804,9 +5843,9 @@ package body Internal is
           .Real_Range_Specification_Access,
       Get_Child    => Program.Elements.Ordinary_Fixed_Point_Types.Real_Range);
 
-   F147 : aliased constant Getter_Array :=
-     (1 => (False, Delta_Expression, F147_1'Access),
-      2 => (False, Real_Range, F147_2'Access));
+   F148 : aliased constant Getter_Array :=
+     (1 => (False, Delta_Expression, F148_1'Access),
+      2 => (False, Real_Range, F148_2'Access));
 
    overriding procedure Ordinary_Fixed_Point_Type
     (Self    : in out Visitor;
@@ -5814,10 +5853,10 @@ package body Internal is
          .Ordinary_Fixed_Point_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F147'Access;
+      Self.Result := F148'Access;
    end Ordinary_Fixed_Point_Type;
 
-   function F148_1 is new Generic_Child
+   function F149_1 is new Generic_Child
      (Element      =>
         Program.Elements.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Type,
       Child        => Program.Elements.Expressions.Expression,
@@ -5825,7 +5864,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Decimal_Fixed_Point_Types.Delta_Expression);
 
-   function F148_2 is new Generic_Child
+   function F149_2 is new Generic_Child
      (Element      =>
         Program.Elements.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Type,
       Child        => Program.Elements.Expressions.Expression,
@@ -5833,7 +5872,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Decimal_Fixed_Point_Types.Digits_Expression);
 
-   function F148_3 is new Generic_Child
+   function F149_3 is new Generic_Child
      (Element      =>
         Program.Elements.Decimal_Fixed_Point_Types.Decimal_Fixed_Point_Type,
       Child        =>
@@ -5843,10 +5882,10 @@ package body Internal is
           .Real_Range_Specification_Access,
       Get_Child    => Program.Elements.Decimal_Fixed_Point_Types.Real_Range);
 
-   F148 : aliased constant Getter_Array :=
-     (1 => (False, Delta_Expression, F148_1'Access),
-      2 => (False, Digits_Expression, F148_2'Access),
-      3 => (False, Real_Range, F148_3'Access));
+   F149 : aliased constant Getter_Array :=
+     (1 => (False, Delta_Expression, F149_1'Access),
+      2 => (False, Digits_Expression, F149_2'Access),
+      3 => (False, Real_Range, F149_3'Access));
 
    overriding procedure Decimal_Fixed_Point_Type
     (Self    : in out Visitor;
@@ -5854,10 +5893,10 @@ package body Internal is
          .Decimal_Fixed_Point_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F148'Access;
+      Self.Result := F149'Access;
    end Decimal_Fixed_Point_Type;
 
-   function F149_1 is new Generic_Vector
+   function F150_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Unconstrained_Array_Types.Unconstrained_Array_Type,
       Vector        => Program.Elements.Expressions.Expression_Vector,
@@ -5865,7 +5904,7 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Unconstrained_Array_Types.Index_Subtypes);
 
-   function F149_2 is new Generic_Child
+   function F150_2 is new Generic_Child
      (Element      =>
         Program.Elements.Unconstrained_Array_Types.Unconstrained_Array_Type,
       Child        =>
@@ -5875,9 +5914,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Unconstrained_Array_Types.Component_Definition);
 
-   F149 : aliased constant Getter_Array :=
-     (1 => (True, Index_Subtypes, F149_1'Access),
-      2 => (False, Component_Definition, F149_2'Access));
+   F150 : aliased constant Getter_Array :=
+     (1 => (True, Index_Subtypes, F150_1'Access),
+      2 => (False, Component_Definition, F150_2'Access));
 
    overriding procedure Unconstrained_Array_Type
     (Self    : in out Visitor;
@@ -5885,10 +5924,10 @@ package body Internal is
          .Unconstrained_Array_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F149'Access;
+      Self.Result := F150'Access;
    end Unconstrained_Array_Type;
 
-   function F150_1 is new Generic_Vector
+   function F151_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Constrained_Array_Types.Constrained_Array_Type,
       Vector        => Program.Elements.Discrete_Ranges.Discrete_Range_Vector,
@@ -5897,7 +5936,7 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Constrained_Array_Types.Index_Subtypes);
 
-   function F150_2 is new Generic_Child
+   function F151_2 is new Generic_Child
      (Element      =>
         Program.Elements.Constrained_Array_Types.Constrained_Array_Type,
       Child        =>
@@ -5907,9 +5946,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Constrained_Array_Types.Component_Definition);
 
-   F150 : aliased constant Getter_Array :=
-     (1 => (True, Index_Subtypes, F150_1'Access),
-      2 => (False, Component_Definition, F150_2'Access));
+   F151 : aliased constant Getter_Array :=
+     (1 => (True, Index_Subtypes, F151_1'Access),
+      2 => (False, Component_Definition, F151_2'Access));
 
    overriding procedure Constrained_Array_Type
     (Self    : in out Visitor;
@@ -5917,34 +5956,34 @@ package body Internal is
          .Constrained_Array_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F150'Access;
+      Self.Result := F151'Access;
    end Constrained_Array_Type;
 
-   function F151_1 is new Generic_Child
+   function F152_1 is new Generic_Child
      (Element      => Program.Elements.Record_Types.Record_Type,
       Child        => Program.Elements.Definitions.Definition,
       Child_Access => Program.Elements.Definitions.Definition_Access,
       Get_Child    => Program.Elements.Record_Types.Record_Definition);
 
-   F151 : aliased constant Getter_Array :=
-     (1 => (False, Record_Definition, F151_1'Access));
+   F152 : aliased constant Getter_Array :=
+     (1 => (False, Record_Definition, F152_1'Access));
 
    overriding procedure Record_Type
     (Self    : in out Visitor;
      Element : not null Program.Elements.Record_Types.Record_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F151'Access;
+      Self.Result := F152'Access;
    end Record_Type;
 
-   function F152_1 is new Generic_Vector
+   function F153_1 is new Generic_Vector
      (Parent        => Program.Elements.Interface_Types.Interface_Type,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Interface_Types.Progenitors);
 
-   F152 : aliased constant Getter_Array :=
-     (1 => (True, Progenitors, F152_1'Access));
+   F153 : aliased constant Getter_Array :=
+     (1 => (True, Progenitors, F153_1'Access));
 
    overriding procedure Interface_Type
     (Self    : in out Visitor;
@@ -5952,18 +5991,18 @@ package body Internal is
          .Interface_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F152'Access;
+      Self.Result := F153'Access;
    end Interface_Type;
 
-   function F153_1 is new Generic_Child
+   function F154_1 is new Generic_Child
      (Element      => Program.Elements.Object_Access_Types.Object_Access_Type,
       Child        => Program.Elements.Subtype_Indications.Subtype_Indication,
       Child_Access =>
         Program.Elements.Subtype_Indications.Subtype_Indication_Access,
       Get_Child    => Program.Elements.Object_Access_Types.Subtype_Indication);
 
-   F153 : aliased constant Getter_Array :=
-     (1 => (False, Subtype_Indication, F153_1'Access));
+   F154 : aliased constant Getter_Array :=
+     (1 => (False, Subtype_Indication, F154_1'Access));
 
    overriding procedure Object_Access_Type
     (Self    : in out Visitor;
@@ -5971,10 +6010,10 @@ package body Internal is
          .Object_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F153'Access;
+      Self.Result := F154'Access;
    end Object_Access_Type;
 
-   function F154_1 is new Generic_Vector
+   function F155_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Procedure_Access_Types.Procedure_Access_Type,
       Vector        =>
@@ -5985,8 +6024,8 @@ package body Internal is
           .Parameter_Specification_Vector_Access,
       Get_Vector    => Program.Elements.Procedure_Access_Types.Parameters);
 
-   F154 : aliased constant Getter_Array :=
-     (1 => (True, Parameters, F154_1'Access));
+   F155 : aliased constant Getter_Array :=
+     (1 => (True, Parameters, F155_1'Access));
 
    overriding procedure Procedure_Access_Type
     (Self    : in out Visitor;
@@ -5994,10 +6033,10 @@ package body Internal is
          .Procedure_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F154'Access;
+      Self.Result := F155'Access;
    end Procedure_Access_Type;
 
-   function F155_1 is new Generic_Vector
+   function F156_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Function_Access_Types.Function_Access_Type,
       Vector        =>
@@ -6008,16 +6047,16 @@ package body Internal is
           .Parameter_Specification_Vector_Access,
       Get_Vector    => Program.Elements.Function_Access_Types.Parameters);
 
-   function F155_2 is new Generic_Child
+   function F156_2 is new Generic_Child
      (Element      =>
         Program.Elements.Function_Access_Types.Function_Access_Type,
       Child        => Program.Elements.Element,
       Child_Access => Program.Elements.Element_Access,
       Get_Child    => Program.Elements.Function_Access_Types.Result_Subtype);
 
-   F155 : aliased constant Getter_Array :=
-     (1 => (True, Parameters, F155_1'Access),
-      2 => (False, Result_Subtype, F155_2'Access));
+   F156 : aliased constant Getter_Array :=
+     (1 => (True, Parameters, F156_1'Access),
+      2 => (False, Result_Subtype, F156_2'Access));
 
    overriding procedure Function_Access_Type
     (Self    : in out Visitor;
@@ -6025,10 +6064,10 @@ package body Internal is
          .Function_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F155'Access;
+      Self.Result := F156'Access;
    end Function_Access_Type;
 
-   function F157_1 is new Generic_Child
+   function F158_1 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Derived_Type_Definitions
           .Formal_Derived_Type_Definition,
@@ -6037,7 +6076,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Derived_Type_Definitions.Subtype_Mark);
 
-   function F157_2 is new Generic_Vector
+   function F158_2 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Derived_Type_Definitions
           .Formal_Derived_Type_Definition,
@@ -6046,9 +6085,9 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Formal_Derived_Type_Definitions.Progenitors);
 
-   F157 : aliased constant Getter_Array :=
-     (1 => (False, Subtype_Mark, F157_1'Access),
-      2 => (True, Progenitors, F157_2'Access));
+   F158 : aliased constant Getter_Array :=
+     (1 => (False, Subtype_Mark, F158_1'Access),
+      2 => (True, Progenitors, F158_2'Access));
 
    overriding procedure Formal_Derived_Type_Definition
     (Self    : in out Visitor;
@@ -6056,10 +6095,10 @@ package body Internal is
          .Formal_Derived_Type_Definition_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F157'Access;
+      Self.Result := F158'Access;
    end Formal_Derived_Type_Definition;
 
-   function F164_1 is new Generic_Vector
+   function F165_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Unconstrained_Array_Types
           .Formal_Unconstrained_Array_Type,
@@ -6068,7 +6107,7 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Formal_Unconstrained_Array_Types.Index_Subtypes);
 
-   function F164_2 is new Generic_Child
+   function F165_2 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Unconstrained_Array_Types
           .Formal_Unconstrained_Array_Type,
@@ -6080,9 +6119,9 @@ package body Internal is
         Program.Elements.Formal_Unconstrained_Array_Types
           .Component_Definition);
 
-   F164 : aliased constant Getter_Array :=
-     (1 => (True, Index_Subtypes, F164_1'Access),
-      2 => (False, Component_Definition, F164_2'Access));
+   F165 : aliased constant Getter_Array :=
+     (1 => (True, Index_Subtypes, F165_1'Access),
+      2 => (False, Component_Definition, F165_2'Access));
 
    overriding procedure Formal_Unconstrained_Array_Type
     (Self    : in out Visitor;
@@ -6090,10 +6129,10 @@ package body Internal is
          .Formal_Unconstrained_Array_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F164'Access;
+      Self.Result := F165'Access;
    end Formal_Unconstrained_Array_Type;
 
-   function F165_1 is new Generic_Vector
+   function F166_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Constrained_Array_Types
           .Formal_Constrained_Array_Type,
@@ -6103,7 +6142,7 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Formal_Constrained_Array_Types.Index_Subtypes);
 
-   function F165_2 is new Generic_Child
+   function F166_2 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Constrained_Array_Types
           .Formal_Constrained_Array_Type,
@@ -6114,9 +6153,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Constrained_Array_Types.Component_Definition);
 
-   F165 : aliased constant Getter_Array :=
-     (1 => (True, Index_Subtypes, F165_1'Access),
-      2 => (False, Component_Definition, F165_2'Access));
+   F166 : aliased constant Getter_Array :=
+     (1 => (True, Index_Subtypes, F166_1'Access),
+      2 => (False, Component_Definition, F166_2'Access));
 
    overriding procedure Formal_Constrained_Array_Type
     (Self    : in out Visitor;
@@ -6124,10 +6163,10 @@ package body Internal is
          .Formal_Constrained_Array_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F165'Access;
+      Self.Result := F166'Access;
    end Formal_Constrained_Array_Type;
 
-   function F166_1 is new Generic_Child
+   function F167_1 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Object_Access_Types.Formal_Object_Access_Type,
       Child        => Program.Elements.Subtype_Indications.Subtype_Indication,
@@ -6136,8 +6175,8 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Object_Access_Types.Subtype_Indication);
 
-   F166 : aliased constant Getter_Array :=
-     (1 => (False, Subtype_Indication, F166_1'Access));
+   F167 : aliased constant Getter_Array :=
+     (1 => (False, Subtype_Indication, F167_1'Access));
 
    overriding procedure Formal_Object_Access_Type
     (Self    : in out Visitor;
@@ -6145,10 +6184,10 @@ package body Internal is
          .Formal_Object_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F166'Access;
+      Self.Result := F167'Access;
    end Formal_Object_Access_Type;
 
-   function F167_1 is new Generic_Vector
+   function F168_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Procedure_Access_Types
           .Formal_Procedure_Access_Type,
@@ -6161,8 +6200,8 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Formal_Procedure_Access_Types.Parameters);
 
-   F167 : aliased constant Getter_Array :=
-     (1 => (True, Parameters, F167_1'Access));
+   F168 : aliased constant Getter_Array :=
+     (1 => (True, Parameters, F168_1'Access));
 
    overriding procedure Formal_Procedure_Access_Type
     (Self    : in out Visitor;
@@ -6170,10 +6209,10 @@ package body Internal is
          .Formal_Procedure_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F167'Access;
+      Self.Result := F168'Access;
    end Formal_Procedure_Access_Type;
 
-   function F168_1 is new Generic_Vector
+   function F169_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Function_Access_Types
           .Formal_Function_Access_Type,
@@ -6186,7 +6225,7 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Formal_Function_Access_Types.Parameters);
 
-   function F168_2 is new Generic_Child
+   function F169_2 is new Generic_Child
      (Element      =>
         Program.Elements.Formal_Function_Access_Types
           .Formal_Function_Access_Type,
@@ -6195,9 +6234,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Formal_Function_Access_Types.Result_Subtype);
 
-   F168 : aliased constant Getter_Array :=
-     (1 => (True, Parameters, F168_1'Access),
-      2 => (False, Result_Subtype, F168_2'Access));
+   F169 : aliased constant Getter_Array :=
+     (1 => (True, Parameters, F169_1'Access),
+      2 => (False, Result_Subtype, F169_2'Access));
 
    overriding procedure Formal_Function_Access_Type
     (Self    : in out Visitor;
@@ -6205,18 +6244,18 @@ package body Internal is
          .Formal_Function_Access_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F168'Access;
+      Self.Result := F169'Access;
    end Formal_Function_Access_Type;
 
-   function F169_1 is new Generic_Vector
+   function F170_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Formal_Interface_Types.Formal_Interface_Type,
       Vector        => Program.Elements.Expressions.Expression_Vector,
       Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Get_Vector    => Program.Elements.Formal_Interface_Types.Progenitors);
 
-   F169 : aliased constant Getter_Array :=
-     (1 => (True, Progenitors, F169_1'Access));
+   F170 : aliased constant Getter_Array :=
+     (1 => (True, Progenitors, F170_1'Access));
 
    overriding procedure Formal_Interface_Type
     (Self    : in out Visitor;
@@ -6224,10 +6263,10 @@ package body Internal is
          .Formal_Interface_Type_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F169'Access;
+      Self.Result := F170'Access;
    end Formal_Interface_Type;
 
-   function F170_1 is new Generic_Child
+   function F171_1 is new Generic_Child
      (Element      =>
         Program.Elements.Range_Attribute_References.Range_Attribute_Reference,
       Child        =>
@@ -6237,8 +6276,8 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Range_Attribute_References.Range_Attribute);
 
-   F170 : aliased constant Getter_Array :=
-     (1 => (False, Range_Attribute, F170_1'Access));
+   F171 : aliased constant Getter_Array :=
+     (1 => (False, Range_Attribute, F171_1'Access));
 
    overriding procedure Range_Attribute_Reference
     (Self    : in out Visitor;
@@ -6246,26 +6285,26 @@ package body Internal is
          .Range_Attribute_Reference_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F170'Access;
+      Self.Result := F171'Access;
    end Range_Attribute_Reference;
 
-   function F171_1 is new Generic_Child
+   function F172_1 is new Generic_Child
      (Element      =>
         Program.Elements.Simple_Expression_Ranges.Simple_Expression_Range,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Simple_Expression_Ranges.Lower_Bound);
 
-   function F171_2 is new Generic_Child
+   function F172_2 is new Generic_Child
      (Element      =>
         Program.Elements.Simple_Expression_Ranges.Simple_Expression_Range,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Simple_Expression_Ranges.Upper_Bound);
 
-   F171 : aliased constant Getter_Array :=
-     (1 => (False, Lower_Bound, F171_1'Access),
-      2 => (False, Upper_Bound, F171_2'Access));
+   F172 : aliased constant Getter_Array :=
+     (1 => (False, Lower_Bound, F172_1'Access),
+      2 => (False, Upper_Bound, F172_2'Access));
 
    overriding procedure Simple_Expression_Range
     (Self    : in out Visitor;
@@ -6273,26 +6312,26 @@ package body Internal is
          .Simple_Expression_Range_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F171'Access;
+      Self.Result := F172'Access;
    end Simple_Expression_Range;
 
-   function F172_1 is new Generic_Child
+   function F173_1 is new Generic_Child
      (Element      => Program.Elements.Digits_Constraints.Digits_Constraint,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Digits_Constraints.Digits_Expression);
 
-   function F172_2 is new Generic_Child
+   function F173_2 is new Generic_Child
      (Element      => Program.Elements.Digits_Constraints.Digits_Constraint,
       Child        => Program.Elements.Constraints.Constraint,
       Child_Access => Program.Elements.Constraints.Constraint_Access,
       Get_Child    =>
         Program.Elements.Digits_Constraints.Real_Range_Constraint);
 
-   F172 : aliased constant Getter_Array :=
-     (1 => (False, Digits_Expression, F172_1'Access),
+   F173 : aliased constant Getter_Array :=
+     (1 => (False, Digits_Expression, F173_1'Access),
       2 =>
-        (False, Real_Range_Constraint, F172_2'Access));
+        (False, Real_Range_Constraint, F173_2'Access));
 
    overriding procedure Digits_Constraint
     (Self    : in out Visitor;
@@ -6300,26 +6339,26 @@ package body Internal is
          .Digits_Constraint_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F172'Access;
+      Self.Result := F173'Access;
    end Digits_Constraint;
 
-   function F173_1 is new Generic_Child
+   function F174_1 is new Generic_Child
      (Element      => Program.Elements.Delta_Constraints.Delta_Constraint,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Delta_Constraints.Delta_Expression);
 
-   function F173_2 is new Generic_Child
+   function F174_2 is new Generic_Child
      (Element      => Program.Elements.Delta_Constraints.Delta_Constraint,
       Child        => Program.Elements.Constraints.Constraint,
       Child_Access => Program.Elements.Constraints.Constraint_Access,
       Get_Child    =>
         Program.Elements.Delta_Constraints.Real_Range_Constraint);
 
-   F173 : aliased constant Getter_Array :=
-     (1 => (False, Delta_Expression, F173_1'Access),
+   F174 : aliased constant Getter_Array :=
+     (1 => (False, Delta_Expression, F174_1'Access),
       2 =>
-        (False, Real_Range_Constraint, F173_2'Access));
+        (False, Real_Range_Constraint, F174_2'Access));
 
    overriding procedure Delta_Constraint
     (Self    : in out Visitor;
@@ -6327,18 +6366,18 @@ package body Internal is
          .Delta_Constraint_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F173'Access;
+      Self.Result := F174'Access;
    end Delta_Constraint;
 
-   function F174_1 is new Generic_Vector
+   function F175_1 is new Generic_Vector
      (Parent        => Program.Elements.Index_Constraints.Index_Constraint,
       Vector        => Program.Elements.Discrete_Ranges.Discrete_Range_Vector,
       Vector_Access =>
         Program.Elements.Discrete_Ranges.Discrete_Range_Vector_Access,
       Get_Vector    => Program.Elements.Index_Constraints.Ranges);
 
-   F174 : aliased constant Getter_Array :=
-     (1 => (True, Ranges, F174_1'Access));
+   F175 : aliased constant Getter_Array :=
+     (1 => (True, Ranges, F175_1'Access));
 
    overriding procedure Index_Constraint
     (Self    : in out Visitor;
@@ -6346,10 +6385,10 @@ package body Internal is
          .Index_Constraint_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F174'Access;
+      Self.Result := F175'Access;
    end Index_Constraint;
 
-   function F175_1 is new Generic_Vector
+   function F176_1 is new Generic_Vector
      (Parent        =>
         Program.Elements.Discriminant_Constraints.Discriminant_Constraint,
       Vector        =>
@@ -6361,8 +6400,8 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Discriminant_Constraints.Discriminants);
 
-   F175 : aliased constant Getter_Array :=
-     (1 => (True, Discriminants, F175_1'Access));
+   F176 : aliased constant Getter_Array :=
+     (1 => (True, Discriminants, F176_1'Access));
 
    overriding procedure Discriminant_Constraint
     (Self    : in out Visitor;
@@ -6370,10 +6409,10 @@ package body Internal is
          .Discriminant_Constraint_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F175'Access;
+      Self.Result := F176'Access;
    end Discriminant_Constraint;
 
-   function F176_1 is new Generic_Child
+   function F177_1 is new Generic_Child
      (Element      =>
         Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause,
@@ -6381,7 +6420,7 @@ package body Internal is
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Attribute_Definition_Clauses.Name);
 
-   function F176_2 is new Generic_Child
+   function F177_2 is new Generic_Child
      (Element      =>
         Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause,
@@ -6390,9 +6429,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Attribute_Definition_Clauses.Expression);
 
-   F176 : aliased constant Getter_Array :=
-     (1 => (False, Name, F176_1'Access),
-      2 => (False, Expression, F176_2'Access));
+   F177 : aliased constant Getter_Array :=
+     (1 => (False, Name, F177_1'Access),
+      2 => (False, Expression, F177_2'Access));
 
    overriding procedure Attribute_Definition_Clause
     (Self    : in out Visitor;
@@ -6400,10 +6439,10 @@ package body Internal is
          .Attribute_Definition_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F176'Access;
+      Self.Result := F177'Access;
    end Attribute_Definition_Clause;
 
-   function F177_1 is new Generic_Child
+   function F178_1 is new Generic_Child
      (Element      =>
         Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause,
@@ -6412,7 +6451,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Enumeration_Representation_Clauses.Name);
 
-   function F177_2 is new Generic_Child
+   function F178_2 is new Generic_Child
      (Element      =>
         Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause,
@@ -6421,9 +6460,9 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Enumeration_Representation_Clauses.Expression);
 
-   F177 : aliased constant Getter_Array :=
-     (1 => (False, Name, F177_1'Access),
-      2 => (False, Expression, F177_2'Access));
+   F178 : aliased constant Getter_Array :=
+     (1 => (False, Name, F178_1'Access),
+      2 => (False, Expression, F178_2'Access));
 
    overriding procedure Enumeration_Representation_Clause
     (Self    : in out Visitor;
@@ -6431,10 +6470,10 @@ package body Internal is
          .Enumeration_Representation_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F177'Access;
+      Self.Result := F178'Access;
    end Enumeration_Representation_Clause;
 
-   function F178_1 is new Generic_Child
+   function F179_1 is new Generic_Child
      (Element      =>
         Program.Elements.Record_Representation_Clauses
           .Record_Representation_Clause,
@@ -6442,7 +6481,7 @@ package body Internal is
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.Record_Representation_Clauses.Name);
 
-   function F178_2 is new Generic_Child
+   function F179_2 is new Generic_Child
      (Element      =>
         Program.Elements.Record_Representation_Clauses
           .Record_Representation_Clause,
@@ -6451,7 +6490,7 @@ package body Internal is
       Get_Child    =>
         Program.Elements.Record_Representation_Clauses.Mod_Clause_Expression);
 
-   function F178_3 is new Generic_Vector
+   function F179_3 is new Generic_Vector
      (Parent        =>
         Program.Elements.Record_Representation_Clauses
           .Record_Representation_Clause,
@@ -6462,11 +6501,11 @@ package body Internal is
       Get_Vector    =>
         Program.Elements.Record_Representation_Clauses.Component_Clauses);
 
-   F178 : aliased constant Getter_Array :=
-     (1 => (False, Name, F178_1'Access),
+   F179 : aliased constant Getter_Array :=
+     (1 => (False, Name, F179_1'Access),
       2 =>
-        (False, Mod_Clause_Expression, F178_2'Access),
-      3 => (True, Component_Clauses, F178_3'Access));
+        (False, Mod_Clause_Expression, F179_2'Access),
+      3 => (True, Component_Clauses, F179_3'Access));
 
    overriding procedure Record_Representation_Clause
     (Self    : in out Visitor;
@@ -6474,34 +6513,34 @@ package body Internal is
          .Record_Representation_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F178'Access;
+      Self.Result := F179'Access;
    end Record_Representation_Clause;
 
-   function F179_1 is new Generic_Child
+   function F180_1 is new Generic_Child
      (Element      => Program.Elements.At_Clauses.At_Clause,
       Child        => Program.Elements.Identifiers.Identifier,
       Child_Access => Program.Elements.Identifiers.Identifier_Access,
       Get_Child    => Program.Elements.At_Clauses.Name);
 
-   function F179_2 is new Generic_Child
+   function F180_2 is new Generic_Child
      (Element      => Program.Elements.At_Clauses.At_Clause,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    => Program.Elements.At_Clauses.Expression);
 
-   F179 : aliased constant Getter_Array :=
-     (1 => (False, Name, F179_1'Access),
-      2 => (False, Expression, F179_2'Access));
+   F180 : aliased constant Getter_Array :=
+     (1 => (False, Name, F180_1'Access),
+      2 => (False, Expression, F180_2'Access));
 
    overriding procedure At_Clause
     (Self    : in out Visitor;
      Element : not null Program.Elements.At_Clauses.At_Clause_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F179'Access;
+      Self.Result := F180'Access;
    end At_Clause;
 
-   function F180_1 is new Generic_Child
+   function F181_1 is new Generic_Child
      (Element      => Program.Elements.Exception_Handlers.Exception_Handler,
       Child        =>
         Program.Elements.Choice_Parameter_Specifications
@@ -6511,22 +6550,22 @@ package body Internal is
           .Choice_Parameter_Specification_Access,
       Get_Child    => Program.Elements.Exception_Handlers.Choice_Parameter);
 
-   function F180_2 is new Generic_Vector
+   function F181_2 is new Generic_Vector
      (Parent        => Program.Elements.Exception_Handlers.Exception_Handler,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Exception_Handlers.Choices);
 
-   function F180_3 is new Generic_Vector
+   function F181_3 is new Generic_Vector
      (Parent        => Program.Elements.Exception_Handlers.Exception_Handler,
       Vector        => Program.Element_Vectors.Element_Vector,
       Vector_Access => Program.Element_Vectors.Element_Vector_Access,
       Get_Vector    => Program.Elements.Exception_Handlers.Statements);
 
-   F180 : aliased constant Getter_Array :=
-     (1 => (False, Choice_Parameter, F180_1'Access),
-      2 => (True, Choices, F180_2'Access),
-      3 => (True, Statements, F180_3'Access));
+   F181 : aliased constant Getter_Array :=
+     (1 => (False, Choice_Parameter, F181_1'Access),
+      2 => (True, Choices, F181_2'Access),
+      3 => (True, Statements, F181_3'Access));
 
    overriding procedure Exception_Handler
     (Self    : in out Visitor;
@@ -6534,7 +6573,7 @@ package body Internal is
          .Exception_Handler_Access) is
       pragma Unreferenced (Element);
    begin
-      Self.Result := F180'Access;
+      Self.Result := F181'Access;
    end Exception_Handler;
 
    function Get

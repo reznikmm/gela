@@ -1249,6 +1249,16 @@ package body Program.Nodes is
    end Is_Indexed_Component;
 
    -----------------------
+   -- Is_Infix_Operator --
+   -----------------------
+
+   overriding function Is_Infix_Operator (Self : Node) return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Infix_Operator;
+
+   -----------------------
    -- Is_Interface_Type --
    -----------------------
 

@@ -99,6 +99,7 @@ limited with Program.Elements.Identifiers;
 limited with Program.Elements.Operator_Symbols;
 limited with Program.Elements.Character_Literals;
 limited with Program.Elements.Explicit_Dereferences;
+limited with Program.Elements.Infix_Operators;
 limited with Program.Elements.Function_Calls;
 limited with Program.Elements.Indexed_Components;
 limited with Program.Elements.Slices;
@@ -747,6 +748,10 @@ package Program.Elements is
       return Boolean is abstract
      with Post'Class =>
        (if Is_Explicit_Dereference'Result then Self.Is_Expression);
+
+   not overriding function Is_Infix_Operator (Self : Element) return Boolean
+     is abstract
+     with Post'Class => (if Is_Infix_Operator'Result then Self.Is_Expression);
 
    not overriding function Is_Function_Call (Self : Element) return Boolean
      is abstract
@@ -1808,6 +1813,11 @@ package Program.Elements is
     (Self : access Element'Class)
       return Program.Elements.Explicit_Dereferences.Explicit_Dereference_Access
      with Pre => Self.Is_Explicit_Dereference;
+
+   function To_Infix_Operator
+    (Self : access Element'Class)
+      return Program.Elements.Infix_Operators.Infix_Operator_Access
+     with Pre => Self.Is_Infix_Operator;
 
    function To_Function_Call
     (Self : access Element'Class)

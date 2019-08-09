@@ -97,6 +97,7 @@ with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Character_Literals;
 with Program.Elements.Explicit_Dereferences;
+with Program.Elements.Infix_Operators;
 with Program.Elements.Function_Calls;
 with Program.Elements.Indexed_Components;
 with Program.Elements.Slices;
@@ -1674,6 +1675,14 @@ package Program.Element_Factories is
      All_Token : not null Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Explicit_Dereferences
           .Explicit_Dereference_Access;
+
+   not overriding function Create_Infix_Operator
+    (Self : Element_Factory;
+     Left     : Program.Elements.Expressions.Expression_Access;
+     Operator : not null Program.Elements.Operator_Symbols
+         .Operator_Symbol_Access;
+     Right    : not null Program.Elements.Expressions.Expression_Access)
+      return not null Program.Elements.Infix_Operators.Infix_Operator_Access;
 
    not overriding function Create_Function_Call
     (Self : Element_Factory;

@@ -82,6 +82,7 @@ package Program.Element_Iterators is
       Names,
       Object_Subtype,
       Operand,
+      Operator,
       Parameter,
       Parameters,
       Parameter_Subtype,

@@ -90,6 +90,7 @@ with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Character_Literals;
 with Program.Elements.Explicit_Dereferences;
+with Program.Elements.Infix_Operators;
 with Program.Elements.Function_Calls;
 with Program.Elements.Indexed_Components;
 with Program.Elements.Slices;
@@ -619,6 +620,11 @@ package Program.Element_Visitors is
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Explicit_Dereferences
          .Explicit_Dereference_Access) is null;
+
+   procedure Infix_Operator
+    (Self    : in out Element_Visitor;
+     Element : not null Program.Elements.Infix_Operators.Infix_Operator_Access)
+     is null;
 
    procedure Function_Call
     (Self    : in out Element_Visitor;

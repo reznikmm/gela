@@ -265,6 +265,8 @@ private
 
    overriding function Is_Function_Call (Self : Node) return Boolean;
 
+   overriding function Is_Infix_Operator (Self : Node) return Boolean;
+
    overriding function Is_Indexed_Component (Self : Node) return Boolean;
 
    overriding function Is_Slice (Self : Node) return Boolean;
