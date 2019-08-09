@@ -1053,6 +1053,12 @@
  - Dot_Token  : Token
  - All_Token  : Token
 
+### Infix_Operator
+> _[Expression]_
+ - Left                      : _[Expression]_?
+ - Operator                  : [Operator_Symbol]
+ - Right                     : _[Expression]_
+
 ### Function_Call
 > _[Expression]_
  - Prefix                    : _[Expression]_
@@ -1991,6 +1997,7 @@
 [Incomplete_Type_Definition]: ast.md#Incomplete_Type_Definition
 [Index_Constraint]: ast.md#Index_Constraint
 [Indexed_Component]: ast.md#Indexed_Component
+[Infix_Operator]: ast.md#Infix_Operator
 [Interface_Type]: ast.md#Interface_Type
 [Known_Discriminant_Part]: ast.md#Known_Discriminant_Part
 [Loop_Parameter_Specification]: ast.md#Loop_Parameter_Specification
