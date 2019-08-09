@@ -116,11 +116,11 @@ private
     (Self : Base_Task_Type_Declaration)
       return not null Program.Elements.Task_Definitions.Task_Definition_Access;
 
-   overriding function Is_Task_Type_Declaration
+   overriding function Is_Task_Type_Declaration_Element
     (Self : Base_Task_Type_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Task_Type_Declaration)
       return Boolean;
 

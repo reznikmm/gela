@@ -67,11 +67,11 @@ private
     (Self : Base_Parameter_Association)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Parameter_Association
+   overriding function Is_Parameter_Association_Element
     (Self : Base_Parameter_Association)
       return Boolean;
 
-   overriding function Is_Association
+   overriding function Is_Association_Element
     (Self : Base_Parameter_Association)
       return Boolean;
 

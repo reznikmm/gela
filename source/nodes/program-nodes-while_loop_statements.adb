@@ -176,21 +176,21 @@ package body Program.Nodes.While_Loop_Statements is
       null;
    end Initialize;
 
-   overriding function Is_While_Loop_Statement
+   overriding function Is_While_Loop_Statement_Element
     (Self : Base_While_Loop_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_While_Loop_Statement;
+   end Is_While_Loop_Statement_Element;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_While_Loop_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement;
+   end Is_Statement_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_While_Loop_Statement;

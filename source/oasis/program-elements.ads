@@ -215,1072 +215,1862 @@ package Program.Elements is
    function Assigned (Self : access Element'Class) return Boolean
      is (Self /= null);
 
-   not overriding function Is_Pragma (Self : Element) return Boolean
+   not overriding function Is_Pragma_Element (Self : Element) return Boolean
      is abstract;
 
-   not overriding function Is_Defining_Name (Self : Element) return Boolean
-     is abstract;
+   function Is_Pragma (Self : Element'Class) return Boolean
+     is (Self.Is_Pragma_Element);
 
-   not overriding function Is_Defining_Identifier
+   not overriding function Is_Defining_Name_Element
+    (Self : Element)
+      return Boolean is abstract;
+
+   function Is_Defining_Name (Self : Element'Class) return Boolean
+     is (Self.Is_Defining_Name_Element);
+
+   not overriding function Is_Defining_Identifier_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Defining_Identifier'Result then Self.Is_Defining_Name);
+       (if Is_Defining_Identifier_Element'Result then Self.Is_Defining_Name);
 
-   not overriding function Is_Defining_Character_Literal
+   function Is_Defining_Identifier (Self : Element'Class) return Boolean
+     is (Self.Is_Defining_Identifier_Element);
+
+   not overriding function Is_Defining_Character_Literal_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Defining_Character_Literal'Result then Self.Is_Defining_Name);
+       (if Is_Defining_Character_Literal_Element'Result
+          then Self.Is_Defining_Name);
 
-   not overriding function Is_Defining_Operator_Symbol
+   function Is_Defining_Character_Literal (Self : Element'Class) return Boolean
+     is (Self.Is_Defining_Character_Literal_Element);
+
+   not overriding function Is_Defining_Operator_Symbol_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Defining_Operator_Symbol'Result then Self.Is_Defining_Name);
+       (if Is_Defining_Operator_Symbol_Element'Result
+          then Self.Is_Defining_Name);
 
-   not overriding function Is_Defining_Expanded_Name
+   function Is_Defining_Operator_Symbol (Self : Element'Class) return Boolean
+     is (Self.Is_Defining_Operator_Symbol_Element);
+
+   not overriding function Is_Defining_Expanded_Name_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Defining_Expanded_Name'Result then Self.Is_Defining_Name);
+       (if Is_Defining_Expanded_Name_Element'Result
+          then Self.Is_Defining_Name);
 
-   not overriding function Is_Declaration (Self : Element) return Boolean
-     is abstract;
+   function Is_Defining_Expanded_Name (Self : Element'Class) return Boolean
+     is (Self.Is_Defining_Expanded_Name_Element);
 
-   not overriding function Is_Type_Declaration (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Type_Declaration'Result then Self.Is_Declaration);
+   not overriding function Is_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract;
 
-   not overriding function Is_Task_Type_Declaration
+   function Is_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Declaration_Element);
+
+   not overriding function Is_Type_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Task_Type_Declaration'Result then Self.Is_Declaration);
+       (if Is_Type_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Protected_Type_Declaration
+   function Is_Type_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Type_Declaration_Element);
+
+   not overriding function Is_Task_Type_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Protected_Type_Declaration'Result then Self.Is_Declaration);
+       (if Is_Task_Type_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Subtype_Declaration
+   function Is_Task_Type_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Task_Type_Declaration_Element);
+
+   not overriding function Is_Protected_Type_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Subtype_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Object_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Object_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Single_Task_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Single_Task_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Single_Protected_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Single_Protected_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Number_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Number_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Enumeration_Literal_Specification
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Enumeration_Literal_Specification'Result
+       (if Is_Protected_Type_Declaration_Element'Result
           then Self.Is_Declaration);
 
-   not overriding function Is_Discriminant_Specification
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Discriminant_Specification'Result then Self.Is_Declaration);
+   function Is_Protected_Type_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Protected_Type_Declaration_Element);
 
-   not overriding function Is_Component_Declaration
+   not overriding function Is_Subtype_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Component_Declaration'Result then Self.Is_Declaration);
+       (if Is_Subtype_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Loop_Parameter_Specification
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Loop_Parameter_Specification'Result then Self.Is_Declaration);
+   function Is_Subtype_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Subtype_Declaration_Element);
 
-   not overriding function Is_Generalized_Iterator_Specification
+   not overriding function Is_Object_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generalized_Iterator_Specification'Result
+       (if Is_Object_Declaration_Element'Result then Self.Is_Declaration);
+
+   function Is_Object_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Object_Declaration_Element);
+
+   not overriding function Is_Single_Task_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Single_Task_Declaration_Element'Result then Self.Is_Declaration);
+
+   function Is_Single_Task_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Single_Task_Declaration_Element);
+
+   not overriding function Is_Single_Protected_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Single_Protected_Declaration_Element'Result
           then Self.Is_Declaration);
 
-   not overriding function Is_Element_Iterator_Specification
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Element_Iterator_Specification'Result then Self.Is_Declaration);
+   function Is_Single_Protected_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Single_Protected_Declaration_Element);
 
-   not overriding function Is_Procedure_Declaration
+   not overriding function Is_Number_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Procedure_Declaration'Result then Self.Is_Declaration);
+       (if Is_Number_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Function_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Function_Declaration'Result then Self.Is_Declaration);
+   function Is_Number_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Number_Declaration_Element);
 
-   not overriding function Is_Parameter_Specification
+   not overriding function Is_Enumeration_Literal_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Parameter_Specification'Result then Self.Is_Declaration);
-
-   not overriding function Is_Procedure_Body_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Procedure_Body_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Function_Body_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Function_Body_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Return_Object_Specification
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Return_Object_Specification'Result then Self.Is_Declaration);
-
-   not overriding function Is_Package_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Package_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Package_Body_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Package_Body_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Object_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Object_Renaming_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Exception_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Exception_Renaming_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Procedure_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Procedure_Renaming_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Function_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Function_Renaming_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Package_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Package_Renaming_Declaration'Result then Self.Is_Declaration);
-
-   not overriding function Is_Generic_Package_Renaming_Declaration
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Generic_Package_Renaming_Declaration'Result
+       (if Is_Enumeration_Literal_Specification_Element'Result
           then Self.Is_Declaration);
 
-   not overriding function Is_Generic_Procedure_Renaming_Declaration
+   function Is_Enumeration_Literal_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Enumeration_Literal_Specification_Element);
+
+   not overriding function Is_Discriminant_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generic_Procedure_Renaming_Declaration'Result
+       (if Is_Discriminant_Specification_Element'Result
           then Self.Is_Declaration);
 
-   not overriding function Is_Generic_Function_Renaming_Declaration
+   function Is_Discriminant_Specification (Self : Element'Class) return Boolean
+     is (Self.Is_Discriminant_Specification_Element);
+
+   not overriding function Is_Component_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generic_Function_Renaming_Declaration'Result
+       (if Is_Component_Declaration_Element'Result then Self.Is_Declaration);
+
+   function Is_Component_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Component_Declaration_Element);
+
+   not overriding function Is_Loop_Parameter_Specification_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Loop_Parameter_Specification_Element'Result
           then Self.Is_Declaration);
 
-   not overriding function Is_Task_Body_Declaration
+   function Is_Loop_Parameter_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Loop_Parameter_Specification_Element);
+
+   not overriding function Is_Generalized_Iterator_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Task_Body_Declaration'Result then Self.Is_Declaration);
+       (if Is_Generalized_Iterator_Specification_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Protected_Body_Declaration
+   function Is_Generalized_Iterator_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Generalized_Iterator_Specification_Element);
+
+   not overriding function Is_Element_Iterator_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Protected_Body_Declaration'Result then Self.Is_Declaration);
+       (if Is_Element_Iterator_Specification_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Entry_Declaration (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Entry_Declaration'Result then Self.Is_Declaration);
+   function Is_Element_Iterator_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Element_Iterator_Specification_Element);
 
-   not overriding function Is_Entry_Body_Declaration
+   not overriding function Is_Procedure_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Entry_Body_Declaration'Result then Self.Is_Declaration);
+       (if Is_Procedure_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Entry_Index_Specification
+   function Is_Procedure_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Procedure_Declaration_Element);
+
+   not overriding function Is_Function_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Entry_Index_Specification'Result then Self.Is_Declaration);
+       (if Is_Function_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Procedure_Body_Stub
+   function Is_Function_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Declaration_Element);
+
+   not overriding function Is_Parameter_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Procedure_Body_Stub'Result then Self.Is_Declaration);
+       (if Is_Parameter_Specification_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Function_Body_Stub
+   function Is_Parameter_Specification (Self : Element'Class) return Boolean
+     is (Self.Is_Parameter_Specification_Element);
+
+   not overriding function Is_Procedure_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Function_Body_Stub'Result then Self.Is_Declaration);
+       (if Is_Procedure_Body_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Package_Body_Stub (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Package_Body_Stub'Result then Self.Is_Declaration);
+   function Is_Procedure_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Procedure_Body_Declaration_Element);
 
-   not overriding function Is_Task_Body_Stub (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Task_Body_Stub'Result then Self.Is_Declaration);
-
-   not overriding function Is_Protected_Body_Stub
+   not overriding function Is_Function_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Protected_Body_Stub'Result then Self.Is_Declaration);
+       (if Is_Function_Body_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Exception_Declaration
+   function Is_Function_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Body_Declaration_Element);
+
+   not overriding function Is_Return_Object_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Exception_Declaration'Result then Self.Is_Declaration);
+       (if Is_Return_Object_Specification_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Choice_Parameter_Specification
+   function Is_Return_Object_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Return_Object_Specification_Element);
+
+   not overriding function Is_Package_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Choice_Parameter_Specification'Result then Self.Is_Declaration);
+       (if Is_Package_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Generic_Package_Declaration
+   function Is_Package_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Package_Declaration_Element);
+
+   not overriding function Is_Package_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generic_Package_Declaration'Result then Self.Is_Declaration);
+       (if Is_Package_Body_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Generic_Procedure_Declaration
+   function Is_Package_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Package_Body_Declaration_Element);
+
+   not overriding function Is_Object_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generic_Procedure_Declaration'Result then Self.Is_Declaration);
+       (if Is_Object_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Generic_Function_Declaration
+   function Is_Object_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Object_Renaming_Declaration_Element);
+
+   not overriding function Is_Exception_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Generic_Function_Declaration'Result then Self.Is_Declaration);
+       (if Is_Exception_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Package_Instantiation
+   function Is_Exception_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Exception_Renaming_Declaration_Element);
+
+   not overriding function Is_Procedure_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Package_Instantiation'Result then Self.Is_Declaration);
+       (if Is_Procedure_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Procedure_Instantiation
+   function Is_Procedure_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Procedure_Renaming_Declaration_Element);
+
+   not overriding function Is_Function_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Procedure_Instantiation'Result then Self.Is_Declaration);
+       (if Is_Function_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Function_Instantiation
+   function Is_Function_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Function_Renaming_Declaration_Element);
+
+   not overriding function Is_Package_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Function_Instantiation'Result then Self.Is_Declaration);
+       (if Is_Package_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Formal_Object_Declaration
+   function Is_Package_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Package_Renaming_Declaration_Element);
+
+   not overriding function Is_Generic_Package_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Object_Declaration'Result then Self.Is_Declaration);
+       (if Is_Generic_Package_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Formal_Type_Declaration
+   function Is_Generic_Package_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Generic_Package_Renaming_Declaration_Element);
+
+   not overriding function Is_Generic_Procedure_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Type_Declaration'Result then Self.Is_Declaration);
+       (if Is_Generic_Procedure_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Formal_Procedure_Declaration
+   function Is_Generic_Procedure_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean
+     is (Self.Is_Generic_Procedure_Renaming_Declaration_Element);
+
+   not overriding function Is_Generic_Function_Renaming_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Procedure_Declaration'Result then Self.Is_Declaration);
+       (if Is_Generic_Function_Renaming_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Formal_Function_Declaration
+   function Is_Generic_Function_Renaming_Declaration
+    (Self : Element'Class)
+      return Boolean
+     is (Self.Is_Generic_Function_Renaming_Declaration_Element);
+
+   not overriding function Is_Task_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Function_Declaration'Result then Self.Is_Declaration);
+       (if Is_Task_Body_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Formal_Package_Declaration
+   function Is_Task_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Task_Body_Declaration_Element);
+
+   not overriding function Is_Protected_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Package_Declaration'Result then Self.Is_Declaration);
+       (if Is_Protected_Body_Declaration_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Definition (Self : Element) return Boolean
-     is abstract;
+   function Is_Protected_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Protected_Body_Declaration_Element);
 
-   not overriding function Is_Type_Definition (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Type_Definition'Result then Self.Is_Definition);
-
-   not overriding function Is_Subtype_Indication
+   not overriding function Is_Entry_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Subtype_Indication'Result then Self.Is_Definition);
+       (if Is_Entry_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Constraint (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Constraint'Result then Self.Is_Definition);
+   function Is_Entry_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Entry_Declaration_Element);
 
-   not overriding function Is_Component_Definition
+   not overriding function Is_Entry_Body_Declaration_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Component_Definition'Result then Self.Is_Definition);
+       (if Is_Entry_Body_Declaration_Element'Result then Self.Is_Declaration);
 
-   not overriding function Is_Discrete_Range (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Discrete_Range'Result then Self.Is_Definition);
+   function Is_Entry_Body_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Entry_Body_Declaration_Element);
 
-   not overriding function Is_Discrete_Subtype_Indication
+   not overriding function Is_Entry_Index_Specification_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Discrete_Subtype_Indication'Result then Self.Is_Discrete_Range);
+       (if Is_Entry_Index_Specification_Element'Result
+          then Self.Is_Declaration);
 
-   not overriding function Is_Discrete_Range_Attribute_Reference
+   function Is_Entry_Index_Specification (Self : Element'Class) return Boolean
+     is (Self.Is_Entry_Index_Specification_Element);
+
+   not overriding function Is_Procedure_Body_Stub_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Discrete_Range_Attribute_Reference'Result
+       (if Is_Procedure_Body_Stub_Element'Result then Self.Is_Declaration);
+
+   function Is_Procedure_Body_Stub (Self : Element'Class) return Boolean
+     is (Self.Is_Procedure_Body_Stub_Element);
+
+   not overriding function Is_Function_Body_Stub_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Function_Body_Stub_Element'Result then Self.Is_Declaration);
+
+   function Is_Function_Body_Stub (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Body_Stub_Element);
+
+   not overriding function Is_Package_Body_Stub_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Package_Body_Stub_Element'Result then Self.Is_Declaration);
+
+   function Is_Package_Body_Stub (Self : Element'Class) return Boolean
+     is (Self.Is_Package_Body_Stub_Element);
+
+   not overriding function Is_Task_Body_Stub_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Task_Body_Stub_Element'Result then Self.Is_Declaration);
+
+   function Is_Task_Body_Stub (Self : Element'Class) return Boolean
+     is (Self.Is_Task_Body_Stub_Element);
+
+   not overriding function Is_Protected_Body_Stub_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Protected_Body_Stub_Element'Result then Self.Is_Declaration);
+
+   function Is_Protected_Body_Stub (Self : Element'Class) return Boolean
+     is (Self.Is_Protected_Body_Stub_Element);
+
+   not overriding function Is_Exception_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Exception_Declaration_Element'Result then Self.Is_Declaration);
+
+   function Is_Exception_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Exception_Declaration_Element);
+
+   not overriding function Is_Choice_Parameter_Specification_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Choice_Parameter_Specification_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Choice_Parameter_Specification
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Choice_Parameter_Specification_Element);
+
+   not overriding function Is_Generic_Package_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Generic_Package_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Generic_Package_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Generic_Package_Declaration_Element);
+
+   not overriding function Is_Generic_Procedure_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Generic_Procedure_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Generic_Procedure_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Generic_Procedure_Declaration_Element);
+
+   not overriding function Is_Generic_Function_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Generic_Function_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Generic_Function_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Generic_Function_Declaration_Element);
+
+   not overriding function Is_Package_Instantiation_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Package_Instantiation_Element'Result then Self.Is_Declaration);
+
+   function Is_Package_Instantiation (Self : Element'Class) return Boolean
+     is (Self.Is_Package_Instantiation_Element);
+
+   not overriding function Is_Procedure_Instantiation_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Procedure_Instantiation_Element'Result then Self.Is_Declaration);
+
+   function Is_Procedure_Instantiation (Self : Element'Class) return Boolean
+     is (Self.Is_Procedure_Instantiation_Element);
+
+   not overriding function Is_Function_Instantiation_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Function_Instantiation_Element'Result then Self.Is_Declaration);
+
+   function Is_Function_Instantiation (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Instantiation_Element);
+
+   not overriding function Is_Formal_Object_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Object_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Formal_Object_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Object_Declaration_Element);
+
+   not overriding function Is_Formal_Type_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Type_Declaration_Element'Result then Self.Is_Declaration);
+
+   function Is_Formal_Type_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Type_Declaration_Element);
+
+   not overriding function Is_Formal_Procedure_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Procedure_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Formal_Procedure_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Procedure_Declaration_Element);
+
+   not overriding function Is_Formal_Function_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Function_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Formal_Function_Declaration
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Function_Declaration_Element);
+
+   not overriding function Is_Formal_Package_Declaration_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Package_Declaration_Element'Result
+          then Self.Is_Declaration);
+
+   function Is_Formal_Package_Declaration (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Package_Declaration_Element);
+
+   not overriding function Is_Definition_Element
+    (Self : Element)
+      return Boolean is abstract;
+
+   function Is_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Definition_Element);
+
+   not overriding function Is_Type_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Type_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Type_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Type_Definition_Element);
+
+   not overriding function Is_Subtype_Indication_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Subtype_Indication_Element'Result then Self.Is_Definition);
+
+   function Is_Subtype_Indication (Self : Element'Class) return Boolean
+     is (Self.Is_Subtype_Indication_Element);
+
+   not overriding function Is_Constraint_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Constraint_Element'Result then Self.Is_Definition);
+
+   function Is_Constraint (Self : Element'Class) return Boolean
+     is (Self.Is_Constraint_Element);
+
+   not overriding function Is_Component_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Component_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Component_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Component_Definition_Element);
+
+   not overriding function Is_Discrete_Range_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discrete_Range_Element'Result then Self.Is_Definition);
+
+   function Is_Discrete_Range (Self : Element'Class) return Boolean
+     is (Self.Is_Discrete_Range_Element);
+
+   not overriding function Is_Discrete_Subtype_Indication_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discrete_Subtype_Indication_Element'Result
           then Self.Is_Discrete_Range);
 
-   not overriding function Is_Discrete_Simple_Expression_Range
+   function Is_Discrete_Subtype_Indication
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Discrete_Subtype_Indication_Element);
+
+   not overriding function Is_Discrete_Range_Attribute_Reference_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Discrete_Simple_Expression_Range'Result
+       (if Is_Discrete_Range_Attribute_Reference_Element'Result
           then Self.Is_Discrete_Range);
 
-   not overriding function Is_Unknown_Discriminant_Part
+   function Is_Discrete_Range_Attribute_Reference
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Discrete_Range_Attribute_Reference_Element);
+
+   not overriding function Is_Discrete_Simple_Expression_Range_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Unknown_Discriminant_Part'Result then Self.Is_Definition);
+       (if Is_Discrete_Simple_Expression_Range_Element'Result
+          then Self.Is_Discrete_Range);
 
-   not overriding function Is_Known_Discriminant_Part
+   function Is_Discrete_Simple_Expression_Range
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Discrete_Simple_Expression_Range_Element);
+
+   not overriding function Is_Unknown_Discriminant_Part_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Known_Discriminant_Part'Result then Self.Is_Definition);
+       (if Is_Unknown_Discriminant_Part_Element'Result
+          then Self.Is_Definition);
 
-   not overriding function Is_Record_Definition (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Record_Definition'Result then Self.Is_Definition);
+   function Is_Unknown_Discriminant_Part (Self : Element'Class) return Boolean
+     is (Self.Is_Unknown_Discriminant_Part_Element);
 
-   not overriding function Is_Null_Component (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Null_Component'Result then Self.Is_Definition);
-
-   not overriding function Is_Variant_Part (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Variant_Part'Result then Self.Is_Definition);
-
-   not overriding function Is_Variant (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Variant'Result then Self.Is_Definition);
-
-   not overriding function Is_Others_Choice (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Others_Choice'Result then Self.Is_Definition);
-
-   not overriding function Is_Anonymous_Access_Definition
+   not overriding function Is_Known_Discriminant_Part_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Anonymous_Access_Definition'Result then Self.Is_Definition);
+       (if Is_Known_Discriminant_Part_Element'Result then Self.Is_Definition);
 
-   not overriding function Is_Anonymous_Access_To_Object
+   function Is_Known_Discriminant_Part (Self : Element'Class) return Boolean
+     is (Self.Is_Known_Discriminant_Part_Element);
+
+   not overriding function Is_Record_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Anonymous_Access_To_Object'Result
+       (if Is_Record_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Record_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Record_Definition_Element);
+
+   not overriding function Is_Null_Component_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Null_Component_Element'Result then Self.Is_Definition);
+
+   function Is_Null_Component (Self : Element'Class) return Boolean
+     is (Self.Is_Null_Component_Element);
+
+   not overriding function Is_Variant_Part_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Variant_Part_Element'Result then Self.Is_Definition);
+
+   function Is_Variant_Part (Self : Element'Class) return Boolean
+     is (Self.Is_Variant_Part_Element);
+
+   not overriding function Is_Variant_Element (Self : Element) return Boolean
+     is abstract
+     with Post'Class => (if Is_Variant_Element'Result then Self.Is_Definition);
+
+   function Is_Variant (Self : Element'Class) return Boolean
+     is (Self.Is_Variant_Element);
+
+   not overriding function Is_Others_Choice_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Others_Choice_Element'Result then Self.Is_Definition);
+
+   function Is_Others_Choice (Self : Element'Class) return Boolean
+     is (Self.Is_Others_Choice_Element);
+
+   not overriding function Is_Anonymous_Access_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Anonymous_Access_Definition_Element'Result
+          then Self.Is_Definition);
+
+   function Is_Anonymous_Access_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Anonymous_Access_Definition_Element);
+
+   not overriding function Is_Anonymous_Access_To_Object_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Anonymous_Access_To_Object_Element'Result
           then Self.Is_Anonymous_Access_Definition);
 
-   not overriding function Is_Anonymous_Access_To_Procedure
+   function Is_Anonymous_Access_To_Object (Self : Element'Class) return Boolean
+     is (Self.Is_Anonymous_Access_To_Object_Element);
+
+   not overriding function Is_Anonymous_Access_To_Procedure_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Anonymous_Access_To_Procedure'Result
+       (if Is_Anonymous_Access_To_Procedure_Element'Result
           then Self.Is_Anonymous_Access_Definition);
 
-   not overriding function Is_Anonymous_Access_To_Function
+   function Is_Anonymous_Access_To_Procedure
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Anonymous_Access_To_Procedure_Element);
+
+   not overriding function Is_Anonymous_Access_To_Function_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Anonymous_Access_To_Function'Result
+       (if Is_Anonymous_Access_To_Function_Element'Result
           then Self.Is_Anonymous_Access_Definition);
 
-   not overriding function Is_Private_Type_Definition
+   function Is_Anonymous_Access_To_Function
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Anonymous_Access_To_Function_Element);
+
+   not overriding function Is_Private_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Private_Type_Definition'Result then Self.Is_Definition);
+       (if Is_Private_Type_Definition_Element'Result then Self.Is_Definition);
 
-   not overriding function Is_Private_Extension_Definition
+   function Is_Private_Type_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Private_Type_Definition_Element);
+
+   not overriding function Is_Private_Extension_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Private_Extension_Definition'Result then Self.Is_Definition);
+       (if Is_Private_Extension_Definition_Element'Result
+          then Self.Is_Definition);
 
-   not overriding function Is_Incomplete_Type_Definition
+   function Is_Private_Extension_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Private_Extension_Definition_Element);
+
+   not overriding function Is_Incomplete_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Incomplete_Type_Definition'Result then Self.Is_Definition);
+       (if Is_Incomplete_Type_Definition_Element'Result
+          then Self.Is_Definition);
 
-   not overriding function Is_Task_Definition (Self : Element) return Boolean
+   function Is_Incomplete_Type_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Incomplete_Type_Definition_Element);
+
+   not overriding function Is_Task_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Task_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Task_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Task_Definition_Element);
+
+   not overriding function Is_Protected_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Protected_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Protected_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Protected_Definition_Element);
+
+   not overriding function Is_Formal_Type_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Type_Definition_Element'Result then Self.Is_Definition);
+
+   function Is_Formal_Type_Definition (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Type_Definition_Element);
+
+   not overriding function Is_Aspect_Specification_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Aspect_Specification_Element'Result then Self.Is_Definition);
+
+   function Is_Aspect_Specification (Self : Element'Class) return Boolean
+     is (Self.Is_Aspect_Specification_Element);
+
+   not overriding function Is_Real_Range_Specification_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Real_Range_Specification_Element'Result then Self.Is_Definition);
+
+   function Is_Real_Range_Specification (Self : Element'Class) return Boolean
+     is (Self.Is_Real_Range_Specification_Element);
+
+   not overriding function Is_Expression_Element
+    (Self : Element)
+      return Boolean is abstract;
+
+   function Is_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Expression_Element);
+
+   not overriding function Is_Numeric_Literal_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Numeric_Literal_Element'Result then Self.Is_Expression);
+
+   function Is_Numeric_Literal (Self : Element'Class) return Boolean
+     is (Self.Is_Numeric_Literal_Element);
+
+   not overriding function Is_String_Literal_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_String_Literal_Element'Result then Self.Is_Expression);
+
+   function Is_String_Literal (Self : Element'Class) return Boolean
+     is (Self.Is_String_Literal_Element);
+
+   not overriding function Is_Identifier_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Identifier_Element'Result then Self.Is_Expression);
+
+   function Is_Identifier (Self : Element'Class) return Boolean
+     is (Self.Is_Identifier_Element);
+
+   not overriding function Is_Operator_Symbol_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Operator_Symbol_Element'Result then Self.Is_Expression);
+
+   function Is_Operator_Symbol (Self : Element'Class) return Boolean
+     is (Self.Is_Operator_Symbol_Element);
+
+   not overriding function Is_Character_Literal_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Character_Literal_Element'Result then Self.Is_Expression);
+
+   function Is_Character_Literal (Self : Element'Class) return Boolean
+     is (Self.Is_Character_Literal_Element);
+
+   not overriding function Is_Explicit_Dereference_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Explicit_Dereference_Element'Result then Self.Is_Expression);
+
+   function Is_Explicit_Dereference (Self : Element'Class) return Boolean
+     is (Self.Is_Explicit_Dereference_Element);
+
+   not overriding function Is_Infix_Operator_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Infix_Operator_Element'Result then Self.Is_Expression);
+
+   function Is_Infix_Operator (Self : Element'Class) return Boolean
+     is (Self.Is_Infix_Operator_Element);
+
+   not overriding function Is_Function_Call_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Function_Call_Element'Result then Self.Is_Expression);
+
+   function Is_Function_Call (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Call_Element);
+
+   not overriding function Is_Indexed_Component_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Indexed_Component_Element'Result then Self.Is_Expression);
+
+   function Is_Indexed_Component (Self : Element'Class) return Boolean
+     is (Self.Is_Indexed_Component_Element);
+
+   not overriding function Is_Slice_Element (Self : Element) return Boolean
      is abstract
-     with Post'Class => (if Is_Task_Definition'Result then Self.Is_Definition);
+     with Post'Class => (if Is_Slice_Element'Result then Self.Is_Expression);
 
-   not overriding function Is_Protected_Definition
+   function Is_Slice (Self : Element'Class) return Boolean
+     is (Self.Is_Slice_Element);
+
+   not overriding function Is_Selected_Component_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Protected_Definition'Result then Self.Is_Definition);
+       (if Is_Selected_Component_Element'Result then Self.Is_Expression);
 
-   not overriding function Is_Formal_Type_Definition
+   function Is_Selected_Component (Self : Element'Class) return Boolean
+     is (Self.Is_Selected_Component_Element);
+
+   not overriding function Is_Attribute_Reference_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Type_Definition'Result then Self.Is_Definition);
+       (if Is_Attribute_Reference_Element'Result then Self.Is_Expression);
 
-   not overriding function Is_Aspect_Specification
+   function Is_Attribute_Reference (Self : Element'Class) return Boolean
+     is (Self.Is_Attribute_Reference_Element);
+
+   not overriding function Is_Record_Aggregate_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Aspect_Specification'Result then Self.Is_Definition);
+       (if Is_Record_Aggregate_Element'Result then Self.Is_Expression);
 
-   not overriding function Is_Real_Range_Specification
+   function Is_Record_Aggregate (Self : Element'Class) return Boolean
+     is (Self.Is_Record_Aggregate_Element);
+
+   not overriding function Is_Extension_Aggregate_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Real_Range_Specification'Result then Self.Is_Definition);
+       (if Is_Extension_Aggregate_Element'Result then Self.Is_Expression);
 
-   not overriding function Is_Expression (Self : Element) return Boolean
+   function Is_Extension_Aggregate (Self : Element'Class) return Boolean
+     is (Self.Is_Extension_Aggregate_Element);
+
+   not overriding function Is_Array_Aggregate_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Array_Aggregate_Element'Result then Self.Is_Expression);
+
+   function Is_Array_Aggregate (Self : Element'Class) return Boolean
+     is (Self.Is_Array_Aggregate_Element);
+
+   not overriding function Is_Short_Circuit_Operation_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Short_Circuit_Operation_Element'Result then Self.Is_Expression);
+
+   function Is_Short_Circuit_Operation (Self : Element'Class) return Boolean
+     is (Self.Is_Short_Circuit_Operation_Element);
+
+   not overriding function Is_Membership_Test_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Membership_Test_Element'Result then Self.Is_Expression);
+
+   function Is_Membership_Test (Self : Element'Class) return Boolean
+     is (Self.Is_Membership_Test_Element);
+
+   not overriding function Is_Null_Literal_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Null_Literal_Element'Result then Self.Is_Expression);
+
+   function Is_Null_Literal (Self : Element'Class) return Boolean
+     is (Self.Is_Null_Literal_Element);
+
+   not overriding function Is_Parenthesized_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Parenthesized_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_Parenthesized_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Parenthesized_Expression_Element);
+
+   not overriding function Is_Raise_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Raise_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_Raise_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Raise_Expression_Element);
+
+   not overriding function Is_Type_Conversion_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Type_Conversion_Element'Result then Self.Is_Expression);
+
+   function Is_Type_Conversion (Self : Element'Class) return Boolean
+     is (Self.Is_Type_Conversion_Element);
+
+   not overriding function Is_Qualified_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Qualified_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_Qualified_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Qualified_Expression_Element);
+
+   not overriding function Is_Allocator_Element (Self : Element) return Boolean
+     is abstract
+     with Post'Class =>
+       (if Is_Allocator_Element'Result then Self.Is_Expression);
+
+   function Is_Allocator (Self : Element'Class) return Boolean
+     is (Self.Is_Allocator_Element);
+
+   not overriding function Is_Case_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Case_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_Case_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Case_Expression_Element);
+
+   not overriding function Is_If_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_If_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_If_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_If_Expression_Element);
+
+   not overriding function Is_Quantified_Expression_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Quantified_Expression_Element'Result then Self.Is_Expression);
+
+   function Is_Quantified_Expression (Self : Element'Class) return Boolean
+     is (Self.Is_Quantified_Expression_Element);
+
+   not overriding function Is_Association_Element
+    (Self : Element)
+      return Boolean is abstract;
+
+   function Is_Association (Self : Element'Class) return Boolean
+     is (Self.Is_Association_Element);
+
+   not overriding function Is_Discriminant_Association_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discriminant_Association_Element'Result
+          then Self.Is_Association);
+
+   function Is_Discriminant_Association (Self : Element'Class) return Boolean
+     is (Self.Is_Discriminant_Association_Element);
+
+   not overriding function Is_Record_Component_Association_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Record_Component_Association_Element'Result
+          then Self.Is_Association);
+
+   function Is_Record_Component_Association
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Record_Component_Association_Element);
+
+   not overriding function Is_Array_Component_Association_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Array_Component_Association_Element'Result
+          then Self.Is_Association);
+
+   function Is_Array_Component_Association
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Array_Component_Association_Element);
+
+   not overriding function Is_Parameter_Association_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Parameter_Association_Element'Result then Self.Is_Association);
+
+   function Is_Parameter_Association (Self : Element'Class) return Boolean
+     is (Self.Is_Parameter_Association_Element);
+
+   not overriding function Is_Formal_Package_Association_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Package_Association_Element'Result
+          then Self.Is_Association);
+
+   function Is_Formal_Package_Association (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Package_Association_Element);
+
+   not overriding function Is_Statement_Element (Self : Element) return Boolean
      is abstract;
 
-   not overriding function Is_Numeric_Literal (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Numeric_Literal'Result then Self.Is_Expression);
+   function Is_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Statement_Element);
 
-   not overriding function Is_String_Literal (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_String_Literal'Result then Self.Is_Expression);
-
-   not overriding function Is_Identifier (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Identifier'Result then Self.Is_Expression);
-
-   not overriding function Is_Operator_Symbol (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Operator_Symbol'Result then Self.Is_Expression);
-
-   not overriding function Is_Character_Literal (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Character_Literal'Result then Self.Is_Expression);
-
-   not overriding function Is_Explicit_Dereference
+   not overriding function Is_Null_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Explicit_Dereference'Result then Self.Is_Expression);
+       (if Is_Null_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Infix_Operator (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Infix_Operator'Result then Self.Is_Expression);
+   function Is_Null_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Null_Statement_Element);
 
-   not overriding function Is_Function_Call (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Function_Call'Result then Self.Is_Expression);
-
-   not overriding function Is_Indexed_Component (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Indexed_Component'Result then Self.Is_Expression);
-
-   not overriding function Is_Slice (Self : Element) return Boolean is abstract
-     with Post'Class => (if Is_Slice'Result then Self.Is_Expression);
-
-   not overriding function Is_Selected_Component
+   not overriding function Is_Assignment_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Selected_Component'Result then Self.Is_Expression);
+       (if Is_Assignment_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Attribute_Reference
+   function Is_Assignment_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Assignment_Statement_Element);
+
+   not overriding function Is_If_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Attribute_Reference'Result then Self.Is_Expression);
+       (if Is_If_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Record_Aggregate (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Record_Aggregate'Result then Self.Is_Expression);
+   function Is_If_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_If_Statement_Element);
 
-   not overriding function Is_Extension_Aggregate
+   not overriding function Is_Case_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Extension_Aggregate'Result then Self.Is_Expression);
+       (if Is_Case_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Array_Aggregate (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Array_Aggregate'Result then Self.Is_Expression);
+   function Is_Case_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Case_Statement_Element);
 
-   not overriding function Is_Short_Circuit_Operation
+   not overriding function Is_Loop_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Short_Circuit_Operation'Result then Self.Is_Expression);
+       (if Is_Loop_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Membership_Test (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Membership_Test'Result then Self.Is_Expression);
+   function Is_Loop_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Loop_Statement_Element);
 
-   not overriding function Is_Null_Literal (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Null_Literal'Result then Self.Is_Expression);
-
-   not overriding function Is_Parenthesized_Expression
+   not overriding function Is_While_Loop_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Parenthesized_Expression'Result then Self.Is_Expression);
+       (if Is_While_Loop_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Raise_Expression (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Raise_Expression'Result then Self.Is_Expression);
+   function Is_While_Loop_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_While_Loop_Statement_Element);
 
-   not overriding function Is_Type_Conversion (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Type_Conversion'Result then Self.Is_Expression);
-
-   not overriding function Is_Qualified_Expression
+   not overriding function Is_For_Loop_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Qualified_Expression'Result then Self.Is_Expression);
+       (if Is_For_Loop_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Allocator (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Allocator'Result then Self.Is_Expression);
+   function Is_For_Loop_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_For_Loop_Statement_Element);
 
-   not overriding function Is_Case_Expression (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Case_Expression'Result then Self.Is_Expression);
-
-   not overriding function Is_If_Expression (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_If_Expression'Result then Self.Is_Expression);
-
-   not overriding function Is_Quantified_Expression
+   not overriding function Is_Block_Statement_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Quantified_Expression'Result then Self.Is_Expression);
+       (if Is_Block_Statement_Element'Result then Self.Is_Statement);
 
-   not overriding function Is_Association (Self : Element) return Boolean
+   function Is_Block_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Block_Statement_Element);
+
+   not overriding function Is_Exit_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Exit_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Exit_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Exit_Statement_Element);
+
+   not overriding function Is_Goto_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Goto_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Goto_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Goto_Statement_Element);
+
+   not overriding function Is_Call_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Call_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Call_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Call_Statement_Element);
+
+   not overriding function Is_Simple_Return_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Simple_Return_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Simple_Return_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Simple_Return_Statement_Element);
+
+   not overriding function Is_Extended_Return_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Extended_Return_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Extended_Return_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Extended_Return_Statement_Element);
+
+   not overriding function Is_Accept_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Accept_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Accept_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Accept_Statement_Element);
+
+   not overriding function Is_Requeue_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Requeue_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Requeue_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Requeue_Statement_Element);
+
+   not overriding function Is_Delay_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Delay_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Delay_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Delay_Statement_Element);
+
+   not overriding function Is_Terminate_Alternative_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Terminate_Alternative_Statement_Element'Result
+          then Self.Is_Statement);
+
+   function Is_Terminate_Alternative_Statement
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Terminate_Alternative_Statement_Element);
+
+   not overriding function Is_Select_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Select_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Select_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Select_Statement_Element);
+
+   not overriding function Is_Abort_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Abort_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Abort_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Abort_Statement_Element);
+
+   not overriding function Is_Raise_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Raise_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Raise_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Raise_Statement_Element);
+
+   not overriding function Is_Code_Statement_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Code_Statement_Element'Result then Self.Is_Statement);
+
+   function Is_Code_Statement (Self : Element'Class) return Boolean
+     is (Self.Is_Code_Statement_Element);
+
+   not overriding function Is_Path_Element (Self : Element) return Boolean
      is abstract;
 
-   not overriding function Is_Discriminant_Association
+   function Is_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Path_Element);
+
+   not overriding function Is_Elsif_Path_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class => (if Is_Elsif_Path_Element'Result then Self.Is_Path);
+
+   function Is_Elsif_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Elsif_Path_Element);
+
+   not overriding function Is_Case_Path_Element (Self : Element) return Boolean
+     is abstract
+     with Post'Class => (if Is_Case_Path_Element'Result then Self.Is_Path);
+
+   function Is_Case_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Case_Path_Element);
+
+   not overriding function Is_Select_Path_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class => (if Is_Select_Path_Element'Result then Self.Is_Path);
+
+   function Is_Select_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Select_Path_Element);
+
+   not overriding function Is_Case_Expression_Path_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Discriminant_Association'Result then Self.Is_Association);
+       (if Is_Case_Expression_Path_Element'Result then Self.Is_Path);
 
-   not overriding function Is_Record_Component_Association
+   function Is_Case_Expression_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Case_Expression_Path_Element);
+
+   not overriding function Is_Elsif_Expression_Path_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Record_Component_Association'Result then Self.Is_Association);
+       (if Is_Elsif_Expression_Path_Element'Result then Self.Is_Path);
 
-   not overriding function Is_Array_Component_Association
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Array_Component_Association'Result then Self.Is_Association);
+   function Is_Elsif_Expression_Path (Self : Element'Class) return Boolean
+     is (Self.Is_Elsif_Expression_Path_Element);
 
-   not overriding function Is_Parameter_Association
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Parameter_Association'Result then Self.Is_Association);
-
-   not overriding function Is_Formal_Package_Association
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Formal_Package_Association'Result then Self.Is_Association);
-
-   not overriding function Is_Statement (Self : Element) return Boolean
+   not overriding function Is_Clause_Element (Self : Element) return Boolean
      is abstract;
 
-   not overriding function Is_Null_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Null_Statement'Result then Self.Is_Statement);
+   function Is_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_Clause_Element);
 
-   not overriding function Is_Assignment_Statement
+   not overriding function Is_Use_Clause_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class => (if Is_Use_Clause_Element'Result then Self.Is_Clause);
+
+   function Is_Use_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_Use_Clause_Element);
+
+   not overriding function Is_With_Clause_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class => (if Is_With_Clause_Element'Result then Self.Is_Clause);
+
+   function Is_With_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_With_Clause_Element);
+
+   not overriding function Is_Representation_Clause_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Assignment_Statement'Result then Self.Is_Statement);
+       (if Is_Representation_Clause_Element'Result then Self.Is_Clause);
 
-   not overriding function Is_If_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_If_Statement'Result then Self.Is_Statement);
+   function Is_Representation_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_Representation_Clause_Element);
 
-   not overriding function Is_Case_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Case_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Loop_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Loop_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_While_Loop_Statement
+   not overriding function Is_Component_Clause_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_While_Loop_Statement'Result then Self.Is_Statement);
+       (if Is_Component_Clause_Element'Result then Self.Is_Clause);
 
-   not overriding function Is_For_Loop_Statement
+   function Is_Component_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_Component_Clause_Element);
+
+   not overriding function Is_Derived_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_For_Loop_Statement'Result then Self.Is_Statement);
+       (if Is_Derived_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Block_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Block_Statement'Result then Self.Is_Statement);
+   function Is_Derived_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Derived_Type_Element);
 
-   not overriding function Is_Exit_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Exit_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Goto_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Goto_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Call_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Call_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Simple_Return_Statement
+   not overriding function Is_Derived_Record_Extension_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Simple_Return_Statement'Result then Self.Is_Statement);
+       (if Is_Derived_Record_Extension_Element'Result
+          then Self.Is_Type_Definition);
 
-   not overriding function Is_Extended_Return_Statement
+   function Is_Derived_Record_Extension (Self : Element'Class) return Boolean
+     is (Self.Is_Derived_Record_Extension_Element);
+
+   not overriding function Is_Enumeration_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Extended_Return_Statement'Result then Self.Is_Statement);
+       (if Is_Enumeration_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Accept_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Accept_Statement'Result then Self.Is_Statement);
+   function Is_Enumeration_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Enumeration_Type_Element);
 
-   not overriding function Is_Requeue_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Requeue_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Delay_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Delay_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Terminate_Alternative_Statement
+   not overriding function Is_Signed_Integer_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Terminate_Alternative_Statement'Result then Self.Is_Statement);
+       (if Is_Signed_Integer_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Select_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Select_Statement'Result then Self.Is_Statement);
+   function Is_Signed_Integer_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Signed_Integer_Type_Element);
 
-   not overriding function Is_Abort_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Abort_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Raise_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Raise_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Code_Statement (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Code_Statement'Result then Self.Is_Statement);
-
-   not overriding function Is_Path (Self : Element) return Boolean is abstract;
-
-   not overriding function Is_Elsif_Path (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Elsif_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Case_Path (Self : Element) return Boolean
-     is abstract with Post'Class => (if Is_Case_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Select_Path (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Select_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Case_Expression_Path
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class => (if Is_Case_Expression_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Elsif_Expression_Path
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class => (if Is_Elsif_Expression_Path'Result then Self.Is_Path);
-
-   not overriding function Is_Clause (Self : Element) return Boolean
-     is abstract;
-
-   not overriding function Is_Use_Clause (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Use_Clause'Result then Self.Is_Clause);
-
-   not overriding function Is_With_Clause (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_With_Clause'Result then Self.Is_Clause);
-
-   not overriding function Is_Representation_Clause
+   not overriding function Is_Modular_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Representation_Clause'Result then Self.Is_Clause);
+       (if Is_Modular_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Component_Clause (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Component_Clause'Result then Self.Is_Clause);
+   function Is_Modular_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Modular_Type_Element);
 
-   not overriding function Is_Derived_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Derived_Type'Result then Self.Is_Type_Definition);
-
-   not overriding function Is_Derived_Record_Extension
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Derived_Record_Extension'Result then Self.Is_Type_Definition);
-
-   not overriding function Is_Enumeration_Type (Self : Element) return Boolean
+   not overriding function Is_Root_Type_Element (Self : Element) return Boolean
      is abstract
      with Post'Class =>
-       (if Is_Enumeration_Type'Result then Self.Is_Type_Definition);
+       (if Is_Root_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Signed_Integer_Type
+   function Is_Root_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Root_Type_Element);
+
+   not overriding function Is_Floating_Point_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Signed_Integer_Type'Result then Self.Is_Type_Definition);
+       (if Is_Floating_Point_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Modular_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Modular_Type'Result then Self.Is_Type_Definition);
+   function Is_Floating_Point_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Floating_Point_Type_Element);
 
-   not overriding function Is_Root_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class => (if Is_Root_Type'Result then Self.Is_Type_Definition);
-
-   not overriding function Is_Floating_Point_Type
+   not overriding function Is_Ordinary_Fixed_Point_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Floating_Point_Type'Result then Self.Is_Type_Definition);
+       (if Is_Ordinary_Fixed_Point_Type_Element'Result
+          then Self.Is_Type_Definition);
 
-   not overriding function Is_Ordinary_Fixed_Point_Type
+   function Is_Ordinary_Fixed_Point_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Ordinary_Fixed_Point_Type_Element);
+
+   not overriding function Is_Decimal_Fixed_Point_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Ordinary_Fixed_Point_Type'Result then Self.Is_Type_Definition);
+       (if Is_Decimal_Fixed_Point_Type_Element'Result
+          then Self.Is_Type_Definition);
 
-   not overriding function Is_Decimal_Fixed_Point_Type
+   function Is_Decimal_Fixed_Point_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Decimal_Fixed_Point_Type_Element);
+
+   not overriding function Is_Unconstrained_Array_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Decimal_Fixed_Point_Type'Result then Self.Is_Type_Definition);
+       (if Is_Unconstrained_Array_Type_Element'Result
+          then Self.Is_Type_Definition);
 
-   not overriding function Is_Unconstrained_Array_Type
+   function Is_Unconstrained_Array_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Unconstrained_Array_Type_Element);
+
+   not overriding function Is_Constrained_Array_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Unconstrained_Array_Type'Result then Self.Is_Type_Definition);
+       (if Is_Constrained_Array_Type_Element'Result
+          then Self.Is_Type_Definition);
 
-   not overriding function Is_Constrained_Array_Type
+   function Is_Constrained_Array_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Constrained_Array_Type_Element);
+
+   not overriding function Is_Record_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Constrained_Array_Type'Result then Self.Is_Type_Definition);
+       (if Is_Record_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Record_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Record_Type'Result then Self.Is_Type_Definition);
+   function Is_Record_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Record_Type_Element);
 
-   not overriding function Is_Interface_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Interface_Type'Result then Self.Is_Type_Definition);
-
-   not overriding function Is_Object_Access_Type
+   not overriding function Is_Interface_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Object_Access_Type'Result then Self.Is_Access_Type);
+       (if Is_Interface_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Procedure_Access_Type
+   function Is_Interface_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Interface_Type_Element);
+
+   not overriding function Is_Object_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Procedure_Access_Type'Result then Self.Is_Access_Type);
+       (if Is_Object_Access_Type_Element'Result then Self.Is_Access_Type);
 
-   not overriding function Is_Function_Access_Type
+   function Is_Object_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Object_Access_Type_Element);
+
+   not overriding function Is_Procedure_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Function_Access_Type'Result then Self.Is_Access_Type);
+       (if Is_Procedure_Access_Type_Element'Result then Self.Is_Access_Type);
 
-   not overriding function Is_Formal_Private_Type_Definition
+   function Is_Procedure_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Procedure_Access_Type_Element);
+
+   not overriding function Is_Function_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Private_Type_Definition'Result
+       (if Is_Function_Access_Type_Element'Result then Self.Is_Access_Type);
+
+   function Is_Function_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Function_Access_Type_Element);
+
+   not overriding function Is_Formal_Private_Type_Definition_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Private_Type_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Derived_Type_Definition
+   function Is_Formal_Private_Type_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Private_Type_Definition_Element);
+
+   not overriding function Is_Formal_Derived_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Derived_Type_Definition'Result
+       (if Is_Formal_Derived_Type_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Discrete_Type_Definition
+   function Is_Formal_Derived_Type_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Derived_Type_Definition_Element);
+
+   not overriding function Is_Formal_Discrete_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Discrete_Type_Definition'Result
+       (if Is_Formal_Discrete_Type_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Signed_Integer_Type_Definition
+   function Is_Formal_Discrete_Type_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Discrete_Type_Definition_Element);
+
+   not overriding function Is_Formal_Signed_Integer_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Signed_Integer_Type_Definition'Result
+       (if Is_Formal_Signed_Integer_Type_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Modular_Type_Definition
+   function Is_Formal_Signed_Integer_Type_Definition
+    (Self : Element'Class)
+      return Boolean
+     is (Self.Is_Formal_Signed_Integer_Type_Definition_Element);
+
+   not overriding function Is_Formal_Modular_Type_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Modular_Type_Definition'Result
+       (if Is_Formal_Modular_Type_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Floating_Point_Definition
+   function Is_Formal_Modular_Type_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Modular_Type_Definition_Element);
+
+   not overriding function Is_Formal_Floating_Point_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Floating_Point_Definition'Result
+       (if Is_Formal_Floating_Point_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Ordinary_Fixed_Point_Definition
+   function Is_Formal_Floating_Point_Definition
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Floating_Point_Definition_Element);
+
+   not overriding function Is_Formal_Ordinary_Fixed_Point_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Ordinary_Fixed_Point_Definition'Result
+       (if Is_Formal_Ordinary_Fixed_Point_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Decimal_Fixed_Point_Definition
+   function Is_Formal_Ordinary_Fixed_Point_Definition
+    (Self : Element'Class)
+      return Boolean
+     is (Self.Is_Formal_Ordinary_Fixed_Point_Definition_Element);
+
+   not overriding function Is_Formal_Decimal_Fixed_Point_Definition_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Decimal_Fixed_Point_Definition'Result
+       (if Is_Formal_Decimal_Fixed_Point_Definition_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Unconstrained_Array_Type
+   function Is_Formal_Decimal_Fixed_Point_Definition
+    (Self : Element'Class)
+      return Boolean
+     is (Self.Is_Formal_Decimal_Fixed_Point_Definition_Element);
+
+   not overriding function Is_Formal_Unconstrained_Array_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Unconstrained_Array_Type'Result
+       (if Is_Formal_Unconstrained_Array_Type_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Constrained_Array_Type
+   function Is_Formal_Unconstrained_Array_Type
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Unconstrained_Array_Type_Element);
+
+   not overriding function Is_Formal_Constrained_Array_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Constrained_Array_Type'Result
+       (if Is_Formal_Constrained_Array_Type_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Formal_Access_Type
-    (Self : Element)
-      return Boolean is abstract
-     with Post'Class =>
-       (if Is_Formal_Access_Type'Result then Self.Is_Formal_Type_Definition);
+   function Is_Formal_Constrained_Array_Type
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Constrained_Array_Type_Element);
 
-   not overriding function Is_Formal_Object_Access_Type
+   not overriding function Is_Formal_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Object_Access_Type'Result
+       (if Is_Formal_Access_Type_Element'Result
+          then Self.Is_Formal_Type_Definition);
+
+   function Is_Formal_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Access_Type_Element);
+
+   not overriding function Is_Formal_Object_Access_Type_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Formal_Object_Access_Type_Element'Result
           then Self.Is_Formal_Access_Type);
 
-   not overriding function Is_Formal_Procedure_Access_Type
+   function Is_Formal_Object_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Object_Access_Type_Element);
+
+   not overriding function Is_Formal_Procedure_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Procedure_Access_Type'Result
+       (if Is_Formal_Procedure_Access_Type_Element'Result
           then Self.Is_Formal_Access_Type);
 
-   not overriding function Is_Formal_Function_Access_Type
+   function Is_Formal_Procedure_Access_Type
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Procedure_Access_Type_Element);
+
+   not overriding function Is_Formal_Function_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Function_Access_Type'Result
+       (if Is_Formal_Function_Access_Type_Element'Result
           then Self.Is_Formal_Access_Type);
 
-   not overriding function Is_Formal_Interface_Type
+   function Is_Formal_Function_Access_Type
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Formal_Function_Access_Type_Element);
+
+   not overriding function Is_Formal_Interface_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Formal_Interface_Type'Result
+       (if Is_Formal_Interface_Type_Element'Result
           then Self.Is_Formal_Type_Definition);
 
-   not overriding function Is_Access_Type (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Access_Type'Result then Self.Is_Type_Definition);
+   function Is_Formal_Interface_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Formal_Interface_Type_Element);
 
-   not overriding function Is_Range_Attribute_Reference
+   not overriding function Is_Access_Type_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Range_Attribute_Reference'Result then Self.Is_Constraint);
+       (if Is_Access_Type_Element'Result then Self.Is_Type_Definition);
 
-   not overriding function Is_Simple_Expression_Range
+   function Is_Access_Type (Self : Element'Class) return Boolean
+     is (Self.Is_Access_Type_Element);
+
+   not overriding function Is_Range_Attribute_Reference_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Simple_Expression_Range'Result then Self.Is_Constraint);
+       (if Is_Range_Attribute_Reference_Element'Result
+          then Self.Is_Constraint);
 
-   not overriding function Is_Digits_Constraint (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Digits_Constraint'Result then Self.Is_Constraint);
+   function Is_Range_Attribute_Reference (Self : Element'Class) return Boolean
+     is (Self.Is_Range_Attribute_Reference_Element);
 
-   not overriding function Is_Delta_Constraint (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Delta_Constraint'Result then Self.Is_Constraint);
-
-   not overriding function Is_Index_Constraint (Self : Element) return Boolean
-     is abstract
-     with Post'Class =>
-       (if Is_Index_Constraint'Result then Self.Is_Constraint);
-
-   not overriding function Is_Discriminant_Constraint
+   not overriding function Is_Simple_Expression_Range_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Discriminant_Constraint'Result then Self.Is_Constraint);
+       (if Is_Simple_Expression_Range_Element'Result then Self.Is_Constraint);
 
-   not overriding function Is_Attribute_Definition_Clause
+   function Is_Simple_Expression_Range (Self : Element'Class) return Boolean
+     is (Self.Is_Simple_Expression_Range_Element);
+
+   not overriding function Is_Digits_Constraint_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Attribute_Definition_Clause'Result
+       (if Is_Digits_Constraint_Element'Result then Self.Is_Constraint);
+
+   function Is_Digits_Constraint (Self : Element'Class) return Boolean
+     is (Self.Is_Digits_Constraint_Element);
+
+   not overriding function Is_Delta_Constraint_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Delta_Constraint_Element'Result then Self.Is_Constraint);
+
+   function Is_Delta_Constraint (Self : Element'Class) return Boolean
+     is (Self.Is_Delta_Constraint_Element);
+
+   not overriding function Is_Index_Constraint_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Index_Constraint_Element'Result then Self.Is_Constraint);
+
+   function Is_Index_Constraint (Self : Element'Class) return Boolean
+     is (Self.Is_Index_Constraint_Element);
+
+   not overriding function Is_Discriminant_Constraint_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Discriminant_Constraint_Element'Result then Self.Is_Constraint);
+
+   function Is_Discriminant_Constraint (Self : Element'Class) return Boolean
+     is (Self.Is_Discriminant_Constraint_Element);
+
+   not overriding function Is_Attribute_Definition_Clause_Element
+    (Self : Element)
+      return Boolean is abstract
+     with Post'Class =>
+       (if Is_Attribute_Definition_Clause_Element'Result
           then Self.Is_Representation_Clause);
 
-   not overriding function Is_Enumeration_Representation_Clause
+   function Is_Attribute_Definition_Clause
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Attribute_Definition_Clause_Element);
+
+   not overriding function Is_Enumeration_Representation_Clause_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Enumeration_Representation_Clause'Result
+       (if Is_Enumeration_Representation_Clause_Element'Result
           then Self.Is_Representation_Clause);
 
-   not overriding function Is_Record_Representation_Clause
+   function Is_Enumeration_Representation_Clause
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Enumeration_Representation_Clause_Element);
+
+   not overriding function Is_Record_Representation_Clause_Element
     (Self : Element)
       return Boolean is abstract
      with Post'Class =>
-       (if Is_Record_Representation_Clause'Result
+       (if Is_Record_Representation_Clause_Element'Result
           then Self.Is_Representation_Clause);
 
-   not overriding function Is_At_Clause (Self : Element) return Boolean
+   function Is_Record_Representation_Clause
+    (Self : Element'Class)
+      return Boolean is (Self.Is_Record_Representation_Clause_Element);
+
+   not overriding function Is_At_Clause_Element (Self : Element) return Boolean
      is abstract
      with Post'Class =>
-       (if Is_At_Clause'Result then Self.Is_Representation_Clause);
+       (if Is_At_Clause_Element'Result then Self.Is_Representation_Clause);
 
-   not overriding function Is_Exception_Handler (Self : Element) return Boolean
-     is abstract;
+   function Is_At_Clause (Self : Element'Class) return Boolean
+     is (Self.Is_At_Clause_Element);
+
+   not overriding function Is_Exception_Handler_Element
+    (Self : Element)
+      return Boolean is abstract;
+
+   function Is_Exception_Handler (Self : Element'Class) return Boolean
+     is (Self.Is_Exception_Handler_Element);
 
    function To_Pragma
     (Self : access Element'Class)

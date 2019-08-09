@@ -65,11 +65,11 @@ private
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
 
-   overriding function Is_Choice_Parameter_Specification
+   overriding function Is_Choice_Parameter_Specification_Element
     (Self : Base_Choice_Parameter_Specification)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Choice_Parameter_Specification)
       return Boolean;
 

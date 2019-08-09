@@ -77,15 +77,15 @@ private
       return not null Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Access;
 
-   overriding function Is_Ordinary_Fixed_Point_Type
+   overriding function Is_Ordinary_Fixed_Point_Type_Element
     (Self : Base_Ordinary_Fixed_Point_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Ordinary_Fixed_Point_Type)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Ordinary_Fixed_Point_Type)
       return Boolean;
 

@@ -99,29 +99,29 @@ package body Program.Nodes.Record_Types is
       null;
    end Initialize;
 
-   overriding function Is_Record_Type
+   overriding function Is_Record_Type_Element
     (Self : Base_Record_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Record_Type;
+   end Is_Record_Type_Element;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Record_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Type_Definition;
+   end Is_Type_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Record_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Type;

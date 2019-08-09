@@ -64,9 +64,13 @@ private
     (Self : Base_With_Clause)
       return not null Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_With_Clause (Self : Base_With_Clause) return Boolean;
+   overriding function Is_With_Clause_Element
+    (Self : Base_With_Clause)
+      return Boolean;
 
-   overriding function Is_Clause (Self : Base_With_Clause) return Boolean;
+   overriding function Is_Clause_Element
+    (Self : Base_With_Clause)
+      return Boolean;
 
    type With_Clause is
      new Base_With_Clause and Program.Elements.With_Clauses.With_Clause_Text

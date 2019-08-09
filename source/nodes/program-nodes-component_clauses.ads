@@ -83,11 +83,13 @@ private
       return not null Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Access;
 
-   overriding function Is_Component_Clause
+   overriding function Is_Component_Clause_Element
     (Self : Base_Component_Clause)
       return Boolean;
 
-   overriding function Is_Clause (Self : Base_Component_Clause) return Boolean;
+   overriding function Is_Clause_Element
+    (Self : Base_Component_Clause)
+      return Boolean;
 
    type Component_Clause is
      new Base_Component_Clause

@@ -75,11 +75,13 @@ private
     (Self : Base_Variant_Part)
       return not null Program.Elements.Variants.Variant_Vector_Access;
 
-   overriding function Is_Variant_Part
+   overriding function Is_Variant_Part_Element
     (Self : Base_Variant_Part)
       return Boolean;
 
-   overriding function Is_Definition (Self : Base_Variant_Part) return Boolean;
+   overriding function Is_Definition_Element
+    (Self : Base_Variant_Part)
+      return Boolean;
 
    type Variant_Part is
      new Base_Variant_Part and Program.Elements.Variant_Parts.Variant_Part_Text

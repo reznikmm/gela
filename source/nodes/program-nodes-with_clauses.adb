@@ -136,19 +136,21 @@ package body Program.Nodes.With_Clauses is
       null;
    end Initialize;
 
-   overriding function Is_With_Clause
+   overriding function Is_With_Clause_Element
     (Self : Base_With_Clause)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_With_Clause;
+   end Is_With_Clause_Element;
 
-   overriding function Is_Clause (Self : Base_With_Clause) return Boolean is
+   overriding function Is_Clause_Element
+    (Self : Base_With_Clause)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Clause;
+   end Is_Clause_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_With_Clause;

@@ -79,21 +79,21 @@ package body Program.Nodes.Choice_Parameter_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Choice_Parameter_Specification
+   overriding function Is_Choice_Parameter_Specification_Element
     (Self : Base_Choice_Parameter_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Choice_Parameter_Specification;
+   end Is_Choice_Parameter_Specification_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Choice_Parameter_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Choice_Parameter_Specification;

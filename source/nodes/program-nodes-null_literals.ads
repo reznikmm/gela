@@ -46,11 +46,13 @@ private
     (Self    : not null access Base_Null_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Null_Literal
+   overriding function Is_Null_Literal_Element
     (Self : Base_Null_Literal)
       return Boolean;
 
-   overriding function Is_Expression (Self : Base_Null_Literal) return Boolean;
+   overriding function Is_Expression_Element
+    (Self : Base_Null_Literal)
+      return Boolean;
 
    type Null_Literal is
      new Base_Null_Literal and Program.Elements.Null_Literals.Null_Literal_Text

@@ -93,29 +93,29 @@ package body Program.Nodes.Simple_Expression_Ranges is
       null;
    end Initialize;
 
-   overriding function Is_Simple_Expression_Range
+   overriding function Is_Simple_Expression_Range_Element
     (Self : Base_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Simple_Expression_Range;
+   end Is_Simple_Expression_Range_Element;
 
-   overriding function Is_Constraint
+   overriding function Is_Constraint_Element
     (Self : Base_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Constraint;
+   end Is_Constraint_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Simple_Expression_Range;

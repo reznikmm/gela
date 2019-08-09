@@ -110,29 +110,29 @@ package body Program.Nodes.Attribute_Definition_Clauses is
       null;
    end Initialize;
 
-   overriding function Is_Attribute_Definition_Clause
+   overriding function Is_Attribute_Definition_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Attribute_Definition_Clause;
+   end Is_Attribute_Definition_Clause_Element;
 
-   overriding function Is_Representation_Clause
+   overriding function Is_Representation_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Representation_Clause;
+   end Is_Representation_Clause_Element;
 
-   overriding function Is_Clause
+   overriding function Is_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Clause;
+   end Is_Clause_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Attribute_Definition_Clause;

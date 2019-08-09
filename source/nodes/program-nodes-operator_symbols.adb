@@ -78,21 +78,21 @@ package body Program.Nodes.Operator_Symbols is
       null;
    end Initialize;
 
-   overriding function Is_Operator_Symbol
+   overriding function Is_Operator_Symbol_Element
     (Self : Base_Operator_Symbol)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Operator_Symbol;
+   end Is_Operator_Symbol_Element;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Operator_Symbol)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Operator_Symbol;

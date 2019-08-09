@@ -69,11 +69,11 @@ private
     (Self : Base_Formal_Package_Association)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Formal_Package_Association
+   overriding function Is_Formal_Package_Association_Element
     (Self : Base_Formal_Package_Association)
       return Boolean;
 
-   overriding function Is_Association
+   overriding function Is_Association_Element
     (Self : Base_Formal_Package_Association)
       return Boolean;
 

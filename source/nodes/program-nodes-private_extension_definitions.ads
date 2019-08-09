@@ -87,11 +87,11 @@ private
     (Self : Base_Private_Extension_Definition)
       return Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Private_Extension_Definition
+   overriding function Is_Private_Extension_Definition_Element
     (Self : Base_Private_Extension_Definition)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Private_Extension_Definition)
       return Boolean;
 

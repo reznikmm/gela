@@ -84,11 +84,11 @@ private
     (Self : Base_Select_Statement)
       return Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Select_Statement
+   overriding function Is_Select_Statement_Element
     (Self : Base_Select_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Select_Statement)
       return Boolean;
 

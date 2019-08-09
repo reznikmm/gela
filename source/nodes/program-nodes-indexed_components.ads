@@ -70,11 +70,11 @@ private
     (Self : Base_Indexed_Component)
       return Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Indexed_Component
+   overriding function Is_Indexed_Component_Element
     (Self : Base_Indexed_Component)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Indexed_Component)
       return Boolean;
 

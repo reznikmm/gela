@@ -64,9 +64,13 @@ private
     (Self : Base_Select_Path)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Select_Path (Self : Base_Select_Path) return Boolean;
+   overriding function Is_Select_Path_Element
+    (Self : Base_Select_Path)
+      return Boolean;
 
-   overriding function Is_Path (Self : Base_Select_Path) return Boolean;
+   overriding function Is_Path_Element
+    (Self : Base_Select_Path)
+      return Boolean;
 
    type Select_Path is
      new Base_Select_Path and Program.Elements.Select_Paths.Select_Path_Text

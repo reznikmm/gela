@@ -116,21 +116,21 @@ package body Program.Nodes.Generalized_Iterator_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Generalized_Iterator_Specification
+   overriding function Is_Generalized_Iterator_Specification_Element
     (Self : Base_Generalized_Iterator_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Generalized_Iterator_Specification;
+   end Is_Generalized_Iterator_Specification_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Generalized_Iterator_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Generalized_Iterator_Specification;

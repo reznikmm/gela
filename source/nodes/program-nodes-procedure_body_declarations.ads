@@ -143,11 +143,11 @@ private
     (Self : Base_Procedure_Body_Declaration)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Procedure_Body_Declaration
+   overriding function Is_Procedure_Body_Declaration_Element
     (Self : Base_Procedure_Body_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Procedure_Body_Declaration)
       return Boolean;
 

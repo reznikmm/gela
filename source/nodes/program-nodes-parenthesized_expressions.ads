@@ -65,11 +65,11 @@ private
     (Self : Base_Parenthesized_Expression)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Parenthesized_Expression
+   overriding function Is_Parenthesized_Expression_Element
     (Self : Base_Parenthesized_Expression)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Parenthesized_Expression)
       return Boolean;
 

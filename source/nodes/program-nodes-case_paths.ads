@@ -63,9 +63,11 @@ private
     (Self : Base_Case_Path)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Case_Path (Self : Base_Case_Path) return Boolean;
+   overriding function Is_Case_Path_Element
+    (Self : Base_Case_Path)
+      return Boolean;
 
-   overriding function Is_Path (Self : Base_Case_Path) return Boolean;
+   overriding function Is_Path_Element (Self : Base_Case_Path) return Boolean;
 
    type Case_Path is
      new Base_Case_Path and Program.Elements.Case_Paths.Case_Path_Text

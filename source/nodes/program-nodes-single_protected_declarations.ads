@@ -106,11 +106,11 @@ private
       return not null Program.Elements.Protected_Definitions
           .Protected_Definition_Access;
 
-   overriding function Is_Single_Protected_Declaration
+   overriding function Is_Single_Protected_Declaration_Element
     (Self : Base_Single_Protected_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Single_Protected_Declaration)
       return Boolean;
 

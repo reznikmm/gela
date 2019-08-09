@@ -188,29 +188,29 @@ package body Program.Nodes.Formal_Interface_Types is
       null;
    end Initialize;
 
-   overriding function Is_Formal_Interface_Type
+   overriding function Is_Formal_Interface_Type_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Interface_Type;
+   end Is_Formal_Interface_Type_Element;
 
-   overriding function Is_Formal_Type_Definition
+   overriding function Is_Formal_Type_Definition_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Type_Definition;
+   end Is_Formal_Type_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Interface_Type;

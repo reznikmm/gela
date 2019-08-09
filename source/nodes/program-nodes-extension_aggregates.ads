@@ -75,11 +75,11 @@ private
       return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access;
 
-   overriding function Is_Extension_Aggregate
+   overriding function Is_Extension_Aggregate_Element
     (Self : Base_Extension_Aggregate)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Extension_Aggregate)
       return Boolean;
 

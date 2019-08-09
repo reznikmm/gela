@@ -93,11 +93,13 @@ private
     (Self : Base_If_Statement)
       return Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_If_Statement
+   overriding function Is_If_Statement_Element
     (Self : Base_If_Statement)
       return Boolean;
 
-   overriding function Is_Statement (Self : Base_If_Statement) return Boolean;
+   overriding function Is_Statement_Element
+    (Self : Base_If_Statement)
+      return Boolean;
 
    type If_Statement is
      new Base_If_Statement and Program.Elements.If_Statements.If_Statement_Text

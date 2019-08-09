@@ -46,9 +46,13 @@ private
     (Self    : not null access Base_Identifier;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Identifier (Self : Base_Identifier) return Boolean;
+   overriding function Is_Identifier_Element
+    (Self : Base_Identifier)
+      return Boolean;
 
-   overriding function Is_Expression (Self : Base_Identifier) return Boolean;
+   overriding function Is_Expression_Element
+    (Self : Base_Identifier)
+      return Boolean;
 
    type Identifier is
      new Base_Identifier and Program.Elements.Identifiers.Identifier_Text

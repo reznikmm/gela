@@ -163,29 +163,29 @@ package body Program.Nodes.Anonymous_Access_To_Objects is
       null;
    end Initialize;
 
-   overriding function Is_Anonymous_Access_To_Object
+   overriding function Is_Anonymous_Access_To_Object_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Anonymous_Access_To_Object;
+   end Is_Anonymous_Access_To_Object_Element;
 
-   overriding function Is_Anonymous_Access_Definition
+   overriding function Is_Anonymous_Access_Definition_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Anonymous_Access_Definition;
+   end Is_Anonymous_Access_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Anonymous_Access_To_Object;

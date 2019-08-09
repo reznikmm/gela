@@ -63,9 +63,11 @@ private
     (Self : Base_Variant)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Variant (Self : Base_Variant) return Boolean;
+   overriding function Is_Variant_Element (Self : Base_Variant) return Boolean;
 
-   overriding function Is_Definition (Self : Base_Variant) return Boolean;
+   overriding function Is_Definition_Element
+    (Self : Base_Variant)
+      return Boolean;
 
    type Variant is
      new Base_Variant and Program.Elements.Variants.Variant_Text

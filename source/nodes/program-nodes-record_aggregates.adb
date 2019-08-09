@@ -91,21 +91,21 @@ package body Program.Nodes.Record_Aggregates is
       null;
    end Initialize;
 
-   overriding function Is_Record_Aggregate
+   overriding function Is_Record_Aggregate_Element
     (Self : Base_Record_Aggregate)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Record_Aggregate;
+   end Is_Record_Aggregate_Element;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Record_Aggregate)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Aggregate;

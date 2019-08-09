@@ -48,11 +48,11 @@ private
     (Self    : not null access Base_Null_Component;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Null_Component
+   overriding function Is_Null_Component_Element
     (Self : Base_Null_Component)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Null_Component)
       return Boolean;
 

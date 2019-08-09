@@ -151,11 +151,11 @@ private
     (Self : Base_Entry_Body_Declaration)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Entry_Body_Declaration
+   overriding function Is_Entry_Body_Declaration_Element
     (Self : Base_Entry_Body_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Entry_Body_Declaration)
       return Boolean;
 

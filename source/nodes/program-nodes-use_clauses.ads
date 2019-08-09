@@ -64,9 +64,13 @@ private
     (Self : Base_Use_Clause)
       return not null Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Use_Clause (Self : Base_Use_Clause) return Boolean;
+   overriding function Is_Use_Clause_Element
+    (Self : Base_Use_Clause)
+      return Boolean;
 
-   overriding function Is_Clause (Self : Base_Use_Clause) return Boolean;
+   overriding function Is_Clause_Element
+    (Self : Base_Use_Clause)
+      return Boolean;
 
    type Use_Clause is
      new Base_Use_Clause and Program.Elements.Use_Clauses.Use_Clause_Text

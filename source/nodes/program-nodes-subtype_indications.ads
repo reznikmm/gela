@@ -67,11 +67,11 @@ private
     (Self : Base_Subtype_Indication)
       return Program.Elements.Constraints.Constraint_Access;
 
-   overriding function Is_Subtype_Indication
+   overriding function Is_Subtype_Indication_Element
     (Self : Base_Subtype_Indication)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Subtype_Indication)
       return Boolean;
 

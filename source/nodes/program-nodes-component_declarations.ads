@@ -98,11 +98,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Component_Declaration
+   overriding function Is_Component_Declaration_Element
     (Self : Base_Component_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Component_Declaration)
       return Boolean;
 

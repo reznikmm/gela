@@ -70,13 +70,17 @@ private
     (Self : Base_At_Clause)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_At_Clause (Self : Base_At_Clause) return Boolean;
-
-   overriding function Is_Representation_Clause
+   overriding function Is_At_Clause_Element
     (Self : Base_At_Clause)
       return Boolean;
 
-   overriding function Is_Clause (Self : Base_At_Clause) return Boolean;
+   overriding function Is_Representation_Clause_Element
+    (Self : Base_At_Clause)
+      return Boolean;
+
+   overriding function Is_Clause_Element
+    (Self : Base_At_Clause)
+      return Boolean;
 
    type At_Clause is
      new Base_At_Clause and Program.Elements.At_Clauses.At_Clause_Text

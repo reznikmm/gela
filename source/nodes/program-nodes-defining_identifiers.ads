@@ -48,11 +48,11 @@ private
     (Self    : not null access Base_Defining_Identifier;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Defining_Identifier
+   overriding function Is_Defining_Identifier_Element
     (Self : Base_Defining_Identifier)
       return Boolean;
 
-   overriding function Is_Defining_Name
+   overriding function Is_Defining_Name_Element
     (Self : Base_Defining_Identifier)
       return Boolean;
 

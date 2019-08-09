@@ -48,11 +48,11 @@ private
     (Self    : not null access Base_Numeric_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Numeric_Literal
+   overriding function Is_Numeric_Literal_Element
     (Self : Base_Numeric_Literal)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Numeric_Literal)
       return Boolean;
 

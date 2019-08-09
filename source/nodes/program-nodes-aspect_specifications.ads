@@ -71,11 +71,11 @@ private
     (Self : Base_Aspect_Specification)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Aspect_Specification
+   overriding function Is_Aspect_Specification_Element
     (Self : Base_Aspect_Specification)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Aspect_Specification)
       return Boolean;
 

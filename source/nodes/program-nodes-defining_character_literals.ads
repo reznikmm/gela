@@ -53,11 +53,11 @@ private
     (Self    : not null access Base_Defining_Character_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Defining_Character_Literal
+   overriding function Is_Defining_Character_Literal_Element
     (Self : Base_Defining_Character_Literal)
       return Boolean;
 
-   overriding function Is_Defining_Name
+   overriding function Is_Defining_Name_Element
     (Self : Base_Defining_Character_Literal)
       return Boolean;
 

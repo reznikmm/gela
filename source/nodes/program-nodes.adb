@@ -11,7 +11,8 @@ package body Program.Nodes is
    -----------------------
 
    overriding function Enclosing_Element
-     (Self : Node) return Program.Elements.Element_Access is
+     (Self : Node) return Program.Elements.Element_Access
+   is
    begin
       return Self.Enclosing_Element;
    end Enclosing_Element;
@@ -20,1505 +21,1605 @@ package body Program.Nodes is
    -- Is_Abort_Statement --
    ------------------------
 
-   overriding function Is_Abort_Statement (Self : Node) return Boolean is
+   overriding function Is_Abort_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Abort_Statement;
+   end Is_Abort_Statement_Element;
 
    -------------------------
    -- Is_Accept_Statement --
    -------------------------
 
-   overriding function Is_Accept_Statement (Self : Node) return Boolean is
+   overriding function Is_Accept_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Accept_Statement;
+   end Is_Accept_Statement_Element;
 
    --------------------
    -- Is_Access_Type --
    --------------------
 
-   overriding function Is_Access_Type (Self : Node) return Boolean is
+   overriding function Is_Access_Type_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Access_Type;
+   end Is_Access_Type_Element;
 
    ------------------
    -- Is_Allocator --
    ------------------
 
-   overriding function Is_Allocator (Self : Node) return Boolean is
+   overriding function Is_Allocator_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Allocator;
+   end Is_Allocator_Element;
 
    ------------------------------------
    -- Is_Anonymous_Access_Definition --
    ------------------------------------
 
-   overriding function Is_Anonymous_Access_Definition
+   overriding function Is_Anonymous_Access_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Anonymous_Access_Definition;
+   end Is_Anonymous_Access_Definition_Element;
 
    -----------------------------------
    -- Is_Anonymous_Access_To_Object --
    -----------------------------------
 
-   overriding function Is_Anonymous_Access_To_Object
+   overriding function Is_Anonymous_Access_To_Object_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Anonymous_Access_To_Object;
+   end Is_Anonymous_Access_To_Object_Element;
 
    --------------------------------------
    -- Is_Anonymous_Access_To_Procedure --
    --------------------------------------
 
-   overriding function Is_Anonymous_Access_To_Procedure
+   overriding function Is_Anonymous_Access_To_Procedure_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Anonymous_Access_To_Procedure;
+   end Is_Anonymous_Access_To_Procedure_Element;
 
    -------------------------------------
    -- Is_Anonymous_Access_To_Function --
    -------------------------------------
 
-   overriding function Is_Anonymous_Access_To_Function
+   overriding function Is_Anonymous_Access_To_Function_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Anonymous_Access_To_Function;
+   end Is_Anonymous_Access_To_Function_Element;
 
    ------------------------
    -- Is_Array_Aggregate --
    ------------------------
 
-   overriding function Is_Array_Aggregate (Self : Node) return Boolean is
+   overriding function Is_Array_Aggregate_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Array_Aggregate;
+   end Is_Array_Aggregate_Element;
 
    ------------------------------------
    -- Is_Array_Component_Association --
    ------------------------------------
 
-   overriding function Is_Array_Component_Association
+   overriding function Is_Array_Component_Association_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Array_Component_Association;
+   end Is_Array_Component_Association_Element;
 
    -----------------------------
    -- Is_Aspect_Specification --
    -----------------------------
 
-   overriding function Is_Aspect_Specification (Self : Node) return Boolean is
+   overriding function Is_Aspect_Specification_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Aspect_Specification;
+   end Is_Aspect_Specification_Element;
 
    -----------------------------
    -- Is_Assignment_Statement --
    -----------------------------
 
-   overriding function Is_Assignment_Statement (Self : Node) return Boolean is
+   overriding function Is_Assignment_Statement_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Assignment_Statement;
+   end Is_Assignment_Statement_Element;
 
    --------------------
    -- Is_Association --
    --------------------
 
-   overriding function Is_Association (Self : Node) return Boolean is
+   overriding function Is_Association_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Association;
+   end Is_Association_Element;
 
    ------------------
    -- Is_At_Clause --
    ------------------
 
-   overriding function Is_At_Clause (Self : Node) return Boolean is
+   overriding function Is_At_Clause_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_At_Clause;
+   end Is_At_Clause_Element;
 
    ------------------------------------
    -- Is_Attribute_Definition_Clause --
    ------------------------------------
 
-   overriding function Is_Attribute_Definition_Clause
+   overriding function Is_Attribute_Definition_Clause_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Attribute_Definition_Clause;
+   end Is_Attribute_Definition_Clause_Element;
 
    ----------------------------
    -- Is_Attribute_Reference --
    ----------------------------
 
-   overriding function Is_Attribute_Reference (Self : Node) return Boolean is
+   overriding function Is_Attribute_Reference_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Attribute_Reference;
+   end Is_Attribute_Reference_Element;
 
    ------------------------
    -- Is_Block_Statement --
    ------------------------
 
-   overriding function Is_Block_Statement (Self : Node) return Boolean is
+   overriding function Is_Block_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Block_Statement;
+   end Is_Block_Statement_Element;
 
    -----------------------
    -- Is_Call_Statement --
    -----------------------
 
-   overriding function Is_Call_Statement (Self : Node) return Boolean is
+   overriding function Is_Call_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Call_Statement;
+   end Is_Call_Statement_Element;
 
    ------------------------
    -- Is_Case_Expression --
    ------------------------
 
-   overriding function Is_Case_Expression (Self : Node) return Boolean is
+   overriding function Is_Case_Expression_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Case_Expression;
+   end Is_Case_Expression_Element;
 
    -----------------------------
    -- Is_Case_Expression_Path --
    -----------------------------
 
-   overriding function Is_Case_Expression_Path (Self : Node) return Boolean is
+   overriding function Is_Case_Expression_Path_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Case_Expression_Path;
+   end Is_Case_Expression_Path_Element;
 
    ------------------
    -- Is_Case_Path --
    ------------------
 
-   overriding function Is_Case_Path (Self : Node) return Boolean is
+   overriding function Is_Case_Path_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Case_Path;
+   end Is_Case_Path_Element;
 
    -----------------------
    -- Is_Case_Statement --
    -----------------------
 
-   overriding function Is_Case_Statement (Self : Node) return Boolean is
+   overriding function Is_Case_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Case_Statement;
+   end Is_Case_Statement_Element;
 
    --------------------------
    -- Is_Character_Literal --
    --------------------------
 
-   overriding function Is_Character_Literal (Self : Node) return Boolean is
+   overriding function Is_Character_Literal_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Character_Literal;
+   end Is_Character_Literal_Element;
 
    ---------------------------------------
    -- Is_Choice_Parameter_Specification --
    ---------------------------------------
 
-   overriding function Is_Choice_Parameter_Specification
+   overriding function Is_Choice_Parameter_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Choice_Parameter_Specification;
+   end Is_Choice_Parameter_Specification_Element;
 
    ---------------
    -- Is_Clause --
    ---------------
 
-   overriding function Is_Clause (Self : Node) return Boolean is
+   overriding function Is_Clause_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Clause;
+   end Is_Clause_Element;
 
    -----------------------
    -- Is_Code_Statement --
    -----------------------
 
-   overriding function Is_Code_Statement (Self : Node) return Boolean is
+   overriding function Is_Code_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Code_Statement;
+   end Is_Code_Statement_Element;
 
    -------------------------
    -- Is_Component_Clause --
    -------------------------
 
-   overriding function Is_Component_Clause (Self : Node) return Boolean is
+   overriding function Is_Component_Clause_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Component_Clause;
+   end Is_Component_Clause_Element;
 
    ------------------------------
    -- Is_Component_Declaration --
    ------------------------------
 
-   overriding function Is_Component_Declaration (Self : Node) return Boolean is
+   overriding function Is_Component_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Component_Declaration;
+   end Is_Component_Declaration_Element;
 
    -----------------------------
    -- Is_Component_Definition --
    -----------------------------
 
-   overriding function Is_Component_Definition (Self : Node) return Boolean is
+   overriding function Is_Component_Definition_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Component_Definition;
+   end Is_Component_Definition_Element;
 
    -------------------------------
    -- Is_Constrained_Array_Type --
    -------------------------------
 
-   overriding function Is_Constrained_Array_Type (Self : Node) return Boolean
+   overriding function Is_Constrained_Array_Type_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Constrained_Array_Type;
+   end Is_Constrained_Array_Type_Element;
 
    -------------------
    -- Is_Constraint --
    -------------------
 
-   overriding function Is_Constraint (Self : Node) return Boolean is
+   overriding function Is_Constraint_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Constraint;
+   end Is_Constraint_Element;
 
    ---------------------------------
    -- Is_Decimal_Fixed_Point_Type --
    ---------------------------------
 
-   overriding function Is_Decimal_Fixed_Point_Type (Self : Node) return Boolean
+   overriding function Is_Decimal_Fixed_Point_Type_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Decimal_Fixed_Point_Type;
+   end Is_Decimal_Fixed_Point_Type_Element;
 
    --------------------
    -- Is_Declaration --
    --------------------
 
-   overriding function Is_Declaration (Self : Node) return Boolean is
+   overriding function Is_Declaration_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    -----------------------------------
    -- Is_Defining_Character_Literal --
    -----------------------------------
 
-   overriding function Is_Defining_Character_Literal
+   overriding function Is_Defining_Character_Literal_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Defining_Character_Literal;
+   end Is_Defining_Character_Literal_Element;
 
    -------------------------------
    -- Is_Defining_Expanded_Name --
    -------------------------------
 
-   overriding function Is_Defining_Expanded_Name (Self : Node) return Boolean
+   overriding function Is_Defining_Expanded_Name_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Defining_Expanded_Name;
+   end Is_Defining_Expanded_Name_Element;
 
    ----------------------------
    -- Is_Defining_Identifier --
    ----------------------------
 
-   overriding function Is_Defining_Identifier (Self : Node) return Boolean is
+   overriding function Is_Defining_Identifier_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Defining_Identifier;
+   end Is_Defining_Identifier_Element;
 
    ----------------------
    -- Is_Defining_Name --
    ----------------------
 
-   overriding function Is_Defining_Name (Self : Node) return Boolean is
+   overriding function Is_Defining_Name_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Defining_Name;
+   end Is_Defining_Name_Element;
 
    ---------------------------------
    -- Is_Defining_Operator_Symbol --
    ---------------------------------
 
-   overriding function Is_Defining_Operator_Symbol (Self : Node) return Boolean
+   overriding function Is_Defining_Operator_Symbol_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Defining_Operator_Symbol;
+   end Is_Defining_Operator_Symbol_Element;
 
    -------------------
    -- Is_Definition --
    -------------------
 
-   overriding function Is_Definition (Self : Node) return Boolean is
+   overriding function Is_Definition_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    ------------------------
    -- Is_Delay_Statement --
    ------------------------
 
-   overriding function Is_Delay_Statement (Self : Node) return Boolean is
+   overriding function Is_Delay_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Delay_Statement;
+   end Is_Delay_Statement_Element;
 
    -------------------------
    -- Is_Delta_Constraint --
    -------------------------
 
-   overriding function Is_Delta_Constraint (Self : Node) return Boolean is
+   overriding function Is_Delta_Constraint_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Delta_Constraint;
+   end Is_Delta_Constraint_Element;
 
    ---------------------------------
    -- Is_Derived_Record_Extension --
    ---------------------------------
 
-   overriding function Is_Derived_Record_Extension (Self : Node) return Boolean
+   overriding function Is_Derived_Record_Extension_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Derived_Record_Extension;
+   end Is_Derived_Record_Extension_Element;
 
    ---------------------
    -- Is_Derived_Type --
    ---------------------
 
-   overriding function Is_Derived_Type (Self : Node) return Boolean is
+   overriding function Is_Derived_Type_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Derived_Type;
+   end Is_Derived_Type_Element;
 
    --------------------------
    -- Is_Digits_Constraint --
    --------------------------
 
-   overriding function Is_Digits_Constraint (Self : Node) return Boolean is
+   overriding function Is_Digits_Constraint_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Digits_Constraint;
+   end Is_Digits_Constraint_Element;
 
    -----------------------
    -- Is_Discrete_Range --
    -----------------------
 
-   overriding function Is_Discrete_Range (Self : Node) return Boolean is
+   overriding function Is_Discrete_Range_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discrete_Range;
+   end Is_Discrete_Range_Element;
 
    -------------------------------------------
    -- Is_Discrete_Range_Attribute_Reference --
    -------------------------------------------
 
-   overriding function Is_Discrete_Range_Attribute_Reference
-     (Self : Node) return Boolean is
+   overriding function Is_Discrete_Range_Attribute_Reference_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discrete_Range_Attribute_Reference;
+   end Is_Discrete_Range_Attribute_Reference_Element;
 
    -----------------------------------------
    -- Is_Discrete_Simple_Expression_Range --
    -----------------------------------------
 
-   overriding function Is_Discrete_Simple_Expression_Range
+   overriding function Is_Discrete_Simple_Expression_Range_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discrete_Simple_Expression_Range;
+   end Is_Discrete_Simple_Expression_Range_Element;
 
    ------------------------------------
    -- Is_Discrete_Subtype_Indication --
    ------------------------------------
 
-   overriding function Is_Discrete_Subtype_Indication
+   overriding function Is_Discrete_Subtype_Indication_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discrete_Subtype_Indication;
+   end Is_Discrete_Subtype_Indication_Element;
 
    ---------------------------------
    -- Is_Discriminant_Association --
    ---------------------------------
 
-   overriding function Is_Discriminant_Association (Self : Node) return Boolean
+   overriding function Is_Discriminant_Association_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discriminant_Association;
+   end Is_Discriminant_Association_Element;
 
    --------------------------------
    -- Is_Discriminant_Constraint --
    --------------------------------
 
-   overriding function Is_Discriminant_Constraint (Self : Node) return Boolean
+   overriding function Is_Discriminant_Constraint_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discriminant_Constraint;
+   end Is_Discriminant_Constraint_Element;
 
    -----------------------------------
    -- Is_Discriminant_Specification --
    -----------------------------------
 
-   overriding function Is_Discriminant_Specification
+   overriding function Is_Discriminant_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Discriminant_Specification;
+   end Is_Discriminant_Specification_Element;
 
    ---------------------------------------
    -- Is_Element_Iterator_Specification --
    ---------------------------------------
 
-   overriding function Is_Element_Iterator_Specification
+   overriding function Is_Element_Iterator_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Element_Iterator_Specification;
+   end Is_Element_Iterator_Specification_Element;
 
    ------------------------------
    -- Is_Elsif_Expression_Path --
    ------------------------------
 
-   overriding function Is_Elsif_Expression_Path (Self : Node) return Boolean is
+   overriding function Is_Elsif_Expression_Path_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Elsif_Expression_Path;
+   end Is_Elsif_Expression_Path_Element;
 
    -------------------
    -- Is_Elsif_Path --
    -------------------
 
-   overriding function Is_Elsif_Path (Self : Node) return Boolean is
+   overriding function Is_Elsif_Path_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Elsif_Path;
+   end Is_Elsif_Path_Element;
 
    -------------------------------
    -- Is_Entry_Body_Declaration --
    -------------------------------
 
-   overriding function Is_Entry_Body_Declaration (Self : Node) return Boolean
+   overriding function Is_Entry_Body_Declaration_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Entry_Body_Declaration;
+   end Is_Entry_Body_Declaration_Element;
 
    --------------------------
    -- Is_Entry_Declaration --
    --------------------------
 
-   overriding function Is_Entry_Declaration (Self : Node) return Boolean is
+   overriding function Is_Entry_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Entry_Declaration;
+   end Is_Entry_Declaration_Element;
 
    ----------------------------------
    -- Is_Entry_Index_Specification --
    ----------------------------------
 
-   overriding function Is_Entry_Index_Specification
+   overriding function Is_Entry_Index_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Entry_Index_Specification;
+   end Is_Entry_Index_Specification_Element;
 
    ------------------------------------------
    -- Is_Enumeration_Literal_Specification --
    ------------------------------------------
 
-   overriding function Is_Enumeration_Literal_Specification
+   overriding function Is_Enumeration_Literal_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Enumeration_Literal_Specification;
+   end Is_Enumeration_Literal_Specification_Element;
 
    ------------------------------------------
    -- Is_Enumeration_Representation_Clause --
    ------------------------------------------
 
-   overriding function Is_Enumeration_Representation_Clause
+   overriding function Is_Enumeration_Representation_Clause_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Enumeration_Representation_Clause;
+   end Is_Enumeration_Representation_Clause_Element;
 
    -------------------------
    -- Is_Enumeration_Type --
    -------------------------
 
-   overriding function Is_Enumeration_Type (Self : Node) return Boolean is
+   overriding function Is_Enumeration_Type_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Enumeration_Type;
+   end Is_Enumeration_Type_Element;
 
    ------------------------------
    -- Is_Exception_Declaration --
    ------------------------------
 
-   overriding function Is_Exception_Declaration (Self : Node) return Boolean is
+   overriding function Is_Exception_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Exception_Declaration;
+   end Is_Exception_Declaration_Element;
 
    --------------------------
    -- Is_Exception_Handler --
    --------------------------
 
-   overriding function Is_Exception_Handler (Self : Node) return Boolean is
+   overriding function Is_Exception_Handler_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Exception_Handler;
+   end Is_Exception_Handler_Element;
 
    ---------------------------------------
    -- Is_Exception_Renaming_Declaration --
    ---------------------------------------
 
-   overriding function Is_Exception_Renaming_Declaration
+   overriding function Is_Exception_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Exception_Renaming_Declaration;
+   end Is_Exception_Renaming_Declaration_Element;
 
    -----------------------
    -- Is_Exit_Statement --
    -----------------------
 
-   overriding function Is_Exit_Statement (Self : Node) return Boolean is
+   overriding function Is_Exit_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Exit_Statement;
+   end Is_Exit_Statement_Element;
 
    -----------------------------
    -- Is_Explicit_Dereference --
    -----------------------------
 
-   overriding function Is_Explicit_Dereference (Self : Node) return Boolean is
+   overriding function Is_Explicit_Dereference_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Explicit_Dereference;
+   end Is_Explicit_Dereference_Element;
 
    -------------------
    -- Is_Expression --
    -------------------
 
-   overriding function Is_Expression (Self : Node) return Boolean is
+   overriding function Is_Expression_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    ----------------------------------
    -- Is_Extended_Return_Statement --
    ----------------------------------
 
-   overriding function Is_Extended_Return_Statement
+   overriding function Is_Extended_Return_Statement_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Extended_Return_Statement;
+   end Is_Extended_Return_Statement_Element;
 
    ----------------------------
    -- Is_Extension_Aggregate --
    ----------------------------
 
-   overriding function Is_Extension_Aggregate (Self : Node) return Boolean is
+   overriding function Is_Extension_Aggregate_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Extension_Aggregate;
+   end Is_Extension_Aggregate_Element;
 
    ----------------------------
    -- Is_Floating_Point_Type --
    ----------------------------
 
-   overriding function Is_Floating_Point_Type (Self : Node) return Boolean is
+   overriding function Is_Floating_Point_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Floating_Point_Type;
+   end Is_Floating_Point_Type_Element;
 
    ---------------------------
    -- Is_For_Loop_Statement --
    ---------------------------
 
-   overriding function Is_For_Loop_Statement (Self : Node) return Boolean is
+   overriding function Is_For_Loop_Statement_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_For_Loop_Statement;
+   end Is_For_Loop_Statement_Element;
 
    ---------------------------
    -- Is_Formal_Access_Type --
    ---------------------------
 
-   overriding function Is_Formal_Access_Type (Self : Node) return Boolean is
+   overriding function Is_Formal_Access_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Access_Type;
+   end Is_Formal_Access_Type_Element;
 
    --------------------------------------
    -- Is_Formal_Constrained_Array_Type --
    --------------------------------------
 
-   overriding function Is_Formal_Constrained_Array_Type
+   overriding function Is_Formal_Constrained_Array_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Constrained_Array_Type;
+   end Is_Formal_Constrained_Array_Type_Element;
 
    ----------------------------------------------
    -- Is_Formal_Decimal_Fixed_Point_Definition --
    ----------------------------------------------
 
-   overriding function Is_Formal_Decimal_Fixed_Point_Definition
+   overriding function Is_Formal_Decimal_Fixed_Point_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Decimal_Fixed_Point_Definition;
+   end Is_Formal_Decimal_Fixed_Point_Definition_Element;
 
    ---------------------------------------
    -- Is_Formal_Derived_Type_Definition --
    ---------------------------------------
 
-   overriding function Is_Formal_Derived_Type_Definition
+   overriding function Is_Formal_Derived_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Derived_Type_Definition;
+   end Is_Formal_Derived_Type_Definition_Element;
 
    ----------------------------------------
    -- Is_Formal_Discrete_Type_Definition --
    ----------------------------------------
 
-   overriding function Is_Formal_Discrete_Type_Definition
+   overriding function Is_Formal_Discrete_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Discrete_Type_Definition;
+   end Is_Formal_Discrete_Type_Definition_Element;
 
    -----------------------------------------
    -- Is_Formal_Floating_Point_Definition --
    -----------------------------------------
 
-   overriding function Is_Formal_Floating_Point_Definition
+   overriding function Is_Formal_Floating_Point_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Floating_Point_Definition;
+   end Is_Formal_Floating_Point_Definition_Element;
 
    ------------------------------------
    -- Is_Formal_Function_Declaration --
    ------------------------------------
 
-   overriding function Is_Formal_Function_Declaration
+   overriding function Is_Formal_Function_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Function_Declaration;
+   end Is_Formal_Function_Declaration_Element;
 
    ---------------------------------------
    -- Is_Formal_Modular_Type_Definition --
    ---------------------------------------
 
-   overriding function Is_Formal_Modular_Type_Definition
+   overriding function Is_Formal_Modular_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Modular_Type_Definition;
+   end Is_Formal_Modular_Type_Definition_Element;
 
    ----------------------------------
    -- Is_Formal_Object_Access_Type --
    ----------------------------------
 
-   overriding function Is_Formal_Object_Access_Type
+   overriding function Is_Formal_Object_Access_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Object_Access_Type;
+   end Is_Formal_Object_Access_Type_Element;
 
    -------------------------------------
    -- Is_Formal_Procedure_Access_Type --
    -------------------------------------
 
-   overriding function Is_Formal_Procedure_Access_Type
-     (Self : Node)  return Boolean
+   overriding function Is_Formal_Procedure_Access_Type_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Procedure_Access_Type;
+   end Is_Formal_Procedure_Access_Type_Element;
 
    ------------------------------------
    -- Is_Formal_Function_Access_Type --
    ------------------------------------
 
-   overriding function Is_Formal_Function_Access_Type
+   overriding function Is_Formal_Function_Access_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Function_Access_Type;
+   end Is_Formal_Function_Access_Type_Element;
 
    ------------------------------
    -- Is_Formal_Interface_Type --
    ------------------------------
 
-   overriding function Is_Formal_Interface_Type (Self : Node) return Boolean is
+   overriding function Is_Formal_Interface_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Interface_Type;
+   end Is_Formal_Interface_Type_Element;
 
    ----------------------------------
    -- Is_Formal_Object_Declaration --
    ----------------------------------
 
-   overriding function Is_Formal_Object_Declaration
+   overriding function Is_Formal_Object_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Object_Declaration;
+   end Is_Formal_Object_Declaration_Element;
 
    -----------------------------------------------
    -- Is_Formal_Ordinary_Fixed_Point_Definition --
    -----------------------------------------------
 
-   overriding function Is_Formal_Ordinary_Fixed_Point_Definition
+   overriding function Is_Formal_Ordinary_Fixed_Point_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Ordinary_Fixed_Point_Definition;
+   end Is_Formal_Ordinary_Fixed_Point_Definition_Element;
 
    -----------------------------------
    -- Is_Formal_Package_Association --
    -----------------------------------
 
-   overriding function Is_Formal_Package_Association
+   overriding function Is_Formal_Package_Association_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Package_Association;
+   end Is_Formal_Package_Association_Element;
 
    -----------------------------------
    -- Is_Formal_Package_Declaration --
    -----------------------------------
 
-   overriding function Is_Formal_Package_Declaration
+   overriding function Is_Formal_Package_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Package_Declaration;
+   end Is_Formal_Package_Declaration_Element;
 
    ---------------------------------------
    -- Is_Formal_Private_Type_Definition --
    ---------------------------------------
 
-   overriding function Is_Formal_Private_Type_Definition
+   overriding function Is_Formal_Private_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Private_Type_Definition;
+   end Is_Formal_Private_Type_Definition_Element;
 
    -------------------------------------
    -- Is_Formal_Procedure_Declaration --
    -------------------------------------
 
-   overriding function Is_Formal_Procedure_Declaration
+   overriding function Is_Formal_Procedure_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Procedure_Declaration;
+   end Is_Formal_Procedure_Declaration_Element;
 
    ----------------------------------------------
    -- Is_Formal_Signed_Integer_Type_Definition --
    ----------------------------------------------
 
-   overriding function Is_Formal_Signed_Integer_Type_Definition
+   overriding function Is_Formal_Signed_Integer_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Signed_Integer_Type_Definition;
+   end Is_Formal_Signed_Integer_Type_Definition_Element;
 
    --------------------------------
    -- Is_Formal_Type_Declaration --
    --------------------------------
 
-   overriding function Is_Formal_Type_Declaration (Self : Node) return Boolean
+   overriding function Is_Formal_Type_Declaration_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Type_Declaration;
+   end Is_Formal_Type_Declaration_Element;
 
    -------------------------------
    -- Is_Formal_Type_Definition --
    -------------------------------
 
-   overriding function Is_Formal_Type_Definition (Self : Node) return Boolean
+   overriding function Is_Formal_Type_Definition_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Type_Definition;
+   end Is_Formal_Type_Definition_Element;
 
    ----------------------------------------
    -- Is_Formal_Unconstrained_Array_Type --
    ----------------------------------------
 
-   overriding function Is_Formal_Unconstrained_Array_Type
+   overriding function Is_Formal_Unconstrained_Array_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Formal_Unconstrained_Array_Type;
+   end Is_Formal_Unconstrained_Array_Type_Element;
 
    -----------------------------
    -- Is_Function_Access_Type --
    -----------------------------
 
-   overriding function Is_Function_Access_Type (Self : Node) return Boolean is
+   overriding function Is_Function_Access_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Access_Type;
+   end Is_Function_Access_Type_Element;
 
    ----------------------------------
    -- Is_Function_Body_Declaration --
    ----------------------------------
 
-   overriding function Is_Function_Body_Declaration
+   overriding function Is_Function_Body_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Body_Declaration;
+   end Is_Function_Body_Declaration_Element;
 
    ---------------------------
    -- Is_Function_Body_Stub --
    ---------------------------
 
-   overriding function Is_Function_Body_Stub (Self : Node) return Boolean is
+   overriding function Is_Function_Body_Stub_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Body_Stub;
+   end Is_Function_Body_Stub_Element;
 
    ----------------------
    -- Is_Function_Call --
    ----------------------
 
-   overriding function Is_Function_Call (Self : Node) return Boolean is
+   overriding function Is_Function_Call_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Call;
+   end Is_Function_Call_Element;
 
    -----------------------------
    -- Is_Function_Declaration --
    -----------------------------
 
-   overriding function Is_Function_Declaration (Self : Node) return Boolean is
+   overriding function Is_Function_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Declaration;
+   end Is_Function_Declaration_Element;
 
    -------------------------------
    -- Is_Function_Instantiation --
    -------------------------------
 
-   overriding function Is_Function_Instantiation (Self : Node) return Boolean
+   overriding function Is_Function_Instantiation_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Instantiation;
+   end Is_Function_Instantiation_Element;
 
    --------------------------------------
    -- Is_Function_Renaming_Declaration --
    --------------------------------------
 
-   overriding function Is_Function_Renaming_Declaration
+   overriding function Is_Function_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Function_Renaming_Declaration;
+   end Is_Function_Renaming_Declaration_Element;
 
    -------------------------------------------
    -- Is_Generalized_Iterator_Specification --
    -------------------------------------------
 
-   overriding function Is_Generalized_Iterator_Specification
+   overriding function Is_Generalized_Iterator_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generalized_Iterator_Specification;
+   end Is_Generalized_Iterator_Specification_Element;
 
    -------------------------------------
    -- Is_Generic_Function_Declaration --
    -------------------------------------
 
-   overriding function Is_Generic_Function_Declaration
+   overriding function Is_Generic_Function_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Function_Declaration;
+   end Is_Generic_Function_Declaration_Element;
 
    ----------------------------------------------
    -- Is_Generic_Function_Renaming_Declaration --
    ----------------------------------------------
 
-   overriding function Is_Generic_Function_Renaming_Declaration
+   overriding function Is_Generic_Function_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Function_Renaming_Declaration;
+   end Is_Generic_Function_Renaming_Declaration_Element;
 
    ------------------------------------
    -- Is_Generic_Package_Declaration --
    ------------------------------------
 
-   overriding function Is_Generic_Package_Declaration
+   overriding function Is_Generic_Package_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Package_Declaration;
+   end Is_Generic_Package_Declaration_Element;
 
    ---------------------------------------------
    -- Is_Generic_Package_Renaming_Declaration --
    ---------------------------------------------
 
-   overriding function Is_Generic_Package_Renaming_Declaration
+   overriding function Is_Generic_Package_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Package_Renaming_Declaration;
+   end Is_Generic_Package_Renaming_Declaration_Element;
 
    --------------------------------------
    -- Is_Generic_Procedure_Declaration --
    --------------------------------------
 
-   overriding function Is_Generic_Procedure_Declaration
+   overriding function Is_Generic_Procedure_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Procedure_Declaration;
+   end Is_Generic_Procedure_Declaration_Element;
 
    -----------------------------------------------
    -- Is_Generic_Procedure_Renaming_Declaration --
    -----------------------------------------------
 
-   overriding function Is_Generic_Procedure_Renaming_Declaration
+   overriding function Is_Generic_Procedure_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Generic_Procedure_Renaming_Declaration;
+   end Is_Generic_Procedure_Renaming_Declaration_Element;
 
    -----------------------
    -- Is_Goto_Statement --
    -----------------------
 
-   overriding function Is_Goto_Statement (Self : Node) return Boolean is
+   overriding function Is_Goto_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Goto_Statement;
+   end Is_Goto_Statement_Element;
 
    -------------------
    -- Is_Identifier --
    -------------------
 
-   overriding function Is_Identifier (Self : Node) return Boolean is
+   overriding function Is_Identifier_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Identifier;
+   end Is_Identifier_Element;
 
    ----------------------
    -- Is_If_Expression --
    ----------------------
 
-   overriding function Is_If_Expression (Self : Node) return Boolean is
+   overriding function Is_If_Expression_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_If_Expression;
+   end Is_If_Expression_Element;
 
    ---------------------
    -- Is_If_Statement --
    ---------------------
 
-   overriding function Is_If_Statement (Self : Node) return Boolean is
+   overriding function Is_If_Statement_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_If_Statement;
+   end Is_If_Statement_Element;
 
    -----------------------------------
    -- Is_Incomplete_Type_Definition --
    -----------------------------------
 
-   overriding function Is_Incomplete_Type_Definition
+   overriding function Is_Incomplete_Type_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Incomplete_Type_Definition;
+   end Is_Incomplete_Type_Definition_Element;
 
    -------------------------
    -- Is_Index_Constraint --
    -------------------------
 
-   overriding function Is_Index_Constraint (Self : Node) return Boolean is
+   overriding function Is_Index_Constraint_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Index_Constraint;
+   end Is_Index_Constraint_Element;
 
    --------------------------
    -- Is_Indexed_Component --
    --------------------------
 
-   overriding function Is_Indexed_Component (Self : Node) return Boolean is
+   overriding function Is_Indexed_Component_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Indexed_Component;
+   end Is_Indexed_Component_Element;
 
    -----------------------
    -- Is_Infix_Operator --
    -----------------------
 
-   overriding function Is_Infix_Operator (Self : Node) return Boolean is
+   overriding function Is_Infix_Operator_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Infix_Operator;
+   end Is_Infix_Operator_Element;
 
    -----------------------
    -- Is_Interface_Type --
    -----------------------
 
-   overriding function Is_Interface_Type (Self : Node) return Boolean is
+   overriding function Is_Interface_Type_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Interface_Type;
+   end Is_Interface_Type_Element;
 
    --------------------------------
    -- Is_Known_Discriminant_Part --
    --------------------------------
 
-   overriding function Is_Known_Discriminant_Part (Self : Node) return Boolean
+   overriding function Is_Known_Discriminant_Part_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Known_Discriminant_Part;
+   end Is_Known_Discriminant_Part_Element;
 
    -------------------------------------
    -- Is_Loop_Parameter_Specification --
    -------------------------------------
 
-   overriding function Is_Loop_Parameter_Specification
+   overriding function Is_Loop_Parameter_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Loop_Parameter_Specification;
+   end Is_Loop_Parameter_Specification_Element;
 
    -----------------------
    -- Is_Loop_Statement --
    -----------------------
 
-   overriding function Is_Loop_Statement (Self : Node) return Boolean is
+   overriding function Is_Loop_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Loop_Statement;
+   end Is_Loop_Statement_Element;
 
    ------------------------
    -- Is_Membership_Test --
    ------------------------
 
-   overriding function Is_Membership_Test (Self : Node) return Boolean is
+   overriding function Is_Membership_Test_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Membership_Test;
+   end Is_Membership_Test_Element;
 
    ---------------------
    -- Is_Modular_Type --
    ---------------------
 
-   overriding function Is_Modular_Type (Self : Node) return Boolean is
+   overriding function Is_Modular_Type_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Modular_Type;
+   end Is_Modular_Type_Element;
 
    -----------------------
    -- Is_Null_Component --
    -----------------------
 
-   overriding function Is_Null_Component (Self : Node) return Boolean is
+   overriding function Is_Null_Component_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Null_Component;
+   end Is_Null_Component_Element;
 
    ---------------------
    -- Is_Null_Literal --
    ---------------------
 
-   overriding function Is_Null_Literal (Self : Node) return Boolean is
+   overriding function Is_Null_Literal_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Null_Literal;
+   end Is_Null_Literal_Element;
 
    -----------------------
    -- Is_Null_Statement --
    -----------------------
 
-   overriding function Is_Null_Statement (Self : Node) return Boolean is
+   overriding function Is_Null_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Null_Statement;
+   end Is_Null_Statement_Element;
 
    ---------------------------
    -- Is_Number_Declaration --
    ---------------------------
 
-   overriding function Is_Number_Declaration (Self : Node) return Boolean is
+   overriding function Is_Number_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Number_Declaration;
+   end Is_Number_Declaration_Element;
 
    ------------------------
    -- Is_Numeric_Literal --
    ------------------------
 
-   overriding function Is_Numeric_Literal (Self : Node) return Boolean is
+   overriding function Is_Numeric_Literal_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Numeric_Literal;
+   end Is_Numeric_Literal_Element;
 
    ---------------------------
    -- Is_Object_Access_Type --
    ---------------------------
 
-   overriding function Is_Object_Access_Type (Self : Node) return Boolean is
+   overriding function Is_Object_Access_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Object_Access_Type;
+   end Is_Object_Access_Type_Element;
 
    ---------------------------
    -- Is_Object_Declaration --
    ---------------------------
 
-   overriding function Is_Object_Declaration (Self : Node) return Boolean is
+   overriding function Is_Object_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Object_Declaration;
+   end Is_Object_Declaration_Element;
 
    ------------------------------------
    -- Is_Object_Renaming_Declaration --
    ------------------------------------
 
-   overriding function Is_Object_Renaming_Declaration
+   overriding function Is_Object_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Object_Renaming_Declaration;
+   end Is_Object_Renaming_Declaration_Element;
 
    ------------------------
    -- Is_Operator_Symbol --
    ------------------------
 
-   overriding function Is_Operator_Symbol (Self : Node) return Boolean is
+   overriding function Is_Operator_Symbol_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Operator_Symbol;
+   end Is_Operator_Symbol_Element;
 
    ----------------------------------
    -- Is_Ordinary_Fixed_Point_Type --
    ----------------------------------
 
-   overriding function Is_Ordinary_Fixed_Point_Type
+   overriding function Is_Ordinary_Fixed_Point_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Ordinary_Fixed_Point_Type;
+   end Is_Ordinary_Fixed_Point_Type_Element;
 
    ----------------------
    -- Is_Others_Choice --
    ----------------------
 
-   overriding function Is_Others_Choice (Self : Node) return Boolean is
+   overriding function Is_Others_Choice_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Others_Choice;
+   end Is_Others_Choice_Element;
 
    ---------------------------------
    -- Is_Package_Body_Declaration --
    ---------------------------------
 
-   overriding function Is_Package_Body_Declaration (Self : Node) return Boolean
-   is
-      pragma Unreferenced (Self);
-   begin
-      return False;
-   end Is_Package_Body_Declaration;
-
-   --------------------------
-   -- Is_Package_Body_Stub --
-   --------------------------
-
-   overriding function Is_Package_Body_Stub (Self : Node) return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return False;
-   end Is_Package_Body_Stub;
-
-   ----------------------------
-   -- Is_Package_Declaration --
-   ----------------------------
-
-   overriding function Is_Package_Declaration (Self : Node) return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return False;
-   end Is_Package_Declaration;
-
-   ------------------------------
-   -- Is_Package_Instantiation --
-   ------------------------------
-
-   overriding function Is_Package_Instantiation (Self : Node) return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return False;
-   end Is_Package_Instantiation;
-
-   -------------------------------------
-   -- Is_Package_Renaming_Declaration --
-   -------------------------------------
-
-   overriding function Is_Package_Renaming_Declaration
+   overriding function Is_Package_Body_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Package_Renaming_Declaration;
+   end Is_Package_Body_Declaration_Element;
+
+   --------------------------
+   -- Is_Package_Body_Stub --
+   --------------------------
+
+   overriding function Is_Package_Body_Stub_Element
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Package_Body_Stub_Element;
+
+   ----------------------------
+   -- Is_Package_Declaration --
+   ----------------------------
+
+   overriding function Is_Package_Declaration_Element
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Package_Declaration_Element;
+
+   ------------------------------
+   -- Is_Package_Instantiation --
+   ------------------------------
+
+   overriding function Is_Package_Instantiation_Element
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Package_Instantiation_Element;
+
+   -------------------------------------
+   -- Is_Package_Renaming_Declaration --
+   -------------------------------------
+
+   overriding function Is_Package_Renaming_Declaration_Element
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Package_Renaming_Declaration_Element;
 
    ------------------------------
    -- Is_Parameter_Association --
    ------------------------------
 
-   overriding function Is_Parameter_Association (Self : Node) return Boolean is
+   overriding function Is_Parameter_Association_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Parameter_Association;
+   end Is_Parameter_Association_Element;
 
    --------------------------------
    -- Is_Parameter_Specification --
    --------------------------------
 
-   overriding function Is_Parameter_Specification (Self : Node) return Boolean
+   overriding function Is_Parameter_Specification_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Parameter_Specification;
+   end Is_Parameter_Specification_Element;
 
    ---------------------------------
    -- Is_Parenthesized_Expression --
    ---------------------------------
 
-   overriding function Is_Parenthesized_Expression (Self : Node) return Boolean
+   overriding function Is_Parenthesized_Expression_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Parenthesized_Expression;
+   end Is_Parenthesized_Expression_Element;
 
    -------------------------
    -- Is_Part_Of_Implicit --
@@ -1554,613 +1655,665 @@ package body Program.Nodes is
    -- Is_Path --
    -------------
 
-   overriding function Is_Path (Self : Node) return Boolean is
+   overriding function Is_Path_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Path;
+   end Is_Path_Element;
 
    ---------------
    -- Is_Pragma --
    ---------------
 
-   overriding function Is_Pragma (Self : Node) return Boolean is
+   overriding function Is_Pragma_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Pragma;
+   end Is_Pragma_Element;
 
    -------------------------------------
    -- Is_Private_Extension_Definition --
    -------------------------------------
 
-   overriding function Is_Private_Extension_Definition
+   overriding function Is_Private_Extension_Definition_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Private_Extension_Definition;
+   end Is_Private_Extension_Definition_Element;
 
    --------------------------------
    -- Is_Private_Type_Definition --
    --------------------------------
 
-   overriding function Is_Private_Type_Definition (Self : Node) return Boolean
+   overriding function Is_Private_Type_Definition_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Private_Type_Definition;
+   end Is_Private_Type_Definition_Element;
 
    ------------------------------
    -- Is_Procedure_Access_Type --
    ------------------------------
 
-   overriding function Is_Procedure_Access_Type (Self : Node) return Boolean is
+   overriding function Is_Procedure_Access_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Access_Type;
+   end Is_Procedure_Access_Type_Element;
 
    -----------------------------------
    -- Is_Procedure_Body_Declaration --
    -----------------------------------
 
-   overriding function Is_Procedure_Body_Declaration
+   overriding function Is_Procedure_Body_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Body_Declaration;
+   end Is_Procedure_Body_Declaration_Element;
 
    ----------------------------
    -- Is_Procedure_Body_Stub --
    ----------------------------
 
-   overriding function Is_Procedure_Body_Stub (Self : Node) return Boolean is
+   overriding function Is_Procedure_Body_Stub_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Body_Stub;
+   end Is_Procedure_Body_Stub_Element;
 
    ------------------------------
    -- Is_Procedure_Declaration --
    ------------------------------
 
-   overriding function Is_Procedure_Declaration (Self : Node) return Boolean is
+   overriding function Is_Procedure_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Declaration;
+   end Is_Procedure_Declaration_Element;
 
    --------------------------------
    -- Is_Procedure_Instantiation --
    --------------------------------
 
-   overriding function Is_Procedure_Instantiation (Self : Node) return Boolean
+   overriding function Is_Procedure_Instantiation_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Instantiation;
+   end Is_Procedure_Instantiation_Element;
 
    ---------------------------------------
    -- Is_Procedure_Renaming_Declaration --
    ---------------------------------------
 
-   overriding function Is_Procedure_Renaming_Declaration
+   overriding function Is_Procedure_Renaming_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Procedure_Renaming_Declaration;
+   end Is_Procedure_Renaming_Declaration_Element;
 
    -----------------------------------
    -- Is_Protected_Body_Declaration --
    -----------------------------------
 
-   overriding function Is_Protected_Body_Declaration
+   overriding function Is_Protected_Body_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Protected_Body_Declaration;
+   end Is_Protected_Body_Declaration_Element;
 
    ----------------------------
    -- Is_Protected_Body_Stub --
    ----------------------------
 
-   overriding function Is_Protected_Body_Stub (Self : Node) return Boolean is
+   overriding function Is_Protected_Body_Stub_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Protected_Body_Stub;
+   end Is_Protected_Body_Stub_Element;
 
    -----------------------------
    -- Is_Protected_Definition --
    -----------------------------
 
-   overriding function Is_Protected_Definition (Self : Node) return Boolean is
+   overriding function Is_Protected_Definition_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Protected_Definition;
+   end Is_Protected_Definition_Element;
 
    -----------------------------------
    -- Is_Protected_Type_Declaration --
    -----------------------------------
 
-   overriding function Is_Protected_Type_Declaration
+   overriding function Is_Protected_Type_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Protected_Type_Declaration;
+   end Is_Protected_Type_Declaration_Element;
 
    -----------------------------
    -- Is_Qualified_Expression --
    -----------------------------
 
-   overriding function Is_Qualified_Expression (Self : Node) return Boolean is
+   overriding function Is_Qualified_Expression_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Qualified_Expression;
+   end Is_Qualified_Expression_Element;
 
    ------------------------------
    -- Is_Quantified_Expression --
    ------------------------------
 
-   overriding function Is_Quantified_Expression (Self : Node) return Boolean is
+   overriding function Is_Quantified_Expression_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Quantified_Expression;
+   end Is_Quantified_Expression_Element;
 
    -------------------------
    -- Is_Raise_Expression --
    -------------------------
 
-   overriding function Is_Raise_Expression (Self : Node) return Boolean is
+   overriding function Is_Raise_Expression_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Raise_Expression;
+   end Is_Raise_Expression_Element;
 
    ------------------------
    -- Is_Raise_Statement --
    ------------------------
 
-   overriding function Is_Raise_Statement (Self : Node) return Boolean is
+   overriding function Is_Raise_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Raise_Statement;
+   end Is_Raise_Statement_Element;
 
    ----------------------------------
    -- Is_Range_Attribute_Reference --
    ----------------------------------
 
-   overriding function Is_Range_Attribute_Reference
+   overriding function Is_Range_Attribute_Reference_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Range_Attribute_Reference;
+   end Is_Range_Attribute_Reference_Element;
 
    ---------------------------------
    -- Is_Real_Range_Specification --
    ---------------------------------
 
-   overriding function Is_Real_Range_Specification (Self : Node) return Boolean
+   overriding function Is_Real_Range_Specification_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Real_Range_Specification;
+   end Is_Real_Range_Specification_Element;
 
    -------------------------
    -- Is_Record_Aggregate --
    -------------------------
 
-   overriding function Is_Record_Aggregate (Self : Node) return Boolean is
+   overriding function Is_Record_Aggregate_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Record_Aggregate;
+   end Is_Record_Aggregate_Element;
 
    -------------------------------------
    -- Is_Record_Component_Association --
    -------------------------------------
 
-   overriding function Is_Record_Component_Association
+   overriding function Is_Record_Component_Association_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Record_Component_Association;
+   end Is_Record_Component_Association_Element;
 
    --------------------------
    -- Is_Record_Definition --
    --------------------------
 
-   overriding function Is_Record_Definition (Self : Node) return Boolean is
+   overriding function Is_Record_Definition_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Record_Definition;
+   end Is_Record_Definition_Element;
 
    -------------------------------------
    -- Is_Record_Representation_Clause --
    -------------------------------------
 
-   overriding function Is_Record_Representation_Clause
+   overriding function Is_Record_Representation_Clause_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Record_Representation_Clause;
+   end Is_Record_Representation_Clause_Element;
 
    --------------------
    -- Is_Record_Type --
    --------------------
 
-   overriding function Is_Record_Type (Self : Node) return Boolean is
+   overriding function Is_Record_Type_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Record_Type;
+   end Is_Record_Type_Element;
 
    ------------------------------
    -- Is_Representation_Clause --
    ------------------------------
 
-   overriding function Is_Representation_Clause (Self : Node) return Boolean is
+   overriding function Is_Representation_Clause_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Representation_Clause;
+   end Is_Representation_Clause_Element;
 
    --------------------------
    -- Is_Requeue_Statement --
    --------------------------
 
-   overriding function Is_Requeue_Statement (Self : Node) return Boolean is
+   overriding function Is_Requeue_Statement_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Requeue_Statement;
+   end Is_Requeue_Statement_Element;
 
    ------------------------------------
    -- Is_Return_Object_Specification --
    ------------------------------------
 
-   overriding function Is_Return_Object_Specification
+   overriding function Is_Return_Object_Specification_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Return_Object_Specification;
+   end Is_Return_Object_Specification_Element;
 
    ------------------
    -- Is_Root_Type --
    ------------------
 
-   overriding function Is_Root_Type (Self : Node) return Boolean is
+   overriding function Is_Root_Type_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Root_Type;
+   end Is_Root_Type_Element;
 
    --------------------
    -- Is_Select_Path --
    --------------------
 
-   overriding function Is_Select_Path (Self : Node) return Boolean is
+   overriding function Is_Select_Path_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Select_Path;
+   end Is_Select_Path_Element;
 
    -------------------------
    -- Is_Select_Statement --
    -------------------------
 
-   overriding function Is_Select_Statement (Self : Node) return Boolean is
+   overriding function Is_Select_Statement_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Select_Statement;
+   end Is_Select_Statement_Element;
 
    ---------------------------
    -- Is_Selected_Component --
    ---------------------------
 
-   overriding function Is_Selected_Component (Self : Node) return Boolean is
+   overriding function Is_Selected_Component_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Selected_Component;
+   end Is_Selected_Component_Element;
 
    --------------------------------
    -- Is_Short_Circuit_Operation --
    --------------------------------
 
-   overriding function Is_Short_Circuit_Operation (Self : Node) return Boolean
+   overriding function Is_Short_Circuit_Operation_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Short_Circuit_Operation;
+   end Is_Short_Circuit_Operation_Element;
 
    ----------------------------
    -- Is_Signed_Integer_Type --
    ----------------------------
 
-   overriding function Is_Signed_Integer_Type (Self : Node) return Boolean is
+   overriding function Is_Signed_Integer_Type_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Signed_Integer_Type;
+   end Is_Signed_Integer_Type_Element;
 
    --------------------------------
    -- Is_Simple_Expression_Range --
    --------------------------------
 
-   overriding function Is_Simple_Expression_Range (Self : Node) return Boolean
+   overriding function Is_Simple_Expression_Range_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Simple_Expression_Range;
+   end Is_Simple_Expression_Range_Element;
 
    --------------------------------
    -- Is_Simple_Return_Statement --
    --------------------------------
 
-   overriding function Is_Simple_Return_Statement (Self : Node) return Boolean
+   overriding function Is_Simple_Return_Statement_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Simple_Return_Statement;
+   end Is_Simple_Return_Statement_Element;
 
    -------------------------------------
    -- Is_Single_Protected_Declaration --
    -------------------------------------
 
-   overriding function Is_Single_Protected_Declaration
+   overriding function Is_Single_Protected_Declaration_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Single_Protected_Declaration;
+   end Is_Single_Protected_Declaration_Element;
 
    --------------------------------
    -- Is_Single_Task_Declaration --
    --------------------------------
 
-   overriding function Is_Single_Task_Declaration (Self : Node) return Boolean
+   overriding function Is_Single_Task_Declaration_Element
+     (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Single_Task_Declaration;
+   end Is_Single_Task_Declaration_Element;
 
    --------------
    -- Is_Slice --
    --------------
 
-   overriding function Is_Slice (Self : Node) return Boolean is
+   overriding function Is_Slice_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Slice;
+   end Is_Slice_Element;
 
    ------------------
    -- Is_Statement --
    ------------------
 
-   overriding function Is_Statement (Self : Node) return Boolean is
+   overriding function Is_Statement_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Statement;
+   end Is_Statement_Element;
 
    -----------------------
    -- Is_String_Literal --
    -----------------------
 
-   overriding function Is_String_Literal (Self : Node) return Boolean is
+   overriding function Is_String_Literal_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_String_Literal;
+   end Is_String_Literal_Element;
 
    ----------------------------
    -- Is_Subtype_Declaration --
    ----------------------------
 
-   overriding function Is_Subtype_Declaration (Self : Node) return Boolean is
+   overriding function Is_Subtype_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Subtype_Declaration;
+   end Is_Subtype_Declaration_Element;
 
    ---------------------------
    -- Is_Subtype_Indication --
    ---------------------------
 
-   overriding function Is_Subtype_Indication (Self : Node) return Boolean is
+   overriding function Is_Subtype_Indication_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Subtype_Indication;
+   end Is_Subtype_Indication_Element;
 
    ------------------------------
    -- Is_Task_Body_Declaration --
    ------------------------------
 
-   overriding function Is_Task_Body_Declaration (Self : Node) return Boolean is
+   overriding function Is_Task_Body_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Task_Body_Declaration;
+   end Is_Task_Body_Declaration_Element;
 
    -----------------------
    -- Is_Task_Body_Stub --
    -----------------------
 
-   overriding function Is_Task_Body_Stub (Self : Node) return Boolean is
+   overriding function Is_Task_Body_Stub_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Task_Body_Stub;
+   end Is_Task_Body_Stub_Element;
 
    ------------------------
    -- Is_Task_Definition --
    ------------------------
 
-   overriding function Is_Task_Definition (Self : Node) return Boolean is
+   overriding function Is_Task_Definition_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Task_Definition;
+   end Is_Task_Definition_Element;
 
    ------------------------------
    -- Is_Task_Type_Declaration --
    ------------------------------
 
-   overriding function Is_Task_Type_Declaration (Self : Node) return Boolean is
+   overriding function Is_Task_Type_Declaration_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Task_Type_Declaration;
+   end Is_Task_Type_Declaration_Element;
 
    ----------------------------------------
    -- Is_Terminate_Alternative_Statement --
    ----------------------------------------
 
-   overriding function Is_Terminate_Alternative_Statement
+   overriding function Is_Terminate_Alternative_Statement_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Terminate_Alternative_Statement;
+   end Is_Terminate_Alternative_Statement_Element;
 
    ------------------------
    -- Is_Type_Conversion --
    ------------------------
 
-   overriding function Is_Type_Conversion (Self : Node) return Boolean is
+   overriding function Is_Type_Conversion_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Type_Conversion;
+   end Is_Type_Conversion_Element;
 
    -------------------------
    -- Is_Type_Declaration --
    -------------------------
 
-   overriding function Is_Type_Declaration (Self : Node) return Boolean is
+   overriding function Is_Type_Declaration_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Type_Declaration;
+   end Is_Type_Declaration_Element;
 
    ------------------------
    -- Is_Type_Definition --
    ------------------------
 
-   overriding function Is_Type_Definition (Self : Node) return Boolean is
+   overriding function Is_Type_Definition_Element (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Type_Definition;
+   end Is_Type_Definition_Element;
 
    ---------------------------------
    -- Is_Unconstrained_Array_Type --
    ---------------------------------
 
-   overriding function Is_Unconstrained_Array_Type (Self : Node) return Boolean
-   is
-      pragma Unreferenced (Self);
-   begin
-      return False;
-   end Is_Unconstrained_Array_Type;
-
-   ----------------------------------
-   -- Is_Unknown_Discriminant_Part --
-   ----------------------------------
-
-   overriding function Is_Unknown_Discriminant_Part
+   overriding function Is_Unconstrained_Array_Type_Element
      (Self : Node) return Boolean
    is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Unknown_Discriminant_Part;
+   end Is_Unconstrained_Array_Type_Element;
+
+   ----------------------------------
+   -- Is_Unknown_Discriminant_Part --
+   ----------------------------------
+
+   overriding function Is_Unknown_Discriminant_Part_Element
+     (Self : Node) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return False;
+   end Is_Unknown_Discriminant_Part_Element;
 
    -------------------
    -- Is_Use_Clause --
    -------------------
 
-   overriding function Is_Use_Clause (Self : Node) return Boolean is
+   overriding function Is_Use_Clause_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Use_Clause;
+   end Is_Use_Clause_Element;
 
    ----------------
    -- Is_Variant --
    ----------------
 
-   overriding function Is_Variant (Self : Node) return Boolean is
+   overriding function Is_Variant_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Variant;
+   end Is_Variant_Element;
 
    ---------------------
    -- Is_Variant_Part --
    ---------------------
 
-   overriding function Is_Variant_Part (Self : Node) return Boolean is
+   overriding function Is_Variant_Part_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_Variant_Part;
+   end Is_Variant_Part_Element;
 
    -----------------------------
    -- Is_While_Loop_Statement --
    -----------------------------
 
-   overriding function Is_While_Loop_Statement (Self : Node) return Boolean is
+   overriding function Is_While_Loop_Statement_Element
+     (Self : Node) return Boolean
+   is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_While_Loop_Statement;
+   end Is_While_Loop_Statement_Element;
 
    --------------------
    -- Is_With_Clause --
    --------------------
 
-   overriding function Is_With_Clause (Self : Node) return Boolean is
+   overriding function Is_With_Clause_Element (Self : Node) return Boolean is
       pragma Unreferenced (Self);
    begin
       return False;
-   end Is_With_Clause;
+   end Is_With_Clause_Element;
 
    ---------------------------
    -- Set_Enclosing_Element --
@@ -2168,7 +2321,8 @@ package body Program.Nodes is
 
    procedure Set_Enclosing_Element
      (Self  : access Program.Elements.Element'Class;
-      Value : access Program.Elements.Element'Class) is
+      Value : access Program.Elements.Element'Class)
+   is
    begin
       if Self.all in Node'Class then
          Node'Class (Self.all).Enclosing_Element := Value;

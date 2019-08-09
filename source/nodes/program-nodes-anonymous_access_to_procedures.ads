@@ -75,15 +75,15 @@ private
       return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
-   overriding function Is_Anonymous_Access_To_Procedure
+   overriding function Is_Anonymous_Access_To_Procedure_Element
     (Self : Base_Anonymous_Access_To_Procedure)
       return Boolean;
 
-   overriding function Is_Anonymous_Access_Definition
+   overriding function Is_Anonymous_Access_Definition_Element
     (Self : Base_Anonymous_Access_To_Procedure)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Anonymous_Access_To_Procedure)
       return Boolean;
 

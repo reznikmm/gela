@@ -127,21 +127,21 @@ package body Program.Nodes.Exception_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Exception_Declaration
+   overriding function Is_Exception_Declaration_Element
     (Self : Base_Exception_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Exception_Declaration;
+   end Is_Exception_Declaration_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Exception_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Exception_Declaration;

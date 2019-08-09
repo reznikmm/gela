@@ -61,11 +61,11 @@ private
     (Self : Base_Simple_Return_Statement)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Simple_Return_Statement
+   overriding function Is_Simple_Return_Statement_Element
     (Self : Base_Simple_Return_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Simple_Return_Statement)
       return Boolean;
 

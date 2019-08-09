@@ -102,17 +102,21 @@ package body Program.Nodes.Variants is
       null;
    end Initialize;
 
-   overriding function Is_Variant (Self : Base_Variant) return Boolean is
+   overriding function Is_Variant_Element
+    (Self : Base_Variant)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Variant;
+   end Is_Variant_Element;
 
-   overriding function Is_Definition (Self : Base_Variant) return Boolean is
+   overriding function Is_Definition_Element
+    (Self : Base_Variant)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Variant;

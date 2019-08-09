@@ -68,11 +68,11 @@ private
     (Self : Base_Raise_Expression)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Raise_Expression
+   overriding function Is_Raise_Expression_Element
     (Self : Base_Raise_Expression)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Raise_Expression)
       return Boolean;
 

@@ -71,19 +71,19 @@ private
       return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Vector_Access;
 
-   overriding function Is_Procedure_Access_Type
+   overriding function Is_Procedure_Access_Type_Element
     (Self : Base_Procedure_Access_Type)
       return Boolean;
 
-   overriding function Is_Access_Type
+   overriding function Is_Access_Type_Element
     (Self : Base_Procedure_Access_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Procedure_Access_Type)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Procedure_Access_Type)
       return Boolean;
 

@@ -59,15 +59,17 @@ private
     (Self : Base_Derived_Type)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Derived_Type
+   overriding function Is_Derived_Type_Element
     (Self : Base_Derived_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Derived_Type)
       return Boolean;
 
-   overriding function Is_Definition (Self : Base_Derived_Type) return Boolean;
+   overriding function Is_Definition_Element
+    (Self : Base_Derived_Type)
+      return Boolean;
 
    type Derived_Type is
      new Base_Derived_Type and Program.Elements.Derived_Types.Derived_Type_Text

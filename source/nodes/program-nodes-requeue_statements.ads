@@ -63,11 +63,11 @@ private
     (Self : Base_Requeue_Statement)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Requeue_Statement
+   overriding function Is_Requeue_Statement_Element
     (Self : Base_Requeue_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Requeue_Statement)
       return Boolean;
 

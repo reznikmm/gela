@@ -101,21 +101,21 @@ package body Program.Nodes.Array_Component_Associations is
       null;
    end Initialize;
 
-   overriding function Is_Array_Component_Association
+   overriding function Is_Array_Component_Association_Element
     (Self : Base_Array_Component_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Array_Component_Association;
+   end Is_Array_Component_Association_Element;
 
-   overriding function Is_Association
+   overriding function Is_Association_Element
     (Self : Base_Array_Component_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Association;
+   end Is_Association_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Array_Component_Association;

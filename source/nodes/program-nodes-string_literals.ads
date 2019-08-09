@@ -46,11 +46,11 @@ private
     (Self    : not null access Base_String_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_String_Literal
+   overriding function Is_String_Literal_Element
     (Self : Base_String_Literal)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_String_Literal)
       return Boolean;
 

@@ -75,11 +75,11 @@ private
     (Self : Base_Protected_Definition)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Protected_Definition
+   overriding function Is_Protected_Definition_Element
     (Self : Base_Protected_Definition)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Protected_Definition)
       return Boolean;
 

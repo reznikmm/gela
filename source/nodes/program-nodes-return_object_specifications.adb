@@ -163,21 +163,21 @@ package body Program.Nodes.Return_Object_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Return_Object_Specification
+   overriding function Is_Return_Object_Specification_Element
     (Self : Base_Return_Object_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Return_Object_Specification;
+   end Is_Return_Object_Specification_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Return_Object_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Return_Object_Specification;

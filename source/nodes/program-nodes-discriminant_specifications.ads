@@ -87,11 +87,11 @@ private
     (Self : Base_Discriminant_Specification)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Discriminant_Specification
+   overriding function Is_Discriminant_Specification_Element
     (Self : Base_Discriminant_Specification)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Discriminant_Specification)
       return Boolean;
 

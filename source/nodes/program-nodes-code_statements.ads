@@ -59,11 +59,11 @@ private
       return not null Program.Elements.Qualified_Expressions
           .Qualified_Expression_Access;
 
-   overriding function Is_Code_Statement
+   overriding function Is_Code_Statement_Element
     (Self : Base_Code_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Code_Statement)
       return Boolean;
 

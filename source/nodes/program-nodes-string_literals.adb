@@ -78,21 +78,21 @@ package body Program.Nodes.String_Literals is
       null;
    end Initialize;
 
-   overriding function Is_String_Literal
+   overriding function Is_String_Literal_Element
     (Self : Base_String_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_String_Literal;
+   end Is_String_Literal_Element;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_String_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_String_Literal;

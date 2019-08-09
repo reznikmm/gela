@@ -59,11 +59,11 @@ private
     (Self : Base_Record_Definition)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Record_Definition
+   overriding function Is_Record_Definition_Element
     (Self : Base_Record_Definition)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Record_Definition)
       return Boolean;
 

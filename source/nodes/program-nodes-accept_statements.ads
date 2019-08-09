@@ -126,11 +126,11 @@ private
     (Self : Base_Accept_Statement)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Accept_Statement
+   overriding function Is_Accept_Statement_Element
     (Self : Base_Accept_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Accept_Statement)
       return Boolean;
 

@@ -102,11 +102,11 @@ private
     (Self : Base_Single_Task_Declaration)
       return not null Program.Elements.Task_Definitions.Task_Definition_Access;
 
-   overriding function Is_Single_Task_Declaration
+   overriding function Is_Single_Task_Declaration_Element
     (Self : Base_Single_Task_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Single_Task_Declaration)
       return Boolean;
 

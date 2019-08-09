@@ -117,21 +117,21 @@ package body Program.Nodes.Protected_Definitions is
       null;
    end Initialize;
 
-   overriding function Is_Protected_Definition
+   overriding function Is_Protected_Definition_Element
     (Self : Base_Protected_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Protected_Definition;
+   end Is_Protected_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Protected_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Definition;

@@ -53,15 +53,15 @@ private
     (Self    : not null access Base_Formal_Modular_Type_Definition;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Formal_Modular_Type_Definition
+   overriding function Is_Formal_Modular_Type_Definition_Element
     (Self : Base_Formal_Modular_Type_Definition)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition
+   overriding function Is_Formal_Type_Definition_Element
     (Self : Base_Formal_Modular_Type_Definition)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Formal_Modular_Type_Definition)
       return Boolean;
 

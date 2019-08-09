@@ -100,17 +100,21 @@ package body Program.Nodes.Elsif_Paths is
       null;
    end Initialize;
 
-   overriding function Is_Elsif_Path (Self : Base_Elsif_Path) return Boolean is
+   overriding function Is_Elsif_Path_Element
+    (Self : Base_Elsif_Path)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Elsif_Path;
+   end Is_Elsif_Path_Element;
 
-   overriding function Is_Path (Self : Base_Elsif_Path) return Boolean is
+   overriding function Is_Path_Element
+    (Self : Base_Elsif_Path)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Path;
+   end Is_Path_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Elsif_Path;

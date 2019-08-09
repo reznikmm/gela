@@ -69,9 +69,11 @@ private
     (Self : Base_Slice)
       return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access;
 
-   overriding function Is_Slice (Self : Base_Slice) return Boolean;
+   overriding function Is_Slice_Element (Self : Base_Slice) return Boolean;
 
-   overriding function Is_Expression (Self : Base_Slice) return Boolean;
+   overriding function Is_Expression_Element
+    (Self : Base_Slice)
+      return Boolean;
 
    type Slice is
      new Base_Slice and Program.Elements.Slices.Slice_Text

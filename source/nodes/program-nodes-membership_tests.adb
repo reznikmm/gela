@@ -113,21 +113,21 @@ package body Program.Nodes.Membership_Tests is
       null;
    end Initialize;
 
-   overriding function Is_Membership_Test
+   overriding function Is_Membership_Test_Element
     (Self : Base_Membership_Test)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Membership_Test;
+   end Is_Membership_Test_Element;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Membership_Test)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Membership_Test;

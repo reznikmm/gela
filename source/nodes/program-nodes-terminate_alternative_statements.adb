@@ -77,21 +77,21 @@ package body Program.Nodes.Terminate_Alternative_Statements is
       null;
    end Initialize;
 
-   overriding function Is_Terminate_Alternative_Statement
+   overriding function Is_Terminate_Alternative_Statement_Element
     (Self : Base_Terminate_Alternative_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Terminate_Alternative_Statement;
+   end Is_Terminate_Alternative_Statement_Element;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Terminate_Alternative_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement;
+   end Is_Statement_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Terminate_Alternative_Statement;

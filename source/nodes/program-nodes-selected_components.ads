@@ -65,11 +65,11 @@ private
     (Self : Base_Selected_Component)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Selected_Component
+   overriding function Is_Selected_Component_Element
     (Self : Base_Selected_Component)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Selected_Component)
       return Boolean;
 

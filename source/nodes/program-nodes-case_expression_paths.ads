@@ -68,11 +68,11 @@ private
     (Self : Base_Case_Expression_Path)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Case_Expression_Path
+   overriding function Is_Case_Expression_Path_Element
     (Self : Base_Case_Expression_Path)
       return Boolean;
 
-   overriding function Is_Path
+   overriding function Is_Path_Element
     (Self : Base_Case_Expression_Path)
       return Boolean;
 

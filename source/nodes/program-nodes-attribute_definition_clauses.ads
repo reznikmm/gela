@@ -75,15 +75,15 @@ private
     (Self : Base_Attribute_Definition_Clause)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Attribute_Definition_Clause
+   overriding function Is_Attribute_Definition_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean;
 
-   overriding function Is_Representation_Clause
+   overriding function Is_Representation_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean;
 
-   overriding function Is_Clause
+   overriding function Is_Clause_Element
     (Self : Base_Attribute_Definition_Clause)
       return Boolean;
 

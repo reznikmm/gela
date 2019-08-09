@@ -73,15 +73,15 @@ private
       return not null Program.Elements.Subtype_Indications
           .Subtype_Indication_Access;
 
-   overriding function Is_Anonymous_Access_To_Object
+   overriding function Is_Anonymous_Access_To_Object_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean;
 
-   overriding function Is_Anonymous_Access_Definition
+   overriding function Is_Anonymous_Access_Definition_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Anonymous_Access_To_Object)
       return Boolean;
 

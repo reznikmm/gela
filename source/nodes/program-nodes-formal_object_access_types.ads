@@ -73,19 +73,19 @@ private
       return not null Program.Elements.Subtype_Indications
           .Subtype_Indication_Access;
 
-   overriding function Is_Formal_Object_Access_Type
+   overriding function Is_Formal_Object_Access_Type_Element
     (Self : Base_Formal_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Access_Type
+   overriding function Is_Formal_Access_Type_Element
     (Self : Base_Formal_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition
+   overriding function Is_Formal_Type_Definition_Element
     (Self : Base_Formal_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Formal_Object_Access_Type)
       return Boolean;
 

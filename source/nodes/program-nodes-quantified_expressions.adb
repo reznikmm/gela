@@ -187,21 +187,21 @@ package body Program.Nodes.Quantified_Expressions is
       null;
    end Initialize;
 
-   overriding function Is_Quantified_Expression
+   overriding function Is_Quantified_Expression_Element
     (Self : Base_Quantified_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Quantified_Expression;
+   end Is_Quantified_Expression_Element;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Quantified_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression;
+   end Is_Expression_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Quantified_Expression;

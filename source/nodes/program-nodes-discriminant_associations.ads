@@ -71,11 +71,11 @@ private
     (Self : Base_Discriminant_Association)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Discriminant_Association
+   overriding function Is_Discriminant_Association_Element
     (Self : Base_Discriminant_Association)
       return Boolean;
 
-   overriding function Is_Association
+   overriding function Is_Association_Element
     (Self : Base_Discriminant_Association)
       return Boolean;
 

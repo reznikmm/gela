@@ -74,11 +74,11 @@ private
       return not null Program.Elements.Case_Expression_Paths
           .Case_Expression_Path_Vector_Access;
 
-   overriding function Is_Case_Expression
+   overriding function Is_Case_Expression_Element
     (Self : Base_Case_Expression)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Case_Expression)
       return Boolean;
 

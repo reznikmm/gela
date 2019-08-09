@@ -63,11 +63,11 @@ private
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
 
-   overriding function Is_Enumeration_Literal_Specification
+   overriding function Is_Enumeration_Literal_Specification_Element
     (Self : Base_Enumeration_Literal_Specification)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Enumeration_Literal_Specification)
       return Boolean;
 

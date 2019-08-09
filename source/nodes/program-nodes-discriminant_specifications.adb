@@ -160,21 +160,21 @@ package body Program.Nodes.Discriminant_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Discriminant_Specification
+   overriding function Is_Discriminant_Specification_Element
     (Self : Base_Discriminant_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discriminant_Specification;
+   end Is_Discriminant_Specification_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Discriminant_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Specification;

@@ -80,15 +80,15 @@ private
     (Self : Base_Discrete_Subtype_Indication)
       return Boolean;
 
-   overriding function Is_Discrete_Subtype_Indication
+   overriding function Is_Discrete_Subtype_Indication_Element
     (Self : Base_Discrete_Subtype_Indication)
       return Boolean;
 
-   overriding function Is_Discrete_Range
+   overriding function Is_Discrete_Range_Element
     (Self : Base_Discrete_Subtype_Indication)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Discrete_Subtype_Indication)
       return Boolean;
 

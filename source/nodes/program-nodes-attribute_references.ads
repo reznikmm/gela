@@ -82,11 +82,11 @@ private
     (Self : Base_Attribute_Reference)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Attribute_Reference
+   overriding function Is_Attribute_Reference_Element
     (Self : Base_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Expression
+   overriding function Is_Expression_Element
     (Self : Base_Attribute_Reference)
       return Boolean;
 

@@ -80,21 +80,21 @@ package body Program.Nodes.Defining_Identifiers is
       null;
    end Initialize;
 
-   overriding function Is_Defining_Identifier
+   overriding function Is_Defining_Identifier_Element
     (Self : Base_Defining_Identifier)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Identifier;
+   end Is_Defining_Identifier_Element;
 
-   overriding function Is_Defining_Name
+   overriding function Is_Defining_Name_Element
     (Self : Base_Defining_Identifier)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Name;
+   end Is_Defining_Name_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Identifier;

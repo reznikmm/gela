@@ -55,25 +55,29 @@ package body Program.Nodes.Root_Types is
       null;
    end Initialize;
 
-   overriding function Is_Root_Type (Self : Base_Root_Type) return Boolean is
-      pragma Unreferenced (Self);
-   begin
-      return True;
-   end Is_Root_Type;
-
-   overriding function Is_Type_Definition
+   overriding function Is_Root_Type_Element
     (Self : Base_Root_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Type_Definition;
+   end Is_Root_Type_Element;
 
-   overriding function Is_Definition (Self : Base_Root_Type) return Boolean is
+   overriding function Is_Type_Definition_Element
+    (Self : Base_Root_Type)
+      return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Type_Definition_Element;
+
+   overriding function Is_Definition_Element
+    (Self : Base_Root_Type)
+      return Boolean is
+      pragma Unreferenced (Self);
+   begin
+      return True;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Root_Type;

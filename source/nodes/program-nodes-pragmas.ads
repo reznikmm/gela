@@ -73,7 +73,7 @@ private
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
-   overriding function Is_Pragma (Self : Base_Pragma) return Boolean;
+   overriding function Is_Pragma_Element (Self : Base_Pragma) return Boolean;
 
    type Pragma_Element is
      new Base_Pragma and Program.Elements.Pragmas.Pragma_Text

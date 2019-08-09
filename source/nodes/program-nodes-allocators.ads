@@ -79,9 +79,13 @@ private
       return Program.Elements.Qualified_Expressions
           .Qualified_Expression_Access;
 
-   overriding function Is_Allocator (Self : Base_Allocator) return Boolean;
+   overriding function Is_Allocator_Element
+    (Self : Base_Allocator)
+      return Boolean;
 
-   overriding function Is_Expression (Self : Base_Allocator) return Boolean;
+   overriding function Is_Expression_Element
+    (Self : Base_Allocator)
+      return Boolean;
 
    type Allocator is
      new Base_Allocator and Program.Elements.Allocators.Allocator_Text

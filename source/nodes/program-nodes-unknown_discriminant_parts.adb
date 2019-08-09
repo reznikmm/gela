@@ -86,21 +86,21 @@ package body Program.Nodes.Unknown_Discriminant_Parts is
       null;
    end Initialize;
 
-   overriding function Is_Unknown_Discriminant_Part
+   overriding function Is_Unknown_Discriminant_Part_Element
     (Self : Base_Unknown_Discriminant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Unknown_Discriminant_Part;
+   end Is_Unknown_Discriminant_Part_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Unknown_Discriminant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Unknown_Discriminant_Part;

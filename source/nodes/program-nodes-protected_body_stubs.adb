@@ -143,21 +143,21 @@ package body Program.Nodes.Protected_Body_Stubs is
       null;
    end Initialize;
 
-   overriding function Is_Protected_Body_Stub
+   overriding function Is_Protected_Body_Stub_Element
     (Self : Base_Protected_Body_Stub)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Protected_Body_Stub;
+   end Is_Protected_Body_Stub_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Protected_Body_Stub)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Body_Stub;

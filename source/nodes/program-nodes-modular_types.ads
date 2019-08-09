@@ -55,15 +55,17 @@ private
     (Self : Base_Modular_Type)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Modular_Type
+   overriding function Is_Modular_Type_Element
     (Self : Base_Modular_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Modular_Type)
       return Boolean;
 
-   overriding function Is_Definition (Self : Base_Modular_Type) return Boolean;
+   overriding function Is_Definition_Element
+    (Self : Base_Modular_Type)
+      return Boolean;
 
    type Modular_Type is
      new Base_Modular_Type and Program.Elements.Modular_Types.Modular_Type_Text

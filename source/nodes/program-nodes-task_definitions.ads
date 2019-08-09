@@ -74,11 +74,11 @@ private
     (Self : Base_Task_Definition)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Task_Definition
+   overriding function Is_Task_Definition_Element
     (Self : Base_Task_Definition)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Task_Definition)
       return Boolean;
 

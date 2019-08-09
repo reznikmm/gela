@@ -76,29 +76,29 @@ package body Program.Nodes.Formal_Ordinary_Fixed_Point_Definitions is
       null;
    end Initialize;
 
-   overriding function Is_Formal_Ordinary_Fixed_Point_Definition
+   overriding function Is_Formal_Ordinary_Fixed_Point_Definition_Element
     (Self : Base_Formal_Ordinary_Fixed_Point_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Ordinary_Fixed_Point_Definition;
+   end Is_Formal_Ordinary_Fixed_Point_Definition_Element;
 
-   overriding function Is_Formal_Type_Definition
+   overriding function Is_Formal_Type_Definition_Element
     (Self : Base_Formal_Ordinary_Fixed_Point_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Type_Definition;
+   end Is_Formal_Type_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Formal_Ordinary_Fixed_Point_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Ordinary_Fixed_Point_Definition;

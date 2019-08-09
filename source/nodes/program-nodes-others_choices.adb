@@ -65,21 +65,21 @@ package body Program.Nodes.Others_Choices is
       null;
    end Initialize;
 
-   overriding function Is_Others_Choice
+   overriding function Is_Others_Choice_Element
     (Self : Base_Others_Choice)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Others_Choice;
+   end Is_Others_Choice_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Others_Choice)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Others_Choice;

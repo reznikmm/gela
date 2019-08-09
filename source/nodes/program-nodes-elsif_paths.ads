@@ -65,9 +65,11 @@ private
     (Self : Base_Elsif_Path)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Elsif_Path (Self : Base_Elsif_Path) return Boolean;
+   overriding function Is_Elsif_Path_Element
+    (Self : Base_Elsif_Path)
+      return Boolean;
 
-   overriding function Is_Path (Self : Base_Elsif_Path) return Boolean;
+   overriding function Is_Path_Element (Self : Base_Elsif_Path) return Boolean;
 
    type Elsif_Path is
      new Base_Elsif_Path and Program.Elements.Elsif_Paths.Elsif_Path_Text

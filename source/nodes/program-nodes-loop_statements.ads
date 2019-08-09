@@ -86,11 +86,11 @@ private
     (Self : Base_Loop_Statement)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Loop_Statement
+   overriding function Is_Loop_Statement_Element
     (Self : Base_Loop_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Loop_Statement)
       return Boolean;
 

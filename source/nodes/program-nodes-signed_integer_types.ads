@@ -70,15 +70,15 @@ private
     (Self : Base_Signed_Integer_Type)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Signed_Integer_Type
+   overriding function Is_Signed_Integer_Type_Element
     (Self : Base_Signed_Integer_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition
+   overriding function Is_Type_Definition_Element
     (Self : Base_Signed_Integer_Type)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Signed_Integer_Type)
       return Boolean;
 

@@ -171,21 +171,21 @@ package body Program.Nodes.Generic_Procedure_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Generic_Procedure_Declaration
+   overriding function Is_Generic_Procedure_Declaration_Element
     (Self : Base_Generic_Procedure_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Generic_Procedure_Declaration;
+   end Is_Generic_Procedure_Declaration_Element;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Generic_Procedure_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration;
+   end Is_Declaration_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Generic_Procedure_Declaration;

@@ -77,11 +77,11 @@ private
     (Self : Base_Case_Statement)
       return not null Program.Elements.Case_Paths.Case_Path_Vector_Access;
 
-   overriding function Is_Case_Statement
+   overriding function Is_Case_Statement_Element
     (Self : Base_Case_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Case_Statement)
       return Boolean;
 

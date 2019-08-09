@@ -68,15 +68,15 @@ private
     (Self : Base_Formal_Interface_Type)
       return Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Formal_Interface_Type
+   overriding function Is_Formal_Interface_Type_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition
+   overriding function Is_Formal_Type_Definition_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Formal_Interface_Type)
       return Boolean;
 

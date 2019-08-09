@@ -110,11 +110,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Procedure_Instantiation
+   overriding function Is_Procedure_Instantiation_Element
     (Self : Base_Procedure_Instantiation)
       return Boolean;
 
-   overriding function Is_Declaration
+   overriding function Is_Declaration_Element
     (Self : Base_Procedure_Instantiation)
       return Boolean;
 

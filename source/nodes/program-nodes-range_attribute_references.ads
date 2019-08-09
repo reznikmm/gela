@@ -63,15 +63,15 @@ private
       return not null Program.Elements.Attribute_References
           .Attribute_Reference_Access;
 
-   overriding function Is_Range_Attribute_Reference
+   overriding function Is_Range_Attribute_Reference_Element
     (Self : Base_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Constraint
+   overriding function Is_Constraint_Element
     (Self : Base_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Range_Attribute_Reference)
       return Boolean;
 

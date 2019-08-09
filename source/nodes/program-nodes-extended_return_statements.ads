@@ -92,11 +92,11 @@ private
       return Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
 
-   overriding function Is_Extended_Return_Statement
+   overriding function Is_Extended_Return_Statement_Element
     (Self : Base_Extended_Return_Statement)
       return Boolean;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Extended_Return_Statement)
       return Boolean;
 

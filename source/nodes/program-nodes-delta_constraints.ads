@@ -69,15 +69,15 @@ private
     (Self : Base_Delta_Constraint)
       return Program.Elements.Constraints.Constraint_Access;
 
-   overriding function Is_Delta_Constraint
+   overriding function Is_Delta_Constraint_Element
     (Self : Base_Delta_Constraint)
       return Boolean;
 
-   overriding function Is_Constraint
+   overriding function Is_Constraint_Element
     (Self : Base_Delta_Constraint)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Delta_Constraint)
       return Boolean;
 

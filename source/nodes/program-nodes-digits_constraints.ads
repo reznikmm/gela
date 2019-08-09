@@ -69,15 +69,15 @@ private
     (Self : Base_Digits_Constraint)
       return Program.Elements.Constraints.Constraint_Access;
 
-   overriding function Is_Digits_Constraint
+   overriding function Is_Digits_Constraint_Element
     (Self : Base_Digits_Constraint)
       return Boolean;
 
-   overriding function Is_Constraint
+   overriding function Is_Constraint_Element
     (Self : Base_Digits_Constraint)
       return Boolean;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Digits_Constraint)
       return Boolean;
 

@@ -196,21 +196,21 @@ package body Program.Nodes.Private_Extension_Definitions is
       null;
    end Initialize;
 
-   overriding function Is_Private_Extension_Definition
+   overriding function Is_Private_Extension_Definition_Element
     (Self : Base_Private_Extension_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Private_Extension_Definition;
+   end Is_Private_Extension_Definition_Element;
 
-   overriding function Is_Definition
+   overriding function Is_Definition_Element
     (Self : Base_Private_Extension_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition;
+   end Is_Definition_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Private_Extension_Definition;

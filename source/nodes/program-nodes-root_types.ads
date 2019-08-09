@@ -41,13 +41,17 @@ private
     (Self    : not null access Base_Root_Type;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Root_Type (Self : Base_Root_Type) return Boolean;
-
-   overriding function Is_Type_Definition
+   overriding function Is_Root_Type_Element
     (Self : Base_Root_Type)
       return Boolean;
 
-   overriding function Is_Definition (Self : Base_Root_Type) return Boolean;
+   overriding function Is_Type_Definition_Element
+    (Self : Base_Root_Type)
+      return Boolean;
+
+   overriding function Is_Definition_Element
+    (Self : Base_Root_Type)
+      return Boolean;
 
    type Root_Type is
      new Base_Root_Type and Program.Elements.Root_Types.Root_Type_Text

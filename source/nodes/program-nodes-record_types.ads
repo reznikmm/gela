@@ -62,13 +62,17 @@ private
     (Self : Base_Record_Type)
       return not null Program.Elements.Definitions.Definition_Access;
 
-   overriding function Is_Record_Type (Self : Base_Record_Type) return Boolean;
-
-   overriding function Is_Type_Definition
+   overriding function Is_Record_Type_Element
     (Self : Base_Record_Type)
       return Boolean;
 
-   overriding function Is_Definition (Self : Base_Record_Type) return Boolean;
+   overriding function Is_Type_Definition_Element
+    (Self : Base_Record_Type)
+      return Boolean;
+
+   overriding function Is_Definition_Element
+    (Self : Base_Record_Type)
+      return Boolean;
 
    type Record_Type is
      new Base_Record_Type and Program.Elements.Record_Types.Record_Type_Text

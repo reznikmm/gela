@@ -99,21 +99,21 @@ package body Program.Nodes.Elsif_Expression_Paths is
       null;
    end Initialize;
 
-   overriding function Is_Elsif_Expression_Path
+   overriding function Is_Elsif_Expression_Path_Element
     (Self : Base_Elsif_Expression_Path)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Elsif_Expression_Path;
+   end Is_Elsif_Expression_Path_Element;
 
-   overriding function Is_Path
+   overriding function Is_Path_Element
     (Self : Base_Elsif_Expression_Path)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Path;
+   end Is_Path_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Elsif_Expression_Path;

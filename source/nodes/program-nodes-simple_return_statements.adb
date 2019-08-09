@@ -89,21 +89,21 @@ package body Program.Nodes.Simple_Return_Statements is
       null;
    end Initialize;
 
-   overriding function Is_Simple_Return_Statement
+   overriding function Is_Simple_Return_Statement_Element
     (Self : Base_Simple_Return_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Simple_Return_Statement;
+   end Is_Simple_Return_Statement_Element;
 
-   overriding function Is_Statement
+   overriding function Is_Statement_Element
     (Self : Base_Simple_Return_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement;
+   end Is_Statement_Element;
 
    overriding procedure Visit
     (Self    : not null access Base_Simple_Return_Statement;

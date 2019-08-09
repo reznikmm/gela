@@ -82,7 +82,7 @@ private
     (Self : Base_Exception_Handler)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Exception_Handler
+   overriding function Is_Exception_Handler_Element
     (Self : Base_Exception_Handler)
       return Boolean;
 
