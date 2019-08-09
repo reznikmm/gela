@@ -21,17 +21,17 @@ package Program.Subunits is
    type Subunit_Access is access all Subunit'Class
      with Storage_Size => 0;
 
-   not overriding function Subunits (Self : Subunit)
+   not overriding function Subunits (Self : access Subunit)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access
-       is abstract
-     with Post'Class =>
-       (Subunits'Result.Is_Empty
-        or else (for all X in Subunits'Result.Each_Unit => X.Unit.Is_Subunit));
+       is abstract;
+--   with Post'Class =>
+--     (Subunits'Result.Is_Empty
+--     or else (for all X in Subunits'Result.Each_Unit => X.Unit.Is_Subunit));
    --  Returns a complete list of subunit values, with one value for each body
    --  stub that appears in the given Subunit. Returns an empty list if the
    --  parent unit does not contain any body stubs.
 
-   not overriding function Parent_Body (Self : Subunit)
+   not overriding function Parent_Body (Self : access Subunit)
      return not null Program.Compilation_Units.Compilation_Unit_Access
        is abstract
      with Post'Class =>

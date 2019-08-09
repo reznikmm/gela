@@ -4,9 +4,10 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-with Program.Compilation_Units;
 with Program.Compilation_Unit_Vectors;
+with Program.Compilation_Units;
 with Program.Library_Items;
+with Program.Library_Unit_Bodies;
 
 package Program.Library_Unit_Declarations is
    pragma Pure;
@@ -20,9 +21,10 @@ package Program.Library_Unit_Declarations is
      access all Library_Unit_Declaration'Class
        with Storage_Size => 0;
 
-   not overriding function Corresponding_Body (Self : Library_Unit_Declaration)
-     return Program.Compilation_Units.Compilation_Unit_Access
-       is abstract;
+   not overriding function Corresponding_Body
+     (Self : access Library_Unit_Declaration)
+       return Program.Library_Unit_Bodies.Library_Unit_Body_Access
+         is abstract;
    --  Returns the corresponding library_unit_body, if any, for the
    --  library_unit_declaration. The corresponding library_unit_body is the
    --  unit that depends semantically on the library_unit_declaration.
@@ -31,13 +33,13 @@ package Program.Library_Unit_Declarations is
    --  do not have a corresponding library_unit_body contained in the Context.
 
    not overriding function Corresponding_Childern
-     (Self : Library_Unit_Declaration)
+     (Self : access Library_Unit_Declaration)
        return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access
-         is abstract
-     with Post'Class =>
-       (Corresponding_Childern'Result.Is_Empty
-        or else (for all X in Corresponding_Childern'Result.Each_Unit
-                   => X.Unit.Is_Library_Item));
+         is abstract;
+--       with Post'Class =>
+--         (Corresponding_Childern'Result.Is_Empty
+--          or else (for all X in Corresponding_Childern'Result.Each_Unit
+--                     => X.Unit.Is_Library_Item));
    --  Returns a list of the child units for the given parent library unit.
    --
    --  Both the declaration and body (if any) of each child unit are returned.

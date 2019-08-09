@@ -22,7 +22,7 @@ package Program.Library_Items is
    type Library_Item_Access is access all Library_Item'Class
      with Storage_Size => 0;
 
-   not overriding function Parent (Self : Library_Item)
+   not overriding function Parent (Self : access Library_Item)
      return Program.Library_Unit_Declarations.Library_Unit_Declaration_Access
        is abstract;
    --  Returns the parent unit of the given library unit.

@@ -56,31 +56,31 @@ package Program.Compilation_Units is
    function Assigned (Self : access Compilation_Unit'Class) return Boolean
      is (Self /= null);
 
-   not overriding function Compilation (Self : Compilation_Unit)
+   not overriding function Compilation (Self : access Compilation_Unit)
      return Program.Compilations.Compilation_Access is abstract;
    --  Return corresponding compilation
 
    not overriding function Full_Name
-     (Self : Compilation_Unit) return Text is abstract;
+     (Self : access Compilation_Unit) return Text is abstract;
    --  Returns the string image of the fully expanded Ada name of the given
    --  compilation unit.  This may be a simple name ("A") of a root library
    --  unit, or an expanded name ("A.B") of a subunit or non-root child unit.
    --  An expanded name shall contain the full parent_unit_name as its prefix.
 
    not overriding function Context_Clause_Elements
-     (Self : Compilation_Unit)
-      return Program.Element_Vectors.Element_Vector_Access is abstract
-     with Post'Class =>
-       (Context_Clause_Elements'Result.Is_Empty
-        or else (for all X in Context_Clause_Elements'Result.Each_Element
-                   => X.Element.Is_Pragma
-                      or X.Element.Is_With_Clause
-                      or X.Element.Is_Use_Clause));
---  Returns a list of with clauses, use clauses, and pragmas that explicitly
---  appear in the context clause of the compilation unit, in their order of
---  appearance.
+     (Self : access Compilation_Unit)
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
+--       with Post'Class =>
+--         (Context_Clause_Elements'Result.Is_Empty
+--          or else (for all X in Context_Clause_Elements'Result.Each_Element
+--                     => X.Element.Is_Pragma
+--                        or X.Element.Is_With_Clause
+--                        or X.Element.Is_Use_Clause));
+   --  Returns a list of with clauses, use clauses, and pragmas that explicitly
+   --  appear in the context clause of the compilation unit, in their order of
+   --  appearance.
 
-   not overriding function Unit_Declaration (Self : Compilation_Unit)
+   not overriding function Unit_Declaration (Self : access Compilation_Unit)
      return not null Program.Elements.Element_Access is abstract
        with Post'Class => (Unit_Declaration'Result.Is_Declaration);
    --  Returns the element representing the declaration of the compilation_unit

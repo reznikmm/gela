@@ -35,12 +35,12 @@ package Program.Library_Unit_Bodies is
    --  Returns null for library_unit_body arguments that do not have a
    --  corresponding library unit contained in the Context.
 
-   not overriding function Subunits (Self : Library_Unit_Body)
+   not overriding function Subunits (Self : access Library_Unit_Body)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access
-       is abstract
-     with Post'Class =>
-       (Subunits'Result.Is_Empty
-        or else (for all X in Subunits'Result.Each_Unit => X.Unit.Is_Subunit));
+       is abstract;
+--   with Post'Class =>
+--     (Subunits'Result.Is_Empty
+--      or else (for all X in Subunits'Result.Each_Unit => X.Unit.Is_Subunit));
    --  Returns a complete list of subunit values, with one value for each body
    --  stub that appears in the given Library_Unit_Body. Returns an empty list
    --  if the parent unit does not contain any body stubs.

@@ -8,7 +8,10 @@ library project Oasis is
 
    Version := "0.1";
 
-   for Source_Dirs use ("../source/oasis", "../source/nodes");
+   for Source_Dirs use
+     ("../source/oasis",
+      "../source/nodes",
+      "../source/units");
    for Object_Dir use "../.objs";
    for Library_Kind use "dynamic";
    for Library_Name use "oasis";
