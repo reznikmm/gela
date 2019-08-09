@@ -382,7 +382,7 @@ package body Meta.Writes is
    begin
       return F.New_Subprogram_Specification
         (Is_Overriding => Ada_Pretty.True,
-         Name          => F.New_Name ("Is_" & Name),
+         Name          => F.New_Name ("Is_" & Name & "_Element"),
          Parameters    => F.New_Parameter
            (Name            => F.New_Name (+"Self"),
             Type_Definition => Base_Name),
@@ -777,7 +777,7 @@ package body Meta.Writes is
               (Name  => F.New_Name (+"Post'Class"),
                Value => F.New_Parentheses
                  (F.New_If_Expression
-                      (Condition  => F.New_Name (Name & "'Result"),
+                      (Condition  => F.New_Name (Name & "_Element'Result"),
                        Then_Path  => List)));
          end Get_Aspect;
 
@@ -794,15 +794,27 @@ package body Meta.Writes is
                  F.New_Subprogram_Declaration
                    (F.New_Subprogram_Specification
                       (Is_Overriding => Ada_Pretty.False,
-                       Name          => F.New_Name (Name),
+                       Name          => F.New_Name (Name & "_Element"),
                        Parameters    => F.New_Parameter
                          (Name            => F.New_Name (+"Self"),
                           Type_Definition => F.New_Name (Element)),
                        Result        => F.New_Name (+"Boolean")),
                     Aspects     => Get_Aspect (Item),
                     Is_Abstract => True);
+
+               Funct_2 : constant Ada_Pretty.Node_Access :=
+                 F.New_Subprogram_Declaration
+                   (F.New_Subprogram_Specification
+                      (Name          => F.New_Name (Name),
+                       Parameters    => F.New_Parameter
+                         (Name            => F.New_Name (+"Self"),
+                          Type_Definition => F.New_Name (Element & "'Class")),
+                       Result        => F.New_Name (+"Boolean")),
+                    Expression  => F.New_Selected_Name
+                      ("Self." & Name & "_Element"));
             begin
                Result := F.New_List (Result, Funct);
+               Result := F.New_List (Result, Funct_2);
             end;
          end loop;
 
