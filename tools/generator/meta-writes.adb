@@ -23,6 +23,7 @@ package body Meta.Writes is
    procedure Open_File
      (Output : out Ada.Wide_Wide_Text_IO.File_Type;
       Unit   : League.Strings.Universal_String;
+      Prefix : String;
       Spec   : Boolean := True);
 
    function Get_With_Clauses
@@ -612,6 +613,7 @@ package body Meta.Writes is
    procedure Open_File
      (Output : out Ada.Wide_Wide_Text_IO.File_Type;
       Unit   : League.Strings.Universal_String;
+      Prefix : String;
       Spec   : Boolean := True)
    is
       Name : League.Strings.Universal_String :=
@@ -624,7 +626,7 @@ package body Meta.Writes is
       end if;
 
       Ada.Wide_Wide_Text_IO.Create
-        (Output, Name => Name.To_UTF_8_String);
+        (Output, Name => Prefix & Name.To_UTF_8_String);
       Write_Header (Output);
    end Open_File;
 
@@ -933,7 +935,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, +"Program.Elements");
+      Open_File (Output, +"Program.Elements", "oasis/");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -1046,7 +1048,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, +"Program.Elements", Spec => False);
+      Open_File (Output, +"Program.Elements", "oasis/", Spec => False);
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -1159,10 +1161,11 @@ package body Meta.Writes is
       begin
          if Implicit then
             return Skip_Texts (Skip_Tokens (Item.Properties))
-              & Only_Booleans (Vector.First_Element.Properties)
-              & Parent_Props;
+              & Only_Booleans
+                (Vector.First_Element.Properties & Parent_Props);
          else
-            return Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props;
+            return Skip_Texts (Skip_Booleans (Item.Properties))
+              & Only_Booleans (Parent_Props);
          end if;
       end Prop_List;
 
@@ -1200,7 +1203,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name);
+      Open_File (Output, Package_Name, "nodes/");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -1409,10 +1412,11 @@ package body Meta.Writes is
       begin
          if Implicit then
             return Skip_Texts (Skip_Tokens (Item.Properties))
-              & Only_Booleans (Vector.First_Element.Properties)
-              & Parent_Props;
+              & Only_Booleans
+                (Vector.First_Element.Properties & Parent_Props);
          else
-            return Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props;
+            return Skip_Texts (Skip_Booleans (Item.Properties))
+              & Only_Booleans (Parent_Props);
          end if;
       end Prop_List;
 
@@ -1428,7 +1432,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name, Spec => False);
+      Open_File (Output, Package_Name, "nodes/", Spec => False);
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -1772,6 +1776,7 @@ package body Meta.Writes is
    begin
       Open_File
         (Output, Get_Package_Name (Element_Iterator) & "." & Package_Name,
+         "oasis/",
          Spec => False);
 
       Ada.Wide_Wide_Text_IO.Put_Line
@@ -2041,7 +2046,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name);
+      Open_File (Output, Package_Name, "oasis/");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -2133,8 +2138,8 @@ package body Meta.Writes is
            (Specification => Prop_Check_Spec (F, Name, Base_Name));
       end Prop_Check;
 
-      Base_Props : constant Ada_Pretty.Node_Access :=
-        Prop_Variables (Only_Objects (Item.Properties) & Parent_Props);
+      Base_Props : constant Ada_Pretty.Node_Access := Prop_Variables
+        (Only_Objects (Item.Properties) & Only_Booleans (Parent_Props));
 
       Base : constant Ada_Pretty.Node_Access :=
         F.New_Type
@@ -2169,7 +2174,7 @@ package body Meta.Writes is
         (Get_Props
            (F,
             Base_Name,
-            Only_Objects (Item.Properties) & Parent_Props,
+            Only_Objects (Item.Properties) & Only_Booleans (Parent_Props),
             F.New_List ((Base, Base_Init, Visit)),
             Is_Abstr => False),
          Prop_Checks (All_Parents (Item, Vector)));
@@ -2207,7 +2212,8 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props),
+                (Skip_Texts (Skip_Booleans (Item.Properties & Parent_Props))
+                 & Only_Booleans (Parent_Props)),
               Result        => Node_Name));
 
       Node_To_Text : constant Ada_Pretty.Node_Access :=
@@ -2220,7 +2226,7 @@ package body Meta.Writes is
            Name     => Node_Name,
            Props    => Only_Tokens (Item.Properties)
              & Only_Booleans (Item.Properties)
-             & Only_Texts (Item.Properties),
+             & Only_Texts (Item.Properties & Parent_Props),
            Prefix   => F.New_List (Node, Node_To_Text),
            Is_Abstr => False);
 
@@ -2232,7 +2238,7 @@ package body Meta.Writes is
           (F,
            Name     => Implicit_Name,
            Props    => Bool_Props
-             & Only_Texts (Item.Properties),
+             & Only_Texts (Item.Properties & Parent_Props),
            Prefix   => null,
            Is_Abstr => False);
 
@@ -2270,7 +2276,8 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Only_Objects (Item.Properties) & Bool_Props & Parent_Props),
+                (Only_Objects (Item.Properties & Parent_Props) &
+                   Bool_Props & Only_Booleans (Parent_Props)),
               Result        => Implicit_Name),
            Aspects       => F.New_Aspect
              (Name  => F.New_Name (+"Pre"),
@@ -2307,7 +2314,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name);
+      Open_File (Output, Package_Name, "nodes/");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -2513,7 +2520,8 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Skip_Texts (Skip_Booleans (Item.Properties)) & Parent_Props),
+                (Skip_Texts (Skip_Booleans (Item.Properties & Parent_Props))
+                 & Only_Booleans (Parent_Props)),
               Result        => Node_Name),
            Statements => F.New_Extended_Return
              (Name            => Result,
@@ -2521,8 +2529,9 @@ package body Meta.Writes is
               Initialization  => F.New_Parentheses
                 (F.New_List
                   (Prop_Arguments
-                     (Skip_Texts (Skip_Booleans (Item.Properties))
-                      & Parent_Props),
+                     (Skip_Texts (Skip_Booleans
+                        (Item.Properties & Parent_Props))
+                      & Only_Booleans (Parent_Props)),
                    F.New_Component_Association
                      (Choices => F.New_Name (+"Enclosing_Element"),
                       Value   => F.New_Name (+"null")))),
@@ -2536,7 +2545,8 @@ package body Meta.Writes is
           (Specification => F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Create"),
               Parameters    => Prop_Parameters
-                (Only_Objects (Item.Properties) & Bool_Props & Parent_Props),
+                (Only_Objects (Item.Properties & Parent_Props) &
+                   Bool_Props & Only_Booleans (Parent_Props)),
               Result        => Implicit_Name),
            Statements => F.New_Extended_Return
              (Name            => Result,
@@ -2544,8 +2554,8 @@ package body Meta.Writes is
               Initialization  => F.New_Parentheses
                 (F.New_List
                   (Prop_Arguments
-                     (Only_Objects (Item.Properties)
-                        & Bool_Props & Parent_Props),
+                     (Only_Objects (Item.Properties & Parent_Props) &
+                        Bool_Props & Only_Booleans (Parent_Props)),
                    F.New_Component_Association
                      (Choices => F.New_Name (+"Enclosing_Element"),
                       Value   => F.New_Name (+"null")))),
@@ -2572,8 +2582,8 @@ package body Meta.Writes is
       function Base_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Base_Getter, F);
 
-      BG : constant Ada_Pretty.Node_Access :=
-        Base_Getters (Only_Objects (Item.Properties) & Parent_Props);
+      BG : constant Ada_Pretty.Node_Access := Base_Getters
+        (Only_Objects (Item.Properties) & Only_Booleans (Parent_Props));
 
       function Node_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Node_Getter, F);
@@ -2581,13 +2591,13 @@ package body Meta.Writes is
       NG : constant Ada_Pretty.Node_Access := Node_Getters
         (Only_Tokens (Item.Properties)
          & Only_Booleans (Item.Properties)
-         & Only_Texts (Item.Properties));
+         & Only_Texts (Item.Properties & Parent_Props));
 
       function Impl_Getters is new Generic_List_Reduce
         (Classes.Property, Classes.Property_Array, Impl_Getter, F);
 
       IG : constant Ada_Pretty.Node_Access := Impl_Getters
-        (Bool_Props & Only_Texts (Item.Properties));
+        (Bool_Props & Only_Texts (Item.Properties & Parent_Props));
 
       Visit : constant Ada_Pretty.Node_Access :=
         F.New_Subprogram_Body
@@ -2629,7 +2639,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name, Spec => False);
+      Open_File (Output, Package_Name, "nodes/", Spec => False);
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,
@@ -2714,7 +2724,7 @@ package body Meta.Writes is
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
-      Open_File (Output, Package_Name);
+      Open_File (Output, Package_Name, "oasis/");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,

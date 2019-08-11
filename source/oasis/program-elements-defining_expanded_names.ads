@@ -29,9 +29,6 @@ package Program.Elements.Defining_Expanded_Names is
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access is abstract;
 
-   not overriding function Image (Self : Defining_Expanded_Name) return Text
-     is abstract;
-
    type Defining_Expanded_Name_Text is limited interface;
 
    type Defining_Expanded_Name_Text_Access is

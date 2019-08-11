@@ -17,9 +17,6 @@ package Program.Elements.Defining_Operator_Symbols is
    type Defining_Operator_Symbol_Access is
      access all Defining_Operator_Symbol'Class with Storage_Size => 0;
 
-   not overriding function Image (Self : Defining_Operator_Symbol) return Text
-     is abstract;
-
    type Defining_Operator_Symbol_Text is limited interface;
 
    type Defining_Operator_Symbol_Text_Access is

@@ -36,28 +36,25 @@
 
 ## _Defining_Name_
 > _[Element]_
+ - Image            : Text
 
 ### Defining_Identifier
 > _[Defining_Name]_
  - Identifier_Token : Token
- - Image            : Text
  
 ### Defining_Character_Literal
 > _[Defining_Name]_
  - Character_Literal_Token : Token
- - Image                   : Text
 
 ### Defining_Operator_Symbol
 > _[Defining_Name]_
  - Operator_Symbol_Token : Token
- - Image                 : Text
 
 ### Defining_Expanded_Name
 > _[Defining_Name]_
  - Prefix                : _[Expression]_ {[Selected_Component],[Identifier]}
  - Dot_Token             : Token
  - Selector              : [Defining_Identifier]
- - Image                 : Text
 
 ## _Declaration_
 > _[Element]_
@@ -1937,6 +1934,7 @@
 [Discriminant_Association]: ast.md#Discriminant_Association
 [Discriminant_Constraint]: ast.md#Discriminant_Constraint
 [Discriminant_Specification]: ast.md#Discriminant_Specification
+[Element]: ast.md#Element
 [Element_Iterator_Specification]: ast.md#Element_Iterator_Specification
 [Elsif_Expression_Path]: ast.md#Elsif_Expression_Path
 [Elsif_Path]: ast.md#Elsif_Path

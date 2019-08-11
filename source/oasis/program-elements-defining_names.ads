@@ -13,4 +13,7 @@ package Program.Elements.Defining_Names is
    type Defining_Name_Access is access all Defining_Name'Class
      with Storage_Size => 0;
 
+   not overriding function Image (Self : Defining_Name) return Text
+     is abstract;
+
 end Program.Elements.Defining_Names;
