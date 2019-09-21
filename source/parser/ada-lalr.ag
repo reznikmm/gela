@@ -1,0 +1,5149 @@
+Token less_token;
+Token equal_token;
+Token greater_token;
+Token hyphen_token             Priority 16 left;
+Token slash_token              Priority 18 left;
+Token star_token               Priority 18 left;
+Token ampersand_token          Priority 16 left;
+Token plus_token               Priority 16 left;
+Token less_or_equal_token;
+Token greater_or_equal_token;
+Token inequality_token;
+Token double_star_token        Priority 20 none;
+Token or_token;
+Token and_token;
+Token xor_token;
+Token mod_token                Priority 18 left;
+Token rem_token                Priority 18 left;
+Token abs_token                Priority 20 none;
+Token not_token                Priority 20 none;
+Token right_label_token;
+Token box_token;
+Token left_label_token;
+Token assignment_token;
+Token arrow_token;
+Token double_dot_token;
+Token apostrophe_token;
+Token left_parenthesis_token;
+Token right_parenthesis_token;
+Token comma_token;
+Token dot_token;
+Token colon_token;
+Token semicolon_token;
+Token vertical_line_token      Priority 12 left;
+
+Token abort_token;
+Token abstract_token;
+Token accept_token;
+Token access_token;
+Token aliased_token;
+Token all_token;
+Token array_token;
+Token at_token;
+Token begin_token;
+Token body_token;
+Token case_token;
+Token constant_token;
+Token declare_token;
+Token delay_token;
+Token delta_token;
+Token digits_token;
+Token do_token;
+Token else_token;
+Token elsif_token;
+Token end_token;
+Token entry_token;
+Token exception_token;
+Token exit_token;
+Token for_token;
+Token function_token;
+Token generic_token;
+Token goto_token;
+Token if_token;
+Token in_token;
+Token interface_token;
+Token is_token;
+Token limited_token;
+Token loop_token;
+Token new_token;
+Token null_token;
+Token of_token;
+Token others_token;
+Token out_token;
+Token overriding_token;
+Token package_token;
+Token pragma_token;
+Token private_token;
+Token procedure_token;
+Token protected_token;
+Token raise_token;
+Token range_token;
+Token record_token;
+Token renames_token;
+Token requeue_token;
+Token return_token;
+Token reverse_token;
+Token select_token;
+Token separate_token;
+Token some_token;
+Token subtype_token;
+Token synchronized_token;
+Token tagged_token;
+Token task_token;
+Token terminate_token;
+Token then_token;
+Token type_token;
+Token until_token;
+Token use_token;
+Token when_token;
+Token while_token;
+Token with_token;
+
+Token comment_token;
+Token identifier_token;
+Token numeric_literal_token;
+Token character_literal_token;
+Token string_literal_token;
+
+Compilation ::= compilation_unit
+  {compilation_unit} {context_item};
+
+Rules for Compilation. :
+(.
+   declare
+      List : Node :=
+        ${compilation_unit_list.ast:Self.Factory.Compilation_Unit_Sequence};
+   begin
+      Self.Factory.Prepend_Compilation_Unit
+        (List, ${compilation_unit.ast});
+      ${Compilation.ast} := Self.Factory.Compilation
+         (List, ${context_item_list.ast:(Self.Factory.Context_Item_Sequence)});
+   end;
+.)
+
+abort_statement ::=
+ abort_token name {colon_token name} <name_list> semicolon_token;
+
+Rules for abort_statement. :
+(.
+   declare
+      List : Node :=
+        ${name_list.ast:Self.Factory.Name_Sequence};
+   begin
+      Self.Factory.Prepend_Name (List, ${name.ast});
+      ${abort_statement.ast} :=
+        Self.Factory.Abort_Statement
+          (${abort_token.ast}, List, ${semicolon_token.ast});
+   end;
+.)
+
+accept_alternative ::= accept_statement [sequence_of_statements];
+
+Rules for accept_alternative. :
+(.
+   declare
+      List : Node :=
+        ${sequence_of_statements.ast:Self.Factory.Statement_Sequence};
+   begin
+      Self.Factory.Prepend_Statement
+        (List, ${accept_statement.ast});
+      ${accept_alternative.ast} := List;
+   end;
+.)
+
+accept_statement ::=
+  accept_token identifier
+  [(index) left_parenthesis_token expression right_parenthesis_token]
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [(statements) do_token sequence_of_statements
+    [exception_token sequence_of_exception_handlers]
+  end_token [identifier_token]] semicolon_token;
+
+Rules for accept_statement. :
+(.
+   ${accept_statement.ast} :=
+      Self.Factory.Accept_Statement
+         (${accept_token.ast},
+          ${identifier.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${expression.ast:None},
+          ${right_parenthesis_token.ast:No_Token},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${do_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast:No_Token},
+          ${identifier_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+access_definition ::=
+(subtype_mark)
+  [not_token null_token] access_token [constant_token] subtype_mark
+  |
+(procedure)
+  [not_token null_token] access_token [protected_token]
+  procedure_token [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  |
+(function_subtype)
+  [not_token null_token] access_token [protected_token]
+  function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>] return_token
+  [(ret) not_token <return_not> null_token <return_null>]
+  subtype_mark
+  |
+(function_access)
+  [not_token null_token] access_token [protected_token]
+  function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>] return_token access_definition
+;
+
+Rules for access_definition.function_access :
+(.
+   ${access_definition.ast} := Self.Factory.Anonymous_Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        No_Token,
+        No_Token,
+        ${access_definition.ast});
+.)
+
+Rules for access_definition.function_subtype :
+(.
+   ${access_definition.ast} := Self.Factory.Anonymous_Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        ${return_not.ast:No_Token},
+        ${return_null.ast:No_Token},
+        ${subtype_mark.ast});
+.)
+
+Rules for access_definition.subtype_mark :
+(.
+   ${access_definition.ast} := Self.Factory.
+     Anonymous_Access_To_Object_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${constant_token.ast:No_Token},
+        ${subtype_mark.ast});
+.)
+
+Rules for access_definition.procedure :
+(.
+   ${access_definition.ast} := Self.Factory.
+     Anonymous_Access_To_Procedure_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${procedure_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token});
+.)
+
+access_type_definition ::=
+  (object)
+  [not_token null_token] access_token [general_access_modifier] subtype_indication
+  |
+  (procedure)
+  [not_token null_token]
+  access_token [protected_token] procedure_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  |
+  (function_subtype)
+  [not_token null_token]
+  access_token [protected_token] function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>] return_token
+  [(ret) not_token <return_not> null_token <return_null>]
+  subtype_mark
+  |
+  (function_access)
+  [not_token null_token]
+  access_token [protected_token] function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+;
+
+Rules for access_type_definition.object :
+(.
+   ${access_type_definition.ast} := Self.Factory.
+     Access_To_Object_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${general_access_modifier.ast:No_Token},
+        ${subtype_indication.ast});
+.)
+
+Rules for access_type_definition.procedure :
+(.
+   ${access_type_definition.ast} := Self.Factory.
+     Access_To_Procedure_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${procedure_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token});
+.)
+
+Rules for access_type_definition.function_access :
+(.
+   ${access_type_definition.ast} := Self.Factory.Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        No_Token,
+        No_Token,
+        ${access_definition.ast});
+.)
+
+Rules for access_type_definition.function_subtype :
+(.
+   ${access_type_definition.ast} := Self.Factory.Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        ${return_not.ast:No_Token},
+        ${return_null.ast:No_Token},
+        ${subtype_mark.ast});
+.)
+
+aggregate ::=
+  record_aggregate | extension_aggregate
+;
+
+allocator ::= new_token
+  [left_parenthesis_token name <subpool> right_parenthesis_token] name;
+
+Rules for allocator. :
+(.  ${allocator.ast} := Self.Factory.Allocator
+   (${new_token.ast},
+    ${left_parenthesis_token.ast:No_Token},
+    ${subpool.ast:None},
+    ${right_parenthesis_token.ast:No_Token},
+    ${name.ast});
+.)
+
+aspect_clause ::=
+  attribute_definition_clause |
+  record_representation_clause |
+  at_clause |
+  pragma;
+
+aspect_specification ::=
+   with_token subtype_mark
+      [(aspect_definition) arrow_token expression]
+   { comma_token subtype_mark [ arrow_token expression] } <aspect_list>
+;
+
+Rules for aspect_specification. :
+(.
+   declare
+      Comp : constant Node :=
+        Self.Factory.Aspect_Specification
+          (${subtype_mark.ast},
+           ${arrow_token.ast:No_Token},
+           ${expression.ast:None});
+      List : Node := ${aspect_list.ast:Self.
+        Factory.Aspect_Specification_Sequence};
+   begin
+      Self.Factory.Prepend_Aspect_Specification
+        (List, Comp);
+      ${aspect_specification.ast} := List;
+   end;
+.)
+
+assignment_statement ::=
+  name assignment_token expression semicolon_token
+;
+
+Rules for assignment_statement. :
+(.
+   ${assignment_statement.ast} :=
+      Self.Factory.Assignment_Statement
+         (${name.ast},
+          ${assignment_token.ast},
+          ${expression.ast},
+          ${semicolon_token.ast});
+.)
+
+asynchronous_select ::=
+  select_token
+   select_alternative
+  then_token abort_token
+   sequence_of_statements
+  end_token select_token <end_select> semicolon_token;
+
+Rules for asynchronous_select. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Select_Or_Path
+          (No_Token, No_Token, None, No_Token,
+           ${select_alternative.ast});
+      Then_Item : constant Node :=
+        Self.Factory.Then_Abort_Path
+          (${then_token.ast},
+           ${abort_token.ast},
+           ${sequence_of_statements.ast});
+      List : Node :=
+        Self.Factory.Select_Then_Abort_Path_Sequence;
+   begin
+      Self.Factory.Append_Select_Then_Abort_Path
+        (List, Item);
+      Self.Factory.Append_Select_Then_Abort_Path
+        (List, Then_Item);
+      ${asynchronous_select.ast} := Self.Factory.Asynchronous_Select
+        (${select_token.ast},
+         List,
+         ${end_token.ast},
+         ${end_select.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+at_clause ::=
+ for_token subtype_mark use_token at_token expression semicolon_token;
+
+Rules for at_clause. :
+(.
+   ${at_clause.ast} := Self.Factory.
+     At_Clause
+       (${for_token.ast},
+        ${subtype_mark.ast},
+        ${use_token.ast},
+        ${at_token.ast},
+        ${expression.ast},
+        ${semicolon_token.ast});
+.)
+
+attribute_definition_clause ::=
+  for_token subtype_mark use_token expression semicolon_token;
+
+Rules for attribute_definition_clause. :
+(.
+   ${attribute_definition_clause.ast} := Self.Factory.
+     Attribute_Definition_Clause
+       (${for_token.ast},
+        ${subtype_mark.ast},
+        ${use_token.ast},
+        ${expression.ast},
+        ${semicolon_token.ast});
+.)
+
+attribute_reference ::=
+  prefix apostrophe_token identifier;
+
+Rules for attribute_reference. :
+(.  ${attribute_reference.ast} := Self.Factory.Attribute_Reference
+   (${prefix.ast}, ${apostrophe_token.ast}, ${identifier.ast}, None);
+.)
+
+basic_declaration ::=
+  full_type_declaration |
+  incomplete_type_declaration |
+  private_type_declaration |
+  private_extension_declaration |
+  task_type_declaration |
+  protected_type_declaration |
+  subtype_declaration |
+  object_declaration |
+  number_declaration |
+  procedure_declaration |
+  function_declaration |
+  package_declaration |
+  object_renaming_declaration |
+  exception_renaming_declaration |
+  package_renaming_declaration |
+  generic_renaming_declaration |
+  exception_declaration |
+  generic_function_declaration |
+  generic_procedure_declaration |
+  generic_package_declaration |
+  generic_instantiation;
+
+basic_declarative_item ::=
+  basic_declaration |
+  aspect_clause |
+  use_clause;
+
+basic_declarative_item_list ::=
+ [basic_declarative_item_list <head>] basic_declarative_item;
+
+Rules for basic_declarative_item_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Basic_Declarative_Item_Sequence};
+   begin
+      Self.Factory.Append_Basic_Declarative_Item
+        (List, ${basic_declarative_item.ast});
+      ${basic_declarative_item_list.ast} := List;
+   end;
+.)
+
+block_statement ::=
+  [defining_identifier colon_token]
+  [(declare) declare_token [declarative_part]]
+  begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token
+  [identifier_token <endid>] semicolon_token;
+
+Rules for block_statement. :
+(.
+   ${block_statement.ast} :=
+      Self.Factory.Block_Statement
+         (${defining_identifier.ast:None},
+          ${colon_token.ast:No_Token},
+          ${declare_token.ast:No_Token},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast},
+          ${sequence_of_statements.ast},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${endid.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+body ::= proper_body | body_stub;
+
+body_stub ::=
+  package_body_stub |
+  task_body_stub |
+  protected_body_stub;
+
+case_expression ::=
+  case_token expression is_token
+  case_expression_alternative
+  {comma_token case_expression_alternative} <case_exp_alternative_list>;
+
+Rules for case_expression. :
+(.
+   declare
+      List : Node :=
+        ${case_exp_alternative_list.ast:Self.Factory.Case_Expression_Path_Sequence};
+   begin
+      Self.Factory.Prepend_Case_Expression_Path
+        (List, ${case_expression_alternative.ast});
+      ${case_expression.ast} := Self.Factory.Case_Expression
+        (${case_token.ast},
+         ${expression.ast},
+         ${is_token.ast},
+         List);
+   end;
+.)
+
+case_expression_alternative ::=
+  when_token discrete_choice_list arrow_token expression;
+
+Rules for case_expression_alternative. :
+(.  ${case_expression_alternative.ast} := Self.Factory.Case_Expression_Path
+   (${when_token.ast},
+    ${discrete_choice_list.ast},
+    ${arrow_token.ast},
+    ${expression.ast});
+.)
+
+case_statement ::=
+  case_token expression is_token
+  case_statement_alternative
+  {case_statement_alternative}
+  end_token case_token <endcase> semicolon_token;
+
+Rules for case_statement. :
+(.
+   declare
+      List : Node :=
+        ${case_statement_alternative_list.ast:Self.Factory.Case_Path_Sequence};
+   begin
+      Self.Factory.Prepend_Case_Path
+        (List, ${case_statement_alternative.ast});
+      ${case_statement.ast} := Self.Factory.Case_Statement
+        (${case_token.ast},
+         ${expression.ast},
+         ${is_token.ast},
+         List,
+         ${end_token.ast},
+         ${endcase.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+case_statement_alternative ::=
+   when_token discrete_choice_list arrow_token
+   sequence_of_statements;
+
+Rules for case_statement_alternative. :
+(.
+   ${case_statement_alternative.ast} :=
+      Self.Factory.Case_Path
+         (${when_token.ast},
+          ${discrete_choice_list.ast},
+          ${arrow_token.ast},
+          ${sequence_of_statements.ast});
+.)
+
+choice_parameter_specification ::= defining_identifier;
+
+Rules for choice_parameter_specification.defining_identifier :
+(.
+   ${choice_parameter_specification.ast} :=
+      Self.Factory.Choice_Parameter_Specification
+         (${defining_identifier.ast});
+.)
+
+compilation_unit ::= library_item | subunit;
+
+component_clause ::=
+(clause)
+  subtype_mark at_token
+  simple_expression <position> range_token
+  discrete_simple_expression_range
+  semicolon_token
+| pragma;
+
+Rules for component_clause.clause :
+(.
+   ${component_clause.ast} := Self.Factory.
+     Component_Clause
+       (${subtype_mark.ast},
+        ${at_token.ast},
+        ${position.ast},
+        ${range_token.ast},
+        ${discrete_simple_expression_range.ast},
+        ${semicolon_token.ast});
+.)
+
+component_declaration ::=
+  defining_identifier_list colon_token component_definition
+  [(def) assignment_token expression]
+  [aspect_specification]
+  semicolon_token;
+
+Rules for component_declaration. :
+(.
+   ${component_declaration.ast} := Self.Factory.
+     Component_Declaration
+       (${defining_identifier_list.ast},
+        ${colon_token.ast},
+        ${component_definition.ast},
+        ${assignment_token.ast:No_Token},
+        ${expression.ast:None},
+        ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+        ${semicolon_token.ast});
+.)
+
+component_definition ::=
+  (subtype_indication) [aliased_token] subtype_indication |
+  (access_definition)  [aliased_token] access_definition;
+
+Rules for component_definition.subtype_indication :
+(.
+   ${component_definition.ast} := Self.Factory.Component_Definition
+       (${aliased_token.ast:No_Token},
+        ${subtype_indication.ast});
+.)
+
+Rules for component_definition.access_definition :
+(.
+   ${component_definition.ast} := Self.Factory.Component_Definition
+       (${aliased_token.ast:No_Token},
+        ${access_definition.ast});
+.)
+
+component_item ::= component_declaration | aspect_clause;
+
+component_list ::=
+  (list) component_item {component_item} <component_item_list> [variant_part] |
+  variant_part |
+  (null) null_token semicolon_token
+;
+
+Rules for component_list.list :
+(.
+   declare
+      List : Node :=
+        ${component_item_list.ast:Self.Factory.
+        Component_Item_Sequence};
+   begin
+      Self.Factory.Prepend_Component_Item
+        (List, ${component_item.ast});
+      ${component_list.ast} := List;
+   end;
+.)
+
+Rules for component_list.list :
+(.
+  declare
+     List : Node :=
+       ${component_item_list.ast:Self.Factory.
+       Component_Item_Sequence};
+  begin
+      Self.Factory.Prepend_Component_Item
+        (List, ${component_item.ast});
+      Self.Factory.Append_Component_Item
+        (List, ${variant_part.ast});
+      ${component_list.ast} := List;
+  end;
+.)
+
+Rules for component_list.variant_part :
+(.
+   declare
+      List : Node :=
+        Self.Factory.Component_Item_Sequence;
+   begin
+      Self.Factory.Prepend_Component_Item
+        (List, ${variant_part.ast});
+      ${component_list.ast} := List;
+   end;
+.)
+
+
+Rules for component_list.null :
+(.
+   declare
+      Comp : constant Node :=
+        Self.Factory.Null_Component
+          (${null_token.ast}, ${semicolon_token.ast});
+      List : Node :=
+        Self.Factory.Component_Item_Sequence;
+   begin
+      Self.Factory.Prepend_Component_Item
+        (List, Comp);
+      ${component_list.ast} := List;
+   end;
+.)
+
+conditional_expression ::= if_expression | case_expression;
+
+constrained_array_definition ::=
+  array_token left_parenthesis_token discrete_subtype_definition
+  {comma_token discrete_subtype_definition} <discrete_subtype_definition_list>
+  right_parenthesis_token of_token component_definition;
+
+Rules for constrained_array_definition. :
+(.
+   declare
+      List : Node :=
+        ${discrete_subtype_definition_list.ast:Self.Factory.
+        Discrete_Subtype_Definition_Sequence};
+   begin
+      Self.Factory.Prepend_Discrete_Subtype_Definition
+        (List, ${discrete_subtype_definition.ast});
+      ${constrained_array_definition.ast} := Self.Factory.
+        Constrained_Array_Definition
+          (${array_token.ast},
+           ${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast},
+           ${of_token.ast},
+           ${component_definition.ast});
+   end;
+.)
+
+context_item ::= with_clause | use_clause | pragma;
+
+decimal_fixed_point_definition ::=
+  delta_token simple_expression <delta>
+  digits_token simple_expression <digits>
+  [real_range_specification];
+
+Rules for decimal_fixed_point_definition. :
+(.  ${decimal_fixed_point_definition.ast} :=
+     Self.Factory.Decimal_Fixed_Point_Definition
+      (${delta_token.ast},
+       ${delta.ast},
+       ${digits_token.ast},
+       ${digits.ast},
+       ${real_range_specification.ast:None});
+.)
+
+declarative_item ::= basic_declarative_item | body;
+
+declarative_part ::= declarative_item {declarative_item} <declarative_item_list>;
+
+Rules for declarative_part. :
+(.
+   declare
+      List : Node :=
+       ${declarative_item_list.ast:Self.
+         Factory.Declarative_Item_Sequence};
+   begin
+      Self.Factory.Prepend_Declarative_Item
+        (List, ${declarative_item.ast});
+      ${declarative_part.ast} := List;
+   end;
+.)
+
+defining_character_literal ::= character_literal_token;
+
+Rules for defining_character_literal.character_literal_token :
+(.  ${defining_character_literal.ast} := Self.Factory.Defining_Character_Literal
+     (${character_literal_token.ast});
+.)
+
+
+defining_enumeration_literal ::= identifier_token;
+
+Rules for defining_enumeration_literal.identifier_token :
+(.  ${defining_enumeration_literal.ast} :=
+     Self.Factory.Defining_Enumeration_Literal (${identifier_token.ast});
+.)
+
+defining_identifier ::= identifier_token;
+
+Rules for defining_identifier.identifier_token :
+(.  ${defining_identifier.ast} := Self.Factory.Defining_Identifier
+     (${identifier_token.ast});
+.)
+
+defining_identifier_list ::=
+  defining_identifier {comma_token defining_identifier} <defining_id_list>;
+
+Rules for defining_identifier_list. :
+(.
+   declare
+      List : Node :=
+        ${defining_id_list.ast:Self.Factory.Defining_Identifier_Sequence};
+   begin
+      Self.Factory.Prepend_Defining_Identifier
+        (List, ${defining_identifier.ast});
+      ${defining_identifier_list.ast} := List;
+   end;
+.)
+
+defining_program_unit_name ::= identifier_token | selected_identifier;
+
+Rules for defining_program_unit_name.identifier_token :
+(.  ${defining_program_unit_name.ast} := Self.Factory.Defining_Identifier
+     (${identifier_token.ast});
+.)
+
+
+Rules for defining_program_unit_name.selected_identifier :
+(.
+   ${defining_program_unit_name.ast} := Self.Factory.To_Defining_Program_Unit_Name
+     (${selected_identifier.ast});
+.)
+
+delay_alternative ::= delay_statement [sequence_of_statements];
+
+Rules for delay_alternative. :
+(.
+   declare
+      List : Node :=
+        ${sequence_of_statements.ast:Self.Factory.Statement_Sequence};
+   begin
+      Self.Factory.Prepend_Statement
+        (List, ${delay_statement.ast});
+      ${delay_alternative.ast} := List;
+   end;
+.)
+
+delay_statement ::=
+  delay_token [until_token] expression semicolon_token;
+
+Rules for delay_statement. :
+(.
+   ${delay_statement.ast} :=
+      Self.Factory.Delay_Statement
+         (${delay_token.ast},
+          ${until_token.ast:No_Token},
+          ${expression.ast},
+          ${semicolon_token.ast});
+.)
+
+delta_constraint ::= delta_token simple_expression [range_constraint];
+
+Rules for delta_constraint. :
+(.  ${delta_constraint.ast} := Self.Factory.Delta_Constraint
+     (${delta_token.ast}, ${simple_expression.ast}, ${range_constraint.ast:None});
+.)
+
+defining_designator ::=
+  defining_program_unit_name |
+  string_literal_token;
+
+Rules for defining_designator.string_literal_token :
+(.  ${defining_designator.ast} := Self.Factory.Defining_Operator_Symbol
+     (${string_literal_token.ast});
+.)
+
+designator ::= program_unit_name | operator_symbol;
+
+digits_constraint ::= digits_token simple_expression [range_constraint];
+
+Rules for digits_constraint. :
+(.  ${digits_constraint.ast} := Self.Factory.Digits_Constraint
+     (${digits_token.ast}, ${simple_expression.ast}, ${range_constraint.ast:None});
+.)
+
+direct_name ::= identifier | operator_symbol;
+
+discrete_choice ::=
+  expression |
+  discrete_range |
+  others_choice
+;
+
+discrete_choice_list ::=
+   discrete_choice {vertical_line_token discrete_choice} <choice_list>
+;
+
+Rules for discrete_choice_list. :
+(.
+   declare
+      List : Node :=
+        ${choice_list.ast:Self.Factory.Discrete_Choice_Sequence};
+   begin
+      Self.Factory.Prepend_Discrete_Choice
+        (List, ${discrete_choice.ast});
+      ${discrete_choice_list.ast} := List;
+   end;
+.)
+
+discrete_range ::=
+  (subtype_indication) simple_expression range_constraint |
+  range_attribute_reference |
+  (range)  simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for discrete_range.subtype_indication :
+(.   ${discrete_range.ast} := Self.Factory.Discrete_Subtype_Indication_Dr
+     (${simple_expression.ast}, ${range_constraint.ast});
+.)
+
+Rules for discrete_range.range :
+(.   ${discrete_range.ast} := Self.Factory.Simple_Expression_Range_Dr
+     (${left.ast}, ${double_dot_token.ast}, ${right.ast});
+.)
+
+Rules for discrete_range.range_attribute_reference :
+(.   ${discrete_range.ast} := Self.Factory.Range_Attribute_Reference_Dr
+     (${range_attribute_reference.ast});
+.)
+
+discrete_simple_expression_range ::=
+  simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for discrete_simple_expression_range. :
+(.   ${discrete_simple_expression_range.ast} := Self.Factory.Discrete_Simple_Expression_Range
+     (${left.ast}, ${double_dot_token.ast}, ${right.ast});
+.)
+
+discrete_subtype_definition ::=
+  (subtype_indication) subtype_mark [scalar_constraint] |
+  range_attribute_reference |
+  discrete_simple_expression_range;
+
+Rules for discrete_subtype_definition.subtype_indication :
+(.   ${discrete_subtype_definition.ast} := Self.Factory.Discrete_Subtype_Indication
+     (${subtype_mark.ast}, ${scalar_constraint.ast:None});
+.)
+
+Rules for discrete_subtype_definition.range_attribute_reference :
+(.  ${discrete_subtype_definition.ast} := Self.Factory.Discrete_Range_Attribute_Reference
+     (${range_attribute_reference.ast});
+.)
+
+discriminant_part ::=
+  unknown_discriminant_part |
+  known_discriminant_part;
+
+discriminant_specification ::=
+(subtype_mark)
+  defining_identifier_list colon_token
+    [not_token null_token] subtype_mark
+    [assignment_token expression]
+ |
+(access_definition)
+  defining_identifier_list colon_token access_definition
+  [assignment_token expression]
+;
+
+Rules for discriminant_specification.subtype_mark :
+(.
+   ${discriminant_specification.ast} :=
+      Self.Factory.Discriminant_Specification
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${not_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None});
+.)
+
+Rules for discriminant_specification.access_definition :
+(.
+   ${discriminant_specification.ast} :=
+      Self.Factory.Discriminant_Specification
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None});
+.)
+
+entry_body ::=
+  entry_token defining_identifier
+  [left_parenthesis_token entry_index_specification right_parenthesis_token]
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  when_token expression
+   is_token
+    [declarative_part]
+  begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token [identifier_token]
+  semicolon_token
+;
+
+Rules for entry_body. :
+(.
+   ${entry_body.ast} :=
+      Self.Factory.Entry_Body
+         (${entry_token.ast},
+          ${defining_identifier.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${entry_index_specification.ast:None},
+          ${right_parenthesis_token.ast:No_Token},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${when_token.ast},
+          ${expression.ast},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast},
+          ${sequence_of_statements.ast},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${identifier_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+entry_call_alternative ::= entry_call_statement [sequence_of_statements];
+
+Rules for entry_call_alternative. :
+(.
+   declare
+      List : Node :=
+        ${sequence_of_statements.ast:Self.Factory.Statement_Sequence};
+   begin
+      Self.Factory.Prepend_Statement
+        (List, ${entry_call_statement.ast});
+      ${entry_call_alternative.ast} := List;
+   end;
+.)
+
+entry_call_statement ::= name semicolon_token;
+
+Rules for entry_call_statement. :
+(.
+   ${entry_call_statement.ast} :=
+      Self.Factory.Procedure_Call_Statement
+         (${name.ast}, ${semicolon_token.ast});
+.)
+
+entry_declaration ::=
+  [[not_token] overriding_token]
+  entry_token defining_identifier
+  [left_parenthesis_token
+    discrete_subtype_definition
+   right_parenthesis_token] [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [aspect_specification]
+  semicolon_token;
+
+Rules for entry_declaration. :
+(.
+   ${entry_declaration.ast} :=
+      Self.Factory.Entry_Declaration
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${entry_token.ast},
+          ${defining_identifier.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${discrete_subtype_definition.ast:None},
+          ${right_parenthesis_token.ast:No_Token},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+entry_index_specification ::=
+  for_token defining_identifier in_token discrete_subtype_definition
+;
+
+Rules for entry_index_specification. :
+(.
+   ${entry_index_specification.ast} :=
+      Self.Factory.Entry_Index_Specification
+         (${for_token.ast},
+          ${defining_identifier.ast},
+          ${in_token.ast},
+          ${discrete_subtype_definition.ast});
+.)
+
+enumeration_literal_specification ::=
+  defining_enumeration_literal |
+  defining_character_literal;
+
+Rules for enumeration_literal_specification.defining_enumeration_literal :
+(.   ${enumeration_literal_specification.ast} := Self.Factory.Enumeration_Literal_Specification
+     (${defining_enumeration_literal.ast});
+.)
+
+Rules for enumeration_literal_specification.defining_character_literal :
+(.  ${enumeration_literal_specification.ast} := Self.Factory.Enumeration_Literal_Specification
+     (${defining_character_literal.ast});
+.)
+
+enumeration_type_definition ::=
+  left_parenthesis_token enumeration_literal_specification
+  {comma_token enumeration_literal_specification} <enumeration_list>
+  right_parenthesis_token;
+
+Rules for enumeration_type_definition. :
+(.
+   declare
+      List : Node :=
+        ${enumeration_list.ast:Self.
+        Factory.Enumeration_Literal_Specification_Sequence};
+   begin
+      Self.Factory.Prepend_Enumeration_Literal_Specification
+        (List, ${enumeration_literal_specification.ast});
+      ${enumeration_type_definition.ast} := Self.Factory.
+        Enumeration_Type_Definition
+          (${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast});
+   end;
+.)
+
+exception_choice ::= program_unit_name | others_choice;
+
+exception_declaration ::=
+  defining_identifier_list colon_token exception_token
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for exception_declaration. :
+(.
+   ${exception_declaration.ast} :=
+      Self.Factory.Exception_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${exception_token.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+exception_handler ::=
+  when_token
+  [choice_parameter_specification colon_token]
+  exception_choice
+  {vertical_line_token exception_choice} <exception_choice_list>
+  arrow_token
+  sequence_of_statements
+;
+
+Rules for exception_handler. :
+(.
+   declare
+      List : Node :=
+        ${exception_choice_list.ast:Self.
+          Factory.Exception_Choice_Sequence};
+   begin
+      Self.Factory.Prepend_Exception_Choice
+        (List, ${exception_choice.ast});
+      ${exception_handler.ast} :=
+        Self.Factory.Exception_Handler
+          (${when_token.ast},
+           ${choice_parameter_specification.ast:None},
+           ${colon_token.ast:No_Token},
+           List,
+           ${arrow_token.ast},
+           ${sequence_of_statements.ast});
+   end;
+.)
+
+exception_renaming_declaration ::=
+  defining_identifier_list colon_token
+  exception_token renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for exception_renaming_declaration. :
+(.
+   ${exception_renaming_declaration.ast} :=
+      Self.Factory.Exception_Renaming_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${exception_token.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+exit_statement ::=
+   exit_token [name] [when_token expression] semicolon_token
+;
+
+Rules for exit_statement. :
+(.
+   ${exit_statement.ast} :=
+      Self.Factory.Exit_Statement
+         (${exit_token.ast},
+          ${name.ast:None},
+          ${when_token.ast:No_Token},
+          ${expression.ast:None},
+          ${semicolon_token.ast});
+.)
+
+explicit_dereference ::= prefix dot_token all_token;
+
+Rules for explicit_dereference. :
+(.  ${explicit_dereference.ast} := Self.Factory.Explicit_Dereference
+     (${prefix.ast}, ${dot_token.ast}, ${all_token.ast});
+.)
+
+expression ::= relation |
+  (and)      expression and_token relation |
+  (and_then) expression and_token then_token relation |
+  (or)       expression or_token  relation |
+  (or_else)  expression or_token  else_token relation |
+  (xor)      expression xor_token relation
+;
+
+Rules for expression.and :
+(.  ${expression.ast} := Self.Factory.Infix_Call
+     (${and_token.ast}, ${expression.ast}, ${relation.ast});
+.)
+
+Rules for expression.or :
+(.  ${expression.ast} := Self.Factory.Infix_Call
+     (${or_token.ast}, ${expression.ast}, ${relation.ast});
+.)
+
+Rules for expression.xor :
+(.  ${expression.ast} := Self.Factory.Infix_Call
+     (${xor_token.ast}, ${expression.ast}, ${relation.ast});
+.)
+
+Rules for expression.and_then :
+(.  ${expression.ast} := Self.Factory.Short_Circuit
+     (${expression.ast}, ${and_token.ast}, ${then_token.ast}, ${relation.ast});
+.)
+
+Rules for expression.or_else :
+(.  ${expression.ast} := Self.Factory.Short_Circuit
+     (${expression.ast}, ${or_token.ast}, ${else_token.ast}, ${relation.ast});
+.)
+
+extended_return_object_declaration ::=
+  defining_identifier colon_token
+  [aliased_token] [constant_token]
+  subtype_indication
+  [assignment_token expression];
+
+Rules for extended_return_object_declaration. :
+(.
+   ${extended_return_object_declaration.ast} :=
+      Self.Factory.Return_Object_Specification
+         (${defining_identifier.ast},
+          ${colon_token.ast},
+          ${aliased_token.ast:No_Token},
+          ${constant_token.ast:No_Token},
+          ${subtype_indication.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None});
+.)
+
+extended_return_statement ::=
+  return_token extended_return_object_declaration
+  [do_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token return_token <endreturn>]
+  semicolon_token;
+
+Rules for extended_return_statement. :
+(.
+   ${extended_return_statement.ast} :=
+      Self.Factory.Extended_Return_Statement
+         (${return_token.ast},
+          ${extended_return_object_declaration.ast},
+          ${do_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast:No_Token},
+          ${endreturn.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+extension_aggregate ::=
+  left_parenthesis_token
+  name with_token
+  record_component_association_list
+  right_parenthesis_token
+;
+
+Rules for extension_aggregate. :
+(.
+   ${extension_aggregate.ast} :=
+     Self.Factory.Extension_Aggregate
+       (${left_parenthesis_token.ast},
+        ${name.ast},
+        ${with_token.ast},
+        ${record_component_association_list.ast},
+        ${right_parenthesis_token.ast});
+.)
+
+floating_point_definition ::=
+  digits_token simple_expression [real_range_specification];
+
+Rules for floating_point_definition. :
+(.  ${floating_point_definition.ast} := Self.Factory.Floating_Point_Definition
+      (${digits_token.ast},
+       ${simple_expression.ast},
+       ${real_range_specification.ast:None});
+.)
+
+formal_access_type_definition ::=
+  (object)
+  [not_token null_token] access_token [general_access_modifier] subtype_indication
+  |
+  (procedure)
+  [not_token null_token]
+  access_token [protected_token] procedure_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  |
+  (function_subtype)
+  [not_token null_token]
+  access_token [protected_token] function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token
+  [(ret) not_token <return_not> null_token <return_null>]
+  subtype_mark
+  |
+  (function_access)
+  [not_token null_token]
+  access_token [protected_token] function_token
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+;
+
+Rules for formal_access_type_definition.object :
+(.
+   ${formal_access_type_definition.ast} := Self.Factory.
+     Formal_Access_To_Object_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${general_access_modifier.ast:No_Token},
+        ${subtype_indication.ast});
+.)
+
+Rules for formal_access_type_definition.procedure :
+(.
+   ${formal_access_type_definition.ast} := Self.Factory.
+     Formal_Access_To_Procedure_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${procedure_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token});
+.)
+
+Rules for formal_access_type_definition.function_access :
+(.
+   ${formal_access_type_definition.ast} := Self.Factory.Formal_Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        No_Token,
+        No_Token,
+        ${access_definition.ast});
+.)
+
+Rules for formal_access_type_definition.function_subtype :
+(.
+   ${formal_access_type_definition.ast} := Self.Factory.
+     Formal_Access_To_Function_Definition
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${access_token.ast},
+        ${protected_token.ast:No_Token},
+        ${function_token.ast},
+        ${lp.ast:No_Token},
+        ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+        ${rp.ast:No_Token},
+        ${return_token.ast},
+        ${return_not.ast:No_Token},
+        ${return_null.ast:No_Token},
+        ${subtype_mark.ast});
+.)
+
+formal_complete_type_declaration ::=
+(definition)
+  type_token defining_identifier
+  [discriminant_part] is_token formal_type_definition
+  [aspect_specification]
+  semicolon_token
+|
+(derived)
+  type_token defining_identifier
+  [discriminant_part] is_token formal_derived_type_definition
+  semicolon_token
+;
+
+Rules for formal_complete_type_declaration.definition :
+(.
+   ${formal_complete_type_declaration.ast} :=
+      Self.Factory.Formal_Type_Declaration
+         (${type_token.ast},
+          ${defining_identifier.ast},
+          ${discriminant_part.ast:None},
+          ${is_token.ast:No_Token},
+          ${formal_type_definition.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for formal_complete_type_declaration.derived :
+(.
+   ${formal_complete_type_declaration.ast} :=
+      Self.Factory.Formal_Type_Declaration
+         (${type_token.ast},
+          ${defining_identifier.ast},
+          ${discriminant_part.ast:None},
+          ${is_token.ast:No_Token},
+          ${formal_derived_type_definition.ast},
+          Self.Factory.Aspect_Specification_Sequence,
+          ${semicolon_token.ast});
+.)
+
+formal_constrained_array_definition ::=
+  array_token left_parenthesis_token discrete_subtype_definition
+  {comma_token discrete_subtype_definition} <discrete_subtype_definition_list>
+  right_parenthesis_token of_token component_definition;
+
+Rules for formal_constrained_array_definition. :
+(.
+   declare
+      List : Node :=
+        ${discrete_subtype_definition_list.ast:Self.Factory.
+        Discrete_Subtype_Definition_Sequence};
+   begin
+      Self.Factory.Prepend_Discrete_Subtype_Definition
+        (List, ${discrete_subtype_definition.ast});
+      ${formal_constrained_array_definition.ast} := Self.Factory.
+        Formal_Constrained_Array_Definition
+          (${array_token.ast},
+           ${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast},
+           ${of_token.ast},
+           ${component_definition.ast});
+   end;
+.)
+
+formal_decimal_fixed_point_definition ::=
+  delta_token box_token <delta> digits_token box_token <digits>;
+
+Rules for formal_decimal_fixed_point_definition. :
+(.
+   ${formal_decimal_fixed_point_definition.ast} :=
+      Self.Factory.Formal_Decimal_Fixed_Point_Definition
+         (${delta_token.ast},
+          ${delta.ast},
+          ${digits_token.ast},
+          ${digits.ast});
+.)
+
+formal_derived_type_definition ::=
+  [abstract_token] [limited_token | synchronized_token]
+  new_token subtype_mark
+  [[and_token interface_list] with_token private_token]
+  [aspect_specification]
+;
+
+Rules for formal_derived_type_definition. :
+(.
+   ${formal_derived_type_definition.ast} :=
+      Self.Factory.Formal_Derived_Type_Definition
+         (${abstract_token.ast:No_Token},
+          ${limited_token.ast:No_Token},
+          ${synchronized_token.ast:No_Token},
+          ${new_token.ast},
+          ${subtype_mark.ast},
+          ${and_token.ast:No_Token},
+          ${interface_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+          ${with_token.ast:No_Token},
+          ${private_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)});
+.)
+
+formal_discrete_type_definition ::=
+  left_parenthesis_token box_token right_parenthesis_token;
+
+Rules for formal_discrete_type_definition. :
+(.
+   ${formal_discrete_type_definition.ast} :=
+      Self.Factory.Formal_Discrete_Type_Definition
+         (${left_parenthesis_token.ast},
+          ${box_token.ast},
+          ${right_parenthesis_token.ast});
+.)
+
+formal_floating_point_definition ::= digits_token box_token;
+
+Rules for formal_floating_point_definition. :
+(.
+   ${formal_floating_point_definition.ast} :=
+      Self.Factory.Formal_Floating_Point_Definition
+         (${digits_token.ast},
+          ${box_token.ast});
+.)
+
+formal_function_declaration ::=
+(subtype)
+  with_token function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token
+  [not_token null_token] subtype_mark
+  [(abs)  is_token abstract_token [name | box_token] |
+   (name) is_token name |
+   (box)  is_token box_token]
+  [aspect_specification] semicolon_token
+  |
+(access)
+  with_token function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+  [(abs)  is_token abstract_token [name | box_token] |
+   (name) is_token name |
+   (box)  is_token box_token]
+  [aspect_specification] semicolon_token
+;
+
+Rules for formal_function_declaration.subtype :
+(.
+   ${formal_function_declaration.ast} :=
+      Self.Factory.Formal_Function_Declaration
+         (${with_token.ast},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          ${not_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${is_token.ast:No_Token},
+          ${abstract_token.ast:No_Token},
+          ${name.ast:None},
+          ${box_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for formal_function_declaration.access :
+(.
+   ${formal_function_declaration.ast} :=
+      Self.Factory.Formal_Function_Declaration
+         (${with_token.ast},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${is_token.ast:No_Token},
+          ${abstract_token.ast:No_Token},
+          ${name.ast:None},
+          ${box_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+formal_incomplete_type_declaration ::=
+  type_token defining_identifier
+  [discriminant_part] [is_token tagged_token]
+  semicolon_token
+;
+
+Rules for formal_incomplete_type_declaration. :
+(.
+   ${formal_incomplete_type_declaration.ast} :=
+      Self.Factory.Formal_Incomplete_Type_Declaration
+         (${type_token.ast},
+          ${defining_identifier.ast},
+          ${discriminant_part.ast:None},
+          ${is_token.ast:No_Token},
+          ${tagged_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+formal_interface_type_definition ::=
+  [interface_kind] interface_token
+  {and_token subtype_mark} <and_subtype_mark_list>;
+
+Rules for formal_interface_type_definition. :
+(.
+   ${formal_interface_type_definition.ast} := Self.Factory.
+     Formal_Interface_Type_Definition
+       (${interface_kind.ast:No_Token},
+        ${interface_token.ast},
+        ${and_subtype_mark_list.ast:(Self.Factory.Subtype_Mark_Sequence)});
+.)
+
+formal_modular_type_definition ::= mod_token box_token;
+
+Rules for formal_modular_type_definition. :
+(.
+   ${formal_modular_type_definition.ast} :=
+      Self.Factory.Formal_Modular_Type_Definition
+         (${mod_token.ast},
+          ${box_token.ast});
+.)
+
+formal_object_declaration ::=
+(subtype_mark)
+  defining_identifier_list colon_token
+  [in_token] [out_token] [not_token null_token] subtype_mark
+  [assignment_token expression]
+  [aspect_specification]
+  semicolon_token
+ |
+(access_definition)
+  defining_identifier_list colon_token
+  [in_token] [out_token] access_definition
+  [assignment_token expression]
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for formal_object_declaration.subtype_mark :
+(.
+   ${formal_object_declaration.ast} :=
+      Self.Factory.Formal_Object_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${in_token.ast:No_Token},
+          ${out_token.ast:No_Token},
+          ${not_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for formal_object_declaration.access_definition :
+(.
+   ${formal_object_declaration.ast} :=
+      Self.Factory.Formal_Object_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${in_token.ast:No_Token},
+          ${out_token.ast:No_Token},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+formal_ordinary_fixed_point_definition ::=
+  delta_token box_token;
+
+Rules for formal_ordinary_fixed_point_definition. :
+(.
+   ${formal_ordinary_fixed_point_definition.ast} := Self.Factory
+     .Formal_Ordinary_Fixed_Point_Definition
+         (${delta_token.ast},
+          ${box_token.ast});
+.)
+
+formal_package_actual_part ::=
+(box)
+  [others_choice arrow_token] box_token
+|
+(association)
+  formal_package_association
+  {comma_token formal_package_association} <formal_package_association_list>
+  [(box) comma_token others_choice arrow_token box_token]
+;
+
+Rules for formal_package_actual_part.box :
+(.
+   declare
+      List : Node :=
+        Self.Factory.Generic_Association_Sequence;
+      Box  : constant Node :=
+        Self.Factory.Generic_Association
+          (${others_choice.ast:None},
+           ${arrow_token.ast:No_Token},
+           None,
+           ${box_token.ast});
+   begin
+      Self.Factory.Append_Generic_Association
+        (List, Box);
+      ${formal_package_actual_part.ast} := List;
+   end;
+.)
+
+Rules for formal_package_actual_part.association :
+(.
+   declare
+      List : Node :=
+        ${formal_package_association_list.ast:Self.Factory.Generic_Association_Sequence};
+      Box  : constant Node :=
+        Self.Factory.Generic_Association
+          (${others_choice.ast},
+           ${arrow_token.ast},
+           None,
+           ${box_token.ast});
+   begin
+      Self.Factory.Prepend_Generic_Association
+        (List, ${formal_package_association.ast});
+      Self.Factory.Append_Generic_Association
+        (List, Box);
+      ${formal_package_actual_part.ast} := List;
+   end;
+.)
+
+Rules for formal_package_actual_part.association :
+(.
+   declare
+      List : Node :=
+        ${formal_package_association_list.ast:Self.Factory.Generic_Association_Sequence};
+   begin
+      Self.Factory.Prepend_Generic_Association
+        (List, ${formal_package_association.ast});
+      ${formal_package_actual_part.ast} := List;
+   end;
+.)
+
+formal_package_association ::=
+  generic_association |
+(box)
+  selector_name arrow_token box_token
+;
+
+Rules for formal_package_association.box :
+(.
+   ${formal_package_association.ast} :=
+      Self.Factory.Generic_Association
+         (${selector_name.ast},
+          ${arrow_token.ast},
+          None,
+          ${box_token.ast});
+.)
+
+formal_package_declaration ::=
+  with_token package_token defining_identifier
+  is_token new_token program_unit_name
+  [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for formal_package_declaration. :
+(.
+   ${formal_package_declaration.ast} :=
+      Self.Factory.Formal_Package_Declaration
+         (${with_token.ast},
+          ${package_token.ast},
+          ${defining_identifier.ast},
+          ${is_token.ast},
+          ${new_token.ast},
+          ${program_unit_name.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${formal_package_actual_part.ast:(Self.Factory.Generic_Association_Sequence)},
+          ${right_parenthesis_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+
+formal_part ::=
+   parameter_specification
+     {semicolon_token parameter_specification} <parameter_specification_list>
+;
+
+Rules for formal_part. :
+(.
+   declare
+      List : Node :=
+        ${parameter_specification_list.ast:Self.Factory.Parameter_Specification_Sequence};
+   begin
+      Self.Factory.Prepend_Parameter_Specification
+        (List, ${parameter_specification.ast});
+      ${formal_part.ast} := List;
+   end;
+.)
+
+formal_private_type_definition ::=
+  [[abstract_token] tagged_token] [limited_token] private_token;
+
+Rules for formal_private_type_definition. :
+(.
+   ${formal_private_type_definition.ast} :=
+      Self.Factory.Formal_Private_Type_Definition
+         (${abstract_token.ast:No_Token},
+          ${tagged_token.ast:No_Token},
+          ${limited_token.ast:No_Token},
+          ${private_token.ast});
+.)
+
+formal_procedure_declaration ::=
+  with_token procedure_token defining_program_unit_name
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [(abs)  is_token abstract_token [name | box_token | null_token] |
+   (name) is_token name |
+   (box)  is_token box_token |
+   (null) is_token null_token]
+  [aspect_specification] semicolon_token;
+
+Rules for formal_procedure_declaration. :
+(.
+   ${formal_procedure_declaration.ast} :=
+      Self.Factory.Formal_Procedure_Declaration
+         (${with_token.ast},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${is_token.ast:No_Token},
+          ${abstract_token.ast:No_Token},
+          ${box_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${name.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+formal_signed_integer_type_definition ::= range_token box_token;
+
+Rules for formal_signed_integer_type_definition. :
+(.
+   ${formal_signed_integer_type_definition.ast} := Self.Factory
+     .Formal_Signed_Integer_Type_Definition
+         (${range_token.ast},
+          ${box_token.ast});
+.)
+
+formal_type_definition ::=
+  formal_private_type_definition |
+  formal_discrete_type_definition |
+  formal_signed_integer_type_definition |
+  formal_modular_type_definition |
+  formal_floating_point_definition |
+  formal_ordinary_fixed_point_definition |
+  formal_decimal_fixed_point_definition |
+  formal_constrained_array_definition |
+  formal_unconstrained_array_definition |
+  formal_access_type_definition |
+  formal_interface_type_definition;
+
+formal_unconstrained_array_definition ::=
+  array_token left_parenthesis_token index_subtype_definition
+  {comma_token index_subtype_definition} <index_subtype_definition_list>
+  right_parenthesis_token
+  of_token component_definition;
+
+Rules for formal_unconstrained_array_definition. :
+(.
+   declare
+      List : Node :=
+        ${index_subtype_definition_list.ast:Self.Factory.
+        Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Prepend_Subtype_Mark
+        (List, ${index_subtype_definition.ast});
+      ${formal_unconstrained_array_definition.ast} := Self.Factory.
+        Formal_Unconstrained_Array_Definition
+          (${array_token.ast},
+           ${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast},
+           ${of_token.ast},
+           ${component_definition.ast});
+   end;
+.)
+
+full_type_declaration ::=
+  (full)  type_token defining_identifier
+    [discriminant_part] is_token type_definition
+    [aspect_specification] semicolon_token
+  |
+  (derived) type_token defining_identifier
+    [discriminant_part] is_token
+  [abstract_token] [limited_token] new_token subtype_indication
+  [(ext) {and_token subtype_mark} <and_subtype_mark_list>
+         with_token record_definition]
+    [aspect_specification] semicolon_token
+;
+
+Rules for full_type_declaration.full :
+(.  ${full_type_declaration.ast} :=
+       Self.Factory.Full_Type_Declaration
+         (${type_token.ast},
+          ${defining_identifier.ast},
+          ${discriminant_part.ast:None},
+          ${is_token.ast},
+          ${type_definition.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for full_type_declaration.derived :
+(.
+     declare
+        Type_Definition : constant Node :=
+          Self.Factory.Derived_Type_Definition
+            (${abstract_token.ast:No_Token},
+             ${limited_token.ast:No_Token},
+             ${new_token.ast},
+             ${subtype_indication.ast});
+     begin
+       ${full_type_declaration.ast} :=
+       Self.Factory.Full_Type_Declaration
+         (${type_token.ast},
+          ${defining_identifier.ast},
+          ${discriminant_part.ast:None},
+          ${is_token.ast},
+          Type_Definition,
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+     end;
+.)
+
+Rules for full_type_declaration.derived :
+(.
+     declare
+        Type_Definition : constant Node :=
+          Self.Factory.Derived_Record_Definition
+            (${abstract_token.ast:No_Token},
+             ${limited_token.ast:No_Token},
+             ${new_token.ast},
+             ${subtype_indication.ast},
+             ${and_subtype_mark_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+             ${with_token.ast},
+             ${record_definition.ast});
+     begin
+        ${full_type_declaration.ast} :=
+          Self.Factory.Full_Type_Declaration
+            (${type_token.ast},
+            ${defining_identifier.ast},
+            ${discriminant_part.ast:None},
+            ${is_token.ast},
+            Type_Definition,
+            ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+            ${semicolon_token.ast});
+     end;
+.)
+
+function_body ::=
+(function_subtype)
+  [[not_token] overriding_token]
+  function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token
+  [not_token <not_null> null_token] subtype_mark
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [designator] semicolon_token
+  |
+(function_access)
+  [[not_token] overriding_token]
+  function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [designator] semicolon_token
+;
+
+Rules for function_body.function_subtype :
+(.
+   ${function_body.ast} := Self.Factory.Function_Body
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          ${not_null.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${designator.ast:None},
+          ${semicolon_token.ast});
+.)
+
+Rules for function_body.function_access :
+(.
+   ${function_body.ast} := Self.Factory.Function_Body
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${designator.ast:None},
+          ${semicolon_token.ast});
+.)
+
+function_call ::= prefix association_list;
+
+Rules for function_call. :
+(.  ${function_call.ast} := Self.Factory.Function_Call
+     (${prefix.ast}, ${association_list.ast});
+.)
+
+function_declaration ::=
+(function_subtype)
+  [[not_token] overriding_token]
+  function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token
+  [not_token <not_null> null_token] subtype_mark
+  [(abs) is_token abstract_token |
+   (expr) is_token association_list |
+   (ren)  renames_token name |
+   (sep) is_token separate_token]
+  [aspect_specification] semicolon_token
+  |
+(function_access)
+  [[not_token] overriding_token]
+  function_token defining_designator
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+  [(abs) is_token abstract_token |
+   (expr) is_token association_list |
+   (ren)  renames_token name |
+   (sep) is_token separate_token]
+  [aspect_specification] semicolon_token
+;
+
+Rules for function_declaration.function_subtype :
+(.
+   ${function_declaration.ast} := Self.Factory.Function_Declaration
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          ${not_null.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${is_token.ast:No_Token},
+          ${abstract_token.ast:No_Token},
+          ${association_list.ast:None},
+          ${renames_token.ast:No_Token},
+          ${name.ast:None},
+          ${separate_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for function_declaration.function_access :
+(.
+   ${function_declaration.ast} := Self.Factory.Function_Declaration
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${is_token.ast:No_Token},
+          ${abstract_token.ast:No_Token},
+          ${association_list.ast:None},
+          ${renames_token.ast:No_Token},
+          ${name.ast:None},
+          ${separate_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+general_access_modifier ::= all_token | constant_token;
+
+generic_association ::=
+  [selector_name arrow_token] expression;
+
+Rules for generic_association. :
+(.
+   ${generic_association.ast} := Self.Factory.Generic_Association
+         (${selector_name.ast:None},
+          ${arrow_token.ast:No_Token},
+          ${expression.ast},
+           No_Token);
+.)
+
+generic_formal_item ::= generic_formal_parameter_declaration | use_clause | pragma;
+
+Rules for generic_formal_item_list.generic_formal_item :
+(.
+  declare
+     List : Node := ${head.ast:Self.
+       Factory.Generic_Formal_Sequence};
+  begin
+     Self.Factory.Append_Generic_Formal
+        (List, ${generic_formal_item.ast});
+     ${generic_formal_item_list.ast} := List;
+  end;
+.)
+
+generic_formal_parameter_declaration ::=
+   formal_object_declaration |
+   formal_complete_type_declaration |
+   formal_incomplete_type_declaration |
+   formal_function_declaration |
+   formal_procedure_declaration |
+   formal_package_declaration;
+
+generic_function_declaration ::=
+(subtype)
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  function_token defining_designator
+  [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token
+  [not_token null_token] subtype_mark
+  [aspect_specification] semicolon_token
+  |
+(access)
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  function_token defining_designator
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  return_token access_definition
+  [aspect_specification] semicolon_token
+;
+
+Rules for generic_function_declaration.subtype :
+(.
+   ${generic_function_declaration.ast} := Self.Factory.Generic_Function_Declaration
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          ${not_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for generic_function_declaration.access :
+(.
+   ${generic_function_declaration.ast} := Self.Factory.Generic_Function_Declaration
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${return_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+generic_instantiation ::=
+(package)
+  package_token defining_program_unit_name is_token
+  new_token program_unit_name
+  [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
+  [aspect_specification]
+  semicolon_token
+  |
+(subtype)
+  [[not_token] overriding_token]
+  function_token defining_designator
+  is_token new_token program_unit_name
+  [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
+  [aspect_specification] semicolon_token
+  |
+(proc)
+  [[not_token] overriding_token]
+  procedure_token defining_program_unit_name
+  is_token new_token program_unit_name
+  [left_parenthesis_token formal_package_actual_part right_parenthesis_token]
+  [aspect_specification] semicolon_token;
+
+Rules for generic_instantiation.package :
+(.
+   ${generic_instantiation.ast} :=
+      Self.Factory.Package_Instantiation
+         (${package_token.ast},
+          ${defining_program_unit_name.ast},
+          ${is_token.ast},
+          ${new_token.ast},
+          ${program_unit_name.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${formal_package_actual_part.ast:(Self.Factory.Generic_Association_Sequence)},
+          ${right_parenthesis_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for generic_instantiation.subtype :
+(.
+   ${generic_instantiation.ast} :=
+      Self.Factory.Function_Instantiation
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${function_token.ast},
+          ${defining_designator.ast},
+          ${is_token.ast},
+          ${new_token.ast},
+          ${program_unit_name.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${formal_package_actual_part.ast:(Self.Factory.Generic_Association_Sequence)},
+          ${right_parenthesis_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for generic_instantiation.proc :
+(.
+   ${generic_instantiation.ast} :=
+      Self.Factory.Procedure_Instantiation
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${is_token.ast:No_Token},
+          ${new_token.ast},
+          ${program_unit_name.ast},
+          ${left_parenthesis_token.ast:No_Token},
+          ${formal_package_actual_part.ast:(Self.Factory.Generic_Association_Sequence)},
+          ${right_parenthesis_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+generic_package_declaration ::=
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  package_token defining_program_unit_name [aspect_specification] is_token
+    [basic_declarative_item_list <public_item_list>]
+  [(private_part)
+    private_token
+    [basic_declarative_item_list <private_item_list>] ]
+  end_token [program_unit_name] semicolon_token
+;
+
+Rules for generic_package_declaration. :
+(.
+   ${generic_package_declaration.ast} :=
+      Self.Factory.Generic_Package_Declaration
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${package_token.ast},
+          ${defining_program_unit_name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${public_item_list.ast:(Self.Factory.Basic_Declarative_Item_Sequence)},
+          ${private_token.ast:No_Token},
+          ${private_item_list.ast:(Self.Factory.Basic_Declarative_Item_Sequence)},
+          ${end_token.ast},
+          ${program_unit_name.ast:None},
+          ${semicolon_token.ast});
+.)
+
+generic_procedure_declaration ::=
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  procedure_token defining_program_unit_name
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [aspect_specification] semicolon_token;
+
+Rules for generic_procedure_declaration. :
+(.
+   ${generic_procedure_declaration.ast} :=
+      Self.Factory.Generic_Procedure_Declaration
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+generic_renaming_declaration ::=
+(package)
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  package_token
+  defining_program_unit_name renames_token name
+  [aspect_specification]
+  semicolon_token
+ |
+(procedure)
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  procedure_token
+  defining_program_unit_name renames_token name
+  [aspect_specification]
+  semicolon_token
+ |
+(function)
+  generic_token {generic_formal_item} <generic_formal_item_list>
+  function_token
+  defining_program_unit_name renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for generic_renaming_declaration.package :
+(.
+   ${generic_renaming_declaration.ast} :=
+      Self.Factory.Generic_Package_Renaming
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${package_token.ast},
+          ${defining_program_unit_name.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for generic_renaming_declaration.procedure :
+(.
+   ${generic_renaming_declaration.ast} :=
+      Self.Factory.Generic_Procedure_Renaming
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for generic_renaming_declaration.function :
+(.
+   ${generic_renaming_declaration.ast} :=
+      Self.Factory.Generic_Function_Renaming
+         (${generic_token.ast},
+          ${generic_formal_item_list.ast:(Self.Factory.Generic_Formal_Sequence)},
+          ${function_token.ast},
+          ${defining_program_unit_name.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+goto_statement ::= goto_token program_unit_name semicolon_token;
+
+Rules for goto_statement. :
+(.
+   ${goto_statement.ast} :=
+      Self.Factory.Goto_Statement
+         (${goto_token.ast},
+          ${program_unit_name.ast},
+          ${semicolon_token.ast});
+.)
+
+identifier ::= identifier_token;
+
+Rules for identifier.identifier_token :
+(.  ${identifier.ast} := Self.Factory.Identifier
+     (${identifier_token.ast});
+.)
+
+if_expression ::=
+  if_token expression <condition> then_token expression <then>
+  {elsif_token expression <condition> then_token expression} <elsif_exp_list>
+  [(else) else_token expression <else>];
+
+Rules for if_expression. :
+(.
+   declare
+      Path : constant Node :=
+        Self.Factory.If_Expression_Path
+          (${if_token.ast},
+           ${condition.ast},
+           ${then_token.ast},
+          ${then.ast});
+      List : Node :=
+        ${elsif_exp_list.ast:Self.Factory.If_Else_Expression_Path_Sequence};
+   begin
+      Self.Factory.Prepend_If_Else_Expression_Path
+        (List, Path);
+      ${if_expression.ast} := Self.Factory.If_Expression (List);
+   end;
+.)
+
+Rules for if_expression. :
+(.
+   declare
+      Path : constant Node :=
+        Self.Factory.If_Expression_Path
+          (${if_token.ast},
+           ${condition.ast},
+           ${then_token.ast},
+           ${then.ast});
+      Tail : constant Node :=
+        Self.Factory.Else_Expression_Path
+          (${else_token.ast},
+           ${else.ast});
+      List : Node :=
+        ${elsif_exp_list.ast:Self.Factory.If_Else_Expression_Path_Sequence};
+   begin
+      Self.Factory.Prepend_If_Else_Expression_Path
+        (List, Path);
+      Self.Factory.Append_If_Else_Expression_Path
+        (List, Tail);
+      ${if_expression.ast} := Self.Factory.If_Expression (List);
+   end;
+.)
+
+if_statement ::=
+  if_token expression then_token
+  sequence_of_statements <if>
+  {elsif_token expression then_token sequence_of_statements} <elsif_list>
+  [else_token sequence_of_statements <else>]
+  end_token if_token <endif> semicolon_token;
+
+Rules for if_statement. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.If_Path
+          (${if_token.ast},
+           ${expression.ast},
+           ${then_token.ast},
+           ${if.ast});
+      List : Node :=
+        ${elsif_list.ast:Self.Factory.If_Elsif_Else_Path_Sequence};
+   begin
+      Self.Factory.Prepend_If_Elsif_Else_Path
+        (List, Item);
+      ${if_statement.ast} := Self.Factory.If_Statement
+        (List,
+         ${end_token.ast},
+         ${endif.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+Rules for if_statement. :
+(.
+   declare
+      If_Item : constant Node :=
+        Self.Factory.If_Path
+          (${if_token.ast},
+           ${expression.ast},
+           ${then_token.ast},
+           ${if.ast});
+      Else_Item : constant Node :=
+        Self.Factory.Else_Path
+          (${else_token.ast}, ${else.ast});
+      List : Node :=
+        ${elsif_list.ast:Self.Factory.If_Elsif_Else_Path_Sequence};
+   begin
+      Self.Factory.Prepend_If_Elsif_Else_Path
+        (List, If_Item);
+      Self.Factory.Append_If_Elsif_Else_Path
+        (List, Else_Item);
+      ${if_statement.ast} := Self.Factory.If_Statement
+        (List,
+         ${end_token.ast},
+         ${endif.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+incomplete_type_declaration ::=
+  type_token defining_identifier
+  [discriminant_part]
+  [is_token tagged_token]
+  semicolon_token;
+
+Rules for incomplete_type_declaration. :
+(.
+   declare
+      Def : constant Node  :=
+        Self.Factory.Incomplete_Type_Definition
+          (${tagged_token.ast:No_Token});
+   begin
+      ${incomplete_type_declaration.ast} :=
+         Self.Factory.Incomplete_Type_Declaration
+           (${type_token.ast},
+            ${defining_identifier.ast},
+            ${discriminant_part.ast:None},
+            ${is_token.ast:No_Token},
+            Def,
+            ${semicolon_token.ast});
+   end;
+.)
+
+index_subtype_definition ::=
+  subtype_mark range_token box_token;
+
+interface_kind ::=
+  limited_token | task_token | protected_token | synchronized_token;
+
+interface_list ::=
+  subtype_mark {and_token subtype_mark} <and_subtype_mark_list>;
+
+Rules for interface_list. :
+(.
+   declare
+      List : Node :=
+        ${and_subtype_mark_list.ast:Self.Factory.
+        Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Prepend_Subtype_Mark
+        (List, ${subtype_mark.ast});
+      ${interface_list.ast} := List;
+   end;
+.)
+
+interface_type_definition ::=
+  [interface_kind] interface_token
+  {and_token subtype_mark} <and_subtype_mark_list>;
+
+Rules for interface_type_definition. :
+(.
+   ${interface_type_definition.ast} := Self.Factory.
+     Interface_Type_Definition
+       (${interface_kind.ast:No_Token},
+        ${interface_token.ast},
+        ${and_subtype_mark_list.ast:(Self.Factory.Subtype_Mark_Sequence)});
+.)
+
+iterator_specification ::=
+  defining_identifier
+  [(subtype) colon_token subtype_indication] of_token [reverse_token] name
+;
+
+Rules for iterator_specification. :
+(.
+   ${iterator_specification.ast} := Self.Factory.
+     Element_Iterator_Specification
+       (${defining_identifier.ast},
+        ${colon_token.ast:No_Token},
+        ${subtype_indication.ast:None},
+        ${of_token.ast},
+        ${reverse_token.ast:No_Token},
+        ${name.ast});
+.)
+
+known_discriminant_part ::=
+  left_parenthesis_token discriminant_specification
+  {semicolon_token discriminant_specification} <discriminant_spec_list>
+  right_parenthesis_token;
+
+Rules for known_discriminant_part. :
+(.
+   declare
+      List : Node := ${discriminant_spec_list.ast:Self.
+        Factory.Discriminant_Specification_Sequence};
+   begin
+      Self.Factory.Prepend_Discriminant_Specification
+        (List, ${discriminant_specification.ast});
+      ${known_discriminant_part.ast} :=
+        Self.Factory.Known_Discriminant_Part
+          (${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast});
+   end;
+.)
+
+label ::=
+  left_label_token defining_identifier right_label_token;
+
+
+Rules for label. :
+(.
+   ${label.ast} := ${defining_identifier.ast};
+.)
+
+library_item ::=
+  (spec)  {context_item} [private_token] library_unit_declaration |
+  (body)  {context_item} library_unit_body;
+
+Rules for library_item.spec :
+(.
+   ${library_item.ast} :=
+      Self.Factory.Compilation_Unit_Declaration
+         (${context_item_list.ast:(Self.Factory.Context_Item_Sequence)},
+          ${private_token.ast:No_Token},
+          ${library_unit_declaration.ast});
+.)
+
+Rules for library_item.body :
+(.
+   ${library_item.ast} :=
+      Self.Factory.Compilation_Unit_Body
+         (${context_item_list.ast:(Self.Factory.Context_Item_Sequence)},
+          ${library_unit_body.ast});
+.)
+
+library_unit_body ::= package_body | function_body | procedure_body;
+
+library_unit_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  package_declaration |
+  generic_procedure_declaration |
+  generic_function_declaration |
+  generic_package_declaration |
+  generic_instantiation |
+  generic_renaming_declaration |
+  package_renaming_declaration;
+
+loop_parameter_specification ::=
+  defining_identifier in_token [reverse_token] discrete_subtype_definition;
+
+Rules for loop_parameter_specification. :
+(.  ${loop_parameter_specification.ast} :=
+     Self.Factory.Loop_Parameter_Specification
+       (${defining_identifier.ast},
+        ${in_token.ast},
+        ${reverse_token.ast:No_Token},
+        ${discrete_subtype_definition.ast});
+.)
+
+loop_statement ::=
+  [defining_identifier colon_token]
+  [(while) while_token expression |
+   (loop)  for_token loop_parameter_specification |
+   (iter)  for_token iterator_specification ]
+  loop_token
+  sequence_of_statements
+  end_token loop_token <endloop>
+  [identifier_token <endid>] semicolon_token;
+
+Rules for loop_statement. :
+(.
+   ${loop_statement.ast} :=
+      Self.Factory.Loop_Statement
+         (${defining_identifier.ast:None},
+          ${colon_token.ast:No_Token},
+          ${loop_token.ast},
+          ${sequence_of_statements.ast},
+          ${end_token.ast},
+          ${endloop.ast},
+          ${endid.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+   ${loop_statement.ast} :=
+      Self.Factory.While_Loop_Statement
+         (${defining_identifier.ast:None},
+          ${colon_token.ast:No_Token},
+          ${while_token.ast},
+          ${expression.ast},
+          ${loop_token.ast},
+          ${sequence_of_statements.ast},
+          ${end_token.ast},
+          ${endloop.ast},
+          ${endid.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+   ${loop_statement.ast} :=
+      Self.Factory.For_Loop_Statement
+         (${defining_identifier.ast:None},
+          ${colon_token.ast:No_Token},
+          ${for_token.ast},
+          ${loop_parameter_specification.ast},
+          ${loop_token.ast},
+          ${sequence_of_statements.ast},
+          ${end_token.ast},
+          ${endloop.ast},
+          ${endid.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+Rules for loop_statement. :
+(.
+   ${loop_statement.ast} :=
+      Self.Factory.For_Loop_Statement
+         (${defining_identifier.ast:None},
+          ${colon_token.ast:No_Token},
+          ${for_token.ast},
+          ${iterator_specification.ast},
+          ${loop_token.ast},
+          ${sequence_of_statements.ast},
+          ${end_token.ast},
+          ${endloop.ast},
+          ${endid.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+membership_choice ::= simple_expression | range;
+
+membership_choice_list ::=
+  membership_choice {vertical_line_token membership_choice} <mchoice_list>;
+
+Priority membership_choice_list. 10 left;
+
+Rules for membership_choice_list. :
+(.
+   declare
+      List : Node :=
+        ${mchoice_list.ast:Self.Factory.Membership_Choice_Sequence};
+   begin
+      Self.Factory.Prepend_Membership_Choice
+        (List, ${membership_choice.ast});
+      ${membership_choice_list.ast} := List;
+   end;
+.)
+
+modular_type_definition ::= mod_token expression;
+
+Rules for modular_type_definition. :
+(.  ${modular_type_definition.ast} := Self.Factory.Modular_Type_Definition
+     (${mod_token.ast}, ${expression.ast});
+.)
+
+name ::=
+  direct_name |
+  explicit_dereference |
+  selected_component |
+  attribute_reference |
+  function_call |
+  character_literal_token |
+  qualified_expression;
+
+Rules for name.character_literal_token :
+(.  ${name.ast} := Self.Factory.Character_Literal
+     (${character_literal_token.ast});
+.)
+
+null_or_abstract ::= null_token | abstract_token;
+
+null_statement ::= null_token semicolon_token;
+
+Rules for null_statement. :
+(.
+   ${null_statement.ast} :=
+      Self.Factory.Null_Statement
+         (${null_token.ast}, ${semicolon_token.ast});
+.)
+
+number_declaration ::=
+  defining_identifier_list colon_token constant_token
+  assignment_token expression
+  semicolon_token
+;
+
+Rules for number_declaration. :
+(.
+   ${number_declaration.ast} :=
+      Self.Factory.Number_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${constant_token.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast},
+          ${semicolon_token.ast});
+.)
+
+object_declaration ::=
+(object_definition)
+  defining_identifier_list colon_token
+  [aliased_token] [constant_token] object_definition
+  [assignment_token expression]
+  [aspect_specification]
+  semicolon_token
+  |
+  single_task_declaration |
+  single_protected_declaration
+;
+
+Rules for object_declaration.object_definition :
+(.
+   ${object_declaration.ast} :=
+      Self.Factory.Object_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${aliased_token.ast:No_Token},
+          ${constant_token.ast:No_Token},
+          ${object_definition.ast},
+          ${assignment_token.ast:No_Token},
+          ${expression.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+object_definition ::=
+  subtype_indication |
+  access_definition |
+  unconstrained_array_definition |
+  constrained_array_definition;
+
+object_renaming_declaration ::=
+(subtype_mark)
+  defining_identifier_list colon_token
+  [not_token null_token] subtype_mark renames_token name
+  [aspect_specification]
+  semicolon_token
+ |
+(access_definition)
+  defining_identifier_list colon_token
+  access_definition renames_token name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for object_renaming_declaration.subtype_mark :
+(.
+   ${object_renaming_declaration.ast} :=
+      Self.Factory.Object_Renaming_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          ${not_token.ast:No_Token},
+          ${null_token.ast:No_Token},
+          ${subtype_mark.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+Rules for object_renaming_declaration.access_definition :
+(.
+   ${object_renaming_declaration.ast} :=
+      Self.Factory.Object_Renaming_Declaration
+         (${defining_identifier_list.ast},
+          ${colon_token.ast},
+          No_Token,
+          No_Token,
+          ${access_definition.ast},
+          ${renames_token.ast},
+          ${name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+operator_symbol ::= string_literal_token;
+
+Rules for operator_symbol.string_literal_token :
+(.  ${operator_symbol.ast} := Self.Factory.Operator_Symbol
+     (${string_literal_token.ast});
+.)
+
+ordinary_fixed_point_definition ::=
+   delta_token simple_expression real_range_specification;
+
+Rules for ordinary_fixed_point_definition. :
+(.  ${ordinary_fixed_point_definition.ast} := Self.Factory.Ordinary_Fixed_Point_Definition
+     (${delta_token.ast},
+      ${simple_expression.ast},
+      ${real_range_specification.ast:None});
+.)
+
+others_choice ::= others_token;
+
+Rules for others_choice.others_token :
+(. ${others_choice.ast} := Self.Factory.Others_Choice
+     (${others_token.ast});
+.)
+
+package_body ::=
+  package_token body_token defining_program_unit_name
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [program_unit_name]
+  semicolon_token
+;
+
+Rules for package_body. :
+(.
+   ${package_body.ast} :=
+      Self.Factory.Package_Body
+         (${package_token.ast},
+          ${body_token.ast},
+          ${defining_program_unit_name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${program_unit_name.ast:None},
+          ${semicolon_token.ast});
+.)
+
+package_body_stub ::=
+  package_token body_token defining_program_unit_name is_token separate_token
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for package_body_stub. :
+(.
+   ${package_body_stub.ast} :=
+      Self.Factory.Package_Body_Stub
+         (${package_token.ast},
+          ${body_token.ast},
+          ${defining_program_unit_name.ast},
+          ${is_token.ast},
+          ${separate_token.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+package_declaration ::=
+  package_token defining_program_unit_name [aspect_specification] is_token
+    [basic_declarative_item_list <public_item_list>]
+  [(private_part)
+    private_token
+    [basic_declarative_item_list <private_item_list>] ]
+  end_token [program_unit_name] semicolon_token
+;
+
+Rules for package_declaration. :
+(.
+   ${package_declaration.ast} :=
+      Self.Factory.Package_Declaration
+         (${package_token.ast},
+          ${defining_program_unit_name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${public_item_list.ast:(Self.Factory.Basic_Declarative_Item_Sequence)},
+          ${private_token.ast:No_Token},
+          ${private_item_list.ast:(Self.Factory.Basic_Declarative_Item_Sequence)},
+          ${end_token.ast},
+          ${program_unit_name.ast:None},
+          ${semicolon_token.ast});
+.)
+
+package_renaming_declaration ::=
+  package_token defining_program_unit_name
+  renames_token program_unit_name
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for package_renaming_declaration. :
+(.
+   ${package_renaming_declaration.ast} :=
+      Self.Factory.Package_Renaming_Declaration
+         (${package_token.ast},
+          ${defining_program_unit_name.ast},
+          ${renames_token.ast},
+          ${program_unit_name.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+parameter_specification ::=
+(subtype)
+  defining_identifier_list colon_token
+  [aliased_token] [in_token] [out_token] [not_token null_token]
+  subtype_mark [assignment_token expression]
+  |
+(access)
+  defining_identifier_list colon_token
+  access_definition [assignment_token expression]
+;
+
+Rules for parameter_specification.subtype :
+(.
+   ${parameter_specification.ast} := Self.Factory.Parameter_Specification
+       (${defining_identifier_list.ast},
+        ${colon_token.ast},
+        ${aliased_token.ast:No_Token},
+        ${in_token.ast:No_Token},
+        ${out_token.ast:No_Token},
+        ${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${subtype_mark.ast},
+        ${assignment_token.ast:No_Token},
+        ${expression.ast:None});
+.)
+
+Rules for parameter_specification.access :
+(.
+   ${parameter_specification.ast} := Self.Factory.Parameter_Specification
+       (${defining_identifier_list.ast},
+        ${colon_token.ast},
+        No_Token,
+        No_Token,
+        No_Token,
+        No_Token,
+        No_Token,
+        ${access_definition.ast},
+        ${assignment_token.ast:No_Token},
+        ${expression.ast:None});
+.)
+
+pragma ::=
+   pragma_token identifier
+   [left_parenthesis_token pragma_argument_association
+    {comma_token pragma_argument_association} <pragma_argument_list>
+   right_parenthesis_token]
+  semicolon_token
+;
+
+Rules for pragma. :
+(.
+   ${pragma.ast} := Self.Factory.Pragma_Node
+     (${pragma_token.ast},
+      ${identifier.ast},
+      No_Token,
+      Self.Factory.Pragma_Argument_Association_Sequence,
+      No_Token,
+      ${semicolon_token.ast});
+.)
+
+Rules for pragma. :
+(.
+   declare
+      List : Node := ${pragma_argument_list.ast:Self.
+        Factory.Pragma_Argument_Association_Sequence};
+   begin
+      Self.Factory.Prepend_Pragma_Argument_Association
+        (List, ${pragma_argument_association.ast});
+      ${pragma.ast} := Self.Factory.Pragma_Node
+        (${pragma_token.ast},
+         ${identifier.ast},
+         ${left_parenthesis_token.ast},
+         List,
+         ${right_parenthesis_token.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+pragma_argument_association ::= [identifier arrow_token] expression;
+
+Rules for pragma_argument_association. :
+(.
+   ${pragma_argument_association.ast} := Self.Factory.
+     Pragma_Argument_Association
+       (${identifier.ast:None},
+        ${arrow_token.ast:No_Token},
+        ${expression.ast});
+.)
+
+prefix ::= name;
+
+private_extension_declaration ::=
+  type_token defining_identifier
+  [discriminant_part] is_token
+  [abstract_token] [limited_token | synchronized_token]
+  new_token subtype_indication
+  {and_token subtype_mark} <and_subtype_mark_list>
+  with_token private_token
+  [aspect_specification]
+  semicolon_token;
+
+Rules for private_extension_declaration. :
+(.
+   declare
+      Def : constant Node :=
+        Self.Factory.Private_Extension_Definition
+          (${abstract_token.ast:No_Token},
+           ${limited_token.ast:No_Token},
+           ${synchronized_token.ast:No_Token},
+           ${new_token.ast},
+           ${subtype_indication.ast},
+           ${and_subtype_mark_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+           ${with_token.ast},
+           ${private_token.ast});
+   begin
+      ${private_extension_declaration.ast} :=
+         Self.Factory.Private_Extension_Declaration
+           (${type_token.ast},
+            ${defining_identifier.ast},
+            ${discriminant_part.ast:None},
+            ${is_token.ast:No_Token},
+            Def,
+            ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+            ${semicolon_token.ast});
+   end;
+.)
+
+private_type_declaration ::=
+  type_token defining_identifier
+  [discriminant_part] is_token
+  [[abstract_token] tagged_token] [limited_token]
+  private_token
+  [aspect_specification]
+  semicolon_token;
+
+Rules for private_type_declaration. :
+(.
+   declare
+      Def : constant Node:=
+        Self.Factory.Private_Type_Definition
+          (${abstract_token.ast:No_Token},
+           ${tagged_token.ast:No_Token},
+           ${limited_token.ast:No_Token},
+           ${private_token.ast});
+   begin
+      ${private_type_declaration.ast} :=
+         Self.Factory.Private_Type_Declaration
+           (${type_token.ast},
+            ${defining_identifier.ast},
+            ${discriminant_part.ast:None},
+            ${is_token.ast:No_Token},
+            Def,
+            ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+            ${semicolon_token.ast});
+   end;
+.)
+
+procedure_body ::=
+  [[not_token] overriding_token]
+  procedure_token defining_program_unit_name
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [aspect_specification] is_token
+  [declarative_part]
+  [begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]]
+  end_token [program_unit_name]
+  semicolon_token;
+
+Rules for procedure_body. :
+(.
+   ${procedure_body.ast} :=
+      Self.Factory.Procedure_Body
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast:No_Token},
+          ${sequence_of_statements.ast:(Self.Factory.Statement_Sequence)},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${program_unit_name.ast:None},
+          ${semicolon_token.ast});
+.)
+
+procedure_declaration ::=
+  [[not_token] overriding_token]
+  procedure_token defining_program_unit_name
+   [left_parenthesis_token <lp> formal_part right_parenthesis_token <rp>]
+  [(is)  is_token null_or_abstract |
+   (ren) renames_token name |
+   (sep) is_token separate_token]
+  [aspect_specification] semicolon_token;
+
+Rules for procedure_declaration. :
+(.
+   ${procedure_declaration.ast} :=
+      Self.Factory.Procedure_Declaration
+         (${not_token.ast:No_Token},
+          ${overriding_token.ast:No_Token},
+          ${procedure_token.ast},
+          ${defining_program_unit_name.ast},
+          ${lp.ast:No_Token},
+          ${formal_part.ast:(Self.Factory.Parameter_Specification_Sequence)},
+          ${rp.ast:No_Token},
+          ${is_token.ast:No_Token}, No_Token,
+          ${renames_token.ast:No_Token},
+          ${name.ast:None},
+          ${separate_token.ast:No_Token},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+program_unit_name ::= identifier | selected_identifier;
+
+proper_body ::=
+  procedure_body |
+  function_body |
+  package_body |
+  task_body |
+  protected_body;
+
+protected_body ::=
+  protected_token body_token defining_identifier
+  [aspect_specification] is_token
+   { protected_operation_item }
+  end_token [identifier_token]
+  semicolon_token
+;
+
+Rules for protected_body. :
+(.
+   ${protected_body.ast} :=
+      Self.Factory.Protected_Body
+         (${protected_token.ast},
+          ${body_token.ast},
+          ${defining_identifier.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${protected_operation_item_list.ast:(Self.Factory.Protected_Operation_Item_Sequence)},
+          ${end_token.ast},
+          ${identifier_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+protected_body_stub ::=
+  protected_token body_token defining_identifier is_token separate_token
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for protected_body_stub. :
+(.
+   ${protected_body_stub.ast} :=
+      Self.Factory.Protected_Body_Stub
+         (${protected_token.ast},
+          ${body_token.ast},
+          ${defining_identifier.ast},
+          ${is_token.ast},
+          ${separate_token.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+protected_definition ::=
+  {protected_operation_declaration}
+  [ (private) private_token
+    {protected_element_declaration}]
+  end_token [identifier_token];
+
+Rules for protected_definition. :
+(.
+   ${protected_definition.ast} :=
+      Self.Factory.Protected_Definition
+         (${protected_operation_declaration_list.ast:(Self.Factory.Protected_Operation_Declaration_Sequence)},
+          ${private_token.ast:No_Token},
+          ${protected_element_declaration_list.ast:(Self.Factory.Protected_Element_Declaration_Sequence)},
+          ${end_token.ast},
+          ${identifier_token.ast:No_Token});
+.)
+
+protected_element_declaration ::=
+  protected_operation_declaration |
+  component_declaration;
+
+protected_operation_declaration ::=
+  procedure_declaration |
+  function_declaration |
+  entry_declaration |
+  aspect_clause;
+
+protected_operation_item ::=
+  procedure_declaration |
+  function_declaration |
+  procedure_body |
+  function_body |
+  entry_body |
+  aspect_clause
+;
+
+protected_type_declaration ::=
+  protected_token type_token defining_identifier
+  [known_discriminant_part]
+  [aspect_specification] is_token
+  [new_token interface_list with_token]
+  protected_definition
+  semicolon_token;
+
+Rules for protected_type_declaration. :
+(.
+   ${protected_type_declaration.ast} :=
+      Self.Factory.Protected_Type_Declaration
+         (${protected_token.ast},
+          ${type_token.ast},
+          ${defining_identifier.ast},
+          ${known_discriminant_part.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${new_token.ast:No_Token},
+          ${interface_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+          ${with_token.ast:No_Token},
+          ${protected_definition.ast},
+          ${semicolon_token.ast});
+.)
+
+qualified_expression ::= prefix apostrophe_token aggregate;
+
+Rules for qualified_expression. :
+(.  ${qualified_expression.ast} := Self.Factory.Qualified_Expression
+     (${prefix.ast}, ${apostrophe_token.ast}, No_Token, ${aggregate.ast}, No_Token);
+.)
+
+quantified_expression ::=
+(loop)
+  for_token quantifier loop_parameter_specification arrow_token expression |
+(iterator)
+  for_token quantifier iterator_specification arrow_token expression;
+
+Rules for quantified_expression.loop :
+(.
+   ${quantified_expression.ast} := Self.Factory.Quantified_Expression
+       (${for_token.ast},
+        ${quantifier.ast},
+        ${loop_parameter_specification.ast},
+        ${arrow_token.ast},
+        ${expression.ast});
+.)
+
+Rules for quantified_expression.iterator :
+(.
+   ${quantified_expression.ast} := Self.Factory.Quantified_Expression
+       (${for_token.ast},
+        ${quantifier.ast},
+        ${iterator_specification.ast},
+        ${arrow_token.ast},
+        ${expression.ast});
+.)
+
+quantifier ::= all_token | some_token;
+
+raise_statement ::=
+  raise_token [name [with_token expression]] semicolon_token;
+
+Rules for raise_statement. :
+(.
+   ${raise_statement.ast} :=
+      Self.Factory.Raise_Statement
+         (${raise_token.ast},
+          ${name.ast:None},
+          ${with_token.ast:No_Token},
+          ${expression.ast:None},
+          ${semicolon_token.ast});
+.)
+
+range ::=
+  range_attribute_reference |
+  (range) simple_expression <left> double_dot_token simple_expression <right>
+;
+
+Rules for range.range :
+(.  ${range.ast} := Self.Factory.Simple_Expression_Range
+     (${left.ast}, ${double_dot_token.ast}, ${right.ast});
+.)
+
+Rules for range.range_attribute_reference :
+(.  ${range.ast} := Self.Factory.Range_Attribute_Reference
+     (${range_attribute_reference.ast});
+.)
+
+range_attribute_reference ::=
+  prefix apostrophe_token range_token
+  [(exp) left_parenthesis_token expression right_parenthesis_token];
+
+Rules for range_attribute_reference. :
+(.  ${range_attribute_reference.ast} := Self.Factory.Attribute_Reference
+     (${prefix.ast},
+      ${apostrophe_token.ast},
+      Self.Factory.Identifier (${range_token.ast}),
+      ${expression.ast:None});
+.)
+
+range_constraint ::= range_token range;
+
+Rules for range_constraint. :
+(.  ${range_constraint.ast} := ${range.ast};
+.)
+
+real_range_specification ::=
+  range_token
+  simple_expression <left> double_dot_token simple_expression <right>;
+
+Rules for real_range_specification. :
+(. ${real_range_specification.ast} := Self.Factory.Simple_Expression_Range
+     (${left.ast}, ${double_dot_token.ast}, ${right.ast});
+.)
+
+record_aggregate ::= association_list;
+
+Rules for record_aggregate.association_list :
+(. ${record_aggregate.ast} := Self.Factory.To_Aggregate_Or_Expression
+     (${association_list.ast});
+.)
+
+association_list ::=
+  left_parenthesis_token
+  record_component_association_list
+  right_parenthesis_token;
+
+Rules for association_list. :
+(.
+   ${association_list.ast} :=
+     Self.Factory.Association_List
+       (${left_parenthesis_token.ast},
+        ${record_component_association_list.ast},
+        ${right_parenthesis_token.ast});
+.)
+
+record_component_association ::=
+(expression)
+  [discrete_choice_list arrow_token] expression |
+(box)
+  discrete_choice_list arrow_token box_token |
+(discrete_range)
+  discrete_range
+;
+
+Rules for record_component_association.discrete_range :
+(.
+   declare
+      List : Node :=
+        Self.Factory.Discrete_Choice_Sequence;
+   begin
+      Self.Factory.Prepend_Discrete_Choice
+        (List, ${discrete_range.ast});
+      ${record_component_association.ast} := Self.Factory.Association
+        (List, No_Token, None);
+   end;
+.)
+
+Rules for record_component_association.expression :
+(.   ${record_component_association.ast} := Self.Factory.Association
+     (${discrete_choice_list.ast:(Self.Factory.Discrete_Choice_Sequence)},
+      ${arrow_token.ast:No_Token},
+      ${expression.ast});
+.)
+
+Rules for record_component_association.box :
+(.
+   declare
+      Box : constant Node :=
+        Self.Factory.Box (${box_token.ast});
+   begin
+     ${record_component_association.ast} := Self.Factory.Association
+       (${discrete_choice_list.ast}, ${arrow_token.ast}, Box);
+   end;
+.)
+
+record_component_association_list ::=
+(association)
+  record_component_association
+  {comma_token record_component_association} <component_association_list>  |
+(null)
+  null_token record_token
+;
+
+Rules for record_component_association_list.association :
+(.
+   declare
+      List : Node :=
+          ${component_association_list.ast:Self.Factory.Association_Sequence};
+   begin
+      Self.Factory.Prepend_Association
+        (List, ${record_component_association.ast});
+      ${record_component_association_list.ast} := List;
+   end;
+.)
+
+Rules for record_component_association_list.null :
+(.
+   declare
+      List : constant Node := Self.Factory.Association_Sequence;
+   begin
+      ${record_component_association_list.ast} := List;
+   end;
+.)
+
+record_definition ::=
+  (record)
+  record_token
+    component_list
+  end_token record_token <end_record>
+ |
+  (null) null_token record_token
+;
+
+Rules for record_definition.null :
+(.
+   ${record_definition.ast} := Self.Factory.
+     Null_Record_Definition
+       (${null_token.ast},
+        ${record_token.ast});
+.)
+
+Rules for record_definition.record :
+(.
+   ${record_definition.ast} := Self.Factory.
+     Record_Definition
+       (${record_token.ast},
+        ${component_list.ast},
+        ${end_token.ast},
+        ${end_record.ast});
+.)
+
+record_representation_clause ::=
+  for_token subtype_mark use_token
+  record_token [at_token mod_token expression semicolon_token <at_semicolon>]
+    {component_clause}
+  end_token record_token <r> semicolon_token;
+
+Rules for record_representation_clause. :
+(.
+   ${record_representation_clause.ast} := Self.Factory.
+     Record_Representation_Clause
+       (${for_token.ast},
+        ${subtype_mark.ast},
+        ${use_token.ast},
+        ${record_token.ast},
+        ${at_token.ast:No_Token},
+        ${mod_token.ast:No_Token},
+        ${expression.ast:None},
+        ${at_semicolon.ast:No_Token},
+        ${component_clause_list.ast:(Self.Factory.Clause_Or_Pragma_Sequence)},
+        ${end_token.ast},
+        ${r.ast},
+        ${semicolon_token.ast});
+.)
+
+record_type_definition ::=
+  [[abstract_token] tagged_token] [limited_token] record_definition;
+
+Rules for record_type_definition. :
+(.
+   ${record_type_definition.ast} :=
+     Self.Factory.Record_Type_Definition
+      (${abstract_token.ast:No_Token},
+       ${tagged_token.ast:No_Token},
+       ${limited_token.ast:No_Token},
+       ${record_definition.ast});
+.)
+
+relation ::=
+(relation)
+  simple_expression <left> [relational_operator simple_expression <right>] |
+(membership)
+  simple_expression [not_token] in_token membership_choice_list;
+
+Rules for relation.relation :
+(.  ${relation.ast} := Self.Factory.Infix_Call
+     (${relational_operator.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for relation.membership :
+(.  ${relation.ast} := Self.Factory.Membership_Test
+     (${simple_expression.ast},
+      ${not_token.ast:No_Token},
+      ${in_token.ast},
+      ${membership_choice_list.ast});
+.)
+
+relational_operator ::=
+  equal_token |
+  inequality_token |
+  less_token |
+  less_or_equal_token |
+  greater_token |
+  greater_or_equal_token;
+
+requeue_statement ::=
+ requeue_token name [with_token abort_token] semicolon_token;
+
+Rules for requeue_statement. :
+(.
+   ${requeue_statement.ast} :=
+      Self.Factory.Requeue_Statement
+         (${requeue_token.ast},
+          ${name.ast},
+          ${with_token.ast:No_Token},
+          ${abort_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+scalar_constraint ::= range_constraint | digits_constraint | delta_constraint;
+
+select_alternative ::=
+  accept_alternative |
+  delay_alternative |
+  terminate_alternative |
+  entry_call_alternative;
+
+selected_component ::= prefix dot_token selector_name;
+
+Rules for selected_component. :
+(.  ${selected_component.ast} := Self.Factory.Selected_Component
+     (${prefix.ast}, ${dot_token.ast}, ${selector_name.ast});
+.)
+
+selected_identifier ::=
+  program_unit_name dot_token selector_name;
+
+Rules for selected_identifier. :
+(.
+   ${selected_identifier.ast} :=
+      Self.Factory.Selected_Identifier
+         (${program_unit_name.ast},
+          ${dot_token.ast},
+          ${selector_name.ast});
+.)
+
+selective_accept ::=
+  select_token
+  [when_token expression arrow_token]
+  select_alternative
+  {or_token [when_token expression arrow_token]
+    select_alternative} <select_alternative_list>
+  [else_token sequence_of_statements ]
+  end_token select_token <end_select> semicolon_token;
+
+Rules for selective_accept. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Select_Or_Path
+          (No_Token,  --  Or_Token
+           ${when_token.ast:No_Token},
+           ${expression.ast:None},
+           ${arrow_token.ast:No_Token},
+           ${select_alternative.ast});
+      List : Node :=
+        ${select_alternative_list.ast:Self.Factory.Select_Or_Else_Path_Sequence};
+   begin
+      Self.Factory.Prepend_Select_Or_Else_Path
+        (List, Item);
+      ${selective_accept.ast} := Self.Factory.Selective_Accept
+        (${select_token.ast},
+         List,
+         ${end_token.ast},
+         ${end_select.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+Rules for selective_accept. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Select_Or_Path
+          (No_Token,  --  Or_Token
+           ${when_token.ast:No_Token},
+           ${expression.ast:None},
+           ${arrow_token.ast:No_Token},
+           ${select_alternative.ast});
+      Else_Item : constant Node :=
+        Self.Factory.Else_Path
+          (${else_token.ast}, ${sequence_of_statements.ast});
+      List : Node :=
+        ${select_alternative_list.ast:Self.Factory.Select_Or_Else_Path_Sequence};
+   begin
+      Self.Factory.Prepend_Select_Or_Else_Path
+        (List, Item);
+      Self.Factory.Append_Select_Or_Else_Path
+        (List, Else_Item);
+      ${selective_accept.ast} := Self.Factory.Selective_Accept
+        (${select_token.ast},
+         List,
+         ${end_token.ast},
+         ${end_select.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+selector_name ::=
+  identifier |
+  character_literal_token |
+  operator_symbol;
+
+Rules for selector_name.character_literal_token :
+(.  ${selector_name.ast} := Self.Factory.Character_Literal
+     (${character_literal_token.ast});
+.)
+
+sequence_of_exception_handlers ::=
+  exception_handler {exception_handler} <exception_handler_list>;
+
+Rules for sequence_of_exception_handlers. :
+(.
+   declare
+      List : Node :=
+        ${exception_handler_list.ast:Self.Factory.
+        Exception_Handler_Sequence};
+   begin
+      Self.Factory.Prepend_Exception_Handler
+        (List, ${exception_handler.ast});
+      ${sequence_of_exception_handlers.ast} := List;
+   end;
+.)
+
+sequence_of_statements ::=
+  statement {statement} <statement_list> {label} <label_list>
+;
+
+
+Rules for sequence_of_statements. :
+(.
+   declare
+      List : Node :=
+        ${statement_list.ast:Self.Factory.
+        Statement_Sequence};
+   begin
+      Self.Factory.Prepend_Statement
+        (List, ${statement.ast});
+      ${sequence_of_statements.ast} := List;
+   end;
+.)
+
+Rules for sequence_of_statements. :
+(.
+   declare
+      List : Node :=
+        ${statement_list.ast:Self.Factory.
+        Statement_Sequence};
+      Dummy : constant Node :=
+        Self.Factory.Label_Decorator
+          (${label_list.ast}, None);
+   begin
+      Self.Factory.Prepend_Statement (List, ${statement.ast});
+      Self.Factory.Append_Statement
+        (List, Dummy);
+      ${sequence_of_statements.ast} := List;
+   end;
+.)
+
+signed_integer_type_definition ::=
+  range_token
+  simple_expression <left> double_dot_token simple_expression <right>;
+
+Rules for signed_integer_type_definition. :
+(.  ${signed_integer_type_definition.ast} :=
+     Self.Factory.Signed_Integer_Type_Definition
+      (${range_token.ast},
+       Self.Factory.Simple_Expression_Range
+         (${left.ast}, ${double_dot_token.ast}, ${right.ast}));
+.)
+
+simple_expression ::=
+  numeric_literal_token |
+  null_token |
+  aggregate |
+  name |
+  allocator |
+(conditional)
+  left_parenthesis_token conditional_expression right_parenthesis_token |
+(quantified)
+  left_parenthesis_token quantified_expression right_parenthesis_token |
+(abs) abs_token simple_expression <left> |
+(not) not_token simple_expression <left> |
+(power) simple_expression <left> double_star_token simple_expression <right> |
+(star)  simple_expression <left> star_token  simple_expression <right> |
+(slash) simple_expression <left> slash_token simple_expression <right> |
+(mod)   simple_expression <left> mod_token   simple_expression <right> |
+(rem)   simple_expression <left> rem_token   simple_expression <right> |
+(neg)   hyphen_token simple_expression <left> |
+(nop)   plus_token simple_expression <left> |
+(plus)  simple_expression <left> plus_token simple_expression <right> |
+(minus) simple_expression <left> hyphen_token simple_expression <right> |
+(amp)   simple_expression <left> ampersand_token simple_expression <right>
+;
+
+Priority simple_expression.abs   20 none;
+Priority simple_expression.not   20 none;
+Priority simple_expression.power 20 none;
+Priority simple_expression.star  18 left;
+Priority simple_expression.slash 18 left;
+Priority simple_expression.mod   18 left;
+Priority simple_expression.rem   18 left;
+Priority simple_expression.neg   16 left;
+Priority simple_expression.nop   16 left;
+Priority simple_expression.plus  16 left;
+Priority simple_expression.minus 16 left;
+Priority simple_expression.amp   16 left;
+
+Rules for simple_expression.plus :
+(. ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${plus_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.minus :
+(.  ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${hyphen_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.amp :
+(.  ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${ampersand_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.neg :
+(.  ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${hyphen_token.ast}, ${left.ast}, None);
+.)
+
+Rules for simple_expression.nop :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${plus_token.ast}, ${left.ast}, None);
+.)
+
+Rules for simple_expression.star :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${star_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.slash :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${slash_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.mod :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${mod_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.rem :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${rem_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.power :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${double_star_token.ast}, ${left.ast}, ${right.ast});
+.)
+
+Rules for simple_expression.abs :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${abs_token.ast}, ${left.ast}, None);
+.)
+
+Rules for simple_expression.not :
+(.   ${simple_expression.ast} := Self.Factory.Infix_Call
+     (${not_token.ast}, ${left.ast}, None);
+.)
+
+Rules for simple_expression.numeric_literal_token :
+(.  ${simple_expression.ast} := Self.Factory.Numeric_Literal
+     (${numeric_literal_token.ast});
+.)
+
+Rules for simple_expression.null_token :
+(.  ${simple_expression.ast} := Self.Factory.Null_Literal
+     (${null_token.ast});
+.)
+
+Rules for simple_expression.conditional :
+(.   ${simple_expression.ast} := ${conditional_expression.ast};
+.)
+
+Rules for simple_expression.quantified :
+(.   ${simple_expression.ast} := ${quantified_expression.ast};
+.)
+
+simple_return_statement ::= return_token [expression] semicolon_token;
+
+Rules for simple_return_statement. :
+(.
+   ${simple_return_statement.ast} :=
+      Self.Factory.Simple_Return_Statement
+         (${return_token.ast},
+          ${expression.ast:None},
+          ${semicolon_token.ast});
+.)
+
+single_protected_declaration ::=
+  protected_token defining_identifier
+  [aspect_specification]
+  is_token
+  [new_token interface_list with_token]
+  protected_definition
+  semicolon_token
+;
+
+Rules for single_protected_declaration. :
+(.
+   ${single_protected_declaration.ast} :=
+      Self.Factory.Single_Protected_Declaration
+         (${protected_token.ast},
+          ${defining_identifier.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${new_token.ast:No_Token},
+          ${interface_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+          ${with_token.ast:No_Token},
+          ${protected_definition.ast},
+          ${semicolon_token.ast});
+.)
+
+single_task_declaration ::=
+  task_token defining_identifier
+  [aspect_specification]
+  [is_token [new_token interface_list with_token] task_definition]
+  semicolon_token
+;
+
+Rules for single_task_declaration. :
+(.
+   ${single_task_declaration.ast} :=
+      Self.Factory.Single_Task_Declaration
+         (${task_token.ast},
+          ${defining_identifier.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast:No_Token},
+          ${new_token.ast:No_Token},
+          ${interface_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+          ${with_token.ast:No_Token},
+          ${task_definition.ast:None},
+          ${semicolon_token.ast});
+.)
+
+statement ::= {label} <label_list> unlabeled_statement;
+
+Rules for statement. :
+(.
+   ${statement.ast} := Self.Factory.Label_Decorator
+          (${label_list.ast}, ${unlabeled_statement.ast});
+.)
+
+subtype_declaration ::=
+  subtype_token defining_identifier is_token subtype_indication
+  [aspect_specification]
+  semicolon_token;
+
+Rules for subtype_declaration. :
+(.
+   ${subtype_declaration.ast} :=
+      Self.Factory.Subtype_Declaration
+         (${subtype_token.ast},
+          ${defining_identifier.ast},
+          ${is_token.ast},
+          ${subtype_indication.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+subtype_indication ::= [not_token null_token] subtype_mark [scalar_constraint];
+
+Rules for subtype_indication. :
+(.
+   ${subtype_indication.ast} := Self.Factory.To_Subtype_Indication
+       (${not_token.ast:No_Token},
+        ${null_token.ast:No_Token},
+        ${subtype_mark.ast},
+        ${scalar_constraint.ast:None});
+.)
+
+subtype_mark ::= name;
+
+subunit ::=
+  {context_item}
+  separate_token
+  left_parenthesis_token program_unit_name right_parenthesis_token
+  proper_body;
+
+Rules for subunit. :
+(.
+   ${subunit.ast} :=
+      Self.Factory.Subunit
+         (${context_item_list.ast:(Self.Factory.Context_Item_Sequence)},
+          ${separate_token.ast},
+          ${left_parenthesis_token.ast},
+          ${program_unit_name.ast},
+          ${right_parenthesis_token.ast},
+          ${proper_body.ast});
+.)
+
+task_body ::=
+  task_token body_token defining_identifier
+  [aspect_specification] is_token
+    [declarative_part]
+  begin_token sequence_of_statements
+   [exception_token sequence_of_exception_handlers]
+  end_token [identifier_token]
+  semicolon_token
+;
+
+Rules for task_body. :
+(.
+   ${task_body.ast} :=
+      Self.Factory.Task_Body
+         (${task_token.ast},
+          ${body_token.ast},
+          ${defining_identifier.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast},
+          ${declarative_part.ast:(Self.Factory.Declarative_Item_Sequence)},
+          ${begin_token.ast},
+          ${sequence_of_statements.ast},
+          ${exception_token.ast:No_Token},
+          ${sequence_of_exception_handlers.ast:(Self.Factory.Exception_Handler_Sequence)},
+          ${end_token.ast},
+          ${identifier_token.ast:No_Token},
+          ${semicolon_token.ast});
+.)
+
+task_body_stub ::=
+  task_token body_token defining_identifier is_token separate_token
+  [aspect_specification]
+  semicolon_token
+;
+
+Rules for task_body_stub. :
+(.
+   ${task_body_stub.ast} :=
+      Self.Factory.Task_Body_Stub
+         (${task_token.ast},
+          ${body_token.ast},
+          ${defining_identifier.ast},
+          ${is_token.ast},
+          ${separate_token.ast},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${semicolon_token.ast});
+.)
+
+task_definition ::=
+  [task_item_list]
+  [(private) private_token [task_item_list <private_items>] ]
+  end_token [identifier_token]
+;
+
+Rules for task_definition. :
+(.
+   ${task_definition.ast} :=
+      Self.Factory.Task_Definition
+         (${task_item_list.ast:(Self.Factory.Task_Item_Sequence)},
+          ${private_token.ast:No_Token},
+          ${private_items.ast:(Self.Factory.Task_Item_Sequence)},
+          ${end_token.ast},
+          ${identifier_token.ast:No_Token});
+.)
+
+task_item ::= entry_declaration | aspect_clause;
+
+task_item_list ::= [task_item_list <head>] task_item;
+
+Rules for task_item_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Task_Item_Sequence};
+   begin
+      Self.Factory.Prepend_Task_Item
+        (List, ${task_item.ast});
+      ${task_item_list.ast} := List;
+   end;
+.)
+
+
+task_type_declaration ::=
+  task_token type_token defining_identifier
+  [known_discriminant_part]
+  [aspect_specification]
+  [is_token
+     [new_token interface_list with_token]
+     task_definition]
+  semicolon_token;
+
+Rules for task_type_declaration. :
+(.
+   ${task_type_declaration.ast} :=
+      Self.Factory.Task_Type_Declaration
+         (${task_token.ast},
+          ${type_token.ast},
+          ${defining_identifier.ast},
+          ${known_discriminant_part.ast:None},
+          ${aspect_specification.ast:(Self.Factory.Aspect_Specification_Sequence)},
+          ${is_token.ast:No_Token},
+          ${new_token.ast:No_Token},
+          ${interface_list.ast:(Self.Factory.Subtype_Mark_Sequence)},
+          ${with_token.ast:No_Token},
+          ${task_definition.ast:None},
+          ${semicolon_token.ast});
+.)
+
+terminate_alternative ::= terminate_token semicolon_token;
+
+Rules for terminate_alternative. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Terminate_Alternative_Statement
+          (${terminate_token.ast}, ${semicolon_token.ast});
+      List : Node := Self.Factory.Statement_Sequence;
+   begin
+      Self.Factory.Append_Statement
+        (List, Item);
+      ${terminate_alternative.ast} := List;
+   end;
+.)
+
+type_definition ::=
+  enumeration_type_definition |
+  signed_integer_type_definition |
+  modular_type_definition |
+  floating_point_definition |
+  ordinary_fixed_point_definition |
+  decimal_fixed_point_definition |
+  unconstrained_array_definition |
+  constrained_array_definition |
+  record_type_definition |
+  access_type_definition |
+  interface_type_definition;
+
+unconstrained_array_definition ::=
+  array_token left_parenthesis_token index_subtype_definition
+  {comma_token index_subtype_definition} <index_subtype_definition_list>
+  right_parenthesis_token
+  of_token component_definition;
+
+Rules for unconstrained_array_definition. :
+(.
+   declare
+      List : Node :=
+        ${index_subtype_definition_list.ast:Self.Factory.
+        Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Prepend_Subtype_Mark
+        (List, ${index_subtype_definition.ast});
+      ${unconstrained_array_definition.ast} := Self.Factory.
+        Unconstrained_Array_Definition
+          (${array_token.ast},
+           ${left_parenthesis_token.ast},
+           List,
+           ${right_parenthesis_token.ast},
+           ${of_token.ast},
+           ${component_definition.ast});
+   end;
+.)
+
+unknown_discriminant_part ::=
+ left_parenthesis_token box_token right_parenthesis_token;
+
+Rules for unknown_discriminant_part. :
+(.  ${unknown_discriminant_part.ast} := Self.Factory.Unknown_Discriminant_Part
+     (${left_parenthesis_token.ast}, ${box_token.ast}, ${right_parenthesis_token.ast});
+.)
+
+unlabeled_statement ::=
+  null_statement |
+  assignment_statement |
+  exit_statement |
+  goto_statement |
+  simple_return_statement |
+  entry_call_statement |
+  requeue_statement |
+  delay_statement |
+  abort_statement |
+  raise_statement |
+  pragma |
+  if_statement |
+  case_statement |
+  loop_statement |
+  block_statement |
+  extended_return_statement |
+  accept_statement |
+  selective_accept |
+  asynchronous_select
+;
+
+use_clause ::= use_package_clause | use_type_clause;
+
+use_package_clause ::=
+  use_token program_unit_name
+  {comma_token program_unit_name} <program_unit_name_list>
+  semicolon_token;
+
+Rules for use_package_clause. :
+(.
+   declare
+      List : Node := ${program_unit_name_list.ast:Self.
+        Factory.Program_Unit_Name_Sequence};
+   begin
+      Self.Factory.Prepend_Program_Unit_Name
+        (List, ${program_unit_name.ast});
+      ${use_package_clause.ast} :=
+        Self.Factory.Use_Package_Clause
+          (${use_token.ast},
+           List,
+           ${semicolon_token.ast});
+   end;
+.)
+
+use_type_clause ::=
+  use_token [all_token] type_token subtype_mark
+  {comma_token subtype_mark} <subtype_mark_list>
+  semicolon_token;
+
+Rules for use_type_clause. :
+(.
+   declare
+      List : Node := ${subtype_mark_list.ast:Self.
+        Factory.Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Prepend_Subtype_Mark
+        (List, ${subtype_mark.ast});
+      ${use_type_clause.ast} :=
+        Self.Factory.Use_Type_Clause
+          (${use_token.ast},
+           ${all_token.ast:No_Token},
+           ${type_token.ast},
+           List,
+           ${semicolon_token.ast});
+   end;
+.)
+
+variant ::=
+   when_token discrete_choice_list arrow_token component_list;
+
+Rules for variant. :
+(.
+   ${variant.ast} := Self.Factory.Variant
+     (${when_token.ast},
+      ${discrete_choice_list.ast},
+      ${arrow_token.ast},
+      ${component_list.ast});
+.)
+
+variant_part ::=
+  case_token direct_name is_token
+    variant
+    {variant} <variant_list>
+  end_token case_token <end_case>
+  semicolon_token;
+
+Rules for variant_part. :
+(.
+   declare
+      List : Node :=
+        ${variant_list.ast:Self.Factory.Variant_Sequence};
+   begin
+      Self.Factory.Prepend_Variant
+        (List, ${variant.ast});
+      ${variant_part.ast} := Self.Factory.Variant_Part
+        (${case_token.ast},
+         ${direct_name.ast},
+         ${is_token.ast},
+         List,
+         ${end_token.ast},
+         ${end_case.ast},
+         ${semicolon_token.ast});
+   end;
+.)
+
+with_clause ::=
+  [limited_token] [private_token] with_token
+    program_unit_name
+    {comma_token program_unit_name} <program_unit_name_list>
+  semicolon_token;
+
+Rules for with_clause. :
+(.
+   declare
+      List : Node := ${program_unit_name_list.ast:Self.
+        Factory.Program_Unit_Name_Sequence};
+   begin
+      Self.Factory.Prepend_Program_Unit_Name
+        (List, ${program_unit_name.ast});
+      ${with_clause.ast} :=
+        Self.Factory.With_Clause
+          (${limited_token.ast:No_Token},
+           ${private_token.ast:No_Token},
+           ${with_token.ast},
+           List,
+           ${semicolon_token.ast});
+   end;
+.)
+
+
+
+
+
+Rules for variant_list.variant :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Variant_Sequence};
+   begin
+      Self.Factory.Append_Variant
+        (List, ${variant.ast});
+      ${variant_list.ast} := List;
+   end;
+.)
+
+Rules for compilation_unit_list.compilation_unit :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Compilation_Unit_Sequence};
+   begin
+      Self.Factory.Append_Compilation_Unit
+        (List, ${compilation_unit.ast});
+      ${compilation_unit_list.ast} := List;
+   end;
+.)
+
+Rules for context_item_list.context_item :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Context_Item_Sequence};
+   begin
+      Self.Factory.Append_Context_Item
+        (List, ${context_item.ast});
+      ${context_item_list.ast} := List;
+   end;
+.)
+
+Rules for program_unit_name_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Program_Unit_Name_Sequence};
+   begin
+      Self.Factory.Append_Program_Unit_Name
+        (List, ${program_unit_name.ast});
+      ${program_unit_name_list.ast} := List;
+   end;
+.)
+
+
+Rules for subtype_mark_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Append_Subtype_Mark
+        (List, ${subtype_mark.ast});
+      ${subtype_mark_list.ast} := List;
+   end;
+.)
+
+Rules for exception_choice_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Exception_Choice_Sequence};
+   begin
+      Self.Factory.Append_Exception_Choice
+        (List, ${exception_choice.ast});
+      ${exception_choice_list.ast} := List;
+   end;
+.)
+
+Rules for exception_handler_list.exception_handler :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Exception_Handler_Sequence};
+   begin
+      Self.Factory.Append_Exception_Handler
+        (List, ${exception_handler.ast});
+      ${exception_handler_list.ast} := List;
+   end;
+.)
+
+Rules for statement_list.statement :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Statement_Sequence};
+   begin
+      Self.Factory.Append_Statement
+        (List, ${statement.ast});
+      ${statement_list.ast} := List;
+   end;
+.)
+
+Rules for select_alternative_list. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Select_Or_Path
+          (${or_token.ast},
+           ${when_token.ast:No_Token},
+           ${expression.ast:None},
+           ${arrow_token.ast:No_Token},
+           ${select_alternative.ast});
+      List : Node :=
+        ${head.ast:Self.Factory.Select_Or_Else_Path_Sequence};
+   begin
+      Self.Factory.Append_Select_Or_Else_Path
+        (List, Item);
+      ${select_alternative_list.ast} := List;
+   end;
+.)
+
+Rules for case_statement_alternative_list.case_statement_alternative :
+(.
+  declare
+     List : Node :=
+       ${head.ast:Self.Factory.Case_Path_Sequence};
+  begin
+     Self.Factory.Append_Case_Path
+        (List, ${case_statement_alternative.ast});
+     ${case_statement_alternative_list.ast} := List;
+  end;
+.)
+
+Rules for elsif_list. :
+(.
+   declare
+      Item : constant Node :=
+        Self.Factory.Elsif_Path
+          (${elsif_token.ast},
+           ${expression.ast},
+           ${then_token.ast},
+           ${sequence_of_statements.ast});
+      List : Node :=
+        ${head.ast:Self.Factory.If_Elsif_Else_Path_Sequence};
+   begin
+      Self.Factory.Append_If_Elsif_Else_Path
+        (List, Item);
+      ${elsif_list.ast} := List;
+   end;
+.)
+
+Rules for name_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Name_Sequence};
+   begin
+      Self.Factory.Append_Name
+        (List, ${name.ast});
+      ${name_list.ast} := List;
+   end;
+.)
+
+Rules for label_list.label :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Defining_Identifier_Sequence};
+   begin
+      Self.Factory.Append_Defining_Identifier
+        (List, ${label.ast});
+      ${label_list.ast} := List;
+   end;
+.)
+
+Rules for discriminant_spec_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Discriminant_Specification_Sequence};
+   begin
+      Self.Factory.Append_Discriminant_Specification
+        (List, ${discriminant_specification.ast});
+      ${discriminant_spec_list.ast} := List;
+   end;
+.)
+
+Rules for aspect_list. :
+(.
+   declare
+      Comp : constant Node :=
+        Self.Factory.Aspect_Specification
+          (${subtype_mark.ast},
+           ${arrow_token.ast:No_Token},
+           ${expression.ast:None});
+      List : Node := ${head.ast:Self.
+        Factory.Aspect_Specification_Sequence};
+   begin
+      Self.Factory.Append_Aspect_Specification
+        (List, Comp);
+      ${aspect_list.ast} := List;
+   end;
+.)
+
+Rules for and_subtype_mark_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Append_Subtype_Mark
+        (List, ${subtype_mark.ast});
+      ${and_subtype_mark_list.ast} := List;
+   end;
+.)
+
+Rules for pragma_argument_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Pragma_Argument_Association_Sequence};
+   begin
+      Self.Factory.Append_Pragma_Argument_Association
+        (List, ${pragma_argument_association.ast});
+      ${pragma_argument_list.ast} := List;
+   end;
+.)
+
+Rules for component_clause_list.component_clause :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Clause_Or_Pragma_Sequence};
+   begin
+      Self.Factory.Append_Clause_Or_Pragma
+        (List, ${component_clause.ast});
+      ${component_clause_list.ast} := List;
+   end;
+.)
+
+Rules for component_item_list.component_item :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Component_Item_Sequence};
+   begin
+      Self.Factory.Append_Component_Item
+        (List, ${component_item.ast});
+      ${component_item_list.ast} := List;
+   end;
+.)
+
+Rules for index_subtype_definition_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Subtype_Mark_Sequence};
+   begin
+      Self.Factory.Append_Subtype_Mark
+        (List, ${index_subtype_definition.ast});
+      ${index_subtype_definition_list.ast} := List;
+   end;
+.)
+
+Rules for discrete_subtype_definition_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Discrete_Subtype_Definition_Sequence};
+   begin
+      Self.Factory.Append_Discrete_Subtype_Definition
+        (List, ${discrete_subtype_definition.ast});
+      ${discrete_subtype_definition_list.ast} := List;
+   end;
+.)
+
+Rules for parameter_specification_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Parameter_Specification_Sequence};
+   begin
+      Self.Factory.Append_Parameter_Specification
+        (List, ${parameter_specification.ast});
+      ${parameter_specification_list.ast} := List;
+   end;
+.)
+
+Rules for defining_id_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Defining_Identifier_Sequence};
+   begin
+      Self.Factory.Append_Defining_Identifier
+        (List, ${defining_identifier.ast});
+      ${defining_id_list.ast} := List;
+   end;
+.)
+
+Rules for enumeration_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Enumeration_Literal_Specification_Sequence};
+   begin
+      Self.Factory.Append_Enumeration_Literal_Specification
+        (List, ${enumeration_literal_specification.ast});
+      ${enumeration_list.ast} := List;
+   end;
+.)
+
+Rules for mchoice_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Membership_Choice_Sequence};
+   begin
+      Self.Factory.Append_Membership_Choice
+        (List, ${membership_choice.ast});
+      ${mchoice_list.ast} := List;
+   end;
+.)
+
+Rules for component_association_list. :
+(.
+   declare
+      List : Node :=
+          ${head.ast:Self.Factory.Association_Sequence};
+   begin
+      Self.Factory.Append_Association
+        (List, ${record_component_association.ast});
+      ${component_association_list.ast} := List;
+   end;
+.)
+
+Rules for choice_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Discrete_Choice_Sequence};
+   begin
+      Self.Factory.Append_Discrete_Choice
+        (List, ${discrete_choice.ast});
+      ${choice_list.ast} := List;
+   end;
+.)
+
+Rules for elsif_exp_list. :
+(.
+   declare
+      Path : constant Node :=
+        Self.Factory.Elsif_Expression_Path
+          (${elsif_token.ast},
+           ${condition.ast},
+           ${then_token.ast},
+           ${expression.ast});
+      List : Node :=
+        ${head.ast:Self.Factory.If_Else_Expression_Path_Sequence};
+   begin
+      Self.Factory.Append_If_Else_Expression_Path
+        (List, Path);
+      ${elsif_exp_list.ast} := List;
+   end;
+.)
+
+Rules for case_exp_alternative_list. :
+(.
+   declare
+      List : Node :=
+        ${head.ast:Self.Factory.Case_Expression_Path_Sequence};
+   begin
+      Self.Factory.Append_Case_Expression_Path
+        (List, ${case_expression_alternative.ast});
+      ${case_exp_alternative_list.ast} := List;
+   end;
+.)
+
+Rules for declarative_item_list.declarative_item :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Declarative_Item_Sequence};
+   begin
+      Self.Factory.Append_Declarative_Item
+        (List, ${declarative_item.ast});
+      ${declarative_item_list.ast} := List;
+   end;
+.)
+
+Rules for protected_operation_item_list.protected_operation_item :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Protected_Operation_Item_Sequence};
+   begin
+      Self.Factory.Append_Protected_Operation_Item
+        (List, ${protected_operation_item.ast});
+      ${protected_operation_item_list.ast} := List;
+   end;
+.)
+
+Rules for formal_package_association_list. :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Generic_Association_Sequence};
+   begin
+      Self.Factory.Append_Generic_Association
+        (List, ${formal_package_association.ast});
+      ${formal_package_association_list.ast} := List;
+   end;
+.)
+
+Rules for protected_operation_declaration_list.protected_operation_declaration :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Protected_Operation_Declaration_Sequence};
+   begin
+      Self.Factory.Append_Protected_Operation_Declaration
+        (List, ${protected_operation_declaration.ast});
+      ${protected_operation_declaration_list.ast} := List;
+   end;
+.)
+
+Rules for protected_element_declaration_list.protected_element_declaration :
+(.
+   declare
+      List : Node := ${head.ast:Self.
+        Factory.Protected_Element_Declaration_Sequence};
+   begin
+      Self.Factory.Append_Protected_Element_Declaration
+        (List, ${protected_element_declaration.ast});
+      ${protected_element_declaration_list.ast} := List;
+   end;
+.)
+
+
+
+Synthesized attributes
+  Compilation,
+  abort_statement,
+  accept_alternative,
+  accept_statement,
+  access_definition,
+  access_type_definition,
+  aggregate,
+  allocator,
+  and_subtype_mark_list,
+  aspect_list,
+  aspect_specification,
+  assignment_statement,
+  association_list,
+  asynchronous_select,
+  at_clause,
+  attribute_definition_clause,
+  attribute_reference,
+  basic_declarative_item,
+  basic_declarative_item_list,
+  block_statement,
+  case_expression,
+  case_expression_alternative,
+  case_exp_alternative_list,
+  case_statement,
+  case_statement_alternative,
+  case_statement_alternative_list,
+  choice_list,
+  context_item,
+  context_item_list,
+  choice_parameter_specification,
+  compilation_unit,
+  compilation_unit_list,
+  component_association_list,
+  component_clause,
+  component_clause_list,
+  component_declaration,
+  component_definition,
+  component_item,
+  component_item_list,
+  component_list,
+  conditional_expression,
+  constrained_array_definition,
+  decimal_fixed_point_definition,
+  declarative_item,
+  declarative_item_list,
+  declarative_part,
+  defining_character_literal,
+  defining_designator,
+  defining_enumeration_literal,
+  defining_id_list,
+  defining_identifier,
+  defining_identifier_list,
+  defining_program_unit_name,
+  delay_alternative,
+  delay_statement,
+  delta_constraint,
+  designator,
+  digits_constraint,
+  direct_name,
+  discrete_choice,
+  discrete_choice_list,
+  discrete_range,
+  discrete_simple_expression_range,
+  discrete_subtype_definition,
+  discrete_subtype_definition_list,
+  discriminant_part,
+  discriminant_spec_list,
+  discriminant_specification,
+  elsif_exp_list,
+  elsif_list,
+  entry_body,
+  entry_call_alternative,
+  entry_call_statement,
+  entry_declaration,
+  entry_index_specification,
+  enumeration_list,
+  enumeration_literal_specification,
+  enumeration_type_definition,
+  exception_choice,
+  exception_choice_list,
+  exception_declaration,
+  exception_handler,
+  exception_handler_list,
+  exception_renaming_declaration,
+  exit_statement,
+  explicit_dereference,
+  expression,
+  extended_return_object_declaration,
+  extended_return_statement,
+  extension_aggregate,
+  floating_point_definition,
+  formal_access_type_definition,
+  formal_complete_type_declaration,
+  formal_constrained_array_definition,
+  formal_decimal_fixed_point_definition,
+  formal_derived_type_definition,
+  formal_discrete_type_definition,
+  formal_floating_point_definition,
+  formal_function_declaration,
+  formal_incomplete_type_declaration,
+  formal_interface_type_definition,
+  formal_modular_type_definition,
+  formal_object_declaration,
+  formal_ordinary_fixed_point_definition,
+  formal_package_actual_part,
+  formal_package_association,
+  formal_package_association_list,
+  formal_package_declaration,
+  formal_part,
+  formal_private_type_definition,
+  formal_procedure_declaration,
+  formal_signed_integer_type_definition,
+  formal_type_definition,
+  formal_unconstrained_array_definition,
+  full_type_declaration,
+  function_body,
+  function_call,
+  function_declaration,
+  general_access_modifier,
+  generic_association,
+  generic_formal_item,
+  generic_formal_item_list,
+  generic_formal_parameter_declaration,
+  generic_function_declaration,
+  generic_package_declaration,
+  generic_procedure_declaration,
+  generic_renaming_declaration,
+  goto_statement,
+  incomplete_type_declaration,
+  identifier,
+  if_expression,
+  if_statement,
+  index_subtype_definition,
+  index_subtype_definition_list,
+  interface_kind,
+  interface_list,
+  interface_type_definition,
+  iterator_specification,
+  known_discriminant_part,
+  label,
+  label_list,
+  library_item,
+  library_unit_body,
+  library_unit_declaration,
+  loop_parameter_specification,
+  loop_statement,
+  mchoice_list,
+  modular_type_definition,
+  membership_choice,
+  membership_choice_list,
+  name,
+  name_list,
+  null_statement,
+  number_declaration,
+  object_declaration,
+  object_definition,
+  object_renaming_declaration,
+  operator_symbol,
+  ordinary_fixed_point_definition,
+  others_choice,
+  package_body,
+  package_declaration,
+  generic_instantiation,
+  package_body_stub,
+  package_renaming_declaration,
+  parameter_specification,
+  parameter_specification_list,
+  pragma,
+  pragma_argument_list,
+  pragma_argument_association,
+  prefix,
+  private_extension_declaration,
+  private_type_declaration,
+  procedure_body,
+  procedure_declaration,
+  program_unit_name,
+  program_unit_name_list,
+  proper_body,
+  protected_body,
+  protected_body_stub,
+  protected_definition,
+  protected_element_declaration,
+  protected_element_declaration_list,
+  protected_operation_declaration,
+  protected_operation_declaration_list,
+  protected_operation_item,
+  protected_operation_item_list,
+  protected_type_declaration,
+  qualified_expression,
+  quantified_expression,
+  quantifier,
+  raise_statement,
+  range,
+  range_attribute_reference,
+  range_constraint,
+  real_range_specification,
+  record_aggregate,
+  record_component_association,
+  record_component_association_list,
+  record_definition,
+  record_representation_clause,
+  record_type_definition,
+  requeue_statement,
+  relation,
+  relational_operator,
+  scalar_constraint,
+  sequence_of_exception_handlers,
+  sequence_of_statements,
+  select_alternative,
+  select_alternative_list,
+  selected_component,
+  selected_identifier,
+  selective_accept,
+  selector_name,
+  signed_integer_type_definition,
+  simple_expression,
+  simple_return_statement,
+  single_protected_declaration,
+  single_task_declaration,
+  statement,
+  statement_list,
+  subtype_declaration,
+  subtype_indication,
+  subtype_mark,
+  subtype_mark_list,
+  subunit,
+  task_body,
+  task_body_stub,
+  task_definition,
+  task_item,
+  task_item_list,
+  task_type_declaration,
+  terminate_alternative,
+  type_definition,
+  unconstrained_array_definition,
+  unknown_discriminant_part,
+  unlabeled_statement,
+  use_package_clause,
+  use_type_clause,
+  variant,
+  variant_list,
+  variant_part,
+  with_clause
+ : Integer : ast;
+
+Synthesized attributes
+  abort_token,
+  abs_token,
+  abstract_token,
+  accept_token,
+  access_token,
+  aliased_token,
+  all_token,
+  ampersand_token,
+  and_token,
+  apostrophe_token,
+  array_token,
+  arrow_token,
+  assignment_token,
+  at_token,
+  begin_token,
+  body_token,
+  box_token,
+  case_token,
+  character_literal_token,
+  colon_token,
+  comma_token,
+  comment_token,
+  constant_token,
+  declare_token,
+  delay_token,
+  delta_token,
+  digits_token,
+  do_token,
+  dot_token,
+  double_dot_token,
+  double_star_token,
+  else_token,
+  elsif_token,
+  end_token,
+  entry_token,
+  equal_token,
+  exception_token,
+  exit_token,
+  for_token,
+  function_token,
+  generic_token,
+  goto_token,
+  greater_or_equal_token,
+  greater_token,
+  hyphen_token,
+  identifier_token,
+  if_token,
+  in_token,
+  inequality_token,
+  interface_token,
+  is_token,
+  left_label_token,
+  left_parenthesis_token,
+  less_or_equal_token,
+  less_token,
+  limited_token,
+  loop_token,
+  mod_token,
+  new_token,
+  not_token,
+  null_token,
+  numeric_literal_token,
+  of_token,
+  or_token,
+  others_token,
+  out_token,
+  overriding_token,
+  package_token,
+  plus_token,
+  pragma_token,
+  private_token,
+  procedure_token,
+  protected_token,
+  raise_token,
+  range_token,
+  record_token,
+  rem_token,
+  renames_token,
+  requeue_token,
+  return_token,
+  reverse_token,
+  right_label_token,
+  right_parenthesis_token,
+  select_token,
+  semicolon_token,
+  separate_token,
+  slash_token,
+  some_token,
+  star_token,
+  string_literal_token,
+  subtype_token,
+  synchronized_token,
+  tagged_token,
+  task_token,
+  terminate_token,
+  then_token,
+  type_token,
+  until_token,
+  use_token,
+  vertical_line_token,
+  when_token,
+  while_token,
+  with_token,
+  xor_token
+ : Integer : ast;
+
