@@ -47,13 +47,16 @@ package Program.Compilations is
      (Self : Compilation) return Natural is abstract;
 
    not overriding function Line
-     (Self : Compilation) return Text is abstract;
+     (Self  : Compilation;
+      Index : Positive) return Text is abstract;
 
    not overriding function Lexical_Element_Count
      (Self : Compilation) return Natural is abstract;
 
-   not overriding function Lexical_Element (Self : Compilation)
-     return Program.Lexical_Elements.Lexical_Element_Access is abstract;
+   not overriding function Lexical_Element
+     (Self  : Compilation;
+      Index : Positive) return Program.Lexical_Elements.Lexical_Element_Access
+        is abstract;
 
    --  TODO: Compilation_Pragmas?
 end Program.Compilations;

@@ -10,6 +10,7 @@ with Program.Contexts;
 private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 private with Program.Compilation_Units;
+private with Program.Compilations;
 private with Program.Source_Buffers;
 private with Program.Symbols;
 
@@ -91,12 +92,18 @@ private
       Name  : Text)
         return Program.Compilation_Units.Compilation_Unit_Access;
 
+   package Compilation_Vectors is new Ada.Containers.Vectors
+     (Index_Type   => Positive,
+      Element_Type => Program.Compilations.Compilation_Access,
+      "="          => Program.Compilations."=");
+
    type Context is limited new Program.Contexts.Context with record
       Symbols      : Symbol_Maps.Map;
       Last_Symbol  : Program.Symbols.Symbol := Program.Symbols.X_Symbol'Last;
       Symbol_Lists : Symbol_List_Maps.Map;
       Declarations : aliased Unit_Vector (Context'Unchecked_Access);
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);
+      Compilations : Compilation_Vectors.Vector;
    end record;
 
 end Program.Plain_Contexts;
