@@ -10,8 +10,9 @@ library project Oasis is
 
    for Source_Dirs use
      ("../source/oasis",
-      "../source/nodes",
       "../source/units",
+      "../source/nodes",
+      "../source/contexts/plain",
       "../source/lexer",
       "../source/visibility");
    for Object_Dir use "../.objs";

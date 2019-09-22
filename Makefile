@@ -12,6 +12,9 @@ GPRINSTALL_FLAGS = --prefix=$(PREFIX) --sources-subdir=$(INSTALL_INCLUDE_DIR)\
 --link-lib-subdir=$(INSTALL_LIBRARY_DIR)
 
 all:
+	gprbuild $(GPRBUILD_FLAGS) -P gnat/ada_larl.gpr
+	.objs/ada-larl/ada_larl source/parser/ada-lalr.ag > /tmp/aaa
+	gnatchop -w /tmp/aaa source/parser/
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis.gpr
 
 install:

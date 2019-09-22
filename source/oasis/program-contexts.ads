@@ -29,10 +29,11 @@ package Program.Contexts is
    not overriding function Library_Unit_Declarations (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access
        is abstract
-     with Post'Class =>
-       (Library_Unit_Declarations'Result.Is_Empty
-        or else (for all X in Library_Unit_Declarations'Result.Each_Unit
-                   => X.Unit.Is_Library_Unit_Declaration));
+--       with Post'Class =>
+--         (Library_Unit_Declarations'Result.Is_Empty
+--          or else (for all X in Library_Unit_Declarations'Result.Each_Unit
+--            => X.Unit.Is_Library_Unit_Declaration))
+   ;
 --  Returns a list of all library_unit_declaration and
 --  library_unit_renaming_declaration elements contained in Context.
 --  Individual units will appear only once in an order that is not defined.
@@ -40,10 +41,11 @@ package Program.Contexts is
    not overriding function Compilation_Unit_Bodies (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access
        is abstract
-     with Post'Class =>
-       (Compilation_Unit_Bodies'Result.Is_Empty
-        or else (for all X in Compilation_Unit_Bodies'Result.Each_Unit
-                   => X.Unit.Is_Library_Unit_Body or X.Unit.Is_Subunit));
+--       with Post'Class =>
+--         (Compilation_Unit_Bodies'Result.Is_Empty
+--          or else (for all X in Compilation_Unit_Bodies'Result.Each_Unit
+--            => X.Unit.Is_Library_Unit_Body or X.Unit.Is_Subunit))
+   ;
 --  Returns a list of all library_unit_body and subunit elements contained in
 --  Context. Individual units will appear only once in an order that is not
 --  defined.

@@ -7,7 +7,7 @@
 limited private with Program.Parsers.Nodes;
 
 package Program.Parsers is
-   pragma Pure;
+   pragma Preelaborate;
 
    procedure Parse;
 

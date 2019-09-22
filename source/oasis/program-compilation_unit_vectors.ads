@@ -15,7 +15,7 @@ package Program.Compilation_Unit_Vectors is
    --  Vector of Compilation_Units
 
    type Compilation_Unit_Vector_Access is
-     access all Compilation_Unit_Vector'Class
+     access constant Compilation_Unit_Vector'Class
        with Storage_Size => 0;
 
    not overriding function Get_Length (Self : Compilation_Unit_Vector)
