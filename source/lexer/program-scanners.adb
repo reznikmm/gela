@@ -98,7 +98,6 @@ package body Program.Scanners is
       end Next;
 
       use type Program.Scanner_States.Character_Class;
-      use type Program.Source_Buffers.Character_Length;
 
       Current_State : Program.Scanner_States.State;
       Char          : Program.Scanner_States.Character_Class;

@@ -26,7 +26,7 @@ package Program.Source_Buffers is
    --  Return text slice of Span, where Span is positions
    --  in the source measured in encoded text element (such as bytes for UTF-8)
 
-   type Character_Length is range 0 .. 6;
+   subtype Character_Length is Natural range 0 .. 6;
    --  Length of one character in encoded text elements
 
    type Character_Info is record
