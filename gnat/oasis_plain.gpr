@@ -1,0 +1,23 @@
+--  Copyright (c) 2019 Maxim Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+--  License-Filename: LICENSE
+-------------------------------------------------------------
+
+with "anagram";
+with "oasis";
+
+project Oasis_Plain is
+
+   for Source_Dirs use
+     ("../source/contexts/plain",
+      "../source/lexer",
+      "../source/parser",
+      "../source/visibility");
+   for Object_Dir use "../.objs/plain";
+
+   package Compiler is
+      for Default_Switches ("ada") use Oasis.Check_Ada_Switches;
+   end Compiler;
+
+end Oasis_Plain;
