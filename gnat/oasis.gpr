@@ -11,10 +11,7 @@ library project Oasis is
    for Source_Dirs use
      ("../source/oasis",
       "../source/units",
-      "../source/nodes",
-      "../source/contexts/plain",
-      "../source/lexer",
-      "../source/visibility");
+      "../source/nodes");
    for Object_Dir use "../.objs";
    for Library_Kind use "dynamic";
    for Library_Name use "oasis";

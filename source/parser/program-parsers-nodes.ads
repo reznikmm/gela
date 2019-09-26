@@ -4,8 +4,13 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with System.Storage_Pools.Subpools;
+
+private with Program.Compilation_Units;
+private with Program.Element_Factories;
+private with Program.Elements;
+
 private package Program.Parsers.Nodes is
-   pragma Preelaborate;
 
    type Node is private;
    type Node_Array is array (Positive range <>) of Node;
@@ -13,7 +18,20 @@ private package Program.Parsers.Nodes is
    None     : constant Node;
    No_Token : constant Node;
 
-   type Node_Factory is tagged limited private;
+   type Node_Factory
+     (Comp    : not null Program.Compilations.Compilation_Access;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+       is tagged limited private;
+
+   function Token
+     (Self  : Node_Factory'Class;
+      Value : not null Program.Lexical_Elements.Lexical_Element_Access)
+        return Node;
+
+   procedure Get_Compilation_Units
+     (Value   : Node;
+      Units   : out Program.Parsers.Unit_Vectors.Vector;
+      Pragmas : out Program.Parsers.Element_Vectors.Vector);
 
    function Compilation
      (Self : Node_Factory'Class; Units : Node; Compilation_Pragmas : Node)
@@ -171,13 +189,19 @@ private package Program.Parsers.Nodes is
      (Self                         : Node_Factory'Class; Aliased_Token : Node;
       Component_Subtype_Indication : Node) return Node;
 
-   function Composite_Constraint
-     (Self        : Node_Factory'Class; Left_Token : Node; Associations : Node;
-      Right_Token : Node) return Node;
+   --     function Composite_Constraint
+   --       (Self         : Node_Factory'Class;
+   --        Left_Token   : Node;
+   --        Associations : Node;
+   --        Right_Token  : Node) return Node;
+   --  We call Function_Call instead
 
-   function Composite_Subtype_Indication
-     (Self         : Node_Factory'Class; Not_Token : Node; Null_Token : Node;
-      Subtype_Mark : Node; Composite_Constraint : Node) return Node;
+   --     function Composite_Subtype_Indication
+   --       (Self         : Node_Factory'Class;
+   --        Not_Token    : Node;
+   --        Null_Token   : Node;
+   --        Subtype_Mark : Node;
+   --        Composite_Constraint : Node) return Node;
 
    function Constrained_Array_Definition
      (Self : Node_Factory'Class; Array_Token : Node; Left_Token : Node;
@@ -195,9 +219,11 @@ private package Program.Parsers.Nodes is
    function Defining_Enumeration_Literal
      (Self : Node_Factory'Class; Identifier : Node) return Node;
 
-   function Defining_Expanded_Unit_Name
-     (Self : Node_Factory'Class; Defining_Prefix : Node; Dot_Token : Node;
-      Defining_Selector : Node) return Node;
+   --     function Defining_Expanded_Unit_Name
+   --       (Self : Node_Factory'Class;
+   --        Defining_Prefix : Node;
+   --        Dot_Token : Node;
+   --        Defining_Selector : Node) return Node;
 
    function Defining_Identifier
      (Self : Node_Factory'Class; Identifier_Token : Node) return Node;
@@ -488,9 +514,12 @@ private package Program.Parsers.Nodes is
       Generic_Actual_Part   : Node; Right_Parenthesis_Token : Node;
       Aspect_Specifications : Node; Semicolon_Token : Node) return Node;
 
-   function Generalized_Iterator_Specification
-     (Self          : Node_Factory'Class; Names : Node; In_Token : Node;
-      Reverse_Token : Node; Iteration_Scheme_Name : Node) return Node;
+   --     function Generalized_Iterator_Specification
+   --       (Self          : Node_Factory'Class;
+   --        Names : Node;
+   --        In_Token : Node;
+   --        Reverse_Token : Node;
+   --        Iteration_Scheme_Name : Node) return Node;
 
    function Generic_Association
      (Self : Node_Factory'Class; Formal_Parameter : Node; Arrow_Token : Node;
@@ -676,9 +705,10 @@ private package Program.Parsers.Nodes is
       Renames_Token         : Node; Renamed_Entity : Node;
       Aspect_Specifications : Node; Semicolon_Token : Node) return Node;
 
-   function Parameter_Association
-     (Self             : Node_Factory'Class; Formal_Parameter : Node;
-      Actual_Parameter : Node) return Node;
+   --     function Parameter_Association
+   --       (Self             : Node_Factory'Class;
+   --        Formal_Parameter : Node;
+   --        Actual_Parameter : Node) return Node;
 
    function Parameter_Specification
      (Self             : Node_Factory'Class; Names : Node; Colon_Token : Node;
@@ -686,9 +716,11 @@ private package Program.Parsers.Nodes is
       Not_Token : Node; Null_Token : Node; Object_Declaration_Subtype : Node;
       Assignment_Token : Node; Initialization_Expression : Node) return Node;
 
-   function Parenthesized_Expression
-     (Self                     : Node_Factory'Class; Left_Token : Node;
-      Expression_Parenthesized : Node; Right_Token : Node) return Node;
+   --     function Parenthesized_Expression
+   --       (Self                     : Node_Factory'Class;
+   --        Left_Token : Node;
+   --        Expression_Parenthesized : Node;
+   --        Right_Token : Node) return Node;
 
    function Pragma_Argument_Association
      (Self : Node_Factory'Class; Formal_Parameter : Node; Arrow_Token : Node;
@@ -792,8 +824,8 @@ private package Program.Parsers.Nodes is
    function Range_Attribute_Reference_Dr
      (Self : Node_Factory'Class; Range_Attribute : Node) return Node;
 
-   function Record_Aggregate
-     (Self : Node_Factory'Class; Associations : Node) return Node;
+   --     function Record_Aggregate
+   --       (Self : Node_Factory'Class; Associations : Node) return Node;
 
    function Record_Definition
      (Self : Node_Factory'Class; Record_Token : Node; Record_Components : Node;
@@ -821,12 +853,14 @@ private package Program.Parsers.Nodes is
       Object_Declaration_Subtype : Node; Assignment_Token : Node;
       Initialization_Expression  : Node) return Node;
 
-   function Root_Type_Definition
-     (Self : Node_Factory'Class; Dummy_Token : Node) return Node;
+   --     function Root_Type_Definition
+   --       (Self : Node_Factory'Class; Dummy_Token : Node) return Node;
 
-   function Scalar_Subtype_Indication
-     (Self : Node_Factory'Class; Subtype_Mark : Node; Scalar_Constraint : Node)
-      return Node;
+   --     function Scalar_Subtype_Indication
+   --       (Self : Node_Factory'Class;
+   --        Subtype_Mark : Node;
+   --        Scalar_Constraint : Node)
+   --        return Node;
 
    function Select_Or_Path
      (Self  : Node_Factory'Class; Or_Token : Node; When_Token : Node;
@@ -880,8 +914,9 @@ private package Program.Parsers.Nodes is
       Progenitor_List            : Node; With_Token : Node;
       Object_Declaration_Subtype : Node; Semicolon_Token : Node) return Node;
 
-   function String_Literal
-     (Self : Node_Factory'Class; String_Literal_Token : Node) return Node;
+   --     function String_Literal
+   --       (Self : Node_Factory'Class;
+   --        String_Literal_Token : Node) return Node;
 
    function Subtype_Declaration
      (Self : Node_Factory'Class; Subtype_Token : Node; Names : Node;
@@ -1241,10 +1276,41 @@ private package Program.Parsers.Nodes is
       return Node;
 
 private
-   type Node is null record;
-   type Node_Factory is tagged limited null record;
 
-   None     : constant Node := (null record);
-   No_Token : constant Node := (null record);
+   type Node_Kind is
+     (Token_Node,
+      Element_Node,
+      Element_Sequence_Node,
+      Unit_Node,
+      Unit_Sequence_Node,
+      Compilation_Node);
+
+   type Node (Kind : Node_Kind := Node_Kind'First) is record
+      case Kind is
+         when Token_Node =>
+            Token : Program.Lexical_Elements.Lexical_Element_Access;
+         when Element_Node =>
+            Element : Program.Elements.Element_Access;
+         when Element_Sequence_Node =>
+            Vector : aliased Element_Vectors.Vector;
+         when Unit_Node =>
+            Unit : Program.Compilation_Units.Compilation_Unit_Access;
+         when Unit_Sequence_Node =>
+            Units : aliased Unit_Vectors.Vector;
+         when Compilation_Node =>
+            Root_Units : Unit_Vectors.Vector;
+            Pragmas    : Element_Vectors.Vector;
+      end case;
+   end record;
+
+   type Node_Factory
+     (Comp    : not null Program.Compilations.Compilation_Access;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+   is tagged limited record
+      EF : Program.Element_Factories.Element_Factory (Subpool);
+   end record;
+
+   None     : constant Node := (Element_Node, null);
+   No_Token : constant Node := (Token_Node, null);
 
 end Program.Parsers.Nodes;

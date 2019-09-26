@@ -9,6 +9,7 @@ with Program.Source_Buffers;
 private with Ada.Strings.UTF_Encoding;
 
 package Program.Plain_Source_Buffers is
+   pragma Preelaborate;
 
    type Source_Buffer is limited new Program.Source_Buffers.Source_Buffer
      with private;

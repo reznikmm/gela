@@ -6,6 +6,27 @@
 
 package body Program.Plain_Lexical_Elements is
 
+   type Lexical_Element_Access is access Lexical_Element;
+
+   ------------
+   -- Append --
+   ------------
+
+   not overriding procedure Append
+     (Self   : in out Lexical_Element_Vector;
+      Buffer : Program.Source_Buffers.Source_Buffer_Access;
+      Span   : Program.Source_Buffers.Span;
+      Kind   : Program.Lexical_Elements.Lexical_Element_Kind)
+   is
+      Item : constant Lexical_Element_Access := new Lexical_Element'
+        (Buffer => Buffer,
+         Span   => Span,
+         Kind   => Kind);
+   begin
+      Self.Vector.Append
+        (Program.Lexical_Elements.Lexical_Element_Access (Item));
+   end Append;
+
    -------------
    -- Element --
    -------------

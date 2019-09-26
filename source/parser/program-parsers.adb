@@ -17,7 +17,7 @@ package body Program.Parsers is
       Token : out Anagram.Grammars.Terminal_Count;
       Value : out Program.Parsers.Nodes.Node);
 
-   procedure Aaa is new Anagram.Grammars.LR_Parsers.Parse
+   procedure Do_Parse is new Anagram.Grammars.LR_Parsers.Parse
      (Node        => Program.Parsers.Nodes.Node,
       Node_Array  => Program.Parsers.Nodes.Node_Array,
       Lexer       => Parse_Context,
@@ -147,13 +147,20 @@ package body Program.Parsers is
       Token : out Anagram.Grammars.Terminal_Count;
       Value : out Program.Parsers.Nodes.Node)
    is
-      Next : constant Program.Lexical_Elements.Lexical_Element_Access :=
-        Self.Tokens.Element (Self.Index);
-      Kind : constant Program.Lexical_Elements.Lexical_Element_Kind :=
-        Next.Kind;
+      Next : Program.Lexical_Elements.Lexical_Element_Access;
+      Kind : Program.Lexical_Elements.Lexical_Element_Kind;
    begin
-      Token := Map (Kind);
-      Value := Program.Parsers.Nodes.No_Token;
+      if Self.Index <= Self.Tokens.Last_Index then
+         Next := Self.Tokens.Element (Self.Index);
+         Kind := Next.Kind;
+
+         Token := Map (Kind);
+         Value := Self.Factory.Token (Next);
+         Self.Index := Self.Index + 1;
+      else
+         Token := 0;
+         Value := Program.Parsers.Nodes.No_Token;
+      end if;
    end Next_Token;
 
    -----------
@@ -161,9 +168,14 @@ package body Program.Parsers is
    -----------
 
    procedure Parse
-     (Tokens : not null Lexical_Elements.Lexical_Element_Vector_Access)
+     (Compilation : not null Program.Compilations.Compilation_Access;
+      Tokens      : not null Lexical_Elements.Lexical_Element_Vector_Access;
+      Subpool     : not null System.Storage_Pools.Subpools.Subpool_Handle;
+      Units       : out Unit_Vectors.Vector;
+      Pragmas     : out Element_Vectors.Vector)
    is
-      Factory : aliased Program.Parsers.Nodes.Node_Factory;
+      Factory : aliased Program.Parsers.Nodes.Node_Factory
+        (Compilation, Subpool);
       Context : aliased Parse_Context :=
         (Factory => Factory'Unchecked_Access,
          Tokens  => Tokens,
@@ -172,7 +184,9 @@ package body Program.Parsers is
       Root : Program.Parsers.Nodes.Node;
       Ok   : Boolean;
    begin
-      Aaa (Context'Access, Context'Access, Root, Ok);
+      Do_Parse (Context'Access, Context'Access, Root, Ok);
+      Program.Parsers.Nodes.Get_Compilation_Units
+        (Root, Units, Pragmas);
    end Parse;
 
 end Program.Parsers;

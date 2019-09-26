@@ -4,7 +4,6 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-with Ada.Directories;
 with Ada.Streams.Stream_IO;
 with Ada.Strings.UTF_Encoding.Wide_Wide_Strings;
 with Interfaces;
@@ -22,47 +21,34 @@ package body Program.Plain_Source_Buffers is
      (Self : in out Source_Buffer;
       Name : Program.Text)
    is
-      function File_Size (Name : UTF_8_String) return Natural;
+      procedure Read_File (Text : in out UTF_8_String);
 
-      procedure Read_File
-        (Name : UTF_8_String;
-         Text : in out UTF_8_String);
-
-      ---------------
-      -- File_Size --
-      ---------------
-
-      function File_Size (Name : UTF_8_String) return Natural is
-         Result : constant Ada.Directories.File_Size :=
-           Ada.Directories.Size (Name);
-      begin
-         return Natural (Result);
-      end File_Size;
+      Input : Ada.Streams.Stream_IO.File_Type;
 
       ---------------
       -- Read_File --
       ---------------
 
-      procedure Read_File
-        (Name : UTF_8_String;
-         Text : in out UTF_8_String)
-      is
-         Input : Ada.Streams.Stream_IO.File_Type;
-
+      procedure Read_File (Text : in out UTF_8_String) is
          Data : Ada.Streams.Stream_Element_Array (1 .. Text'Length)
            with Import, Convention => Ada, Address => Text'Address;
          Last : Ada.Streams.Stream_Element_Offset;
       begin
-         Ada.Streams.Stream_IO.Open
-           (Input, Ada.Streams.Stream_IO.In_File, Name);
          Ada.Streams.Stream_IO.Read (Input, Data, Last);
-         Ada.Streams.Stream_IO.Close (Input);
       end Read_File;
+
+      File_Size : Natural;
       File_Name : constant UTF_8_String :=
         Ada.Strings.UTF_Encoding.Wide_Wide_Strings.Encode (Name);
+
    begin
-      Self.Text := new UTF_8_String (1 .. File_Size (File_Name));
-      Read_File (File_Name, Self.Text.all);
+      Ada.Streams.Stream_IO.Open
+        (Input, Ada.Streams.Stream_IO.In_File, File_Name);
+
+      File_Size := Natural (Ada.Streams.Stream_IO.Size (Input));
+      Self.Text := new UTF_8_String (1 .. File_Size);
+      Read_File (Self.Text.all);
+      Ada.Streams.Stream_IO.Close (Input);
       Self.Rewind;
    end Initialize;
 

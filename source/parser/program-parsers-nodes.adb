@@ -1,5 +1,146 @@
-pragma Ada_2012;
+--  Copyright (c) 2019 Maxim Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+--  License-Filename: LICENSE
+-------------------------------------------------------------
+
+with Program.Element_Vectors;
+with Program.Elements.Aspect_Specifications;
+with Program.Elements.Defining_Names;
+with Program.Elements.Expressions;
+with Program.Nodes.Vectors;
+with Program.Storage_Pools;
+with Program.Units.Declarations;
+
 package body Program.Parsers.Nodes is
+
+   generic
+      type Vector is limited interface;
+      type Vector_Access is access all Vector'Class;
+      type Vector_Instance (<>) is new Vector with private;
+      with function Create
+        (Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
+         return Vector_Instance is <>;
+   package Generic_Vector_Cast is
+      function To_Vector
+        (Value   : access constant Element_Vectors.Vector;
+         Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+           return Vector_Access;
+   end Generic_Vector_Cast;
+
+   type Forward_Iterator;
+
+   function Iter
+     (V : access constant Element_Vectors.Vector) return Forward_Iterator;
+
+   type Forward_Iterator is
+     new Program.Element_Vectors.Iterators.Forward_Iterator with
+   record
+      Vector : access constant Element_Vectors.Vector;
+   end record;
+
+   overriding function First
+     (Self : Forward_Iterator)
+      return Program.Element_Vectors.Element_Cursor;
+
+   overriding function Next
+     (Self     : Forward_Iterator;
+      Position : Program.Element_Vectors.Element_Cursor)
+      return Program.Element_Vectors.Element_Cursor;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self : Forward_Iterator)
+      return Program.Element_Vectors.Element_Cursor is
+   begin
+      return
+        (Element   => Self.Vector.Element (1),
+         Delimiter => null,
+         Index     => 1,
+         Is_Last   => Self.Vector.Last_Index = 1);
+   end First;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self     : Forward_Iterator;
+      Position : Program.Element_Vectors.Element_Cursor)
+      return Program.Element_Vectors.Element_Cursor
+   is
+      Index : constant Positive := Position.Index + 1;
+   begin
+      if Self.Vector.Last_Index < Index then
+         return (null, null, Index, False);
+      else
+         return
+           (Element   => Self.Vector.Element (Index),
+            Delimiter => null,
+            Index     => Index,
+            Is_Last   => Self.Vector.Last_Index = Index);
+      end if;
+   end Next;
+
+   ----------
+   -- Iter --
+   ----------
+
+   function Iter
+     (V : access constant Element_Vectors.Vector) return Forward_Iterator is
+   begin
+      return (Vector => V);
+   end Iter;
+
+   package body Generic_Vector_Cast is
+      type Vector_Ref is access Vector_Instance
+        with Storage_Pool => Program.Storage_Pools.Pool;
+
+      function To_Vector
+        (Value   : access constant Element_Vectors.Vector;
+         Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+           return Vector_Access
+      is
+         Result : Vector_Ref;
+      begin
+         if Value.Is_Empty then
+            return null;
+         else
+            Result := new (Subpool) Vector_Instance'(Create (Iter (Value)));
+            return Vector_Access (Result);
+         end if;
+      end To_Vector;
+   end Generic_Vector_Cast;
+
+   package Aspect_Specification_Vector_Cast is new Generic_Vector_Cast
+     (Vector        => Program.Elements
+         .Aspect_Specifications.Aspect_Specification_Vector,
+      Vector_Access => Program.Elements
+         .Aspect_Specifications.Aspect_Specification_Vector_Access,
+      Vector_Instance => Program.Nodes.Vectors.Vector,
+      Create => Program.Nodes.Vectors.Create);
+
+   function To_Aspect_Specification_Vector
+     (Value   : access constant Element_Vectors.Vector;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+        return Program.Elements.Aspect_Specifications
+          .Aspect_Specification_Vector_Access
+             renames Aspect_Specification_Vector_Cast.To_Vector;
+
+   package Element_Vector_Cast is new Generic_Vector_Cast
+     (Vector        => Program.Element_Vectors.Element_Vector,
+      Vector_Access => Program.Element_Vectors.Element_Vector_Access,
+      Vector_Instance => Program.Nodes.Vectors.Vector,
+      Create => Program.Nodes.Vectors.Create);
+
+   function To_Element_Vector
+     (Value   : access constant Element_Vectors.Vector;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+        return Program.Element_Vectors.Element_Vector_Access
+           renames Element_Vector_Cast.To_Vector;
 
    pragma Warnings (Off);
 
@@ -644,10 +785,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Aspect_Specification_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Aspect_Specification_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Aspect_Specification_Sequence;
 
    --------------------------
@@ -700,10 +838,7 @@ package body Program.Parsers.Nodes is
 
    function Association_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Association_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Association_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Association_Sequence;
 
    -------------------------
@@ -778,10 +913,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Basic_Declarative_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Basic_Declarative_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Basic_Declarative_Item_Sequence;
 
    ---------------------
@@ -849,10 +981,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Case_Expression_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Case_Expression_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Case_Expression_Path_Sequence;
 
    ---------------
@@ -874,10 +1003,7 @@ package body Program.Parsers.Nodes is
 
    function Case_Path_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Case_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Case_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Case_Path_Sequence;
 
    --------------------
@@ -930,10 +1056,7 @@ package body Program.Parsers.Nodes is
    function Clause_Or_Pragma_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Clause_Or_Pragma_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Clause_Or_Pragma_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Clause_Or_Pragma_Sequence;
 
    -----------------
@@ -942,11 +1065,9 @@ package body Program.Parsers.Nodes is
 
    function Compilation
      (Self : Node_Factory'Class; Units : Node; Compilation_Pragmas : Node)
-      return Node
-   is
+      return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Compilation unimplemented");
-      return raise Program_Error with "Unimplemented function Compilation";
+      return (Compilation_Node, Units.Units, Compilation_Pragmas.Vector);
    end Compilation;
 
    ---------------------------
@@ -968,15 +1089,30 @@ package body Program.Parsers.Nodes is
    -- Compilation_Unit_Declaration --
    ----------------------------------
 
+   type Unit_Declaration_Access is access all
+     Program.Units.Declarations.Unit_Declaration
+       with Storage_Pool => Program.Storage_Pools.Pool;
+
    function Compilation_Unit_Declaration
      (Self          : Node_Factory'Class; Context_Clause_Elements : Node;
       Private_Token : Node; Unit_Declaration : Node) return Node
    is
+      Result : Unit_Declaration_Access :=
+        new (Self.Subpool) Program.Units.Declarations.Unit_Declaration;
+      Clause : Program.Element_Vectors.Element_Vector_Access :=
+        To_Element_Vector
+          (Context_Clause_Elements.Vector'Access, Self.Subpool);
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Compilation_Unit_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Compilation_Unit_Declaration";
+      Result.Initialize
+        (Compilation    => Self.Comp,
+         Full_Name      => "",
+         Context_Clause => Clause,
+         Declaration    => Unit_Declaration.Element,
+         Parent         => null);
+
+      return
+        (Unit_Node,
+         Program.Compilation_Units.Compilation_Unit_Access (Result));
    end Compilation_Unit_Declaration;
 
    -------------------------------
@@ -986,10 +1122,7 @@ package body Program.Parsers.Nodes is
    function Compilation_Unit_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Compilation_Unit_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Compilation_Unit_Sequence";
+      return (Unit_Sequence_Node, Unit_Vectors.Empty_Vector);
    end Compilation_Unit_Sequence;
 
    ----------------------
@@ -1046,10 +1179,7 @@ package body Program.Parsers.Nodes is
 
    function Component_Item_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Component_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Component_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Component_Item_Sequence;
 
    ----------------------------------
@@ -1074,10 +1204,7 @@ package body Program.Parsers.Nodes is
 
    function Context_Item_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Context_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Context_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Context_Item_Sequence;
 
    ------------------------------------
@@ -1103,10 +1230,7 @@ package body Program.Parsers.Nodes is
    function Declarative_Item_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Declarative_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Declarative_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Declarative_Item_Sequence;
 
    --------------------------------
@@ -1145,10 +1269,10 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Identifier_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Defining_Identifier unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Defining_Identifier";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Defining_Identifier (Identifier_Token.Token)));
    end Defining_Identifier;
 
    ----------------------------------
@@ -1159,10 +1283,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Defining_Identifier_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Defining_Identifier_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Defining_Identifier_Sequence;
 
    ------------------------------
@@ -1261,10 +1382,7 @@ package body Program.Parsers.Nodes is
 
    function Discrete_Choice_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Discrete_Choice_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Discrete_Choice_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Discrete_Choice_Sequence;
 
    ----------------------------------------
@@ -1304,10 +1422,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Discrete_Subtype_Definition_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Discrete_Subtype_Definition_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Discrete_Subtype_Definition_Sequence;
 
    ---------------------------------
@@ -1364,10 +1479,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Discriminant_Specification_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Discriminant_Specification_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Discriminant_Specification_Sequence;
 
    ------------------------------------
@@ -1518,10 +1630,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Enumeration_Literal_Specification_Sequence unimplemented");
-      return raise Program_Error
-        with "Unimplemented Enumeration_Literal_Specification_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Enumeration_Literal_Specification_Sequence;
 
    ---------------------------------
@@ -1546,10 +1655,7 @@ package body Program.Parsers.Nodes is
    function Exception_Choice_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Exception_Choice_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Exception_Choice_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Exception_Choice_Sequence;
 
    ---------------------------
@@ -1592,10 +1698,7 @@ package body Program.Parsers.Nodes is
    function Exception_Handler_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Exception_Handler_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Exception_Handler_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Exception_Handler_Sequence;
 
    ------------------------------------
@@ -2149,10 +2252,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Generic_Association_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Generic_Association_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Generic_Association_Sequence;
 
    -----------------------------
@@ -2161,10 +2261,7 @@ package body Program.Parsers.Nodes is
 
    function Generic_Formal_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Generic_Formal_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Generic_Formal_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Generic_Formal_Sequence;
 
    ----------------------------------
@@ -2273,6 +2370,19 @@ package body Program.Parsers.Nodes is
           with "Unimplemented function Generic_Procedure_Renaming";
    end Generic_Procedure_Renaming;
 
+   ---------------------------
+   -- Get_Compilation_Units --
+   ---------------------------
+
+   procedure Get_Compilation_Units
+     (Value   : Node;
+      Units   : out Program.Parsers.Unit_Vectors.Vector;
+      Pragmas : out Program.Parsers.Element_Vectors.Vector) is
+   begin
+      Units := Value.Root_Units;
+      Pragmas := Value.Pragmas;
+   end Get_Compilation_Units;
+
    --------------------
    -- Goto_Statement --
    --------------------
@@ -2295,8 +2405,10 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Identifier_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Identifier unimplemented");
-      return raise Program_Error with "Unimplemented function Identifier";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Identifier (Identifier_Token.Token)));
    end Identifier;
 
    --------------------------------------
@@ -2307,10 +2419,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "If_Else_Expression_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function If_Else_Expression_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end If_Else_Expression_Path_Sequence;
 
    ---------------------------------
@@ -2320,10 +2429,7 @@ package body Program.Parsers.Nodes is
    function If_Elsif_Else_Path_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "If_Elsif_Else_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function If_Elsif_Else_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end If_Elsif_Else_Path_Sequence;
 
    -------------------
@@ -2506,10 +2612,7 @@ package body Program.Parsers.Nodes is
    function Membership_Choice_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Membership_Choice_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Membership_Choice_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Membership_Choice_Sequence;
 
    ---------------------
@@ -2548,9 +2651,7 @@ package body Program.Parsers.Nodes is
 
    function Name_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Name_Sequence unimplemented");
-      return raise Program_Error with "Unimplemented function Name_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Name_Sequence;
 
    --------------------
@@ -2760,10 +2861,26 @@ package body Program.Parsers.Nodes is
       Semicolon_Token                : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Package_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Package_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Package_Declaration
+                (Package_Token        => Package_Token.Token,
+                 Name                 =>
+                   Program.Elements.Defining_Names.Defining_Name_Access
+                     (Names.Element),
+                 With_Token           => null,
+                 Aspects              => To_Aspect_Specification_Vector
+                   (Aspect_Specifications.Vector'Access, Self.Subpool),
+                 Is_Token             => Is_Token.Token,
+                 Visible_Declarations => null,
+                 Private_Token        => Private_Token.Token,
+                 Private_Declarations => null,
+                 End_Token            => End_Token.Token,
+                 End_Name             =>
+                   Program.Elements.Expressions.Expression_Access
+                     (End_Name.Element),
+                 Semicolon_Token      => Semicolon_Token.Token)));
    end Package_Declaration;
 
    ---------------------------
@@ -2825,10 +2942,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Parameter_Specification_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Parameter_Specification_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Parameter_Specification_Sequence;
 
    ---------------------------------
@@ -2854,10 +2968,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Pragma_Argument_Association_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Pragma_Argument_Association_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Pragma_Argument_Association_Sequence;
 
    -----------------
@@ -2933,13 +3044,9 @@ package body Program.Parsers.Nodes is
    ------------------------------
 
    procedure Prepend_Compilation_Unit
-     (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
+     (Self : Node_Factory'Class; List : in out Node; Item : Node) is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Compilation_Unit unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Compilation_Unit";
+      List.Units.Prepend (Item.Unit);
    end Prepend_Compilation_Unit;
 
    ----------------------------
@@ -3387,10 +3494,7 @@ package body Program.Parsers.Nodes is
    function Program_Unit_Name_Sequence (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Program_Unit_Name_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Program_Unit_Name_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Program_Unit_Name_Sequence;
 
    --------------------
@@ -3449,10 +3553,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Protected_Element_Declaration_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Protected_Element_Declaration_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Protected_Element_Declaration_Sequence;
 
    ----------------------------------------------
@@ -3463,10 +3564,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Protected_Operation_Declaration_Sequence unimplemented");
-      return raise Program_Error
-        with "Unimplemented Protected_Operation_Declaration_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Protected_Operation_Declaration_Sequence;
 
    ---------------------------------------
@@ -3477,10 +3575,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Protected_Operation_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Protected_Operation_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Protected_Operation_Item_Sequence;
 
    --------------------------------
@@ -3666,10 +3761,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Select_Or_Else_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Select_Or_Else_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Select_Or_Else_Path_Sequence;
 
    --------------------
@@ -3695,10 +3787,7 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Select_Then_Abort_Path_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Select_Then_Abort_Path_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Select_Then_Abort_Path_Sequence;
 
    ------------------------
@@ -3863,10 +3952,7 @@ package body Program.Parsers.Nodes is
 
    function Statement_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Statement_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Statement_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Statement_Sequence;
 
    -------------------------
@@ -3891,10 +3977,7 @@ package body Program.Parsers.Nodes is
 
    function Subtype_Mark_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Subtype_Mark_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Subtype_Mark_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Subtype_Mark_Sequence;
 
    -------------
@@ -3965,10 +4048,7 @@ package body Program.Parsers.Nodes is
 
    function Task_Item_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Task_Item_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Task_Item_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Task_Item_Sequence;
 
    ---------------------------
@@ -4060,6 +4140,18 @@ package body Program.Parsers.Nodes is
       return raise Program_Error
           with "Unimplemented function To_Subtype_Indication";
    end To_Subtype_Indication;
+
+   -----------
+   -- Token --
+   -----------
+
+   function Token
+     (Self  : Node_Factory'Class;
+      Value : not null Program.Lexical_Elements.Lexical_Element_Access)
+        return Node is
+   begin
+      return (Token_Node, Value);
+   end Token;
 
    ------------------------------------
    -- Unconstrained_Array_Definition --
@@ -4157,10 +4249,7 @@ package body Program.Parsers.Nodes is
 
    function Variant_Sequence (Self : Node_Factory'Class) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Variant_Sequence unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Variant_Sequence";
+      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
    end Variant_Sequence;
 
    --------------------------

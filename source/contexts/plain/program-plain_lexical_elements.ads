@@ -5,17 +5,24 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
+with Program.Source_Buffers;
 
 private with Ada.Containers.Vectors;
-private with Program.Source_Buffers;
 
 package Program.Plain_Lexical_Elements is
+   pragma Preelaborate;
 
    type Lexical_Element is new Program.Lexical_Elements.Lexical_Element
      with private;
 
    type Lexical_Element_Vector is limited
      new Program.Lexical_Elements.Lexical_Element_Vector with private;
+
+   not overriding procedure Append
+     (Self   : in out Lexical_Element_Vector;
+      Buffer : Program.Source_Buffers.Source_Buffer_Access;
+      Span   : Program.Source_Buffers.Span;
+      Kind   : Program.Lexical_Elements.Lexical_Element_Kind);
 
 private
 
