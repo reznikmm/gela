@@ -6,6 +6,7 @@
 
 with Program.Lexical_Elements;
 with Program.Source_Buffers;
+with Program.Symbols;
 
 private with Ada.Containers.Vectors;
 
@@ -15,6 +16,9 @@ package Program.Plain_Lexical_Elements is
    type Lexical_Element is new Program.Lexical_Elements.Lexical_Element
      with private;
 
+   function Symbol (Self : Lexical_Element'Class)
+      return Program.Symbols.Symbol;
+
    type Lexical_Element_Vector is limited
      new Program.Lexical_Elements.Lexical_Element_Vector with private;
 
@@ -22,7 +26,8 @@ package Program.Plain_Lexical_Elements is
      (Self   : in out Lexical_Element_Vector;
       Buffer : Program.Source_Buffers.Source_Buffer_Access;
       Span   : Program.Source_Buffers.Span;
-      Kind   : Program.Lexical_Elements.Lexical_Element_Kind);
+      Kind   : Program.Lexical_Elements.Lexical_Element_Kind;
+      Symbol : Program.Symbols.Symbol);
 
 private
 
@@ -31,6 +36,7 @@ private
       Buffer : Program.Source_Buffers.Source_Buffer_Access;
       Span   : Program.Source_Buffers.Span;
       Kind   : Program.Lexical_Elements.Lexical_Element_Kind;
+      Symbol : Program.Symbols.Symbol;
    end record;
 
    overriding function Image (Self  : Lexical_Element) return Text;

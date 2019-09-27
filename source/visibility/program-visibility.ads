@@ -17,17 +17,19 @@
 private with Ada.Containers.Vectors;
 
 with Program.Elements.Defining_Names;
+with Program.Symbols;
 
 package Program.Visibility is
+   pragma Preelaborate;
 
    subtype Defining_Name is
      Program.Elements.Defining_Names.Defining_Name_Access;
    --  Defining name AST node
 
-   type Symbol is new Integer;
+   subtype Symbol is Program.Symbols.Symbol;
    --  A representation of an identifier, operator or character literal
 
-   Standard : constant Symbol;
+   function Standard return Symbol renames Program.Symbols.Standard;
    --  Symbol of Standard Ada package
 
    type View_Kind is
@@ -335,7 +337,5 @@ private
       Env   : access constant Context;
       Index : Item_Offset_Positive;
    end record;
-
-   Standard : constant Symbol := Symbol'Last;
 
 end Program.Visibility;

@@ -15,6 +15,7 @@ private with Ada.Strings.Wide_Wide_Unbounded;
 private with Program.Source_Buffers;
 private with Program.Plain_Source_Buffers;
 private with Program.Plain_Lexical_Elements;
+private with Program.Plain_Contexts;
 
 package Program.Plain_Compilations is
 
@@ -57,7 +58,7 @@ private
    type Compilation
      (Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
    is limited new Compilations.Compilation with record
-      Context     : Program.Contexts.Context_Access;
+      Context     : access Program.Plain_Contexts.Context;
       Text_Name   : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
       Object_Name : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
       Buffer      : aliased Program.Plain_Source_Buffers.Source_Buffer;

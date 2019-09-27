@@ -6,18 +6,27 @@
 
 with Program.Compilation_Unit_Vectors;
 with Program.Contexts;
+with Program.Source_Buffers;
+with Program.Symbols;
 
 private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 private with Program.Compilation_Units;
 private with Program.Compilations;
-private with Program.Source_Buffers;
-private with Program.Symbols;
+private with Program.Symbols.Tables;
 
 package Program.Plain_Contexts is
    pragma Preelaborate;
 
    type Context is limited new Program.Contexts.Context with private;
+
+   procedure Initialize (Self : in out Context'Class);
+
+   procedure Find_Or_Create_Symbol
+     (Self : in out Context'Class;
+      Buffer : not null Program.Source_Buffers.Source_Buffer_Access;
+      Span   : Program.Source_Buffers.Span;
+      Result : out Program.Symbols.Symbol);
 
    overriding function Library_Unit_Declarations (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access;
@@ -44,22 +53,6 @@ private
       Element_Type    => Symbol_List_Index,
       Hash            => Hash,
       Equivalent_Keys => "=");
-
-   type Symbol_Reference is record
-      Buffer : not null Program.Source_Buffers.Source_Buffer_Access;
-      Span   : Program.Source_Buffers.Span;
-   end record;
-
-   function Equal (Left, Right : Symbol_Reference) return Boolean;
-
-   function Hash (Value : Symbol_Reference) return Ada.Containers.Hash_Type;
-
-   package Symbol_Maps is new Ada.Containers.Hashed_Maps
-     (Key_Type        => Symbol_Reference,
-      Element_Type    => Program.Symbols.Symbol,
-      Hash            => Hash,
-      Equivalent_Keys => Equal,
-      "="             => Program.Symbols."=");
 
    package Unit_Maps is new Ada.Containers.Hashed_Maps
      (Key_Type        => Symbol_List_Index,
@@ -98,8 +91,7 @@ private
       "="          => Program.Compilations."=");
 
    type Context is limited new Program.Contexts.Context with record
-      Symbols      : Symbol_Maps.Map;
-      Last_Symbol  : Program.Symbols.Symbol := Program.Symbols.X_Symbol'Last;
+      Symbols      : Program.Symbols.Tables.Symbol_Table;
       Symbol_Lists : Symbol_List_Maps.Map;
       Declarations : aliased Unit_Vector (Context'Unchecked_Access);
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);

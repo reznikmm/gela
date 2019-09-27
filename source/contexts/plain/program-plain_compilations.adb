@@ -6,8 +6,11 @@
 
 with Program.Lexical_Handlers;
 with Program.Parsers;
+with Program.Resolvers;
 with Program.Scanner_Destinations;
 with Program.Scanners;
+with Program.Symbols;
+with Program.Visibility;
 
 package body Program.Plain_Compilations is
 
@@ -107,12 +110,18 @@ package body Program.Plain_Compilations is
 
    overriding procedure New_Token
      (Self  : in out Scanner_Destination;
-      Token : Program.Scanner_Destinations.Token) is
+      Token : Program.Scanner_Destinations.Token)
+   is
+      Symbol : Program.Symbols.Symbol;
    begin
+      Self.Comp.Context.Find_Or_Create_Symbol
+        (Self.Comp.Buffer'Unchecked_Access, Token.Span, Symbol);
+
       Self.Comp.Tokens.Append
         (Self.Comp.Buffer'Unchecked_Access,
          Token.Span,
-         Token.Kind);
+         Token.Kind,
+         Symbol);
    end New_Token;
 
    -----------------
@@ -133,6 +142,7 @@ package body Program.Plain_Compilations is
      (Self      : aliased in out Compilation;
       Text_Name : Text)
    is
+      Env     : Program.Visibility.Context;
       Units   : Program.Parsers.Unit_Vectors.Vector;
       Pragmas : Program.Parsers.Element_Vectors.Vector;
    begin
@@ -144,6 +154,12 @@ package body Program.Plain_Compilations is
          Self.Subpool,
          Units,
          Pragmas);
+
+      Env.Create_Empty_Context;
+
+      Program.Resolvers.Resolve_Names
+        (Env  => Env,
+         Unit => Units (1));
    end Parse_File;
 
    ---------------------

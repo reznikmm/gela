@@ -7,6 +7,7 @@
 with Ada.Containers.Hashed_Maps;
 
 package body Program.Visibility is
+   use all type Program.Visibility.Symbol;
 
    type Allocated_Snapshot is access all Snapshot;
 

@@ -16,12 +16,14 @@ package body Program.Plain_Lexical_Elements is
      (Self   : in out Lexical_Element_Vector;
       Buffer : Program.Source_Buffers.Source_Buffer_Access;
       Span   : Program.Source_Buffers.Span;
-      Kind   : Program.Lexical_Elements.Lexical_Element_Kind)
+      Kind   : Program.Lexical_Elements.Lexical_Element_Kind;
+      Symbol : Program.Symbols.Symbol)
    is
       Item : constant Lexical_Element_Access := new Lexical_Element'
         (Buffer => Buffer,
          Span   => Span,
-         Kind   => Kind);
+         Kind   => Kind,
+         Symbol => Symbol);
    begin
       Self.Vector.Append
         (Program.Lexical_Elements.Lexical_Element_Access (Item));
@@ -67,5 +69,15 @@ package body Program.Plain_Lexical_Elements is
    begin
       return Self.Vector.Last_Index;
    end Last_Index;
+
+   ------------
+   -- Symbol --
+   ------------
+
+   function Symbol
+     (Self : Lexical_Element'Class) return Program.Symbols.Symbol is
+   begin
+      return Self.Symbol;
+   end Symbol;
 
 end Program.Plain_Lexical_Elements;
