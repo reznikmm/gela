@@ -81,9 +81,10 @@ package body Program.Symbols.Tables is
       if Symbol_Maps.Has_Element (Cursor) then
          Result := Symbol_Maps.Element (Cursor);
          return;
+      elsif Buffer.Text (Span) (1) in ''' | '"' then
+         Result := No_Symbol;
+         return;
       end if;
-
-      pragma Assert (Buffer.Text (Span) (1) not in ''' | '"');
 
       Self.Last_Symbol := Self.Last_Symbol + 1;
       Result := Self.Last_Symbol;

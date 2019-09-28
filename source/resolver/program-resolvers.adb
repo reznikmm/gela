@@ -5,10 +5,13 @@
 -------------------------------------------------------------
 
 with Program.Element_Visitors;
-with Program.Elements;
-with Program.Elements.Package_Declarations;
-with Program.Symbols;
+with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
+with Program.Elements.Package_Declarations;
+with Program.Elements;
+with Program.Lexical_Elements;
+with Program.Plain_Lexical_Elements;
+with Program.Symbols;
 
 package body Program.Resolvers is
 
@@ -47,6 +50,10 @@ package body Program.Resolvers is
 
    package body Visitors is
 
+      function To_Symbol
+        (Name : Program.Elements.Defining_Names.Defining_Name_Access)
+         return Program.Symbols.Symbol;
+
       -------------------------
       -- Package_Declaration --
       -------------------------
@@ -59,12 +66,50 @@ package body Program.Resolvers is
          Name   : constant
            Program.Elements.Defining_Names.Defining_Name_Access :=
              Element.Name;
-         Symbol : constant Program.Symbols.Symbol := 0;
+         Symbol : constant Program.Symbols.Symbol := To_Symbol (Name);
       begin
          Self.Env.Create_Package
            (Symbol => Symbol,
             Name   => Name);
       end Package_Declaration;
+
+      ---------------
+      -- To_Symbol --
+      ---------------
+
+      function To_Symbol
+        (Name : Program.Elements.Defining_Names.Defining_Name_Access)
+         return Program.Symbols.Symbol
+      is
+         type Getter is new Program.Element_Visitors.Element_Visitor with
+         record
+            Result : Program.Symbols.Symbol := Program.Symbols.No_Symbol;
+         end record;
+
+         procedure Defining_Identifier
+           (Self    : in out Getter;
+            Element : not null Program.Elements.Defining_Identifiers
+              .Defining_Identifier_Access);
+
+         procedure Defining_Identifier
+           (Self    : in out Getter;
+            Element : not null Program.Elements.Defining_Identifiers
+              .Defining_Identifier_Access)
+         is
+            Token : constant Program.Lexical_Elements.Lexical_Element_Access :=
+              Element.To_Defining_Identifier_Text.Identifier_Token;
+         begin
+            Self.Result := Program.Plain_Lexical_Elements.Lexical_Element
+              (Token.all).Symbol;
+         end Defining_Identifier;
+
+         G : Getter;
+      begin
+         Name.Visit (G);
+         pragma Assert (G.Result not in Program.Symbols.No_Symbol);
+
+         return G.Result;
+      end To_Symbol;
 
    end Visitors;
 

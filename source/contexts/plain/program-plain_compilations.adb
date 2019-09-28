@@ -42,8 +42,19 @@ package body Program.Plain_Compilations is
    overriding function Context
      (Self : Compilation) return not null Program.Contexts.Context_Access is
    begin
-      return Self.Context;
+      return Program.Contexts.Context_Access (Self.Context);
    end Context;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize
+     (Self    : in out Compilation'Class;
+      Context : not null Program.Contexts.Context_Access) is
+   begin
+      Self.Context := Plain_Context_Access (Context);
+   end Initialize;
 
    ---------------------
    -- Lexical_Element --
@@ -112,10 +123,16 @@ package body Program.Plain_Compilations is
      (Self  : in out Scanner_Destination;
       Token : Program.Scanner_Destinations.Token)
    is
-      Symbol : Program.Symbols.Symbol;
+      Symbol : Program.Symbols.Symbol := Program.Symbols.No_Symbol;
    begin
-      Self.Comp.Context.Find_Or_Create_Symbol
-        (Self.Comp.Buffer'Unchecked_Access, Token.Span, Symbol);
+      if Token.Kind in
+        Program.Lexical_Elements.Character_Literal
+        | Program.Lexical_Elements.String_Literal
+        | Program.Lexical_Elements.Identifier
+      then
+         Self.Comp.Context.Find_Or_Create_Symbol
+           (Self.Comp.Buffer'Unchecked_Access, Token.Span, Symbol);
+      end if;
 
       Self.Comp.Tokens.Append
         (Self.Comp.Buffer'Unchecked_Access,

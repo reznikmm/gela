@@ -23,6 +23,10 @@ package Program.Plain_Compilations is
      (Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
        is limited new Program.Compilations.Compilation with private;
 
+   procedure Initialize
+     (Self    : in out Compilation'Class;
+      Context : not null Program.Contexts.Context_Access);
+
    overriding function Context (Self : Compilation)
      return not null Program.Contexts.Context_Access;
    --  Return corresponding context
@@ -55,10 +59,12 @@ private
       Element_Type => Program.Source_Buffers.Span,
       "="          => Program.Source_Buffers."=");
 
+   type Plain_Context_Access is access all Program.Plain_Contexts.Context;
+
    type Compilation
      (Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
    is limited new Compilations.Compilation with record
-      Context     : access Program.Plain_Contexts.Context;
+      Context     : Plain_Context_Access;
       Text_Name   : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
       Object_Name : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
       Buffer      : aliased Program.Plain_Source_Buffers.Source_Buffer;

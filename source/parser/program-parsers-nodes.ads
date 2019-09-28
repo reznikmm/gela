@@ -321,8 +321,10 @@ private package Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Names : Node) return Node;
 
    function Enumeration_Type_Definition
-     (Self                             : Node_Factory'Class; Left_Token : Node;
-      Enumeration_Literal_Declarations : Node; Right_Token : Node) return Node;
+     (Self        : Node_Factory'Class;
+      Left_Token  : Node;
+      Literals    : Node;
+      Right_Token : Node) return Node;
 
    function Exception_Declaration
      (Self            : Node_Factory'Class; Names : Node; Colon_Token : Node;

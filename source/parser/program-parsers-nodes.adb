@@ -6,7 +6,9 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Aspect_Specifications;
+with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
+with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
 with Program.Nodes.Vectors;
 with Program.Storage_Pools;
@@ -47,6 +49,18 @@ package body Program.Parsers.Nodes is
      (Self     : Forward_Iterator;
       Position : Program.Element_Vectors.Element_Cursor)
       return Program.Element_Vectors.Element_Cursor;
+
+   function New_Element_Sequence (Self : Node_Factory'Class) return Node;
+
+   procedure Prepend
+     (Self : Node_Factory'Class;
+      List : in out Node;
+      Item : Node);
+
+   procedure Append
+     (Self : Node_Factory'Class;
+      List : in out Node;
+      Item : Node);
 
    -----------
    -- First --
@@ -129,6 +143,24 @@ package body Program.Parsers.Nodes is
         return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access
              renames Aspect_Specification_Vector_Cast.To_Vector;
+
+   package Enumeration_Literal_Specification_Vector_Cast is
+     new Generic_Vector_Cast
+       (Vector        => Program.Elements
+                           .Enumeration_Literal_Specifications
+                              .Enumeration_Literal_Specification_Vector,
+        Vector_Access => Program.Elements
+                           .Enumeration_Literal_Specifications
+                              .Enumeration_Literal_Specification_Vector_Access,
+        Vector_Instance => Program.Nodes.Vectors.Vector,
+        Create => Program.Nodes.Vectors.Create);
+
+   function To_Enumeration_Literal_Specification_Vector
+     (Value   : access constant Element_Vectors.Vector;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+        return Program.Elements.Enumeration_Literal_Specifications
+          .Enumeration_Literal_Specification_Vector_Access
+             renames Enumeration_Literal_Specification_Vector_Cast.To_Vector;
 
    package Element_Vector_Cast is new Generic_Vector_Cast
      (Vector        => Program.Element_Vectors.Element_Vector,
@@ -296,19 +328,21 @@ package body Program.Parsers.Nodes is
         with "Unimplemented function Anonymous_Access_To_Procedure_Definition";
    end Anonymous_Access_To_Procedure_Definition;
 
+   procedure Append
+     (Self : Node_Factory'Class;
+      List : in out Node;
+      Item : Node) is
+   begin
+      List.Vector.Append (Item.Element);
+   end Append;
+
    ---------------------------------
    -- Append_Aspect_Specification --
    ---------------------------------
 
    procedure Append_Aspect_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Aspect_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Aspect_Specification";
-   end Append_Aspect_Specification;
+      renames Append;
 
    ------------------------
    -- Append_Association --
@@ -316,12 +350,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Association unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Association";
-   end Append_Association;
+      renames Append;
 
    -----------------------------------
    -- Append_Basic_Declarative_Item --
@@ -329,13 +358,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Basic_Declarative_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Basic_Declarative_Item unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Basic_Declarative_Item";
-   end Append_Basic_Declarative_Item;
+      renames Append;
 
    ---------------------------------
    -- Append_Case_Expression_Path --
@@ -343,13 +366,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Case_Expression_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Case_Expression_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Case_Expression_Path";
-   end Append_Case_Expression_Path;
+      renames Append;
 
    ----------------------
    -- Append_Case_Path --
@@ -357,12 +374,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Case_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Case_Path unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Case_Path";
-   end Append_Case_Path;
+      renames Append;
 
    -----------------------------
    -- Append_Clause_Or_Pragma --
@@ -370,13 +382,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Clause_Or_Pragma
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Clause_Or_Pragma unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Clause_Or_Pragma";
-   end Append_Clause_Or_Pragma;
+      renames Append;
 
    -----------------------------
    -- Append_Compilation_Unit --
@@ -384,13 +390,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Compilation_Unit
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Compilation_Unit unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Compilation_Unit";
-   end Append_Compilation_Unit;
+      renames Append;
 
    ---------------------------
    -- Append_Component_Item --
@@ -398,12 +398,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Component_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Component_Item unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Component_Item";
-   end Append_Component_Item;
+      renames Append;
 
    -------------------------
    -- Append_Context_Item --
@@ -411,12 +406,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Context_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Context_Item unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Context_Item";
-   end Append_Context_Item;
+      renames Append;
 
    -----------------------------
    -- Append_Declarative_Item --
@@ -424,13 +414,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Declarative_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Declarative_Item unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Declarative_Item";
-   end Append_Declarative_Item;
+      renames Append;
 
    --------------------------------
    -- Append_Defining_Identifier --
@@ -438,13 +422,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Defining_Identifier
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Defining_Identifier unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Defining_Identifier";
-   end Append_Defining_Identifier;
+      renames Append;
 
    ----------------------------
    -- Append_Discrete_Choice --
@@ -452,13 +430,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Discrete_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Discrete_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Discrete_Choice";
-   end Append_Discrete_Choice;
+      renames Append;
 
    ----------------------------------------
    -- Append_Discrete_Subtype_Definition --
@@ -466,13 +438,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Discrete_Subtype_Definition
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Discrete_Subtype_Definition unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Discrete_Subtype_Definition";
-   end Append_Discrete_Subtype_Definition;
+      renames Append;
 
    ---------------------------------------
    -- Append_Discriminant_Specification --
@@ -480,13 +446,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Discriminant_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Discriminant_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Discriminant_Specification";
-   end Append_Discriminant_Specification;
+      renames Append;
 
    ----------------------------------------------
    -- Append_Enumeration_Literal_Specification --
@@ -494,13 +454,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Enumeration_Literal_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Enumeration_Literal_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented Append_Enumeration_Literal_Specification";
-   end Append_Enumeration_Literal_Specification;
+      renames Append;
 
    -----------------------------
    -- Append_Exception_Choice --
@@ -508,13 +462,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Exception_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Exception_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Exception_Choice";
-   end Append_Exception_Choice;
+      renames Append;
 
    ------------------------------
    -- Append_Exception_Handler --
@@ -522,13 +470,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Exception_Handler
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Exception_Handler unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Exception_Handler";
-   end Append_Exception_Handler;
+      renames Append;
 
    --------------------------------
    -- Append_Generic_Association --
@@ -536,13 +478,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Generic_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Generic_Association unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Generic_Association";
-   end Append_Generic_Association;
+      renames Append;
 
    ---------------------------
    -- Append_Generic_Formal --
@@ -550,12 +486,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Generic_Formal
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Generic_Formal unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Generic_Formal";
-   end Append_Generic_Formal;
+      renames Append;
 
    ------------------------------------
    -- Append_If_Else_Expression_Path --
@@ -563,13 +494,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_If_Else_Expression_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_If_Else_Expression_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_If_Else_Expression_Path";
-   end Append_If_Else_Expression_Path;
+      renames Append;
 
    -------------------------------
    -- Append_If_Elsif_Else_Path --
@@ -577,13 +502,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_If_Elsif_Else_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_If_Elsif_Else_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_If_Elsif_Else_Path";
-   end Append_If_Elsif_Else_Path;
+      renames Append;
 
    ------------------------------
    -- Append_Membership_Choice --
@@ -591,13 +510,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Membership_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Membership_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Membership_Choice";
-   end Append_Membership_Choice;
+      renames Append;
 
    -----------------
    -- Append_Name --
@@ -605,11 +518,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Name
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Append_Name unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Name";
-   end Append_Name;
+      renames Append;
 
    ------------------------------------
    -- Append_Parameter_Specification --
@@ -617,13 +526,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Parameter_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Parameter_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Parameter_Specification";
-   end Append_Parameter_Specification;
+      renames Append;
 
    ----------------------------------------
    -- Append_Pragma_Argument_Association --
@@ -631,13 +534,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Pragma_Argument_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Pragma_Argument_Association unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Pragma_Argument_Association";
-   end Append_Pragma_Argument_Association;
+      renames Append;
 
    ------------------------------
    -- Append_Program_Unit_Name --
@@ -645,13 +542,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Program_Unit_Name
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Program_Unit_Name unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Program_Unit_Name";
-   end Append_Program_Unit_Name;
+      renames Append;
 
    ------------------------------------------
    -- Append_Protected_Element_Declaration --
@@ -659,13 +550,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Protected_Element_Declaration
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Protected_Element_Declaration unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Protected_Element_Declaration";
-   end Append_Protected_Element_Declaration;
+      renames Append;
 
    --------------------------------------------
    -- Append_Protected_Operation_Declaration --
@@ -673,13 +558,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Protected_Operation_Declaration
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Protected_Operation_Declaration unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Protected_Operation_Declaration";
-   end Append_Protected_Operation_Declaration;
+      renames Append;
 
    -------------------------------------
    -- Append_Protected_Operation_Item --
@@ -687,13 +566,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Protected_Operation_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Protected_Operation_Item unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Protected_Operation_Item";
-   end Append_Protected_Operation_Item;
+      renames Append;
 
    --------------------------------
    -- Append_Select_Or_Else_Path --
@@ -701,13 +574,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Select_Or_Else_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Select_Or_Else_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Select_Or_Else_Path";
-   end Append_Select_Or_Else_Path;
+      renames Append;
 
    -----------------------------------
    -- Append_Select_Then_Abort_Path --
@@ -715,13 +582,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Select_Then_Abort_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Select_Then_Abort_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Append_Select_Then_Abort_Path";
-   end Append_Select_Then_Abort_Path;
+      renames Append;
 
    ----------------------
    -- Append_Statement --
@@ -729,12 +590,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Statement
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Statement unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Statement";
-   end Append_Statement;
+      renames Append;
 
    -------------------------
    -- Append_Subtype_Mark --
@@ -742,12 +598,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Subtype_Mark
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Subtype_Mark unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Subtype_Mark";
-   end Append_Subtype_Mark;
+      renames Append;
 
    --------------------
    -- Append_Variant --
@@ -755,12 +606,7 @@ package body Program.Parsers.Nodes is
 
    procedure Append_Variant
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Append_Variant unimplemented");
-      raise Program_Error with "Unimplemented procedure Append_Variant";
-   end Append_Variant;
+      renames Append;
 
    --------------------------
    -- Aspect_Specification --
@@ -782,11 +628,7 @@ package body Program.Parsers.Nodes is
    -----------------------------------
 
    function Aspect_Specification_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Aspect_Specification_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------------
    -- Assignment_Statement --
@@ -836,10 +678,8 @@ package body Program.Parsers.Nodes is
    -- Association_Sequence --
    --------------------------
 
-   function Association_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Association_Sequence;
+   function Association_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -------------------------
    -- Asynchronous_Select --
@@ -910,11 +750,7 @@ package body Program.Parsers.Nodes is
    -------------------------------------
 
    function Basic_Declarative_Item_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Basic_Declarative_Item_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------
    -- Block_Statement --
@@ -978,11 +814,7 @@ package body Program.Parsers.Nodes is
    -----------------------------------
 
    function Case_Expression_Path_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Case_Expression_Path_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------
    -- Case_Path --
@@ -1001,10 +833,8 @@ package body Program.Parsers.Nodes is
    -- Case_Path_Sequence --
    ------------------------
 
-   function Case_Path_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Case_Path_Sequence;
+   function Case_Path_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------
    -- Case_Statement --
@@ -1053,11 +883,8 @@ package body Program.Parsers.Nodes is
    -- Clause_Or_Pragma_Sequence --
    -------------------------------
 
-   function Clause_Or_Pragma_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Clause_Or_Pragma_Sequence;
+   function Clause_Or_Pragma_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -----------------
    -- Compilation --
@@ -1177,10 +1004,8 @@ package body Program.Parsers.Nodes is
    -- Component_Item_Sequence --
    -----------------------------
 
-   function Component_Item_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Component_Item_Sequence;
+   function Component_Item_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ----------------------------------
    -- Constrained_Array_Definition --
@@ -1202,10 +1027,8 @@ package body Program.Parsers.Nodes is
    -- Context_Item_Sequence --
    ---------------------------
 
-   function Context_Item_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Context_Item_Sequence;
+   function Context_Item_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ------------------------------------
    -- Decimal_Fixed_Point_Definition --
@@ -1227,11 +1050,8 @@ package body Program.Parsers.Nodes is
    -- Declarative_Item_Sequence --
    -------------------------------
 
-   function Declarative_Item_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Declarative_Item_Sequence;
+   function Declarative_Item_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------------------
    -- Defining_Character_Literal --
@@ -1255,10 +1075,10 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Identifier : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Defining_Enumeration_Literal unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Defining_Enumeration_Literal";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Defining_Identifier (Identifier.Token)));
    end Defining_Enumeration_Literal;
 
    -------------------------
@@ -1280,11 +1100,7 @@ package body Program.Parsers.Nodes is
    ----------------------------------
 
    function Defining_Identifier_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Defining_Identifier_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ------------------------------
    -- Defining_Operator_Symbol --
@@ -1380,10 +1196,8 @@ package body Program.Parsers.Nodes is
    -- Discrete_Choice_Sequence --
    ------------------------------
 
-   function Discrete_Choice_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Discrete_Choice_Sequence;
+   function Discrete_Choice_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ----------------------------------------
    -- Discrete_Range_Attribute_Reference --
@@ -1419,11 +1233,7 @@ package body Program.Parsers.Nodes is
    ------------------------------------------
 
    function Discrete_Subtype_Definition_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Discrete_Subtype_Definition_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------------
    -- Discrete_Subtype_Indication --
@@ -1476,11 +1286,7 @@ package body Program.Parsers.Nodes is
    -----------------------------------------
 
    function Discriminant_Specification_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Discriminant_Specification_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ------------------------------------
    -- Element_Iterator_Specification --
@@ -1616,10 +1422,12 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Names : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Enumeration_Literal_Specification unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Enumeration_Literal_Specification";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Enumeration_Literal_Specification
+             (Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+                (Names.Element))));
    end Enumeration_Literal_Specification;
 
    ------------------------------------------------
@@ -1627,36 +1435,36 @@ package body Program.Parsers.Nodes is
    ------------------------------------------------
 
    function Enumeration_Literal_Specification_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Enumeration_Literal_Specification_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------------
    -- Enumeration_Type_Definition --
    ---------------------------------
 
    function Enumeration_Type_Definition
-     (Self                             : Node_Factory'Class; Left_Token : Node;
-      Enumeration_Literal_Declarations : Node; Right_Token : Node) return Node
+     (Self        : Node_Factory'Class;
+      Left_Token  : Node;
+      Literals    : Node;
+      Right_Token : Node) return Node
    is
+      List : Program.Elements.Enumeration_Literal_Specifications
+        .Enumeration_Literal_Specification_Vector_Access :=
+          To_Enumeration_Literal_Specification_Vector
+            (Literals.Vector'Unchecked_Access, Self.Subpool);
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Enumeration_Type_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Enumeration_Type_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Enumeration_Type
+                (Left_Token.Token, List, Right_Token.Token)));
    end Enumeration_Type_Definition;
 
    -------------------------------
    -- Exception_Choice_Sequence --
    -------------------------------
 
-   function Exception_Choice_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Exception_Choice_Sequence;
+   function Exception_Choice_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------
    -- Exception_Declaration --
@@ -1695,11 +1503,8 @@ package body Program.Parsers.Nodes is
    -- Exception_Handler_Sequence --
    --------------------------------
 
-   function Exception_Handler_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Exception_Handler_Sequence;
+   function Exception_Handler_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ------------------------------------
    -- Exception_Renaming_Declaration --
@@ -2249,20 +2054,14 @@ package body Program.Parsers.Nodes is
    ----------------------------------
 
    function Generic_Association_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Generic_Association_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -----------------------------
    -- Generic_Formal_Sequence --
    -----------------------------
 
-   function Generic_Formal_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Generic_Formal_Sequence;
+   function Generic_Formal_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ----------------------------------
    -- Generic_Function_Declaration --
@@ -2416,21 +2215,14 @@ package body Program.Parsers.Nodes is
    --------------------------------------
 
    function If_Else_Expression_Path_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end If_Else_Expression_Path_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------------
    -- If_Elsif_Else_Path_Sequence --
    ---------------------------------
 
-   function If_Elsif_Else_Path_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end If_Elsif_Else_Path_Sequence;
+   function If_Elsif_Else_Path_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -------------------
    -- If_Expression --
@@ -2609,11 +2401,8 @@ package body Program.Parsers.Nodes is
    -- Membership_Choice_Sequence --
    --------------------------------
 
-   function Membership_Choice_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Membership_Choice_Sequence;
+   function Membership_Choice_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------
    -- Membership_Test --
@@ -2645,14 +2434,21 @@ package body Program.Parsers.Nodes is
           with "Unimplemented function Modular_Type_Definition";
    end Modular_Type_Definition;
 
+   --------------------------
+   -- New_Element_Sequence --
+   --------------------------
+
+   function New_Element_Sequence (Self : Node_Factory'Class) return Node is
+   begin
+      return (Element_Sequence_Node,   Element_Vectors.Empty_Vector);
+   end New_Element_Sequence;
+
    -------------------
    -- Name_Sequence --
    -------------------
 
-   function Name_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Name_Sequence;
+   function Name_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------
    -- Null_Component --
@@ -2939,11 +2735,7 @@ package body Program.Parsers.Nodes is
    --------------------------------------
 
    function Parameter_Specification_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Parameter_Specification_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------------
    -- Pragma_Argument_Association --
@@ -2965,11 +2757,7 @@ package body Program.Parsers.Nodes is
    ------------------------------------------
 
    function Pragma_Argument_Association_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Pragma_Argument_Association_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -----------------
    -- Pragma_Node --
@@ -2985,19 +2773,25 @@ package body Program.Parsers.Nodes is
       return raise Program_Error with "Unimplemented function Pragma_Node";
    end Pragma_Node;
 
+   -------------
+   -- Prepend --
+   -------------
+
+   procedure Prepend
+     (Self : Node_Factory'Class;
+      List : in out Node;
+      Item : Node) is
+   begin
+      List.Vector.Prepend (Item.Element);
+   end Prepend;
+
    ----------------------------------
    -- Prepend_Aspect_Specification --
    ----------------------------------
 
    procedure Prepend_Aspect_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Aspect_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Aspect_Specification";
-   end Prepend_Aspect_Specification;
+     renames Prepend;
 
    -------------------------
    -- Prepend_Association --
@@ -3005,12 +2799,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Association unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Association";
-   end Prepend_Association;
+     renames Prepend;
 
    ----------------------------------
    -- Prepend_Case_Expression_Path --
@@ -3018,13 +2807,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Case_Expression_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Case_Expression_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Case_Expression_Path";
-   end Prepend_Case_Expression_Path;
+     renames Prepend;
 
    -----------------------
    -- Prepend_Case_Path --
@@ -3032,12 +2815,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Case_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Case_Path unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Case_Path";
-   end Prepend_Case_Path;
+     renames Prepend;
 
    ------------------------------
    -- Prepend_Compilation_Unit --
@@ -3055,13 +2833,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Component_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Component_Item unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Component_Item";
-   end Prepend_Component_Item;
+     renames Prepend;
 
    ------------------------------
    -- Prepend_Declarative_Item --
@@ -3069,13 +2841,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Declarative_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Declarative_Item unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Declarative_Item";
-   end Prepend_Declarative_Item;
+     renames Prepend;
 
    ---------------------------------
    -- Prepend_Defining_Identifier --
@@ -3083,13 +2849,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Defining_Identifier
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Defining_Identifier unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Defining_Identifier";
-   end Prepend_Defining_Identifier;
+     renames Prepend;
 
    -----------------------------
    -- Prepend_Discrete_Choice --
@@ -3097,13 +2857,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Discrete_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Discrete_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Discrete_Choice";
-   end Prepend_Discrete_Choice;
+     renames Prepend;
 
    -----------------------------------------
    -- Prepend_Discrete_Subtype_Definition --
@@ -3111,13 +2865,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Discrete_Subtype_Definition
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Discrete_Subtype_Definition unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Discrete_Subtype_Definition";
-   end Prepend_Discrete_Subtype_Definition;
+     renames Prepend;
 
    ----------------------------------------
    -- Prepend_Discriminant_Specification --
@@ -3125,13 +2873,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Discriminant_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Discriminant_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Discriminant_Specification";
-   end Prepend_Discriminant_Specification;
+     renames Prepend;
 
    -----------------------------------------------
    -- Prepend_Enumeration_Literal_Specification --
@@ -3139,13 +2881,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Enumeration_Literal_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Enumeration_Literal_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented Prepend_Enumeration_Literal_Specification";
-   end Prepend_Enumeration_Literal_Specification;
+     renames Prepend;
 
    ------------------------------
    -- Prepend_Exception_Choice --
@@ -3153,13 +2889,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Exception_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Exception_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Exception_Choice";
-   end Prepend_Exception_Choice;
+     renames Prepend;
 
    -------------------------------
    -- Prepend_Exception_Handler --
@@ -3167,13 +2897,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Exception_Handler
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Exception_Handler unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Exception_Handler";
-   end Prepend_Exception_Handler;
+     renames Prepend;
 
    ---------------------------------
    -- Prepend_Generic_Association --
@@ -3181,13 +2905,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Generic_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Generic_Association unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Generic_Association";
-   end Prepend_Generic_Association;
+     renames Prepend;
 
    -------------------------------------
    -- Prepend_If_Else_Expression_Path --
@@ -3195,13 +2913,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_If_Else_Expression_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_If_Else_Expression_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_If_Else_Expression_Path";
-   end Prepend_If_Else_Expression_Path;
+     renames Prepend;
 
    --------------------------------
    -- Prepend_If_Elsif_Else_Path --
@@ -3209,13 +2921,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_If_Elsif_Else_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_If_Elsif_Else_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_If_Elsif_Else_Path";
-   end Prepend_If_Elsif_Else_Path;
+     renames Prepend;
 
    -------------------------------
    -- Prepend_Membership_Choice --
@@ -3223,13 +2929,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Membership_Choice
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Membership_Choice unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Membership_Choice";
-   end Prepend_Membership_Choice;
+     renames Prepend;
 
    ------------------
    -- Prepend_Name --
@@ -3237,12 +2937,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Name
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Name unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Name";
-   end Prepend_Name;
+      renames Prepend;
 
    -------------------------------------
    -- Prepend_Parameter_Specification --
@@ -3250,13 +2945,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Parameter_Specification
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Parameter_Specification unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Parameter_Specification";
-   end Prepend_Parameter_Specification;
+     renames Prepend;
 
    -----------------------------------------
    -- Prepend_Pragma_Argument_Association --
@@ -3264,13 +2953,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Pragma_Argument_Association
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Pragma_Argument_Association unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Pragma_Argument_Association";
-   end Prepend_Pragma_Argument_Association;
+     renames Prepend;
 
    -------------------------------
    -- Prepend_Program_Unit_Name --
@@ -3278,13 +2961,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Program_Unit_Name
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Program_Unit_Name unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Program_Unit_Name";
-   end Prepend_Program_Unit_Name;
+     renames Prepend;
 
    ---------------------------------
    -- Prepend_Select_Or_Else_Path --
@@ -3292,13 +2969,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Select_Or_Else_Path
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Select_Or_Else_Path unimplemented");
-      raise Program_Error
-        with "Unimplemented procedure Prepend_Select_Or_Else_Path";
-   end Prepend_Select_Or_Else_Path;
+     renames Prepend;
 
    -----------------------
    -- Prepend_Statement --
@@ -3306,12 +2977,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Statement
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Statement unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Statement";
-   end Prepend_Statement;
+     renames Prepend;
 
    --------------------------
    -- Prepend_Subtype_Mark --
@@ -3319,12 +2985,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Subtype_Mark
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Subtype_Mark unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Subtype_Mark";
-   end Prepend_Subtype_Mark;
+     renames Prepend;
 
    -----------------------
    -- Prepend_Task_Item --
@@ -3332,12 +2993,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Task_Item
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Task_Item unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Task_Item";
-   end Prepend_Task_Item;
+     renames Prepend;
 
    ---------------------
    -- Prepend_Variant --
@@ -3345,12 +3001,7 @@ package body Program.Parsers.Nodes is
 
    procedure Prepend_Variant
      (Self : Node_Factory'Class; List : in out Node; Item : Node)
-   is
-   begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Prepend_Variant unimplemented");
-      raise Program_Error with "Unimplemented procedure Prepend_Variant";
-   end Prepend_Variant;
+     renames Prepend;
 
    -----------------------------------
    -- Private_Extension_Declaration --
@@ -3491,11 +3142,8 @@ package body Program.Parsers.Nodes is
    -- Program_Unit_Name_Sequence --
    --------------------------------
 
-   function Program_Unit_Name_Sequence (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Program_Unit_Name_Sequence;
+   function Program_Unit_Name_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------
    -- Protected_Body --
@@ -3550,33 +3198,21 @@ package body Program.Parsers.Nodes is
    --------------------------------------------
 
    function Protected_Element_Declaration_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Protected_Element_Declaration_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ----------------------------------------------
    -- Protected_Operation_Declaration_Sequence --
    ----------------------------------------------
 
    function Protected_Operation_Declaration_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Protected_Operation_Declaration_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------------------
    -- Protected_Operation_Item_Sequence --
    ---------------------------------------
 
    function Protected_Operation_Item_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Protected_Operation_Item_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------------------
    -- Protected_Type_Declaration --
@@ -3758,11 +3394,7 @@ package body Program.Parsers.Nodes is
    ----------------------------------
 
    function Select_Or_Else_Path_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Select_Or_Else_Path_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------
    -- Select_Or_Path --
@@ -3784,11 +3416,7 @@ package body Program.Parsers.Nodes is
    -------------------------------------
 
    function Select_Then_Abort_Path_Sequence
-     (Self : Node_Factory'Class) return Node
-   is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Select_Then_Abort_Path_Sequence;
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ------------------------
    -- Selected_Component --
@@ -3950,10 +3578,8 @@ package body Program.Parsers.Nodes is
    -- Statement_Sequence --
    ------------------------
 
-   function Statement_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Statement_Sequence;
+   function Statement_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -------------------------
    -- Subtype_Declaration --
@@ -3975,10 +3601,8 @@ package body Program.Parsers.Nodes is
    -- Subtype_Mark_Sequence --
    ---------------------------
 
-   function Subtype_Mark_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Subtype_Mark_Sequence;
+   function Subtype_Mark_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    -------------
    -- Subunit --
@@ -4046,10 +3670,8 @@ package body Program.Parsers.Nodes is
    -- Task_Item_Sequence --
    ------------------------
 
-   function Task_Item_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Task_Item_Sequence;
+   function Task_Item_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    ---------------------------
    -- Task_Type_Declaration --
@@ -4247,10 +3869,8 @@ package body Program.Parsers.Nodes is
    -- Variant_Sequence --
    ----------------------
 
-   function Variant_Sequence (Self : Node_Factory'Class) return Node is
-   begin
-      return (Element_Sequence_Node, Element_Vectors.Empty_Vector);
-   end Variant_Sequence;
+   function Variant_Sequence
+     (Self : Node_Factory'Class) return Node renames New_Element_Sequence;
 
    --------------------------
    -- While_Loop_Statement --
