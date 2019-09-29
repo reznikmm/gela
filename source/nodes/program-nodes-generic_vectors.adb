@@ -4,11 +4,11 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-package body Program.Nodes.Vectors is
+package body Program.Nodes.Generic_Vectors is
 
-   -------------------
-   -- Create_Vector --
-   -------------------
+   ------------
+   -- Create --
+   ------------
 
    function Create
      (Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
@@ -48,9 +48,8 @@ package body Program.Nodes.Vectors is
    ---------------
 
    overriding function Delimiter
-     (Self  : Vector;
-      Index : Positive)
-      return Program.Lexical_Elements.Lexical_Element_Access is
+     (Self : Vector; Index : Positive)
+        return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       if Index in Self.Token_List'Range then
          return Self.Token_List (Index);
@@ -58,6 +57,16 @@ package body Program.Nodes.Vectors is
          return null;
       end if;
    end Delimiter;
+
+   -------------
+   -- Element --
+   -------------
+
+   overriding function Element (Self : Vector; Index : Positive)
+      return not null Program.Elements.Element_Access is
+   begin
+      return Self.Element_List (Index);
+   end Element;
 
    ----------------
    -- Get_Length --
@@ -68,16 +77,4 @@ package body Program.Nodes.Vectors is
       return Self.Elements;
    end Get_Length;
 
-   -------------
-   -- Element --
-   -------------
-
-   overriding function Element
-     (Self  : Vector;
-      Index : Positive)
-        return not null Program.Elements.Element_Access is
-   begin
-      return Self.Element_List (Index);
-   end Element;
-
-end Program.Nodes.Vectors;
+end Program.Nodes.Generic_Vectors;

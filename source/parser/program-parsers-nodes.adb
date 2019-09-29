@@ -10,25 +10,23 @@ with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
-with Program.Nodes.Vectors;
+with Program.Element_Vector_Factories;
 with Program.Storage_Pools;
 with Program.Units.Declarations;
 
 package body Program.Parsers.Nodes is
 
    generic
-      type Vector is limited interface;
-      type Vector_Access is access all Vector'Class;
-      type Vector_Instance (<>) is new Vector with private;
-      with function Create
-        (Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
-         return Vector_Instance is <>;
-   package Generic_Vector_Cast is
-      function To_Vector
-        (Value   : access constant Element_Vectors.Vector;
-         Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-           return Vector_Access;
-   end Generic_Vector_Cast;
+      type Vector_Access is private;
+
+      with function Create_Vector
+        (Self : Program.Element_Vector_Factories.Element_Vector_Factory;
+         Each : Program.Element_Vectors.Iterators.Forward_Iterator'Class)
+       return Vector_Access;
+   function Generic_Vector_Cast
+     (Value   : access constant Element_Vectors.Vector;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+         return Vector_Access;
 
    type Forward_Iterator;
 
@@ -109,70 +107,37 @@ package body Program.Parsers.Nodes is
       return (Vector => V);
    end Iter;
 
-   package body Generic_Vector_Cast is
-      type Vector_Ref is access Vector_Instance
-        with Storage_Pool => Program.Storage_Pools.Pool;
+   -------------------------
+   -- Generic_Vector_Cast --
+   -------------------------
 
-      function To_Vector
-        (Value   : access constant Element_Vectors.Vector;
-         Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-           return Vector_Access
-      is
-         Result : Vector_Ref;
-      begin
-         if Value.Is_Empty then
-            return null;
-         else
-            Result := new (Subpool) Vector_Instance'(Create (Iter (Value)));
-            return Vector_Access (Result);
-         end if;
-      end To_Vector;
+   function Generic_Vector_Cast
+     (Value   : access constant Element_Vectors.Vector;
+      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+         return Vector_Access
+   is
+      Fact : Program.Element_Vector_Factories.Element_Vector_Factory (Subpool);
+   begin
+      return Create_Vector (Fact, Iter (Value));
    end Generic_Vector_Cast;
 
-   package Aspect_Specification_Vector_Cast is new Generic_Vector_Cast
-     (Vector        => Program.Elements
-         .Aspect_Specifications.Aspect_Specification_Vector,
-      Vector_Access => Program.Elements
+   function To_Aspect_Specification_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements
          .Aspect_Specifications.Aspect_Specification_Vector_Access,
-      Vector_Instance => Program.Nodes.Vectors.Vector,
-      Create => Program.Nodes.Vectors.Create);
+      Create_Vector =>
+         Program.Element_Vector_Factories.Create_Aspect_Specification_Vector);
 
-   function To_Aspect_Specification_Vector
-     (Value   : access constant Element_Vectors.Vector;
-      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-        return Program.Elements.Aspect_Specifications
-          .Aspect_Specification_Vector_Access
-             renames Aspect_Specification_Vector_Cast.To_Vector;
-
-   package Enumeration_Literal_Specification_Vector_Cast is
+   function To_Enumeration_Literal_Specification_Vector is
      new Generic_Vector_Cast
-       (Vector        => Program.Elements
-                           .Enumeration_Literal_Specifications
-                              .Enumeration_Literal_Specification_Vector,
-        Vector_Access => Program.Elements
-                           .Enumeration_Literal_Specifications
-                              .Enumeration_Literal_Specification_Vector_Access,
-        Vector_Instance => Program.Nodes.Vectors.Vector,
-        Create => Program.Nodes.Vectors.Create);
+       (Vector_Access => Program.Elements
+           .Enumeration_Literal_Specifications
+              .Enumeration_Literal_Specification_Vector_Access,
+        Create_Vector => Program.Element_Vector_Factories
+           .Create_Enumeration_Literal_Specification_Vector);
 
-   function To_Enumeration_Literal_Specification_Vector
-     (Value   : access constant Element_Vectors.Vector;
-      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-        return Program.Elements.Enumeration_Literal_Specifications
-          .Enumeration_Literal_Specification_Vector_Access
-             renames Enumeration_Literal_Specification_Vector_Cast.To_Vector;
-
-   package Element_Vector_Cast is new Generic_Vector_Cast
-     (Vector        => Program.Element_Vectors.Element_Vector,
-      Vector_Access => Program.Element_Vectors.Element_Vector_Access,
-      Vector_Instance => Program.Nodes.Vectors.Vector,
-      Create => Program.Nodes.Vectors.Create);
-
-   function To_Element_Vector
-     (Value   : access constant Element_Vectors.Vector;
-      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-        return Program.Element_Vectors.Element_Vector_Access
-           renames Element_Vector_Cast.To_Vector;
+   function To_Element_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Element_Vectors.Element_Vector_Access,
+      Create_Vector => Program.Element_Vector_Factories.Create_Element_Vector);
 
    pragma Warnings (Off);
 
