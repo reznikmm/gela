@@ -4,13 +4,14 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
+with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
 with Program.Elements.Aspect_Specifications;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
+with Program.Elements.Definitions;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
-with Program.Element_Vector_Factories;
 with Program.Storage_Pools;
 with Program.Units.Declarations;
 
@@ -69,7 +70,8 @@ package body Program.Parsers.Nodes is
       return Program.Element_Vectors.Element_Cursor is
    begin
       return
-        (Element   => Self.Vector.Element (1),
+        (Element   => (if Self.Vector.Is_Empty then null
+                       else Self.Vector.Element (1)),
          Delimiter => null,
          Index     => 1,
          Is_Last   => Self.Vector.Last_Index = 1);
@@ -893,7 +895,7 @@ package body Program.Parsers.Nodes is
         new (Self.Subpool) Program.Units.Declarations.Unit_Declaration;
       Clause : Program.Element_Vectors.Element_Vector_Access :=
         To_Element_Vector
-          (Context_Clause_Elements.Vector'Access, Self.Subpool);
+          (Context_Clause_Elements.Vector'Unchecked_Access, Self.Subpool);
    begin
       Result.Initialize
         (Compilation    => Self.Comp,
@@ -1920,10 +1922,23 @@ package body Program.Parsers.Nodes is
       Aspect_Specifications : Node; Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Full_Type_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Full_Type_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Type_Declaration
+                (Type_Token        => Type_Token.Token,
+                 Name              => Program.Elements.Defining_Identifiers
+                    .Defining_Identifier_Access (Names.Element),
+                 Discriminant_Part => Program.Elements.Definitions
+                    .Definition_Access (Discriminant_Part.Element),
+                 Is_Token          => Is_Token.Token,
+                 Definition        => Program.Elements.Definitions
+                    .Definition_Access (Type_Declaration_View.Element),
+                 With_Token        => null,  --  FIXME
+                 Aspects           => To_Aspect_Specification_Vector
+                   (Aspect_Specifications.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Semicolon_Token   => Semicolon_Token.Token)));
    end Full_Type_Declaration;
 
    -------------------
@@ -2632,7 +2647,8 @@ package body Program.Parsers.Nodes is
                      (Names.Element),
                  With_Token           => null,
                  Aspects              => To_Aspect_Specification_Vector
-                   (Aspect_Specifications.Vector'Access, Self.Subpool),
+                   (Aspect_Specifications.Vector'Unchecked_Access,
+                    Self.Subpool),
                  Is_Token             => Is_Token.Token,
                  Visible_Declarations => null,
                  Private_Token        => Private_Token.Token,
