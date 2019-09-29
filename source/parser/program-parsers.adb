@@ -185,8 +185,13 @@ package body Program.Parsers is
       Ok   : Boolean;
    begin
       Do_Parse (Context'Access, Context'Access, Root, Ok);
-      Program.Parsers.Nodes.Get_Compilation_Units
-        (Root, Units, Pragmas);
+
+      if Ok then
+         Program.Parsers.Nodes.Get_Compilation_Units
+           (Root, Units, Pragmas);
+      else
+         raise Constraint_Error with "Parsing error";
+      end if;
    end Parse;
 
 end Program.Parsers;

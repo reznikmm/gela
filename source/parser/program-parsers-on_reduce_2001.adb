@@ -901,8 +901,9 @@ begin
   Nodes (1) :=
      Self.Factory.Signed_Integer_Type_Definition
       (Nodes (1),
-       Self.Factory.Simple_Expression_Range
-         (Nodes (2), Nodes (3), Nodes (4)));
+       Nodes (2),
+       Nodes (3),
+       Nodes (4));
 
       when 2093 =>
   Nodes (1) := Self.Factory.Numeric_Literal
@@ -926,11 +927,11 @@ begin
 
       when 2100 =>
    Nodes (1) := Self.Factory.Infix_Call
-     (Nodes (1), Nodes (2), None);
+     (Nodes (1), None, Nodes (2));
 
       when 2101 =>
    Nodes (1) := Self.Factory.Infix_Call
-     (Nodes (1), Nodes (2), None);
+     (Nodes (1), None, Nodes (2));
 
       when 2102 =>
    Nodes (1) := Self.Factory.Infix_Call
@@ -954,11 +955,11 @@ begin
 
       when 2107 =>
   Nodes (1) := Self.Factory.Infix_Call
-     (Nodes (1), Nodes (2), None);
+     (Nodes (1), None, Nodes (2));
 
       when 2108 =>
    Nodes (1) := Self.Factory.Infix_Call
-     (Nodes (1), Nodes (2), None);
+     (Nodes (1), None, Nodes (2));
 
       when 2109 =>
  Nodes (1) := Self.Factory.Infix_Call

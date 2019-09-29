@@ -889,8 +889,11 @@ private package Program.Parsers.Nodes is
       return Node;
 
    function Signed_Integer_Type_Definition
-     (Self : Node_Factory'Class; Range_Token : Node; Integer_Constraint : Node)
-      return Node;
+     (Self : Node_Factory'Class;
+      Range_Token : Node;
+      Lower_Bound : Node;
+      Double_Dot_Token : Node;
+      Upper_Bound : Node) return Node;
 
    function Simple_Expression_Range
      (Self : Node_Factory'Class; Lower_Bound : Node; Double_Dot_Token : Node;

@@ -12,6 +12,7 @@ with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
+with Program.Elements.Operator_Symbols;
 with Program.Storage_Pools;
 with Program.Units.Declarations;
 
@@ -2296,9 +2297,18 @@ package body Program.Parsers.Nodes is
    function Infix_Call
      (Self : Node_Factory'Class; Prefix, Left, Right : Node) return Node
    is
+      Operator : Program.Elements.Operator_Symbols.Operator_Symbol_Access :=
+        Self.EF.Create_Operator_Symbol (Prefix.Token);
    begin
-      pragma Compile_Time_Warning (Standard.True, "Infix_Call unimplemented");
-      return raise Program_Error with "Unimplemented function Infix_Call";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Infix_Operator
+                (Left     => Program.Elements.Expressions.Expression_Access
+                               (Left.Element),
+                 Operator => Operator,
+                 Right    => Program.Elements.Expressions.Expression_Access
+                               (Right.Element))));
    end Infix_Call;
 
    -------------------------------
@@ -2510,9 +2520,10 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Numeric_Literal_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Numeric_Literal unimplemented");
-      return raise Program_Error with "Unimplemented function Numeric_Literal";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Numeric_Literal (Numeric_Literal_Token.Token)));
    end Numeric_Literal;
 
    ------------------------
@@ -3466,14 +3477,24 @@ package body Program.Parsers.Nodes is
    ------------------------------------
 
    function Signed_Integer_Type_Definition
-     (Self : Node_Factory'Class; Range_Token : Node; Integer_Constraint : Node)
+     (Self : Node_Factory'Class;
+      Range_Token : Node;
+      Lower_Bound : Node;
+      Double_Dot_Token : Node;
+      Upper_Bound : Node)
       return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Signed_Integer_Type_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Signed_Integer_Type_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Signed_Integer_Type
+             (Range_Token      => Range_Token.Token,
+              Lower_Bound => Program.Elements.Expressions.Expression_Access
+                               (Lower_Bound.Element),
+              Double_Dot_Token => Double_Dot_Token.Token,
+              Upper_Bound => Program.Elements.Expressions.Expression_Access
+                               (Upper_Bound.Element))));
    end Signed_Integer_Type_Definition;
 
    -----------------------------
@@ -3485,10 +3506,15 @@ package body Program.Parsers.Nodes is
       Upper_Bound : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Simple_Expression_Range unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Simple_Expression_Range";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Simple_Expression_Range
+             (Lower_Bound => Program.Elements.Expressions.Expression_Access
+                               (Lower_Bound.Element),
+              Double_Dot_Token => Double_Dot_Token.Token,
+              Upper_Bound => Program.Elements.Expressions.Expression_Access
+                               (Upper_Bound.Element))));
    end Simple_Expression_Range;
 
    --------------------------------

@@ -3822,8 +3822,9 @@ Rules for signed_integer_type_definition. :
 (.  ${signed_integer_type_definition.ast} :=
      Self.Factory.Signed_Integer_Type_Definition
       (${range_token.ast},
-       Self.Factory.Simple_Expression_Range
-         (${left.ast}, ${double_dot_token.ast}, ${right.ast}));
+       ${left.ast},
+       ${double_dot_token.ast},
+       ${right.ast});
 .)
 
 simple_expression ::=
@@ -3836,15 +3837,15 @@ simple_expression ::=
   left_parenthesis_token conditional_expression right_parenthesis_token |
 (quantified)
   left_parenthesis_token quantified_expression right_parenthesis_token |
-(abs) abs_token simple_expression <left> |
-(not) not_token simple_expression <left> |
+(abs) abs_token simple_expression <right> |
+(not) not_token simple_expression <right> |
 (power) simple_expression <left> double_star_token simple_expression <right> |
 (star)  simple_expression <left> star_token  simple_expression <right> |
 (slash) simple_expression <left> slash_token simple_expression <right> |
 (mod)   simple_expression <left> mod_token   simple_expression <right> |
 (rem)   simple_expression <left> rem_token   simple_expression <right> |
-(neg)   hyphen_token simple_expression <left> |
-(nop)   plus_token simple_expression <left> |
+(neg)   hyphen_token simple_expression <right> |
+(nop)   plus_token simple_expression <right> |
 (plus)  simple_expression <left> plus_token simple_expression <right> |
 (minus) simple_expression <left> hyphen_token simple_expression <right> |
 (amp)   simple_expression <left> ampersand_token simple_expression <right>
@@ -3880,12 +3881,12 @@ Rules for simple_expression.amp :
 
 Rules for simple_expression.neg :
 (.  ${simple_expression.ast} := Self.Factory.Infix_Call
-     (${hyphen_token.ast}, ${left.ast}, None);
+     (${hyphen_token.ast}, None, ${right.ast});
 .)
 
 Rules for simple_expression.nop :
 (.   ${simple_expression.ast} := Self.Factory.Infix_Call
-     (${plus_token.ast}, ${left.ast}, None);
+     (${plus_token.ast}, None, ${right.ast});
 .)
 
 Rules for simple_expression.star :
@@ -3915,12 +3916,12 @@ Rules for simple_expression.power :
 
 Rules for simple_expression.abs :
 (.   ${simple_expression.ast} := Self.Factory.Infix_Call
-     (${abs_token.ast}, ${left.ast}, None);
+     (${abs_token.ast}, None, ${right.ast});
 .)
 
 Rules for simple_expression.not :
 (.   ${simple_expression.ast} := Self.Factory.Infix_Call
-     (${not_token.ast}, ${left.ast}, None);
+     (${not_token.ast}, None, ${right.ast});
 .)
 
 Rules for simple_expression.numeric_literal_token :
