@@ -12,6 +12,7 @@ with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
+with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Storage_Pools;
 with Program.Units.Declarations;
@@ -707,10 +708,19 @@ package body Program.Parsers.Nodes is
       Attribute_Designator_Expressions : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Attribute_Reference unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Attribute_Reference";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Attribute_Reference
+                (Prefix => Program.Elements.Expressions.Expression_Access
+                     (Prefix.Element),
+                 Apostrophe_Token     => Apostrophe_Token.Token,
+                 Attribute_Designator =>
+                   Program.Elements.Identifiers.Identifier_Access
+                     (Attribute_Designator_Identifier.Element),
+                 Left_Bracket_Token   => null,  --  ???
+                 Expressions          => null,  --  ???
+                 Right_Bracket_Token  => null)));  --  ???
    end Attribute_Reference;
 
    -------------------------------------

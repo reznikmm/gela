@@ -1088,9 +1088,9 @@
  - Prefix                    : _[Expression]_
  - Apostrophe_Token          : Token
  - Attribute_Designator      : [Identifier]
- - Left_Bracket_Token        : Token
+ - Left_Bracket_Token        : Token?
  - Expressions               : _[Expression]_?
- - Right_Bracket_Token       : Token
+ - Right_Bracket_Token       : Token?
 
 ### Record_Aggregate
 > _[Expression]_

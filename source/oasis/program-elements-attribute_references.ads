@@ -48,12 +48,10 @@ package Program.Elements.Attribute_References is
 
    not overriding function Left_Bracket_Token
     (Self : Attribute_Reference_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Right_Bracket_Token
     (Self : Attribute_Reference_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Attribute_References;

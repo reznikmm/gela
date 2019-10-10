@@ -27,11 +27,9 @@ package Program.Nodes.Attribute_References is
          .Lexical_Element_Access;
      Attribute_Designator : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Left_Bracket_Token   : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+     Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Expressions          : Program.Elements.Expressions.Expression_Access;
-     Right_Bracket_Token  : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access)
       return Attribute_Reference;
 
    type Implicit_Attribute_Reference is
@@ -96,10 +94,8 @@ private
      with record
         Apostrophe_Token    : not null Program.Lexical_Elements
           .Lexical_Element_Access;
-        Left_Bracket_Token  : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
-        Right_Bracket_Token : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
+        Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
+        Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
      end record;
 
    overriding function To_Attribute_Reference_Text
@@ -113,11 +109,11 @@ private
 
    overriding function Left_Bracket_Token
     (Self : Attribute_Reference)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    overriding function Right_Bracket_Token
     (Self : Attribute_Reference)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    type Implicit_Attribute_Reference is
      new Base_Attribute_Reference

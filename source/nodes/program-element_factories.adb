@@ -3830,11 +3830,9 @@ package body Program.Element_Factories is
          .Lexical_Element_Access;
      Attribute_Designator : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Left_Bracket_Token   : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+     Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Expressions          : Program.Elements.Expressions.Expression_Access;
-     Right_Bracket_Token  : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Attribute_References
           .Attribute_Reference_Access is
       Result : constant Attribute_Reference_Access :=

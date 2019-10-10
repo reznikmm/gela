@@ -13,11 +13,9 @@ package body Program.Nodes.Attribute_References is
          .Lexical_Element_Access;
      Attribute_Designator : not null Program.Elements.Identifiers
          .Identifier_Access;
-     Left_Bracket_Token   : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+     Left_Bracket_Token   : Program.Lexical_Elements.Lexical_Element_Access;
      Expressions          : Program.Elements.Expressions.Expression_Access;
-     Right_Bracket_Token  : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Right_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access)
       return Attribute_Reference is
    begin
       return Result : Attribute_Reference :=
@@ -82,14 +80,14 @@ package body Program.Nodes.Attribute_References is
 
    overriding function Left_Bracket_Token
     (Self : Attribute_Reference)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Left_Bracket_Token;
    end Left_Bracket_Token;
 
    overriding function Right_Bracket_Token
     (Self : Attribute_Reference)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Right_Bracket_Token;
    end Right_Bracket_Token;
