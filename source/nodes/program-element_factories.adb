@@ -1375,8 +1375,7 @@ package body Program.Element_Factories is
 
    not overriding function Create_Enumeration_Literal_Specification
     (Self : Element_Factory;
-     Name : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access)
+     Name : not null Program.Elements.Defining_Names.Defining_Name_Access)
       return not null Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Access is
       Result : constant Enumeration_Literal_Specification_Access :=

@@ -1042,10 +1042,11 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class; Character_Literal : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Defining_Character_Literal unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Defining_Character_Literal";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Defining_Character_Literal
+                (Character_Literal.Token)));
    end Defining_Character_Literal;
 
    ----------------------------------
@@ -1407,7 +1408,7 @@ package body Program.Parsers.Nodes is
         (Element_Node,
          Program.Elements.Element_Access
            (Self.EF.Create_Enumeration_Literal_Specification
-             (Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+             (Program.Elements.Defining_Names.Defining_Name_Access
                 (Names.Element))));
    end Enumeration_Literal_Specification;
 

@@ -7,8 +7,7 @@
 package body Program.Nodes.Enumeration_Literal_Specifications is
 
    function Create
-    (Name : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access)
+    (Name : not null Program.Elements.Defining_Names.Defining_Name_Access)
       return Enumeration_Literal_Specification is
    begin
       return Result : Enumeration_Literal_Specification :=
@@ -19,8 +18,8 @@ package body Program.Nodes.Enumeration_Literal_Specifications is
    end Create;
 
    function Create
-    (Name                 : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access;
+    (Name                 : not null Program.Elements.Defining_Names
+         .Defining_Name_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -37,8 +36,7 @@ package body Program.Nodes.Enumeration_Literal_Specifications is
 
    overriding function Name
     (Self : Base_Enumeration_Literal_Specification)
-      return not null Program.Elements.Defining_Identifiers
-          .Defining_Identifier_Access is
+      return not null Program.Elements.Defining_Names.Defining_Name_Access is
    begin
       return Self.Name;
    end Name;

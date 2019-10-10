@@ -1396,8 +1396,8 @@ package body Program.Implicit_Element_Factories is
 
    not overriding function Create_Enumeration_Literal_Specification
     (Self : Element_Factory;
-     Name                 : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access;
+     Name                 : not null Program.Elements.Defining_Names
+         .Defining_Name_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)

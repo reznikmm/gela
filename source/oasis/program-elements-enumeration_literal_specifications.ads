@@ -6,7 +6,7 @@
 
 with Program.Element_Vectors;
 with Program.Elements.Declarations;
-with Program.Elements.Defining_Identifiers;
+with Program.Elements.Defining_Names;
 
 package Program.Elements.Enumeration_Literal_Specifications is
 
@@ -20,8 +20,8 @@ package Program.Elements.Enumeration_Literal_Specifications is
 
    not overriding function Name
     (Self : Enumeration_Literal_Specification)
-      return not null Program.Elements.Defining_Identifiers
-          .Defining_Identifier_Access is abstract;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access
+     is abstract;
 
    type Enumeration_Literal_Specification_Text is limited interface;
 

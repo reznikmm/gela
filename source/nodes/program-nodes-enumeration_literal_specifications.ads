@@ -4,7 +4,7 @@
 --  License-Filename: LICENSE
 -------------------------------------------------------------
 
-with Program.Elements.Defining_Identifiers;
+with Program.Elements.Defining_Names;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Element_Visitors;
 
@@ -21,8 +21,7 @@ package Program.Nodes.Enumeration_Literal_Specifications is
      with private;
 
    function Create
-    (Name : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access)
+    (Name : not null Program.Elements.Defining_Names.Defining_Name_Access)
       return Enumeration_Literal_Specification;
 
    type Implicit_Enumeration_Literal_Specification is
@@ -32,8 +31,8 @@ package Program.Nodes.Enumeration_Literal_Specifications is
      with private;
 
    function Create
-    (Name                 : not null Program.Elements.Defining_Identifiers
-         .Defining_Identifier_Access;
+    (Name                 : not null Program.Elements.Defining_Names
+         .Defining_Name_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -47,8 +46,7 @@ private
        and Program.Elements.Enumeration_Literal_Specifications
          .Enumeration_Literal_Specification
      with record
-        Name : not null Program.Elements.Defining_Identifiers
-          .Defining_Identifier_Access;
+        Name : not null Program.Elements.Defining_Names.Defining_Name_Access;
      end record;
 
    procedure Initialize
@@ -60,8 +58,7 @@ private
 
    overriding function Name
     (Self : Base_Enumeration_Literal_Specification)
-      return not null Program.Elements.Defining_Identifiers
-          .Defining_Identifier_Access;
+      return not null Program.Elements.Defining_Names.Defining_Name_Access;
 
    overriding function Is_Enumeration_Literal_Specification_Element
     (Self : Base_Enumeration_Literal_Specification)

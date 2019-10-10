@@ -1405,10 +1405,8 @@ package body Internal is
      (Element      =>
         Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification,
-      Child        =>
-        Program.Elements.Defining_Identifiers.Defining_Identifier,
-      Child_Access =>
-        Program.Elements.Defining_Identifiers.Defining_Identifier_Access,
+      Child        => Program.Elements.Defining_Names.Defining_Name,
+      Child_Access => Program.Elements.Defining_Names.Defining_Name_Access,
       Get_Child    =>
         Program.Elements.Enumeration_Literal_Specifications.Name);
 

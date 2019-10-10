@@ -163,7 +163,7 @@
 
 ### Enumeration_Literal_Specification
 > _[Declaration]_
- - Name                       : [Defining_Identifier]
+ - Name                       : _[Defining_Name]_ {[Defining_Identifier],[Defining_Character_Literal]}
 
 ### Discriminant_Specification
 > _[Declaration]_
