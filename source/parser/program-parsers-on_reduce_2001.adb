@@ -249,8 +249,8 @@ begin
   Nodes (1) := Nodes (2);
 
       when 2029 =>
- Nodes (1) := Self.Factory.Simple_Expression_Range
-     (Nodes (2), Nodes (3), Nodes (4));
+ Nodes (1) := Self.Factory.Real_Range_Specification
+     (Nodes (1), Nodes (2), Nodes (3), Nodes (4));
 
       when 2030 =>
  Nodes (1) := Self.Factory.To_Aggregate_Or_Expression

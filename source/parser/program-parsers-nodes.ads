@@ -829,6 +829,13 @@ private package Program.Parsers.Nodes is
    --     function Record_Aggregate
    --       (Self : Node_Factory'Class; Associations : Node) return Node;
 
+   function Real_Range_Specification
+     (Self : Node_Factory'Class;
+      Range_Token : Node;
+      Lower_Bound : Node;
+      Double_Dot_Token : Node;
+      Upper_Bound : Node) return Node;
+
    function Record_Definition
      (Self : Node_Factory'Class; Record_Token : Node; Record_Components : Node;
       End_Token : Node; End_Record_Token : Node) return Node;

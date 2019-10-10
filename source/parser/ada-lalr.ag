@@ -3465,8 +3465,8 @@ real_range_specification ::=
   simple_expression <left> double_dot_token simple_expression <right>;
 
 Rules for real_range_specification. :
-(. ${real_range_specification.ast} := Self.Factory.Simple_Expression_Range
-     (${left.ast}, ${double_dot_token.ast}, ${right.ast});
+(. ${real_range_specification.ast} := Self.Factory.Real_Range_Specification
+     (${range_token.ast}, ${left.ast}, ${double_dot_token.ast}, ${right.ast});
 .)
 
 record_aggregate ::= association_list;

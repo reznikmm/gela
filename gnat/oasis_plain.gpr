@@ -21,4 +21,8 @@ project Oasis_Plain is
       for Default_Switches ("ada") use Oasis.Check_Ada_Switches;
    end Compiler;
 
+   package Remote renames Oasis.Remote;
+
+   package Builder renames Oasis.Builder;
+
 end Oasis_Plain;

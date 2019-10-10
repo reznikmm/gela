@@ -33,4 +33,7 @@ library project Oasis is
       for Root_Dir use "..";
    end Remote;
 
+   package Builder is
+      for Switches (others) use ("-m2");  --  minimum recompilation
+   end Builder;
 end Oasis;

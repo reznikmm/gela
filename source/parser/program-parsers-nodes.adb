@@ -7,6 +7,7 @@
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
 with Program.Elements.Aspect_Specifications;
+with Program.Elements.Constraints;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
@@ -14,6 +15,8 @@ with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
 with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
+with Program.Elements.Real_Range_Specifications;
+with Program.Elements.Subtype_Indications;
 with Program.Storage_Pools;
 with Program.Units.Declarations;
 
@@ -1573,10 +1576,18 @@ package body Program.Parsers.Nodes is
       Real_Range_Constraint : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Floating_Point_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Floating_Point_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Floating_Point_Type
+                (Digits_Token      => Digits_Token.Token,
+                 Digits_Expression =>
+                   Program.Elements.Expressions.Expression_Access
+                     (Digits_Expression.Element),
+                 Real_Range        =>
+                   Program.Elements.Real_Range_Specifications
+                     .Real_Range_Specification_Access
+                        (Real_Range_Constraint.Element))));
    end Floating_Point_Definition;
 
    ------------------------
@@ -3310,6 +3321,29 @@ package body Program.Parsers.Nodes is
           with "Unimplemented function Range_Attribute_Reference_Dr";
    end Range_Attribute_Reference_Dr;
 
+   ------------------------------
+   -- Real_Range_Specification --
+   ------------------------------
+
+   function Real_Range_Specification
+     (Self : Node_Factory'Class;
+      Range_Token : Node;
+      Lower_Bound : Node;
+      Double_Dot_Token : Node;
+      Upper_Bound : Node) return Node is
+   begin
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Real_Range_Specification
+                (Range_Token => Range_Token.Token,
+                 Lower_Bound => Program.Elements.Expressions.Expression_Access
+                                 (Lower_Bound.Element),
+                 Double_Dot_Token => Double_Dot_Token.Token,
+                 Upper_Bound => Program.Elements.Expressions.Expression_Access
+                                 (Upper_Bound.Element))));
+   end Real_Range_Specification;
+
    -----------------------
    -- Record_Definition --
    -----------------------
@@ -3608,10 +3642,21 @@ package body Program.Parsers.Nodes is
       Aspect_Specifications : Node; Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Subtype_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Subtype_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Subtype_Declaration
+                (Subtype_Token      => Subtype_Token.Token,
+                 Name               => Program.Elements.Defining_Identifiers
+                    .Defining_Identifier_Access (Names.Element),
+                 Is_Token           => Is_Token.Token,
+                 Subtype_Indication => Program.Elements.Subtype_Indications
+                    .Subtype_Indication_Access (Type_Declaration_View.Element),
+                 With_Token         => null,
+                 Aspects            => To_Aspect_Specification_Vector
+                   (Aspect_Specifications.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Semicolon_Token    => Semicolon_Token.Token)));
    end Subtype_Declaration;
 
    ---------------------------
@@ -3774,10 +3819,18 @@ package body Program.Parsers.Nodes is
       Mark : Node; Constraint : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "To_Subtype_Indication unimplemented");
-      return raise Program_Error
-          with "Unimplemented function To_Subtype_Indication";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Subtype_Indication
+                (Not_Token    => Not_Token.Token,
+                 Null_Token   => Null_Token.Token,
+                 Subtype_Mark =>
+                   Program.Elements.Expressions.Expression_Access
+                     (Mark.Element),
+                 Constraint   =>
+                   Program.Elements.Constraints.Constraint_Access
+                     (Constraint.Element))));
    end To_Subtype_Indication;
 
    -----------
