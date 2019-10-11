@@ -7,6 +7,7 @@
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
 with Program.Elements.Aspect_Specifications;
+with Program.Elements.Component_Definitions;
 with Program.Elements.Constraints;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
@@ -134,6 +135,12 @@ package body Program.Parsers.Nodes is
       Create_Vector =>
          Program.Element_Vector_Factories.Create_Aspect_Specification_Vector);
 
+   function To_Defining_Identifier_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements
+         .Defining_Identifiers.Defining_Identifier_Vector_Access,
+      Create_Vector =>
+         Program.Element_Vector_Factories.Create_Defining_Identifier_Vector);
+
    function To_Enumeration_Literal_Specification_Vector is
      new Generic_Vector_Cast
        (Vector_Access => Program.Elements
@@ -141,6 +148,11 @@ package body Program.Parsers.Nodes is
               .Enumeration_Literal_Specification_Vector_Access,
         Create_Vector => Program.Element_Vector_Factories
            .Create_Enumeration_Literal_Specification_Vector);
+
+   function To_Expression_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
+      Create_Vector =>
+         Program.Element_Vector_Factories.Create_Expression_Vector);
 
    function To_Element_Vector is new Generic_Vector_Cast
      (Vector_Access => Program.Element_Vectors.Element_Vector_Access,
@@ -627,8 +639,16 @@ package body Program.Parsers.Nodes is
       Arrow_Token : Node; Component_Expression : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Association unimplemented");
-      return raise Program_Error with "Unimplemented function Association";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Record_Component_Association  --  FIXME?
+                (Choices     => null,
+                 Arrow_Token => Arrow_Token.Token,
+                 Expression  =>
+                   Program.Elements.Expressions.Expression_Access
+                     (Component_Expression.Element),
+                 Box_Token   => null)));
    end Association;
 
    ----------------------
@@ -971,14 +991,17 @@ package body Program.Parsers.Nodes is
    --------------------------
 
    function Component_Definition
-     (Self                         : Node_Factory'Class; Aliased_Token : Node;
-      Component_Subtype_Indication : Node) return Node
+     (Self               : Node_Factory'Class;
+      Aliased_Token      : Node;
+      Subtype_Indication : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Component_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Component_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Component_Definition
+                (Aliased_Token      => Aliased_Token.Token,
+                 Subtype_Indication => Subtype_Indication.Element)));
    end Component_Definition;
 
    -----------------------------
@@ -1458,10 +1481,20 @@ package body Program.Parsers.Nodes is
       Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Exception_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Exception_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Exception_Declaration
+                (Names           => To_Defining_Identifier_Vector
+                   (Names.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Colon_Token     => Colon_Token.Token,
+                 Exception_Token => Exception_Token.Token,
+                 With_Token      => null,
+                 Aspects           => To_Aspect_Specification_Vector
+                   (Aspect_Specifications.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Semicolon_Token => Semicolon_Token.Token)));
    end Exception_Declaration;
 
    -----------------------
@@ -2601,14 +2634,24 @@ package body Program.Parsers.Nodes is
    -------------------------------------
 
    function Ordinary_Fixed_Point_Definition
-     (Self : Node_Factory'Class; Delta_Token : Node; Delta_Expression : Node;
+     (Self : Node_Factory'Class;
+      Delta_Token : Node;
+      Delta_Expression : Node;
       Real_Range_Constraint : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Ordinary_Fixed_Point_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Ordinary_Fixed_Point_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Ordinary_Fixed_Point_Type
+                (Delta_Token      => Delta_Token.Token,
+                 Delta_Expression =>
+                   Program.Elements.Expressions.Expression_Access
+                     (Delta_Expression.Element),
+                 Real_Range       =>
+                   Program.Elements.Real_Range_Specifications
+                     .Real_Range_Specification_Access
+                        (Real_Range_Constraint.Element))));
    end Ordinary_Fixed_Point_Definition;
 
    -------------------
@@ -3856,10 +3899,20 @@ package body Program.Parsers.Nodes is
       Array_Component_Definition : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Unconstrained_Array_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Unconstrained_Array_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Unconstrained_Array_Type
+                (Array_Token          => Array_Token.Token,
+                 Left_Bracket_Token   => Left_Token.Token,
+                 Index_Subtypes       => To_Expression_Vector
+                   (Index_Subtype_Definitions.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Right_Bracket_Token  => Right_Token.Token,
+                 Of_Token             => Of_Token.Token,
+                 Component_Definition => Program.Elements.Component_Definitions
+                   .Component_Definition_Access
+                      (Array_Component_Definition.Element))));
    end Unconstrained_Array_Definition;
 
    -------------------------------

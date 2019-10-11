@@ -186,8 +186,9 @@ private package Program.Parsers.Nodes is
       Semicolon_Token            : Node) return Node;
 
    function Component_Definition
-     (Self                         : Node_Factory'Class; Aliased_Token : Node;
-      Component_Subtype_Indication : Node) return Node;
+     (Self               : Node_Factory'Class;
+      Aliased_Token      : Node;
+      Subtype_Indication : Node) return Node;
 
    --     function Composite_Constraint
    --       (Self         : Node_Factory'Class;
