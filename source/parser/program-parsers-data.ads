@@ -2,6 +2,7 @@ with Anagram.Grammars;
 with Anagram.Grammars.LR_Parsers;
 
 package Program.Parsers.Data is
+   pragma Preelaborate;
 
    procedure Next_Action
      (State : Anagram.Grammars.LR_Parsers.State_Index;

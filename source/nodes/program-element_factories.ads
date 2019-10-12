@@ -196,6 +196,7 @@ with Program.Lexical_Elements;
 with Program.Element_Vectors;
 
 package Program.Element_Factories is
+   pragma Preelaborate;
 
    type Element_Factory (Subpool : not null System.Storage_Pools.Subpools
        .Subpool_Handle) is tagged limited private;

@@ -11,6 +11,7 @@ private with Program.Element_Factories;
 private with Program.Elements;
 
 private package Program.Parsers.Nodes is
+   pragma Preelaborate;
 
    type Node is private;
    type Node_Array is array (Positive range <>) of Node;

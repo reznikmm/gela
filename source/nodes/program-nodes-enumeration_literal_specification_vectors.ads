@@ -11,3 +11,4 @@ package Program.Nodes.Enumeration_Literal_Specification_Vectors is new
   Program.Nodes.Generic_Vectors
     (Program.Elements.Enumeration_Literal_Specifications
        .Enumeration_Literal_Specification_Vector);
+pragma Preelaborate (Program.Nodes.Enumeration_Literal_Specification_Vectors);

@@ -11,3 +11,4 @@ package Program.Nodes.Aspect_Specification_Vectors is new
   Program.Nodes.Generic_Vectors
     (Program.Elements.Aspect_Specifications
        .Aspect_Specification_Vector);
+pragma Preelaborate (Program.Nodes.Aspect_Specification_Vectors);

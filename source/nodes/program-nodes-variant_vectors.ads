@@ -9,3 +9,5 @@ with Program.Elements.Variants;
 
 package Program.Nodes.Variant_Vectors is new
   Program.Nodes.Generic_Vectors (Program.Elements.Variants.Variant_Vector);
+pragma Preelaborate (Program.Nodes.Variant_Vectors);
+

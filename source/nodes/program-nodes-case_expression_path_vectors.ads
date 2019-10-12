@@ -11,3 +11,4 @@ package Program.Nodes.Case_Expression_Path_Vectors is new
   Program.Nodes.Generic_Vectors
     (Program.Elements.Case_Expression_Paths
        .Case_Expression_Path_Vector);
+pragma Preelaborate (Program.Nodes.Case_Expression_Path_Vectors);

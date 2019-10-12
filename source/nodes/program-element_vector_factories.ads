@@ -29,6 +29,8 @@ with Program.Elements.Select_Paths;
 with Program.Elements.Variants;
 
 package Program.Element_Vector_Factories is
+   pragma Preelaborate;
+
    type Element_Vector_Factory
      (Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle) is
        tagged limited private;

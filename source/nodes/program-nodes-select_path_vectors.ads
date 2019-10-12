@@ -10,3 +10,4 @@ with Program.Elements.Select_Paths;
 package Program.Nodes.Select_Path_Vectors is new
   Program.Nodes.Generic_Vectors
     (Program.Elements.Select_Paths.Select_Path_Vector);
+pragma Preelaborate (Program.Nodes.Select_Path_Vectors);

@@ -11,3 +11,4 @@ package Program.Nodes.Discriminant_Association_Vectors is new
   Program.Nodes.Generic_Vectors
     (Program.Elements.Discriminant_Associations
        .Discriminant_Association_Vector);
+pragma Preelaborate (Program.Nodes.Discriminant_Association_Vectors);

@@ -18,6 +18,7 @@ private with Program.Plain_Lexical_Elements;
 private with Program.Plain_Contexts;
 
 package Program.Plain_Compilations is
+   pragma Preelaborate;
 
    type Compilation
      (Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)

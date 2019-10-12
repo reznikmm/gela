@@ -8,6 +8,7 @@ with System.Storage_Elements;
 with System.Storage_Pools.Subpools;
 
 package Program.Dummy_Subpools is
+   pragma Preelaborate;
 
    type Dummy_Storage_Pool is
      new System.Storage_Pools.Subpools.Root_Storage_Pool_With_Subpools

@@ -16,6 +16,7 @@ with Program.Lexical_Elements;
 limited private with Program.Parsers.Nodes;
 
 package Program.Parsers is
+   pragma Preelaborate;
 
    package Element_Vectors is new Ada.Containers.Vectors
      (Positive, Program.Elements.Element_Access, Program.Elements."=");

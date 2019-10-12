@@ -53,6 +53,8 @@ package body Program.Resolvers is
       function To_Symbol
         (Name : Program.Elements.Defining_Names.Defining_Name_Access)
          return Program.Symbols.Symbol;
+      --  Return a symbol for given defining name. Return symbol of the
+      --  selector for expanded defining name.
 
       -------------------------
       -- Package_Declaration --
