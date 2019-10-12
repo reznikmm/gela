@@ -178,7 +178,7 @@ package body Internal is
    type Visitor is
      new Program.Element_Visitors.Element_Visitor
      with record
-        Result : access constant Getter_Array;
+        Result : access constant Getter_Array := Empty'Access;
      end record;
 
    overriding procedure Pragma_Element

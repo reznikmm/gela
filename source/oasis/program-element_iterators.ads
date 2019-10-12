@@ -224,6 +224,7 @@ private
    end record;
 
    type Getter_Array is array (Positive range <>) of Getter;
+   Empty : aliased constant Getter_Array := (1 .. 0 => <>);
 
    type Enclosing_Element_Iterator is
      new Enclosing_Element_Iterators.Forward_Iterator with

@@ -1169,8 +1169,11 @@ package body Meta.Writes is
          end if;
       end Prop_List;
 
+      Pure : constant Ada_Pretty.Node_Access :=
+        F.New_Pragma (F.New_Name (+"Preelaborate"));
+
       Public_Part : constant Ada_Pretty.Node_Access :=
-        F.New_List ((Type_Decl, Methods));
+        F.New_List ((Pure, Type_Decl, Methods));
 
       Full_Type_Decl : constant Ada_Pretty.Node_Access :=
         F.New_Type
@@ -1485,7 +1488,8 @@ package body Meta.Writes is
                 (Name            => F.New_Name (+"Result"),
                  Type_Definition => F.New_Access
                    (Modifier => Access_Constant,
-                    Target   => F.New_Name (+"Getter_Array")))));
+                    Target   => F.New_Name (+"Getter_Array")),
+                 Initialization => F.New_Name (+"Empty'Access"))));
 
       function Method_Bodies return Ada_Pretty.Node_Access;
 
