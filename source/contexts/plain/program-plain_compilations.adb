@@ -6,7 +6,7 @@
 
 with Program.Lexical_Handlers;
 with Program.Parsers;
-with Program.Resolvers;
+with Program.Resolve_Standard;
 with Program.Scanner_Destinations;
 with Program.Scanners;
 with Program.Symbols;
@@ -157,7 +157,8 @@ package body Program.Plain_Compilations is
 
    not overriding procedure Parse_File
      (Self      : aliased in out Compilation;
-      Text_Name : Text)
+      Text_Name : Text;
+      Unit      : out Program.Compilation_Units.Compilation_Unit_Access)
    is
       Env     : Program.Visibility.Context;
       Units   : Program.Parsers.Unit_Vectors.Vector;
@@ -174,9 +175,8 @@ package body Program.Plain_Compilations is
 
       Env.Create_Empty_Context;
 
-      Program.Resolvers.Resolve_Names
-        (Env  => Env,
-         Unit => Units (1));
+      Program.Resolve_Standard (Unit => Units (1));
+      Unit := Units (1);
    end Parse_File;
 
    ---------------------

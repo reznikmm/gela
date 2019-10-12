@@ -2726,9 +2726,13 @@ package body Program.Parsers.Nodes is
                    (Aspect_Specifications.Vector'Unchecked_Access,
                     Self.Subpool),
                  Is_Token             => Is_Token.Token,
-                 Visible_Declarations => null,
+                 Visible_Declarations => To_Element_Vector
+                   (Visible_Part_Declarative_Items.Vector'Unchecked_Access,
+                    Self.Subpool),
                  Private_Token        => Private_Token.Token,
-                 Private_Declarations => null,
+                 Private_Declarations => To_Element_Vector
+                   (Private_Part_Declarative_Items.Vector'Unchecked_Access,
+                    Self.Subpool),
                  End_Token            => End_Token.Token,
                  End_Name             =>
                    Program.Elements.Expressions.Expression_Access

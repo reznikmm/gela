@@ -16,6 +16,11 @@ project Oasis_Plain is
       "../source/resolver",
       "../source/visibility");
    for Object_Dir use "../.objs/plain";
+   for Library_Kind use "dynamic";
+   for Library_Name use "oasis_pl";
+   for Library_Dir use "../.libs";
+   for Library_ALI_Dir use "../.libs";
+   for Library_Version use "liboasis_pl.so." & Oasis.Version;
 
    package Compiler is
       for Default_Switches ("ada") use Oasis.Check_Ada_Switches;
