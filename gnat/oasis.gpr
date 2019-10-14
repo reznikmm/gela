@@ -34,6 +34,6 @@ library project Oasis is
    end Remote;
 
    package Builder is
-      for Switches (others) use ("-m2");  --  minimum recompilation
+      for Switches (others) use ("-m");  --  minimum recompilation
    end Builder;
 end Oasis;

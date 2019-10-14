@@ -1,0 +1,8 @@
+version: 2
+jobs:
+   build:
+     docker:
+       - image: reznik/oasis-build:fc30.01
+     steps:
+       - checkout
+       - run: make
