@@ -1,6 +1,7 @@
 Object Ada Semantic Interface Specification _(oasis)_
 =========================================
 
+[![CircleCI](https://circleci.com/gh/reznikmm/oasis.svg?style=svg)](https://circleci.com/gh/reznikmm/oasis)
 [![reuse compliant](https://img.shields.io/badge/reuse-compliant-green.svg)](https://reuse.software/)
 
 This project is a development of [ASIS](https://www.sigada.org/WG/asiswg/) rewritten in

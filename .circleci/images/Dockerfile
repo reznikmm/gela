@@ -1,15 +1,17 @@
-FROM fedora
+FROM registry.fedoraproject.org/fedora-minimal:30
 RUN curl -o /etc/yum.repos.d/bintray-reznikmm-matreshka.repo \
  https://bintray.com/reznikmm/matreshka/rpm && \
- dnf --assumeyes install make && \
- dnf --assumeyes install rpmdevtools && \
- dnf --assumeyes install gcc-gnat && \
- dnf --assumeyes install gprbuild && \
- dnf --assumeyes install gdb && \
- dnf --assumeyes install git && \
- dnf --assumeyes install openssh-server && \
- dnf --assumeyes install tar && \
- dnf --assumeyes install gzip && \
- dnf --assumeyes install ca-certificates && \
- dnf --assumeyes install --repo bintray--reznikmm-matreshka matreshka-devel && \
- dnf --assumeyes install --repo bintray--reznikmm-matreshka anagram-devel
+ microdnf install --enablerepo bintray--reznikmm-matreshka \
+  make \
+  rpmdevtools \
+  gcc-gnat \
+  gprbuild \
+  gdb \
+  git \
+  openssh-server \
+  tar \
+  gzip \
+  ca-certificates \
+  matreshka-devel \
+  anagram-devel && \
+ microdnf clean all

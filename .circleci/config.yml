@@ -2,7 +2,7 @@ version: 2
 jobs:
    build:
      docker:
-       - image: reznik/oasis-build:fc30.01
+       - image: reznik/oasis-build:fc30.02
      steps:
        - checkout
        - run: make
