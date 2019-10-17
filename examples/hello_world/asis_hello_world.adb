@@ -11,7 +11,7 @@ with Ada.Strings.Wide_Unbounded; use Ada.Strings.Wide_Unbounded;
 with Ada.Command_Line;           use Ada.Command_Line;
 with Ada.Characters.Handling;    use Ada.Characters.Handling;
 
-procedure Main is
+procedure Asis_Hello_World is
 
    procedure Help is
    begin
@@ -19,12 +19,12 @@ procedure Main is
       Ada.Wide_Text_IO.Put_Line ("   <Prop_List> ::= <prop>[,<Prop_List>]");
       Ada.Wide_Text_IO.Put_Line ("   <Prop>      ::= UP | DOWN | EN_IN | ENV_OUT | FULL_NAME");
       Ada.Wide_Text_IO.Put_Line ("");
-      Ada.Wide_Text_IO.Put_Line ("Note: You should provide a path to standard library files through -I");      
+      Ada.Wide_Text_IO.Put_Line ("Note: You should provide a path to standard library files through -I");
       Ada.Wide_Text_IO.Put_Line ("or through GELA_INCLUDE_PATH environment variable.");
    end Help;
-   
+
    Invalid_Number_Of_Arguments : exception;
-   
+
    My_Context_Name           : constant Wide_String           := Asis.Ada_Environments.Default_Name;
    Initialization_Parameters : constant Wide_String           := "";
    Finalization_Parameters   : constant Wide_String           := "";
@@ -92,4 +92,4 @@ exception
    when Invalid_Number_Of_Arguments =>
       Ada.Wide_Text_IO.Put_Line (">>> Invalid number of arguments");
       Help;
-end Main;
+end Asis_Hello_World;

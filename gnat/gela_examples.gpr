@@ -1,0 +1,12 @@
+with "gela_asis.gpr";
+
+project Gela_Examples is
+
+   for Source_Dirs use
+     ("../examples/hello_world",
+      "../examples/api_dump_tree");
+   for Main use ("asis_hello_world.adb", "api_dump_tree");
+   for Object_Dir use Gela_Asis.Build & "/examples";
+
+end Gela_Examples;
+

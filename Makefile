@@ -11,10 +11,10 @@ LEXER=$(abspath src/lexer/ada.l)
 LEXER_STAMP=$(GELA_BUILD)/.stamp-ada.l
 PARSER=$(GELA_BUILD)/.stamp-ada.p
 
-all: asis tests
+all: asis tests examples
 	echo gprbuild -m -j0 -p -P gnat/gela_debug.gpr
 
-asis : $(AST_STAMP) $(LEXER_STAMP) $(PARSER)
+asis: $(AST_STAMP) $(LEXER_STAMP) $(PARSER)
 	gprbuild -m -j0 -p -P gnat/gela_build.gpr
 
 $(AST_STAMP): $(AG_DRIVER) $(AST)
@@ -54,3 +54,6 @@ endif
 check:
 	GELA_INCLUDE_PATH=$(realpath src/adalib/) \
 	$(GELA_BUILD)/gela-test_driver2
+
+examples: asis
+	gprbuild -m -j0 -p -P gnat/gela_examples.gpr
