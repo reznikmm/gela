@@ -17,6 +17,7 @@ all:
 	# gnatchop -w /tmp/aaa source/parser/
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis.gpr
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis_plain.gpr
+	gprbuild $(GPRBUILD_FLAGS) -P gnat/examples.gpr
 
 install:
 	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/oasis.gpr
