@@ -5,10 +5,12 @@
 -------------------------------------------------------------
 
 with Program.Compilation_Units;
+with Program.Visibility;
 
 private
 procedure Program.Resolve_Standard
-  (Unit : not null Program.Compilation_Units.Compilation_Unit_Access);
+  (Unit : not null Program.Compilation_Units.Compilation_Unit_Access;
+   Env  : aliased in out Program.Visibility.Context);
 --  Resolve names in predefined Standard package.
 --  This is simplified version of resolver that creates and polulates
 --  name table for Standard package. It uses some implementation defined

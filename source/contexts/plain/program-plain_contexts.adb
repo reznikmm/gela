@@ -5,8 +5,17 @@
 -------------------------------------------------------------
 
 with Ada.Strings.Wide_Wide_Fixed;
+with System.Storage_Pools.Subpools;
+
+with Program.Parsers;
+with Program.Plain_Compilations;
+with Program.Storage_Pools;
+with Program.Resolve_Standard;
 
 package body Program.Plain_Contexts is
+
+   type Plain_Compilation_Access is
+     access all Program.Plain_Compilations.Compilation;
 
    -----------------------------
    -- Compilation_Unit_Bodies --
@@ -15,7 +24,11 @@ package body Program.Plain_Contexts is
    overriding function Compilation_Unit_Bodies (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access is
    begin
-      return Self.Bodies'Unchecked_Access;
+      if Self.Bodies.List.Is_Empty then
+         return null;
+      else
+         return Self.Bodies'Unchecked_Access;
+      end if;
    end Compilation_Unit_Bodies;
 
    -------------
@@ -29,6 +42,17 @@ package body Program.Plain_Contexts is
    begin
       return Self.List.Element (Index);
    end Element;
+
+   ----------
+   -- Find --
+   ----------
+
+   function Find
+     (Self  : Context'Class;
+      Value : Program.Text) return Program.Symbols.Symbol is
+   begin
+      return Self.Symbols.Find (Value);
+   end Find;
 
    ---------------------------
    -- Find_Or_Create_Symbol --
@@ -125,5 +149,44 @@ package body Program.Plain_Contexts is
    begin
       return Self.Declarations'Unchecked_Access;
    end Library_Unit_Declarations;
+
+   ----------------
+   -- Parse_File --
+   ----------------
+
+   procedure Parse_File
+     (Self      : aliased in out Context'Class;
+      Text_Name : Text;
+      Env       : aliased in out Program.Visibility.Context)
+   is
+      Units   : Program.Parsers.Unit_Vectors.Vector;
+      Pragmas : Program.Parsers.Element_Vectors.Vector;
+
+      Pool : Program.Storage_Pools.Storage_Pool renames
+        Program.Storage_Pools.Pool;
+
+      Subpool : constant not null System.Storage_Pools.Subpools.Subpool_Handle
+        := Pool.Create_Subpool;
+
+      Compilation : constant Plain_Compilation_Access :=
+        new Program.Plain_Compilations.Compilation (Subpool);
+      --  Plain_Compilation is a controlled type, so don't allocate it in
+      --  the (Subpool)
+
+   begin
+      Compilation.Initialize (Self'Unchecked_Access);
+
+      Compilation.Parse_File (Text_Name, Units, Pragmas);
+
+      Env.Create_Empty_Context;
+
+      Program.Resolve_Standard (Unit => Units (1), Env => Env);
+
+      Self.Compilations.Append
+        (Program.Compilations.Compilation_Access (Compilation));
+      Self.Symbol_Lists.Insert ((0, Program.Symbols.Standard), 1);
+      Self.Declarations.Map.Insert (1, Units (1));
+      Self.Declarations.List.Append (Units (1));
+   end Parse_File;
 
 end Program.Plain_Contexts;

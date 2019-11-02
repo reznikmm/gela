@@ -10,6 +10,7 @@ with Program.Compilation_Units;
 with Program.Compilations;
 with Program.Contexts;
 with Program.Lexical_Elements;
+with Program.Parsers;
 
 private with Ada.Containers.Vectors;
 private with Ada.Strings.Wide_Wide_Unbounded;
@@ -53,7 +54,8 @@ package Program.Plain_Compilations is
    not overriding procedure Parse_File
      (Self      : aliased in out Compilation;
       Text_Name : Text;
-      Unit      : out Program.Compilation_Units.Compilation_Unit_Access);
+      Units     : out Program.Parsers.Unit_Vectors.Vector;
+      Pragmas   : out Program.Parsers.Element_Vectors.Vector);
 
 private
 

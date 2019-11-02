@@ -110,6 +110,7 @@ package body Program.Visibility is
    not overriding procedure Create_Character_Literal
      (Self             : in out Context;
       Symbol           : Program.Visibility.Symbol;
+      Name             : Defining_Name;
       Meta_Character   : Meta_Character_Literal_Kind;
       Enumeration_Type : View)
    is
@@ -118,7 +119,7 @@ package body Program.Visibility is
       Value : constant Item :=
         (Kind           => Character_Literal_View,
          Symbol         => Symbol,
-         Name           => null,   --  FIXME
+         Name           => Name,
          Entity_Id      => Self.Last_Entity + 1,
          Character_Type => Enumeration_Type.Index);
 
@@ -670,6 +671,17 @@ package body Program.Visibility is
    begin
       return Type_Item.Is_Character_Type;
    end Is_Character_Type;
+
+   -----------------
+   -- Latest_View --
+   -----------------
+
+   not overriding function Latest_View (Self : aliased Context) return View is
+   begin
+      return (Self.Data.Last_Element.Kind,
+              Self'Access,
+              Self.Data.Last_Index);
+   end Latest_View;
 
    ------------------------------
    -- Leave_Declarative_Region --

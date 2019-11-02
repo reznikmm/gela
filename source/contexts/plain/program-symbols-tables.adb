@@ -25,20 +25,14 @@ package body Program.Symbols.Tables is
       end if;
    end Equal;
 
-   ----------
-   -- Find --
-   ----------
-
-   function Find
-     (Self : Symbol_Table'Class; Value : Program.Text) return Symbol
-   is
-      type Dummy_Source_Buffer is new Program.Source_Buffers.Source_Buffer
-      with null record;
+   package Dummy_Source_Buffers is
+      type Dummy_Source_Buffer (Value : access constant Program.Text) is
+        new Program.Source_Buffers.Source_Buffer with null record;
 
       overriding function Text
         (Self   : Dummy_Source_Buffer;
          Unused : Program.Source_Buffers.Span)
-            return Program.Text is (Value);
+            return Program.Text is (Self.Value.all);
 
       overriding procedure Read
         (Self : in out Dummy_Source_Buffer;
@@ -48,7 +42,17 @@ package body Program.Symbols.Tables is
       overriding procedure Rewind
         (Self : in out Dummy_Source_Buffer) is null;
 
-      Dummy  : aliased Dummy_Source_Buffer;
+   end Dummy_Source_Buffers;
+
+   ----------
+   -- Find --
+   ----------
+
+   function Find
+     (Self : Symbol_Table'Class; Value : Program.Text) return Symbol
+   is
+      Text   : aliased Program.Text := Value;
+      Dummy  : aliased Dummy_Source_Buffers.Dummy_Source_Buffer (Text'Access);
       Ref    : constant Symbol_Reference := (Dummy'Unchecked_Access, (1, 0));
       Cursor : constant Symbol_Maps.Cursor := Self.Map.Find (Ref);
    begin
@@ -81,10 +85,23 @@ package body Program.Symbols.Tables is
       if Symbol_Maps.Has_Element (Cursor) then
          Result := Symbol_Maps.Element (Cursor);
          return;
-      elsif Buffer.Text (Span) (1) in ''' | '"' then
-         Result := No_Symbol;
-         return;
       end if;
+
+      declare
+         Value : constant Program.Text := Buffer.Text (Span);
+      begin
+         if Value (Value'First) = '''
+           and Value (Value'Last) = '''
+           and Value'Length = 3
+         then
+            --  Character literal
+            Result := S.Wide_Wide_Character'Pos (Value (Value'First + 1));
+            return;
+         elsif Value (Value'First) in '"' then
+            Result := No_Symbol;
+            return;
+         end if;
+      end;
 
       Self.Last_Symbol := Self.Last_Symbol + 1;
       Result := Self.Last_Symbol;

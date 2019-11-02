@@ -8,6 +8,7 @@ with Program.Compilation_Unit_Vectors;
 with Program.Contexts;
 with Program.Source_Buffers;
 with Program.Symbols;
+with Program.Visibility;
 
 private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
@@ -23,10 +24,19 @@ package Program.Plain_Contexts is
    procedure Initialize (Self : in out Context'Class);
 
    procedure Find_Or_Create_Symbol
-     (Self : in out Context'Class;
+     (Self   : in out Context'Class;
       Buffer : not null Program.Source_Buffers.Source_Buffer_Access;
       Span   : Program.Source_Buffers.Span;
       Result : out Program.Symbols.Symbol);
+
+   function Find
+     (Self  : Context'Class;
+      Value : Program.Text) return Program.Symbols.Symbol;
+
+   procedure Parse_File
+     (Self      : aliased in out Context'Class;
+      Text_Name : Text;
+      Env       : aliased in out Program.Visibility.Context);
 
    overriding function Library_Unit_Declarations (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access;

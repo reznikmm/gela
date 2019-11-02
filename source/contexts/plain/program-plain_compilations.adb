@@ -5,12 +5,9 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Handlers;
-with Program.Parsers;
-with Program.Resolve_Standard;
 with Program.Scanner_Destinations;
 with Program.Scanners;
 with Program.Symbols;
-with Program.Visibility;
 
 package body Program.Plain_Compilations is
 
@@ -158,11 +155,8 @@ package body Program.Plain_Compilations is
    not overriding procedure Parse_File
      (Self      : aliased in out Compilation;
       Text_Name : Text;
-      Unit      : out Program.Compilation_Units.Compilation_Unit_Access)
-   is
-      Env     : Program.Visibility.Context;
-      Units   : Program.Parsers.Unit_Vectors.Vector;
-      Pragmas : Program.Parsers.Element_Vectors.Vector;
+      Units     : out Program.Parsers.Unit_Vectors.Vector;
+      Pragmas   : out Program.Parsers.Element_Vectors.Vector) is
    begin
       Self.Buffer.Initialize (Text_Name);
       Self.Read_All_Tokens (Self.Buffer'Unchecked_Access);
@@ -172,11 +166,6 @@ package body Program.Plain_Compilations is
          Self.Subpool,
          Units,
          Pragmas);
-
-      Env.Create_Empty_Context;
-
-      Program.Resolve_Standard (Unit => Units (1));
-      Unit := Units (1);
    end Parse_File;
 
    ---------------------

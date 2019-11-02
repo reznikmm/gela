@@ -198,6 +198,7 @@ package Program.Visibility is
    not overriding procedure Create_Character_Literal
      (Self             : in out Context;
       Symbol           : Program.Visibility.Symbol;
+      Name             : Defining_Name;
       Meta_Character   : Meta_Character_Literal_Kind;
       Enumeration_Type : View)
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
@@ -258,6 +259,9 @@ package Program.Visibility is
      (Self   : aliased Context;
       Symbol : Program.Visibility.Symbol) return View_Array;
    --  Return array of views for immediate visible names with given symbol
+
+   not overriding function Latest_View (Self : aliased Context) return View;
+   --  View that was added to the context
 
 private
 
