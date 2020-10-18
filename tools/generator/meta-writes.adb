@@ -1,7 +1,6 @@
---  Copyright (c) 2019 Maxim Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
---  License-Filename: LICENSE
 -------------------------------------------------------------
 
 with Ada.Characters.Wide_Wide_Latin_1;
@@ -1452,15 +1451,13 @@ package body Meta.Writes is
    procedure Write_Header (Output : Ada.Wide_Wide_Text_IO.File_Type) is
    begin
       Ada.Wide_Wide_Text_IO.Put_Line
-        (Output, "--  Copyright (c) 2019 Maxim Reznik <reznikmm@gmail.com>");
+        (Output,
+         "--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>");
 
       Ada.Wide_Wide_Text_IO.Put_Line (Output, "--");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output, "--  SPDX-License-Identifier: MIT");
-
-      Ada.Wide_Wide_Text_IO.Put_Line
-        (Output, "--  License-Filename: LICENSE");
 
       Ada.Wide_Wide_Text_IO.Put_Line
         (Output,

@@ -1,7 +1,6 @@
---  Copyright (c) 2019 Maxim Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
---  License-Filename: LICENSE
 -------------------------------------------------------------
 --
 --  This package is about Ada Visibility Rules as they defined in the Reference

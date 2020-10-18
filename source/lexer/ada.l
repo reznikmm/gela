@@ -1,3 +1,8 @@
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+-------------------------------------------------------------
+--
 -- In Allow_Char  state character literals are available
 -- Lexer expected
 --   to enter in Default after identifier

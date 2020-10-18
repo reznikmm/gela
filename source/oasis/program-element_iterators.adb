@@ -1,3 +1,8 @@
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+-------------------------------------------------------------
+
 with Program.Elements;
 
 with Program.Element_Vectors;

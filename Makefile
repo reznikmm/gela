@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+#
+
 GPRBUILD_FLAGS = -p -j0
 PREFIX                 ?= /usr
 GPRDIR                 ?= $(PREFIX)/share/gpr
@@ -9,7 +14,7 @@ INSTALL_ALI_DIR        ?= ${INSTALL_LIBRARY_DIR}/oasis
 
 GPRINSTALL_FLAGS = --prefix=$(PREFIX) --sources-subdir=$(INSTALL_INCLUDE_DIR)\
  --lib-subdir=$(INSTALL_ALI_DIR) --project-subdir=$(INSTALL_PROJECT_DIR)\
---link-lib-subdir=$(INSTALL_LIBRARY_DIR)
+ --link-lib-subdir=$(INSTALL_LIBRARY_DIR)
 
 all:
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/ada_larl.gpr

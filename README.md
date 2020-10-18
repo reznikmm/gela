@@ -2,7 +2,7 @@ Gela
 ====
 
 [![CircleCI](https://circleci.com/gh/reznikmm/gela.svg?style=svg)](https://circleci.com/gh/reznikmm/gela)
-[![reuse compliant](https://img.shields.io/badge/reuse-compliant-green.svg)](https://reuse.software/)
+[![REUSE status](https://api.reuse.software/badge/github.com/reznikmm/gela)](https://api.reuse.software/info/github.com/reznikmm/gela)
 
 > Ada code analyzer
 

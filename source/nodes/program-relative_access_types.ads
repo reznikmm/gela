@@ -1,3 +1,8 @@
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+-------------------------------------------------------------
+
 generic
    type Object is limited private;
    type Object_Access is access all Object;

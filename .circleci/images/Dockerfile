@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+#
+
 FROM registry.fedoraproject.org/fedora-minimal:30
 RUN curl -o /etc/yum.repos.d/bintray-reznikmm-matreshka.repo \
  https://bintray.com/reznikmm/matreshka/rpm && \

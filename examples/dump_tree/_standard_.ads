@@ -1,3 +1,8 @@
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+-------------------------------------------------------------
+
 package Standard is
    type Boolean is (False, True);
    type Integer is range -2 ** 31 .. 2 ** 31 - 1;

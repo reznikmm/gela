@@ -1,3 +1,8 @@
+--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+-------------------------------------------------------------
+
 with System.Storage_Elements;
 with System.Address_To_Access_Conversions;
 
