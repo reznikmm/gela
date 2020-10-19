@@ -628,14 +628,16 @@ package body Program.Visibility is
 
    begin
       for J of reverse Self.Stack loop
-         Append (Immediate_Visible (Self'Access, J.Enclosing_Item, Symbol));
+         Append
+           (Immediate_Visible
+              (Self'Unchecked_Access, J.Enclosing_Item, Symbol));
       end loop;
 
       if Symbol = Standard and then not Self.Stack.Is_Empty then
          declare
             Top : constant View :=
               (Package_View,
-               Self'Access,
+               Self'Unchecked_Access,
                Self.Stack.First_Element.Enclosing_Item);
          begin
             Append ((1 => Top));
@@ -678,7 +680,7 @@ package body Program.Visibility is
    not overriding function Latest_View (Self : aliased Context) return View is
    begin
       return (Self.Data.Last_Element.Kind,
-              Self'Access,
+              Self'Unchecked_Access,
               Self.Data.Last_Index);
    end Latest_View;
 
