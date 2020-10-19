@@ -1140,7 +1140,7 @@ package body Dump_Elements is
            .Defining_Identifier_Access)
       is
       begin
-         Self.Print (Element, "Defining_Identifier");
+         Self.Print (Element, "Defining_Identifier: " & Element.Image);
       end Defining_Identifier;
 
       procedure Defining_Character_Literal
@@ -1149,7 +1149,7 @@ package body Dump_Elements is
            .Defining_Character_Literal_Access)
       is
       begin
-         Self.Print (Element, "Defining_Character_Literal");
+         Self.Print (Element, "Defining_Character_Literal: " & Element.Image);
       end Defining_Character_Literal;
 
       procedure Defining_Operator_Symbol
@@ -1158,7 +1158,7 @@ package body Dump_Elements is
            .Defining_Operator_Symbol_Access)
       is
       begin
-         Self.Print (Element, "Defining_Operator_Symbol");
+         Self.Print (Element, "Defining_Operator_Symbol: " & Element.Image);
       end Defining_Operator_Symbol;
 
       procedure Defining_Expanded_Name
@@ -1167,7 +1167,7 @@ package body Dump_Elements is
            .Defining_Expanded_Name_Access)
       is
       begin
-         Self.Print (Element, "Defining_Expanded_Name");
+         Self.Print (Element, "Defining_Expanded_Name: " & Element.Image);
       end Defining_Expanded_Name;
 
       procedure Type_Declaration
@@ -1854,7 +1854,7 @@ package body Dump_Elements is
            .Numeric_Literal_Access)
       is
       begin
-         Self.Print (Element, "Numeric_Literal");
+         Self.Print (Element, "Numeric_Literal: " & Element.Image);
       end Numeric_Literal;
 
       procedure String_Literal
@@ -1863,7 +1863,7 @@ package body Dump_Elements is
            .String_Literal_Access)
       is
       begin
-         Self.Print (Element, "String_Literal");
+         Self.Print (Element, "String_Literal: " & Element.Image);
       end String_Literal;
 
       procedure Identifier
@@ -1871,7 +1871,7 @@ package body Dump_Elements is
          Element :    not null Program.Elements.Identifiers.Identifier_Access)
       is
       begin
-         Self.Print (Element, "Identifier");
+         Self.Print (Element, "Identifier: " & Element.Image);
       end Identifier;
 
       procedure Operator_Symbol
@@ -1880,7 +1880,7 @@ package body Dump_Elements is
            .Operator_Symbol_Access)
       is
       begin
-         Self.Print (Element, "Operator_Symbol");
+         Self.Print (Element, "Operator_Symbol: " & Element.Image);
       end Operator_Symbol;
 
       procedure Character_Literal
@@ -1889,7 +1889,7 @@ package body Dump_Elements is
            .Character_Literal_Access)
       is
       begin
-         Self.Print (Element, "Character_Literal");
+         Self.Print (Element, "Character_Literal: " & Element.Image);
       end Character_Literal;
 
       procedure Explicit_Dereference
