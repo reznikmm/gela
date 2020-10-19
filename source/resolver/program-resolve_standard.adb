@@ -109,7 +109,7 @@ is
          Symbol : constant Program.Symbols.Symbol :=
            Program.Resolvers.To_Symbol (Element.Name);
       begin
-         if Symbol in Program.Symbols.Character_Literal_Symbol then
+         if Program.Symbols.Is_Character_Literal (Symbol) then
             Self.Env.Create_Character_Literal
               (Symbol,
                Element.Name,

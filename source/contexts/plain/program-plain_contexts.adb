@@ -74,7 +74,7 @@ package body Program.Plain_Contexts is
       use type Ada.Containers.Hash_Type;
    begin
       return Ada.Containers.Hash_Type'Mod (Value.Prefix)
-        + 100003 * Ada.Containers.Hash_Type'Mod (Value.Symbol);
+        + 100003 * Program.Symbols.Hash (Value.Symbol);
    end Hash;
 
    ---------------
@@ -86,7 +86,7 @@ package body Program.Plain_Contexts is
       Name : Text) return Program.Compilation_Units.Compilation_Unit_Access
    is
       Cursor : Symbol_List_Maps.Cursor;
-      Item   : Symbol_List_Item := (0, 0);
+      Item   : Symbol_List_Item := (0, Program.Symbols.No_Symbol);
       Result : Symbol_List_Index;
       Prev   : Positive;
       Dot    : Natural := Name'First - 1;
