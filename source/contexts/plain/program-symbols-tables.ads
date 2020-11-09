@@ -26,6 +26,11 @@ package Program.Symbols.Tables is
       Span   : Program.Source_Buffers.Span;
       Result : out Symbol);
 
+   function Symbol_Text
+     (Self   : Symbol_Table'Class;
+      Symbol : Program.Symbols.Symbol) return Program.Text;
+   --  Return text of the Symbol
+
 private
    type Symbol_Reference is record
       Buffer : not null Program.Source_Buffers.Source_Buffer_Access;
@@ -42,6 +47,16 @@ private
       Hash            => Hash,
       Equivalent_Keys => Equal,
       "="             => Program.Symbols."=");
+
+   package Reference_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Program.Symbols.Symbol,
+      Element_Type    => Symbol_Reference,
+      Hash            => Program.Symbols.Hash,
+      Equivalent_Keys => Program.Symbols."=",
+      "="             => Equal);
+
+   function Hash (Value : Symbol) return Ada.Containers.Hash_Type is
+      (Ada.Containers.Hash_Type'Mod (Value));
 
    type Predefined_Source_Buffer is new Program.Source_Buffers.Source_Buffer
      with null record;
@@ -61,6 +76,7 @@ private
 
    type Symbol_Table is tagged limited record
       Map         : Symbol_Maps.Map;
+      References  : Reference_Maps.Map;
       Buffer      : aliased Predefined_Source_Buffer;
       Last_Symbol : Program.Symbols.Symbol := Program.Symbols.X_Symbol'Last;
    end record;

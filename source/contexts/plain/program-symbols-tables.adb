@@ -306,6 +306,26 @@ package body Program.Symbols.Tables is
       Self.Map.Insert ((B, (171, 0)), Root_Real);
    end Initialize;
 
+   -----------------
+   -- Symbol_Text --
+   -----------------
+
+   function Symbol_Text
+     (Self   : Symbol_Table'Class;
+      Symbol : Program.Symbols.Symbol) return Program.Text
+   is
+   begin
+      if Symbol = No_Symbol then
+         return "";
+      else
+         declare
+            Reference : constant Symbol_Reference := Self.References (Symbol);
+         begin
+            return Reference.Buffer.Text (Reference.Span);
+         end;
+      end if;
+   end Symbol_Text;
+
    ----------
    -- Text --
    ----------
