@@ -67,6 +67,18 @@ package body Program.Units.Declarations is
       Self.Childern.Clear;
    end Initialize;
 
+   --------------------------------------
+   -- Is_Library_Unit_Declaration_Unit --
+   --------------------------------------
+
+   overriding function Is_Library_Unit_Declaration_Unit
+     (Self : Unit_Declaration) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return True;
+   end Is_Library_Unit_Declaration_Unit;
+
    --------------
    -- Set_Body --
    --------------

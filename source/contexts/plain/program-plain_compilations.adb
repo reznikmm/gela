@@ -155,7 +155,8 @@ package body Program.Plain_Compilations is
      (Self      : aliased in out Compilation;
       Text_Name : Text;
       Units     : out Program.Parsers.Unit_Vectors.Vector;
-      Pragmas   : out Program.Parsers.Element_Vectors.Vector) is
+      Pragmas   : out Program.Parsers.Element_Vectors.Vector;
+      Standard  : Boolean := False) is
    begin
       Self.Buffer.Initialize (Text_Name);
       Self.Read_All_Tokens (Self.Buffer'Unchecked_Access);
@@ -164,7 +165,8 @@ package body Program.Plain_Compilations is
          Self.Tokens'Unchecked_Access,
          Self.Subpool,
          Units,
-         Pragmas);
+         Pragmas,
+         Standard);
    end Parse_File;
 
    ---------------------

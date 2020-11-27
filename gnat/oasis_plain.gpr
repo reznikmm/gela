@@ -13,7 +13,8 @@ project Oasis_Plain is
       "../source/lexer",
       "../source/parser",
       "../source/resolver",
-      "../source/visibility");
+      "../source/visibility",
+      "../source/library");
    for Object_Dir use "../.objs/plain";
    for Library_Kind use "dynamic";
    for Library_Name use "oasis_pl";

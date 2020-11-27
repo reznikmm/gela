@@ -81,4 +81,7 @@ private
       Last_Symbol : Program.Symbols.Symbol := Program.Symbols.X_Symbol'Last;
    end record;
 
+   type Symbol_List is null record;
+   type Symbol_List_Table is tagged limited null record;
+
 end Program.Symbols.Tables;

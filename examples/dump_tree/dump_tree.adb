@@ -10,7 +10,6 @@ with Ada.Wide_Wide_Text_IO;
 with Program.Compilation_Unit_Vectors;
 with Program.Compilation_Units;
 with Program.Plain_Contexts;
-with Program.Visibility;
 
 with Program.Storage_Pools.Instance;
 pragma Unreferenced (Program.Storage_Pools.Instance);
@@ -44,11 +43,11 @@ procedure Dump_Tree is
    end Process_Units;
 
    Ctx  : aliased Program.Plain_Contexts.Context;
-   Env  : aliased Program.Visibility.Context;
 begin
    Ctx.Initialize;
    Ctx.Parse_File
-     (Ada.Characters.Conversions.To_Wide_Wide_String (File), Env);
+     (Ada.Characters.Conversions.To_Wide_Wide_String (File));
+   Ctx.Complete_Analysis;
 
 --   Ada.Wide_Wide_Text_IO.Put_Line ("Compilation: " & C.Text_Name);
 --     Ada.Wide_Wide_Text_IO.Put_Line

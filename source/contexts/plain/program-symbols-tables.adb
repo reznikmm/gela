@@ -16,7 +16,7 @@ package body Program.Symbols.Tables is
       Left_Text  : constant Program.Text := Left.Buffer.Text (Left.Span);
       Right_Text : constant Program.Text := Right.Buffer.Text (Right.Span);
    begin
-      if Left_Text (Left_Text'First) = ''' then
+      if Left_Text = ""  or else Left_Text (Left_Text'First) = ''' then
          return Left_Text = Right_Text;
       else
          return Ada.Wide_Wide_Characters.Handling.To_Lower (Left_Text)
@@ -57,9 +57,9 @@ package body Program.Symbols.Tables is
    begin
       if Symbol_Maps.Has_Element (Cursor) then
          return Symbol_Maps.Element (Cursor);
-      elsif Value (Value'First) = '''
-        and Value (Value'Last) = '''
-        and Value'Length = 3
+      elsif Value'Length = 3
+        and then Value (Value'First) = '''
+        and then Value (Value'Last) = '''
       then
          --  Character literal
          return S.Wide_Wide_Character'Pos (Value (Value'First + 1));
@@ -114,7 +114,7 @@ package body Program.Symbols.Tables is
    function Hash (Value : Symbol_Reference) return Ada.Containers.Hash_Type is
       Value_Text  : constant Program.Text := Value.Buffer.Text (Value.Span);
    begin
-      if Value_Text (Value_Text'First) = ''' then
+      if Value_Text = "" or else Value_Text (Value_Text'First) = ''' then
          return Ada.Strings.Wide_Wide_Hash (Value_Text);
       else
          return Ada.Strings.Wide_Wide_Hash

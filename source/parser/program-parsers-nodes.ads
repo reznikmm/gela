@@ -19,8 +19,9 @@ private package Program.Parsers.Nodes is
    No_Token : constant Node;
 
    type Node_Factory
-     (Comp    : not null Program.Compilations.Compilation_Access;
-      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
+     (Comp     : not null Program.Compilations.Compilation_Access;
+      Subpool  : not null System.Storage_Pools.Subpools.Subpool_Handle;
+      Standard : Boolean)
        is tagged limited private;
 
    function Token
@@ -1317,11 +1318,16 @@ private
    end record;
 
    type Node_Factory
-     (Comp    : not null Program.Compilations.Compilation_Access;
-      Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle)
-   is tagged limited record
+     (Comp     : not null Program.Compilations.Compilation_Access;
+      Subpool  : not null System.Storage_Pools.Subpools.Subpool_Handle;
+      Standard : Boolean) is tagged limited
+   record
       EF : Program.Element_Factories.Element_Factory (Subpool);
    end record;
+
+   function Get_Unit_Name
+     (Self : Node_Factory'Class;
+      Unit : Node) return Text;
 
    None     : constant Node := (Element_Node, null);
    No_Token : constant Node := (Token_Node, null);

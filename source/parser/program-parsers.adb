@@ -171,10 +171,11 @@ package body Program.Parsers is
       Tokens      : not null Lexical_Elements.Lexical_Element_Vector_Access;
       Subpool     : not null System.Storage_Pools.Subpools.Subpool_Handle;
       Units       : out Unit_Vectors.Vector;
-      Pragmas     : out Element_Vectors.Vector)
+      Pragmas     : out Element_Vectors.Vector;
+      Standard    : Boolean)
    is
       Factory : aliased Program.Parsers.Nodes.Node_Factory
-        (Compilation, Subpool);
+        (Compilation, Subpool, Standard);
       Context : aliased Parse_Context :=
         (Factory => Factory'Unchecked_Access,
          Tokens  => Tokens,

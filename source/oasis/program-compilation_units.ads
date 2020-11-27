@@ -65,6 +65,7 @@ package Program.Compilation_Units is
    --  compilation unit.  This may be a simple name ("A") of a root library
    --  unit, or an expanded name ("A.B") of a subunit or non-root child unit.
    --  An expanded name shall contain the full parent_unit_name as its prefix.
+   --  Returns an empty string for the predefined Standard library unit.
 
    not overriding function Context_Clause_Elements
      (Self : access Compilation_Unit)

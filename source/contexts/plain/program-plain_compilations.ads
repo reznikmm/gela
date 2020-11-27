@@ -54,7 +54,8 @@ package Program.Plain_Compilations is
      (Self      : aliased in out Compilation;
       Text_Name : Text;
       Units     : out Program.Parsers.Unit_Vectors.Vector;
-      Pragmas   : out Program.Parsers.Element_Vectors.Vector);
+      Pragmas   : out Program.Parsers.Element_Vectors.Vector;
+      Standard  : Boolean := False);
 
 private
 

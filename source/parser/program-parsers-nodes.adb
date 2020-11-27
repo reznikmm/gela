@@ -3,8 +3,11 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Ada.Strings.Wide_Wide_Unbounded;
+
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
+with Program.Element_Visitors;
 with Program.Elements.Aspect_Specifications;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Constraints;
@@ -15,6 +18,7 @@ with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Expressions;
 with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
+with Program.Elements.Package_Declarations;
 with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Subtype_Indications;
 with Program.Storage_Pools;
@@ -932,7 +936,7 @@ package body Program.Parsers.Nodes is
    begin
       Result.Initialize
         (Compilation    => Self.Comp,
-         Full_Name      => "",
+         Full_Name      => Self.Get_Unit_Name (Unit_Declaration),
          Context_Clause => Clause,
          Declaration    => Unit_Declaration.Element,
          Parent         => null);
@@ -2216,6 +2220,61 @@ package body Program.Parsers.Nodes is
       Units := Value.Root_Units;
       Pragmas := Value.Pragmas;
    end Get_Compilation_Units;
+
+   -------------------
+   -- Get_Unit_Name --
+   -------------------
+
+   function Get_Unit_Name
+     (Self : Node_Factory'Class;
+      Unit : Node) return Text
+   is
+      function Name
+        (Element : Program.Elements.Element_Access)
+         return Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
+
+      type Visitor is new Program.Element_Visitors.Element_Visitor with record
+         Name : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
+      end record;
+
+      procedure Package_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Package_Declarations
+           .Package_Declaration_Access);
+
+      procedure Package_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Package_Declarations
+           .Package_Declaration_Access) is
+      begin
+         Self.Name :=
+           Ada.Strings.Wide_Wide_Unbounded.To_Unbounded_Wide_Wide_String
+             (Element.Name.Image);
+      end Package_Declaration;
+
+      ----------
+      -- Name --
+      ----------
+
+      function Name
+        (Element : Program.Elements.Element_Access)
+         return Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String
+      is
+         Getter : Visitor;
+      begin
+         Element.Visit (Getter);
+         return Getter.Name;
+      end Name;
+   begin
+      if Self.Standard then
+         return "";
+      elsif Unit.Kind /= Element_Node then
+         raise Program_Error;
+      else
+         return Ada.Strings.Wide_Wide_Unbounded.To_Wide_Wide_String
+           (Name (Unit.Element));
+      end if;
+   end Get_Unit_Name;
 
    --------------------
    -- Goto_Statement --

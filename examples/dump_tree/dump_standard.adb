@@ -23,7 +23,6 @@ procedure Dump_Standard is
    procedure Print (View : Program.Visibility.View_Array);
 
    Ctx : aliased Program.Plain_Contexts.Context;
-   Env : aliased Program.Visibility.Context;
 
    -----------
    -- Print --
@@ -106,9 +105,8 @@ procedure Dump_Standard is
 
 begin
    Ctx.Initialize;
-   Ctx.Parse_File
-     (Ada.Characters.Conversions.To_Wide_Wide_String (File),
-      Env);
+   Ctx.Parse_File (Ada.Characters.Conversions.To_Wide_Wide_String (File));
+   Ctx.Complete_Analysis;
 
-   Print (Env.Immediate_Visible (Program.Visibility.Standard));
+   Print (Ctx.Immediate_Visible ("", "Standard"));
 end Dump_Standard;

@@ -56,4 +56,7 @@ private
      (Self : access Unit_Declaration)
        return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access;
 
+   overriding function Is_Library_Unit_Declaration_Unit
+     (Self : Unit_Declaration) return Boolean;
+
 end Program.Units.Declarations;
