@@ -12,6 +12,7 @@ package body Program.Nodes.Operator_Symbols is
    begin
       return Result : Operator_Symbol :=
         (Operator_Symbol_Token => Operator_Symbol_Token,
+         Corresponding_Defining_Operator_Symbol => null,
          Enclosing_Element => null)
       do
          Initialize (Result);
@@ -25,13 +26,22 @@ package body Program.Nodes.Operator_Symbols is
       return Implicit_Operator_Symbol is
    begin
       return Result : Implicit_Operator_Symbol :=
-        (Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+        (Corresponding_Defining_Operator_Symbol => null,
+         Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
          Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
    end Create;
+
+   overriding function Corresponding_Defining_Operator_Symbol
+    (Self : Base_Operator_Symbol)
+      return Program.Elements.Defining_Operator_Symbols
+          .Defining_Operator_Symbol_Access is
+   begin
+      return Self.Corresponding_Defining_Operator_Symbol;
+   end Corresponding_Defining_Operator_Symbol;
 
    overriding function Operator_Symbol_Token
     (Self : Operator_Symbol)

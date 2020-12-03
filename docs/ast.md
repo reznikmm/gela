@@ -1033,16 +1033,19 @@
 > _[Expression]_
  - Identifier_Token : Token
  - Image                 : Text
+ - Corresponding_Defining_Identifier : [Defining_Identifier]?
 
 ### Operator_Symbol
 > _[Expression]_
  - Operator_Symbol_Token : Token
  - Image                 : Text
+ - Corresponding_Defining_Operator_Symbol : [Defining_Operator_Symbol]?
 
 ### Character_Literal
 > _[Expression]_
  - Character_Literal_Token : Token
  - Image                 : Text
+ - Corresponding_Defining_Character_Literal : [Defining_Character_Literal]?
 
 ### Explicit_Dereference
 > _[Expression]_

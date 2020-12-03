@@ -4,6 +4,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Identifiers;
 with Program.Elements.Identifiers;
 with Program.Element_Visitors;
 
@@ -37,13 +38,20 @@ private
    type Base_Identifier is
      abstract new Program.Nodes.Node
        and Program.Elements.Identifiers.Identifier
-     with null record;
+     with record
+        Corresponding_Defining_Identifier : Program.Elements
+          .Defining_Identifiers.Defining_Identifier_Access;
+     end record;
 
    procedure Initialize (Self : aliased in out Base_Identifier'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Identifier;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
+
+   overriding function Corresponding_Defining_Identifier
+    (Self : Base_Identifier)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access;
 
    overriding function Is_Identifier (Self : Base_Identifier) return Boolean;
 

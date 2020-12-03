@@ -5,6 +5,7 @@
 
 with Program.Elements.Expressions;
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Operator_Symbols;
 
 package Program.Elements.Operator_Symbols is
 
@@ -18,6 +19,11 @@ package Program.Elements.Operator_Symbols is
 
    not overriding function Image (Self : Operator_Symbol) return Text
      is abstract;
+
+   not overriding function Corresponding_Defining_Operator_Symbol
+    (Self : Operator_Symbol)
+      return Program.Elements.Defining_Operator_Symbols
+          .Defining_Operator_Symbol_Access is abstract;
 
    type Operator_Symbol_Text is limited interface;
 

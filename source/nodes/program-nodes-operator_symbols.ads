@@ -4,6 +4,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Operator_Symbols;
 with Program.Elements.Operator_Symbols;
 with Program.Element_Visitors;
 
@@ -39,13 +40,21 @@ private
    type Base_Operator_Symbol is
      abstract new Program.Nodes.Node
        and Program.Elements.Operator_Symbols.Operator_Symbol
-     with null record;
+     with record
+        Corresponding_Defining_Operator_Symbol : Program.Elements
+          .Defining_Operator_Symbols.Defining_Operator_Symbol_Access;
+     end record;
 
    procedure Initialize (Self : aliased in out Base_Operator_Symbol'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Operator_Symbol;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
+
+   overriding function Corresponding_Defining_Operator_Symbol
+    (Self : Base_Operator_Symbol)
+      return Program.Elements.Defining_Operator_Symbols
+          .Defining_Operator_Symbol_Access;
 
    overriding function Is_Operator_Symbol
     (Self : Base_Operator_Symbol)

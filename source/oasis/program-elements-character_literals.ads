@@ -5,6 +5,7 @@
 
 with Program.Elements.Expressions;
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Character_Literals;
 
 package Program.Elements.Character_Literals is
 
@@ -18,6 +19,11 @@ package Program.Elements.Character_Literals is
 
    not overriding function Image (Self : Character_Literal) return Text
      is abstract;
+
+   not overriding function Corresponding_Defining_Character_Literal
+    (Self : Character_Literal)
+      return Program.Elements.Defining_Character_Literals
+          .Defining_Character_Literal_Access is abstract;
 
    type Character_Literal_Text is limited interface;
 

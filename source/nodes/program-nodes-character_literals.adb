@@ -12,6 +12,7 @@ package body Program.Nodes.Character_Literals is
    begin
       return Result : Character_Literal :=
         (Character_Literal_Token => Character_Literal_Token,
+         Corresponding_Defining_Character_Literal => null,
          Enclosing_Element => null)
       do
          Initialize (Result);
@@ -25,13 +26,22 @@ package body Program.Nodes.Character_Literals is
       return Implicit_Character_Literal is
    begin
       return Result : Implicit_Character_Literal :=
-        (Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+        (Corresponding_Defining_Character_Literal => null,
+         Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
          Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
    end Create;
+
+   overriding function Corresponding_Defining_Character_Literal
+    (Self : Base_Character_Literal)
+      return Program.Elements.Defining_Character_Literals
+          .Defining_Character_Literal_Access is
+   begin
+      return Self.Corresponding_Defining_Character_Literal;
+   end Corresponding_Defining_Character_Literal;
 
    overriding function Character_Literal_Token
     (Self : Character_Literal)

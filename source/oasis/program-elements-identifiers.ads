@@ -6,6 +6,7 @@
 with Program.Element_Vectors;
 with Program.Elements.Expressions;
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Identifiers;
 
 package Program.Elements.Identifiers is
 
@@ -18,6 +19,11 @@ package Program.Elements.Identifiers is
      with Storage_Size => 0;
 
    not overriding function Image (Self : Identifier) return Text is abstract;
+
+   not overriding function Corresponding_Defining_Identifier
+    (Self : Identifier)
+      return Program.Elements.Defining_Identifiers.Defining_Identifier_Access
+     is abstract;
 
    type Identifier_Text is limited interface;
 

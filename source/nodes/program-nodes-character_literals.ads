@@ -4,6 +4,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
+with Program.Elements.Defining_Character_Literals;
 with Program.Elements.Character_Literals;
 with Program.Element_Visitors;
 
@@ -39,13 +40,21 @@ private
    type Base_Character_Literal is
      abstract new Program.Nodes.Node
        and Program.Elements.Character_Literals.Character_Literal
-     with null record;
+     with record
+        Corresponding_Defining_Character_Literal : Program.Elements
+          .Defining_Character_Literals.Defining_Character_Literal_Access;
+     end record;
 
    procedure Initialize (Self : aliased in out Base_Character_Literal'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Character_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
+
+   overriding function Corresponding_Defining_Character_Literal
+    (Self : Base_Character_Literal)
+      return Program.Elements.Defining_Character_Literals
+          .Defining_Character_Literal_Access;
 
    overriding function Is_Character_Literal
     (Self : Base_Character_Literal)

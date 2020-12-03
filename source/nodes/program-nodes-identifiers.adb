@@ -11,7 +11,8 @@ package body Program.Nodes.Identifiers is
       return Identifier is
    begin
       return Result : Identifier :=
-        (Identifier_Token => Identifier_Token, Enclosing_Element => null)
+        (Identifier_Token => Identifier_Token,
+         Corresponding_Defining_Identifier => null, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
@@ -24,13 +25,22 @@ package body Program.Nodes.Identifiers is
       return Implicit_Identifier is
    begin
       return Result : Implicit_Identifier :=
-        (Is_Part_Of_Implicit => Is_Part_Of_Implicit,
+        (Corresponding_Defining_Identifier => null,
+         Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
          Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
    end Create;
+
+   overriding function Corresponding_Defining_Identifier
+    (Self : Base_Identifier)
+      return Program.Elements.Defining_Identifiers
+          .Defining_Identifier_Access is
+   begin
+      return Self.Corresponding_Defining_Identifier;
+   end Corresponding_Defining_Identifier;
 
    overriding function Identifier_Token
     (Self : Identifier)
