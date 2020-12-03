@@ -101,21 +101,21 @@ package body Program.Nodes.Formal_Package_Associations is
       null;
    end Initialize;
 
-   overriding function Is_Formal_Package_Association_Element
+   overriding function Is_Formal_Package_Association
     (Self : Base_Formal_Package_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Package_Association_Element;
+   end Is_Formal_Package_Association;
 
-   overriding function Is_Association_Element
+   overriding function Is_Association
     (Self : Base_Formal_Package_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Association_Element;
+   end Is_Association;
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Package_Association;

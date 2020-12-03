@@ -93,21 +93,21 @@ package body Program.Nodes.Known_Discriminant_Parts is
       null;
    end Initialize;
 
-   overriding function Is_Known_Discriminant_Part_Element
+   overriding function Is_Known_Discriminant_Part
     (Self : Base_Known_Discriminant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Known_Discriminant_Part_Element;
+   end Is_Known_Discriminant_Part;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Known_Discriminant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Known_Discriminant_Part;

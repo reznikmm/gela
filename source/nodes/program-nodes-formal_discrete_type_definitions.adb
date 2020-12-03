@@ -85,29 +85,29 @@ package body Program.Nodes.Formal_Discrete_Type_Definitions is
       null;
    end Initialize;
 
-   overriding function Is_Formal_Discrete_Type_Definition_Element
+   overriding function Is_Formal_Discrete_Type_Definition
     (Self : Base_Formal_Discrete_Type_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Discrete_Type_Definition_Element;
+   end Is_Formal_Discrete_Type_Definition;
 
-   overriding function Is_Formal_Type_Definition_Element
+   overriding function Is_Formal_Type_Definition
     (Self : Base_Formal_Discrete_Type_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Formal_Type_Definition_Element;
+   end Is_Formal_Type_Definition;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Formal_Discrete_Type_Definition)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Discrete_Type_Definition;

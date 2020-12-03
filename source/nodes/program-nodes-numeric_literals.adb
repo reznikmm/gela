@@ -77,21 +77,21 @@ package body Program.Nodes.Numeric_Literals is
       null;
    end Initialize;
 
-   overriding function Is_Numeric_Literal_Element
+   overriding function Is_Numeric_Literal
     (Self : Base_Numeric_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Numeric_Literal_Element;
+   end Is_Numeric_Literal;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Numeric_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Numeric_Literal;

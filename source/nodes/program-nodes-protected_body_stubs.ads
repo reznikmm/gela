@@ -81,11 +81,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Protected_Body_Stub_Element
+   overriding function Is_Protected_Body_Stub
     (Self : Base_Protected_Body_Stub)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Protected_Body_Stub)
       return Boolean;
 

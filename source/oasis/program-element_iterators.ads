@@ -1,15 +1,15 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
 with Ada.Iterator_Interfaces;
 
-limited with Program.Elements;
+with Program.Elements;
 limited with Program.Element_Vectors;
 
 package Program.Element_Iterators is
-   pragma Pure (Program.Element_Iterators);
+   pragma Pure;
 
    type Child_Iterator is tagged;
 
@@ -130,7 +130,7 @@ package Program.Element_Iterators is
    package Cursors is
 
       type Enclosing_Element_Cursor is record
-         Element : access Program.Elements.Element'Class;
+         Element : Program.Elements.Element_Access;
          Level   : Positive;
       end record;
 
@@ -145,6 +145,15 @@ package Program.Element_Iterators is
         (Self : Child_Cursor) return Program.Elements.Element_Access;
 
       function Property (Self : Child_Cursor) return Property_Name;
+      --  Property name for element pointed by the cursor
+
+      function Index (Self : Child_Cursor) return Positive;
+      --  Index if the cursor in the middle of Element_Vector or 1 for single
+      --  element.
+
+      function Total (Self : Child_Cursor) return Positive;
+      --  Vector length if the cursor in the middle of Element_Vector or 1 for
+      --  single element.
 
       package Internal is
 
@@ -158,10 +167,11 @@ package Program.Element_Iterators is
    private
 
       type Child_Cursor is tagged record
-         Element      : access Program.Elements.Element'Class;
+         Element      : Program.Elements.Element_Access;
          Property     : Property_Name;
          Getter_Index : Positive;
          Item_Index   : Positive;
+         Total_Items  : Positive;
       end record;
 
    end Cursors;
@@ -173,7 +183,7 @@ package Program.Element_Iterators is
      new Enclosing_Element_Iterators.Forward_Iterator with private;
 
    function To_Enclosing_Element_Iterator
-     (Parent : not null access Program.Elements.Element'Class)
+     (Parent : not null Program.Elements.Element_Access)
          return Enclosing_Element_Iterator;
 
    overriding function First
@@ -188,12 +198,7 @@ package Program.Element_Iterators is
    package Child_Iterators is
      new Ada.Iterator_Interfaces (Cursors.Child_Cursor, Cursors.Has_Element);
 
-   type Child_Iterator is
-     new Child_Iterators.Forward_Iterator with private;
-
-   function To_Child_Iterator
-     (Parent : not null access Program.Elements.Element'Class)
-      return Child_Iterator;
+   type Child_Iterator is new Child_Iterators.Forward_Iterator with private;
 
    overriding function First
      (Self : Child_Iterator) return Cursors.Child_Cursor;
@@ -201,6 +206,27 @@ package Program.Element_Iterators is
    overriding function Next
      (Self     : Child_Iterator;
       Position : Cursors.Child_Cursor) return Cursors.Child_Cursor;
+
+   type Cursor_Checker is access
+     function (Cursor : Cursors.Child_Cursor) return Boolean;
+
+   function Only_If
+     (Parent : Child_Iterator;
+      Filter : not null Cursor_Checker)
+      return Child_Iterator;
+
+   type Element_Checker is access function
+     (Element : not null Program.Elements.Element_Access) return Boolean;
+
+   function Only_If
+     (Parent : Child_Iterator;
+      Filter : not null Element_Checker)
+      return Child_Iterator;
+
+   function To_Child_Iterator
+     (Parent : not null Program.Elements.Element_Access;
+      Filter : Element_Checker := null)
+      return Child_Iterator;
 
 private
 
@@ -211,12 +237,12 @@ private
       case Is_Vector is
          when False =>
             Get_Child : access function
-              (Self : access Program.Elements.Element'Class)
+              (Self : not null Program.Elements.Element_Access)
                 return Program.Elements.Element_Access;
 
          when True =>
             Get_Vector : access function
-              (Self : access Program.Elements.Element'Class)
+              (Self : not null Program.Elements.Element_Access)
                 return Program.Element_Vectors.Element_Vector_Access;
 
       end case;
@@ -228,12 +254,29 @@ private
    type Enclosing_Element_Iterator is
      new Enclosing_Element_Iterators.Forward_Iterator with
    record
-      First : access Program.Elements.Element'Class;
+      First : Program.Elements.Element_Access;
    end record;
 
+   type Checker_Chain (Is_Cursor : Boolean := False) is record
+      case Is_Cursor is
+         when True =>
+            Cursor_Filter  : Cursor_Checker;
+         when False =>
+            Element_Filter : Element_Checker;
+      end case;
+   end record;
+
+   type Checker_Chain_Array is array (Positive range <>) of Checker_Chain;
+
+   function Check
+     (Cursor : Cursors.Child_Cursor;
+      List   : Checker_Chain_Array) return Boolean;
+
    type Child_Iterator is new Child_Iterators.Forward_Iterator with record
-      Parent  : access Program.Elements.Element'Class;
+      Parent  : Program.Elements.Element_Access;
       Getters : access constant Getter_Array;
+      Filter  : Checker_Chain_Array (1 .. 3);
+      Last    : Natural := 0;
    end record;
 
 end Program.Element_Iterators;

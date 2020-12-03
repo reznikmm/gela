@@ -204,21 +204,21 @@ package body Program.Nodes.Generic_Package_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Generic_Package_Declaration_Element
+   overriding function Is_Generic_Package_Declaration
     (Self : Base_Generic_Package_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Generic_Package_Declaration_Element;
+   end Is_Generic_Package_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Generic_Package_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Generic_Package_Declaration;

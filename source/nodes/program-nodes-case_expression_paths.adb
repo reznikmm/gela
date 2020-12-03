@@ -100,21 +100,21 @@ package body Program.Nodes.Case_Expression_Paths is
       null;
    end Initialize;
 
-   overriding function Is_Case_Expression_Path_Element
+   overriding function Is_Case_Expression_Path
     (Self : Base_Case_Expression_Path)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Case_Expression_Path_Element;
+   end Is_Case_Expression_Path;
 
-   overriding function Is_Path_Element
+   overriding function Is_Path
     (Self : Base_Case_Expression_Path)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Path_Element;
+   end Is_Path;
 
    overriding procedure Visit
     (Self    : not null access Base_Case_Expression_Path;

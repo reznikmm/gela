@@ -71,11 +71,11 @@ private
     (Self : Base_Short_Circuit_Operation)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Short_Circuit_Operation_Element
+   overriding function Is_Short_Circuit_Operation
     (Self : Base_Short_Circuit_Operation)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Short_Circuit_Operation)
       return Boolean;
 

@@ -70,11 +70,11 @@ private
       return not null Program.Elements.Defining_Identifiers
           .Defining_Identifier_Access;
 
-   overriding function Is_Defining_Expanded_Name_Element
+   overriding function Is_Defining_Expanded_Name
     (Self : Base_Defining_Expanded_Name)
       return Boolean;
 
-   overriding function Is_Defining_Name_Element
+   overriding function Is_Defining_Name
     (Self : Base_Defining_Expanded_Name)
       return Boolean;
 

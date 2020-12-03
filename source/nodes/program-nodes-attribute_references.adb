@@ -123,21 +123,21 @@ package body Program.Nodes.Attribute_References is
       null;
    end Initialize;
 
-   overriding function Is_Attribute_Reference_Element
+   overriding function Is_Attribute_Reference
     (Self : Base_Attribute_Reference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Attribute_Reference_Element;
+   end Is_Attribute_Reference;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Attribute_Reference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Attribute_Reference;

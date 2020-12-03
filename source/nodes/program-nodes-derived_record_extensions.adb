@@ -173,29 +173,29 @@ package body Program.Nodes.Derived_Record_Extensions is
       null;
    end Initialize;
 
-   overriding function Is_Derived_Record_Extension_Element
+   overriding function Is_Derived_Record_Extension
     (Self : Base_Derived_Record_Extension)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Derived_Record_Extension_Element;
+   end Is_Derived_Record_Extension;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Derived_Record_Extension)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Type_Definition_Element;
+   end Is_Type_Definition;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Derived_Record_Extension)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Derived_Record_Extension;

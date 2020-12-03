@@ -94,21 +94,21 @@ package body Program.Nodes.Infix_Operators is
       null;
    end Initialize;
 
-   overriding function Is_Infix_Operator_Element
+   overriding function Is_Infix_Operator
     (Self : Base_Infix_Operator)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Infix_Operator_Element;
+   end Is_Infix_Operator;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Infix_Operator)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Infix_Operator;

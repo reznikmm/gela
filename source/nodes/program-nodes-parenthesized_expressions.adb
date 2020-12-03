@@ -88,21 +88,21 @@ package body Program.Nodes.Parenthesized_Expressions is
       null;
    end Initialize;
 
-   overriding function Is_Parenthesized_Expression_Element
+   overriding function Is_Parenthesized_Expression
     (Self : Base_Parenthesized_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Parenthesized_Expression_Element;
+   end Is_Parenthesized_Expression;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Parenthesized_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Parenthesized_Expression;

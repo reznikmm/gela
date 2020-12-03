@@ -96,21 +96,21 @@ package body Program.Nodes.Delay_Statements is
       null;
    end Initialize;
 
-   overriding function Is_Delay_Statement_Element
+   overriding function Is_Delay_Statement
     (Self : Base_Delay_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Delay_Statement_Element;
+   end Is_Delay_Statement;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Delay_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement_Element;
+   end Is_Statement;
 
    overriding procedure Visit
     (Self    : not null access Base_Delay_Statement;

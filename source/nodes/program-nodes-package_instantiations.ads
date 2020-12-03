@@ -104,11 +104,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Package_Instantiation_Element
+   overriding function Is_Package_Instantiation
     (Self : Base_Package_Instantiation)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Package_Instantiation)
       return Boolean;
 

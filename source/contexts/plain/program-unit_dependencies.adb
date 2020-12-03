@@ -3,6 +3,7 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Filters;
 with Program.Element_Vectors;
 with Program.Elements.Identifiers;
 with Program.Elements.Selected_Components;
@@ -92,7 +93,9 @@ package body Program.Unit_Dependencies is
 
       --  A compilation unit depends semantically upon each library_item
       --  mentioned in a with_clause of the compilation unit.
-      for J in Clauses.Each_Element (Elements.Is_With_Clause'Access) loop
+      for J in Clauses.Each_Element
+        (Program.Element_Filters.Is_With_Clause'Access)
+      loop
          declare
             With_Clause : constant Elements.With_Clauses.With_Clause_Access :=
               J.Element.To_With_Clause;

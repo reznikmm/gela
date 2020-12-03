@@ -134,21 +134,21 @@ package body Program.Nodes.If_Expressions is
       null;
    end Initialize;
 
-   overriding function Is_If_Expression_Element
+   overriding function Is_If_Expression
     (Self : Base_If_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_If_Expression_Element;
+   end Is_If_Expression;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_If_Expression)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_If_Expression;

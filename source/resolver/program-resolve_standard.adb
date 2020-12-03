@@ -3,6 +3,7 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Iterators;
 with Program.Element_Visitors;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Defining_Identifiers;

@@ -1,9 +1,7 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
-
-with Program.Elements;
 
 with Program.Element_Vectors;
 
@@ -25,7 +23,7 @@ package body Program.Element_Iterators is
       type Child_Access is access all Child'Class;
 
       with function Get_Child (Self : Element) return Child_Access is abstract;
-   function Generic_Child (Self : access Program.Elements.Element'Class)
+   function Generic_Child (Self : not null Program.Elements.Element_Access)
      return Program.Elements.Element_Access;
 
    generic
@@ -38,7 +36,7 @@ package body Program.Element_Iterators is
 
       with function Get_Vector
         (Self : Parent) return Vector_Access is abstract;
-   function Generic_Vector (Self : access Program.Elements.Element'Class)
+   function Generic_Vector (Self : not null Program.Elements.Element_Access)
      return Program.Element_Vectors.Element_Vector_Access;
 
    -------------
@@ -63,7 +61,7 @@ package body Program.Element_Iterators is
 
       function Has_Element (Self : Child_Cursor) return Boolean is
       begin
-         return Self.Element /= null;
+         return Self.Element.Assigned;
       end Has_Element;
 
       ---------------------------
@@ -73,8 +71,26 @@ package body Program.Element_Iterators is
       function Has_Enclosing_Element
         (Self : Enclosing_Element_Cursor) return Boolean is
       begin
-         return Self.Element not in null;
+         return Self.Element.Assigned;
       end Has_Enclosing_Element;
+
+      -----------
+      -- Index --
+      -----------
+
+      function Index (Self : Child_Cursor) return Positive is
+      begin
+         return Self.Item_Index;
+      end Index;
+
+      -----------
+      -- Total --
+      -----------
+
+      function Total (Self : Child_Cursor) return Positive is
+      begin
+         return Self.Total_Items;
+      end Total;
 
       --------------
       -- Property --
@@ -103,6 +119,7 @@ package body Program.Element_Iterators is
 
             Cursor.Element := null;
 
+            Find_Next_Element :
             while Cursor.Getter_Index in Self.Getters'Range loop
                Cursor.Property := Self.Getters (Cursor.Getter_Index).Property;
 
@@ -111,12 +128,16 @@ package body Program.Element_Iterators is
                      Vector := Self.Getters (Cursor.Getter_Index).Get_Vector
                        (Self.Parent);
 
-                     if Vector not in null
+                     while Vector not in null
                        and then Cursor.Item_Index <= Vector.Length
-                     then
+                     loop
                         Cursor.Element := Vector.Element (Cursor.Item_Index);
-                        exit;
-                     end if;
+
+                        exit Find_Next_Element
+                          when Check (Cursor, Self.Filter (1 .. Self.Last));
+
+                        Cursor.Item_Index := Cursor.Item_Index + 1;
+                     end loop;
 
                   when False =>
                      if Cursor.Item_Index > 1 then
@@ -126,17 +147,39 @@ package body Program.Element_Iterators is
                           Self.Getters (Cursor.Getter_Index).Get_Child
                           (Self.Parent);
 
-                        exit when Cursor.Element /= null;
+                        exit Find_Next_Element
+                          when Cursor.Element.Assigned and then
+                            Check (Cursor, Self.Filter (1 .. Self.Last));
                      end if;
                end case;
 
                Cursor.Getter_Index := Cursor.Getter_Index + 1;
-            end loop;
+            end loop Find_Next_Element;
          end Step;
 
       end Internal;
 
    end Cursors;
+
+   -----------
+   -- Check --
+   -----------
+
+   function Check
+     (Cursor : Cursors.Child_Cursor;
+      List   : Checker_Chain_Array) return Boolean is
+   begin
+      for Item of List loop
+         case Item.Is_Cursor is
+            when True =>
+               return Item.Cursor_Filter (Cursor);
+            when False =>
+               return Item.Element_Filter (Cursor.Element);
+         end case;
+      end loop;
+
+      return True;
+   end Check;
 
    -----------
    -- First --
@@ -166,7 +209,7 @@ package body Program.Element_Iterators is
    --------------------
 
    function Generic_Vector
-     (Self : access Program.Elements.Element'Class)
+     (Self : not null Program.Elements.Element_Access)
       return Program.Element_Vectors.Element_Vector_Access
    is
       Result : constant Vector_Access := Get_Vector (Parent'Class (Self.all));
@@ -179,7 +222,7 @@ package body Program.Element_Iterators is
    -------------------
 
    function Generic_Child
-     (Self : access Program.Elements.Element'Class)
+     (Self : not null Program.Elements.Element_Access)
       return Program.Elements.Element_Access
    is
       Result : constant Child_Access := Get_Child (Element'Class (Self.all));
@@ -215,16 +258,57 @@ package body Program.Element_Iterators is
       end return;
    end Next;
 
+   -------------
+   -- Only_If --
+   -------------
+
+   function Only_If
+     (Parent : Child_Iterator;
+      Filter : not null Cursor_Checker)
+      return Child_Iterator is
+   begin
+      return Result : Child_Iterator :=
+        (Parent.Parent, Parent.Getters, Parent.Filter, Parent.Last + 1)
+      do
+         Result.Filter (Result.Last) := (True, Filter);
+      end return;
+   end Only_If;
+
+   -------------
+   -- Only_If --
+   -------------
+
+   function Only_If
+     (Parent : Child_Iterator;
+      Filter : not null Element_Checker)
+      return Child_Iterator is
+   begin
+      return Result : Child_Iterator :=
+        (Parent.Parent, Parent.Getters, Parent.Filter, Parent.Last + 1)
+      do
+         Result.Filter (Result.Last) := (False, Filter);
+      end return;
+   end Only_If;
+
    -----------------------
    -- To_Child_Iterator --
    -----------------------
 
    function To_Child_Iterator
-     (Parent : not null access Program.Elements.Element'Class)
+     (Parent : not null Program.Elements.Element_Access;
+      Filter : Element_Checker := null)
       return Child_Iterator is
    begin
-      return Child_Iterator'(Parent  => Parent,
-                             Getters => Internal.Get (Parent));
+      return Result : Child_Iterator := (Parent  => Parent,
+                                         Getters => Internal.Get (Parent),
+                                         Last    => 0,
+                                         Filter  => <>)
+      do
+         if Filter /= null then
+            Result.Filter (1) := (False, Filter);
+            Result.Last := 1;
+         end if;
+      end return;
    end To_Child_Iterator;
 
    -----------------------------------
@@ -232,7 +316,7 @@ package body Program.Element_Iterators is
    -----------------------------------
 
    function To_Enclosing_Element_Iterator
-     (Parent : not null access Program.Elements.Element'Class)
+     (Parent : not null Program.Elements.Element_Access)
       return Enclosing_Element_Iterator is
    begin
       return Enclosing_Element_Iterator'(First => Parent);

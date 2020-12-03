@@ -154,11 +154,11 @@ private
     (Self : Base_Function_Body_Declaration)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Function_Body_Declaration_Element
+   overriding function Is_Function_Body_Declaration
     (Self : Base_Function_Body_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Function_Body_Declaration)
       return Boolean;
 

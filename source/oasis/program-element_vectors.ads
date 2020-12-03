@@ -83,11 +83,11 @@ package Program.Element_Vectors is
          return Program.Element_Vectors.Element_Cursor;
 
    type Element_Checker is access
-     function (Self : Program.Elements.Element'Class) return Boolean;
+     function (Self : not null Program.Elements.Element_Access) return Boolean;
 
    function Each_Element
-     (Self         : access Element_Vector'Class;
-      When_Element : Element_Checker := null) return Iterator;
+     (Self   : access Element_Vector'Class;
+      Filter : Element_Checker := null) return Iterator;
    --  Return an iterator to enumerate elements in the Vector which satisfy
    --  given condition, if provided
 

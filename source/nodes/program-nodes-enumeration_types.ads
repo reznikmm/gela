@@ -64,15 +64,15 @@ private
       return not null Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Vector_Access;
 
-   overriding function Is_Enumeration_Type_Element
+   overriding function Is_Enumeration_Type
     (Self : Base_Enumeration_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Enumeration_Type)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Enumeration_Type)
       return Boolean;
 

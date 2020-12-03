@@ -86,19 +86,19 @@ private
     (Self : Base_Formal_Function_Access_Type)
       return not null Program.Elements.Element_Access;
 
-   overriding function Is_Formal_Function_Access_Type_Element
+   overriding function Is_Formal_Function_Access_Type
     (Self : Base_Formal_Function_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Access_Type_Element
+   overriding function Is_Formal_Access_Type
     (Self : Base_Formal_Function_Access_Type)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition_Element
+   overriding function Is_Formal_Type_Definition
     (Self : Base_Formal_Function_Access_Type)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Formal_Function_Access_Type)
       return Boolean;
 

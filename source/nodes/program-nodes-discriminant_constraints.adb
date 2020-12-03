@@ -93,29 +93,29 @@ package body Program.Nodes.Discriminant_Constraints is
       null;
    end Initialize;
 
-   overriding function Is_Discriminant_Constraint_Element
+   overriding function Is_Discriminant_Constraint
     (Self : Base_Discriminant_Constraint)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discriminant_Constraint_Element;
+   end Is_Discriminant_Constraint;
 
-   overriding function Is_Constraint_Element
+   overriding function Is_Constraint
     (Self : Base_Discriminant_Constraint)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Constraint_Element;
+   end Is_Constraint;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discriminant_Constraint)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Constraint;

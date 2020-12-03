@@ -64,11 +64,11 @@ private
       return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Vector_Access;
 
-   overriding function Is_Known_Discriminant_Part_Element
+   overriding function Is_Known_Discriminant_Part
     (Self : Base_Known_Discriminant_Part)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Known_Discriminant_Part)
       return Boolean;
 

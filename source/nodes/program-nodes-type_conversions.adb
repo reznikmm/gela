@@ -101,21 +101,21 @@ package body Program.Nodes.Type_Conversions is
       null;
    end Initialize;
 
-   overriding function Is_Type_Conversion_Element
+   overriding function Is_Type_Conversion
     (Self : Base_Type_Conversion)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Type_Conversion_Element;
+   end Is_Type_Conversion;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Type_Conversion)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Type_Conversion;

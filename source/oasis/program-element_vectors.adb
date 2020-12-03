@@ -16,10 +16,10 @@ package body Program.Element_Vectors is
    ------------------
 
    function Each_Element
-     (Self         : access Element_Vector'Class;
-      When_Element : Element_Checker := null) return Iterator is
+     (Self   : access Element_Vector'Class;
+      Filter : Element_Checker := null) return Iterator is
    begin
-      return (Vector => Self, Condition => When_Element);
+      return (Vector => Self, Condition => Filter);
    end Each_Element;
 
    -----------
@@ -89,7 +89,7 @@ package body Program.Element_Vectors is
    begin
       while Pos.Index in 1 .. Self.Vector.Length
         and then Self.Condition /= null
-        and then not Self.Condition (Self.Vector.Element (Pos.Index).all)
+        and then not Self.Condition (Self.Vector.Element (Pos.Index))
       loop
          Pos.Index := Pos.Index + Step;
       end loop;

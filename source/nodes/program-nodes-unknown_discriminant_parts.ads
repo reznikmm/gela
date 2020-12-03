@@ -56,11 +56,11 @@ private
     (Self    : not null access Base_Unknown_Discriminant_Part;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Unknown_Discriminant_Part_Element
+   overriding function Is_Unknown_Discriminant_Part
     (Self : Base_Unknown_Discriminant_Part)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Unknown_Discriminant_Part)
       return Boolean;
 

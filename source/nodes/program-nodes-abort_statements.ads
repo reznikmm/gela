@@ -61,11 +61,11 @@ private
     (Self : Base_Abort_Statement)
       return not null Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Abort_Statement_Element
+   overriding function Is_Abort_Statement
     (Self : Base_Abort_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Abort_Statement)
       return Boolean;
 

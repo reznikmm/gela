@@ -64,11 +64,11 @@ private
     (Self : Base_Exit_Statement)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Exit_Statement_Element
+   overriding function Is_Exit_Statement
     (Self : Base_Exit_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Exit_Statement)
       return Boolean;
 

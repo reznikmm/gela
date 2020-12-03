@@ -58,11 +58,11 @@ private
     (Self : Base_Explicit_Dereference)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Explicit_Dereference_Element
+   overriding function Is_Explicit_Dereference
     (Self : Base_Explicit_Dereference)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Explicit_Dereference)
       return Boolean;
 

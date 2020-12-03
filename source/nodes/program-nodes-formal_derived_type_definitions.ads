@@ -82,15 +82,15 @@ private
     (Self : Base_Formal_Derived_Type_Definition)
       return Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Formal_Derived_Type_Definition_Element
+   overriding function Is_Formal_Derived_Type_Definition
     (Self : Base_Formal_Derived_Type_Definition)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition_Element
+   overriding function Is_Formal_Type_Definition
     (Self : Base_Formal_Derived_Type_Definition)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Formal_Derived_Type_Definition)
       return Boolean;
 

@@ -54,15 +54,15 @@ private
     (Self    : not null access Base_Formal_Decimal_Fixed_Point_Definition;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Formal_Decimal_Fixed_Point_Definition_Element
+   overriding function Is_Formal_Decimal_Fixed_Point_Definition
     (Self : Base_Formal_Decimal_Fixed_Point_Definition)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition_Element
+   overriding function Is_Formal_Type_Definition
     (Self : Base_Formal_Decimal_Fixed_Point_Definition)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Formal_Decimal_Fixed_Point_Definition)
       return Boolean;
 

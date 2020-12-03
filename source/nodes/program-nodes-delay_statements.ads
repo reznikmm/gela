@@ -61,11 +61,11 @@ private
     (Self : Base_Delay_Statement)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Delay_Statement_Element
+   overriding function Is_Delay_Statement
     (Self : Base_Delay_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Delay_Statement)
       return Boolean;
 

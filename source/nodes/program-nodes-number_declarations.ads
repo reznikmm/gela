@@ -76,11 +76,11 @@ private
     (Self : Base_Number_Declaration)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Number_Declaration_Element
+   overriding function Is_Number_Declaration
     (Self : Base_Number_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Number_Declaration)
       return Boolean;
 

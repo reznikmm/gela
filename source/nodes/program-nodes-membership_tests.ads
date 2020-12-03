@@ -67,11 +67,11 @@ private
     (Self : Base_Membership_Test)
       return not null Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Is_Membership_Test_Element
+   overriding function Is_Membership_Test
     (Self : Base_Membership_Test)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Membership_Test)
       return Boolean;
 

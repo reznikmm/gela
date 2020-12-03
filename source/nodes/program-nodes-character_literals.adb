@@ -77,21 +77,21 @@ package body Program.Nodes.Character_Literals is
       null;
    end Initialize;
 
-   overriding function Is_Character_Literal_Element
+   overriding function Is_Character_Literal
     (Self : Base_Character_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Character_Literal_Element;
+   end Is_Character_Literal;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Character_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Character_Literal;

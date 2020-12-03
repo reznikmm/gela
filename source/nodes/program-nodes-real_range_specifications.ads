@@ -73,11 +73,11 @@ private
     (Self : Base_Real_Range_Specification)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Real_Range_Specification_Element
+   overriding function Is_Real_Range_Specification
     (Self : Base_Real_Range_Specification)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Real_Range_Specification)
       return Boolean;
 

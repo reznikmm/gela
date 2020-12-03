@@ -69,11 +69,11 @@ private
     (Self : Base_Record_Component_Association)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Record_Component_Association_Element
+   overriding function Is_Record_Component_Association
     (Self : Base_Record_Component_Association)
       return Boolean;
 
-   overriding function Is_Association_Element
+   overriding function Is_Association
     (Self : Base_Record_Component_Association)
       return Boolean;
 

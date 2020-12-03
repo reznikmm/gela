@@ -80,21 +80,21 @@ package body Program.Nodes.Defining_Character_Literals is
       null;
    end Initialize;
 
-   overriding function Is_Defining_Character_Literal_Element
+   overriding function Is_Defining_Character_Literal
     (Self : Base_Defining_Character_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Character_Literal_Element;
+   end Is_Defining_Character_Literal;
 
-   overriding function Is_Defining_Name_Element
+   overriding function Is_Defining_Name
     (Self : Base_Defining_Character_Literal)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Name_Element;
+   end Is_Defining_Name;
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Character_Literal;

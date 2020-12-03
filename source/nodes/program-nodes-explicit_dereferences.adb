@@ -85,21 +85,21 @@ package body Program.Nodes.Explicit_Dereferences is
       null;
    end Initialize;
 
-   overriding function Is_Explicit_Dereference_Element
+   overriding function Is_Explicit_Dereference
     (Self : Base_Explicit_Dereference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Explicit_Dereference_Element;
+   end Is_Explicit_Dereference;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Explicit_Dereference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Explicit_Dereference;

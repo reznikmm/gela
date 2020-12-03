@@ -102,21 +102,21 @@ package body Program.Nodes.Function_Calls is
       null;
    end Initialize;
 
-   overriding function Is_Function_Call_Element
+   overriding function Is_Function_Call
     (Self : Base_Function_Call)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Function_Call_Element;
+   end Is_Function_Call;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Function_Call)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Function_Call;

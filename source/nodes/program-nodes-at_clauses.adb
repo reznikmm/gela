@@ -117,29 +117,25 @@ package body Program.Nodes.At_Clauses is
       null;
    end Initialize;
 
-   overriding function Is_At_Clause_Element
-    (Self : Base_At_Clause)
-      return Boolean is
+   overriding function Is_At_Clause (Self : Base_At_Clause) return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_At_Clause_Element;
+   end Is_At_Clause;
 
-   overriding function Is_Representation_Clause_Element
+   overriding function Is_Representation_Clause
     (Self : Base_At_Clause)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Representation_Clause_Element;
+   end Is_Representation_Clause;
 
-   overriding function Is_Clause_Element
-    (Self : Base_At_Clause)
-      return Boolean is
+   overriding function Is_Clause (Self : Base_At_Clause) return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Clause_Element;
+   end Is_Clause;
 
    overriding procedure Visit
     (Self    : not null access Base_At_Clause;

@@ -152,21 +152,21 @@ package body Program.Nodes.Loop_Statements is
       null;
    end Initialize;
 
-   overriding function Is_Loop_Statement_Element
+   overriding function Is_Loop_Statement
     (Self : Base_Loop_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Loop_Statement_Element;
+   end Is_Loop_Statement;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Loop_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement_Element;
+   end Is_Statement;
 
    overriding procedure Visit
     (Self    : not null access Base_Loop_Statement;

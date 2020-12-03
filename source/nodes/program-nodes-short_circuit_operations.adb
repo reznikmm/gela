@@ -146,21 +146,21 @@ package body Program.Nodes.Short_Circuit_Operations is
       null;
    end Initialize;
 
-   overriding function Is_Short_Circuit_Operation_Element
+   overriding function Is_Short_Circuit_Operation
     (Self : Base_Short_Circuit_Operation)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Short_Circuit_Operation_Element;
+   end Is_Short_Circuit_Operation;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Short_Circuit_Operation)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Short_Circuit_Operation;

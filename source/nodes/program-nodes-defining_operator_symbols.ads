@@ -51,11 +51,11 @@ private
     (Self    : not null access Base_Defining_Operator_Symbol;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Defining_Operator_Symbol_Element
+   overriding function Is_Defining_Operator_Symbol
     (Self : Base_Defining_Operator_Symbol)
       return Boolean;
 
-   overriding function Is_Defining_Name_Element
+   overriding function Is_Defining_Name
     (Self : Base_Defining_Operator_Symbol)
       return Boolean;
 

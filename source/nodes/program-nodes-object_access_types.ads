@@ -67,19 +67,19 @@ private
       return not null Program.Elements.Subtype_Indications
           .Subtype_Indication_Access;
 
-   overriding function Is_Object_Access_Type_Element
+   overriding function Is_Object_Access_Type
     (Self : Base_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Access_Type_Element
+   overriding function Is_Access_Type
     (Self : Base_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Object_Access_Type)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Object_Access_Type)
       return Boolean;
 

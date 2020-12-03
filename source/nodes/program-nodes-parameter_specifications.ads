@@ -87,11 +87,11 @@ private
     (Self : Base_Parameter_Specification)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Parameter_Specification_Element
+   overriding function Is_Parameter_Specification
     (Self : Base_Parameter_Specification)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Parameter_Specification)
       return Boolean;
 

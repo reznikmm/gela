@@ -62,11 +62,11 @@ private
       return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Vector_Access;
 
-   overriding function Is_Array_Aggregate_Element
+   overriding function Is_Array_Aggregate
     (Self : Base_Array_Aggregate)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Array_Aggregate)
       return Boolean;
 

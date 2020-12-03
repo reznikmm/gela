@@ -91,21 +91,21 @@ package body Program.Nodes.Discriminant_Associations is
       null;
    end Initialize;
 
-   overriding function Is_Discriminant_Association_Element
+   overriding function Is_Discriminant_Association
     (Self : Base_Discriminant_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discriminant_Association_Element;
+   end Is_Discriminant_Association;
 
-   overriding function Is_Association_Element
+   overriding function Is_Association
     (Self : Base_Discriminant_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Association_Element;
+   end Is_Association;
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Association;

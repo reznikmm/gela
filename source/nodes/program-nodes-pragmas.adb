@@ -121,11 +121,11 @@ package body Program.Nodes.Pragmas is
       null;
    end Initialize;
 
-   overriding function Is_Pragma_Element (Self : Base_Pragma) return Boolean is
+   overriding function Is_Pragma (Self : Base_Pragma) return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Pragma_Element;
+   end Is_Pragma;
 
    overriding procedure Visit
     (Self    : not null access Base_Pragma;

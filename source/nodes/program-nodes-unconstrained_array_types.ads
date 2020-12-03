@@ -81,15 +81,15 @@ private
       return not null Program.Elements.Component_Definitions
           .Component_Definition_Access;
 
-   overriding function Is_Unconstrained_Array_Type_Element
+   overriding function Is_Unconstrained_Array_Type
     (Self : Base_Unconstrained_Array_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Unconstrained_Array_Type)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Unconstrained_Array_Type)
       return Boolean;
 

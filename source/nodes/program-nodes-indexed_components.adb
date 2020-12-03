@@ -103,21 +103,21 @@ package body Program.Nodes.Indexed_Components is
       null;
    end Initialize;
 
-   overriding function Is_Indexed_Component_Element
+   overriding function Is_Indexed_Component
     (Self : Base_Indexed_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Indexed_Component_Element;
+   end Is_Indexed_Component;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Indexed_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Indexed_Component;

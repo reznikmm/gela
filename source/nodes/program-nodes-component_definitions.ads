@@ -56,11 +56,11 @@ private
     (Self : Base_Component_Definition)
       return not null Program.Elements.Element_Access;
 
-   overriding function Is_Component_Definition_Element
+   overriding function Is_Component_Definition
     (Self : Base_Component_Definition)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Component_Definition)
       return Boolean;
 

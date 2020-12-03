@@ -78,11 +78,11 @@ private
     (Self : Base_Entry_Index_Specification)
       return not null Program.Elements.Discrete_Ranges.Discrete_Range_Access;
 
-   overriding function Is_Entry_Index_Specification_Element
+   overriding function Is_Entry_Index_Specification
     (Self : Base_Entry_Index_Specification)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Entry_Index_Specification)
       return Boolean;
 

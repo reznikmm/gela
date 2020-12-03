@@ -69,15 +69,15 @@ private
     (Self : Base_Simple_Expression_Range)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Simple_Expression_Range_Element
+   overriding function Is_Simple_Expression_Range
     (Self : Base_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Constraint_Element
+   overriding function Is_Constraint
     (Self : Base_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Simple_Expression_Range)
       return Boolean;
 

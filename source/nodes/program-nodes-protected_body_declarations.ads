@@ -105,11 +105,11 @@ private
     (Self : Base_Protected_Body_Declaration)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Protected_Body_Declaration_Element
+   overriding function Is_Protected_Body_Declaration
     (Self : Base_Protected_Body_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Protected_Body_Declaration)
       return Boolean;
 

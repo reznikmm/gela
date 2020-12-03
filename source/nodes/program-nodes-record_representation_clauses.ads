@@ -92,15 +92,15 @@ private
       return not null Program.Elements.Component_Clauses
           .Component_Clause_Vector_Access;
 
-   overriding function Is_Record_Representation_Clause_Element
+   overriding function Is_Record_Representation_Clause
     (Self : Base_Record_Representation_Clause)
       return Boolean;
 
-   overriding function Is_Representation_Clause_Element
+   overriding function Is_Representation_Clause
     (Self : Base_Record_Representation_Clause)
       return Boolean;
 
-   overriding function Is_Clause_Element
+   overriding function Is_Clause
     (Self : Base_Record_Representation_Clause)
       return Boolean;
 

@@ -64,15 +64,15 @@ private
     (Self : Base_Interface_Type)
       return Program.Elements.Expressions.Expression_Vector_Access;
 
-   overriding function Is_Interface_Type_Element
+   overriding function Is_Interface_Type
     (Self : Base_Interface_Type)
       return Boolean;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Interface_Type)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Interface_Type)
       return Boolean;
 

@@ -77,15 +77,15 @@ private
     (Self : Base_Enumeration_Representation_Clause)
       return not null Program.Elements.Array_Aggregates.Array_Aggregate_Access;
 
-   overriding function Is_Enumeration_Representation_Clause_Element
+   overriding function Is_Enumeration_Representation_Clause
     (Self : Base_Enumeration_Representation_Clause)
       return Boolean;
 
-   overriding function Is_Representation_Clause_Element
+   overriding function Is_Representation_Clause
     (Self : Base_Enumeration_Representation_Clause)
       return Boolean;
 
-   overriding function Is_Clause_Element
+   overriding function Is_Clause
     (Self : Base_Enumeration_Representation_Clause)
       return Boolean;
 

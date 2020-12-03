@@ -166,37 +166,37 @@ package body Program.Nodes.Procedure_Access_Types is
       null;
    end Initialize;
 
-   overriding function Is_Procedure_Access_Type_Element
+   overriding function Is_Procedure_Access_Type
     (Self : Base_Procedure_Access_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Procedure_Access_Type_Element;
+   end Is_Procedure_Access_Type;
 
-   overriding function Is_Access_Type_Element
+   overriding function Is_Access_Type
     (Self : Base_Procedure_Access_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Access_Type_Element;
+   end Is_Access_Type;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Procedure_Access_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Type_Definition_Element;
+   end Is_Type_Definition;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Procedure_Access_Type)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Procedure_Access_Type;

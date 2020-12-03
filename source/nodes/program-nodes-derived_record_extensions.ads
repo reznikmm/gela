@@ -90,15 +90,15 @@ private
     (Self : Base_Derived_Record_Extension)
       return not null Program.Elements.Definitions.Definition_Access;
 
-   overriding function Is_Derived_Record_Extension_Element
+   overriding function Is_Derived_Record_Extension
     (Self : Base_Derived_Record_Extension)
       return Boolean;
 
-   overriding function Is_Type_Definition_Element
+   overriding function Is_Type_Definition
     (Self : Base_Derived_Record_Extension)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Derived_Record_Extension)
       return Boolean;
 

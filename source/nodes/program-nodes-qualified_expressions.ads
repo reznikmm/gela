@@ -72,11 +72,11 @@ private
     (Self : Base_Qualified_Expression)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Qualified_Expression_Element
+   overriding function Is_Qualified_Expression
     (Self : Base_Qualified_Expression)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Qualified_Expression)
       return Boolean;
 

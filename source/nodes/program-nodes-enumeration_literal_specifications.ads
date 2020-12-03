@@ -59,11 +59,11 @@ private
     (Self : Base_Enumeration_Literal_Specification)
       return not null Program.Elements.Defining_Names.Defining_Name_Access;
 
-   overriding function Is_Enumeration_Literal_Specification_Element
+   overriding function Is_Enumeration_Literal_Specification
     (Self : Base_Enumeration_Literal_Specification)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Enumeration_Literal_Specification)
       return Boolean;
 

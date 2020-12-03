@@ -47,11 +47,11 @@ private
     (Self    : not null access Base_Null_Statement;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Null_Statement_Element
+   overriding function Is_Null_Statement
     (Self : Base_Null_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Null_Statement)
       return Boolean;
 

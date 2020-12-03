@@ -92,21 +92,21 @@ package body Program.Nodes.Parameter_Associations is
       null;
    end Initialize;
 
-   overriding function Is_Parameter_Association_Element
+   overriding function Is_Parameter_Association
     (Self : Base_Parameter_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Parameter_Association_Element;
+   end Is_Parameter_Association;
 
-   overriding function Is_Association_Element
+   overriding function Is_Association
     (Self : Base_Parameter_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Association_Element;
+   end Is_Association;
 
    overriding procedure Visit
     (Self    : not null access Base_Parameter_Association;

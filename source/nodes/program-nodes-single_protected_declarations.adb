@@ -167,21 +167,21 @@ package body Program.Nodes.Single_Protected_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Single_Protected_Declaration_Element
+   overriding function Is_Single_Protected_Declaration
     (Self : Base_Single_Protected_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Single_Protected_Declaration_Element;
+   end Is_Single_Protected_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Single_Protected_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Single_Protected_Declaration;

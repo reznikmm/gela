@@ -75,21 +75,21 @@ package body Program.Nodes.Null_Components is
       null;
    end Initialize;
 
-   overriding function Is_Null_Component_Element
+   overriding function Is_Null_Component
     (Self : Base_Null_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Null_Component_Element;
+   end Is_Null_Component;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Null_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Null_Component;

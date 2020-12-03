@@ -86,15 +86,15 @@ private
     (Self : Base_Anonymous_Access_To_Function)
       return not null Program.Elements.Element_Access;
 
-   overriding function Is_Anonymous_Access_To_Function_Element
+   overriding function Is_Anonymous_Access_To_Function
     (Self : Base_Anonymous_Access_To_Function)
       return Boolean;
 
-   overriding function Is_Anonymous_Access_Definition_Element
+   overriding function Is_Anonymous_Access_Definition
     (Self : Base_Anonymous_Access_To_Function)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Anonymous_Access_To_Function)
       return Boolean;
 

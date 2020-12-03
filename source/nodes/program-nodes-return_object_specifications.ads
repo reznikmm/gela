@@ -85,11 +85,11 @@ private
     (Self : Base_Return_Object_Specification)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Return_Object_Specification_Element
+   overriding function Is_Return_Object_Specification
     (Self : Base_Return_Object_Specification)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Return_Object_Specification)
       return Boolean;
 

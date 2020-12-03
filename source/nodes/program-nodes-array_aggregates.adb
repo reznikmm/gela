@@ -90,21 +90,21 @@ package body Program.Nodes.Array_Aggregates is
       null;
    end Initialize;
 
-   overriding function Is_Array_Aggregate_Element
+   overriding function Is_Array_Aggregate
     (Self : Base_Array_Aggregate)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Array_Aggregate_Element;
+   end Is_Array_Aggregate;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Array_Aggregate)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Array_Aggregate;

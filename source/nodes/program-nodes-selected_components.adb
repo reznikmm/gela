@@ -89,21 +89,21 @@ package body Program.Nodes.Selected_Components is
       null;
    end Initialize;
 
-   overriding function Is_Selected_Component_Element
+   overriding function Is_Selected_Component
     (Self : Base_Selected_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Selected_Component_Element;
+   end Is_Selected_Component;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Selected_Component)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Expression_Element;
+   end Is_Expression;
 
    overriding procedure Visit
     (Self    : not null access Base_Selected_Component;

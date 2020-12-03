@@ -111,21 +111,21 @@ package body Program.Nodes.Call_Statements is
       null;
    end Initialize;
 
-   overriding function Is_Call_Statement_Element
+   overriding function Is_Call_Statement
     (Self : Base_Call_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Call_Statement_Element;
+   end Is_Call_Statement;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Call_Statement)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Statement_Element;
+   end Is_Statement;
 
    overriding procedure Visit
     (Self    : not null access Base_Call_Statement;

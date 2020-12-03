@@ -3,6 +3,7 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Iterators;
 with Program.Elements.Pragmas;
 with Program.Elements.Defining_Names;
 with Program.Elements.Defining_Identifiers;
@@ -205,13 +206,28 @@ package body Program.Elements is
 
    function Each_Enclosing_Element
     (Self : not null access Element'Class)
-      return Program.Element_Iterators.Enclosing_Element_Iterator
-     renames Program.Element_Iterators.To_Enclosing_Element_Iterator;
+      return Program.Element_Iterators.Enclosing_Element_Iterator is
+   begin
+      return Program.Element_Iterators.To_Enclosing_Element_Iterator
+        (Element_Access (Self));
+   end Each_Enclosing_Element;
+
+   function Each_Child
+    (Self   : not null access Element'Class;
+     Filter : Program.Element_Iterators.Element_Checker)
+      return Program.Element_Iterators.Child_Iterator is
+   begin
+      return Program.Element_Iterators.To_Child_Iterator
+        (Element_Access (Self), Filter);
+   end Each_Child;
 
    function Each_Child
     (Self : not null access Element'Class)
-      return Program.Element_Iterators.Child_Iterator
-     renames Program.Element_Iterators.To_Child_Iterator;
+      return Program.Element_Iterators.Child_Iterator is
+   begin
+      return Program.Element_Iterators.To_Child_Iterator
+        (Element_Access (Self));
+   end Each_Child;
 
    function To_Pragma
     (Self : access Element'Class)

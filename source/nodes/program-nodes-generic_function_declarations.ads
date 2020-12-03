@@ -115,11 +115,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Generic_Function_Declaration_Element
+   overriding function Is_Generic_Function_Declaration
     (Self : Base_Generic_Function_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Generic_Function_Declaration)
       return Boolean;
 

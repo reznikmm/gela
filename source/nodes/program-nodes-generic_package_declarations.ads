@@ -116,11 +116,11 @@ private
     (Self : Base_Generic_Package_Declaration)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Generic_Package_Declaration_Element
+   overriding function Is_Generic_Package_Declaration
     (Self : Base_Generic_Package_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Generic_Package_Declaration)
       return Boolean;
 

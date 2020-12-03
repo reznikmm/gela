@@ -66,11 +66,11 @@ private
     (Self : Base_Raise_Statement)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Raise_Statement_Element
+   overriding function Is_Raise_Statement
     (Self : Base_Raise_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Raise_Statement)
       return Boolean;
 

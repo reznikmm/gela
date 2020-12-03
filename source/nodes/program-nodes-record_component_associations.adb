@@ -100,21 +100,21 @@ package body Program.Nodes.Record_Component_Associations is
       null;
    end Initialize;
 
-   overriding function Is_Record_Component_Association_Element
+   overriding function Is_Record_Component_Association
     (Self : Base_Record_Component_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Record_Component_Association_Element;
+   end Is_Record_Component_Association;
 
-   overriding function Is_Association_Element
+   overriding function Is_Association
     (Self : Base_Record_Component_Association)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Association_Element;
+   end Is_Association;
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Component_Association;

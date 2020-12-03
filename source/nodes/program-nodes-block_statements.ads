@@ -109,11 +109,11 @@ private
     (Self : Base_Block_Statement)
       return Program.Elements.Identifiers.Identifier_Access;
 
-   overriding function Is_Block_Statement_Element
+   overriding function Is_Block_Statement
     (Self : Base_Block_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Block_Statement)
       return Boolean;
 

@@ -84,29 +84,29 @@ package body Program.Nodes.Discrete_Range_Attribute_References is
       null;
    end Initialize;
 
-   overriding function Is_Discrete_Range_Attribute_Reference_Element
+   overriding function Is_Discrete_Range_Attribute_Reference
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discrete_Range_Attribute_Reference_Element;
+   end Is_Discrete_Range_Attribute_Reference;
 
-   overriding function Is_Discrete_Range_Element
+   overriding function Is_Discrete_Range
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discrete_Range_Element;
+   end Is_Discrete_Range;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Discrete_Range_Attribute_Reference;

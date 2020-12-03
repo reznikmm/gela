@@ -105,29 +105,29 @@ package body Program.Nodes.Discrete_Simple_Expression_Ranges is
       null;
    end Initialize;
 
-   overriding function Is_Discrete_Simple_Expression_Range_Element
+   overriding function Is_Discrete_Simple_Expression_Range
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discrete_Simple_Expression_Range_Element;
+   end Is_Discrete_Simple_Expression_Range;
 
-   overriding function Is_Discrete_Range_Element
+   overriding function Is_Discrete_Range
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Discrete_Range_Element;
+   end Is_Discrete_Range;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Discrete_Simple_Expression_Range;

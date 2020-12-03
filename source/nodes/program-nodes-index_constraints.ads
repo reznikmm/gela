@@ -62,15 +62,15 @@ private
       return not null Program.Elements.Discrete_Ranges
           .Discrete_Range_Vector_Access;
 
-   overriding function Is_Index_Constraint_Element
+   overriding function Is_Index_Constraint
     (Self : Base_Index_Constraint)
       return Boolean;
 
-   overriding function Is_Constraint_Element
+   overriding function Is_Constraint
     (Self : Base_Index_Constraint)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Index_Constraint)
       return Boolean;
 

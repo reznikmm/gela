@@ -44,11 +44,11 @@ private
     (Self    : not null access Base_Others_Choice;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Others_Choice_Element
+   overriding function Is_Others_Choice
     (Self : Base_Others_Choice)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Others_Choice)
       return Boolean;
 

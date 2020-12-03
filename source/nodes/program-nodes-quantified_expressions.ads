@@ -105,11 +105,11 @@ private
     (Self : Base_Quantified_Expression)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Quantified_Expression_Element
+   overriding function Is_Quantified_Expression
     (Self : Base_Quantified_Expression)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Quantified_Expression)
       return Boolean;
 

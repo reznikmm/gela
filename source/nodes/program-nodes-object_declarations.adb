@@ -208,21 +208,21 @@ package body Program.Nodes.Object_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Object_Declaration_Element
+   overriding function Is_Object_Declaration
     (Self : Base_Object_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Object_Declaration_Element;
+   end Is_Object_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Object_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Object_Declaration;

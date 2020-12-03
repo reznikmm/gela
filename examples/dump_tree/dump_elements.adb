@@ -5,6 +5,7 @@
 
 with Ada.Wide_Wide_Text_IO;
 
+with Program.Element_Iterators;
 with Program.Element_Visitors;
 
 with Program.Elements.Pragmas;

@@ -288,21 +288,21 @@ package body Program.Nodes.Procedure_Body_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Procedure_Body_Declaration_Element
+   overriding function Is_Procedure_Body_Declaration
     (Self : Base_Procedure_Body_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Procedure_Body_Declaration_Element;
+   end Is_Procedure_Body_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Procedure_Body_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Procedure_Body_Declaration;

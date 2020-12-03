@@ -142,21 +142,21 @@ package body Program.Nodes.Element_Iterator_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Element_Iterator_Specification_Element
+   overriding function Is_Element_Iterator_Specification
     (Self : Base_Element_Iterator_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Element_Iterator_Specification_Element;
+   end Is_Element_Iterator_Specification;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Element_Iterator_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Element_Iterator_Specification;

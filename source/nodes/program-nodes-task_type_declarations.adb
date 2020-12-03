@@ -193,21 +193,21 @@ package body Program.Nodes.Task_Type_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Task_Type_Declaration_Element
+   overriding function Is_Task_Type_Declaration
     (Self : Base_Task_Type_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Task_Type_Declaration_Element;
+   end Is_Task_Type_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Task_Type_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Task_Type_Declaration;

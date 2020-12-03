@@ -221,21 +221,21 @@ package body Program.Nodes.Parameter_Specifications is
       null;
    end Initialize;
 
-   overriding function Is_Parameter_Specification_Element
+   overriding function Is_Parameter_Specification
     (Self : Base_Parameter_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Parameter_Specification_Element;
+   end Is_Parameter_Specification;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Parameter_Specification)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Parameter_Specification;

@@ -70,11 +70,11 @@ private
     (Self : Base_Infix_Operator)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Infix_Operator_Element
+   overriding function Is_Infix_Operator
     (Self : Base_Infix_Operator)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Infix_Operator)
       return Boolean;
 

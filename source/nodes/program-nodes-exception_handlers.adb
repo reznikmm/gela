@@ -118,13 +118,13 @@ package body Program.Nodes.Exception_Handlers is
       null;
    end Initialize;
 
-   overriding function Is_Exception_Handler_Element
+   overriding function Is_Exception_Handler
     (Self : Base_Exception_Handler)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Exception_Handler_Element;
+   end Is_Exception_Handler;
 
    overriding procedure Visit
     (Self    : not null access Base_Exception_Handler;

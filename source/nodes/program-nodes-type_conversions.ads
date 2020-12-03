@@ -69,11 +69,11 @@ private
     (Self : Base_Type_Conversion)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Type_Conversion_Element
+   overriding function Is_Type_Conversion
     (Self : Base_Type_Conversion)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Type_Conversion)
       return Boolean;
 

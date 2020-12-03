@@ -181,21 +181,21 @@ package body Program.Nodes.Object_Renaming_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Object_Renaming_Declaration_Element
+   overriding function Is_Object_Renaming_Declaration
     (Self : Base_Object_Renaming_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Object_Renaming_Declaration_Element;
+   end Is_Object_Renaming_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Object_Renaming_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Object_Renaming_Declaration;

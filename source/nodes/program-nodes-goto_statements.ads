@@ -57,11 +57,11 @@ private
     (Self : Base_Goto_Statement)
       return not null Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Goto_Statement_Element
+   overriding function Is_Goto_Statement
     (Self : Base_Goto_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Goto_Statement)
       return Boolean;
 

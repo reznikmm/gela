@@ -64,15 +64,15 @@ private
       return not null Program.Elements.Discriminant_Associations
           .Discriminant_Association_Vector_Access;
 
-   overriding function Is_Discriminant_Constraint_Element
+   overriding function Is_Discriminant_Constraint
     (Self : Base_Discriminant_Constraint)
       return Boolean;
 
-   overriding function Is_Constraint_Element
+   overriding function Is_Constraint
     (Self : Base_Discriminant_Constraint)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discriminant_Constraint)
       return Boolean;
 

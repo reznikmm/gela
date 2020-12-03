@@ -47,11 +47,11 @@ private
     (Self    : not null access Base_Operator_Symbol;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Operator_Symbol_Element
+   overriding function Is_Operator_Symbol
     (Self : Base_Operator_Symbol)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Operator_Symbol)
       return Boolean;
 

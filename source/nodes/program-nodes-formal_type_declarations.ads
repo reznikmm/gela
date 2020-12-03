@@ -99,11 +99,11 @@ private
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
 
-   overriding function Is_Formal_Type_Declaration_Element
+   overriding function Is_Formal_Type_Declaration
     (Self : Base_Formal_Type_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Formal_Type_Declaration)
       return Boolean;
 

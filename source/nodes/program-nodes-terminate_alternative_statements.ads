@@ -54,11 +54,11 @@ private
     (Self    : not null access Base_Terminate_Alternative_Statement;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Terminate_Alternative_Statement_Element
+   overriding function Is_Terminate_Alternative_Statement
     (Self : Base_Terminate_Alternative_Statement)
       return Boolean;
 
-   overriding function Is_Statement_Element
+   overriding function Is_Statement
     (Self : Base_Terminate_Alternative_Statement)
       return Boolean;
 

@@ -47,11 +47,11 @@ private
     (Self    : not null access Base_Character_Literal;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Character_Literal_Element
+   overriding function Is_Character_Literal
     (Self : Base_Character_Literal)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Character_Literal)
       return Boolean;
 

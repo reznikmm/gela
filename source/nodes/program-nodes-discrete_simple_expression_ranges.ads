@@ -81,15 +81,15 @@ private
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Discrete_Simple_Expression_Range_Element
+   overriding function Is_Discrete_Simple_Expression_Range
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Discrete_Range_Element
+   overriding function Is_Discrete_Range
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discrete_Simple_Expression_Range)
       return Boolean;
 

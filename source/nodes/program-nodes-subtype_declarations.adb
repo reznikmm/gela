@@ -137,21 +137,21 @@ package body Program.Nodes.Subtype_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Subtype_Declaration_Element
+   overriding function Is_Subtype_Declaration
     (Self : Base_Subtype_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Subtype_Declaration_Element;
+   end Is_Subtype_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Subtype_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Subtype_Declaration;

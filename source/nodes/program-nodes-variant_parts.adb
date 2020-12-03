@@ -130,21 +130,21 @@ package body Program.Nodes.Variant_Parts is
       null;
    end Initialize;
 
-   overriding function Is_Variant_Part_Element
+   overriding function Is_Variant_Part
     (Self : Base_Variant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Variant_Part_Element;
+   end Is_Variant_Part;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Variant_Part)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Definition_Element;
+   end Is_Definition;
 
    overriding procedure Visit
     (Self    : not null access Base_Variant_Part;

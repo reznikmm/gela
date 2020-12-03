@@ -52,15 +52,15 @@ private
     (Self    : not null access Base_Formal_Signed_Integer_Type_Definition;
      Visitor : in out Program.Element_Visitors.Element_Visitor'Class);
 
-   overriding function Is_Formal_Signed_Integer_Type_Definition_Element
+   overriding function Is_Formal_Signed_Integer_Type_Definition
     (Self : Base_Formal_Signed_Integer_Type_Definition)
       return Boolean;
 
-   overriding function Is_Formal_Type_Definition_Element
+   overriding function Is_Formal_Type_Definition
     (Self : Base_Formal_Signed_Integer_Type_Definition)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Formal_Signed_Integer_Type_Definition)
       return Boolean;
 

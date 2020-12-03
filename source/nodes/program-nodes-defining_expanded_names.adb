@@ -104,21 +104,21 @@ package body Program.Nodes.Defining_Expanded_Names is
       null;
    end Initialize;
 
-   overriding function Is_Defining_Expanded_Name_Element
+   overriding function Is_Defining_Expanded_Name
     (Self : Base_Defining_Expanded_Name)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Expanded_Name_Element;
+   end Is_Defining_Expanded_Name;
 
-   overriding function Is_Defining_Name_Element
+   overriding function Is_Defining_Name
     (Self : Base_Defining_Expanded_Name)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Defining_Name_Element;
+   end Is_Defining_Name;
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Expanded_Name;

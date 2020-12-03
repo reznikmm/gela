@@ -120,11 +120,11 @@ private
       return not null Program.Elements.Protected_Definitions
           .Protected_Definition_Access;
 
-   overriding function Is_Protected_Type_Declaration_Element
+   overriding function Is_Protected_Type_Declaration
     (Self : Base_Protected_Type_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Protected_Type_Declaration)
       return Boolean;
 

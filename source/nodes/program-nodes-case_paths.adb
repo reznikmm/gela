@@ -101,21 +101,17 @@ package body Program.Nodes.Case_Paths is
       null;
    end Initialize;
 
-   overriding function Is_Case_Path_Element
-    (Self : Base_Case_Path)
-      return Boolean is
+   overriding function Is_Case_Path (Self : Base_Case_Path) return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Case_Path_Element;
+   end Is_Case_Path;
 
-   overriding function Is_Path_Element
-    (Self : Base_Case_Path)
-      return Boolean is
+   overriding function Is_Path (Self : Base_Case_Path) return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Path_Element;
+   end Is_Path;
 
    overriding procedure Visit
     (Self    : not null access Base_Case_Path;

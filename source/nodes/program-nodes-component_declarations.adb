@@ -154,21 +154,21 @@ package body Program.Nodes.Component_Declarations is
       null;
    end Initialize;
 
-   overriding function Is_Component_Declaration_Element
+   overriding function Is_Component_Declaration
     (Self : Base_Component_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Component_Declaration_Element;
+   end Is_Component_Declaration;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Component_Declaration)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Component_Declaration;

@@ -85,11 +85,11 @@ private
     (Self : Base_If_Expression)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_If_Expression_Element
+   overriding function Is_If_Expression
     (Self : Base_If_Expression)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_If_Expression)
       return Boolean;
 

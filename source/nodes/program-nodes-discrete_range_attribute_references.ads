@@ -69,15 +69,15 @@ private
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Discrete_Range_Attribute_Reference_Element
+   overriding function Is_Discrete_Range_Attribute_Reference
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Discrete_Range_Element
+   overriding function Is_Discrete_Range
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean;
 
-   overriding function Is_Definition_Element
+   overriding function Is_Definition
     (Self : Base_Discrete_Range_Attribute_Reference)
       return Boolean;
 

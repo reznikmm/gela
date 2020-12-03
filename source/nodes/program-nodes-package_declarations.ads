@@ -102,11 +102,11 @@ private
     (Self : Base_Package_Declaration)
       return Program.Elements.Expressions.Expression_Access;
 
-   overriding function Is_Package_Declaration_Element
+   overriding function Is_Package_Declaration
     (Self : Base_Package_Declaration)
       return Boolean;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Package_Declaration)
       return Boolean;
 

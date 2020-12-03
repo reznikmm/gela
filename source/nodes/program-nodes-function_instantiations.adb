@@ -228,21 +228,21 @@ package body Program.Nodes.Function_Instantiations is
       null;
    end Initialize;
 
-   overriding function Is_Function_Instantiation_Element
+   overriding function Is_Function_Instantiation
     (Self : Base_Function_Instantiation)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Function_Instantiation_Element;
+   end Is_Function_Instantiation;
 
-   overriding function Is_Declaration_Element
+   overriding function Is_Declaration
     (Self : Base_Function_Instantiation)
       return Boolean is
       pragma Unreferenced (Self);
    begin
       return True;
-   end Is_Declaration_Element;
+   end Is_Declaration;
 
    overriding procedure Visit
     (Self    : not null access Base_Function_Instantiation;

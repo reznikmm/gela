@@ -68,11 +68,11 @@ private
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access;
 
-   overriding function Is_Function_Call_Element
+   overriding function Is_Function_Call
     (Self : Base_Function_Call)
       return Boolean;
 
-   overriding function Is_Expression_Element
+   overriding function Is_Expression
     (Self : Base_Function_Call)
       return Boolean;
 
