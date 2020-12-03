@@ -191,6 +191,8 @@ package Program.Element_Visitors is
 
    type Element_Visitor is limited interface;
 
+   --  See also Safe_Element_Visitors package.
+
    procedure Pragma_Element
     (Self    : in out Element_Visitor;
      Element : not null Program.Elements.Pragmas.Pragma_Access) is null;
