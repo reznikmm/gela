@@ -382,7 +382,7 @@ package body Meta.Writes is
    begin
       return F.New_Subprogram_Specification
         (Is_Overriding => Ada_Pretty.True,
-         Name          => F.New_Name ("Is_" & Name & "_Element"),
+         Name          => F.New_Name ("Is_" & Name),
          Parameters    => F.New_Parameter
            (Name            => F.New_Name (+"Self"),
             Type_Definition => Base_Name),
@@ -778,7 +778,7 @@ package body Meta.Writes is
               (Name  => F.New_Name (+"Post'Class"),
                Value => F.New_Parentheses
                  (F.New_If_Expression
-                      (Condition  => F.New_Name (Name & "_Element'Result"),
+                      (Condition  => F.New_Name (Name & "'Result"),
                        Then_Path  => List)));
          end Get_Aspect;
 
@@ -795,7 +795,7 @@ package body Meta.Writes is
                  F.New_Subprogram_Declaration
                    (F.New_Subprogram_Specification
                       (Is_Overriding => Ada_Pretty.False,
-                       Name          => F.New_Name (Name & "_Element"),
+                       Name          => F.New_Name (Name),
                        Parameters    => F.New_Parameter
                          (Name            => F.New_Name (+"Self"),
                           Type_Definition => F.New_Name (Element)),
@@ -803,19 +803,8 @@ package body Meta.Writes is
                     Aspects     => Get_Aspect (Item),
                     Is_Abstract => True);
 
-               Funct_2 : constant Ada_Pretty.Node_Access :=
-                 F.New_Subprogram_Declaration
-                   (F.New_Subprogram_Specification
-                      (Name          => F.New_Name (Name),
-                       Parameters    => F.New_Parameter
-                         (Name            => F.New_Name (+"Self"),
-                          Type_Definition => F.New_Name (Element & "'Class")),
-                       Result        => F.New_Name (+"Boolean")),
-                    Expression  => F.New_Selected_Name
-                      ("Self." & Name & "_Element"));
             begin
                Result := F.New_List (Result, Funct);
-               Result := F.New_List (Result, Funct_2);
             end;
          end loop;
 
@@ -888,6 +877,25 @@ package body Meta.Writes is
                 (Get_Package_Name (Element_Iterator) &
                    ".Child_Iterator")));
 
+      Each_Child_2 : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"Each_Child"),
+              Parameters    => F.New_List
+                (F.New_Parameter
+                  (Name            => F.New_Name (+"Self"),
+                   Type_Definition => F.New_Null_Exclusion
+                     (F.New_Access
+                       (Target => Element_Class))),
+                 F.New_Parameter
+                  (Name            => F.New_Name (+"Filter"),
+                   Type_Definition => F.New_Selected_Name
+                     (Get_Package_Name (Element_Iterator) &
+                        ".Element_Checker"))),
+              Result => F.New_Selected_Name
+                (Get_Package_Name (Element_Iterator) &
+                   ".Child_Iterator")));
+
       Assigned : constant Ada_Pretty.Node_Access :=
         F.New_Subprogram_Declaration
           (F.New_Subprogram_Specification
@@ -914,7 +922,8 @@ package body Meta.Writes is
             Skip_Tokens (Vector.First_Element.Properties),
             Visit),
          Each_Enclosing,
-         Each_Child));
+         Each_Child,
+         Each_Child_2));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package (Program_Elements, Public_Part);
@@ -930,7 +939,8 @@ package body Meta.Writes is
                  Is_Limited => True),
               F.New_With
                  (F.New_Selected_Name
-                     (Get_Package_Name (Element_Iterator))))));
+                     (Get_Package_Name (Element_Iterator)),
+                 Is_Limited => True))));
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
@@ -1004,7 +1014,7 @@ package body Meta.Writes is
         F.New_Name (+"Element'Class");
 
       Each_Enclosing : constant Ada_Pretty.Node_Access :=
-        F.New_Subprogram_Declaration
+        F.New_Subprogram_Body
           (F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Each_Enclosing_Element"),
               Parameters    => F.New_Parameter
@@ -1015,12 +1025,17 @@ package body Meta.Writes is
               Result => F.New_Selected_Name
                 (Get_Package_Name (Element_Iterator) &
                    ".Enclosing_Element_Iterator")),
-           Renamed => F.New_Selected_Name
-                (Get_Package_Name (Element_Iterator) &
-                   ".To_Enclosing_Element_Iterator"));
+           Statements => F.New_Return
+             (F.New_Apply
+               (F.New_Selected_Name
+                 (Get_Package_Name (Element_Iterator) &
+                               ".To_Enclosing_Element_Iterator"),
+                F.New_Apply
+                 (F.New_Name (+"Element_Access"),
+                  F.New_Name (+"Self")))));
 
       Each_Child : constant Ada_Pretty.Node_Access :=
-        F.New_Subprogram_Declaration
+        F.New_Subprogram_Body
           (F.New_Subprogram_Specification
              (Name          => F.New_Name (+"Each_Child"),
               Parameters    => F.New_Parameter
@@ -1031,19 +1046,60 @@ package body Meta.Writes is
               Result => F.New_Selected_Name
                 (Get_Package_Name (Element_Iterator) &
                    ".Child_Iterator")),
-           Renamed => F.New_Selected_Name
+           Statements => F.New_Return
+             (F.New_Apply
+               (F.New_Selected_Name
+                 (Get_Package_Name (Element_Iterator) &
+                   ".To_Child_Iterator"),
+                F.New_Apply
+                 (F.New_Name (+"Element_Access"),
+                  F.New_Name (+"Self")))));
+
+      Each_Child_2 : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Body
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"Each_Child"),
+              Parameters    => F.New_List
+                (F.New_Parameter
+                  (Name            => F.New_Name (+"Self"),
+                   Type_Definition => F.New_Null_Exclusion
+                     (F.New_Access
+                       (Target => Element_Class))),
+                 F.New_Parameter
+                  (Name            => F.New_Name (+"Filter"),
+                   Type_Definition => F.New_Selected_Name
+                     (Get_Package_Name (Element_Iterator) &
+                        ".Element_Checker"))),
+              Result => F.New_Selected_Name
                 (Get_Package_Name (Element_Iterator) &
-                   ".To_Child_Iterator"));
+                   ".Child_Iterator")),
+           Statements => F.New_Return
+             (F.New_Apply
+               (F.New_Selected_Name
+                 (Get_Package_Name (Element_Iterator) &
+                   ".To_Child_Iterator"),
+                F.New_List
+                 (F.New_Argument_Association
+                   (F.New_Apply
+                     (F.New_Name (+"Element_Access"),
+                      F.New_Name (+"Self"))),
+                  F.New_Argument_Association
+                   (F.New_Name (+"Filter"))))));
 
       Root : constant Ada_Pretty.Node_Access :=
         F.New_Package_Body
           (Program_Elements,
-           Element_Casts (F.New_List (Each_Enclosing, Each_Child)));
+           Element_Casts
+             (F.New_List ((Each_Enclosing, Each_Child_2, Each_Child))));
 
       Unit : constant Ada_Pretty.Node_Access :=
         F.New_Compilation_Unit
           (Root,
-           Get_With_Clauses (F'Access, Vector, Is_Limited => False));
+           F.New_List
+             (F.New_With
+               (F.New_Selected_Name
+                 (Get_Package_Name (Element_Iterator))),
+              Get_With_Clauses (F'Access, Vector, Is_Limited => False)));
 
       Output : Ada.Wide_Wide_Text_IO.File_Type;
    begin
@@ -1451,8 +1507,8 @@ package body Meta.Writes is
    procedure Write_Header (Output : Ada.Wide_Wide_Text_IO.File_Type) is
    begin
       Ada.Wide_Wide_Text_IO.Put_Line
-        (Output,
-         "--  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>");
+        (Output, "--  SPDX-FileCopyrightText: 2019" &
+           " Max Reznik <reznikmm@gmail.com>");
 
       Ada.Wide_Wide_Text_IO.Put_Line (Output, "--");
 
