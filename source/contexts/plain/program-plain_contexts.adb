@@ -344,6 +344,9 @@ package body Program.Plain_Contexts is
       Compilation.Initialize (Self'Unchecked_Access);
 
       Compilation.Parse_File (Text_Name, Units, Pragmas, Standard);
+
+      Self.Compilations.Append
+        (Program.Compilations.Compilation_Access (Compilation));
    end Parse_File;
 
    ----------------
@@ -357,30 +360,12 @@ package body Program.Plain_Contexts is
       Units   : Program.Parsers.Unit_Vectors.Vector;
       Pragmas : Program.Parsers.Element_Vectors.Vector;
 
-      Pool : Program.Storage_Pools.Storage_Pool renames
-        Program.Storage_Pools.Pool;
-
-      Subpool : constant not null System.Storage_Pools.Subpools.Subpool_Handle
-        := Pool.Create_Subpool;
-
-      Compilation : constant Plain_Compilation_Access :=
-        new Program.Plain_Compilations.Compilation (Subpool);
-      --  Plain_Compilation is a controlled type, so don't allocate it in
-      --  the (Subpool)
-
    begin
       Self.Parse_File (Text_Name, False, Units, Pragmas);
 
       for Unit of Units loop
          Self.Append_Unit (Unit);
       end loop;
-
---        Env.Create_Empty_Context;
---
---        Program.Resolve_Standard (Unit => Units (1), Env => Env);
-
-      Self.Compilations.Append
-        (Program.Compilations.Compilation_Access (Compilation));
    end Parse_File;
 
 

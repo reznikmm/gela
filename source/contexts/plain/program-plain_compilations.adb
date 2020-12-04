@@ -158,6 +158,9 @@ package body Program.Plain_Compilations is
       Pragmas   : out Program.Parsers.Element_Vectors.Vector;
       Standard  : Boolean := False) is
    begin
+      Self.Text_Name := Ada.Strings.Wide_Wide_Unbounded.
+        To_Unbounded_Wide_Wide_String (Text_Name);
+
       Self.Buffer.Initialize (Text_Name);
       Self.Read_All_Tokens (Self.Buffer'Unchecked_Access);
       Program.Parsers.Parse
