@@ -78,6 +78,23 @@ package Program.Lexical_Elements is
    not overriding function Kind (Self  : Lexical_Element)
      return Lexical_Element_Kind is abstract;
 
+   type Location is record
+      Line   : Positive;
+      Column : Positive;
+   end record;
+
+   function "<" (Left, Right : Location) return Boolean with Inline;
+   function ">" (Left, Right : Location) return Boolean with Inline;
+   function "<=" (Left, Right : Location) return Boolean with Inline;
+   function ">=" (Left, Right : Location) return Boolean with Inline;
+
+   not overriding function From (Self : Lexical_Element) return Location
+     is abstract;
+   --  Line and column where the lexical element is located.
+
+   function From_Image (Self : Lexical_Element'Class) return Program.Text;
+   --  Line:column where the lexical element is located as a string.
+
    type Lexical_Element_Vector is limited interface;
    --  Vector of lexical elements.
 

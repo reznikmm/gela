@@ -12,14 +12,13 @@ package body Program.Plain_Lexical_Elements is
    ------------
 
    not overriding procedure Append
-     (Self   : in out Lexical_Element_Vector;
-      Buffer : Program.Source_Buffers.Source_Buffer_Access;
+     (Self   : aliased in out Lexical_Element_Vector;
       Span   : Program.Source_Buffers.Span;
       Kind   : Program.Lexical_Elements.Lexical_Element_Kind;
       Symbol : Program.Symbols.Symbol)
    is
       Item : constant Lexical_Element_Access := new Lexical_Element'
-        (Buffer => Buffer,
+        (Vector => Self'Unchecked_Access,
          Span   => Span,
          Kind   => Kind,
          Symbol => Symbol);
@@ -40,13 +39,31 @@ package body Program.Plain_Lexical_Elements is
       return Self.Vector.Element (Index);
    end Element;
 
+   ----------
+   -- From --
+   ----------
+
+   overriding function From
+     (Self  : Lexical_Element) return Program.Lexical_Elements.Location
+   is
+      From_Line   : Positive;
+      To_Line     : Positive;
+      From_Column : Positive;
+      To_Column   : Positive;
+   begin
+      Self.Vector.Buffer.Get_Span
+        (Self.Span, From_Line, To_Line, From_Column, To_Column);
+
+      return (From_Line, From_Column);
+   end From;
+
    -----------
    -- Image --
    -----------
 
-   overriding function Image (Self : Lexical_Element) return Text is
+   overriding function Image (Self : Lexical_Element) return Program.Text is
    begin
-      return Self.Buffer.Text (Self.Span);
+      return Self.Vector.Buffer.Text (Self.Span);
    end Image;
 
    ----------

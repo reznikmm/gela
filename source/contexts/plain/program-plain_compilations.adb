@@ -41,6 +41,45 @@ package body Program.Plain_Compilations is
       return Program.Contexts.Context_Access (Self.Context);
    end Context;
 
+   --------------
+   -- Get_Span --
+   --------------
+
+   overriding procedure Get_Span
+     (Self        : Compilation;
+      Span        : Program.Source_Buffers.Span;
+      From_Line   : out Positive;
+      To_Line     : out Positive;
+      From_Column : out Positive;
+      To_Column   : out Positive) is
+   begin
+      for J in Self.Line_Spans.First_Index .. Self.Line_Spans.Last_Index loop
+         declare
+            SJ : constant Program.Source_Buffers.Span := Self.Line_Spans (J);
+         begin
+            if Span.From in SJ.From .. SJ.To then
+               From_Line := J;
+               From_Column := Span.From - SJ.From + 1;
+
+               for K in J .. Self.Line_Spans.Last_Index loop
+                  declare
+                     SK : constant Source_Buffers.Span := Self.Line_Spans (K);
+                  begin
+                     if Span.To in SK.From .. SK.To then
+                        To_Line := K;
+                        To_Column := Span.To - SK.From + 1;
+
+                        return;
+                     end if;
+                  end;
+               end loop;
+            end if;
+         end;
+      end loop;
+
+      raise Constraint_Error;
+   end Get_Span;
+
    ----------------
    -- Initialize --
    ----------------
@@ -80,7 +119,7 @@ package body Program.Plain_Compilations is
 
    overriding function Line
      (Self  : Compilation;
-      Index : Positive) return Text is
+      Index : Positive) return Program.Text is
    begin
       return Self.Buffer.Text (Self.Line_Spans (Index));
    end Line;
@@ -131,8 +170,7 @@ package body Program.Plain_Compilations is
       end if;
 
       Self.Comp.Tokens.Append
-        (Self.Comp.Buffer'Unchecked_Access,
-         Token.Span,
+        (Token.Span,
          Token.Kind,
          Symbol);
    end New_Token;
@@ -141,7 +179,7 @@ package body Program.Plain_Compilations is
    -- Object_Name --
    -----------------
 
-   overriding function Object_Name (Self : Compilation) return Text is
+   overriding function Object_Name (Self : Compilation) return Program.Text is
    begin
       return Ada.Strings.Wide_Wide_Unbounded.To_Wide_Wide_String
         (Self.Object_Name);
@@ -153,7 +191,7 @@ package body Program.Plain_Compilations is
 
    not overriding procedure Parse_File
      (Self      : aliased in out Compilation;
-      Text_Name : Text;
+      Text_Name : Program.Text;
       Units     : out Program.Parsers.Unit_Vectors.Vector;
       Pragmas   : out Program.Parsers.Element_Vectors.Vector;
       Standard  : Boolean := False) is
@@ -195,11 +233,22 @@ package body Program.Plain_Compilations is
       end loop;
    end Read_All_Tokens;
 
+   ----------
+   -- Text --
+   ----------
+
+   overriding function Text
+     (Self : Compilation;
+      Span : Program.Source_Buffers.Span) return Program.Text is
+   begin
+      return Self.Buffer.Text (Span);
+   end Text;
+
    ---------------
    -- Text_Name --
    ---------------
 
-   overriding function Text_Name (Self : Compilation) return Text is
+   overriding function Text_Name (Self : Compilation) return Program.Text is
    begin
       return Ada.Strings.Wide_Wide_Unbounded.To_Wide_Wide_String
         (Self.Text_Name);
