@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -314,7 +314,11 @@ package body Program.Plain_Contexts is
    overriding function Library_Unit_Declarations (Self : Context)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access is
    begin
-      return Self.Declarations'Unchecked_Access;
+      if Self.Declarations.List.Is_Empty then
+         return null;
+      else
+         return Self.Declarations'Unchecked_Access;
+      end if;
    end Library_Unit_Declarations;
 
    ----------------

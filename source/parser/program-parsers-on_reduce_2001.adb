@@ -260,23 +260,19 @@ begin
    Nodes (1) := Self.Factory.Association
      (Nodes (1),
       Nodes (2),
-      Nodes (3));
+      Nodes (3),
+      No_Token);
 
       when 2032 =>
    Nodes (1) := Self.Factory.Association
      ((Self.Factory.Discrete_Choice_Sequence),
       No_Token,
-      Nodes (1));
+      Nodes (1),
+      No_Token);
 
       when 2033 =>
-
-   declare
-      Box : constant Node :=
-        Self.Factory.Box (Nodes (3));
-   begin
-     Nodes (1) := Self.Factory.Association
-       (Nodes (1), Nodes (2), Box);
-   end;
+   Nodes (1) := Self.Factory.Association
+       (Nodes (1), Nodes (2), None, Nodes (3));
 
       when 2034 =>
 
@@ -287,7 +283,7 @@ begin
       Self.Factory.Prepend_Discrete_Choice
         (List, Nodes (1));
       Nodes (1) := Self.Factory.Association
-        (List, No_Token, None);
+        (List, No_Token, None, No_Token);
    end;
 
       when 2035 =>

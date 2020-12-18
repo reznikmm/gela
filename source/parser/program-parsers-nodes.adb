@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -15,16 +15,34 @@ with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
 with Program.Elements.Enumeration_Literal_Specifications;
+with Program.Elements.Exception_Handlers;
 with Program.Elements.Expressions;
 with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Package_Declarations;
+with Program.Elements.Parameter_Associations;
+with Program.Elements.Parameter_Specifications;
 with Program.Elements.Real_Range_Specifications;
+with Program.Elements.Record_Component_Associations;
 with Program.Elements.Subtype_Indications;
+with Program.Nodes.Proxy_Associations;
+with Program.Nodes.Proxy_Calls;
 with Program.Storage_Pools;
+with Program.Units.Bodies;
 with Program.Units.Declarations;
 
+with Program.Plain_Lexical_Elements;
+with Program.Symbols;
+
 package body Program.Parsers.Nodes is
+
+   type Unit_Declaration_Access is access all
+     Program.Units.Declarations.Unit_Declaration
+       with Storage_Pool => Program.Storage_Pools.Pool;
+
+   type Unit_Body_Access is access all
+     Program.Units.Bodies.Unit_Body
+       with Storage_Pool => Program.Storage_Pools.Pool;
 
    generic
       type Vector_Access is private;
@@ -69,6 +87,9 @@ package body Program.Parsers.Nodes is
      (Self : Node_Factory'Class;
       List : in out Node;
       Item : Node);
+
+--   procedure Destroy (Value : Node) is null;
+   --  This is called for a temporary node used during AST construction.
 
    -----------
    -- First --
@@ -152,10 +173,29 @@ package body Program.Parsers.Nodes is
         Create_Vector => Program.Element_Vector_Factories
            .Create_Enumeration_Literal_Specification_Vector);
 
+   function To_Exception_Handler_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements.Exception_Handlers.
+        Exception_Handler_Vector_Access,
+      Create_Vector => Program.Element_Vector_Factories.
+        Create_Exception_Handler_Vector);
+
    function To_Expression_Vector is new Generic_Vector_Cast
      (Vector_Access => Program.Elements.Expressions.Expression_Vector_Access,
       Create_Vector =>
          Program.Element_Vector_Factories.Create_Expression_Vector);
+
+   function To_Parameter_Specification_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements.Parameter_Specifications.
+        Parameter_Specification_Vector_Access,
+      Create_Vector => Program.Element_Vector_Factories.
+        Create_Parameter_Specification_Vector);
+
+   function To_Record_Component_Association_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements.Record_Component_Associations.
+        Record_Component_Association_Vector_Access,
+      Create_Vector => Program.Element_Vector_Factories.
+        Create_Record_Component_Association_Vector);
+   pragma Unreferenced (To_Record_Component_Association_Vector);
 
    function To_Element_Vector is new Generic_Vector_Cast
      (Vector_Access => Program.Element_Vectors.Element_Vector_Access,
@@ -639,19 +679,22 @@ package body Program.Parsers.Nodes is
 
    function Association
      (Self        : Node_Factory'Class; Array_Component_Choices : Node;
-      Arrow_Token : Node; Component_Expression : Node) return Node
+      Arrow_Token : Node; Component_Expression : Node;
+      Box_Token   : Node) return Node
    is
+      Result : constant
+        Program.Nodes.Proxy_Associations.Proxy_Association_Access :=
+          new (Self.Subpool)
+            Program.Nodes.Proxy_Associations.Proxy_Association'
+              (Program.Nodes.Proxy_Associations.Create
+                 (Choices     => To_Element_Vector
+                    (Array_Component_Choices.Vector'Unchecked_Access,
+                     Self.Subpool),
+                  Arrow_Token => Arrow_Token.Token,
+                  Expression  => Component_Expression.Element.To_Expression,
+                  Box_Token   => Box_Token.Token));
    begin
-      return
-        (Element_Node,
-         Program.Elements.Element_Access
-           (Self.EF.Create_Record_Component_Association  --  FIXME?
-                (Choices     => null,
-                 Arrow_Token => Arrow_Token.Token,
-                 Expression  =>
-                   Program.Elements.Expressions.Expression_Access
-                     (Component_Expression.Element),
-                 Box_Token   => null)));
+      return (Element_Node, Program.Elements.Element_Access (Result));
    end Association;
 
    ----------------------
@@ -662,11 +705,19 @@ package body Program.Parsers.Nodes is
      (Self                          : Node_Factory'Class; Left_Token : Node;
       Record_Component_Associations : Node; Right_Token : Node) return Node
    is
+      Result : constant
+        Program.Nodes.Proxy_Calls.Proxy_Call_Access :=
+          new (Self.Subpool)
+            Program.Nodes.Proxy_Calls.Proxy_Call'
+              (Program.Nodes.Proxy_Calls.Create
+                 (Called_Name         => null,
+                  Left_Bracket_Token  => Left_Token.Token,
+                  Parameters          => To_Element_Vector
+                    (Record_Component_Associations.Vector'Unchecked_Access,
+                     Self.Subpool),
+                  Right_Bracket_Token => Right_Token.Token));
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Association_List unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Association_List";
+      return (Element_Node, Program.Elements.Element_Access (Result));
    end Association_List;
 
    --------------------------
@@ -772,16 +823,6 @@ package body Program.Parsers.Nodes is
          "Block_Statement unimplemented");
       return raise Program_Error with "Unimplemented function Block_Statement";
    end Block_Statement;
-
-   ---------
-   -- Box --
-   ---------
-
-   function Box (Self : Node_Factory'Class; Box_Token : Node) return Node is
-   begin
-      pragma Compile_Time_Warning (Standard.True, "Box unimplemented");
-      return raise Program_Error with "Unimplemented function Box";
-   end Box;
 
    ---------------------
    -- Case_Expression --
@@ -909,20 +950,28 @@ package body Program.Parsers.Nodes is
      (Self             : Node_Factory'Class; Context_Clause_Elements : Node;
       Unit_Declaration : Node) return Node
    is
+      Result : Unit_Body_Access :=
+        new (Self.Subpool) Program.Units.Bodies.Unit_Body;
+      Clause : Program.Element_Vectors.Element_Vector_Access :=
+        To_Element_Vector
+          (Context_Clause_Elements.Vector'Unchecked_Access, Self.Subpool);
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Compilation_Unit_Body unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Compilation_Unit_Body";
+      Result.Initialize
+        (Compilation      => Self.Comp,
+         Full_Name        => Self.Get_Unit_Name (Unit_Declaration),
+         Context_Clause   => Clause,
+         Unit_Declaration => Unit_Declaration.Element,
+         Parent           => null,
+         Declaration      => null);
+
+      return
+        (Unit_Node,
+         Program.Compilation_Units.Compilation_Unit_Access (Result));
    end Compilation_Unit_Body;
 
    ----------------------------------
    -- Compilation_Unit_Declaration --
    ----------------------------------
-
-   type Unit_Declaration_Access is access all
-     Program.Units.Declarations.Unit_Declaration
-       with Storage_Pool => Program.Storage_Pools.Pool;
 
    function Compilation_Unit_Declaration
      (Self          : Node_Factory'Class; Context_Clause_Elements : Node;
@@ -2029,10 +2078,14 @@ package body Program.Parsers.Nodes is
      (Self                     : Node_Factory'Class; Prefix : Node;
       Function_Call_Parameters : Node) return Node
    is
+      Args : constant Program.Nodes.Proxy_Calls.Proxy_Call_Access :=
+        Program.Nodes.Proxy_Calls.Proxy_Call_Access
+          (Function_Call_Parameters.Element);
+
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Function_Call unimplemented");
-      return raise Program_Error with "Unimplemented function Function_Call";
+      Args.Turn_To_Function_Call (Prefix.Element.To_Expression);
+
+      return Function_Call_Parameters;
    end Function_Call;
 
    --------------------------
@@ -2681,10 +2734,21 @@ package body Program.Parsers.Nodes is
    function Operator_Symbol
      (Self : Node_Factory'Class; Operator_Symbol_Token : Node) return Node
    is
+      Symbol : constant Program.Symbols.Symbol :=
+         Program.Plain_Lexical_Elements.Lexical_Element
+           (Operator_Symbol_Token.Token.all).Symbol;
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Operator_Symbol unimplemented");
-      return raise Program_Error with "Unimplemented function Operator_Symbol";
+      if Program.Symbols.Is_Operator (Symbol) then
+         return
+           (Element_Node,
+            Program.Elements.Element_Access
+              (Self.EF.Create_Operator_Symbol (Operator_Symbol_Token.Token)));
+      else
+         return
+           (Element_Node,
+            Program.Elements.Element_Access
+              (Self.EF.Create_String_Literal (Operator_Symbol_Token.Token)));
+      end if;
    end Operator_Symbol;
 
    -------------------------------------
@@ -3200,9 +3264,36 @@ package body Program.Parsers.Nodes is
       Semicolon_Token    : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Procedure_Body unimplemented");
-      return raise Program_Error with "Unimplemented function Procedure_Body";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Procedure_Body_Declaration
+                (Not_Token           => Not_Token.Token,
+                 Overriding_Token    => Overriding_Token.Token,
+                 Procedure_Token     => Procedure_Token.Token,
+                 Name                => Names.Element.To_Defining_Name,
+                 Left_Bracket_Token  => Lp_Token.Token,
+                 Parameters          => To_Parameter_Specification_Vector
+                   (Parameter_Profile.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Right_Bracket_Token => Rp_Token.Token,
+                 With_Token          => null,
+                 Aspects             => null,
+                 Is_Token            => Is_Token.Token,
+                 Declarations        => To_Element_Vector
+                   (Body_Declarative_Items.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Begin_Token         => Begin_Token.Token,
+                 Statements          => To_Element_Vector
+                   (Body_Statements.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 Exception_Token     => Exception_Token.Token,
+                 Exception_Handlers  => To_Exception_Handler_Vector
+                   (Exception_Handlers.Vector'Unchecked_Access,
+                    Self.Subpool),
+                 End_Token           => End_Token.Token,
+                 End_Name            => End_Name.Element.To_Expression,
+                 Semicolon_Token     => Semicolon_Token.Token)));
    end Procedure_Body;
 
    ------------------------------
@@ -3210,14 +3301,31 @@ package body Program.Parsers.Nodes is
    ------------------------------
 
    function Procedure_Call_Statement
-     (Self : Node_Factory'Class; Function_Call : Node; Semicolon_Token : Node)
-      return Node
-   is
+     (Self            : Node_Factory'Class;
+      Function_Call   : Node;
+      Semicolon_Token : Node) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Procedure_Call_Statement unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Procedure_Call_Statement";
+      if Function_Call.Element.all in Program.Nodes.Proxy_Calls.Proxy_Call then
+         declare
+            Call : constant Program.Nodes.Proxy_Calls.Proxy_Call_Access :=
+              Program.Nodes.Proxy_Calls.Proxy_Call_Access
+                (Function_Call.Element);
+         begin
+            Call.Turn_To_Procedure_Call (Semicolon_Token.Token);
+
+            return Function_Call;
+         end;
+      else
+         return
+           (Element_Node,
+            Program.Elements.Element_Access
+              (Self.EF.Create_Call_Statement
+                (Called_Name         => Function_Call.Element.To_Expression,
+                 Left_Bracket_Token  => null,
+                 Parameters          => null,
+                 Right_Bracket_Token => null,
+                 Semicolon_Token     => Semicolon_Token.Token)));
+      end if;
    end Procedure_Call_Statement;
 
    ---------------------------
@@ -4001,10 +4109,17 @@ package body Program.Parsers.Nodes is
       Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Use_Package_Clause unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Use_Package_Clause";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Use_Clause
+             (Use_Token       => Use_Token.Token,
+              All_Token       => null,
+              Type_Token      => null,
+              Clause_Names    => To_Expression_Vector
+                (Clause_Names.Vector'Unchecked_Access,
+                 Self.Subpool),
+              Semicolon_Token => Semicolon_Token.Token)));
    end Use_Package_Clause;
 
    ---------------------
@@ -4086,8 +4201,17 @@ package body Program.Parsers.Nodes is
       return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "With_Clause unimplemented");
-      return raise Program_Error with "Unimplemented function With_Clause";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_With_Clause
+             (Limited_Token   => Limited_Token.Token,
+              Private_Token   => Private_Token.Token,
+              With_Token      => With_Token.Token,
+              Clause_Names    => To_Expression_Vector
+                (With_Clause_Names.Vector'Unchecked_Access,
+                 Self.Subpool),
+              Semicolon_Token => Semicolon_Token.Token)));
    end With_Clause;
 
 end Program.Parsers.Nodes;

@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -106,7 +106,8 @@ private package Program.Parsers.Nodes is
 
    function Association
      (Self        : Node_Factory'Class; Array_Component_Choices : Node;
-      Arrow_Token : Node; Component_Expression : Node) return Node;
+      Arrow_Token : Node; Component_Expression : Node;
+      Box_Token : Node) return Node;
 
    function Association_List
      (Self                          : Node_Factory'Class; Left_Token : Node;
@@ -140,8 +141,6 @@ private package Program.Parsers.Nodes is
       Begin_Token : Node; Block_Statements : Node; Exception_Token : Node;
       Exception_Handlers : Node; End_Token : Node; Identifier_Token : Node;
       Semicolon_Token    : Node) return Node;
-
-   function Box (Self : Node_Factory'Class; Box_Token : Node) return Node;
 
    function Case_Expression
      (Self     : Node_Factory'Class; Case_Token : Node; Expression : Node;

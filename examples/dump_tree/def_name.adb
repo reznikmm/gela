@@ -57,6 +57,7 @@ procedure Def_Name is
      (Self    : in out Visitor;
       Element : not null Program.Elements.Identifiers.Identifier_Access)
    is
+      pragma Unreferenced (Self);
       Text : Program.Elements.Identifiers.Identifier_Text_Access;
       Token : Program.Lexical_Elements.Lexical_Element_Access;
       Def : Program.Elements.Defining_Identifiers.Defining_Identifier_Access;
@@ -118,6 +119,11 @@ procedure Def_Name is
              (Ada.Command_Line.Argument (J))
          then
             Ada.Wide_Wide_Text_IO.Put_Line ("Unit: " & Unit.Full_Name);
+
+            for Item in Unit.Context_Clause_Elements.Each_Element loop
+               Traverse (Item.Element);
+            end loop;
+
             Traverse (Unit.Unit_Declaration);
             exit;
          end if;

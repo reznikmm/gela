@@ -3513,7 +3513,7 @@ Rules for record_component_association.discrete_range :
       Self.Factory.Prepend_Discrete_Choice
         (List, ${discrete_range.ast});
       ${record_component_association.ast} := Self.Factory.Association
-        (List, No_Token, None);
+        (List, No_Token, None, No_Token);
    end;
 .)
 
@@ -3521,18 +3521,13 @@ Rules for record_component_association.expression :
 (.   ${record_component_association.ast} := Self.Factory.Association
      (${discrete_choice_list.ast:(Self.Factory.Discrete_Choice_Sequence)},
       ${arrow_token.ast:No_Token},
-      ${expression.ast});
+      ${expression.ast},
+      No_Token);
 .)
 
 Rules for record_component_association.box :
-(.
-   declare
-      Box : constant Node :=
-        Self.Factory.Box (${box_token.ast});
-   begin
-     ${record_component_association.ast} := Self.Factory.Association
-       (${discrete_choice_list.ast}, ${arrow_token.ast}, Box);
-   end;
+(.   ${record_component_association.ast} := Self.Factory.Association
+       (${discrete_choice_list.ast}, ${arrow_token.ast}, None, ${box_token.ast});
 .)
 
 record_component_association_list ::=
