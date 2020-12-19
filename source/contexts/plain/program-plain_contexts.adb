@@ -48,13 +48,13 @@ package body Program.Plain_Contexts is
 
    overriding procedure Required_Body
      (Self : in out Dependency;
-      Name : Program.Text) is null;
+      Name : Program.Text);
    --  Library unit body or subunit is required
 
    overriding procedure Required_Unit
      (Self       : in out Dependency;
       Name       : Program.Text;
-      Is_Limited : Boolean) is null;
+      Is_Limited : Boolean);
 
    procedure Parse_File
      (Self      : aliased in out Context'Class;
@@ -300,7 +300,10 @@ package body Program.Plain_Contexts is
    -- Initialize --
    ----------------
 
-   procedure Initialize (Self : in out Context'Class) is
+   procedure Initialize
+     (Self   : in out Context'Class;
+      Errors : Program.Error_Listeners.Error_Listener_Access)
+   is
       GNAT : constant Unit_Naming_Schema_Access := new
         Program.GNAT_Unit_Naming.GNAT_Unit_Naming;
       Dir  : constant Unit_Naming_Schema_Access := new
@@ -308,6 +311,7 @@ package body Program.Plain_Contexts is
           (GNAT.all'Access);
    begin
       Self.Naming := Dir.all'Access;
+      Self.Errors := Errors;
       Self.Symbols.Initialize;
    end Initialize;
 
@@ -396,6 +400,49 @@ package body Program.Plain_Contexts is
    end Parse_File;
 
 
+   -------------------
+   -- Required_Body --
+   -------------------
+
+   overriding procedure Required_Body
+     (Self : in out Dependency;
+      Name : Program.Text)
+   is
+      Units   : Program.Parsers.Unit_Vectors.Vector;
+      Pragmas : Program.Parsers.Element_Vectors.Vector;
+      Unit    : Program.Compilation_Units.Compilation_Unit_Access;
+
+      Found   : constant Unit_Maps.Cursor :=
+        Self.Context.Bodies.Find_Unit (Name);
+
+      Text_Name : constant Program.Text :=
+        Self.Context.Naming.Body_Text_Name (Name);
+   begin
+      if Unit_Maps.Has_Element (Found) then
+         Self.Bodies.Append (Unit_Maps.Key (Found));
+
+         return;
+      elsif Text_Name = "" then
+         Self.Context.Errors.No_Body_Text (Name);
+         return;  --  TODO: Mark self.context as failed?
+      else
+         Self.Context.Parse_File
+           (Text_Name => Text_Name,
+            Standard  => False,
+            Units     => Units,
+            Pragmas   => Pragmas);
+      end if;
+
+      pragma Assert (Units.Last_Index = 1);  --  TODO: Check unit.name = Name?
+
+      if Units.Last_Index = 1 then
+         Unit := Units (1);
+         pragma Assert (Unit.Is_Library_Unit_Body);
+         Self.Context.Append_Unit (Unit);
+         Self.Bodies.Append (Self.Context.Bodies.List.Last_Element);
+      end if;
+   end Required_Body;
+
    --------------------------
    -- Required_Declaration --
    --------------------------
@@ -450,5 +497,24 @@ package body Program.Plain_Contexts is
            (Self.Context.Declarations.List.Last_Element);
       end if;
    end Required_Declaration;
+
+   -------------------
+   -- Required_Unit --
+   -------------------
+
+   overriding procedure Required_Unit
+     (Self       : in out Dependency;
+      Name       : Program.Text;
+      Is_Limited : Boolean)
+   is
+      Saved_Count : constant Natural := Self.Declrations.Last_Index;
+   begin
+      pragma Assert (not Is_Limited);
+      Self.Required_Declaration (Name, If_Any => True);
+
+      if Saved_Count = Self.Declrations.Last_Index then
+         Self.Required_Body (Name);
+      end if;
+   end Required_Unit;
 
 end Program.Plain_Contexts;

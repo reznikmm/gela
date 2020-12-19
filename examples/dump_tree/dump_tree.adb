@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -15,6 +15,7 @@ with Program.Storage_Pools.Instance;
 pragma Unreferenced (Program.Storage_Pools.Instance);
 
 with Dump_Elements;
+with Errors;
 
 procedure Dump_Tree is
 
@@ -42,9 +43,10 @@ procedure Dump_Tree is
       end loop;
    end Process_Units;
 
+   Error : aliased Errors.Error_Listener;
    Ctx  : aliased Program.Plain_Contexts.Context;
 begin
-   Ctx.Initialize;
+   Ctx.Initialize (Error'Unchecked_Access);
    Ctx.Parse_File
      (Ada.Characters.Conversions.To_Wide_Wide_String (File));
    Ctx.Complete_Analysis;

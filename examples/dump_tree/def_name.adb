@@ -21,6 +21,8 @@ with Program.Plain_Contexts;
 with Program.Storage_Pools.Instance;
 pragma Unreferenced (Program.Storage_Pools.Instance);
 
+with Errors;
+
 procedure Def_Name is
 
    type Visitor is new Program.Element_Visitors.Element_Visitor with record
@@ -148,9 +150,10 @@ procedure Def_Name is
       end loop;
    end Traverse;
 
-   Ctx  : aliased Program.Plain_Contexts.Context;
+   Ctx : aliased Program.Plain_Contexts.Context;
+   Err : aliased Errors.Error_Listener;
 begin
-   Ctx.Initialize;
+   Ctx.Initialize (Err'Unchecked_Access);
 
    for J in 1 .. Ada.Command_Line.Argument_Count loop
       declare

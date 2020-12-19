@@ -5,6 +5,7 @@
 
 with Program.Compilation_Unit_Vectors;
 with Program.Contexts;
+with Program.Error_Listeners;
 with Program.Source_Buffers;
 with Program.Symbols;
 with Program.Visibility;
@@ -23,7 +24,9 @@ package Program.Plain_Contexts is
 
    type Context is limited new Program.Contexts.Context with private;
 
-   procedure Initialize (Self : in out Context'Class);
+   procedure Initialize
+     (Self   : in out Context'Class;
+      Errors : Program.Error_Listeners.Error_Listener_Access);
 
    procedure Add_Search_Directory
      (Self : in out Context'Class;
@@ -121,6 +124,7 @@ private
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);
       Compilations : Compilation_Vectors.Vector;
       Naming       : Program.Unit_Naming.Unit_Naming_Schema_Access;
+      Errors       : Program.Error_Listeners.Error_Listener_Access;
    end record;
 
    procedure Append_Unit

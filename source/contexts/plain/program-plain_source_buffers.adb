@@ -49,6 +49,10 @@ package body Program.Plain_Source_Buffers is
       Read_File (Self.Text.all);
       Ada.Streams.Stream_IO.Close (Input);
       Self.Rewind;
+   exception
+      when Ada.Streams.Stream_IO.Name_Error =>
+         raise Ada.Streams.Stream_IO.Name_Error
+           with "Open file failed: " & File_Name;
    end Initialize;
 
    ----------

@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -10,6 +10,7 @@ with Ada.Wide_Wide_Text_IO;
 with Program.Compilation_Unit_Vectors;
 with Program.Compilation_Units;
 with Program.Elements.Defining_Names;
+with Errors;
 with Program.Plain_Contexts;
 with Program.Symbols;
 with Program.Visibility;
@@ -22,6 +23,7 @@ procedure Dump_Standard is
    procedure Print (View : Program.Visibility.View);
    procedure Print (View : Program.Visibility.View_Array);
 
+   Err : aliased Errors.Error_Listener;
    Ctx : aliased Program.Plain_Contexts.Context;
 
    -----------
@@ -104,7 +106,7 @@ procedure Dump_Standard is
    File : constant String := Ada.Command_Line.Argument (1);
 
 begin
-   Ctx.Initialize;
+   Ctx.Initialize (Err'Unchecked_Access);
    Ctx.Parse_File (Ada.Characters.Conversions.To_Wide_Wide_String (File));
    Ctx.Complete_Analysis;
 
