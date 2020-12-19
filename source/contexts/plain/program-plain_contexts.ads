@@ -13,7 +13,7 @@ private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 private with Program.Compilation_Units;
 private with Program.Compilations;
-private with Program.GNAT_Unit_Naming;
+private with Program.Unit_Naming;
 private with Program.Library_Environments;
 private with Program.Symbol_Lists;
 private with Program.Symbols.Tables;
@@ -24,6 +24,10 @@ package Program.Plain_Contexts is
    type Context is limited new Program.Contexts.Context with private;
 
    procedure Initialize (Self : in out Context'Class);
+
+   procedure Add_Search_Directory
+     (Self : in out Context'Class;
+      Path : Program.Text);
 
    procedure Find_Or_Create_Symbol
      (Self   : in out Context'Class;
@@ -116,7 +120,7 @@ private
       Declarations : aliased Unit_Vector (Context'Unchecked_Access);
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);
       Compilations : Compilation_Vectors.Vector;
-      Naming       : aliased Program.GNAT_Unit_Naming.GNAT_Unit_Naming;
+      Naming       : Program.Unit_Naming.Unit_Naming_Schema_Access;
    end record;
 
    procedure Append_Unit

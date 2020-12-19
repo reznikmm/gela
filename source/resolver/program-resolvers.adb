@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -10,6 +10,7 @@ with Program.Elements.Package_Declarations;
 with Program.Elements;
 with Program.Lexical_Elements;
 with Program.Plain_Lexical_Elements;
+with Program.Safe_Element_Visitors;
 
 package body Program.Resolvers is
 
@@ -50,7 +51,8 @@ package body Program.Resolvers is
      (Name : access Program.Elements.Defining_Names.Defining_Name'Class)
          return Program.Symbols.Symbol
    is
-      type Getter is new Program.Element_Visitors.Element_Visitor with record
+      type Getter is new Program.Safe_Element_Visitors.Safe_Element_Visitor
+      with record
          Result : Program.Symbols.Symbol := Program.Symbols.No_Symbol;
       end record;
 
@@ -90,7 +92,7 @@ package body Program.Resolvers is
 
       G : Getter;
    begin
-      Name.Visit (G);
+      G.Visit (Name);
       pragma Assert (G.Result not in Program.Symbols.No_Symbol);
 
       return G.Result;

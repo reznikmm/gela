@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -13,13 +13,14 @@ package Program.GNAT_Unit_Naming is
    type GNAT_Unit_Naming
    is new Program.Unit_Naming.Unit_Naming_Schema
      with private;
+   --  This object returns file base name for GNAT naming (except predefined).
 
 private
 
    type GNAT_Unit_Naming is new Program.Unit_Naming.Unit_Naming_Schema with
    record
       Map : Ada.Strings.Wide_Wide_Maps.Wide_Wide_Character_Mapping :=
-           Ada.Strings.Wide_Wide_Maps.To_Mapping (".", "-");
+              Ada.Strings.Wide_Wide_Maps.To_Mapping (".", "-");
    end record;
 
    overriding function Standard_Text_Name (Self : GNAT_Unit_Naming)
@@ -27,19 +28,19 @@ private
    --  Get compilation Text_Name for Standard library package.
 
    overriding function Declaration_Text_Name
-     (Self   : GNAT_Unit_Naming;
+     (Self : GNAT_Unit_Naming;
       Name : Program.Text)
       return Program.Text;
    --  Get compilation Text_Name for given library declaration unit.
 
    overriding function Body_Text_Name
-     (Self   : GNAT_Unit_Naming;
+     (Self : GNAT_Unit_Naming;
       Name : Program.Text)
       return Program.Text;
    --  Get compilation Text_Name for given body.
 
    overriding function Subunit_Text_Name
-     (Self   : GNAT_Unit_Naming;
+     (Self : GNAT_Unit_Naming;
       Name : Program.Text)
       return Program.Text;
 

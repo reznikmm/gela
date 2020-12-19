@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -67,6 +67,18 @@ package body Program.Units.Bodies is
 
       Self.Subunits.Clear;
    end Initialize;
+
+   -------------------------------
+   -- Is_Library_Unit_Body_Unit --
+   -------------------------------
+
+   overriding function Is_Library_Unit_Body_Unit
+     (Self : Unit_Body) return Boolean
+   is
+      pragma Unreferenced (Self);
+   begin
+      return True;
+   end Is_Library_Unit_Body_Unit;
 
    ------------
    -- Parent --

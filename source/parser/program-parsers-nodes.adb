@@ -7,7 +7,6 @@ with Ada.Strings.Wide_Wide_Unbounded;
 
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
-with Program.Element_Visitors;
 with Program.Elements.Aspect_Specifications;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Constraints;
@@ -22,11 +21,13 @@ with Program.Elements.Operator_Symbols;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Associations;
 with Program.Elements.Parameter_Specifications;
+with Program.Elements.Procedure_Body_Declarations;
 with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Record_Component_Associations;
 with Program.Elements.Subtype_Indications;
 with Program.Nodes.Proxy_Associations;
 with Program.Nodes.Proxy_Calls;
+with Program.Safe_Element_Visitors;
 with Program.Storage_Pools;
 with Program.Units.Bodies;
 with Program.Units.Declarations;
@@ -2286,16 +2287,22 @@ package body Program.Parsers.Nodes is
         (Element : Program.Elements.Element_Access)
          return Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
 
-      type Visitor is new Program.Element_Visitors.Element_Visitor with record
+      type Visitor is new Program.Safe_Element_Visitors.Safe_Element_Visitor
+      with record
          Name : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
       end record;
 
-      procedure Package_Declaration
+      overriding procedure Package_Declaration
         (Self    : in out Visitor;
          Element : not null Program.Elements.Package_Declarations
            .Package_Declaration_Access);
 
-      procedure Package_Declaration
+      overriding procedure Procedure_Body_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Body_Declarations
+           .Procedure_Body_Declaration_Access);
+
+      overriding procedure Package_Declaration
         (Self    : in out Visitor;
          Element : not null Program.Elements.Package_Declarations
            .Package_Declaration_Access) is
@@ -2304,6 +2311,16 @@ package body Program.Parsers.Nodes is
            Ada.Strings.Wide_Wide_Unbounded.To_Unbounded_Wide_Wide_String
              (Element.Name.Image);
       end Package_Declaration;
+
+      overriding procedure Procedure_Body_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Body_Declarations
+           .Procedure_Body_Declaration_Access) is
+      begin
+         Self.Name :=
+           Ada.Strings.Wide_Wide_Unbounded.To_Unbounded_Wide_Wide_String
+             (Element.Name.Image);
+      end Procedure_Body_Declaration;
 
       ----------
       -- Name --
@@ -2315,7 +2332,7 @@ package body Program.Parsers.Nodes is
       is
          Getter : Visitor;
       begin
-         Element.Visit (Getter);
+         Getter.Visit (Element);
          return Getter.Name;
       end Name;
    begin

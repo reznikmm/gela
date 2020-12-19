@@ -153,9 +153,17 @@ begin
    Ctx.Initialize;
 
    for J in 1 .. Ada.Command_Line.Argument_Count loop
-      Ctx.Parse_File
-        (Ada.Characters.Conversions.To_Wide_Wide_String
-           (Ada.Command_Line.Argument (J)));
+      declare
+         Arg : constant Wide_Wide_String :=
+           Ada.Characters.Conversions.To_Wide_Wide_String
+             (Ada.Command_Line.Argument (J));
+      begin
+         if Arg'Length > 2 and then Arg (1 .. 2) = "-I" then
+            Ctx.Add_Search_Directory (Arg (3 .. Arg'Last));
+         else
+            Ctx.Parse_File (Arg);
+         end if;
+      end;
    end loop;
 
    Ctx.Complete_Analysis;

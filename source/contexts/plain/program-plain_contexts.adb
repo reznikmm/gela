@@ -5,6 +5,8 @@
 
 with System.Storage_Pools.Subpools;
 
+with Program.Directory_Unit_Schemas;
+with Program.GNAT_Unit_Naming;
 with Program.Parsers;
 with Program.Plain_Compilations;
 with Program.Resolve_Standard;
@@ -15,6 +17,9 @@ package body Program.Plain_Contexts is
 
    type Plain_Compilation_Access is
      access all Program.Plain_Compilations.Compilation;
+
+   type Unit_Naming_Schema_Access is
+     access all Program.Unit_Naming.Unit_Naming_Schema'Class;
 
    package Symbol_List_Index_Vectors is new Ada.Containers.Vectors
      (Positive,
@@ -57,6 +62,18 @@ package body Program.Plain_Contexts is
       Standard  : Boolean;
       Units     : out Program.Parsers.Unit_Vectors.Vector;
       Pragmas   : out Program.Parsers.Element_Vectors.Vector);
+
+   --------------------------
+   -- Add_Search_Directory --
+   --------------------------
+
+   procedure Add_Search_Directory
+     (Self : in out Context'Class;
+      Path : Program.Text) is
+   begin
+      Program.Directory_Unit_Schemas.Directory_Unit_Schema'Class
+        (Self.Naming.all).Add_Directory (Path);
+   end Add_Search_Directory;
 
    -----------------
    -- Append_Unit --
@@ -284,7 +301,13 @@ package body Program.Plain_Contexts is
    ----------------
 
    procedure Initialize (Self : in out Context'Class) is
+      GNAT : constant Unit_Naming_Schema_Access := new
+        Program.GNAT_Unit_Naming.GNAT_Unit_Naming;
+      Dir  : constant Unit_Naming_Schema_Access := new
+        Program.Directory_Unit_Schemas.Directory_Unit_Schema
+          (GNAT.all'Access);
    begin
+      Self.Naming := Dir.all'Access;
       Self.Symbols.Initialize;
    end Initialize;
 
@@ -385,23 +408,32 @@ package body Program.Plain_Contexts is
       Units   : Program.Parsers.Unit_Vectors.Vector;
       Pragmas : Program.Parsers.Element_Vectors.Vector;
       Unit    : Program.Compilation_Units.Compilation_Unit_Access;
+
       Found   : constant Unit_Maps.Cursor :=
         Self.Context.Declarations.Find_Unit (Name);
+
+      function Text_Name return Program.Text;
+
+      function Text_Name return Program.Text is
+      begin
+         if Name = "" then
+            return Self.Context.Naming.Standard_Text_Name;
+         else
+            return Self.Context.Naming.Declaration_Text_Name (Name);
+         end if;
+      end Text_Name;
+
    begin
       if Unit_Maps.Has_Element (Found) then
          Self.Declrations.Append (Unit_Maps.Key (Found));
 
          return;
-      elsif Name = "" then
-         Self.Context.Parse_File
-           (Text_Name => Self.Context.Naming.Standard_Text_Name,
-            Standard  => True,
-            Units     => Units,
-            Pragmas   => Pragmas);
+      elsif If_Any and Name /= "" and Text_Name = "" then
+         null;  --  Optional unit not found
       else
          Self.Context.Parse_File
-           (Text_Name => Self.Context.Naming.Declaration_Text_Name (Name),
-            Standard  => False,
+           (Text_Name => Text_Name,
+            Standard  => Name = "",
             Units     => Units,
             Pragmas   => Pragmas);
       end if;

@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -51,5 +51,8 @@ private
 
    overriding function Subunits (Self : access Unit_Body)
      return Program.Compilation_Unit_Vectors.Compilation_Unit_Vector_Access;
+
+   overriding function Is_Library_Unit_Body_Unit
+     (Self : Unit_Body) return Boolean;
 
 end Program.Units.Bodies;
