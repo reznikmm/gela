@@ -119,8 +119,11 @@ package body Program.Plain_Contexts is
    -----------------------
 
    procedure Complete_Analysis (Self : in out Context'Class) is
-      procedure Analyze (Item : in out Unit_Map_Item);
-      --  Find and analyze all dependencies and then unit itself
+      procedure Analyze
+        (Vector : in out Unit_Vector;
+         Symbol : Program.Symbol_Lists.Symbol_List);
+      --  Find and analyze all dependencies and then Unit itself, where Unit
+      --  is Vector.Map (Symbol).
 
       procedure Analyze_Unit
         (Unit : Program.Compilation_Units.Compilation_Unit_Access);
@@ -131,12 +134,16 @@ package body Program.Plain_Contexts is
       -- Analyze --
       -------------
 
-      procedure Analyze (Item : in out Unit_Map_Item) is
+      procedure Analyze
+        (Vector : in out Unit_Vector;
+         Symbol : Program.Symbol_Lists.Symbol_List)
+      is
          Deps : Dependency (Self'Unchecked_Access);
+         Item : constant Unit_Map_Item := Vector.Map (Symbol);
       begin
          case Item.Status is
             when Parsed =>
-               Item.Status := Loading;
+               Vector.Map (Symbol).Status := Loading;
 
                Deps.Find_Dependecies
                  (Item.Unit,
@@ -144,19 +151,21 @@ package body Program.Plain_Contexts is
                --  All dependencies are parsed and listed in Deps
 
                for J of Deps.Declrations loop
-                  Analyze (Self.Declarations.Map (J));
+                  Analyze (Self.Declarations, J);
                end loop;
 
                for J of Deps.Bodies loop
-                  Analyze (Self.Bodies.Map (J));
+                  Analyze (Self.Bodies, J);
                end loop;
 
                --  All dependencies analysed
                Analyze_Unit (Item.Unit);
-               Item.Status := Analysed;
+               Vector.Map (Symbol).Status := Analysed;
 
             when Loading =>
-               raise Program_Error with "Circular dependency found";
+
+               Self.Errors.Circular_Dependency (Item.Unit.Full_Name);
+
             when Analysed =>
                null;  --  Nothing to do
          end case;
@@ -169,6 +178,8 @@ package body Program.Plain_Contexts is
       procedure Analyze_Unit
         (Unit : Program.Compilation_Units.Compilation_Unit_Access)
       is
+         List : constant Program.Symbol_Lists.Symbol_List :=
+           Self.Symbols.Lists.Find (Unit.Full_Name);
       begin
          if First then
             Program.Resolve_Standard (Unit, Self.Visible);
@@ -178,23 +189,22 @@ package body Program.Plain_Contexts is
 
          if Unit.Is_Library_Unit_Declaration then
             Self.Library_Env.Put_Public_View
-              (Self.Symbols.Lists.Find (Unit.Full_Name),
-               Self.Visible.Create_Snapshot);
+              (List, Self.Visible.Create_Snapshot);
          end if;
       end Analyze_Unit;
 
-      Item      : Unit_Map_Item;  --  To avoid "attempt to tamper with cursors"
+      Item      : Program.Symbol_Lists.Symbol_List;
       Last_Decl : constant Natural := Self.Declarations.List.Last_Index;
       Last_Body : constant Natural := Self.Bodies.List.Last_Index;
    begin
       for J in 1 .. Last_Decl loop
-         Item := Self.Declarations.Map (Self.Declarations.List (J));
-         Analyze (Item);
+         Item := Self.Declarations.List (J);
+         Analyze (Self.Declarations, Item);
       end loop;
 
       for J in 1 .. Last_Body loop
-         Item := Self.Bodies.Map (Self.Bodies.List (J));
-         Analyze (Item);
+         Item := Self.Bodies.List (J);
+         Analyze (Self.Bodies, Item);
       end loop;
    end Complete_Analysis;
 

@@ -17,4 +17,9 @@ package Program.Error_Listeners is
       Name : Program.Text) is null;
    --  Missing semantic dependency
 
+   not overriding procedure Circular_Dependency
+     (Self : access Error_Listener;
+      Name : Program.Text) is null;
+   --  A circular semantic dependency found during a unit analysis
+
 end Program.Error_Listeners;

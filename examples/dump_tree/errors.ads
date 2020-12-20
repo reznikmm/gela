@@ -14,4 +14,8 @@ package Errors is
      (Self : access Error_Listener;
       Name : Program.Text);
 
+   overriding procedure Circular_Dependency
+     (Self : access Error_Listener;
+      Name : Program.Text);
+
 end Errors;
