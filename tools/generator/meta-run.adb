@@ -1,8 +1,9 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Ada.Directories;
 with League.Application;
 with League.String_Vectors;
 
@@ -29,6 +30,8 @@ begin
       end loop;
    end loop;
 
+   Ada.Directories.Create_Path ("oasis");
+   Ada.Directories.Create_Path ("nodes");
    Meta.Writes.Write_Elements (Class_List);
    Meta.Writes.Write_Elements_Body (Class_List);
    Meta.Writes.Write_Visitors (Class_List);

@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -780,7 +780,11 @@ package body Meta.Writes is
                        Result        => Type_Name),
                     Aspects     => F.New_Aspect
                       (Name  => F.New_Name (+"Pre"),
-                       Value => F.New_Name ("Self.Is_" & Item.Name)));
+                       Value => F.New_List
+                         (F.New_Selected_Name (+"not Self.Assigned"),
+                          F.New_Infix
+                            (+"or else",
+                             F.New_Name ("Self.Is_" & Item.Name)))));
             begin
                Result := F.New_List (Result, Funct);
             end;
