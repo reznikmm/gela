@@ -542,6 +542,7 @@ package body Program.Lexical_Handlers is
          H := Hash (X);
 
          if H in Word_From'Range and then
+           Word_From (H) >= Word_Text'First and then
            Word_From (H) + X'Length - 1 <= Word_Text'Last and then
            Word_Text (Word_From (H) .. Word_From (H) + X'Length - 1) = X
          then
