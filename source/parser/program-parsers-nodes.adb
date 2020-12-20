@@ -2103,10 +2103,33 @@ package body Program.Parsers.Nodes is
       Aspect_Specifications : Node; Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Function_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Function_Declaration";
+      if Renames_Token.Token.Assigned or Separate_Token.Token.Assigned then
+         raise Program_Error with "Procedure_Declaration unimpl";
+      else
+         return
+           (Element_Node,
+            Program.Elements.Element_Access
+              (Self.EF.Create_Function_Declaration
+                (Not_Token           => Not_Token.Token,
+                 Overriding_Token    => Overriding_Token.Token,
+                 Function_Token      => Function_Token.Token,
+                 Name                => Names.Element.To_Defining_Name,
+                 Left_Bracket_Token  => Lp_Token.Token,
+                 Parameters          => To_Parameter_Specification_Vector
+                   (Parameter_Profile.Vector'Unchecked_Access, Self.Subpool),
+                 Right_Bracket_Token => Rp_Token.Token,
+                 Return_Token        => Return_Token.Token,
+                 Not_Token_2         => Return_Not_Token.Token,
+                 Null_Token          => Return_Null_Token.Token,
+                 Result_Subtype      => Result_Subtype.Element,
+                 Is_Token            => Is_Token.Token,
+                 Result_Expression   => Result_Expression.Element.
+                   To_Parenthesized_Expression,
+                 Abstract_Token      => Abstract_Token.Token,
+                 With_Token          => null,
+                 Aspects             => null,
+                 Semicolon_Token     => Semicolon_Token.Token)));
+      end if;
    end Function_Declaration;
 
    ----------------------------
@@ -2721,10 +2744,23 @@ package body Program.Parsers.Nodes is
       Semicolon_Token            : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Object_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Object_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Object_Declaration
+            (Names                     => To_Defining_Identifier_Vector
+              (Names.Vector'Unchecked_Access, Self.Subpool),
+             Colon_Token               => Colon_Token.Token,
+             Aliased_Token             => Aliased_Token.Token,
+             Constant_Token            => Constant_Token.Token,
+             Object_Subtype            => Object_Declaration_Subtype.Element.
+                                            To_Definition,
+             Assignment_Token          => Assignment_Token.Token,
+             Initialization_Expression => Initialization_Expression.Element.
+                                            To_Expression,
+             With_Token                => null,
+             Aspects                   => null,
+             Semicolon_Token           => Semicolon_Token.Token)));
    end Object_Declaration;
 
    ---------------------------------
@@ -2924,10 +2960,22 @@ package body Program.Parsers.Nodes is
       Assignment_Token : Node; Initialization_Expression : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Parameter_Specification unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Parameter_Specification";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Parameter_Specification
+            (Names              => To_Defining_Identifier_Vector
+              (Names.Vector'Unchecked_Access, Self.Subpool),
+             Colon_Token        => Colon_Token.Token,
+             Aliased_Token      => Aliased_Token.Token,
+             In_Token           => In_Token.Token,
+             Out_Token          => Out_Token.Token,
+             Not_Token          => Not_Token.Token,
+             Null_Token         => Null_Token.Token,
+             Parameter_Subtype  => Object_Declaration_Subtype.Element,
+             Assignment_Token   => Assignment_Token.Token,
+             Default_Expression => Initialization_Expression.Element.
+               To_Expression)));
    end Parameter_Specification;
 
    --------------------------------------
@@ -3358,10 +3406,27 @@ package body Program.Parsers.Nodes is
       Semicolon_Token   : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Procedure_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Procedure_Declaration";
+      if Renames_Token.Token.Assigned or Separate_Token.Token.Assigned then
+         raise Program_Error with "Procedure_Declaration unimpl";
+      else
+         return
+           (Element_Node,
+            Program.Elements.Element_Access
+              (Self.EF.Create_Procedure_Declaration
+                (Not_Token           => Not_Token.Token,
+                 Overriding_Token    => Overriding_Token.Token,
+                 Procedure_Token     => Procedure_Token.Token,
+                 Name                => Names.Element.To_Defining_Name,
+                 Left_Bracket_Token  => Lp_Token.Token,
+                 Parameters          => To_Parameter_Specification_Vector
+                   (Parameter_Profile.Vector'Unchecked_Access, Self.Subpool),
+                 Right_Bracket_Token => Rp_Token.Token,
+                 Is_Token            => Is_Token.Token,
+                 Abstract_Token      => Abstract_Token.Token,
+                 With_Token          => null,
+                 Aspects             => null,
+                 Semicolon_Token     => Semicolon_Token.Token)));
+      end if;
    end Procedure_Declaration;
 
    -----------------------------
