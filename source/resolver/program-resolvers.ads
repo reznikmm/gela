@@ -6,6 +6,7 @@
 with Program.Compilation_Units;
 with Program.Visibility;
 with Program.Elements.Defining_Names;
+with Program.Elements.Expressions;
 with Program.Symbols;
 
 private package Program.Resolvers is
@@ -20,5 +21,10 @@ private package Program.Resolvers is
          return Program.Symbols.Symbol;
    --  Return a symbol for given defining name. Return symbol of the
    --  selector for expanded defining name.
+
+   function To_Symbol
+     (Name : Program.Elements.Expressions.Expression_Access)
+      return Program.Symbols.Symbol;
+   --  The same for identifier
 
 end Program.Resolvers;

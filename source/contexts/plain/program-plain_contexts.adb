@@ -38,22 +38,23 @@ package body Program.Plain_Contexts is
       Unit  : Program.Compilation_Units.Compilation_Unit_Access;
       Check : access procedure
         (Unit   : Program.Compilation_Units.Compilation_Unit_Access;
+         Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
          Report : in out Unit_Dependencies.Unit_Dependency_Listener'Class));
 
    overriding procedure Required_Declaration
      (Self   : in out Dependency;
-      Name   : Program.Text;
+      Name   : Program.Symbol_Lists.Symbol_List;
       If_Any : Boolean := False);
    --  Library unit declaration is required (if any when If_Any).
 
    overriding procedure Required_Body
      (Self : in out Dependency;
-      Name : Program.Text);
+      Name : Program.Symbol_Lists.Symbol_List);
    --  Library unit body or subunit is required
 
    overriding procedure Required_Unit
      (Self       : in out Dependency;
-      Name       : Program.Text;
+      Name       : Program.Symbol_Lists.Symbol_List;
       Is_Limited : Boolean);
 
    procedure Parse_File
@@ -253,9 +254,10 @@ package body Program.Plain_Contexts is
       Unit  : Program.Compilation_Units.Compilation_Unit_Access;
       Check : access procedure
         (Unit   : Program.Compilation_Units.Compilation_Unit_Access;
+         Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
          Report : in out Unit_Dependencies.Unit_Dependency_Listener'Class)) is
    begin
-      Check (Unit, Self);
+      Check (Unit, Self.Context.Symbols.Lists, Self);
    end Find_Dependecies;
 
    ---------------
@@ -416,24 +418,27 @@ package body Program.Plain_Contexts is
 
    overriding procedure Required_Body
      (Self : in out Dependency;
-      Name : Program.Text)
+      Name : Program.Symbol_Lists.Symbol_List)
    is
       Units   : Program.Parsers.Unit_Vectors.Vector;
       Pragmas : Program.Parsers.Element_Vectors.Vector;
       Unit    : Program.Compilation_Units.Compilation_Unit_Access;
 
       Found   : constant Unit_Maps.Cursor :=
-        Self.Context.Bodies.Find_Unit (Name);
+        Self.Context.Bodies.Map.Find (Name);
+
+      Full_Name : constant Program.Text :=
+        Self.Context.Symbols.Lists.Symbol_List_Text (Name);
 
       Text_Name : constant Program.Text :=
-        Self.Context.Naming.Body_Text_Name (Name);
+        Self.Context.Naming.Body_Text_Name (Full_Name);
    begin
       if Unit_Maps.Has_Element (Found) then
          Self.Bodies.Append (Unit_Maps.Key (Found));
 
          return;
       elsif Text_Name = "" then
-         Self.Context.Errors.No_Body_Text (Name);
+         Self.Context.Errors.No_Body_Text (Full_Name);
          return;  --  TODO: Mark self.context as failed?
       else
          Self.Context.Parse_File
@@ -459,24 +464,32 @@ package body Program.Plain_Contexts is
 
    overriding procedure Required_Declaration
      (Self   : in out Dependency;
-      Name   : Program.Text;
+      Name   : Program.Symbol_Lists.Symbol_List;
       If_Any : Boolean := False)
    is
+      use type Program.Symbol_Lists.Symbol_List;
+
       Units   : Program.Parsers.Unit_Vectors.Vector;
       Pragmas : Program.Parsers.Element_Vectors.Vector;
       Unit    : Program.Compilation_Units.Compilation_Unit_Access;
 
+      Is_Standard : constant Boolean :=
+        Name = Program.Symbol_Lists.Empty_Symbol_List;
+
       Found   : constant Unit_Maps.Cursor :=
-        Self.Context.Declarations.Find_Unit (Name);
+        Self.Context.Declarations.Map.Find (Name);
+
+      Full_Name : constant Program.Text :=
+        Self.Context.Symbols.Lists.Symbol_List_Text (Name);
 
       function Text_Name return Program.Text;
 
       function Text_Name return Program.Text is
       begin
-         if Name = "" then
+         if Is_Standard then
             return Self.Context.Naming.Standard_Text_Name;
          else
-            return Self.Context.Naming.Declaration_Text_Name (Name);
+            return Self.Context.Naming.Declaration_Text_Name (Full_Name);
          end if;
       end Text_Name;
 
@@ -485,12 +498,12 @@ package body Program.Plain_Contexts is
          Self.Declrations.Append (Unit_Maps.Key (Found));
 
          return;
-      elsif If_Any and Name /= "" and Text_Name = "" then
+      elsif If_Any and not Is_Standard and Text_Name = "" then
          null;  --  Optional unit not found
       else
          Self.Context.Parse_File
            (Text_Name => Text_Name,
-            Standard  => Name = "",
+            Standard  => Is_Standard,
             Units     => Units,
             Pragmas   => Pragmas);
       end if;
@@ -514,7 +527,7 @@ package body Program.Plain_Contexts is
 
    overriding procedure Required_Unit
      (Self       : in out Dependency;
-      Name       : Program.Text;
+      Name       : Program.Symbol_Lists.Symbol_List;
       Is_Limited : Boolean)
    is
       Saved_Count : constant Natural := Self.Declrations.Last_Index;

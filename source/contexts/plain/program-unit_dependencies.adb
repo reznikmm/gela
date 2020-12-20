@@ -9,36 +9,14 @@ with Program.Elements.Identifiers;
 with Program.Elements.Selected_Components;
 with Program.Elements.With_Clauses;
 with Program.Elements.Expressions;
+with Program.Resolvers;
 
 package body Program.Unit_Dependencies is
 
-   function Parent_Name (Name : Program.Text) return Program.Text;
-   function Image
-     (Name : Program.Elements.Expressions.Expression_Access)
-      return Program.Text;
-
-   -----------
-   -- Image --
-   -----------
-
-   function Image
-     (Name : Program.Elements.Expressions.Expression_Access)
-      return Program.Text is
-   begin
-      if Name.Is_Selected_Component then
-         declare
-            Compount_Name : constant Program.Elements.Selected_Components
-              .Selected_Component_Access := Name.To_Selected_Component;
-         begin
-            return Image (Compount_Name.Prefix) & "." &
-              Image (Compount_Name.Selector);
-         end;
-      elsif Name.Is_Identifier then
-         return Name.To_Identifier.Image;
-      else
-         raise Program_Error;
-      end if;
-   end Image;
+   procedure Image
+     (Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
+      Name   : Program.Elements.Expressions.Expression_Access;
+      Result : out Program.Symbol_Lists.Symbol_List);
 
    -----------------------------------
    -- Find_Elaboration_Dependencies --
@@ -46,6 +24,7 @@ package body Program.Unit_Dependencies is
 
    procedure Find_Elaboration_Dependencies
      (Unit   : Program.Compilation_Units.Compilation_Unit_Access;
+      Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
       Report : in out Unit_Dependency_Listener'Class) is
    begin
       raise Program_Error with "Unimplemented";
@@ -57,6 +36,7 @@ package body Program.Unit_Dependencies is
 
    procedure Find_Needed_Units
      (Unit   : Program.Compilation_Units.Compilation_Unit_Access;
+      Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
       Report : in out Unit_Dependency_Listener'Class) is
    begin
       raise Program_Error with "Unimplemented";
@@ -68,21 +48,25 @@ package body Program.Unit_Dependencies is
 
    procedure Find_Semantic_Dependencies
      (Unit   : Program.Compilation_Units.Compilation_Unit_Access;
+      Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
       Report : in out Unit_Dependency_Listener'Class)
    is
-      Full_Name : constant Program.Text := Unit.Full_Name;
+      use type Program.Symbol_Lists.Symbol_List;
+
+      Full_Name : constant Program.Symbol_Lists.Symbol_List :=
+        Lists.Find (Unit.Full_Name);
       Clauses   : constant Program.Element_Vectors.Element_Vector_Access :=
         Unit.Context_Clause_Elements;
    begin
-      if Full_Name = "" then
+      if Full_Name = Program.Symbol_Lists.Empty_Symbol_List then
          --  Standard package has no dependencies
          return;
       elsif Unit.Is_Subunit then
          --  A subunit depends semantically upon its parent body.
-         Report.Required_Body (Parent_Name (Full_Name));
+         Report.Required_Body (Lists.Prefix (Full_Name));
       else
          --  A library_item depends semantically upon its parent declaration.
-         Report.Required_Declaration (Parent_Name (Full_Name));
+         Report.Required_Declaration (Lists.Prefix (Full_Name));
 
          if Unit.Is_Library_Unit_Body then
             --  A library_unit_body depends semantically upon the corresponding
@@ -102,28 +86,40 @@ package body Program.Unit_Dependencies is
             Names : constant Program.Elements.Expressions
               .Expression_Vector_Access := With_Clause.Clause_Names;
             Is_Limited : constant Boolean := With_Clause.Has_Limited;
+            List : Program.Symbol_Lists.Symbol_List;
          begin
             for K in Names.Each_Element loop
-               Report.Required_Unit
-                 (Image (Names.To_Expression (K.Index)), Is_Limited);
+               Image (Lists, Names.To_Expression (K.Index), List);
+               Report.Required_Unit (List, Is_Limited);
             end loop;
          end;
       end loop;
    end Find_Semantic_Dependencies;
 
-   -----------------
-   -- Parent_Name --
-   -----------------
-
-   function Parent_Name (Name : Program.Text) return Program.Text is
+   procedure Image
+     (Lists  : in out Program.Symbol_Lists.Symbol_List_Table'Class;
+      Name   : Program.Elements.Expressions.Expression_Access;
+      Result : out Program.Symbol_Lists.Symbol_List) is
    begin
-      for J in reverse Name'Range loop
-         if Name (J) = '.' then
-            return Name (Name'First .. J - 1);
-         end if;
-      end loop;
-
-      return "";
-   end Parent_Name;
+      if Name.Is_Selected_Component then
+         declare
+            Prefix : Program.Symbol_Lists.Symbol_List;
+         begin
+            Image (Lists, Name.To_Selected_Component.Prefix, Prefix);
+            Lists.Find_Or_Create
+              (Prefix,
+               Program.Resolvers.To_Symbol
+                 (Name.To_Selected_Component.Selector),
+               Result);
+         end;
+      elsif Name.Is_Identifier then
+         Lists.Find_Or_Create
+           (Program.Symbol_Lists.Empty_Symbol_List,
+            Program.Resolvers.To_Symbol (Name),
+            Result);
+      else
+         raise Program_Error;
+      end if;
+   end Image;
 
 end Program.Unit_Dependencies;

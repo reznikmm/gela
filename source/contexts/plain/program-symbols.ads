@@ -5,7 +5,7 @@
 
 with Ada.Containers;
 
-with Program.Lexical_Elements; use Program.Lexical_Elements;
+with Program.Lexical_Elements;
 
 package Program.Symbols is
    pragma Pure;
@@ -214,6 +214,8 @@ private
 
    function Is_Operator (Value : Symbol) return S.Boolean is
       (Value in 1 .. 19);
+
+   use Program.Lexical_Elements;
 
    function Less_Symbol             return Symbol is
      (Lexical_Element_Kind'Pos (Less) + 1);

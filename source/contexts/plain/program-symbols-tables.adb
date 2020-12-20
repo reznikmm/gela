@@ -105,6 +105,7 @@ package body Program.Symbols.Tables is
       Self.Last_Symbol := Self.Last_Symbol + 1;
       Result := Self.Last_Symbol;
       Self.Map.Insert (Ref, Result);
+      Self.References.Insert (Result, Ref);
    end Find_Or_Create;
 
    ----------
