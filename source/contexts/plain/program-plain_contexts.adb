@@ -7,6 +7,7 @@ with System.Storage_Pools.Subpools;
 
 with Program.Directory_Unit_Schemas;
 with Program.GNAT_Unit_Naming;
+with Program.Node_Symbols;
 with Program.Parsers;
 with Program.Plain_Compilations;
 with Program.Resolve_Standard;
@@ -179,9 +180,10 @@ package body Program.Plain_Contexts is
       procedure Analyze_Unit
         (Unit : Program.Compilation_Units.Compilation_Unit_Access)
       is
-         List : constant Program.Symbol_Lists.Symbol_List :=
-           Self.Symbols.Lists.Find (Unit.Full_Name);
+         List : Program.Symbol_Lists.Symbol_List;
       begin
+         Program.Node_Symbols.Unit_Full_Name (Self.Symbols.Lists, Unit, List);
+
          if First then
             Program.Resolve_Standard (Unit, Self.Visible);
 
@@ -334,9 +336,7 @@ package body Program.Plain_Contexts is
    function Immediate_Visible
      (Self : in out Context'Class;
       Unit : Program.Text;
-      Name : Program.Text) return Program.Visibility.View_Array
-   is
-
+      Name : Program.Text) return Program.Visibility.View_Array is
    begin
       Self.Visible.Restore_Snapshot
         (Self.Library_Env.Public_View

@@ -53,11 +53,12 @@ package body Program.Unit_Dependencies is
    is
       use type Program.Symbol_Lists.Symbol_List;
 
-      Full_Name : constant Program.Symbol_Lists.Symbol_List :=
-        Lists.Find (Unit.Full_Name);
+      Full_Name : Program.Symbol_Lists.Symbol_List;
       Clauses   : constant Program.Element_Vectors.Element_Vector_Access :=
         Unit.Context_Clause_Elements;
    begin
+      Program.Node_Symbols.Unit_Full_Name (Lists, Unit, Full_Name);
+
       if Full_Name = Program.Symbol_Lists.Empty_Symbol_List then
          --  Standard package has no dependencies
          return;
