@@ -9,7 +9,7 @@ with Program.Elements.Identifiers;
 with Program.Elements.Selected_Components;
 with Program.Elements.With_Clauses;
 with Program.Elements.Expressions;
-with Program.Resolvers;
+with Program.Node_Symbols;
 
 package body Program.Unit_Dependencies is
 
@@ -108,14 +108,14 @@ package body Program.Unit_Dependencies is
             Image (Lists, Name.To_Selected_Component.Prefix, Prefix);
             Lists.Find_Or_Create
               (Prefix,
-               Program.Resolvers.To_Symbol
+               Program.Node_Symbols.Get_Symbol
                  (Name.To_Selected_Component.Selector),
                Result);
          end;
       elsif Name.Is_Identifier then
          Lists.Find_Or_Create
            (Program.Symbol_Lists.Empty_Symbol_List,
-            Program.Resolvers.To_Symbol (Name),
+            Program.Node_Symbols.Get_Symbol (Name),
             Result);
       else
          raise Program_Error;

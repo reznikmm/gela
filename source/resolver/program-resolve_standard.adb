@@ -20,9 +20,9 @@ with Program.Elements.Subtype_Declarations;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Type_Declarations;
 with Program.Elements.Unconstrained_Array_Types;
+with Program.Node_Symbols;
 with Program.Lexical_Elements;
 with Program.Plain_Lexical_Elements;
-with Program.Resolvers;
 with Program.Symbols;
 with Program.Visibility;
 
@@ -108,7 +108,7 @@ is
            .Enumeration_Literal_Specification_Access)
       is
          Symbol : constant Program.Symbols.Symbol :=
-           Program.Resolvers.To_Symbol (Element.Name);
+           Program.Node_Symbols.Get_Symbol (Element.Name);
       begin
          if Program.Symbols.Is_Character_Literal (Symbol) then
             Self.Env.Create_Character_Literal
@@ -139,7 +139,7 @@ is
            .Enumeration_Type_Access) is
       begin
          Self.Env.Create_Enumeration_Type
-           (Symbol => Program.Resolvers.To_Symbol (Self.Type_Name),
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
          Self.Type_View := Self.Env.Latest_View;
          Self.Visit_Each_Child (Element);
@@ -159,7 +159,7 @@ is
              Element.Names.To_Defining_Identifier (1);
       begin
          Self.Env.Create_Exception
-           (Symbol => Program.Resolvers.To_Symbol (Name),
+           (Symbol => Program.Node_Symbols.Get_Symbol (Name),
             Name   => Program.Elements.Defining_Names.Defining_Name_Access
                         (Name));
       end Exception_Declaration;
@@ -176,7 +176,7 @@ is
          pragma Unreferenced (Element);
       begin
          Self.Env.Create_Float_Point_Type
-           (Symbol => Program.Resolvers.To_Symbol (Self.Type_Name),
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
       end Floating_Point_Type;
 
@@ -207,7 +207,7 @@ is
          pragma Unreferenced (Element);
       begin
          Self.Env.Create_Signed_Integer_Type
-           (Symbol => Program.Resolvers.To_Symbol (Self.Type_Name),
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
       end Signed_Integer_Type;
 
@@ -231,7 +231,7 @@ is
            Self.Env.Immediate_Visible (Subtype_Mark_Symbol);
       begin
          Self.Env.Create_Subtype
-           (Symbol         => Program.Resolvers.To_Symbol (Subtype_Name),
+           (Symbol         => Program.Node_Symbols.Get_Symbol (Subtype_Name),
             Name           => Subtype_Name,
             Subtype_Mark   => Subtype_Mark_Views (1),
             Has_Constraint => Element.Subtype_Indication.Constraint.Assigned);
@@ -274,7 +274,7 @@ is
            Self.Env.Immediate_Visible (Component_Symbol) (1);
       begin
          Self.Env.Create_Array_Type
-           (Symbol    => Program.Resolvers.To_Symbol (Self.Type_Name),
+           (Symbol    => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name      => Self.Type_Name,
             Indexes   => (1 => Index_View),
             Component => Component_View);
