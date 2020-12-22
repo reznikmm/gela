@@ -16,8 +16,10 @@ private with Program.Compilation_Units;
 private with Program.Compilations;
 private with Program.Unit_Naming;
 private with Program.Library_Environments;
+private with Program.Resolvers;
 private with Program.Symbol_Lists;
 private with Program.Symbols.Tables;
+private with Program.Elements.Defining_Names;
 
 package Program.Plain_Contexts is
    pragma Preelaborate;
@@ -116,12 +118,22 @@ private
       Element_Type => Program.Compilations.Compilation_Access,
       "="          => Program.Compilations."=");
 
+   type Cross_Reference_Updater
+     (Context : access Program.Plain_Contexts.Context) is new
+        Program.Resolvers.Cross_Reference_Updater with null record;
+
+   overriding procedure Set_Corresponding_Defining_Name
+     (Self : in out Cross_Reference_Updater;
+      Name : Program.Elements.Element_Access;
+      Def  : Program.Elements.Defining_Names.Defining_Name_Access);
+
    type Context is limited new Program.Contexts.Context with record
       Symbols      : Symbol_Table;
       Library_Env  : aliased Program.Library_Environments.Library_Environment;
       Visible      : aliased Program.Visibility.Context;
       Declarations : aliased Unit_Vector (Context'Unchecked_Access);
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);
+      Xref         : Cross_Reference_Updater (Context'Unchecked_Access);
       Compilations : Compilation_Vectors.Vector;
       Naming       : Program.Unit_Naming.Unit_Naming_Schema_Access;
       Errors       : Program.Error_Listeners.Error_Listener_Access;

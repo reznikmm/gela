@@ -5,7 +5,6 @@
 
 with Program.Element_Visitors;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Defining_Names;
 with Program.Elements.Identifiers;
 with Program.Elements.Package_Declarations;
 with Program.Elements;

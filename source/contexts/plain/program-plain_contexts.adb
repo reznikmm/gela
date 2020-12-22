@@ -540,4 +540,16 @@ package body Program.Plain_Contexts is
       end if;
    end Required_Unit;
 
+   -------------------------------------
+   -- Set_Corresponding_Defining_Name --
+   -------------------------------------
+
+   overriding procedure Set_Corresponding_Defining_Name
+     (Self : in out Cross_Reference_Updater;
+      Name : Program.Elements.Element_Access;
+      Def  : Program.Elements.Defining_Names.Defining_Name_Access) is
+   begin
+      null;
+   end Set_Corresponding_Defining_Name;
+
 end Program.Plain_Contexts;
