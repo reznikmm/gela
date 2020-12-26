@@ -7,10 +7,12 @@ with System.Storage_Pools.Subpools;
 
 with Program.Directory_Unit_Schemas;
 with Program.GNAT_Unit_Naming;
-with Program.Node_Symbols;
+with Program.Nodes.Identifiers.Set_Defining_Name;
 with Program.Parsers;
 with Program.Plain_Compilations;
+with Program.Plain_Contexts.Unit_Name_Resolvers;
 with Program.Resolve_Standard;
+with Program.Resolvers;
 with Program.Storage_Pools;
 with Program.Unit_Dependencies;
 
@@ -30,8 +32,8 @@ package body Program.Plain_Contexts is
    type Dependency (Context : access Program.Plain_Contexts.Context'Class) is
      new Program.Unit_Dependencies.Unit_Dependency_Listener with
    record
-      Declrations : Symbol_List_Index_Vectors.Vector;
-      Bodies      : Symbol_List_Index_Vectors.Vector;
+      Declarations : Symbol_List_Index_Vectors.Vector;
+      Bodies       : Symbol_List_Index_Vectors.Vector;
    end record;
 
    procedure Find_Dependecies
@@ -140,6 +142,7 @@ package body Program.Plain_Contexts is
         (Vector : in out Unit_Vector;
          Symbol : Program.Symbol_Lists.Symbol_List)
       is
+         use type Program.Symbol_Lists.Symbol_List;
          Deps : Dependency (Self'Unchecked_Access);
          Item : constant Unit_Map_Item := Vector.Map (Symbol);
       begin
@@ -147,18 +150,24 @@ package body Program.Plain_Contexts is
             when Parsed =>
                Vector.Map (Symbol).Status := Loading;
 
-               Deps.Find_Dependecies
-                 (Item.Unit,
-                  Program.Unit_Dependencies.Find_Semantic_Dependencies'Access);
-               --  All dependencies are parsed and listed in Deps
+               --  Don't look for dependencies of Standard
+               if Symbol /= Program.Symbol_Lists.Empty_Symbol_List then
 
-               for J of Deps.Declrations loop
-                  Analyze (Self.Declarations, J);
-               end loop;
+                  Deps.Find_Dependecies
+                    (Item.Unit,
+                     Program.Unit_Dependencies
+                       .Find_Semantic_Dependencies'Access);
+                  --  All dependencies are parsed and listed in Deps
 
-               for J of Deps.Bodies loop
-                  Analyze (Self.Bodies, J);
-               end loop;
+                  for J of Deps.Declarations loop
+                     Analyze (Self.Declarations, J);
+                  end loop;
+
+                  for J of Deps.Bodies loop
+                     Analyze (Self.Bodies, J);
+                  end loop;
+
+               end if;
 
                --  All dependencies analysed
                Analyze_Unit (Item.Unit);
@@ -180,19 +189,24 @@ package body Program.Plain_Contexts is
       procedure Analyze_Unit
         (Unit : Program.Compilation_Units.Compilation_Unit_Access)
       is
-         List : Program.Symbol_Lists.Symbol_List;
+         Unit_Name_Resolver : aliased
+           Program.Plain_Contexts.Unit_Name_Resolvers.Unit_Name_Resolver
+             (Self.Symbols.Lists'Unchecked_Access,
+              Self.Errors,
+              Self.Declarations'Unchecked_Access,
+              Self.Bodies'Unchecked_Access);
       begin
-         Program.Node_Symbols.Unit_Full_Name (Self.Symbols.Lists, Unit, List);
-
          if First then
-            Program.Resolve_Standard (Unit, Self.Visible);
-
             First := False;
-         end if;
-
-         if Unit.Is_Library_Unit_Declaration then
-            Self.Library_Env.Put_Public_View
-              (List, Self.Visible.Create_Snapshot);
+            Program.Resolve_Standard (Unit, Self.Visible, Self.Library_Env);
+         else
+            Program.Resolvers.Resolve_Names
+              (Unit,
+               Unit_Name_Resolver'Unchecked_Access,
+               Self.Symbols.Lists,
+               Self.Visible,
+               Self.Library_Env,
+               Self.Xref'Unchecked_Access);
          end if;
       end Analyze_Unit;
 
@@ -495,7 +509,7 @@ package body Program.Plain_Contexts is
 
    begin
       if Unit_Maps.Has_Element (Found) then
-         Self.Declrations.Append (Unit_Maps.Key (Found));
+         Self.Declarations.Append (Unit_Maps.Key (Found));
 
          return;
       elsif If_Any and not Is_Standard and Text_Name = "" then
@@ -516,7 +530,7 @@ package body Program.Plain_Contexts is
          Unit := Units (1);
          pragma Assert (Unit.Is_Library_Unit_Declaration);
          Self.Context.Append_Unit (Unit);
-         Self.Declrations.Append
+         Self.Declarations.Append
            (Self.Context.Declarations.List.Last_Element);
       end if;
    end Required_Declaration;
@@ -530,12 +544,12 @@ package body Program.Plain_Contexts is
       Name       : Program.Symbol_Lists.Symbol_List;
       Is_Limited : Boolean)
    is
-      Saved_Count : constant Natural := Self.Declrations.Last_Index;
+      Saved_Count : constant Natural := Self.Declarations.Last_Index;
    begin
       pragma Assert (not Is_Limited);
       Self.Required_Declaration (Name, If_Any => True);
 
-      if Saved_Count = Self.Declrations.Last_Index then
+      if Saved_Count = Self.Declarations.Last_Index then
          Self.Required_Body (Name);
       end if;
    end Required_Unit;
@@ -545,11 +559,19 @@ package body Program.Plain_Contexts is
    -------------------------------------
 
    overriding procedure Set_Corresponding_Defining_Name
-     (Self : in out Cross_Reference_Updater;
-      Name : Program.Elements.Element_Access;
-      Def  : Program.Elements.Defining_Names.Defining_Name_Access) is
+     (Self : in out Reference_Updater;
+      Name : not null Program.Elements.Element_Access;
+      Def  : Program.Elements.Defining_Names.Defining_Name_Access)
+   is
+      pragma Unreferenced (Self);
    begin
-      null;
+      if Name.Is_Identifier then
+         Program.Nodes.Identifiers.Set_Defining_Name
+           (Program.Nodes.Identifiers.Identifier'Class (Name.all),
+            Def.To_Defining_Identifier);
+      else
+         raise Program_Error;
+      end if;
    end Set_Corresponding_Defining_Name;
 
 end Program.Plain_Contexts;

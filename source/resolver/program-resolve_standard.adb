@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -20,15 +20,17 @@ with Program.Elements.Subtype_Declarations;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Type_Declarations;
 with Program.Elements.Unconstrained_Array_Types;
-with Program.Node_Symbols;
 with Program.Lexical_Elements;
+with Program.Node_Symbols;
 with Program.Plain_Lexical_Elements;
+with Program.Symbol_Lists;
 with Program.Symbols;
 with Program.Visibility;
 
 procedure Program.Resolve_Standard
-  (Unit : not null Program.Compilation_Units.Compilation_Unit_Access;
-   Env  : aliased in out Program.Visibility.Context)
+  (Unit    : not null Program.Compilation_Units.Compilation_Unit_Access;
+   Context : aliased in out Program.Visibility.Context;
+   Library : in out Program.Library_Environments.Library_Environment)
 is
 
    function To_Symbol
@@ -367,9 +369,13 @@ is
    end To_Symbol;
 
 
-   Visitor : Visitors.Visitor (Env'Access);
+   Visitor : Visitors.Visitor (Context'Access);
    Root    : constant Program.Elements.Element_Access := Unit.Unit_Declaration;
 begin
-   Env.Create_Empty_Context;
+   Context.Create_Empty_Context;
    Root.Visit (Visitor);
+
+   Library.Put_Public_View
+     (Program.Symbol_Lists.Empty_Symbol_List,  --  Means Standard root package
+      Context.Create_Snapshot);
 end Program.Resolve_Standard;

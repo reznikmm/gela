@@ -8,6 +8,7 @@ with Program.Elements.Defining_Character_Literals;
 with Program.Elements.Defining_Expanded_Names;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Identifiers;
+with Program.Elements.Package_Declarations;
 with Program.Elements.Procedure_Body_Declarations;
 with Program.Lexical_Elements;
 with Program.Plain_Lexical_Elements;
@@ -228,6 +229,11 @@ package body Program.Node_Symbols is
            Program.Symbol_Lists.Empty_Symbol_List;
       end record;
 
+      overriding procedure Package_Declaration
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Package_Declarations
+           .Package_Declaration_Access);
+
       overriding procedure Procedure_Body_Declaration
         (Self    : in out Getter;
          Element : not null Program.Elements.Procedure_Body_Declarations
@@ -236,6 +242,14 @@ package body Program.Node_Symbols is
    end Unit_Symbols;
 
    package body Unit_Symbols is
+
+      overriding procedure Package_Declaration
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Package_Declarations
+           .Package_Declaration_Access) is
+      begin
+         Defining_Name_Symbol (Self.Table.all, Element.Name, Self.Result);
+      end Package_Declaration;
 
       overriding procedure Procedure_Body_Declaration
         (Self    : in out Getter;

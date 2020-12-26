@@ -30,6 +30,7 @@ package body Program.Directory_Unit_Schemas is
       elsif Self.Next = null then
          Self.Next := new Directory_Unit_Schema'
            (Self.Base_Name.all'Unchecked_Access, others => <>);
+         Self.Next.Add_Directory (Path);
       else
          Self.Next.Add_Directory (Path);
       end if;

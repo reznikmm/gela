@@ -4,26 +4,23 @@
 -------------------------------------------------------------
 
 with Program.Compilation_Units;
-with Program.Elements.Defining_Names;
 with Program.Elements.Expressions;
+with Program.Library_Environments;
+with Program.Symbol_Lists;
 with Program.Visibility;
-
+with Program.Cross_Reference_Updaters;
+with Program.Simple_Resolvers;
 private package Program.Resolvers is
    pragma Preelaborate;
 
-   type Cross_Reference_Updater is limited interface;
-
-   type Cross_Reference_Updater_Access is
-     access all Cross_Reference_Updater'Class
-       with Storage_Size => 0;
-
-   not overriding procedure Set_Corresponding_Defining_Name
-     (Self : in out Cross_Reference_Updater;
-      Name : Program.Elements.Element_Access;
-      Def  : Program.Elements.Defining_Names.Defining_Name_Access) is abstract;
-
    procedure Resolve_Names
-     (Env  : aliased in out Program.Visibility.Context;
-      Unit : not null Program.Compilation_Units.Compilation_Unit_Access);
+     (Unit    : not null Program.Compilation_Units.Compilation_Unit_Access;
+      Unit_Name_Resolver : not null
+        Program.Simple_Resolvers.Simple_Resolver_Access;
+      Lists   : in out Program.Symbol_Lists.Symbol_List_Table'Class;
+      Context : aliased in out Program.Visibility.Context;
+      Library : in out Program.Library_Environments.Library_Environment;
+      Setter             : not null
+        Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access);
 
 end Program.Resolvers;

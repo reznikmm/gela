@@ -25,6 +25,9 @@ package Program.Symbol_Lists is
      (Table : not null access Program.Symbols.Tables.Symbol_Table'Class) is
        tagged limited private;
 
+   type Symbol_List_Table_Access is access all Symbol_List_Table'Class
+     with Storage_Size => 0;
+
    function Find
      (Self  : Symbol_List_Table'Class;
       Value : Program.Text) return Symbol_List;

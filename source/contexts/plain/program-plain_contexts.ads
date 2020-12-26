@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -14,12 +14,12 @@ private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 private with Program.Compilation_Units;
 private with Program.Compilations;
-private with Program.Unit_Naming;
+private with Program.Elements.Defining_Names;
 private with Program.Library_Environments;
-private with Program.Resolvers;
+private with Program.Cross_Reference_Updaters;
 private with Program.Symbol_Lists;
 private with Program.Symbols.Tables;
-private with Program.Elements.Defining_Names;
+private with Program.Unit_Naming;
 
 package Program.Plain_Contexts is
    pragma Preelaborate;
@@ -64,7 +64,7 @@ package Program.Plain_Contexts is
 private
 
    type Symbol_Table is new Program.Symbols.Tables.Symbol_Table with record
-      Lists : Program.Symbol_Lists.Symbol_List_Table
+      Lists : aliased Program.Symbol_Lists.Symbol_List_Table
         (Symbol_Table'Unchecked_Access);
    end record;
 
@@ -97,6 +97,9 @@ private
       List : Unit_Vectors.Vector;
    end record;
 
+   type Unit_Vector_Access is access all Unit_Vector'Class
+     with Storage_Size => 0;
+
    overriding function Get_Length (Self : Unit_Vector) return Positive;
 
    overriding function Element
@@ -118,13 +121,14 @@ private
       Element_Type => Program.Compilations.Compilation_Access,
       "="          => Program.Compilations."=");
 
-   type Cross_Reference_Updater
+   type Reference_Updater
      (Context : access Program.Plain_Contexts.Context) is new
-        Program.Resolvers.Cross_Reference_Updater with null record;
+       Program.Cross_Reference_Updaters.Cross_Reference_Updater
+         with null record;
 
    overriding procedure Set_Corresponding_Defining_Name
-     (Self : in out Cross_Reference_Updater;
-      Name : Program.Elements.Element_Access;
+     (Self : in out Reference_Updater;
+      Name : not null Program.Elements.Element_Access;
       Def  : Program.Elements.Defining_Names.Defining_Name_Access);
 
    type Context is limited new Program.Contexts.Context with record
@@ -133,7 +137,7 @@ private
       Visible      : aliased Program.Visibility.Context;
       Declarations : aliased Unit_Vector (Context'Unchecked_Access);
       Bodies       : aliased Unit_Vector (Context'Unchecked_Access);
-      Xref         : Cross_Reference_Updater (Context'Unchecked_Access);
+      Xref         : aliased Reference_Updater (Context'Unchecked_Access);
       Compilations : Compilation_Vectors.Vector;
       Naming       : Program.Unit_Naming.Unit_Naming_Schema_Access;
       Errors       : Program.Error_Listeners.Error_Listener_Access;

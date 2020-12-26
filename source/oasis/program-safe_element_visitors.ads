@@ -548,8 +548,7 @@ private
 
    overriding procedure Others_Choice
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Others_Choices.Others_Choice_Access)
-    ;
+     Ignore : not null Program.Elements.Others_Choices.Others_Choice_Access);
 
    overriding procedure Anonymous_Access_To_Object
     (Self   : in out Safe_Element_Visitor;
@@ -608,13 +607,11 @@ private
 
    overriding procedure String_Literal
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.String_Literals.String_Literal_Access)
-    ;
+     Ignore : not null Program.Elements.String_Literals.String_Literal_Access);
 
    overriding procedure Identifier
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Identifiers.Identifier_Access)
-    ;
+     Ignore : not null Program.Elements.Identifiers.Identifier_Access);
 
    overriding procedure Operator_Symbol
     (Self   : in out Safe_Element_Visitor;
@@ -633,13 +630,11 @@ private
 
    overriding procedure Infix_Operator
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Infix_Operators.Infix_Operator_Access)
-    ;
+     Ignore : not null Program.Elements.Infix_Operators.Infix_Operator_Access);
 
    overriding procedure Function_Call
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Function_Calls.Function_Call_Access)
-    ;
+     Ignore : not null Program.Elements.Function_Calls.Function_Call_Access);
 
    overriding procedure Indexed_Component
     (Self   : in out Safe_Element_Visitor;
@@ -687,8 +682,7 @@ private
 
    overriding procedure Null_Literal
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Null_Literals.Null_Literal_Access)
-    ;
+     Ignore : not null Program.Elements.Null_Literals.Null_Literal_Access);
 
    overriding procedure Parenthesized_Expression
     (Self   : in out Safe_Element_Visitor;
@@ -721,8 +715,7 @@ private
 
    overriding procedure If_Expression
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.If_Expressions.If_Expression_Access)
-    ;
+     Ignore : not null Program.Elements.If_Expressions.If_Expression_Access);
 
    overriding procedure Quantified_Expression
     (Self   : in out Safe_Element_Visitor;
@@ -756,8 +749,7 @@ private
 
    overriding procedure Null_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Null_Statements.Null_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Null_Statements.Null_Statement_Access);
 
    overriding procedure Assignment_Statement
     (Self   : in out Safe_Element_Visitor;
@@ -766,18 +758,15 @@ private
 
    overriding procedure If_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.If_Statements.If_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.If_Statements.If_Statement_Access);
 
    overriding procedure Case_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Case_Statements.Case_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Case_Statements.Case_Statement_Access);
 
    overriding procedure Loop_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Loop_Statements.Loop_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Loop_Statements.Loop_Statement_Access);
 
    overriding procedure While_Loop_Statement
     (Self   : in out Safe_Element_Visitor;
@@ -796,18 +785,15 @@ private
 
    overriding procedure Exit_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Exit_Statements.Exit_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Exit_Statements.Exit_Statement_Access);
 
    overriding procedure Goto_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Goto_Statements.Goto_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Goto_Statements.Goto_Statement_Access);
 
    overriding procedure Call_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Call_Statements.Call_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Call_Statements.Call_Statement_Access);
 
    overriding procedure Simple_Return_Statement
     (Self   : in out Safe_Element_Visitor;
@@ -856,13 +842,11 @@ private
 
    overriding procedure Code_Statement
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Code_Statements.Code_Statement_Access)
-    ;
+     Ignore : not null Program.Elements.Code_Statements.Code_Statement_Access);
 
    overriding procedure Elsif_Path
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Elsif_Paths.Elsif_Path_Access)
-    ;
+     Ignore : not null Program.Elements.Elsif_Paths.Elsif_Path_Access);
 
    overriding procedure Case_Path
     (Self   : in out Safe_Element_Visitor;
@@ -870,8 +854,7 @@ private
 
    overriding procedure Select_Path
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Select_Paths.Select_Path_Access)
-    ;
+     Ignore : not null Program.Elements.Select_Paths.Select_Path_Access);
 
    overriding procedure Case_Expression_Path
     (Self   : in out Safe_Element_Visitor;
@@ -885,13 +868,11 @@ private
 
    overriding procedure Use_Clause
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Use_Clauses.Use_Clause_Access)
-    ;
+     Ignore : not null Program.Elements.Use_Clauses.Use_Clause_Access);
 
    overriding procedure With_Clause
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.With_Clauses.With_Clause_Access)
-    ;
+     Ignore : not null Program.Elements.With_Clauses.With_Clause_Access);
 
    overriding procedure Component_Clause
     (Self   : in out Safe_Element_Visitor;
@@ -900,8 +881,7 @@ private
 
    overriding procedure Derived_Type
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Derived_Types.Derived_Type_Access)
-    ;
+     Ignore : not null Program.Elements.Derived_Types.Derived_Type_Access);
 
    overriding procedure Derived_Record_Extension
     (Self   : in out Safe_Element_Visitor;
@@ -920,8 +900,7 @@ private
 
    overriding procedure Modular_Type
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Modular_Types.Modular_Type_Access)
-    ;
+     Ignore : not null Program.Elements.Modular_Types.Modular_Type_Access);
 
    overriding procedure Root_Type
     (Self   : in out Safe_Element_Visitor;
@@ -954,13 +933,11 @@ private
 
    overriding procedure Record_Type
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Record_Types.Record_Type_Access)
-    ;
+     Ignore : not null Program.Elements.Record_Types.Record_Type_Access);
 
    overriding procedure Interface_Type
     (Self   : in out Safe_Element_Visitor;
-     Ignore : not null Program.Elements.Interface_Types.Interface_Type_Access)
-    ;
+     Ignore : not null Program.Elements.Interface_Types.Interface_Type_Access);
 
    overriding procedure Object_Access_Type
     (Self   : in out Safe_Element_Visitor;
