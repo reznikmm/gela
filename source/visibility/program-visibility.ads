@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -106,6 +106,9 @@ package Program.Visibility is
    type Context is tagged limited private;
    --  A context keeps map from symbol to its view. It also tracks set of
    --  snapshots.
+
+   type Context_Access is access all Program.Visibility.Context'Class
+     with Storage_Size => 0;
 
    not overriding procedure Create_Empty_Context
      (Self : aliased in out Context);

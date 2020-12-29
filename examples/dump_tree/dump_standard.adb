@@ -103,12 +103,41 @@ procedure Dump_Standard is
       end case;
    end Print;
 
-   File : constant String := Ada.Command_Line.Argument (1);
-
+   Last : Positive := Ada.Command_Line.Argument_Count + 1;
 begin
    Ctx.Initialize (Err'Unchecked_Access);
-   Ctx.Parse_File (Ada.Characters.Conversions.To_Wide_Wide_String (File));
+
+   for J in 1 .. Ada.Command_Line.Argument_Count loop
+      declare
+         Arg : constant Wide_Wide_String :=
+           Ada.Characters.Conversions.To_Wide_Wide_String
+             (Ada.Command_Line.Argument (J));
+      begin
+         if Arg'Length > 2 and then Arg (1 .. 2) = "-I" then
+            Ctx.Add_Search_Directory (Arg (3 .. Arg'Last));
+         elsif Arg = "--" then
+            Last := J + 1;
+            exit;
+         else
+            Ctx.Parse_File (Arg);
+         end if;
+      end;
+   end loop;
+
    Ctx.Complete_Analysis;
 
-   Print (Ctx.Immediate_Visible ("", "Standard"));
+   if Last > Ada.Command_Line.Argument_Count then
+      Print (Ctx.Immediate_Visible ("", "Standard"));
+   else
+      declare
+         Unit : constant Wide_Wide_String :=
+           Ada.Characters.Conversions.To_Wide_Wide_String
+             (Ada.Command_Line.Argument (Last));
+         Name : constant Wide_Wide_String :=
+           Ada.Characters.Conversions.To_Wide_Wide_String
+             (Ada.Command_Line.Argument (Last + 1));
+      begin
+         Print (Ctx.Immediate_Visible (Unit, Name));
+      end;
+   end if;
 end Dump_Standard;

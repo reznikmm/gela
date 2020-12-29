@@ -18,9 +18,9 @@ private package Program.Resolvers is
       Unit_Name_Resolver : not null
         Program.Simple_Resolvers.Simple_Resolver_Access;
       Lists   : in out Program.Symbol_Lists.Symbol_List_Table'Class;
-      Context : aliased in out Program.Visibility.Context;
+      Context : not null Program.Visibility.Context_Access;
       Library : in out Program.Library_Environments.Library_Environment;
-      Setter             : not null
+      Setter  : not null
         Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access);
 
 end Program.Resolvers;

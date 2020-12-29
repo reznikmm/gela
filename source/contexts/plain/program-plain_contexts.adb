@@ -204,7 +204,7 @@ package body Program.Plain_Contexts is
               (Unit,
                Unit_Name_Resolver'Unchecked_Access,
                Self.Symbols.Lists,
-               Self.Visible,
+               Self.Visible'Unchecked_Access,
                Self.Library_Env,
                Self.Xref'Unchecked_Access);
          end if;

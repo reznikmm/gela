@@ -222,9 +222,9 @@ is
          Element : not null Program.Elements.Subtype_Declarations
            .Subtype_Declaration_Access)
       is
-         Subtype_Name : constant Program.Elements.Defining_Names
-           .Defining_Name_Access :=
-           Program.Elements.Defining_Names.Defining_Name_Access (Element.Name);
+         Subtype_Name : constant
+           Program.Elements.Defining_Names.Defining_Name_Access :=
+             Element.Name.To_Defining_Name;
 
          Subtype_Mark_Symbol : constant Program.Symbols.Symbol :=
            To_Symbol (Element.Subtype_Indication.Subtype_Mark);
