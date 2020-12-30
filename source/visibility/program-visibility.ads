@@ -168,13 +168,13 @@ package Program.Visibility is
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add an implicit type view to the context.
+   --  Add an implicit type view to the context. Don't create a region.
 
    not overriding procedure Create_Enumeration_Type
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add an enumeration type view to the context.
+   --  Add an enumeration type view to the context. Don't create a region.
 
    not overriding procedure Create_Enumeration_Literal
      (Self             : in out Context;
@@ -182,7 +182,7 @@ package Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
-   --  Add an enumeration literal view to the context.
+   --  Add an enumeration literal view to the context. Don't create a region.
 
    not overriding procedure Create_Character_Literal
      (Self             : in out Context;
@@ -190,7 +190,7 @@ package Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
-   --  Add a character literal view to the context.
+   --  Add a character literal view to the context. Don't create a region.
 
    type Meta_Character_Literal_Kind is
      (Meta_Character, Meta_Wide_Character, Meta_Wide_Wide_Character);
@@ -204,25 +204,25 @@ package Program.Visibility is
       Meta_Character   : Meta_Character_Literal_Kind;
       Enumeration_Type : View)
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
-   --  Add a meta character literal view to the context.
+   --  Add a meta character literal view to the context. Don't create a region.
 
    not overriding procedure Create_Signed_Integer_Type
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add a signed integer type view to the context.
+   --  Add a signed integer type view to the context. Create a region.
 
    not overriding procedure Create_Modular_Type
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add a unsigned integer type view to the context.
+   --  Add a unsigned integer type view to the context. Create a region.
 
    not overriding procedure Create_Float_Point_Type
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add a float point type view to the context.
+   --  Add a float point type view to the context. Create a region.
 
    not overriding procedure Create_Array_Type
      (Self      : in out Context;
@@ -231,7 +231,7 @@ package Program.Visibility is
       Indexes   : View_Array;
       Component : View)
         with Pre => Component.Kind in Type_View_Kind;
-   --  Add an array type view to the context.
+   --  Add an array type view to the context. Create a region.
 
    not overriding procedure Create_Subtype
      (Self           : in out Context;
@@ -240,19 +240,19 @@ package Program.Visibility is
       Subtype_Mark   : View;
       Has_Constraint : Boolean)
         with Pre => Subtype_Mark.Kind in Type_View_Kind;
-   --  Add a subtype view to the context.
+   --  Add a subtype view to the context. Create a region.
 
    not overriding procedure Create_Package
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add an empty package view to the context
+   --  Add an empty package view to the context. Create a region.
 
    not overriding procedure Create_Exception
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
-   --  Add an exception view to the context.
+   --  Add an exception view to the context. Don't create a region.
 
    not overriding procedure Leave_Declarative_Region (Self : in out Context);
    --  Leave current declarative region the context.

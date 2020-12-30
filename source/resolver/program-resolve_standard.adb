@@ -180,6 +180,7 @@ is
          Self.Env.Create_Float_Point_Type
            (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
+         Self.Env.Leave_Declarative_Region;
       end Floating_Point_Type;
 
       -------------------------
@@ -211,6 +212,7 @@ is
          Self.Env.Create_Signed_Integer_Type
            (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
+         Self.Env.Leave_Declarative_Region;
       end Signed_Integer_Type;
 
       -------------------------
@@ -239,6 +241,7 @@ is
             Has_Constraint => Element.Subtype_Indication.Constraint.Assigned);
 
          Self.Visit_Each_Child (Element);
+         Self.Env.Leave_Declarative_Region;
       end Subtype_Declaration;
 
       ----------------------
@@ -280,6 +283,7 @@ is
             Name      => Self.Type_Name,
             Indexes   => (1 => Index_View),
             Component => Component_View);
+         Self.Env.Leave_Declarative_Region;
       end Unconstrained_Array_Type;
 
       ----------------------

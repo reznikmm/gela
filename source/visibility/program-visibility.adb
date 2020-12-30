@@ -73,6 +73,7 @@ package body Program.Visibility is
 
    begin
       Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Array_Type;
 
    ------------------------------
@@ -225,6 +226,7 @@ package body Program.Visibility is
          Entity_Id => Self.Last_Entity + 1);
    begin
       Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Float_Point_Type;
 
    --------------------------
@@ -261,6 +263,7 @@ package body Program.Visibility is
          Entity_Id => Self.Last_Entity + 1);
    begin
       Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Modular_Type;
 
    --------------------
@@ -299,6 +302,7 @@ package body Program.Visibility is
          Entity_Id => Self.Last_Entity + 1);
    begin
       Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Signed_Integer_Type;
 
    ---------------------
@@ -335,6 +339,7 @@ package body Program.Visibility is
          Has_Constraint => Has_Constraint);
    begin
       Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Subtype;
 
    --------------------

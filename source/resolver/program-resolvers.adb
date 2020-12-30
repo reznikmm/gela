@@ -348,6 +348,8 @@ package body Program.Resolvers is
          for Aspect in Element.Aspects.Each_Element loop
             Aspect.Element.Visit (Self);
          end loop;
+
+         Self.Env.Leave_Declarative_Region;
       end Subtype_Declaration;
 
       ----------------------
