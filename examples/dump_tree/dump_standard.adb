@@ -12,7 +12,6 @@ with Program.Compilation_Units;
 with Program.Elements.Defining_Names;
 with Errors;
 with Program.Plain_Contexts;
-with Program.Symbols;
 with Program.Visibility;
 
 with Program.Storage_Pools.Instance;
@@ -89,17 +88,16 @@ procedure Dump_Standard is
          when Subtype_View =>
             Ada.Wide_Wide_Text_IO.Put ("   ");
             Print (Program.Visibility.Subtype_Mark (View));
+         when Parameter_View =>
+            Ada.Wide_Wide_Text_IO.Put ("   ");
+            Print (Program.Visibility.Subtype_Mark (View));
+            if Program.Visibility.Has_Default (View) then
+               Ada.Wide_Wide_Text_IO.Put ("?");
+            end if;
          when Exception_View =>
             null;
-         when Package_View =>
-            Print (Immediate_Visible (View, Program.Symbols.Boolean));
-            Print (Immediate_Visible (View, Program.Symbols.Integer));
-            Print (Immediate_Visible (View, Ctx.Find ("Natural")));
-            Print (Immediate_Visible (View, Ctx.Find ("Positive")));
-            Print (Immediate_Visible (View, Program.Symbols.Float));
-            Print (Immediate_Visible (View, Program.Symbols.Character));
-            Print (Immediate_Visible (View, Program.Symbols.String));
-            Print (Immediate_Visible (View, Ctx.Find ("Constraint_Error")));
+         when Package_View | Procedure_View =>
+            Print (Region_Items (View));
       end case;
    end Print;
 

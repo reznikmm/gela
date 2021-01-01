@@ -42,6 +42,8 @@ package Program.Visibility is
       Character_Literal_View,
       Subtype_View,
       Exception_View,
+      Parameter_View,
+      Procedure_View,
       Package_View);
    --  Kind of entity view
 
@@ -75,8 +77,8 @@ package Program.Visibility is
    --  If given enumeration type is a character type
 
    function Subtype_Mark (Self : View) return View
-     with Pre => Self.Kind = Subtype_View;
-   --  Return type of subtype declaration
+     with Pre => Self.Kind in Subtype_View | Parameter_View;
+   --  Return type of subtype, parameter declaration
 
    function Has_Constraint (Self : View) return Boolean
      with Pre => Self.Kind = Subtype_View;
@@ -90,11 +92,29 @@ package Program.Visibility is
      with Pre => Self.Kind = Array_Type_View;
    --  Return component type for given array type
 
+   type Parameter_Mode is (In_Mode, In_Out_Mode, Out_Mode);
+
+   function Mode (Self : View) return Parameter_Mode
+     with Pre => Self.Kind = Parameter_View;
+   --  Return Mode of parameter declaration
+
+   function Has_Default (Self : View) return Boolean
+     with Pre => Self.Kind = Parameter_View;
+   --  Check if parameter has a default value
+
+   function Parameters (Self : View) return View_Array
+     with Pre => Self.Kind = Procedure_View;
+   --  Return parameters for given subprogram
+
    function Immediate_Visible
      (Self   : View;
       Symbol : Program.Visibility.Symbol) return View_Array
         with Pre => Has_Region (Self);
    --  Return array of views for immediate visible names with given symbol
+
+   function Region_Items (Self : View) return View_Array
+     with Pre => Has_Region (Self);
+   --  Return array of views for immediate visible names
 
    type Snapshot is tagged limited private;
    --  Snapshot keeps state of a context. We save snapshots for private
@@ -248,6 +268,26 @@ package Program.Visibility is
       Name   : Defining_Name);
    --  Add an empty package view to the context. Create a region.
 
+   not overriding procedure Create_Procedure
+     (Self   : in out Context;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name);
+   --  Add a procedure view to the context. Create declarative region.
+
+   not overriding procedure Create_Parameter
+     (Self        : in out Context;
+      Symbol      : Program.Visibility.Symbol;
+      Name        : Defining_Name;
+      Mode        : Parameter_Mode;
+      Has_Default : Boolean);
+   --  Add a parameter view to the context and to the topmost subprogram
+   --  declaration. Create declarative region.
+
+   not overriding procedure Set_Parameter_Type
+     (Self       : in out Context;
+      Definition : View);
+   --  Assign given subtype to the topmost parameter declaration
+
    not overriding procedure Create_Exception
      (Self   : in out Context;
       Symbol : Program.Visibility.Symbol;
@@ -277,7 +317,7 @@ private
      (Index_Type   => Positive,
       Element_Type => Item_Offset_Positive);
 
-   subtype Has_Region_Kind is View_Kind range Package_View .. Package_View;
+   subtype Has_Region_Kind is View_Kind range Procedure_View .. Package_View;
 
    type Item (Kind :  View_Kind := Package_View) is record
       Symbol    : Program.Visibility.Symbol;
@@ -288,7 +328,7 @@ private
       case Kind is
          when Has_Region_Kind =>
             Region : Item_Offset_Vectors.Vector;
-            --  If Item has nested region, this is an indexes of its elements
+            --  If Item has nested region, these are indexes of its elements
          when others =>
             case Kind is
                when Enumeration_Type_View =>
@@ -305,6 +345,10 @@ private
                when Array_Type_View =>
                   Indexes   : Item_Offset_Vectors.Vector;
                   Component : Item_Offset_Positive;
+               when Parameter_View =>
+                  Param_Def   : Item_Offset;
+                  Mode        : Parameter_Mode;
+                  Has_Default : Boolean;
                when others =>
                   null;
             end case;

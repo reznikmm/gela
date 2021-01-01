@@ -286,6 +286,50 @@ package body Program.Visibility is
       Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Package;
 
+   ----------------------
+   -- Create_Parameter --
+   ----------------------
+
+   not overriding procedure Create_Parameter
+     (Self        : in out Context;
+      Symbol      : Program.Visibility.Symbol;
+      Name        : Defining_Name;
+      Mode        : Parameter_Mode;
+      Has_Default : Boolean)
+   is
+      Value : constant Item :=
+        (Kind      => Parameter_View,
+         Symbol    => Symbol,
+         Name      => Name,
+         Entity_Id => Self.Last_Entity + 1,
+         Param_Def => 0,
+         Mode      => Mode,
+         Has_Default => Has_Default);
+   begin
+      Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
+   end Create_Parameter;
+
+   ----------------------
+   -- Create_Procedure --
+   ----------------------
+
+   not overriding procedure Create_Procedure
+     (Self   : in out Context;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name)
+   is
+      Value : constant Item :=
+        (Kind      => Procedure_View,
+         Symbol    => Symbol,
+         Name      => Name,
+         Entity_Id => Self.Last_Entity + 1,
+         Region    => Item_Offset_Vectors.Empty_Vector);
+   begin
+      Self.Append_Item (Value);
+      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
+   end Create_Procedure;
+
    --------------------------------
    -- Create_Signed_Integer_Type --
    --------------------------------
@@ -498,7 +542,16 @@ package body Program.Visibility is
                      when Array_Type_View =>
                         Update_Vector (Value.Indexes);
                         Update_Index (Value.Component);
-                     when others =>
+                     when Parameter_View =>
+                        Update_Index (Value.Param_Def);
+                     when Signed_Integer_Type_View |
+                          Modular_Type_View |
+                          Float_Point_Type_View |
+                          Implicit_Type_View |
+                          Character_Literal_View |
+                          Exception_View |
+                          Has_Region_Kind =>
+
                         null;
                   end case;
             end case;
@@ -549,7 +602,7 @@ package body Program.Visibility is
      (Env   : access constant Context;
       Index : Item_Offset_Positive) return View
    is
-      Value : Item renames  Env.Data (Index);
+      Value : Item renames Env.Data (Index);
    begin
       return (Kind => Value.Kind, Env => Env, Index => Index);
    end Get_View;
@@ -564,13 +617,23 @@ package body Program.Visibility is
       return Subtype_Item.Has_Constraint;
    end Has_Constraint;
 
+   -----------------
+   -- Has_Default --
+   -----------------
+
+   function Has_Default (Self : View) return Boolean is
+      Value  : Item renames Self.Env.Data (Self.Index);
+   begin
+      return Value.Has_Default;
+   end Has_Default;
+
    ----------------
    -- Has_Region --
    ----------------
 
    function Has_Region (Self : View) return Boolean is
    begin
-      return Self.Kind in Package_View;
+      return Self.Kind in Has_Region_Kind;
    end Has_Region;
 
    -----------------------
@@ -699,6 +762,16 @@ package body Program.Visibility is
    end Leave_Declarative_Region;
 
    ----------
+   -- Mode --
+   ----------
+
+   function Mode (Self : View) return Parameter_Mode is
+      Value  : Item renames Self.Env.Data (Self.Index);
+   begin
+      return Value.Mode;
+   end Mode;
+
+   ----------
    -- Name --
    ----------
 
@@ -706,6 +779,43 @@ package body Program.Visibility is
    begin
       return Self.Env.Data (Self.Index).Name;
    end Name;
+
+   ----------------
+   -- Parameters --
+   ----------------
+
+   function Parameters (Self : View) return View_Array is
+      Value : Item renames Self.Env.Data (Self.Index);
+      Last  : Natural := 0;
+   begin
+      for J in 1 .. Value.Region.Last_Index loop
+         if Self.Env.Data (Value.Region (J)).Kind = Parameter_View then
+            Last := J;
+         else
+            exit;
+         end if;
+      end loop;
+
+      return Result : View_Array (1 .. Last) do
+         for J in Result'Range loop
+            Result (J) := Self.Env.Get_View (Value.Region (J));
+         end loop;
+      end return;
+   end Parameters;
+
+   ------------------
+   -- Region_Items --
+   ------------------
+
+   function Region_Items (Self : View) return View_Array is
+      Value : Item renames Self.Env.Data (Self.Index);
+   begin
+      return Result : View_Array (1 .. Value.Region.Last_Index) do
+         for J in Result'Range loop
+            Result (J) := Self.Env.Get_View (Value.Region (J));
+         end loop;
+      end return;
+   end Region_Items;
 
    ----------------------
    -- Restore_Snapshot --
@@ -720,14 +830,35 @@ package body Program.Visibility is
       Self.Data := Snapshot.Data;
    end Restore_Snapshot;
 
+   ------------------------
+   -- Set_Parameter_Type --
+   ------------------------
+
+   not overriding procedure Set_Parameter_Type
+     (Self       : in out Context;
+      Definition : View)
+   is
+      Top : Item renames Self.Data (Self.Stack.Last_Element.Enclosing_Item);
+   begin
+      pragma Assert (Top.Kind = Parameter_View);
+      Top.Param_Def := Definition.Index;
+   end Set_Parameter_Type;
+
    ------------------
    -- Subtype_Mark --
    ------------------
 
    function Subtype_Mark (Self : View) return View is
-      Subtype_Item : Item renames Self.Env.Data (Self.Index);
+      Value : Item renames Self.Env.Data (Self.Index);
    begin
-      return Self.Env.Get_View (Subtype_Item.Subtype_Mark);
+      case Value.Kind is
+         when Subtype_View =>
+            return Self.Env.Get_View (Value.Subtype_Mark);
+         when Parameter_View =>
+            return Self.Env.Get_View (Value.Param_Def);
+         when others =>
+            raise Constraint_Error;
+      end case;
    end Subtype_Mark;
 
    ---------------
