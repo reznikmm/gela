@@ -140,9 +140,7 @@ package body Program.Element_Iterators is
                      end loop;
 
                   when False =>
-                     if Cursor.Item_Index > 1 then
-                        Cursor.Item_Index := 1;
-                     else
+                     if Cursor.Item_Index = 1 then
                         Cursor.Element :=
                           Self.Getters (Cursor.Getter_Index).Get_Child
                           (Self.Parent);
@@ -154,6 +152,7 @@ package body Program.Element_Iterators is
                end case;
 
                Cursor.Getter_Index := Cursor.Getter_Index + 1;
+               Cursor.Item_Index := 1;
             end loop Find_Next_Element;
          end Step;
 
