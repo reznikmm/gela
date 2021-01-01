@@ -19,8 +19,22 @@ pragma Unreferenced (Program.Storage_Pools.Instance);
 
 procedure Dump_Standard is
 
-   procedure Print (View : Program.Visibility.View);
-   procedure Print (View : Program.Visibility.View_Array);
+   type Verbosity is
+     (Short,   --  Just a name
+      Normal,  --  One line
+      Long);   --  Including nested items
+
+   procedure Print
+     (View    : Program.Visibility.View;
+      Padding : Wide_Wide_String := "";
+      Verbose : Verbosity);
+
+   procedure Print
+     (View    : Program.Visibility.View_Array;
+      Padding : Wide_Wide_String;
+      Verbose : Verbosity);
+
+   Indent : constant Wide_Wide_String := "  ";
 
    Err : aliased Errors.Error_Listener;
    Ctx : aliased Program.Plain_Contexts.Context;
@@ -29,10 +43,14 @@ procedure Dump_Standard is
    -- Print --
    -----------
 
-   procedure Print (View : Program.Visibility.View_Array) is
+   procedure Print
+     (View    : Program.Visibility.View_Array;
+      Padding : Wide_Wide_String;
+      Verbose : Verbosity) is
    begin
       for J in  View'Range loop
-         Print (View (J));
+         Ada.Wide_Wide_Text_IO.New_Line;
+         Print (View (J), Padding, Verbose);
       end loop;
    end Print;
 
@@ -40,27 +58,41 @@ procedure Dump_Standard is
    -- Print --
    -----------
 
-   procedure Print (View : Program.Visibility.View) is
+   procedure Print
+     (View    : Program.Visibility.View;
+      Padding : Wide_Wide_String := "";
+      Verbose : Verbosity)
+   is
       use Program.Visibility;
       Name : constant Program.Elements.Defining_Names.Defining_Name_Access :=
         Program.Visibility.Name (View);
    begin
-      if Name.Assigned then
-         Ada.Wide_Wide_Text_IO.Put_Line
-           (Name.Image
-            & " ["
-            & View_Kind'Wide_Wide_Image (View.Kind)
-            & "]");
+      if Verbose = Short then
+         Ada.Wide_Wide_Text_IO.Put (" ");
       else
-         Ada.Wide_Wide_Text_IO.Put_Line
-           ("___ ["
-            & View_Kind'Wide_Wide_Image (View.Kind)
-            & "]");
+         Ada.Wide_Wide_Text_IO.Put (Padding);
       end if;
+
+      if Name.Assigned then
+         Ada.Wide_Wide_Text_IO.Put (Name.Image);
+      else
+         Ada.Wide_Wide_Text_IO.Put ("___");
+      end if;
+
+      if Verbose = Short and Name.Assigned then
+         return;
+      end if;
+
+      Ada.Wide_Wide_Text_IO.Put
+        (" ["
+         & View_Kind'Wide_Wide_Image (View.Kind)
+         & "]");
 
       case View.Kind is
          when Enumeration_Type_View =>
-            Print (Enumeration_Literals (View));
+            if Verbose = Long then
+               Print (Enumeration_Literals (View), Padding & Indent, Normal);
+            end if;
          when Signed_Integer_Type_View =>
             null;
          when Modular_Type_View =>
@@ -73,11 +105,13 @@ procedure Dump_Standard is
                  Program.Visibility.Indexes (View);
             begin
                for J in Indexes'Range loop
-                  Ada.Wide_Wide_Text_IO.Put ("   ");
-                  Print (Indexes (J));
+                  Print (Indexes (J), Padding & Indent, Short);
                end loop;
-               Ada.Wide_Wide_Text_IO.Put (" => ");
-               Print (Program.Visibility.Component (View));
+               Ada.Wide_Wide_Text_IO.Put (" =>");
+               Print
+                 (Program.Visibility.Component (View),
+                  Padding & Indent,
+                  Short);
             end;
          when Implicit_Type_View =>
             null;
@@ -86,18 +120,25 @@ procedure Dump_Standard is
          when Character_Literal_View =>
             null;
          when Subtype_View =>
-            Ada.Wide_Wide_Text_IO.Put ("   ");
-            Print (Program.Visibility.Subtype_Mark (View));
+            Print
+              (Program.Visibility.Subtype_Mark (View),
+               Padding & Indent,
+               Short);
          when Parameter_View =>
-            Ada.Wide_Wide_Text_IO.Put ("   ");
-            Print (Program.Visibility.Subtype_Mark (View));
+            Print
+              (Program.Visibility.Subtype_Mark (View),
+               Padding & Indent,
+               Verbosity'Pred (Verbose));
+
             if Program.Visibility.Has_Default (View) then
                Ada.Wide_Wide_Text_IO.Put ("?");
             end if;
          when Exception_View =>
             null;
          when Package_View | Procedure_View =>
-            Print (Region_Items (View));
+            if Verbose = Long then
+               Print (Region_Items (View), Padding & Indent, Normal);
+            end if;
       end case;
    end Print;
 
@@ -125,7 +166,7 @@ begin
    Ctx.Complete_Analysis;
 
    if Last > Ada.Command_Line.Argument_Count then
-      Print (Ctx.Immediate_Visible ("", "Standard"));
+      Print (Ctx.Immediate_Visible ("", "Standard"), "", Long);
    else
       declare
          Unit : constant Wide_Wide_String :=
@@ -135,7 +176,7 @@ begin
            Ada.Characters.Conversions.To_Wide_Wide_String
              (Ada.Command_Line.Argument (Last + 1));
       begin
-         Print (Ctx.Immediate_Visible (Unit, Name));
+         Print (Ctx.Immediate_Visible (Unit, Name), "", Long);
       end;
    end if;
 end Dump_Standard;
