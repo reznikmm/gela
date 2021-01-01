@@ -62,4 +62,21 @@ package body Program.Type_Resolvers is
       Value := V.View;
    end Resolve_Type;
 
+   -----------------------------
+   -- Resolve_Type_Definition --
+   -----------------------------
+
+   procedure Resolve_Type_Definition
+     (Element : Program.Elements.Element_Access;
+      Context : not null Program.Visibility.Context_Access;
+      Setter  : not null
+        Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access;
+      Value   : out Program.Visibility.View)
+   is
+      V : Visitor (Context, Setter);
+   begin
+      V.Visit (Element);
+      Value := V.View;
+   end Resolve_Type_Definition;
+
 end Program.Type_Resolvers;

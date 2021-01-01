@@ -9,7 +9,9 @@ with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Identifiers;
 with Program.Elements.Package_Declarations;
+with Program.Elements.Parameter_Specifications;
 with Program.Elements.Procedure_Body_Declarations;
+with Program.Elements.Procedure_Declarations;
 with Program.Elements.Subtype_Declarations;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
@@ -55,6 +57,16 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Package_Declarations
            .Package_Declaration_Access);
+
+      overriding procedure Parameter_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Parameter_Specifications
+           .Parameter_Specification_Access);
+
+      overriding procedure Procedure_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Declarations
+           .Procedure_Declaration_Access);
 
       overriding procedure Subtype_Declaration
         (Self    : in out Visitor;
@@ -310,6 +322,86 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Package_Declaration;
+
+      -----------------------------
+      -- Parameter_Specification --
+      -----------------------------
+
+      overriding procedure Parameter_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Parameter_Specifications
+         .Parameter_Specification_Access)
+      is
+         Modes : constant array (Boolean, Boolean) of
+           Program.Visibility.Parameter_Mode :=
+             (False =>
+                (False => Program.Visibility.In_Mode,
+                 True  => Program.Visibility.Out_Mode),
+              True  =>
+                (False => Program.Visibility.In_Mode,
+                 True  => Program.Visibility.In_Out_Mode));
+
+         Mode : constant Program.Visibility.Parameter_Mode :=
+           Modes  (Element.Has_In, Element.Has_Out);
+
+         Has_Default : constant Boolean := Element.Default_Expression.Assigned;
+         Type_View : Program.Visibility.View;
+
+         Names : constant Program.Elements.Defining_Identifiers
+           .Defining_Identifier_Vector_Access := Element.Names;
+      begin
+         for Name in Names.Each_Element loop
+            declare
+               Symbol : constant Program.Symbols.Symbol :=
+                 Program.Node_Symbols.Get_Symbol (Name.Element);
+            begin
+               Self.Env.Create_Parameter
+                 (Symbol,
+                  Name.Element.To_Defining_Name,
+                  Mode,
+                  Has_Default);
+
+               Program.Type_Resolvers.Resolve_Type_Definition
+                 (Element.Parameter_Subtype,
+                  Self.Env,
+                  Self.Setter,
+                  Type_View);
+
+               Self.Env.Set_Parameter_Type (Type_View);
+               Self.Env.Leave_Declarative_Region;
+            end;
+         end loop;
+      end Parameter_Specification;
+
+      ---------------------------
+      -- Procedure_Declaration --
+      ---------------------------
+
+      overriding procedure Procedure_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Declarations
+           .Procedure_Declaration_Access)
+      is
+         Name   : constant
+           Program.Elements.Defining_Names.Defining_Name_Access :=
+             Element.Name;
+         Symbol : constant Program.Symbols.Symbol :=
+           Program.Node_Symbols.Get_Symbol (Name);
+      begin
+         Self.Env.Create_Procedure
+           (Symbol => Symbol,
+            Name   => Name);
+
+         for Cursor in Element.Parameters.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         for Aspect in Element.Aspects.Each_Element loop
+            Aspect.Element.Visit (Self);
+         end loop;
+
+         Self.Env.Leave_Declarative_Region;
+      end Procedure_Declaration;
 
       -------------------------
       -- Subtype_Declaration --

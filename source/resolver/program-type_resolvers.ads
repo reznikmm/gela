@@ -20,4 +20,13 @@ private package Program.Type_Resolvers is
    --  The Element is a subtype_mark. Resolve it and return corresponding
    --  type view.
 
+   procedure Resolve_Type_Definition
+     (Element : Program.Elements.Element_Access;
+      Context : not null Program.Visibility.Context_Access;
+      Setter  : not null
+        Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access;
+      Value   : out Program.Visibility.View);
+   --  The Element is a subtype_indication, access_definition or
+   --  array_type_definition. Resolve it and return corresponding type view.
+
 end Program.Type_Resolvers;
