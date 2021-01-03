@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -352,7 +352,7 @@ package body Program.Plain_Contexts is
       Unit : Program.Text;
       Name : Program.Text) return Program.Visibility.View_Array is
    begin
-      Self.Visible.Restore_Snapshot
+      Self.Visible.Enter_Snapshot
         (Self.Library_Env.Public_View
            (Self.Symbols.Lists.Find (Unit)));
 

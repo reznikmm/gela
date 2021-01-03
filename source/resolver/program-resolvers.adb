@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -367,8 +367,8 @@ package body Program.Resolvers is
                   Self.Setter,
                   Type_View);
 
-               Self.Env.Set_Parameter_Type (Type_View);
                Self.Env.Leave_Declarative_Region;
+               Self.Env.Set_Parameter_Type (Type_View);
             end;
          end loop;
       end Parameter_Specification;

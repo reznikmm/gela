@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -307,46 +307,49 @@ package Program.Visibility is
 
 private
 
-   type Item_Offset is range 0 .. 2 ** 31 - 1;
-   --  kind of pointer to an Item. Zero means no value
-   subtype Item_Offset_Positive is Item_Offset range 1 .. Item_Offset'Last;
+   type Entity_Identifier is range 1 .. Integer'Last;
+   type Region_Identifier is range 1 .. Integer'Last;
 
-   type Entity_Identifier is mod 2 ** 32;
+   type Entity_Reference is record
+      Region    : Region_Identifier;
+      Entity_Id : Entity_Identifier;
+   end record;
 
-   package Item_Offset_Vectors is new Ada.Containers.Vectors
+   package Entity_References is new Ada.Containers.Vectors
      (Index_Type   => Positive,
-      Element_Type => Item_Offset_Positive);
+      Element_Type => Entity_Reference);
 
    subtype Has_Region_Kind is View_Kind range Procedure_View .. Package_View;
 
-   type Item (Kind :  View_Kind := Package_View) is record
+   type Entity (Kind : View_Kind := Package_View) is record
       Symbol    : Program.Visibility.Symbol;
       Name      : Defining_Name;
-      Entity_Id : Entity_Identifier;
+      --  Entity_Id : Entity_Identifier;
       --  The index of the item from which we copied this item
 
       case Kind is
          when Has_Region_Kind =>
-            Region : Item_Offset_Vectors.Vector;
-            --  If Item has nested region, these are indexes of its elements
+            Region : Region_Identifier;
+            --  If Item has nested region, it's region index
          when others =>
             case Kind is
                when Enumeration_Type_View =>
-                  Is_Character_Type    : Boolean;
-                  Enumeration_Literals : Item_Offset_Vectors.Vector;
+                  Is_Character_Type : Boolean;
+                  First_Literal     : Entity_Identifier;
+                  Last_Literal      : Entity_Identifier;
                   --  indexes of its enumeration literals
                when Enumeration_Literal_View =>
-                  Enumeration_Type : Item_Offset_Positive;
+                  Enumeration_Type : Entity_Identifier;
                when Character_Literal_View =>
-                  Character_Type : Item_Offset_Positive;
+                  Character_Type : Entity_Identifier;
                when Subtype_View =>
-                  Subtype_Mark   : Item_Offset_Positive;
+                  Subtype_Mark   : Entity_Reference;
                   Has_Constraint : Boolean;
                when Array_Type_View =>
-                  Indexes   : Item_Offset_Vectors.Vector;
-                  Component : Item_Offset_Positive;
+                  Indexes   : Entity_References.Vector;
+                  Component : Entity_Reference;
                when Parameter_View =>
-                  Param_Def   : Item_Offset;
+                  Param_Def   : Entity_Reference;
                   Mode        : Parameter_Mode;
                   Has_Default : Boolean;
                when others =>
@@ -355,37 +358,34 @@ private
       end case;
    end record;
 
+   package Entity_Vectors is new Ada.Containers.Vectors
+     (Index_Type   => Entity_Identifier,
+      Element_Type => Entity);
+
+   type Snapshot is tagged limited record
+      Region_Id : Region_Identifier; --  Ignore Region_Id if Entities is empty
+      Entities  : Entity_Vectors.Vector;
+   end record;
+
    type Region is record
-      Enclosing_Item : Item_Offset_Positive;
-      --  Item, that represents a declarative region
+      Enclosing : Region_Identifier'Base;
+      Entities  : Entity_Vectors.Vector;
    end record;
 
    package Region_Vectors is new Ada.Containers.Vectors
-     (Index_Type   => Positive,
+     (Index_Type   => Region_Identifier,
       Element_Type => Region);
 
-   package Item_Vectors is new Ada.Containers.Vectors
-     (Index_Type   => Item_Offset_Positive,
-      Element_Type => Item);
-
-   type Snapshot is tagged limited record
-      Stack   : Region_Vectors.Vector;
-      --  Context is a stack of regions
-      Data    : Item_Vectors.Vector;
-   end record;
-
    type Context is tagged limited record
-      Last_Entity : Entity_Identifier := 0;
-      --  Unique entity counter
-      Data  : Item_Vectors.Vector;
+      Data : Region_Vectors.Vector;
       --  All items are stored here
-      Stack : Region_Vectors.Vector;
-      --  Context is a stack of regions
+      Top  : Region_Identifier;
+      --  Current region
    end record;
 
    type View (Kind : View_Kind := Package_View) is record
       Env   : access constant Context;
-      Index : Item_Offset_Positive;
+      Index : Entity_Reference;
    end record;
 
 end Program.Visibility;

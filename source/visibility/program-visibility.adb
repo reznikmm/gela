@@ -1,28 +1,25 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
-with Ada.Containers.Hashed_Maps;
-
 package body Program.Visibility is
-   use all type Program.Visibility.Symbol;
 
    type Allocated_Snapshot is access all Snapshot;
 
    procedure Append_Item
      (Self  : in out Context'Class;
-      Value : Item);
+      Value : Entity);
 
    function Get_View
      (Env   : access constant Context;
-      Index : Item_Offset_Positive) return View;
+      Index : Entity_Reference) return View;
 
-   function To_Vector (List : View_Array) return Item_Offset_Vectors.Vector;
+   function To_Vector (List : View_Array) return Entity_References.Vector;
 
    function Immediate_Visible
      (Self   : access constant Context;
-      Region : Item_Offset;
+      Region : Region_Identifier;
       Symbol : Program.Visibility.Symbol) return View_Array;
 
    -----------------
@@ -31,15 +28,15 @@ package body Program.Visibility is
 
    procedure Append_Item
      (Self  : in out Context'Class;
-      Value : Item) is
+      Value : Entity) is
    begin
-      Self.Last_Entity := Self.Last_Entity + 1;
-      Self.Data.Append (Value);
+      Self.Data (Self.Top).Entities.Append (Value);
 
-      if not Self.Stack.Is_Empty then
-         Self.Data (Self.Stack.Last_Element.Enclosing_Item).Region.Append
-           (Self.Data.Last_Index);
-      end if;
+      Self.Data.Append
+        ((Enclosing => Self.Top,
+          Entities  => Entity_Vectors.Empty_Vector));
+
+      Self.Top := Self.Data.Last_Index;
    end Append_Item;
 
    ---------------
@@ -47,7 +44,8 @@ package body Program.Visibility is
    ---------------
 
    function Component (Self : View) return View is
-      Type_Item : Item renames Self.Env.Data (Self.Index);
+      Type_Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
       return Self.Env.Get_View (Type_Item.Component);
    end Component;
@@ -63,17 +61,14 @@ package body Program.Visibility is
       Indexes   : View_Array;
       Component : View)
    is
-      Value : constant Item :=
+      Value : constant Entity :=
         (Kind      => Array_Type_View,
          Symbol    => Symbol,
          Name      => Name,
-         Entity_Id => Self.Last_Entity + 1,
          Indexes   => To_Vector (Indexes),
          Component => Component.Index);
-
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Array_Type;
 
    ------------------------------
@@ -86,20 +81,22 @@ package body Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
    is
-      Value : constant Item :=
+      Value : constant Entity :=
         (Kind           => Character_Literal_View,
          Symbol         => Symbol,
          Name           => Name,
-         Entity_Id      => Self.Last_Entity + 1,
-         Character_Type => Enumeration_Type.Index);
-
+         Character_Type => Enumeration_Type.Index.Entity_Id);
    begin
-      Self.Append_Item (Value);
+      pragma Assert (Self.Top = Enumeration_Type.Index.Region);
+      Self.Data (Self.Top).Entities.Append (Value);
 
       declare
-         Type_Item : Item renames Self.Data (Enumeration_Type.Index);
+         Type_Item : Entity renames
+           Self.Data (Enumeration_Type.Index.Region).Entities
+             (Enumeration_Type.Index.Entity_Id);
       begin
-         Type_Item.Enumeration_Literals.Append (Self.Data.Last_Index);
+         Type_Item.Last_Literal := Self.Data (Self.Top).Entities.Last_Index;
+         Type_Item.Is_Character_Type := True;
       end;
    end Create_Character_Literal;
 
@@ -115,22 +112,8 @@ package body Program.Visibility is
       Enumeration_Type : View)
    is
       pragma Unreferenced (Meta_Character);
-
-      Value : constant Item :=
-        (Kind           => Character_Literal_View,
-         Symbol         => Symbol,
-         Name           => Name,
-         Entity_Id      => Self.Last_Entity + 1,
-         Character_Type => Enumeration_Type.Index);
-
    begin
-      Self.Append_Item (Value);
-
-      declare
-         Type_Item : Item renames Self.Data (Enumeration_Type.Index);
-      begin
-         Type_Item.Enumeration_Literals.Append (Self.Data.Last_Index);
-      end;
+      Self.Create_Character_Literal (Symbol, Name, Enumeration_Type);
    end Create_Character_Literal;
 
    --------------------------
@@ -138,11 +121,14 @@ package body Program.Visibility is
    --------------------------
 
    not overriding procedure Create_Empty_Context
-     (Self : aliased in out Context) is
+     (Self : aliased in out Context)
+   is
    begin
-      Self.Last_Entity := 0;
-      Self.Data := Item_Vectors.Empty_Vector;
-      Self.Stack := Region_Vectors.Empty_Vector;
+      Self.Data.Clear;
+      Self.Data.Append
+        ((Enclosing => Self.Data.Last_Index,
+          Entities  => Entity_Vectors.Empty_Vector));
+      Self.Top := Self.Data.Last_Index;
    end Create_Empty_Context;
 
    --------------------------------
@@ -155,20 +141,21 @@ package body Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
    is
-      Value : constant Item :=
+      Value : constant Entity :=
         (Kind             => Enumeration_Literal_View,
          Symbol           => Symbol,
          Name             => Name,
-         Entity_Id        => Self.Last_Entity + 1,
-         Enumeration_Type => Enumeration_Type.Index);
-
+         Enumeration_Type => Enumeration_Type.Index.Entity_Id);
    begin
-      Self.Append_Item (Value);
+      pragma Assert (Self.Top = Enumeration_Type.Index.Region);
+      Self.Data (Self.Top).Entities.Append (Value);
 
       declare
-         Type_Item : Item renames Self.Data (Enumeration_Type.Index);
+         Type_Item : Entity renames
+           Self.Data (Enumeration_Type.Index.Region).Entities
+             (Enumeration_Type.Index.Entity_Id);
       begin
-         Type_Item.Enumeration_Literals.Append (Self.Data.Last_Index);
+         Type_Item.Last_Literal := Self.Data (Self.Top).Entities.Last_Index;
       end;
    end Create_Enumeration_Literal;
 
@@ -177,19 +164,20 @@ package body Program.Visibility is
    -----------------------------
 
    not overriding procedure Create_Enumeration_Type
-     (Self   : in out Context;
-      Symbol : Program.Visibility.Symbol;
-      Name   : Defining_Name)
+     (Self : in out Context; Symbol : Program.Visibility.Symbol;
+      Name :        Defining_Name)
    is
-      Value : constant Item :=
-        (Kind                 => Enumeration_Type_View,
-         Symbol               => Symbol,
-         Name                 => Name,
-         Entity_Id            => Self.Last_Entity + 1,
-         Enumeration_Literals => Item_Offset_Vectors.Empty_Vector,
-         Is_Character_Type    => False);
+      Top : Region renames Self.Data (Self.Top);
+
+      Value : constant Entity :=
+        (Kind              => Enumeration_Type_View,
+         Symbol            => Symbol,
+         Name              => Name,
+         Is_Character_Type => False,
+         First_Literal     => Top.Entities.Last_Index + 2,
+         Last_Literal      => Top.Entities.Last_Index + 2);
    begin
-      Self.Append_Item (Value);
+      Top.Entities.Append (Value);
    end Create_Enumeration_Type;
 
    ----------------------
@@ -197,17 +185,17 @@ package body Program.Visibility is
    ----------------------
 
    not overriding procedure Create_Exception
-     (Self   : in out Context;
-      Symbol : Program.Visibility.Symbol;
-      Name   : Defining_Name)
+     (Self : in out Context; Symbol : Program.Visibility.Symbol;
+      Name :        Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Exception_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1);
+      Top : Region renames Self.Data (Self.Top);
+
+      Value : constant Entity :=
+        (Kind   => Exception_View,
+         Symbol => Symbol,
+         Name   => Name);
    begin
-      Self.Append_Item (Value);
+      Top.Entities.Append (Value);
    end Create_Exception;
 
    -----------------------------
@@ -219,14 +207,12 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Float_Point_Type_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1);
+      Value : constant Entity :=
+        (Kind   => Float_Point_Type_View,
+         Symbol => Symbol,
+         Name   => Name);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Float_Point_Type;
 
    --------------------------
@@ -238,11 +224,10 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Implicit_Type_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1);
+      Value : constant Entity :=
+        (Kind   => Implicit_Type_View,
+         Symbol => Symbol,
+         Name   => Name);
    begin
       Self.Append_Item (Value);
    end Create_Implicit_Type;
@@ -256,14 +241,12 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Modular_Type_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1);
+      Value : constant Entity :=
+        (Kind   => Modular_Type_View,
+         Symbol => Symbol,
+         Name   => Name);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Modular_Type;
 
    --------------------
@@ -275,15 +258,13 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
+      Value : constant Entity :=
         (Kind      => Package_View,
          Symbol    => Symbol,
          Name      => Name,
-         Entity_Id => Self.Last_Entity + 1,
-         Region    => Item_Offset_Vectors.Empty_Vector);
+         Region    => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Package;
 
    ----------------------
@@ -297,17 +278,15 @@ package body Program.Visibility is
       Mode        : Parameter_Mode;
       Has_Default : Boolean)
    is
-      Value : constant Item :=
-        (Kind      => Parameter_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1,
-         Param_Def => 0,
-         Mode      => Mode,
+      Value : constant Entity :=
+        (Kind        => Parameter_View,
+         Symbol      => Symbol,
+         Name        => Name,
+         Param_Def   => (1, 1),
+         Mode        => Mode,
          Has_Default => Has_Default);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Parameter;
 
    ----------------------
@@ -319,15 +298,13 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Procedure_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1,
-         Region    => Item_Offset_Vectors.Empty_Vector);
+      Value : constant Entity :=
+        (Kind   => Procedure_View,
+         Symbol => Symbol,
+         Name   => Name,
+         Region => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Procedure;
 
    --------------------------------
@@ -339,14 +316,12 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Item :=
-        (Kind      => Signed_Integer_Type_View,
-         Symbol    => Symbol,
-         Name      => Name,
-         Entity_Id => Self.Last_Entity + 1);
+      Value : constant Entity :=
+        (Kind   => Signed_Integer_Type_View,
+         Symbol => Symbol,
+         Name   => Name);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Signed_Integer_Type;
 
    ---------------------
@@ -356,9 +331,9 @@ package body Program.Visibility is
    not overriding function Create_Snapshot
      (Self : aliased in out Context) return Snapshot_Access
    is
+      Top : Region renames Self.Data (Self.Top);
       Result : constant Allocated_Snapshot :=
-        new Snapshot'(Stack => Self.Stack,
-                      Data  => Self.Data);
+        new Snapshot'(Region_Id => Self.Top, Entities => Top.Entities);
    begin
       return Snapshot_Access (Result);
    end Create_Snapshot;
@@ -374,16 +349,14 @@ package body Program.Visibility is
       Subtype_Mark   : View;
       Has_Constraint : Boolean)
    is
-      Value : constant Item :=
+      Value : constant Entity :=
         (Kind           => Subtype_View,
          Symbol         => Symbol,
          Name           => Name,
-         Entity_Id      => Self.Last_Entity + 1,
          Subtype_Mark   => Subtype_Mark.Index,
          Has_Constraint => Has_Constraint);
    begin
       Self.Append_Item (Value);
-      Self.Stack.Append ((Enclosing_Item => Self.Data.Last_Index));
    end Create_Subtype;
 
    --------------------
@@ -391,179 +364,21 @@ package body Program.Visibility is
    --------------------
 
    not overriding procedure Enter_Snapshot
-     (Self : in out Context; Snapshot : not null Snapshot_Access)
+     (Self     : in out Context;
+      Snapshot : not null Snapshot_Access)
    is
-
-      --  We create 3 maps:
-      --  Keep_Map - elements to keep in context (above subtree)
-      --  Update_Map - elements of subtree to be replaced by Snapshot elements
-      --  Added_Map - new elements to be added from Snapshot
-
-      function Hash
-        (Value : Entity_Identifier) return Ada.Containers.Hash_Type is
-          (Ada.Containers.Hash_Type (Value));
-
-      package Entity_Maps is new Ada.Containers.Hashed_Maps
-        (Key_Type        => Entity_Identifier,
-         Element_Type    => Item_Offset_Positive,
-         Hash            => Hash,
-         Equivalent_Keys => "=",
-         "="             => "=");
-
-      procedure Append
-        (Data   : Item_Vectors.Vector;
-         Region : Item_Offset_Positive;
-         Map    : in out Entity_Maps.Map);
-
-      function Update_Index
-        (Index : Item_Offset_Positive)  --  In Snapshot
-         return Item_Offset_Positive;   --  In Env
-
-      procedure Update_Index (Index : in out Item_Offset_Positive);
-      procedure Update_Vector (Region : in out Item_Offset_Vectors.Vector);
-
-      ------------
-      -- Append --
-      ------------
-
-      procedure Append
-        (Data   : Item_Vectors.Vector;
-         Region : Item_Offset_Positive;
-         Map    : in out Entity_Maps.Map)
-      is
-         Region_Item : Item renames Data (Region);
-      begin
-         Map.Insert (Region_Item.Entity_Id, Region);
-
-         if Region_Item.Kind not in Has_Region_Kind then
-            return;
-         end if;
-
-         for Index of Region_Item.Region loop
-            declare
-               Value : constant Item := Data (Index);
-            begin
-               if not Map.Contains (Value.Entity_Id) then
-                  Append (Data, Index, Map);
-               end if;
-            end;
-         end loop;
-      end Append;
-
-      Replaced_Items  : Entity_Maps.Map;  --  In Env
-      Replacing_Items : Entity_Maps.Map;  --  In Snapshot
-      Added_Items     : Entity_Maps.Map;  --  In Env
-
-      ------------------
-      -- Update_Index --
-      ------------------
-
-      function Update_Index
-        (Index : Item_Offset_Positive)  --  In Snapshot
-         return Item_Offset_Positive    --  In Env
-      is
-         Id : constant Entity_Identifier := Snapshot.Data (Index).Entity_Id;
-      begin
-         if Replaced_Items.Contains (Id) then
-            return Replaced_Items (Id);
-         else
-            return Added_Items.Element (Id);
-         end if;
-      end Update_Index;
-
-      ------------------
-      -- Update_Index --
-      ------------------
-
-      procedure Update_Index (Index : in out Item_Offset_Positive) is
-      begin
-         Index := Update_Index (Index);
-      end Update_Index;
-
-      -------------------
-      -- Update_Vector --
-      -------------------
-
-      procedure Update_Vector (Region : in out Item_Offset_Vectors.Vector) is
-      begin
-         for Ref of Region loop
-            Ref := Update_Index (Ref);
-         end loop;
-      end Update_Vector;
-
-      Env_Map : Entity_Maps.Map;
-      Top_In_Snapshot : constant Item_Offset_Positive :=  --  In Snapshot
-        Snapshot.Stack.Last_Element.Enclosing_Item;
-      Top_Item_In_Snapshot : Item renames Snapshot.Data (Top_In_Snapshot);
-      Replaced_Item : Item_Offset_Positive;  --  In Env
    begin
-      for Region of reverse Self.Stack loop
-         Append (Self.Data, Region.Enclosing_Item, Env_Map);
-      end loop;
+      if Snapshot.Entities.Is_Empty then
+         Self.Data.Append
+           ((Enclosing => Self.Data.Last_Index,
+             Entities  => Entity_Vectors.Empty_Vector));
 
-      Replaced_Item := Env_Map.Element (Top_Item_In_Snapshot.Entity_Id);
-      Append (Self.Data, Replaced_Item, Replaced_Items);
-      Append (Snapshot.Data, Top_In_Snapshot, Replacing_Items);
+         Self.Top := Self.Data.Last_Index;
+      else
+         Self.Top := Snapshot.Region_Id;
+      end if;
 
-      --  Assign indexes to added items
-      declare
-         Key  : Entity_Identifier;
-         Last : Item_Offset := Self.Data.Last_Index;
-      begin
-         for Cursor in Replacing_Items.Iterate loop
-            Key := Entity_Maps.Key (Cursor);
-
-            if not Replaced_Items.Contains (Key) then
-               Last := Last + 1;
-               Added_Items.Insert (Key, Last);
-            end if;
-         end loop;
-
-         Self.Data.Set_Length (Ada.Containers.Count_Type (Last));
-      end;
-
-      --  Copy items from snapshot to env
-      for Index of Replacing_Items loop
-         declare
-            Value : Item := Snapshot.Data (Index);
-            To    : constant Item_Offset_Positive := Update_Index (Index);
-         begin
-            case Value.Kind is
-               when Has_Region_Kind =>
-                  Update_Vector (Value.Region);
-               when others =>
-                  case Value.Kind is
-                     when Enumeration_Type_View =>
-                        Update_Vector (Value.Enumeration_Literals);
-                     when Enumeration_Literal_View =>
-                        Update_Index (Value.Enumeration_Type);
-                     when Subtype_View =>
-                        Update_Index (Value.Subtype_Mark);
-                     when Array_Type_View =>
-                        Update_Vector (Value.Indexes);
-                        Update_Index (Value.Component);
-                     when Parameter_View =>
-                        Update_Index (Value.Param_Def);
-                     when Signed_Integer_Type_View |
-                          Modular_Type_View |
-                          Float_Point_Type_View |
-                          Implicit_Type_View |
-                          Character_Literal_View |
-                          Exception_View |
-                          Has_Region_Kind =>
-
-                        null;
-                  end case;
-            end case;
-
-            Replaced_Items.Exclude (Value.Entity_Id);
-            Self.Data.Replace_Element (To, Value);
-         end;
-      end loop;
-
-      pragma Assert (Replaced_Items.Is_Empty);
-
-      Self.Stack.Append ((Enclosing_Item => Replaced_Item));
+      Self.Restore_Snapshot (Snapshot);
    end Enter_Snapshot;
 
    --------------------------
@@ -571,15 +386,15 @@ package body Program.Visibility is
    --------------------------
 
    function Enumeration_Literals (Self : View) return View_Array is
-      Type_Item : Item renames Self.Env.Data (Self.Index);
-      Last : Positive := 1;
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
+      Index : Entity_Identifier := Item.First_Literal;
+      Count : constant Natural := Natural (Item.Last_Literal - Index) + 1;
    begin
-      return Result : View_Array
-        (1 .. Type_Item.Enumeration_Literals.Last_Index)
-      do
-         for J of Type_Item.Enumeration_Literals loop
-            Result (Last) := Self.Env.Get_View (J);
-            Last := Last + 1;
+      return Result : View_Array (1 .. Count) do
+         for X of Result loop
+            X := Self.Env.Get_View ((Self.Index.Region, Index));
+            Index := Index + 1;
          end loop;
       end return;
    end Enumeration_Literals;
@@ -589,9 +404,10 @@ package body Program.Visibility is
    ----------------------
 
    function Enumeration_Type (Self : View) return View is
-      Literal_Item : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Self.Env.Get_View (Literal_Item.Enumeration_Type);
+      return Self.Env.Get_View ((Self.Index.Region, Item.Enumeration_Type));
    end Enumeration_Type;
 
    --------------
@@ -600,11 +416,12 @@ package body Program.Visibility is
 
    function Get_View
      (Env   : access constant Context;
-      Index : Item_Offset_Positive) return View
+      Index : Entity_Reference) return View
    is
-      Value : Item renames Env.Data (Index);
+      Value : Entity renames
+        Env.Data (Index.Region).Entities (Index.Entity_Id);
    begin
-      return (Kind => Value.Kind, Env => Env, Index => Index);
+      return (Value.Kind, Env, Index);
    end Get_View;
 
    --------------------
@@ -612,9 +429,10 @@ package body Program.Visibility is
    --------------------
 
    function Has_Constraint (Self : View) return Boolean is
-      Subtype_Item : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Subtype_Item.Has_Constraint;
+      return Item.Has_Constraint;
    end Has_Constraint;
 
    -----------------
@@ -622,9 +440,10 @@ package body Program.Visibility is
    -----------------
 
    function Has_Default (Self : View) return Boolean is
-      Value  : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Value.Has_Default;
+      return Item.Has_Default;
    end Has_Default;
 
    ----------------
@@ -642,25 +461,21 @@ package body Program.Visibility is
 
    function Immediate_Visible
      (Self   : access constant Context;
-      Region : Item_Offset;
+      Region : Region_Identifier;
       Symbol : Program.Visibility.Symbol) return View_Array
    is
+      use type Program.Symbols.Symbol;
+
       Result : View_Array (1 .. 10);
       Last   : Natural := 0;
-      Value  : Item renames Self.Data (Region);
+      Value  : Program.Visibility.Region renames Self.Data (Region);
    begin
-      if Value.Kind in  Has_Region_Kind then
-         for Index of Value.Region loop
-            declare
-               Value : constant Item := Self.Data (Index);
-            begin
-               if Value.Symbol = Symbol then
-                  Last := Last + 1;
-                  Result (Last) := (Value.Kind, Self, Index);
-               end if;
-            end;
-         end loop;
-      end if;
+      for Index in 1 .. Value.Entities.Last_Index loop
+         if Value.Entities (Index).Symbol = Symbol then
+            Last := Last + 1;
+            Result (Last) := Self.Get_View ((Region, Index));
+         end if;
+      end loop;
 
       return Result (1 .. Last);
    end Immediate_Visible;
@@ -671,9 +486,12 @@ package body Program.Visibility is
 
    function Immediate_Visible
      (Self   : View;
-      Symbol : Program.Visibility.Symbol) return View_Array is
+      Symbol : Program.Visibility.Symbol) return View_Array
+   is
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Immediate_Visible (Self.Env, Self.Index, Symbol);
+      return Immediate_Visible (Self.Env, Item.Region, Symbol);
    end Immediate_Visible;
 
    -----------------------
@@ -681,7 +499,8 @@ package body Program.Visibility is
    -----------------------
 
    not overriding function Immediate_Visible
-     (Self : aliased Context; Symbol : Program.Visibility.Symbol)
+     (Self   : aliased Context;
+      Symbol : Program.Visibility.Symbol)
       return View_Array
    is
       procedure Append (List : View_Array);
@@ -694,23 +513,12 @@ package body Program.Visibility is
          Last := Last + List'Length;
       end Append;
 
+      Next : Region_Identifier'Base := Self.Top;
    begin
-      for J of reverse Self.Stack loop
-         Append
-           (Immediate_Visible
-              (Self'Unchecked_Access, J.Enclosing_Item, Symbol));
+      while Next > 0 loop
+         Append (Immediate_Visible (Self'Unchecked_Access, Next, Symbol));
+         Next := Self.Data (Next).Enclosing;
       end loop;
-
-      if Symbol = Standard and then not Self.Stack.Is_Empty then
-         declare
-            Top : constant View :=
-              (Package_View,
-               Self'Unchecked_Access,
-               Self.Stack.First_Element.Enclosing_Item);
-         begin
-            Append ((1 => Top));
-         end;
-      end if;
 
       return Result (1 .. Last);
    end Immediate_Visible;
@@ -720,11 +528,12 @@ package body Program.Visibility is
    -------------
 
    function Indexes (Self : View) return View_Array is
-      Type_Item : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
       Last : Positive := 1;
    begin
-      return Result : View_Array (1 .. Type_Item.Indexes.Last_Index) do
-         for J of Type_Item.Indexes loop
+      return Result : View_Array (1 .. Item.Indexes.Last_Index) do
+         for J of Item.Indexes loop
             Result (Last) := Self.Env.Get_View (J);
             Last := Last + 1;
          end loop;
@@ -736,9 +545,10 @@ package body Program.Visibility is
    -----------------------
 
    function Is_Character_Type (Self : View) return Boolean is
-      Type_Item : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Type_Item.Is_Character_Type;
+      return Item.Is_Character_Type;
    end Is_Character_Type;
 
    -----------------
@@ -746,10 +556,24 @@ package body Program.Visibility is
    -----------------
 
    not overriding function Latest_View (Self : aliased Context) return View is
+      Top   : Region renames Self.Data (Self.Top);
+      Index : Entity_Reference;
    begin
-      return (Self.Data.Last_Element.Kind,
-              Self'Unchecked_Access,
-              Self.Data.Last_Index);
+      if Top.Entities.Is_Empty then
+         Index := (Top.Enclosing,
+                   Self.Data (Top.Enclosing).Entities.Last_Index);
+
+         return (Self.Data (Top.Enclosing).Entities.Last_Element.Kind,
+                 Self'Unchecked_Access,
+                 Index);
+      else
+         Index := (Self.Top, Top.Entities.Last_Index);
+
+         return (Top.Entities.Last_Element.Kind,
+                 Self'Unchecked_Access,
+                 Index);
+      end if;
+
    end Latest_View;
 
    ------------------------------
@@ -757,8 +581,16 @@ package body Program.Visibility is
    ------------------------------
 
    not overriding procedure Leave_Declarative_Region (Self : in out Context) is
+      Enclosing : constant Region_Identifier'Base :=
+        Self.Data (Self.Top).Enclosing;
    begin
-      Self.Stack.Delete_Last;
+      if Self.Data.Last_Index = Self.Top
+        and then Self.Data (Self.Top).Entities.Is_Empty
+      then
+         Self.Data.Delete_Last;
+      end if;
+
+      Self.Top := Enclosing;
    end Leave_Declarative_Region;
 
    ----------
@@ -766,9 +598,10 @@ package body Program.Visibility is
    ----------
 
    function Mode (Self : View) return Parameter_Mode is
-      Value  : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Value.Mode;
+      return Item.Mode;
    end Mode;
 
    ----------
@@ -776,8 +609,10 @@ package body Program.Visibility is
    ----------
 
    function Name (Self : View) return Defining_Name is
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Self.Env.Data (Self.Index).Name;
+      return Item.Name;
    end Name;
 
    ----------------
@@ -785,12 +620,14 @@ package body Program.Visibility is
    ----------------
 
    function Parameters (Self : View) return View_Array is
-      Value : Item renames Self.Env.Data (Self.Index);
-      Last  : Natural := 0;
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
+      Reg  : Region renames Self.Env.Data (Item.Region);
+      Last : Natural := 0;
    begin
-      for J in 1 .. Value.Region.Last_Index loop
-         if Self.Env.Data (Value.Region (J)).Kind = Parameter_View then
-            Last := J;
+      for J in 1 .. Reg.Entities.Last_Index loop
+         if Reg.Entities (J).Kind = Parameter_View then
+            Last := Last + 1;
          else
             exit;
          end if;
@@ -798,7 +635,8 @@ package body Program.Visibility is
 
       return Result : View_Array (1 .. Last) do
          for J in Result'Range loop
-            Result (J) := Self.Env.Get_View (Value.Region (J));
+            Result (Last) := Self.Env.Get_View
+              ((Item.Region, Entity_Identifier (J)));
          end loop;
       end return;
    end Parameters;
@@ -808,11 +646,14 @@ package body Program.Visibility is
    ------------------
 
    function Region_Items (Self : View) return View_Array is
-      Value : Item renames Self.Env.Data (Self.Index);
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
+      Reg  : Region renames Self.Env.Data (Item.Region);
    begin
-      return Result : View_Array (1 .. Value.Region.Last_Index) do
+      return Result : View_Array (1 .. Natural (Reg.Entities.Last_Index)) do
          for J in Result'Range loop
-            Result (J) := Self.Env.Get_View (Value.Region (J));
+            Result (J) := Self.Env.Get_View
+              ((Item.Region, Entity_Identifier (J)));
          end loop;
       end return;
    end Region_Items;
@@ -825,9 +666,15 @@ package body Program.Visibility is
      (Self     : in out Context;
       Snapshot : not null Snapshot_Access)
    is
+      Top : Region renames Self.Data (Self.Top);
+      Length : constant Ada.Containers.Count_Type := Top.Entities.Length;
    begin
-      Self.Stack := Snapshot.Stack;
-      Self.Data := Snapshot.Data;
+      --  Ignore Snapshot.Region_Id if empty
+      pragma Assert
+        (Snapshot.Entities.Is_Empty or Self.Top = Snapshot.Region_Id);
+
+      Top.Entities := Snapshot.Entities;
+      Top.Entities.Set_Length (Length);
    end Restore_Snapshot;
 
    ------------------------
@@ -838,10 +685,11 @@ package body Program.Visibility is
      (Self       : in out Context;
       Definition : View)
    is
-      Top : Item renames Self.Data (Self.Stack.Last_Element.Enclosing_Item);
+      Top : Region renames Self.Data (Self.Top);
+      Last : Entity renames Top.Entities (Top.Entities.Last_Index);
    begin
-      pragma Assert (Top.Kind = Parameter_View);
-      Top.Param_Def := Definition.Index;
+      pragma Assert (Last.Kind = Parameter_View);
+      Last.Param_Def := Definition.Index;
    end Set_Parameter_Type;
 
    ------------------
@@ -849,7 +697,8 @@ package body Program.Visibility is
    ------------------
 
    function Subtype_Mark (Self : View) return View is
-      Value : Item renames Self.Env.Data (Self.Index);
+      Value : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
       case Value.Kind is
          when Subtype_View =>
@@ -865,10 +714,11 @@ package body Program.Visibility is
    -- To_Vector --
    ---------------
 
-   function To_Vector (List : View_Array) return Item_Offset_Vectors.Vector is
+   function To_Vector (List : View_Array) return Entity_References.Vector is
    begin
-      return Result : Item_Offset_Vectors.Vector do
+      return Result : Entity_References.Vector do
          Result.Reserve_Capacity (List'Length);
+
          for View of List loop
             Result.Append (View.Index);
          end loop;
