@@ -826,4 +826,44 @@ package body Program.Visibility is
       end return;
    end To_Vector;
 
+   -----------------
+   -- Use_Visible --
+   -----------------
+
+   not overriding function Use_Visible
+     (Self   : aliased Context;
+      Symbol : Program.Visibility.Symbol) return View_Array
+   is
+      procedure Append (List : View_Array);
+      Result : View_Array (1 .. 10);
+      Last   : Natural := 0;
+
+      procedure Append (List : View_Array) is
+      begin
+         Result (Last + 1 .. Last + List'Length) := List;
+         Last := Last + List'Length;
+      end Append;
+
+      Next : Region_Identifier'Base := Self.Top;
+   begin
+      while Next > 0 loop
+         declare
+            Top : Region renames Self.Data (Next);
+         begin
+            for J of Top.Uses loop
+               declare
+                  Found : constant View_Array := Immediate_Visible
+                    (Self'Unchecked_Access, J, Symbol);
+               begin
+                  Append (Found);
+               end;
+            end loop;
+
+            Next := Top.Enclosing;
+         end;
+      end loop;
+
+      return Result (1 .. Last);
+   end Use_Visible;
+
 end Program.Visibility;

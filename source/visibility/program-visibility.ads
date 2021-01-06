@@ -309,6 +309,11 @@ package Program.Visibility is
       Symbol : Program.Visibility.Symbol) return View_Array;
    --  Return array of views for immediate visible names with given symbol
 
+   not overriding function Use_Visible
+     (Self   : aliased Context;
+      Symbol : Program.Visibility.Symbol) return View_Array;
+   --  Return array of views for use visible names with given symbol
+
    not overriding function Latest_View (Self : aliased Context) return View;
    --  View that was added to the context
 
