@@ -3,7 +3,9 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Filters;
 with Program.Element_Iterators;
+with Program.Element_Vectors;
 with Program.Element_Visitors;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
@@ -46,6 +48,7 @@ package body Program.Resolvers is
       type Visitor
         (Env    : not null Program.Visibility.Context_Access;
          Unit   : not null Program.Elements.Element_Access;
+         Clause : Program.Element_Vectors.Element_Vector_Access;
          Setter : not null
            Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access)
       is new Program.Element_Visitors.Element_Visitor with record
@@ -62,6 +65,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Parameter_Specifications
            .Parameter_Specification_Access);
+
+      overriding procedure Procedure_Body_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Body_Declarations
+           .Procedure_Body_Declaration_Access);
 
       overriding procedure Procedure_Declaration
         (Self    : in out Visitor;
@@ -262,7 +270,8 @@ package body Program.Resolvers is
       Unit_Name : Program.Symbol_Lists.Symbol_List;
       Element : constant Program.Elements.Element_Access :=
         Unit.Unit_Declaration;
-      Visitor   : Visitors.Visitor (Context, Element, Setter);
+      Visitor   : Visitors.Visitor
+        (Context, Element, Unit.Context_Clause_Elements, Setter);
       EL        : Environment_Level.Visitor
         (Unit_Name_Resolver, Setter);
    begin
@@ -290,6 +299,45 @@ package body Program.Resolvers is
          Element : access Program.Elements.Element'Class);
       pragma Unreferenced (Visit_Each_Child);
 
+      procedure Append_Unit_Use_Clauses
+        (Self    : in out Visitor'Class;
+         Element : Program.Elements.Element_Access);
+
+      -----------------------------
+      -- Append_Unit_Use_Clauses --
+      -----------------------------
+
+      procedure Append_Unit_Use_Clauses
+        (Self : in out Visitor'Class;
+         Element : Program.Elements.Element_Access)
+      is
+         use type Program.Elements.Element_Access;
+         Clause : Program.Elements.Use_Clauses.Use_Clause_Access;
+      begin
+         if Self.Unit /= Element then  --  Return if nested element
+            return;
+         end if;
+
+         for Item in Self.Clause.Each_Element
+           (Program.Element_Filters.Is_Use_Clause'Access)
+         loop
+            Clause := Item.Element.To_Use_Clause;
+
+            for Name in Clause.Clause_Names.Each_Element loop
+               declare
+                  View : constant Program.Visibility.View :=
+                    Self.Env.Get_Name_View (Name.Element);
+               begin
+                  if Clause.Has_Type then
+                     raise Program_Error;
+                  else
+                     Self.Env.Add_Use_Package (View);
+                  end if;
+               end;
+            end loop;
+         end loop;
+      end Append_Unit_Use_Clauses;
+
       -------------------------
       -- Package_Declaration --
       -------------------------
@@ -308,6 +356,8 @@ package body Program.Resolvers is
          Self.Env.Create_Package
            (Symbol => Symbol,
             Name   => Name);
+
+         Self.Append_Unit_Use_Clauses (Element.all'Access);
 
          for Cursor in Element.Visible_Declarations.Each_Element loop
             Cursor.Element.Visit (Self);
@@ -373,6 +423,34 @@ package body Program.Resolvers is
          end loop;
       end Parameter_Specification;
 
+      --------------------------------
+      -- Procedure_Body_Declaration --
+      --------------------------------
+
+      overriding procedure Procedure_Body_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Procedure_Body_Declarations
+           .Procedure_Body_Declaration_Access)
+      is
+         Name   : constant
+           Program.Elements.Defining_Names.Defining_Name_Access :=
+             Element.Name;
+         Symbol : constant Program.Symbols.Symbol :=
+           Program.Node_Symbols.Get_Symbol (Name);
+      begin
+         Self.Env.Create_Procedure
+           (Symbol => Symbol,
+            Name   => Name);
+
+         Self.Append_Unit_Use_Clauses (Element.all'Access);
+
+         for Cursor in Element.Parameters.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         Self.Env.Leave_Declarative_Region;
+      end Procedure_Body_Declaration;
+
       ---------------------------
       -- Procedure_Declaration --
       ---------------------------
@@ -391,6 +469,8 @@ package body Program.Resolvers is
          Self.Env.Create_Procedure
            (Symbol => Symbol,
             Name   => Name);
+
+         Self.Append_Unit_Use_Clauses (Element.all'Access);
 
          for Cursor in Element.Parameters.Each_Element loop
             Cursor.Element.Visit (Self);

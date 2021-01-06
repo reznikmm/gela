@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -89,6 +89,8 @@ procedure Dump_Standard is
          & "]");
 
       case View.Kind is
+         when Unresolved_View =>
+            null;
          when Enumeration_Type_View =>
             if Verbose = Long then
                Print (Enumeration_Literals (View), Padding & Indent, Normal);

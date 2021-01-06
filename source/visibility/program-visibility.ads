@@ -13,6 +13,7 @@
 --
 --  View provides access to defining name nodes, entity kind and properties.
 
+private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 
 with Program.Elements.Defining_Names;
@@ -32,7 +33,8 @@ package Program.Visibility is
    --  Symbol of Standard Ada package
 
    type View_Kind is
-     (Enumeration_Type_View,
+     (Unresolved_View,
+      Enumeration_Type_View,
       Signed_Integer_Type_View,
       Modular_Type_View,
       Float_Point_Type_View,
@@ -51,10 +53,10 @@ package Program.Visibility is
      range Enumeration_Type_View .. Implicit_Type_View;
    --  Kind of type view
 
-   type View (Kind : View_Kind := Package_View) is private;
+   type View (Kind : View_Kind := Unresolved_View) is private;
    --  An information about a program entity
 
-   type View_Array is array (Positive range <>) of  View;
+   type View_Array is array (Positive range <>) of View;
    --  Array of views
 
    function Name (Self : View) return Defining_Name;
@@ -297,6 +299,11 @@ package Program.Visibility is
    not overriding procedure Leave_Declarative_Region (Self : in out Context);
    --  Leave current declarative region the context.
 
+   not overriding procedure Add_Use_Package
+     (Self : in out Context;
+      Pkg  : View);
+   --  Add use package clause to the context.
+
    not overriding function Immediate_Visible
      (Self   : aliased Context;
       Symbol : Program.Visibility.Symbol) return View_Array;
@@ -304,6 +311,10 @@ package Program.Visibility is
 
    not overriding function Latest_View (Self : aliased Context) return View;
    --  View that was added to the context
+
+   not overriding function Get_Name_View
+     (Self : Context;
+      Name : not null Program.Elements.Element_Access) return View;
 
 private
 
@@ -362,14 +373,31 @@ private
      (Index_Type   => Entity_Identifier,
       Element_Type => Entity);
 
+   package Region_Id_Vectors is new Ada.Containers.Vectors
+     (Index_Type   => Positive,
+      Element_Type => Region_Identifier);
+
    type Snapshot is tagged limited record
       Region_Id : Region_Identifier; --  Ignore Region_Id if Entities is empty
       Entities  : Entity_Vectors.Vector;
+      Uses      : Region_Id_Vectors.Vector;
    end record;
+
+   function Hash
+     (Value : Program.Elements.Defining_Names.Defining_Name_Access)
+       return Ada.Containers.Hash_Type;
+
+   package Defining_Name_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Program.Elements.Defining_Names.Defining_Name_Access,
+      Element_Type    => Entity_Reference,
+      Hash            => Hash,
+      Equivalent_Keys => Program.Elements.Defining_Names."=",
+      "="             => "=");
 
    type Region is record
       Enclosing : Region_Identifier'Base;
       Entities  : Entity_Vectors.Vector;
+      Uses      : Region_Id_Vectors.Vector;
    end record;
 
    package Region_Vectors is new Ada.Containers.Vectors
@@ -381,10 +409,14 @@ private
       --  All items are stored here
       Top  : Region_Identifier;
       --  Current region
+      Xref : Defining_Name_Maps.Map;
+      --  For each defining name a corresponding reference
    end record;
 
-   type View (Kind : View_Kind := Package_View) is record
-      Env   : access constant Context;
+   type Constant_Context_Access is access constant Context;
+
+   type View (Kind : View_Kind := Unresolved_View) is record
+      Env   : Constant_Context_Access;
       Index : Entity_Reference;
    end record;
 

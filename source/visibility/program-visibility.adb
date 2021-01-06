@@ -3,40 +3,104 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with System.Storage_Elements;
+
+with Program.Elements.Defining_Identifiers;
+with Program.Elements.Identifiers;
+with Program.Safe_Element_Visitors;
+
 package body Program.Visibility is
 
    type Allocated_Snapshot is access all Snapshot;
 
    procedure Append_Item
-     (Self  : in out Context'Class;
-      Value : Entity);
+     (Self   : in out Context'Class;
+      Value  : Entity;
+      Region : Boolean := True);
 
    function Get_View
-     (Env   : access constant Context;
+     (Env   : not null Constant_Context_Access;
       Index : Entity_Reference) return View;
 
    function To_Vector (List : View_Array) return Entity_References.Vector;
 
    function Immediate_Visible
-     (Self   : access constant Context;
+     (Self   : not null Constant_Context_Access;
       Region : Region_Identifier;
       Symbol : Program.Visibility.Symbol) return View_Array;
+
+   package Getters is
+
+      type Visitor
+        (Env    : not null Constant_Context_Access)
+      is new Program.Safe_Element_Visitors.Safe_Element_Visitor with record
+         Result : View;
+      end record;
+
+      overriding procedure Identifier
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Identifiers.Identifier_Access);
+
+   end Getters;
+
+   package body Getters is
+
+      overriding procedure Identifier
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Identifiers.Identifier_Access)
+      is
+         Name : constant Program.Elements.Defining_Identifiers
+           .Defining_Identifier_Access :=
+             Element.Corresponding_Defining_Identifier;
+         Cursor : constant Defining_Name_Maps.Cursor := Self.Env.Xref.Find
+           (Name.To_Defining_Name);
+      begin
+         if Defining_Name_Maps.Has_Element (Cursor) then
+            Self.Result := Get_View
+              (Self.Env, Defining_Name_Maps.Element (Cursor));
+         end if;
+      end Identifier;
+
+   end Getters;
+
+   ---------------------
+   -- Add_Use_Package --
+   ---------------------
+
+   not overriding procedure Add_Use_Package
+     (Self : in out Context;
+      Pkg  : View)
+   is
+      Item : Entity renames
+        Self.Data (Pkg.Index.Region).Entities (Pkg.Index.Entity_Id);
+      Reg  : constant Region_Identifier := Item.Region;
+   begin
+      if not Self.Data (Self.Top).Uses.Contains (Reg) then
+         Self.Data (Self.Top).Uses.Append (Reg);
+      end if;
+   end Add_Use_Package;
 
    -----------------
    -- Append_Item --
    -----------------
 
    procedure Append_Item
-     (Self  : in out Context'Class;
-      Value : Entity) is
+     (Self   : in out Context'Class;
+      Value  : Entity;
+      Region : Boolean := True) is
    begin
       Self.Data (Self.Top).Entities.Append (Value);
+      Self.Xref.Insert
+        (Value.Name, (Self.Top, Self.Data (Self.Top).Entities.Last_Index));
 
-      Self.Data.Append
-        ((Enclosing => Self.Top,
-          Entities  => Entity_Vectors.Empty_Vector));
+      if Region then
+         Self.Data.Append
+           ((Enclosing => Self.Top,
+             Entities  => Entity_Vectors.Empty_Vector,
+             Uses      => Region_Id_Vectors.Empty_Vector));
 
-      Self.Top := Self.Data.Last_Index;
+         Self.Top := Self.Data.Last_Index;
+      end if;
    end Append_Item;
 
    ---------------
@@ -47,7 +111,7 @@ package body Program.Visibility is
       Type_Item : Entity renames
         Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Self.Env.Get_View (Type_Item.Component);
+      return Get_View (Self.Env, Type_Item.Component);
    end Component;
 
    -----------------------
@@ -88,7 +152,7 @@ package body Program.Visibility is
          Character_Type => Enumeration_Type.Index.Entity_Id);
    begin
       pragma Assert (Self.Top = Enumeration_Type.Index.Region);
-      Self.Data (Self.Top).Entities.Append (Value);
+      Append_Item (Self, Value, Region => False);
 
       declare
          Type_Item : Entity renames
@@ -127,7 +191,8 @@ package body Program.Visibility is
       Self.Data.Clear;
       Self.Data.Append
         ((Enclosing => Self.Data.Last_Index,
-          Entities  => Entity_Vectors.Empty_Vector));
+          Entities  => Entity_Vectors.Empty_Vector,
+          Uses      => Region_Id_Vectors.Empty_Vector));
       Self.Top := Self.Data.Last_Index;
    end Create_Empty_Context;
 
@@ -148,7 +213,7 @@ package body Program.Visibility is
          Enumeration_Type => Enumeration_Type.Index.Entity_Id);
    begin
       pragma Assert (Self.Top = Enumeration_Type.Index.Region);
-      Self.Data (Self.Top).Entities.Append (Value);
+      Append_Item (Self, Value, Region => False);
 
       declare
          Type_Item : Entity renames
@@ -167,17 +232,18 @@ package body Program.Visibility is
      (Self : in out Context; Symbol : Program.Visibility.Symbol;
       Name :        Defining_Name)
    is
-      Top : Region renames Self.Data (Self.Top);
+      Last : constant Entity_Identifier'Base :=
+        Self.Data (Self.Top).Entities.Last_Index;
 
       Value : constant Entity :=
         (Kind              => Enumeration_Type_View,
          Symbol            => Symbol,
          Name              => Name,
          Is_Character_Type => False,
-         First_Literal     => Top.Entities.Last_Index + 2,
-         Last_Literal      => Top.Entities.Last_Index + 2);
+         First_Literal     => Last + 2,
+         Last_Literal      => Last + 2);
    begin
-      Top.Entities.Append (Value);
+      Append_Item (Self, Value, Region => False);
    end Create_Enumeration_Type;
 
    ----------------------
@@ -188,14 +254,12 @@ package body Program.Visibility is
      (Self : in out Context; Symbol : Program.Visibility.Symbol;
       Name :        Defining_Name)
    is
-      Top : Region renames Self.Data (Self.Top);
-
       Value : constant Entity :=
         (Kind   => Exception_View,
          Symbol => Symbol,
          Name   => Name);
    begin
-      Top.Entities.Append (Value);
+      Append_Item (Self, Value, Region => False);
    end Create_Exception;
 
    -----------------------------
@@ -333,7 +397,9 @@ package body Program.Visibility is
    is
       Top : Region renames Self.Data (Self.Top);
       Result : constant Allocated_Snapshot :=
-        new Snapshot'(Region_Id => Self.Top, Entities => Top.Entities);
+        new Snapshot'(Region_Id => Self.Top,
+                      Entities  => Top.Entities,
+                      Uses      => Top.Uses);
    begin
       return Snapshot_Access (Result);
    end Create_Snapshot;
@@ -371,7 +437,8 @@ package body Program.Visibility is
       if Snapshot.Entities.Is_Empty then
          Self.Data.Append
            ((Enclosing => Self.Data.Last_Index,
-             Entities  => Entity_Vectors.Empty_Vector));
+             Entities  => Entity_Vectors.Empty_Vector,
+             Uses      => Region_Id_Vectors.Empty_Vector));
 
          Self.Top := Self.Data.Last_Index;
       else
@@ -393,7 +460,7 @@ package body Program.Visibility is
    begin
       return Result : View_Array (1 .. Count) do
          for X of Result loop
-            X := Self.Env.Get_View ((Self.Index.Region, Index));
+            X := Get_View (Self.Env, (Self.Index.Region, Index));
             Index := Index + 1;
          end loop;
       end return;
@@ -407,15 +474,30 @@ package body Program.Visibility is
       Item : Entity renames
         Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Self.Env.Get_View ((Self.Index.Region, Item.Enumeration_Type));
+      return Get_View (Self.Env, (Self.Index.Region, Item.Enumeration_Type));
    end Enumeration_Type;
+
+   -------------------
+   -- Get_Name_View --
+   -------------------
+
+   not overriding function Get_Name_View
+     (Self : Context;
+      Name : not null Program.Elements.Element_Access) return View
+   is
+      Visitor : Getters.Visitor (Self'Unchecked_Access);
+   begin
+      Visitor.Visit (Name);
+
+      return Visitor.Result;
+   end Get_Name_View;
 
    --------------
    -- Get_View --
    --------------
 
    function Get_View
-     (Env   : access constant Context;
+     (Env   : not null Constant_Context_Access;
       Index : Entity_Reference) return View
    is
       Value : Entity renames
@@ -455,12 +537,26 @@ package body Program.Visibility is
       return Self.Kind in Has_Region_Kind;
    end Has_Region;
 
+   ----------
+   -- Hash --
+   ----------
+
+   function Hash
+     (Value : Program.Elements.Defining_Names.Defining_Name_Access)
+      return Ada.Containers.Hash_Type
+   is
+      Addr : constant System.Storage_Elements.Integer_Address :=
+        System.Storage_Elements.To_Integer (Value.all'Address);
+   begin
+      return Ada.Containers.Hash_Type'Mod (Addr);
+   end Hash;
+
    -----------------------
    -- Immediate_Visible --
    -----------------------
 
    function Immediate_Visible
-     (Self   : access constant Context;
+     (Self   : not null Constant_Context_Access;
       Region : Region_Identifier;
       Symbol : Program.Visibility.Symbol) return View_Array
    is
@@ -473,7 +569,7 @@ package body Program.Visibility is
       for Index in 1 .. Value.Entities.Last_Index loop
          if Value.Entities (Index).Symbol = Symbol then
             Last := Last + 1;
-            Result (Last) := Self.Get_View ((Region, Index));
+            Result (Last) := Get_View (Self, (Region, Index));
          end if;
       end loop;
 
@@ -534,7 +630,7 @@ package body Program.Visibility is
    begin
       return Result : View_Array (1 .. Item.Indexes.Last_Index) do
          for J of Item.Indexes loop
-            Result (Last) := Self.Env.Get_View (J);
+            Result (Last) := Get_View (Self.Env, J);
             Last := Last + 1;
          end loop;
       end return;
@@ -635,8 +731,8 @@ package body Program.Visibility is
 
       return Result : View_Array (1 .. Last) do
          for J in Result'Range loop
-            Result (Last) := Self.Env.Get_View
-              ((Item.Region, Entity_Identifier (J)));
+            Result (Last) := Get_View
+              (Self.Env, (Item.Region, Entity_Identifier (J)));
          end loop;
       end return;
    end Parameters;
@@ -652,8 +748,8 @@ package body Program.Visibility is
    begin
       return Result : View_Array (1 .. Natural (Reg.Entities.Last_Index)) do
          for J in Result'Range loop
-            Result (J) := Self.Env.Get_View
-              ((Item.Region, Entity_Identifier (J)));
+            Result (J) := Get_View
+              (Self.Env, (Item.Region, Entity_Identifier (J)));
          end loop;
       end return;
    end Region_Items;
@@ -675,6 +771,11 @@ package body Program.Visibility is
 
       Top.Entities := Snapshot.Entities;
       Top.Entities.Set_Length (Length);
+      Top.Uses := Snapshot.Uses;
+
+      for J in 1 .. Snapshot.Entities.Last_Index loop
+         Self.Xref.Include (Snapshot.Entities (J).Name, (Self.Top, J));
+      end loop;
    end Restore_Snapshot;
 
    ------------------------
@@ -702,9 +803,9 @@ package body Program.Visibility is
    begin
       case Value.Kind is
          when Subtype_View =>
-            return Self.Env.Get_View (Value.Subtype_Mark);
+            return Get_View (Self.Env, Value.Subtype_Mark);
          when Parameter_View =>
-            return Self.Env.Get_View (Value.Param_Def);
+            return Get_View (Self.Env, Value.Param_Def);
          when others =>
             raise Constraint_Error;
       end case;
