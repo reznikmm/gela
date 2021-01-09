@@ -59,7 +59,7 @@ package Program.Plain_Contexts is
    function Immediate_Visible
      (Self : in out Context'Class;
       Unit : Program.Text;
-      Name : Program.Text) return Program.Visibility.View_Array;
+      Name : Program.Text) return Program.Visibility.View_Iterator;
 
 private
 

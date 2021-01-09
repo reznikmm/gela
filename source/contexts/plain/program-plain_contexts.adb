@@ -350,14 +350,13 @@ package body Program.Plain_Contexts is
    function Immediate_Visible
      (Self : in out Context'Class;
       Unit : Program.Text;
-      Name : Program.Text) return Program.Visibility.View_Array is
+      Name : Program.Text) return Program.Visibility.View_Iterator is
    begin
       Self.Visible.Enter_Snapshot
         (Self.Library_Env.Public_View
            (Self.Symbols.Lists.Find (Unit)));
 
-      return Self.Visible.Immediate_Visible
-        (Self.Symbols.Find (Name));
+      return Self.Visible.Immediate_Visible (Self.Symbols.Find (Name));
    end Immediate_Visible;
 
    -------------------------------

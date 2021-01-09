@@ -33,15 +33,18 @@ package body Program.Type_Resolvers is
     (Self    : in out Visitor;
      Element : not null Program.Elements.Identifiers.Identifier_Access)
    is
+      use type Program.Visibility.View_Cursor;
       Def    : Program.Elements.Defining_Names.Defining_Name_Access;
       Symbol : constant Program.Symbols.Symbol :=
         Program.Node_Symbols.Get_Symbol (Element);
-      Views  : constant Program.Visibility.View_Array :=
-        Self.Env.Immediate_Visible (Symbol);
    begin
-      Self.View := Views (1);
-      Def := Program.Visibility.Name (Self.View);
-      Self.Setter.Set_Corresponding_Defining_Name (Element.all'Access, Def);
+      for View in Self.Env.Immediate_Visible (Symbol) loop
+         Self.View := +View;
+         Def := Program.Visibility.Name (Self.View);
+         Self.Setter.Set_Corresponding_Defining_Name (Element.all'Access, Def);
+
+         return;
+      end loop;
    end Identifier;
 
 

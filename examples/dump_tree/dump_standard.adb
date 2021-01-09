@@ -34,6 +34,11 @@ procedure Dump_Standard is
       Padding : Wide_Wide_String;
       Verbose : Verbosity);
 
+   procedure Print
+     (View    : Program.Visibility.View_Iterator;
+      Padding : Wide_Wide_String;
+      Verbose : Verbosity);
+
    Indent : constant Wide_Wide_String := "  ";
 
    Err : aliased Errors.Error_Listener;
@@ -48,9 +53,26 @@ procedure Dump_Standard is
       Padding : Wide_Wide_String;
       Verbose : Verbosity) is
    begin
-      for J in  View'Range loop
+      for J in View'Range loop
          Ada.Wide_Wide_Text_IO.New_Line;
          Print (View (J), Padding, Verbose);
+      end loop;
+   end Print;
+
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print
+     (View    : Program.Visibility.View_Iterator;
+      Padding : Wide_Wide_String;
+      Verbose : Verbosity)
+   is
+      use type Program.Visibility.View_Cursor;
+   begin
+      for J in View loop
+         Ada.Wide_Wide_Text_IO.New_Line;
+         Print (+J, Padding, Verbose);
       end loop;
    end Print;
 

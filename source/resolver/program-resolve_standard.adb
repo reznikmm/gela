@@ -224,6 +224,8 @@ is
          Element : not null Program.Elements.Subtype_Declarations
            .Subtype_Declaration_Access)
       is
+         use type Program.Visibility.View_Cursor;
+
          Subtype_Name : constant
            Program.Elements.Defining_Names.Defining_Name_Access :=
              Element.Name.To_Defining_Name;
@@ -231,17 +233,22 @@ is
          Subtype_Mark_Symbol : constant Program.Symbols.Symbol :=
            To_Symbol (Element.Subtype_Indication.Subtype_Mark);
 
-         Subtype_Mark_Views : constant Program.Visibility.View_Array :=
-           Self.Env.Immediate_Visible (Subtype_Mark_Symbol);
       begin
-         Self.Env.Create_Subtype
-           (Symbol         => Program.Node_Symbols.Get_Symbol (Subtype_Name),
-            Name           => Subtype_Name,
-            Subtype_Mark   => Subtype_Mark_Views (1),
-            Has_Constraint => Element.Subtype_Indication.Constraint.Assigned);
+         for J in Self.Env.Immediate_Visible (Subtype_Mark_Symbol) loop
+            Self.Env.Create_Subtype
+              (Symbol       => Program.Node_Symbols.Get_Symbol (Subtype_Name),
+               Name         => Subtype_Name,
+               Subtype_Mark => +J,
+               Has_Constraint => Element
+               .Subtype_Indication.Constraint.Assigned);
 
-         Self.Visit_Each_Child (Element);
-         Self.Env.Leave_Declarative_Region;
+            Self.Visit_Each_Child (Element);
+            Self.Env.Leave_Declarative_Region;
+
+            return;
+         end loop;
+
+         raise Program_Error;
       end Subtype_Declaration;
 
       ----------------------
@@ -269,21 +276,27 @@ is
          Element : not null Program.Elements.Unconstrained_Array_Types
            .Unconstrained_Array_Type_Access)
       is
+         use type Program.Visibility.View_Cursor;
+
          Index_Symbol : constant Program.Symbols.Symbol :=
            To_Symbol (Element.Index_Subtypes.Element (1));
-         Index_View : constant Program.Visibility.View :=
-           Self.Env.Immediate_Visible (Index_Symbol) (1);
          Component_Symbol : constant Program.Symbols.Symbol :=
            To_Symbol (Element.Component_Definition);
-         Component_View : constant Program.Visibility.View :=
-           Self.Env.Immediate_Visible (Component_Symbol) (1);
       begin
-         Self.Env.Create_Array_Type
-           (Symbol    => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
-            Name      => Self.Type_Name,
-            Indexes   => (1 => Index_View),
-            Component => Component_View);
-         Self.Env.Leave_Declarative_Region;
+         for Index_View in Self.Env.Immediate_Visible (Index_Symbol) loop
+            for Component in Self.Env.Immediate_Visible (Component_Symbol) loop
+               Self.Env.Create_Array_Type
+                 (Symbol  => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
+                  Name    => Self.Type_Name,
+                  Indexes => (1 => +Index_View),
+                  Component => +Component);
+               Self.Env.Leave_Declarative_Region;
+
+               return;
+            end loop;
+         end loop;
+
+         raise Program_Error;
       end Unconstrained_Array_Type;
 
       ----------------------

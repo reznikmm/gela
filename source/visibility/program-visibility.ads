@@ -13,6 +13,7 @@
 --
 --  View provides access to defining name nodes, entity kind and properties.
 
+with Ada.Iterator_Interfaces;
 private with Ada.Containers.Hashed_Maps;
 private with Ada.Containers.Vectors;
 
@@ -108,11 +109,27 @@ package Program.Visibility is
      with Pre => Self.Kind = Procedure_View;
    --  Return parameters for given subprogram
 
+   type View_Cursor is private;
+   --  A cursor to iterate over visible views
+
+   function Get_View (Self : View_Cursor) return View;
+   --  Get a view corresponding to the cursor
+
+   function "+" (Self : View_Cursor) return View renames Get_View;
+   --  Get a view corresponding to the cursor
+
+   function Has_Element (Self : View_Cursor) return Boolean;
+   --  Check if cursor still points to a view
+
+   package Iterators is new Ada.Iterator_Interfaces (View_Cursor, Has_Element);
+   subtype View_Iterator is Iterators.Forward_Iterator'Class;
+
    function Immediate_Visible
      (Self   : View;
-      Symbol : Program.Visibility.Symbol) return View_Array
-        with Pre => Has_Region (Self);
-   --  Return array of views for immediate visible names with given symbol
+      Symbol : Program.Visibility.Symbol)
+        return View_Iterator
+          with Pre => Has_Region (Self);
+   --  Return iterator of views for immediate visible names with given symbol
 
    function Region_Items (Self : View) return View_Array
      with Pre => Has_Region (Self);
@@ -133,11 +150,11 @@ package Program.Visibility is
      with Storage_Size => 0;
 
    not overriding procedure Create_Empty_Context
-     (Self : aliased in out Context);
+     (Self : in out Context);
    --  Initialize a context to empty state before loading Standard package
 
    not overriding function Create_Snapshot
-     (Self    : aliased in out Context) return Snapshot_Access;
+     (Self    : in out Context) return Snapshot_Access;
    --  Store state of the context into a snapshot
 
    not overriding procedure Restore_Snapshot
@@ -305,16 +322,18 @@ package Program.Visibility is
    --  Add use package clause to the context.
 
    not overriding function Immediate_Visible
-     (Self   : aliased Context;
-      Symbol : Program.Visibility.Symbol) return View_Array;
-   --  Return array of views for immediate visible names with given symbol
+     (Self   : Context;
+      Symbol : Program.Visibility.Symbol)
+        return View_Iterator;
+   --  Return iterator of views for immediate visible names with given symbol
 
    not overriding function Use_Visible
-     (Self   : aliased Context;
-      Symbol : Program.Visibility.Symbol) return View_Array;
-   --  Return array of views for use visible names with given symbol
+     (Self   : Context;
+      Symbol : Program.Visibility.Symbol)
+        return View_Iterator;
+   --  Return iterator of views for use visible names with given symbol
 
-   not overriding function Latest_View (Self : aliased Context) return View;
+   not overriding function Latest_View (Self : Context) return View;
    --  View that was added to the context
 
    not overriding function Get_Name_View
@@ -423,6 +442,13 @@ private
    type View (Kind : View_Kind := Unresolved_View) is record
       Env   : Constant_Context_Access;
       Index : Entity_Reference;
+   end record;
+
+   type View_Cursor is record
+      Region : Region_Identifier;
+      Entity : Entity_Identifier'Base;
+      Use_Id : Positive;
+      View   : Program.Visibility.View;
    end record;
 
 end Program.Visibility;

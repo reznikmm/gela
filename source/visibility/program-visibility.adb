@@ -11,6 +11,55 @@ with Program.Safe_Element_Visitors;
 
 package body Program.Visibility is
 
+   package Iterator_Implementations  is
+      type Region_Immediate_Visible_Iterator is new Iterators.Forward_Iterator
+      with record
+         Context : not null Constant_Context_Access;
+         Region  : Region_Identifier;
+         Symbol  : Program.Visibility.Symbol;
+      end record;
+
+      overriding function First
+        (Self : Region_Immediate_Visible_Iterator) return View_Cursor;
+
+      overriding function Next
+        (Self   : Region_Immediate_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor;
+
+      procedure Step
+        (Self   : Region_Immediate_Visible_Iterator'Class;
+         Cursor : in out View_Cursor);
+
+      type Context_Immediate_Visible_Iterator is
+        new Region_Immediate_Visible_Iterator with null record;
+
+      overriding function First
+        (Self : Context_Immediate_Visible_Iterator) return View_Cursor;
+
+      overriding function Next
+        (Self   : Context_Immediate_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor;
+
+      procedure Step_Region
+        (Self   : Context_Immediate_Visible_Iterator'Class;
+         Cursor : in out View_Cursor);
+
+      type Use_Visible_Iterator is
+        new Region_Immediate_Visible_Iterator with null record;
+
+      overriding function First
+        (Self : Use_Visible_Iterator) return View_Cursor;
+
+      overriding function Next
+        (Self   : Use_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor;
+
+      procedure Step_Use
+        (Self   : Use_Visible_Iterator'Class;
+         Cursor : in out View_Cursor);
+
+   end Iterator_Implementations;
+
    type Allocated_Snapshot is access all Snapshot;
 
    procedure Append_Item
@@ -23,11 +72,6 @@ package body Program.Visibility is
       Index : Entity_Reference) return View;
 
    function To_Vector (List : View_Array) return Entity_References.Vector;
-
-   function Immediate_Visible
-     (Self   : not null Constant_Context_Access;
-      Region : Region_Identifier;
-      Symbol : Program.Visibility.Symbol) return View_Array;
 
    package Getters is
 
@@ -185,7 +229,7 @@ package body Program.Visibility is
    --------------------------
 
    not overriding procedure Create_Empty_Context
-     (Self : aliased in out Context)
+     (Self : in out Context)
    is
    begin
       Self.Data.Clear;
@@ -393,7 +437,7 @@ package body Program.Visibility is
    ---------------------
 
    not overriding function Create_Snapshot
-     (Self : aliased in out Context) return Snapshot_Access
+     (Self : in out Context) return Snapshot_Access
    is
       Top : Region renames Self.Data (Self.Top);
       Result : constant Allocated_Snapshot :=
@@ -506,6 +550,15 @@ package body Program.Visibility is
       return (Value.Kind, Env, Index);
    end Get_View;
 
+   --------------
+   -- Get_View --
+   --------------
+
+   function Get_View (Self : View_Cursor) return View is
+   begin
+      return Self.View;
+   end Get_View;
+
    --------------------
    -- Has_Constraint --
    --------------------
@@ -527,6 +580,15 @@ package body Program.Visibility is
    begin
       return Item.Has_Default;
    end Has_Default;
+
+   -----------------
+   -- Has_Element --
+   -----------------
+
+   function Has_Element (Self : View_Cursor) return Boolean is
+   begin
+      return Self.Entity > 0;
+   end Has_Element;
 
    ----------------
    -- Has_Region --
@@ -556,38 +618,16 @@ package body Program.Visibility is
    -----------------------
 
    function Immediate_Visible
-     (Self   : not null Constant_Context_Access;
-      Region : Region_Identifier;
-      Symbol : Program.Visibility.Symbol) return View_Array
-   is
-      use type Program.Symbols.Symbol;
-
-      Result : View_Array (1 .. 10);
-      Last   : Natural := 0;
-      Value  : Program.Visibility.Region renames Self.Data (Region);
-   begin
-      for Index in 1 .. Value.Entities.Last_Index loop
-         if Value.Entities (Index).Symbol = Symbol then
-            Last := Last + 1;
-            Result (Last) := Get_View (Self, (Region, Index));
-         end if;
-      end loop;
-
-      return Result (1 .. Last);
-   end Immediate_Visible;
-
-   -----------------------
-   -- Immediate_Visible --
-   -----------------------
-
-   function Immediate_Visible
      (Self   : View;
-      Symbol : Program.Visibility.Symbol) return View_Array
+      Symbol : Program.Visibility.Symbol) return View_Iterator
    is
       Item : Entity renames
         Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Immediate_Visible (Self.Env, Item.Region, Symbol);
+      return Iterator_Implementations.Region_Immediate_Visible_Iterator'
+        (Context => Self.Env,
+         Region  => Item.Region,
+         Symbol  => Symbol);
    end Immediate_Visible;
 
    -----------------------
@@ -595,28 +635,13 @@ package body Program.Visibility is
    -----------------------
 
    not overriding function Immediate_Visible
-     (Self   : aliased Context;
-      Symbol : Program.Visibility.Symbol)
-      return View_Array
-   is
-      procedure Append (List : View_Array);
-      Result : View_Array (1 .. 10);
-      Last   : Natural := 0;
-
-      procedure Append (List : View_Array) is
-      begin
-         Result (Last + 1 .. Last + List'Length) := List;
-         Last := Last + List'Length;
-      end Append;
-
-      Next : Region_Identifier'Base := Self.Top;
+     (Self   : Context;
+      Symbol : Program.Visibility.Symbol) return View_Iterator is
    begin
-      while Next > 0 loop
-         Append (Immediate_Visible (Self'Unchecked_Access, Next, Symbol));
-         Next := Self.Data (Next).Enclosing;
-      end loop;
-
-      return Result (1 .. Last);
+      return Iterator_Implementations.Context_Immediate_Visible_Iterator'
+        (Context => Self'Unchecked_Access,
+         Region  => Self.Top,
+         Symbol  => Symbol);
    end Immediate_Visible;
 
    -------------
@@ -647,11 +672,161 @@ package body Program.Visibility is
       return Item.Is_Character_Type;
    end Is_Character_Type;
 
+   ------------------------------
+   -- Iterator_Implementations --
+   ------------------------------
+
+   package body Iterator_Implementations  is
+
+      overriding function First
+        (Self : Region_Immediate_Visible_Iterator) return View_Cursor is
+      begin
+         return Result : View_Cursor := (Self.Region, 1, others => <>) do
+            Self.Step (Result);
+         end return;
+      end First;
+
+      overriding function First
+        (Self : Context_Immediate_Visible_Iterator) return View_Cursor is
+      begin
+         return Result : View_Cursor := (Self.Region, 1, others => <>) do
+            Self.Step_Region (Result);
+         end return;
+      end First;
+
+      overriding function First
+        (Self : Use_Visible_Iterator) return View_Cursor is
+      begin
+         return Result : View_Cursor := (Self.Region, 1, 1, View => <>) do
+            Self.Step_Use (Result);
+         end return;
+      end First;
+
+      overriding function Next
+        (Self     : Region_Immediate_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor is
+      begin
+         return Result : View_Cursor :=
+           (Position.Region, Position.Entity + 1, others => <>)
+         do
+            Self.Step (Result);
+         end return;
+      end Next;
+
+      overriding function Next
+        (Self     : Context_Immediate_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor is
+      begin
+         return Result : View_Cursor :=
+           (Position.Region, Position.Entity + 1, others => <>)
+         do
+            Self.Step_Region (Result);
+         end return;
+      end Next;
+
+      overriding function Next
+        (Self     : Use_Visible_Iterator;
+         Position : View_Cursor) return View_Cursor is
+      begin
+         return Result : View_Cursor :=
+           (Position.Region, Position.Entity + 1, Position.Use_Id, View => <>)
+         do
+            Self.Step_Use (Result);
+         end return;
+      end Next;
+
+      procedure Step
+        (Self   : Region_Immediate_Visible_Iterator'Class;
+         Cursor : in out View_Cursor)
+      is
+         use type Program.Symbols.Symbol;
+
+         Value : Program.Visibility.Region renames
+           Self.Context.Data (Cursor.Region);
+      begin
+         for Index in Cursor.Entity .. Value.Entities.Last_Index loop
+            if Value.Entities (Index).Symbol = Self.Symbol then
+               Cursor := (Cursor.Region,
+                          Index,
+                          1,
+                          Get_View (Self.Context, (Cursor.Region, Index)));
+
+               return;
+            end if;
+         end loop;
+
+         Cursor := (Cursor.Region, Entity => 0, others => <>);
+      end Step;
+
+      procedure Step_Region
+        (Self   : Context_Immediate_Visible_Iterator'Class;
+         Cursor : in out View_Cursor)
+      is
+         Next : Region_Identifier'Base := Cursor.Region;
+      begin
+         loop
+            Self.Step (Cursor);
+
+            if Has_Element (Cursor) then
+               return;
+            end if;
+
+            Next := Self.Context.Data (Next).Enclosing;
+
+            exit when Next = 0;
+
+            Cursor.Region := Next;
+            Cursor.Entity := 1;
+         end loop;
+
+         Cursor := (Self.Region, Entity => 0, others => <>);
+      end Step_Region;
+
+      procedure Step_Use
+        (Self   : Use_Visible_Iterator'Class;
+         Cursor : in out View_Cursor)
+      is
+         Next : Region_Identifier'Base := Cursor.Region;
+      begin
+         loop  --  Over each nested region
+            declare
+               Top : Region renames Self.Context.Data (Next);
+            begin
+               if Cursor.Use_Id <= Top.Uses.Last_Index then  --  have use_cl
+                  Cursor.Region := Top.Uses (Cursor.Use_Id);  --  rewrite reg
+                  Self.Step (Cursor);
+               else
+                  Cursor.Entity := 0;  --  clear cursor
+               end if;
+
+               if Has_Element (Cursor) then
+                  Cursor.Region := Next;  --  restore region
+
+                  return;
+               elsif Cursor.Use_Id >= Top.Uses.Last_Index then
+                  Next := Self.Context.Data (Next).Enclosing;
+
+                  exit when Next = 0;
+
+                  Cursor.Use_Id := 1;
+               else
+                  Cursor.Use_Id := Cursor.Use_Id + 1;
+               end if;
+
+               Cursor.Entity := 1;
+            end;
+         end loop;
+
+         Cursor := (Self.Region, Entity => 0, others => <>);
+      end Step_Use;
+
+   end Iterator_Implementations;
+
    -----------------
    -- Latest_View --
    -----------------
 
-   not overriding function Latest_View (Self : aliased Context) return View is
+   not overriding function Latest_View (Self : Context) return View is
       Top   : Region renames Self.Data (Self.Top);
       Index : Entity_Reference;
    begin
@@ -669,7 +844,6 @@ package body Program.Visibility is
                  Self'Unchecked_Access,
                  Index);
       end if;
-
    end Latest_View;
 
    ------------------------------
@@ -763,14 +937,14 @@ package body Program.Visibility is
       Snapshot : not null Snapshot_Access)
    is
       Top : Region renames Self.Data (Self.Top);
-      Length : constant Ada.Containers.Count_Type := Top.Entities.Length;
+--      Length : constant Ada.Containers.Count_Type := Top.Entities.Length;
    begin
       --  Ignore Snapshot.Region_Id if empty
       pragma Assert
         (Snapshot.Entities.Is_Empty or Self.Top = Snapshot.Region_Id);
 
       Top.Entities := Snapshot.Entities;
-      Top.Entities.Set_Length (Length);
+--      Top.Entities.Set_Length (Length);
       Top.Uses := Snapshot.Uses;
 
       for J in 1 .. Snapshot.Entities.Last_Index loop
@@ -831,39 +1005,13 @@ package body Program.Visibility is
    -----------------
 
    not overriding function Use_Visible
-     (Self   : aliased Context;
-      Symbol : Program.Visibility.Symbol) return View_Array
-   is
-      procedure Append (List : View_Array);
-      Result : View_Array (1 .. 10);
-      Last   : Natural := 0;
-
-      procedure Append (List : View_Array) is
-      begin
-         Result (Last + 1 .. Last + List'Length) := List;
-         Last := Last + List'Length;
-      end Append;
-
-      Next : Region_Identifier'Base := Self.Top;
+     (Self   : Context;
+      Symbol : Program.Visibility.Symbol) return View_Iterator is
    begin
-      while Next > 0 loop
-         declare
-            Top : Region renames Self.Data (Next);
-         begin
-            for J of Top.Uses loop
-               declare
-                  Found : constant View_Array := Immediate_Visible
-                    (Self'Unchecked_Access, J, Symbol);
-               begin
-                  Append (Found);
-               end;
-            end loop;
-
-            Next := Top.Enclosing;
-         end;
-      end loop;
-
-      return Result (1 .. Last);
+      return Iterator_Implementations.Use_Visible_Iterator'
+        (Context => Self'Unchecked_Access,
+         Region  => Self.Top,
+         Symbol  => Symbol);
    end Use_Visible;
 
 end Program.Visibility;
