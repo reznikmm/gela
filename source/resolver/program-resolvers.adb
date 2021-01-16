@@ -227,9 +227,12 @@ package body Program.Resolvers is
 
       overriding procedure Push
         (Self  : in out Snapshot_Registry;
-         Name  : Program.Symbols.Symbol) is
+         Name  : Program.Symbols.Symbol)
+      is
+         Next : Program.Symbol_Lists.Symbol_List;
       begin
-         Self.Lists.Find_Or_Create (Self.Parent, Name, Self.Parent);
+         Self.Lists.Find_Or_Create (Self.Parent, Name, Next);
+         Self.Parent := Next;
       end Push;
 
       overriding procedure Pop (Self  : in out Snapshot_Registry) is

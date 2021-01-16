@@ -10,4 +10,4 @@ jobs:
        - image: reznik/oasis-build:fc30.02
      steps:
        - checkout
-       - run: make
+       - run: make -j2 check

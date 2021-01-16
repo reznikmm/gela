@@ -29,3 +29,21 @@ install:
 clean:
 	gprclean -q -P gnat/oasis.gpr
 
+check: DN=.objs/examples/def_name
+check: all .acats
+	@set -e; \
+	for DIR in A; do \
+	  for J in tests/def_name/acats/$$DIR/*; do \
+	    UNIT=`basename $$J .txt`; echo -n $$UNIT : ;\
+	    $(DN) -I.acats -Iexamples/dump_tree/ .acats/$$DIR/$$UNIT* >/tmp/new;\
+	    diff -u $$J /tmp/new ; \
+	  done; \
+	  echo $$DIR def_name done ; \
+	done
+
+.acats:
+	mkdir .acats
+	curl -s -o .acats/ACATS41.ZIP https://www.ada-ru.org/files/ACATS41.ZIP
+	unzip -q -aa .acats/ACATS41.ZIP -d .acats
+	gnatchop -q .acats/SUPPORT/REPORT.A .acats
+	rm -v -f .acats/ACATS41.ZIP

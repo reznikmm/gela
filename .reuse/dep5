@@ -4,9 +4,13 @@ Upstream-Contact: Max Reznik <reznikmm@gmail.com>
 Source: https://github.com/reznikmm/gela
 
 Files: README.md source/README.md docs/ast.md
-Copyright: 2019 Max Reznik <reznikmm@gmail.com>
+Copyright: 2019-2021 Max Reznik <reznikmm@gmail.com>
 License: MIT
 
 Files: source/parser/program-parsers-data* source/parser/program-parsers-on*
-Copyright: 2019 Max Reznik <reznikmm@gmail.com>
+Copyright: 2019-2021 Max Reznik <reznikmm@gmail.com>
+License: MIT
+
+Files: tests/**
+Copyright: 2021 Max Reznik <reznikmm@gmail.com>
 License: MIT
