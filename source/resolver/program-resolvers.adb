@@ -3,10 +3,12 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Complete_Contexts;
 with Program.Element_Filters;
 with Program.Element_Iterators;
 with Program.Element_Vectors;
 with Program.Element_Visitors;
+with Program.Elements.Call_Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Identifiers;
@@ -18,6 +20,7 @@ with Program.Elements.Subtype_Declarations;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
 with Program.Elements;
+with Program.Interpretations;
 with Program.Lexical_Elements;
 with Program.Node_Symbols;
 with Program.Safe_Element_Visitors;
@@ -55,6 +58,11 @@ package body Program.Resolvers is
 --    is new Program.Safe_Element_Visitors.Safe_Element_Visitor with record
          Snapshot_Registry : Snapshot_Registry_Access;
       end record;
+
+      overriding procedure Call_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Call_Statements
+           .Call_Statement_Access);
 
       overriding procedure Package_Declaration
         (Self    : in out Visitor;
@@ -338,6 +346,21 @@ package body Program.Resolvers is
          end loop;
       end Append_Unit_Use_Clauses;
 
+      --------------------
+      -- Call_Statement --
+      --------------------
+
+      overriding procedure Call_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Call_Statements
+           .Call_Statement_Access)
+      is
+         Context : aliased Program.Interpretations.Context (Self.Env);
+      begin
+         Program.Complete_Contexts.Call_Statement
+           (Context'Unchecked_Access, Self.Setter, Element);
+      end Call_Statement;
+
       -------------------------
       -- Package_Declaration --
       -------------------------
@@ -445,6 +468,18 @@ package body Program.Resolvers is
          Self.Append_Unit_Use_Clauses (Element.all'Access);
 
          for Cursor in Element.Parameters.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         for Cursor in Element.Declarations.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         for Cursor in Element.Statements.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         for Cursor in Element.Exception_Handlers.Each_Element loop
             Cursor.Element.Visit (Self);
          end loop;
 

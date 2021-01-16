@@ -149,22 +149,22 @@ package Program.Visibility is
    type Context_Access is access all Program.Visibility.Context'Class
      with Storage_Size => 0;
 
-   not overriding procedure Create_Empty_Context
-     (Self : in out Context);
+   procedure Create_Empty_Context
+     (Self : in out Context'Class);
    --  Initialize a context to empty state before loading Standard package
 
-   not overriding function Create_Snapshot
-     (Self    : in out Context) return Snapshot_Access;
+   function Create_Snapshot
+     (Self    : in out Context'Class) return Snapshot_Access;
    --  Store state of the context into a snapshot
 
-   not overriding procedure Restore_Snapshot
-     (Self     : in out Context;
+   procedure Restore_Snapshot
+     (Self     : in out Context'Class;
       Snapshot : not null Snapshot_Access);
    --  Restore snapshot. For example before leaving a package, restore
    --  the snapshot of its public part.
 
-   not overriding procedure Enter_Snapshot
-     (Self     : in out Context;
+   procedure Enter_Snapshot
+     (Self     : in out Context'Class;
       Snapshot : not null Snapshot_Access);
    --  Take topmost element of the snapshot and enter its declarative region.
    --  Use-case example:
@@ -182,8 +182,8 @@ package Program.Visibility is
    --     package body P is  -->  Enter_Snapshot (Private_Snap);
    --
 
---   not overriding procedure Start_Private_Part
---     (Self     : in out Context;
+--   procedure Start_Private_Part
+--     (Self     : in out Context'Class;
 --      Snapshot : not null Snapshot_Access);
    --  Make private declarations visible. Current "point of view" should be
    --  in a public part of a library unit. Snapshot should be taken from the
@@ -203,28 +203,28 @@ package Program.Visibility is
    --  -->  Now we see that T is integer and its oprerations like "+", "/"
    --
 
-   not overriding procedure Create_Implicit_Type
-     (Self   : in out Context;
+   procedure Create_Implicit_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an implicit type view to the context. Don't create a region.
 
-   not overriding procedure Create_Enumeration_Type
-     (Self   : in out Context;
+   procedure Create_Enumeration_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an enumeration type view to the context. Don't create a region.
 
-   not overriding procedure Create_Enumeration_Literal
-     (Self             : in out Context;
+   procedure Create_Enumeration_Literal
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Enumeration_Type : View)
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
    --  Add an enumeration literal view to the context. Don't create a region.
 
-   not overriding procedure Create_Character_Literal
-     (Self             : in out Context;
+   procedure Create_Character_Literal
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Enumeration_Type : View)
@@ -236,8 +236,8 @@ package Program.Visibility is
    --  Meta character literal matches any character name in its class.
    --  We use them to avoid a million of defining names in the context.
 
-   not overriding procedure Create_Character_Literal
-     (Self             : in out Context;
+   procedure Create_Character_Literal
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Meta_Character   : Meta_Character_Literal_Kind;
@@ -245,26 +245,26 @@ package Program.Visibility is
         with Pre => Enumeration_Type.Kind = Enumeration_Type_View;
    --  Add a meta character literal view to the context. Don't create a region.
 
-   not overriding procedure Create_Signed_Integer_Type
-     (Self   : in out Context;
+   procedure Create_Signed_Integer_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add a signed integer type view to the context. Create a region.
 
-   not overriding procedure Create_Modular_Type
-     (Self   : in out Context;
+   procedure Create_Modular_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add a unsigned integer type view to the context. Create a region.
 
-   not overriding procedure Create_Float_Point_Type
-     (Self   : in out Context;
+   procedure Create_Float_Point_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add a float point type view to the context. Create a region.
 
-   not overriding procedure Create_Array_Type
-     (Self      : in out Context;
+   procedure Create_Array_Type
+     (Self      : in out Context'Class;
       Symbol    : Program.Visibility.Symbol;
       Name      : Defining_Name;
       Indexes   : View_Array;
@@ -272,8 +272,8 @@ package Program.Visibility is
         with Pre => Component.Kind in Type_View_Kind;
    --  Add an array type view to the context. Create a region.
 
-   not overriding procedure Create_Subtype
-     (Self           : in out Context;
+   procedure Create_Subtype
+     (Self           : in out Context'Class;
       Symbol         : Program.Visibility.Symbol;
       Name           : Defining_Name;
       Subtype_Mark   : View;
@@ -281,20 +281,20 @@ package Program.Visibility is
         with Pre => Subtype_Mark.Kind in Type_View_Kind;
    --  Add a subtype view to the context. Create a region.
 
-   not overriding procedure Create_Package
-     (Self   : in out Context;
+   procedure Create_Package
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an empty package view to the context. Create a region.
 
-   not overriding procedure Create_Procedure
-     (Self   : in out Context;
+   procedure Create_Procedure
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add a procedure view to the context. Create declarative region.
 
-   not overriding procedure Create_Parameter
-     (Self        : in out Context;
+   procedure Create_Parameter
+     (Self        : in out Context'Class;
       Symbol      : Program.Visibility.Symbol;
       Name        : Defining_Name;
       Mode        : Parameter_Mode;
@@ -302,42 +302,51 @@ package Program.Visibility is
    --  Add a parameter view to the context and to the topmost subprogram
    --  declaration. Create declarative region.
 
-   not overriding procedure Set_Parameter_Type
-     (Self       : in out Context;
+   procedure Set_Parameter_Type
+     (Self       : in out Context'Class;
       Definition : View);
    --  Assign given subtype to the topmost parameter declaration
 
-   not overriding procedure Create_Exception
-     (Self   : in out Context;
+   procedure Create_Exception
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an exception view to the context. Don't create a region.
 
-   not overriding procedure Leave_Declarative_Region (Self : in out Context);
+   procedure Leave_Declarative_Region (Self : in out Context'Class);
    --  Leave current declarative region the context.
 
-   not overriding procedure Add_Use_Package
-     (Self : in out Context;
+   procedure Add_Use_Package
+     (Self : in out Context'Class;
       Pkg  : View);
    --  Add use package clause to the context.
 
-   not overriding function Immediate_Visible
-     (Self   : Context;
+   function Immediate_Visible
+     (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol)
         return View_Iterator;
    --  Return iterator of views for immediate visible names with given symbol
 
-   not overriding function Use_Visible
-     (Self   : Context;
+   function Use_Visible
+     (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol)
         return View_Iterator;
    --  Return iterator of views for use visible names with given symbol
 
-   not overriding function Latest_View (Self : Context) return View;
+   type Direct_Visible_Name_Iterator is
+     new Iterators.Forward_Iterator with private;
+
+   function Direct_Visible
+     (Self   : Context'Class;
+      Symbol : Program.Visibility.Symbol)
+        return Direct_Visible_Name_Iterator;
+   --  Return iterator of views for direct visible names with given symbol
+
+   function Latest_View (Self : Context'Class) return View;
    --  View that was added to the context
 
-   not overriding function Get_Name_View
-     (Self : Context;
+   function Get_Name_View
+     (Self : Context'Class;
       Name : not null Program.Elements.Element_Access) return View;
 
 private
@@ -437,7 +446,7 @@ private
       --  For each defining name a corresponding reference
    end record;
 
-   type Constant_Context_Access is access constant Context;
+   type Constant_Context_Access is access constant Context'Class;
 
    type View (Kind : View_Kind := Unresolved_View) is record
       Env   : Constant_Context_Access;
@@ -450,5 +459,42 @@ private
       Use_Id : Positive;
       View   : Program.Visibility.View;
    end record;
+
+   type Region_Immediate_Visible_Iterator is new Iterators.Forward_Iterator
+   with record
+      Context : not null Constant_Context_Access;
+      Region  : Region_Identifier;
+      Symbol  : Program.Visibility.Symbol;
+   end record;
+
+   overriding function First
+     (Self : Region_Immediate_Visible_Iterator) return View_Cursor;
+
+   overriding function Next
+     (Self     : Region_Immediate_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor;
+
+   type Context_Immediate_Visible_Iterator is
+     new Region_Immediate_Visible_Iterator with null record;
+
+   overriding function First
+     (Self : Context_Immediate_Visible_Iterator) return View_Cursor;
+
+   overriding function Next
+     (Self     : Context_Immediate_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor;
+
+   type Use_Visible_Iterator is
+     new Region_Immediate_Visible_Iterator with null record;
+
+   overriding function First
+     (Self : Use_Visible_Iterator) return View_Cursor;
+
+   overriding function Next
+     (Self     : Use_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor;
+
+   type Direct_Visible_Name_Iterator is
+     new Use_Visible_Iterator with null record;
 
 end Program.Visibility;

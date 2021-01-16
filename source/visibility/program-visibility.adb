@@ -11,54 +11,17 @@ with Program.Safe_Element_Visitors;
 
 package body Program.Visibility is
 
-   package Iterator_Implementations  is
-      type Region_Immediate_Visible_Iterator is new Iterators.Forward_Iterator
-      with record
-         Context : not null Constant_Context_Access;
-         Region  : Region_Identifier;
-         Symbol  : Program.Visibility.Symbol;
-      end record;
+   procedure Step
+     (Self   : Region_Immediate_Visible_Iterator'Class;
+      Cursor : in out View_Cursor);
 
-      overriding function First
-        (Self : Region_Immediate_Visible_Iterator) return View_Cursor;
+   procedure Step_Region
+     (Self   : Context_Immediate_Visible_Iterator'Class;
+      Cursor : in out View_Cursor);
 
-      overriding function Next
-        (Self   : Region_Immediate_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor;
-
-      procedure Step
-        (Self   : Region_Immediate_Visible_Iterator'Class;
-         Cursor : in out View_Cursor);
-
-      type Context_Immediate_Visible_Iterator is
-        new Region_Immediate_Visible_Iterator with null record;
-
-      overriding function First
-        (Self : Context_Immediate_Visible_Iterator) return View_Cursor;
-
-      overriding function Next
-        (Self   : Context_Immediate_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor;
-
-      procedure Step_Region
-        (Self   : Context_Immediate_Visible_Iterator'Class;
-         Cursor : in out View_Cursor);
-
-      type Use_Visible_Iterator is
-        new Region_Immediate_Visible_Iterator with null record;
-
-      overriding function First
-        (Self : Use_Visible_Iterator) return View_Cursor;
-
-      overriding function Next
-        (Self   : Use_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor;
-
-      procedure Step_Use
-        (Self   : Use_Visible_Iterator'Class;
-         Cursor : in out View_Cursor);
-
-   end Iterator_Implementations;
+   procedure Step_Use
+     (Self   : Use_Visible_Iterator'Class;
+      Cursor : in out View_Cursor);
 
    type Allocated_Snapshot is access all Snapshot;
 
@@ -112,7 +75,7 @@ package body Program.Visibility is
    ---------------------
 
    not overriding procedure Add_Use_Package
-     (Self : in out Context;
+     (Self : in out Context'Class;
       Pkg  : View)
    is
       Item : Entity renames
@@ -163,7 +126,7 @@ package body Program.Visibility is
    -----------------------
 
    not overriding procedure Create_Array_Type
-     (Self      : in out Context;
+     (Self      : in out Context'Class;
       Symbol    : Program.Visibility.Symbol;
       Name      : Defining_Name;
       Indexes   : View_Array;
@@ -184,7 +147,7 @@ package body Program.Visibility is
    ------------------------------
 
    not overriding procedure Create_Character_Literal
-     (Self             : in out Context;
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Enumeration_Type : View)
@@ -213,7 +176,7 @@ package body Program.Visibility is
    ------------------------------
 
    not overriding procedure Create_Character_Literal
-     (Self             : in out Context;
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Meta_Character   : Meta_Character_Literal_Kind;
@@ -228,9 +191,7 @@ package body Program.Visibility is
    -- Create_Empty_Context --
    --------------------------
 
-   not overriding procedure Create_Empty_Context
-     (Self : in out Context)
-   is
+   procedure Create_Empty_Context (Self : in out Context'Class) is
    begin
       Self.Data.Clear;
       Self.Data.Append
@@ -245,7 +206,7 @@ package body Program.Visibility is
    --------------------------------
 
    not overriding procedure Create_Enumeration_Literal
-     (Self             : in out Context;
+     (Self             : in out Context'Class;
       Symbol           : Program.Visibility.Symbol;
       Name             : Defining_Name;
       Enumeration_Type : View)
@@ -272,8 +233,8 @@ package body Program.Visibility is
    -- Create_Enumeration_Type --
    -----------------------------
 
-   not overriding procedure Create_Enumeration_Type
-     (Self : in out Context; Symbol : Program.Visibility.Symbol;
+   procedure Create_Enumeration_Type
+     (Self : in out Context'Class; Symbol : Program.Visibility.Symbol;
       Name :        Defining_Name)
    is
       Last : constant Entity_Identifier'Base :=
@@ -294,8 +255,8 @@ package body Program.Visibility is
    -- Create_Exception --
    ----------------------
 
-   not overriding procedure Create_Exception
-     (Self : in out Context; Symbol : Program.Visibility.Symbol;
+   procedure Create_Exception
+     (Self : in out Context'Class; Symbol : Program.Visibility.Symbol;
       Name :        Defining_Name)
    is
       Value : constant Entity :=
@@ -310,8 +271,8 @@ package body Program.Visibility is
    -- Create_Float_Point_Type --
    -----------------------------
 
-   not overriding procedure Create_Float_Point_Type
-     (Self   : in out Context;
+   procedure Create_Float_Point_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -327,8 +288,8 @@ package body Program.Visibility is
    -- Create_Implicit_Type --
    --------------------------
 
-   not overriding procedure Create_Implicit_Type
-     (Self   : in out Context;
+   procedure Create_Implicit_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -344,8 +305,8 @@ package body Program.Visibility is
    -- Create_Modular_Type --
    -------------------------
 
-   not overriding procedure Create_Modular_Type
-     (Self   : in out Context;
+   procedure Create_Modular_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -361,8 +322,8 @@ package body Program.Visibility is
    -- Create_Package --
    --------------------
 
-   not overriding procedure Create_Package
-     (Self   : in out Context;
+   procedure Create_Package
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -380,7 +341,7 @@ package body Program.Visibility is
    ----------------------
 
    not overriding procedure Create_Parameter
-     (Self        : in out Context;
+     (Self        : in out Context'Class;
       Symbol      : Program.Visibility.Symbol;
       Name        : Defining_Name;
       Mode        : Parameter_Mode;
@@ -401,8 +362,8 @@ package body Program.Visibility is
    -- Create_Procedure --
    ----------------------
 
-   not overriding procedure Create_Procedure
-     (Self   : in out Context;
+   procedure Create_Procedure
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -419,8 +380,8 @@ package body Program.Visibility is
    -- Create_Signed_Integer_Type --
    --------------------------------
 
-   not overriding procedure Create_Signed_Integer_Type
-     (Self   : in out Context;
+   procedure Create_Signed_Integer_Type
+     (Self   : in out Context'Class;
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
@@ -436,8 +397,8 @@ package body Program.Visibility is
    -- Create_Snapshot --
    ---------------------
 
-   not overriding function Create_Snapshot
-     (Self : in out Context) return Snapshot_Access
+   function Create_Snapshot
+     (Self : in out Context'Class) return Snapshot_Access
    is
       Top : Region renames Self.Data (Self.Top);
       Result : constant Allocated_Snapshot :=
@@ -453,7 +414,7 @@ package body Program.Visibility is
    --------------------
 
    not overriding procedure Create_Subtype
-     (Self           : in out Context;
+     (Self           : in out Context'Class;
       Symbol         : Program.Visibility.Symbol;
       Name           : Defining_Name;
       Subtype_Mark   : View;
@@ -474,7 +435,7 @@ package body Program.Visibility is
    --------------------
 
    not overriding procedure Enter_Snapshot
-     (Self     : in out Context;
+     (Self     : in out Context'Class;
       Snapshot : not null Snapshot_Access)
    is
    begin
@@ -521,12 +482,61 @@ package body Program.Visibility is
       return Get_View (Self.Env, (Self.Index.Region, Item.Enumeration_Type));
    end Enumeration_Type;
 
+   --------------------
+   -- Direct_Visible --
+   --------------------
+
+   function Direct_Visible
+     (Self   : Context'Class;
+      Symbol : Program.Visibility.Symbol)
+      return Direct_Visible_Name_Iterator is
+   begin
+      return (Use_Visible_Iterator (Self.Use_Visible (Symbol))
+                with null record);
+   end Direct_Visible;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self : Region_Immediate_Visible_Iterator) return View_Cursor is
+   begin
+      return Result : View_Cursor := (Self.Region, 1, others => <>) do
+         Self.Step (Result);
+      end return;
+   end First;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self : Context_Immediate_Visible_Iterator) return View_Cursor is
+   begin
+      return Result : View_Cursor := (Self.Region, 1, others => <>) do
+         Self.Step_Region (Result);
+      end return;
+   end First;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self : Use_Visible_Iterator) return View_Cursor is
+   begin
+      return Result : View_Cursor := (Self.Region, 1, 1, View => <>) do
+         Self.Step_Use (Result);
+      end return;
+   end First;
+
    -------------------
    -- Get_Name_View --
    -------------------
 
-   not overriding function Get_Name_View
-     (Self : Context;
+   function Get_Name_View
+     (Self : Context'Class;
       Name : not null Program.Elements.Element_Access) return View
    is
       Visitor : Getters.Visitor (Self'Unchecked_Access);
@@ -624,7 +634,7 @@ package body Program.Visibility is
       Item : Entity renames
         Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
    begin
-      return Iterator_Implementations.Region_Immediate_Visible_Iterator'
+      return Region_Immediate_Visible_Iterator'
         (Context => Self.Env,
          Region  => Item.Region,
          Symbol  => Symbol);
@@ -634,11 +644,11 @@ package body Program.Visibility is
    -- Immediate_Visible --
    -----------------------
 
-   not overriding function Immediate_Visible
-     (Self   : Context;
+   function Immediate_Visible
+     (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol) return View_Iterator is
    begin
-      return Iterator_Implementations.Context_Immediate_Visible_Iterator'
+      return Context_Immediate_Visible_Iterator'
         (Context => Self'Unchecked_Access,
          Region  => Self.Top,
          Symbol  => Symbol);
@@ -672,161 +682,11 @@ package body Program.Visibility is
       return Item.Is_Character_Type;
    end Is_Character_Type;
 
-   ------------------------------
-   -- Iterator_Implementations --
-   ------------------------------
-
-   package body Iterator_Implementations  is
-
-      overriding function First
-        (Self : Region_Immediate_Visible_Iterator) return View_Cursor is
-      begin
-         return Result : View_Cursor := (Self.Region, 1, others => <>) do
-            Self.Step (Result);
-         end return;
-      end First;
-
-      overriding function First
-        (Self : Context_Immediate_Visible_Iterator) return View_Cursor is
-      begin
-         return Result : View_Cursor := (Self.Region, 1, others => <>) do
-            Self.Step_Region (Result);
-         end return;
-      end First;
-
-      overriding function First
-        (Self : Use_Visible_Iterator) return View_Cursor is
-      begin
-         return Result : View_Cursor := (Self.Region, 1, 1, View => <>) do
-            Self.Step_Use (Result);
-         end return;
-      end First;
-
-      overriding function Next
-        (Self     : Region_Immediate_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor is
-      begin
-         return Result : View_Cursor :=
-           (Position.Region, Position.Entity + 1, others => <>)
-         do
-            Self.Step (Result);
-         end return;
-      end Next;
-
-      overriding function Next
-        (Self     : Context_Immediate_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor is
-      begin
-         return Result : View_Cursor :=
-           (Position.Region, Position.Entity + 1, others => <>)
-         do
-            Self.Step_Region (Result);
-         end return;
-      end Next;
-
-      overriding function Next
-        (Self     : Use_Visible_Iterator;
-         Position : View_Cursor) return View_Cursor is
-      begin
-         return Result : View_Cursor :=
-           (Position.Region, Position.Entity + 1, Position.Use_Id, View => <>)
-         do
-            Self.Step_Use (Result);
-         end return;
-      end Next;
-
-      procedure Step
-        (Self   : Region_Immediate_Visible_Iterator'Class;
-         Cursor : in out View_Cursor)
-      is
-         use type Program.Symbols.Symbol;
-
-         Value : Program.Visibility.Region renames
-           Self.Context.Data (Cursor.Region);
-      begin
-         for Index in Cursor.Entity .. Value.Entities.Last_Index loop
-            if Value.Entities (Index).Symbol = Self.Symbol then
-               Cursor := (Cursor.Region,
-                          Index,
-                          1,
-                          Get_View (Self.Context, (Cursor.Region, Index)));
-
-               return;
-            end if;
-         end loop;
-
-         Cursor := (Cursor.Region, Entity => 0, others => <>);
-      end Step;
-
-      procedure Step_Region
-        (Self   : Context_Immediate_Visible_Iterator'Class;
-         Cursor : in out View_Cursor)
-      is
-         Next : Region_Identifier'Base := Cursor.Region;
-      begin
-         loop
-            Self.Step (Cursor);
-
-            if Has_Element (Cursor) then
-               return;
-            end if;
-
-            Next := Self.Context.Data (Next).Enclosing;
-
-            exit when Next = 0;
-
-            Cursor.Region := Next;
-            Cursor.Entity := 1;
-         end loop;
-
-         Cursor := (Self.Region, Entity => 0, others => <>);
-      end Step_Region;
-
-      procedure Step_Use
-        (Self   : Use_Visible_Iterator'Class;
-         Cursor : in out View_Cursor)
-      is
-         Next : Region_Identifier'Base := Cursor.Region;
-      begin
-         loop  --  Over each nested region
-            declare
-               Top : Region renames Self.Context.Data (Next);
-            begin
-               if Cursor.Use_Id <= Top.Uses.Last_Index then  --  have use_cl
-                  Cursor.Region := Top.Uses (Cursor.Use_Id);  --  rewrite reg
-                  Self.Step (Cursor);
-               else
-                  Cursor.Entity := 0;  --  clear cursor
-               end if;
-
-               if Has_Element (Cursor) then
-                  Cursor.Region := Next;  --  restore region
-
-                  return;
-               elsif Cursor.Use_Id >= Top.Uses.Last_Index then
-                  Next := Self.Context.Data (Next).Enclosing;
-
-                  exit when Next = 0;
-
-                  Cursor.Use_Id := 1;
-               else
-                  Cursor.Use_Id := Cursor.Use_Id + 1;
-               end if;
-
-               Cursor.Entity := 1;
-            end;
-         end loop;
-
-         Cursor := (Self.Region, Entity => 0, others => <>);
-      end Step_Use;
-
-   end Iterator_Implementations;
-
    -----------------
    -- Latest_View --
    -----------------
 
-   not overriding function Latest_View (Self : Context) return View is
+   function Latest_View (Self : Context'Class) return View is
       Top   : Region renames Self.Data (Self.Top);
       Index : Entity_Reference;
    begin
@@ -850,7 +710,7 @@ package body Program.Visibility is
    -- Leave_Declarative_Region --
    ------------------------------
 
-   not overriding procedure Leave_Declarative_Region (Self : in out Context) is
+   procedure Leave_Declarative_Region (Self : in out Context'Class) is
       Enclosing : constant Region_Identifier'Base :=
         Self.Data (Self.Top).Enclosing;
    begin
@@ -884,6 +744,51 @@ package body Program.Visibility is
    begin
       return Item.Name;
    end Name;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self     : Region_Immediate_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor is
+   begin
+      return Result : View_Cursor :=
+        (Position.Region, Position.Entity + 1, others => <>)
+      do
+         Self.Step (Result);
+      end return;
+   end Next;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self     : Context_Immediate_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor is
+   begin
+      return Result : View_Cursor :=
+        (Position.Region, Position.Entity + 1, others => <>)
+      do
+         Self.Step_Region (Result);
+      end return;
+   end Next;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self     : Use_Visible_Iterator;
+      Position : View_Cursor) return View_Cursor is
+   begin
+      return Result : View_Cursor :=
+        (Position.Region, Position.Entity + 1, Position.Use_Id, View => <>)
+      do
+         Self.Step_Use (Result);
+      end return;
+   end Next;
 
    ----------------
    -- Parameters --
@@ -933,7 +838,7 @@ package body Program.Visibility is
    ----------------------
 
    not overriding procedure Restore_Snapshot
-     (Self     : in out Context;
+     (Self     : in out Context'Class;
       Snapshot : not null Snapshot_Access)
    is
       Top : Region renames Self.Data (Self.Top);
@@ -957,7 +862,7 @@ package body Program.Visibility is
    ------------------------
 
    not overriding procedure Set_Parameter_Type
-     (Self       : in out Context;
+     (Self       : in out Context'Class;
       Definition : View)
    is
       Top : Region renames Self.Data (Self.Top);
@@ -967,6 +872,102 @@ package body Program.Visibility is
       Last.Param_Def := Definition.Index;
    end Set_Parameter_Type;
 
+   ----------
+   -- Step --
+   ----------
+
+   procedure Step
+     (Self   : Region_Immediate_Visible_Iterator'Class;
+      Cursor : in out View_Cursor)
+   is
+      use type Program.Symbols.Symbol;
+
+      Value : Program.Visibility.Region renames
+        Self.Context.Data (Cursor.Region);
+   begin
+      for Index in Cursor.Entity .. Value.Entities.Last_Index loop
+         if Value.Entities (Index).Symbol = Self.Symbol then
+            Cursor := (Cursor.Region,
+                       Index,
+                       1,
+                       Get_View (Self.Context, (Cursor.Region, Index)));
+
+            return;
+         end if;
+      end loop;
+
+      Cursor := (Cursor.Region, Entity => 0, others => <>);
+   end Step;
+
+   -----------------
+   -- Step_Region --
+   -----------------
+
+   procedure Step_Region
+     (Self   : Context_Immediate_Visible_Iterator'Class;
+      Cursor : in out View_Cursor)
+   is
+      Next : Region_Identifier'Base := Cursor.Region;
+   begin
+      loop
+         Self.Step (Cursor);
+
+         if Has_Element (Cursor) then
+            return;
+         end if;
+
+         Next := Self.Context.Data (Next).Enclosing;
+
+         exit when Next = 0;
+
+         Cursor.Region := Next;
+         Cursor.Entity := 1;
+      end loop;
+
+      Cursor := (Self.Region, Entity => 0, others => <>);
+   end Step_Region;
+
+   --------------
+   -- Step_Use --
+   --------------
+
+   procedure Step_Use
+     (Self   : Use_Visible_Iterator'Class;
+      Cursor : in out View_Cursor)
+   is
+      Next : Region_Identifier'Base := Cursor.Region;
+   begin
+      loop  --  Over each nested region
+         declare
+            Top : Region renames Self.Context.Data (Next);
+         begin
+            if Cursor.Use_Id <= Top.Uses.Last_Index then  --  have use_cl
+               Cursor.Region := Top.Uses (Cursor.Use_Id);  --  rewrite reg
+               Self.Step (Cursor);
+            else
+               Cursor.Entity := 0;  --  clear cursor
+            end if;
+
+            if Has_Element (Cursor) then
+               Cursor.Region := Next;  --  restore region
+
+               return;
+            elsif Cursor.Use_Id >= Top.Uses.Last_Index then
+               Next := Self.Context.Data (Next).Enclosing;
+
+               exit when Next = 0;
+
+               Cursor.Use_Id := 1;
+            else
+               Cursor.Use_Id := Cursor.Use_Id + 1;
+            end if;
+
+            Cursor.Entity := 1;
+         end;
+      end loop;
+
+      Cursor := (Self.Region, Entity => 0, others => <>);
+   end Step_Use;
    ------------------
    -- Subtype_Mark --
    ------------------
@@ -1004,11 +1005,11 @@ package body Program.Visibility is
    -- Use_Visible --
    -----------------
 
-   not overriding function Use_Visible
-     (Self   : Context;
+   function Use_Visible
+     (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol) return View_Iterator is
    begin
-      return Iterator_Implementations.Use_Visible_Iterator'
+      return Use_Visible_Iterator'
         (Context => Self'Unchecked_Access,
          Region  => Self.Top,
          Symbol  => Symbol);
