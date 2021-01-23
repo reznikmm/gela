@@ -284,6 +284,25 @@ package body Program.Visibility is
       Self.Append_Item (Value);
    end Create_Float_Point_Type;
 
+   ---------------------
+   -- Create_Function --
+   ---------------------
+
+   procedure Create_Function
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name)
+   is
+      Value : constant Entity :=
+        (Kind       => Function_View,
+         Symbol     => Symbol,
+         Name       => Name,
+         Region     => Self.Data.Last_Index + 1,
+         Result_Def => (1, 1));
+   begin
+      Self.Append_Item (Value);
+   end Create_Function;
+
    --------------------------
    -- Create_Implicit_Type --
    --------------------------
@@ -694,16 +713,12 @@ package body Program.Visibility is
          Index := (Top.Enclosing,
                    Self.Data (Top.Enclosing).Entities.Last_Index);
 
-         return (Self.Data (Top.Enclosing).Entities.Last_Element.Kind,
-                 Self'Unchecked_Access,
-                 Index);
       else
          Index := (Self.Top, Top.Entities.Last_Index);
 
-         return (Top.Entities.Last_Element.Kind,
-                 Self'Unchecked_Access,
-                 Index);
       end if;
+
+      return Get_View (Self'Unchecked_Access, Index);
    end Latest_View;
 
    ------------------------------
@@ -857,6 +872,17 @@ package body Program.Visibility is
       end loop;
    end Restore_Snapshot;
 
+   ------------
+   -- Result --
+   ------------
+
+   function Result (Self : View) return View is
+      Item : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
+   begin
+      return Get_View (Self.Env, Item.Result_Def);
+   end Result;
+
    ------------------------
    -- Set_Parameter_Type --
    ------------------------
@@ -871,6 +897,21 @@ package body Program.Visibility is
       pragma Assert (Last.Kind = Parameter_View);
       Last.Param_Def := Definition.Index;
    end Set_Parameter_Type;
+
+   ---------------------
+   -- Set_Result_Type --
+   ---------------------
+
+   procedure Set_Result_Type
+     (Self       : in out Context'Class;
+      Definition : View)
+   is
+      Top  : Region renames Self.Data (Self.Top);
+      Last : Entity renames Top.Entities (Top.Entities.Last_Index);
+   begin
+      pragma Assert (Last.Kind = Function_View);
+      Last.Result_Def := Definition.Index;
+   end Set_Result_Type;
 
    ----------
    -- Step --

@@ -47,6 +47,7 @@ package Program.Visibility is
       Exception_View,
       Parameter_View,
       Procedure_View,
+      Function_View,
       Package_View);
    --  Kind of entity view
 
@@ -106,8 +107,12 @@ package Program.Visibility is
    --  Check if parameter has a default value
 
    function Parameters (Self : View) return View_Array
-     with Pre => Self.Kind = Procedure_View;
+     with Pre => Self.Kind in Procedure_View | Function_View;
    --  Return parameters for given subprogram
+
+   function Result (Self : View) return View
+     with Pre => Self.Kind = Function_View;
+   --  Return result type for function
 
    type View_Cursor is private;
    --  A cursor to iterate over visible views
@@ -292,6 +297,12 @@ package Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add a procedure view to the context. Create declarative region.
+   --  The typical flow is
+   --  * Create_Procedure
+   --  ** Create_Parameter
+   --  ** Leave_Declarative_Region
+   --  ** Set_Parameter_Type
+   --  * Leave_Declarative_Region
 
    procedure Create_Parameter
      (Self        : in out Context'Class;
@@ -306,6 +317,24 @@ package Program.Visibility is
      (Self       : in out Context'Class;
       Definition : View);
    --  Assign given subtype to the topmost parameter declaration
+
+   procedure Create_Function
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name);
+   --  Add a function view to the context. Create declarative region.
+   --  The typical flow is
+   --  * Create_Procedure
+   --  ** Create_Parameter
+   --  ** Leave_Declarative_Region
+   --  ** Set_Parameter_Type
+   --  * Leave_Declarative_Region
+   --  * Set_Result_Type
+
+   procedure Set_Result_Type
+     (Self       : in out Context'Class;
+      Definition : View);
+   --  Assign given subtype as a result type to the topmost function decl.
 
    procedure Create_Exception
      (Self   : in out Context'Class;
@@ -375,6 +404,13 @@ private
          when Has_Region_Kind =>
             Region : Region_Identifier;
             --  If Item has nested region, it's region index
+            case Kind is
+               when Function_View =>
+                  Result_Def   : Entity_Reference;
+               when others =>
+                  null;
+            end case;
+
          when others =>
             case Kind is
                when Enumeration_Type_View =>

@@ -159,7 +159,7 @@ procedure Dump_Standard is
             end if;
          when Exception_View =>
             null;
-         when Package_View | Procedure_View =>
+         when Procedure_View .. Package_View =>
             if Verbose = Long then
                Print (Region_Items (View), Padding & Indent, Normal);
             end if;
