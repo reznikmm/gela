@@ -305,6 +305,8 @@ package body Program.Symbols.Tables is
       Self.Map.Insert ((B, (169, 0)), Duration);
       Self.Map.Insert ((B, (170, 0)), Root_Integer);
       Self.Map.Insert ((B, (171, 0)), Root_Real);
+      Self.Map.Insert ((B, (172, 0)), Left);
+      Self.Map.Insert ((B, (173, 0)), Right);
    end Initialize;
 
    -----------------
@@ -509,6 +511,8 @@ package body Program.Symbols.Tables is
          when 169 => return "Duration";
          when 170 => return "Root_Integer";
          when 171 => return "Root_Real";
+         when 172 => return "Left";
+         when 173 => return "Right";
 
          when others =>
             raise Constraint_Error;

@@ -200,6 +200,8 @@ package Program.Symbols is
    function Duration                      return Symbol;
    function Root_Integer                  return Symbol;
    function Root_Real                     return Symbol;
+   function Left                          return Symbol;
+   function Right                         return Symbol;
 
 private
 
@@ -277,7 +279,7 @@ private
    function Is_Character_Literal (Value : Symbol) return S.Boolean is
       (Value in 16#00_0020# .. 16#10_FFFF#);
 
-   subtype X_Symbol is Symbol range 16#11_0000# .. 16#11_0097#;
+   subtype X_Symbol is Symbol range 16#11_0000# .. 16#11_0099#;
 
    function All_Calls_Remote              return Symbol is (16#11_0000#);
    function Assert                        return Symbol is (16#11_0001#);
@@ -433,5 +435,7 @@ private
    function Duration                      return Symbol is (16#11_0095#);
    function Root_Integer                  return Symbol is (16#11_0096#);
    function Root_Real                     return Symbol is (16#11_0097#);
+   function Left                          return Symbol is (16#11_0098#);
+   function Right                         return Symbol is (16#11_0099#);
 
 end Program.Symbols;
