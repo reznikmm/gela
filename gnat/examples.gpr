@@ -16,4 +16,7 @@ project Examples is
       for Default_Switches ("ada") use Oasis.Check_Ada_Switches & ("-gnatg");
    end Compiler;
 
+   package Pretty_Printer renames Oasis.Pretty_Printer;
+   package GNATstub renames Oasis.GNATstub;
+
 end Examples;

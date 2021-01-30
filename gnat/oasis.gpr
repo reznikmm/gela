@@ -35,4 +35,22 @@ library project Oasis is
    package Builder is
       for Switches (others) use ("-m");  --  minimum recompilation
    end Builder;
+
+   package Pretty_Printer is
+      for Default_Switches ("ada") use
+        ("--no-align-modes",
+         "--no-separate-is",
+         "--call-threshold=1",
+         "--par-threshold=2",
+         "--vertical-named-aggregates",
+         "--wide-character-encoding=8");
+   end Pretty_Printer;
+
+   package GNATstub is
+      for Default_Switches ("ada") use
+        ("--alphabetical-order",
+         "--no-exception",
+         "--wide-character-encoding=8");
+   end GNATstub;
+
 end Oasis;

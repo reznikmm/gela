@@ -27,7 +27,8 @@ project Oasis_Plain is
    end Compiler;
 
    package Remote renames Oasis.Remote;
-
    package Builder renames Oasis.Builder;
+   package Pretty_Printer renames Oasis.Pretty_Printer;
+   package GNATstub renames Oasis.GNATstub;
 
 end Oasis_Plain;
