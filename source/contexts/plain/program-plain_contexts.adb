@@ -189,6 +189,13 @@ package body Program.Plain_Contexts is
       procedure Analyze_Unit
         (Unit : Program.Compilation_Units.Compilation_Unit_Access)
       is
+         Comp : constant Program.Compilations.Compilation_Access :=
+           Unit.Compilation;
+
+         Subpool : constant not null
+           System.Storage_Pools.Subpools.Subpool_Handle :=
+             Program.Plain_Compilations.Compilation (Comp.all).Subpool;
+
          Unit_Name_Resolver : aliased
            Program.Plain_Contexts.Unit_Name_Resolvers.Unit_Name_Resolver
              (Self.Symbols.Lists'Unchecked_Access,
@@ -198,7 +205,12 @@ package body Program.Plain_Contexts is
       begin
          if First then
             First := False;
-            Program.Resolve_Standard (Unit, Self.Visible, Self.Library_Env);
+            Program.Resolve_Standard
+              (Unit,
+               Self.Visible,
+               Self.Library_Env,
+               Subpool,
+               Self.Xref'Unchecked_Access);
          else
             Program.Resolvers.Resolve_Names
               (Unit,
@@ -566,7 +578,7 @@ package body Program.Plain_Contexts is
    begin
       if Name.Is_Identifier then
          Program.Nodes.Identifiers.Set_Defining_Name
-           (Program.Nodes.Identifiers.Identifier'Class (Name.all),
+           (Name.To_Identifier,
             Def.To_Defining_Identifier);
       else
          raise Program_Error;

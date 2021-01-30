@@ -1,16 +1,17 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
 with Program.Element_Iterators;
+with Program.Element_Vector_Factories;
+with Program.Element_Vectors;
 with Program.Element_Visitors;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Enumeration_Types;
---  with Program.Elements.Expressions;
 with Program.Elements.Exception_Declarations;
 with Program.Elements.Floating_Point_Types;
 with Program.Elements.Identifiers;
@@ -20,9 +21,11 @@ with Program.Elements.Subtype_Declarations;
 with Program.Elements.Subtype_Indications;
 with Program.Elements.Type_Declarations;
 with Program.Elements.Unconstrained_Array_Types;
+with Program.Implicit_Element_Factories;
 with Program.Lexical_Elements;
 with Program.Node_Symbols;
 with Program.Plain_Lexical_Elements;
+with Program.Predefined_Operators;
 with Program.Symbol_Lists;
 with Program.Symbols;
 with Program.Visibility;
@@ -30,12 +33,18 @@ with Program.Visibility;
 procedure Program.Resolve_Standard
   (Unit    : not null Program.Compilation_Units.Compilation_Unit_Access;
    Context : aliased in out Program.Visibility.Context;
-   Library : in out Program.Library_Environments.Library_Environment)
+   Library : in out Program.Library_Environments.Library_Environment;
+   Subpool : not null System.Storage_Pools.Subpools.Subpool_Handle;
+   Setter  : not null
+     Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access)
 is
 
    function To_Symbol
      (Name : access Program.Elements.Element'Class)
        return Program.Symbols.Symbol;
+
+   Factory : Program.Implicit_Element_Factories.Element_Factory (Subpool);
+   Vectors : Program.Element_Vector_Factories.Element_Vector_Factory (Subpool);
 
    package Visitors is
       type Visitor
@@ -282,6 +291,8 @@ is
            To_Symbol (Element.Index_Subtypes.Element (1));
          Component_Symbol : constant Program.Symbols.Symbol :=
            To_Symbol (Element.Component_Definition);
+         Type_View        : Program.Visibility.View;
+         Ignore : Program.Element_Vectors.Element_Vector_Access;
       begin
          for Index_View in Self.Env.Immediate_Visible (Index_Symbol) loop
             for Component in Self.Env.Immediate_Visible (Component_Symbol) loop
@@ -290,7 +301,17 @@ is
                   Name    => Self.Type_Name,
                   Indexes => (1 => +Index_View),
                   Component => +Component);
+
+               Type_View := Self.Env.Latest_View;
                Self.Env.Leave_Declarative_Region;
+
+               Program.Predefined_Operators.Create_Operators_For_Array
+                 (Self      => Self.Env.all,
+                  Type_View => Type_View,
+                  Setter    => Setter,
+                  Factory   => Factory,
+                  Vectors   => Vectors,
+                  Result    => Ignore);  --  FIXME: keep result in AST
 
                return;
             end loop;

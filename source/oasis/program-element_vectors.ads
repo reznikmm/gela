@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -90,6 +90,14 @@ package Program.Element_Vectors is
       Filter : Element_Checker := null) return Iterator;
    --  Return an iterator to enumerate elements in the Vector which satisfy
    --  given condition, if provided
+
+   function Single_Element
+     (Element : Program.Elements.Element_Access)
+        return Iterators.Forward_Iterator'Class;
+
+   function Two_Elements
+     (Left, Right : Program.Elements.Element_Access)
+        return Iterators.Forward_Iterator'Class;
 
 private
 
