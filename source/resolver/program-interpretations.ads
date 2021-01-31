@@ -4,6 +4,7 @@
 -------------------------------------------------------------
 
 private with Ada.Containers.Vectors;
+private with Ada.Finalization;
 
 with Program.Visibility;
 with Program.Symbols;
@@ -14,7 +15,12 @@ package Program.Interpretations is
    type Solution_Kind is
      (Placeholder_Solution,
       Defining_Name_Solution,
-      Expression_Solution);
+      Expression_Solution,
+      Tuple_Solution);
+
+   type Solution_Array;
+
+   type Solution_Tuple_Access is access constant Solution_Array;
 
    type Solution (Kind : Solution_Kind := Solution_Kind'First) is record
       case Kind is
@@ -24,10 +30,12 @@ package Program.Interpretations is
             Name_View : Program.Visibility.View;
          when Expression_Solution =>
             Type_View : Program.Visibility.View;
+         when Tuple_Solution =>
+            Tuple : Solution_Tuple_Access;
       end case;
    end record;
 
-   type Solution_Array is array (Positive range <>) of Solution;
+   type Solution_Array is array (Natural range <>) of Solution;
 
    Empty_Solution_Array : constant Solution_Array := (1 .. 0 => <>);
 
@@ -67,6 +75,8 @@ package Program.Interpretations is
 
 private
 
+   type Solution_Array_Access is access all Solution_Array;
+
    type Interpretation_Kind is (Symbol, Name, Expression);
 
    type Interpretation (Kind : Interpretation_Kind := Symbol) is record
@@ -77,6 +87,7 @@ private
             Name_View : Program.Visibility.View;
          when Expression =>
             Type_View : Program.Visibility.View;
+            Solutions : Solution_Array_Access;
       end case;
    end record;
 
@@ -84,10 +95,12 @@ private
      (Positive, Interpretation);
 
    type Context (Env : not null Program.Visibility.Context_Access) is
-     tagged limited
+     new Ada.Finalization.Limited_Controlled with
    record
       Data : Interpretation_Vectors.Vector;
    end record;
+
+   overriding procedure Finalize (Self : in out Context);
 
    type Interpretation_Set is tagged record
       Context : Context_Access;

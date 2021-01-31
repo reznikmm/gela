@@ -3,6 +3,8 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Ada.Unchecked_Deallocation;
+
 package body Program.Interpretations is
 
    -----------------------
@@ -30,8 +32,8 @@ package body Program.Interpretations is
       Tipe : Program.Visibility.View;
       Down : Solution_Array := Empty_Solution_Array)
    is
-      pragma Unreferenced (Down);
-      Item : constant Interpretation := (Expression, Tipe);
+      Item : constant Interpretation :=
+        (Expression, Tipe, new Solution_Array'(Down));
    begin
       Self.Context.Data.Append (Item);
       Self.To := Self.Context.Data.Last_Index;
@@ -62,5 +64,20 @@ package body Program.Interpretations is
               From => Self.Data.Last_Index + 1,
               To =>   Self.Data.Last_Index);
    end Create_Interpretation_Set;
+
+   --------------
+   -- Finalize --
+   --------------
+
+   overriding procedure Finalize (Self : in out Context) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Solution_Array, Solution_Array_Access);
+   begin
+      for X of Self.Data loop
+         if X.Kind = Expression then
+            Free (X.Solutions);
+         end if;
+      end loop;
+   end Finalize;
 
 end Program.Interpretations;

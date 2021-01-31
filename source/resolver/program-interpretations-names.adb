@@ -13,8 +13,7 @@ package body Program.Interpretations.Names is
    -- Each --
    ----------
 
-   function Each
-     (Set : Interpretation_Set) return Iterator is
+   function Each (Set : Interpretation_Set) return Iterator is
    begin
       return (Set => Set);
    end Each;
@@ -43,8 +42,8 @@ package body Program.Interpretations.Names is
    -- Next --
    ----------
 
-   overriding function Next (Self : Iterator; Position : Cursor) return Cursor
-   is
+   overriding function Next
+     (Self : Iterator; Position : Cursor) return Cursor is
    begin
       return Result : Cursor := Position do
          if Position.State.Is_Symbol then
