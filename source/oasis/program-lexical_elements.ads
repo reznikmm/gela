@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -67,7 +67,7 @@ package Program.Lexical_Elements is
       Character_Literal, String_Literal,
       Error, End_Of_Input);
 
-   subtype Operator_Kind is Lexical_Element_Kind range Less .. Double_Star;
+   subtype Operator_Kind is Lexical_Element_Kind range Less .. Not_Keyword;
 
    subtype Keyword_Operator_Kind is Lexical_Element_Kind
      range Or_Keyword .. Not_Keyword;

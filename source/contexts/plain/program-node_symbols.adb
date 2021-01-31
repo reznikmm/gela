@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2020-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -7,7 +7,9 @@ with Program.Elements.Character_Literals;
 with Program.Elements.Defining_Character_Literals;
 with Program.Elements.Defining_Expanded_Names;
 with Program.Elements.Defining_Identifiers;
+with Program.Elements.Defining_Operator_Symbols;
 with Program.Elements.Identifiers;
+with Program.Elements.Operator_Symbols;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Procedure_Body_Declarations;
 with Program.Lexical_Elements;
@@ -38,9 +40,19 @@ package body Program.Node_Symbols is
          Element : not null Program.Elements.Defining_Identifiers
            .Defining_Identifier_Access);
 
+      overriding procedure Defining_Operator_Symbol
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Defining_Operator_Symbols
+           .Defining_Operator_Symbol_Access);
+
       overriding procedure Identifier
         (Self    : in out Getter;
          Element : not null Program.Elements.Identifiers.Identifier_Access);
+
+      overriding procedure Operator_Symbol
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Operator_Symbols
+           .Operator_Symbol_Access);
 
    end Symbol_Getters;
 
@@ -94,6 +106,22 @@ package body Program.Node_Symbols is
            (Token.all).Symbol;
       end Defining_Identifier;
 
+      ------------------------------
+      -- Defining_Operator_Symbol --
+      ------------------------------
+
+      overriding procedure Defining_Operator_Symbol
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Defining_Operator_Symbols
+           .Defining_Operator_Symbol_Access)
+      is
+         Token : constant Program.Lexical_Elements.Lexical_Element_Access :=
+           Element.To_Defining_Operator_Symbol_Text.Operator_Symbol_Token;
+      begin
+         Self.Result := Program.Plain_Lexical_Elements.Lexical_Element
+           (Token.all).Symbol;
+      end Defining_Operator_Symbol;
+
       ----------------
       -- Identifier --
       ----------------
@@ -108,6 +136,18 @@ package body Program.Node_Symbols is
          Self.Result := Program.Plain_Lexical_Elements.Lexical_Element
            (Token.all).Symbol;
       end Identifier;
+
+      overriding procedure Operator_Symbol
+        (Self    : in out Getter;
+         Element : not null Program.Elements.Operator_Symbols
+           .Operator_Symbol_Access)
+      is
+         Token : constant Program.Lexical_Elements.Lexical_Element_Access :=
+           Element.To_Operator_Symbol_Text.Operator_Symbol_Token;
+      begin
+         Self.Result := Program.Plain_Lexical_Elements.Lexical_Element
+           (Token.all).Symbol;
+      end Operator_Symbol;
 
    end Symbol_Getters;
 

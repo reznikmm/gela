@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -17,6 +17,9 @@ package Program.Symbols is
    function Hash (Value : Symbol) return Ada.Containers.Hash_Type;
 
    function No_Symbol return Symbol;
+
+   function To_Symbol
+     (Value : Program.Lexical_Elements.Operator_Kind) return Symbol;
 
    function Is_Operator (Value : Symbol) return Boolean;
 
@@ -219,62 +222,33 @@ private
 
    use Program.Lexical_Elements;
 
-   function Less_Symbol             return Symbol is
-     (Lexical_Element_Kind'Pos (Less) + 1);
+   function To_Symbol (Value : Operator_Kind) return Symbol is
+     (Lexical_Element_Kind'Pos (Value) + 1);
 
-   function Equal_Symbol            return Symbol is
-     (Lexical_Element_Kind'Pos (Equal) + 1);
-
-   function Greater_Symbol          return Symbol is
-     (Lexical_Element_Kind'Pos (Greater) + 1);
-
-   function Hyphen_Symbol           return Symbol is
-     (Lexical_Element_Kind'Pos (Hyphen) + 1);
-
-   function Slash_Symbol            return Symbol is
-     (Lexical_Element_Kind'Pos (Slash) + 1);
-
-   function Star_Symbol             return Symbol is
-     (Lexical_Element_Kind'Pos (Star) + 1);
-
-   function Ampersand_Symbol        return Symbol is
-     (Lexical_Element_Kind'Pos (Ampersand) + 1);
-
-   function Plus_Symbol             return Symbol is
-     (Lexical_Element_Kind'Pos (Plus) + 1);
+   function Less_Symbol             return Symbol is (To_Symbol (Less));
+   function Equal_Symbol            return Symbol is (To_Symbol (Equal));
+   function Greater_Symbol          return Symbol is (To_Symbol (Greater));
+   function Hyphen_Symbol           return Symbol is (To_Symbol (Hyphen));
+   function Slash_Symbol            return Symbol is (To_Symbol (Slash));
+   function Star_Symbol             return Symbol is (To_Symbol (Star));
+   function Ampersand_Symbol        return Symbol is (To_Symbol (Ampersand));
+   function Plus_Symbol             return Symbol is (To_Symbol (Plus));
 
    function Less_Or_Equal_Symbol    return Symbol is
-     (Lexical_Element_Kind'Pos (Less_Or_Equal) + 1);
+     (To_Symbol (Less_Or_Equal));
 
    function Greater_Or_Equal_Symbol return Symbol is
-     (Lexical_Element_Kind'Pos (Greater_Or_Equal) + 1);
+     (To_Symbol (Greater_Or_Equal));
 
-   function Inequality_Symbol       return Symbol is
-     (Lexical_Element_Kind'Pos (Inequality) + 1);
-
-   function Double_Star_Symbol      return Symbol is
-     (Lexical_Element_Kind'Pos (Double_Star) + 1);
-
-   function Or_Symbol               return Symbol is
-     (Lexical_Element_Kind'Pos (Or_Keyword) + 1);
-
-   function And_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (And_Keyword) + 1);
-
-   function Xor_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (Xor_Keyword) + 1);
-
-   function Mod_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (Mod_Keyword) + 1);
-
-   function Rem_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (Rem_Keyword) + 1);
-
-   function Abs_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (Abs_Keyword) + 1);
-
-   function Not_Symbol              return Symbol is
-     (Lexical_Element_Kind'Pos (Not_Keyword) + 1);
+   function Inequality_Symbol       return Symbol is (To_Symbol (Inequality));
+   function Double_Star_Symbol      return Symbol is (To_Symbol (Double_Star));
+   function Or_Symbol               return Symbol is (To_Symbol (Or_Keyword));
+   function And_Symbol              return Symbol is (To_Symbol (And_Keyword));
+   function Xor_Symbol              return Symbol is (To_Symbol (Xor_Keyword));
+   function Mod_Symbol              return Symbol is (To_Symbol (Mod_Keyword));
+   function Rem_Symbol              return Symbol is (To_Symbol (Rem_Keyword));
+   function Abs_Symbol              return Symbol is (To_Symbol (Abs_Keyword));
+   function Not_Symbol              return Symbol is (To_Symbol (Not_Keyword));
 
    function Is_Character_Literal (Value : Symbol) return S.Boolean is
       (Value in 16#00_0020# .. 16#10_FFFF#);

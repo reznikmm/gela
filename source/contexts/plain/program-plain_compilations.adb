@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -158,18 +158,17 @@ package body Program.Plain_Compilations is
      (Self  : in out Scanner_Destination;
       Token : Program.Scanner_Destinations.Token)
    is
-      use type Program.Lexical_Elements.Lexical_Element_Kind;
+      use all type Program.Lexical_Elements.Lexical_Element_Kind;
       Symbol : Program.Symbols.Symbol := Program.Symbols.No_Symbol;
+
    begin
-      if Token.Kind = Program.Lexical_Elements.Identifier
-      then
+      if Token.Kind = Identifier then
          Self.Comp.Context.Find_Or_Create_Symbol
            (Self.Comp.Buffer'Unchecked_Access, Token.Span, Symbol);
-      elsif Token.Kind in
-        Program.Lexical_Elements.Character_Literal
-        | Program.Lexical_Elements.String_Literal
-      then
+      elsif Token.Kind in Character_Literal | String_Literal then
          Symbol := Self.Comp.Context.Find (Self.Comp.Buffer.Text (Token.Span));
+      elsif Token.Kind in Program.Lexical_Elements.Operator_Kind then
+         Symbol := Program.Symbols.To_Symbol (Token.Kind);
       end if;
 
       Self.Comp.Tokens.Append
