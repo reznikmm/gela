@@ -114,6 +114,20 @@ package Program.Visibility is
      with Pre => Self.Kind = Function_View;
    --  Return result type for function
 
+   function Type_Of (Self : View) return View
+     with Pre => Self.Kind in
+       Enumeration_Literal_View |
+       Character_Literal_View |
+       Parameter_View;
+   --  Return a corresponding type:
+   --  * for enumeration/character literal - Enumeration_Type
+   --  * for parameter - Subtype_Mark
+
+   function Is_Expected_Type (Self, Expected : View) return Boolean
+     with Pre => Self.Kind in Type_View_Kind
+                   and Expected.Kind in Type_View_Kind;
+   --  Check in given type is expected type
+
    type View_Cursor is private;
    --  A cursor to iterate over visible views
 
@@ -498,7 +512,7 @@ private
 
    type Region_Immediate_Visible_Iterator is new Iterators.Forward_Iterator
    with record
-      Context : not null Constant_Context_Access;
+      Context : Constant_Context_Access;
       Region  : Region_Identifier;
       Symbol  : Program.Visibility.Symbol;
    end record;

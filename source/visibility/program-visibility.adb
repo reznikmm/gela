@@ -701,6 +701,15 @@ package body Program.Visibility is
       return Item.Is_Character_Type;
    end Is_Character_Type;
 
+   ----------------------
+   -- Is_Expected_Type --
+   ----------------------
+
+   function Is_Expected_Type (Self, Expected : View) return Boolean is
+   begin
+      return Self = Expected;
+   end Is_Expected_Type;
+
    -----------------
    -- Latest_View --
    -----------------
@@ -825,7 +834,7 @@ package body Program.Visibility is
 
       return Result : View_Array (1 .. Last) do
          for J in Result'Range loop
-            Result (Last) := Get_View
+            Result (J) := Get_View
               (Self.Env, (Item.Region, Entity_Identifier (J)));
          end loop;
       end return;
@@ -1041,6 +1050,22 @@ package body Program.Visibility is
          end loop;
       end return;
    end To_Vector;
+
+   -------------
+   -- Type_Of --
+   -------------
+
+   function Type_Of (Self : View) return View is
+   begin
+      case Self.Kind is
+         when Enumeration_Literal_View | Character_Literal_View =>
+            return Enumeration_Type (Self);
+         when Parameter_View =>
+            return Subtype_Mark (Self);
+         when others =>
+            raise Program_Error;
+      end case;
+   end Type_Of;
 
    -----------------
    -- Use_Visible --
