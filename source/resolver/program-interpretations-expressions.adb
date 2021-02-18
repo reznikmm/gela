@@ -139,7 +139,7 @@ package body Program.Interpretations.Expressions is
                when Symbol =>
                   Cursor.State :=
                     (Kind   => Symbol,
-                     Iter   => Env.Direct_Visible (Item.Symbol),
+                     Iter   => Env.Directly_Visible (Item.Symbol),
                      Cursor => <>);
 
                   Cursor.State.Cursor := Cursor.State.Iter.First;
@@ -149,6 +149,9 @@ package body Program.Interpretations.Expressions is
                      if Check_Name (+Cursor.State.Cursor) then
                         return;
                      end if;
+
+                     Cursor.State.Cursor := Cursor.State.Iter.Next
+                       (Cursor.State.Cursor);
                   end loop;
 
                when Name =>

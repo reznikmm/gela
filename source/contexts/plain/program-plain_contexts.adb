@@ -8,6 +8,7 @@ with System.Storage_Pools.Subpools;
 with Program.Directory_Unit_Schemas;
 with Program.GNAT_Unit_Naming;
 with Program.Nodes.Identifiers.Set_Defining_Name;
+with Program.Nodes.Operator_Symbols.Set_Defining_Name;
 with Program.Parsers;
 with Program.Plain_Compilations;
 with Program.Plain_Contexts.Unit_Name_Resolvers;
@@ -580,6 +581,10 @@ package body Program.Plain_Contexts is
          Program.Nodes.Identifiers.Set_Defining_Name
            (Name.To_Identifier,
             Def.To_Defining_Identifier);
+      elsif Name.Is_Operator_Symbol then
+         Program.Nodes.Operator_Symbols.Set_Defining_Name
+           (Name.To_Operator_Symbol,
+            Def.To_Defining_Operator_Symbol);
       else
          raise Program_Error;
       end if;

@@ -15,10 +15,6 @@ package body Program.Visibility is
      (Self   : Region_Immediate_Visible_Iterator'Class;
       Cursor : in out View_Cursor);
 
-   procedure Step_Region
-     (Self   : Context_Immediate_Visible_Iterator'Class;
-      Cursor : in out View_Cursor);
-
    procedure Step_Use
      (Self   : Use_Visible_Iterator'Class;
       Cursor : in out View_Cursor);
@@ -27,7 +23,7 @@ package body Program.Visibility is
 
    procedure Append_Item
      (Self   : in out Context'Class;
-      Value  : Entity;
+      Value  : in out Entity;
       Region : Boolean := True);
 
    function Get_View
@@ -35,6 +31,11 @@ package body Program.Visibility is
       Index : Entity_Reference) return View;
 
    function To_Vector (List : View_Array) return Entity_References.Vector;
+
+   function Find_Direct
+     (Self   : Context'Class;
+      Symbol : Program.Symbols.Symbol) return Entity_Reference;
+   --  Find a symbol in Self.Directly, return No_Entity if not found
 
    package Getters is
 
@@ -93,12 +94,23 @@ package body Program.Visibility is
 
    procedure Append_Item
      (Self   : in out Context'Class;
-      Value  : Entity;
-      Region : Boolean := True) is
+      Value  : in out Entity;
+      Region : Boolean := True)
+   is
+      Prev : constant Entity_Maps.Cursor := Self.Directly.Find (Value.Symbol);
+      Next : constant Entity_Reference :=
+        (Self.Top, Self.Data (Self.Top).Entities.Last_Index + 1);
    begin
+      if Entity_Maps.Has_Element (Prev) then
+         Value.Prev := Entity_Maps.Element (Prev);
+         Self.Directly.Replace_Element (Prev, Next);
+      else
+         Value.Prev := No_Entity;
+         Self.Directly.Insert (Value.Symbol, Next);
+      end if;
+
       Self.Data (Self.Top).Entities.Append (Value);
-      Self.Xref.Insert
-        (Value.Name, (Self.Top, Self.Data (Self.Top).Entities.Last_Index));
+      Self.Xref.Insert (Value.Name, Next);
 
       if Region then
          Self.Data.Append
@@ -132,10 +144,11 @@ package body Program.Visibility is
       Indexes   : View_Array;
       Component : View)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind      => Array_Type_View,
          Symbol    => Symbol,
          Name      => Name,
+         Prev      => <>,
          Indexes   => To_Vector (Indexes),
          Component => Component.Index);
    begin
@@ -152,14 +165,15 @@ package body Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind           => Character_Literal_View,
          Symbol         => Symbol,
          Name           => Name,
+         Prev           => <>,
          Character_Type => Enumeration_Type.Index.Entity_Id);
    begin
       pragma Assert (Self.Top = Enumeration_Type.Index.Region);
-      Append_Item (Self, Value, Region => False);
+      Self.Append_Item (Value, Region => False);
 
       declare
          Type_Item : Entity renames
@@ -211,14 +225,15 @@ package body Program.Visibility is
       Name             : Defining_Name;
       Enumeration_Type : View)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind             => Enumeration_Literal_View,
          Symbol           => Symbol,
          Name             => Name,
+         Prev             => <>,
          Enumeration_Type => Enumeration_Type.Index.Entity_Id);
    begin
       pragma Assert (Self.Top = Enumeration_Type.Index.Region);
-      Append_Item (Self, Value, Region => False);
+      Self.Append_Item (Value, Region => False);
 
       declare
          Type_Item : Entity renames
@@ -240,15 +255,16 @@ package body Program.Visibility is
       Last : constant Entity_Identifier'Base :=
         Self.Data (Self.Top).Entities.Last_Index;
 
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind              => Enumeration_Type_View,
          Symbol            => Symbol,
          Name              => Name,
+         Prev              => <>,
          Is_Character_Type => False,
          First_Literal     => Last + 2,
          Last_Literal      => Last + 2);
    begin
-      Append_Item (Self, Value, Region => False);
+      Self.Append_Item (Value, Region => False);
    end Create_Enumeration_Type;
 
    ----------------------
@@ -259,12 +275,13 @@ package body Program.Visibility is
      (Self : in out Context'Class; Symbol : Program.Visibility.Symbol;
       Name :        Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Exception_View,
          Symbol => Symbol,
-         Name   => Name);
+         Name   => Name,
+         Prev  => <>);
    begin
-      Append_Item (Self, Value, Region => False);
+      Self.Append_Item (Value, Region => False);
    end Create_Exception;
 
    -----------------------------
@@ -276,10 +293,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Float_Point_Type_View,
          Symbol => Symbol,
-         Name   => Name);
+         Name   => Name,
+         Prev   => <>);
    begin
       Self.Append_Item (Value);
    end Create_Float_Point_Type;
@@ -293,10 +311,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind       => Function_View,
          Symbol     => Symbol,
          Name       => Name,
+         Prev       => <>,
          Region     => Self.Data.Last_Index + 1,
          Result_Def => (1, 1));
    begin
@@ -312,10 +331,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Implicit_Type_View,
          Symbol => Symbol,
-         Name   => Name);
+         Name   => Name,
+         Prev   => <>);
    begin
       Self.Append_Item (Value);
    end Create_Implicit_Type;
@@ -329,10 +349,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Modular_Type_View,
          Symbol => Symbol,
-         Name   => Name);
+         Name   => Name,
+         Prev   => <>);
    begin
       Self.Append_Item (Value);
    end Create_Modular_Type;
@@ -346,10 +367,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind      => Package_View,
          Symbol    => Symbol,
          Name      => Name,
+         Prev      => <>,
          Region    => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
@@ -366,10 +388,11 @@ package body Program.Visibility is
       Mode        : Parameter_Mode;
       Has_Default : Boolean)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind        => Parameter_View,
          Symbol      => Symbol,
          Name        => Name,
+         Prev        => <>,
          Param_Def   => (1, 1),
          Mode        => Mode,
          Has_Default => Has_Default);
@@ -386,10 +409,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Procedure_View,
          Symbol => Symbol,
          Name   => Name,
+         Prev   => <>,
          Region => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
@@ -404,10 +428,11 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind   => Signed_Integer_Type_View,
          Symbol => Symbol,
-         Name   => Name);
+         Name   => Name,
+         Prev   => <>);
    begin
       Self.Append_Item (Value);
    end Create_Signed_Integer_Type;
@@ -439,10 +464,11 @@ package body Program.Visibility is
       Subtype_Mark   : View;
       Has_Constraint : Boolean)
    is
-      Value : constant Entity :=
+      Value : Entity :=
         (Kind           => Subtype_View,
          Symbol         => Symbol,
          Name           => Name,
+         Prev           => <>,
          Subtype_Mark   => Subtype_Mark.Index,
          Has_Constraint => Has_Constraint);
    begin
@@ -501,18 +527,41 @@ package body Program.Visibility is
       return Get_View (Self.Env, (Self.Index.Region, Item.Enumeration_Type));
    end Enumeration_Type;
 
-   --------------------
-   -- Direct_Visible --
-   --------------------
+   ----------------------
+   -- Directly_Visible --
+   ----------------------
 
-   function Direct_Visible
+   function Directly_Visible
      (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol)
-      return Direct_Visible_Name_Iterator is
+      return Directly_Visible_Name_Iterator is
    begin
-      return (Use_Visible_Iterator (Self.Use_Visible (Symbol))
-                with null record);
-   end Direct_Visible;
+      return
+        (Immediate =>
+           (Context => Self'Unchecked_Access,
+            First   => Self.Find_Direct (Symbol)),
+         Uses =>
+           (Context => Self'Unchecked_Access,
+            Region  => Self.Top,
+            Symbol  => Symbol));
+   end Directly_Visible;
+
+   -----------------
+   -- Find_Direct --
+   -----------------
+
+   function Find_Direct
+     (Self   : Context'Class;
+      Symbol : Program.Symbols.Symbol) return Entity_Reference
+   is
+      Prev : constant Entity_Maps.Cursor := Self.Directly.Find (Symbol);
+   begin
+      if Entity_Maps.Has_Element (Prev) then
+         return Entity_Maps.Element (Prev);
+      else
+         return No_Entity;
+      end if;
+   end Find_Direct;
 
    -----------
    -- First --
@@ -533,9 +582,17 @@ package body Program.Visibility is
    overriding function First
      (Self : Context_Immediate_Visible_Iterator) return View_Cursor is
    begin
-      return Result : View_Cursor := (Self.Region, 1, others => <>) do
-         Self.Step_Region (Result);
-      end return;
+      if Self.First = No_Entity then
+         return (Region => Self.First.Region,
+                 Entity => 0,
+                 Use_Id => Positive'Last,
+                 View   => <>);
+      else
+         return (Region => Self.First.Region,
+                 Entity => Self.First.Entity_Id,
+                 Use_Id => Positive'Last,
+                 View   => Get_View (Self.Context, Self.First));
+      end if;
    end First;
 
    -----------
@@ -547,6 +604,20 @@ package body Program.Visibility is
    begin
       return Result : View_Cursor := (Self.Region, 1, 1, View => <>) do
          Self.Step_Use (Result);
+      end return;
+   end First;
+
+   -----------
+   -- First --
+   -----------
+
+   overriding function First
+     (Self : Directly_Visible_Name_Iterator) return View_Cursor is
+   begin
+      return Result : View_Cursor := First (Self.Immediate) do
+         if not Has_Element (Result) then
+            Result := Self.Uses.First;
+         end if;
       end return;
    end First;
 
@@ -668,9 +739,8 @@ package body Program.Visibility is
       Symbol : Program.Visibility.Symbol) return View_Iterator is
    begin
       return Context_Immediate_Visible_Iterator'
-        (Context => Self'Unchecked_Access,
-         Region  => Self.Top,
-         Symbol  => Symbol);
+               (Context => Self'Unchecked_Access,
+                First   => Self.Find_Direct (Symbol));
    end Immediate_Visible;
 
    -------------
@@ -738,9 +808,18 @@ package body Program.Visibility is
       Enclosing : constant Region_Identifier'Base :=
         Self.Data (Self.Top).Enclosing;
    begin
+      for E of reverse Self.Data (Self.Top).Entities loop
+         if E.Prev = No_Entity then
+            Self.Directly.Delete (E.Symbol);
+         else
+            Self.Directly.Replace (E.Symbol, E.Prev);
+         end if;
+      end loop;
+
       if Self.Data.Last_Index = Self.Top
         and then Self.Data (Self.Top).Entities.Is_Empty
       then
+         --  Delete an unused (without any entity) region
          Self.Data.Delete_Last;
       end if;
 
@@ -790,13 +869,22 @@ package body Program.Visibility is
 
    overriding function Next
      (Self     : Context_Immediate_Visible_Iterator;
-      Position : View_Cursor) return View_Cursor is
+      Position : View_Cursor) return View_Cursor
+   is
+      Prev : constant Entity_Reference :=
+        Self.Context.Data (Position.Region).Entities (Position.Entity).Prev;
    begin
-      return Result : View_Cursor :=
-        (Position.Region, Position.Entity + 1, others => <>)
-      do
-         Self.Step_Region (Result);
-      end return;
+      if Prev = No_Entity then
+         return (Region => Self.First.Region,
+                 Entity => 0,
+                 Use_Id => 1,
+                 View   => <>);
+      else
+         return (Region => Self.First.Region,
+                 Entity => Self.First.Entity_Id,
+                 Use_Id => 1,
+                 View   => Get_View (Self.Context, Self.First));
+      end if;
    end Next;
 
    ----------
@@ -812,6 +900,29 @@ package body Program.Visibility is
       do
          Self.Step_Use (Result);
       end return;
+   end Next;
+
+   ----------
+   -- Next --
+   ----------
+
+   overriding function Next
+     (Self     : Directly_Visible_Name_Iterator;
+      Position : View_Cursor) return View_Cursor
+   is
+      Result : View_Cursor;
+   begin
+      if Position.Use_Id = Positive'Last then
+         Result := Self.Immediate.Next (Position);
+
+         if Has_Element (Result) then
+            return Result;
+         else
+            return Self.Uses.First;
+         end if;
+      end if;
+
+      return Self.Uses.Next (Position);
    end Next;
 
    ----------------
@@ -865,15 +976,65 @@ package body Program.Visibility is
      (Self     : in out Context'Class;
       Snapshot : not null Snapshot_Access)
    is
+      use type Program.Visibility.Symbol;
+
       Top : Region renames Self.Data (Self.Top);
---      Length : constant Ada.Containers.Count_Type := Top.Entities.Length;
+      Last_Common : constant Entity_Identifier := Entity_Identifier'Min
+        (Top.Entities.Last_Index, Snapshot.Entities.Last_Index);
    begin
-      --  Ignore Snapshot.Region_Id if empty
+      --  Ignore Snapshot.Region_Id if empty, because we can recreate an empty
+      --  region with a differect id.
       pragma Assert
         (Snapshot.Entities.Is_Empty or Self.Top = Snapshot.Region_Id);
 
+      --  We expect all common entities have the same symbols. Reuse Prev
+      for J in 1 .. Last_Common loop
+         pragma Assert
+           (Top.Entities (J).Symbol = Snapshot.Entities (J).Symbol);
+         Snapshot.Entities (J).Prev := Top.Entities (J).Prev;
+      end loop;
+
+      --  Clean up old entities outside of common slice
+      if Top.Entities.Last_Index > Last_Common then
+         for Cursor in reverse Top.Entities.Iterate
+           (Start => Top.Entities.To_Cursor (Last_Common + 1))
+         loop
+            declare
+               Value : Entity renames Top.Entities (Cursor);
+            begin
+               if Value.Prev = No_Entity then
+                  Self.Directly.Delete (Value.Symbol);
+               else
+                  Self.Directly.Replace (Value.Symbol, Value.Prev);
+               end if;
+            end;
+         end loop;
+      end if;
+
+      --  Update new entities outside of common slice
+      if Snapshot.Entities.Last_Index > Last_Common then
+         for Cursor in Snapshot.Entities.Iterate
+           (Start => Snapshot.Entities.To_Cursor (Last_Common + 1))
+         loop
+            declare
+               Value : Entity renames Snapshot.Entities (Cursor);
+               Next  : constant Entity_Reference :=
+                 (Self.Top, Entity_Vectors.To_Index (Cursor));
+               Prev  : constant Entity_Maps.Cursor :=
+                 Self.Directly.Find (Value.Symbol);
+            begin
+               if Entity_Maps.Has_Element (Prev) then
+                  Value.Prev := Entity_Maps.Element (Prev);
+                  Self.Directly.Replace_Element (Prev, Next);
+               else
+                  Value.Prev := No_Entity;
+                  Self.Directly.Insert (Value.Symbol, Next);
+               end if;
+            end;
+         end loop;
+      end if;
+
       Top.Entities := Snapshot.Entities;
---      Top.Entities.Set_Length (Length);
       Top.Uses := Snapshot.Uses;
 
       for J in 1 .. Snapshot.Entities.Last_Index loop
@@ -915,8 +1076,10 @@ package body Program.Visibility is
      (Self       : in out Context'Class;
       Definition : View)
    is
-      Top  : Region renames Self.Data (Self.Top);
-      Last : Entity renames Top.Entities (Top.Entities.Last_Index);
+      Top       : Region renames Self.Data (Self.Top);
+      Enclosing : Region renames Self.Data (Top.Enclosing);
+      Last      : Entity renames Enclosing.Entities
+        (Enclosing.Entities.Last_Index);
    begin
       pragma Assert (Last.Kind = Function_View);
       Last.Result_Def := Definition.Index;
@@ -948,34 +1111,6 @@ package body Program.Visibility is
 
       Cursor := (Cursor.Region, Entity => 0, others => <>);
    end Step;
-
-   -----------------
-   -- Step_Region --
-   -----------------
-
-   procedure Step_Region
-     (Self   : Context_Immediate_Visible_Iterator'Class;
-      Cursor : in out View_Cursor)
-   is
-      Next : Region_Identifier'Base := Cursor.Region;
-   begin
-      loop
-         Self.Step (Cursor);
-
-         if Has_Element (Cursor) then
-            return;
-         end if;
-
-         Next := Self.Context.Data (Next).Enclosing;
-
-         exit when Next = 0;
-
-         Cursor.Region := Next;
-         Cursor.Entity := 1;
-      end loop;
-
-      Cursor := (Self.Region, Entity => 0, others => <>);
-   end Step_Region;
 
    --------------
    -- Step_Use --

@@ -129,6 +129,8 @@ package body Program.Predefined_Operators is
       Self.Leave_Declarative_Region;
       Self.Set_Parameter_Type (Type_View);
 
+      Self.Set_Result_Type (Type_View);
+
       Result := Vectors.Create_Element_Vector
         (Program.Element_Vectors.Single_Element
          (Program.Elements.Element_Access (Decl)));

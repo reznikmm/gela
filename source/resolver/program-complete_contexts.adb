@@ -200,6 +200,16 @@ package body Program.Complete_Contexts is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Identifiers.Identifier_Access);
 
+      overriding procedure Infix_Operator
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Infix_Operators
+                              .Infix_Operator_Access);
+
+      overriding procedure Operator_Symbol
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Operator_Symbols
+                              .Operator_Symbol_Access);
+
       overriding procedure Parameter_Association
         (Self    : in out Visitor;
          Element : not null Program.Elements.Parameter_Associations
@@ -220,25 +230,47 @@ package body Program.Complete_Contexts is
 
       overriding procedure Identifier
         (Self    : in out Visitor;
-         Element : not null Program.Elements.Identifiers.Identifier_Access)
-      is
+         Element : not null Program.Elements.Identifiers.Identifier_Access) is
       begin
          case Self.Solution.Kind is
             when Program.Interpretations.Defining_Name_Solution =>
                Self.Setter.Set_Corresponding_Defining_Name
                  (Element.all'Unchecked_Access,
-                  Program.Visibility.Name
-                    (Self.Solution.Name_View));
+                  Program.Visibility.Name (Self.Solution.Name_View));
             when others =>
                raise Program_Error;
          end case;
       end Identifier;
 
+      overriding procedure Infix_Operator
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Infix_Operators
+                              .Infix_Operator_Access) is
+      begin
+         Down (Element.Operator, Self.Solution.Tuple (0), Self.Setter);
+         Down (Element.Left,     Self.Solution.Tuple (1), Self.Setter);
+         Down (Element.Right,    Self.Solution.Tuple (2), Self.Setter);
+      end Infix_Operator;
+
+      overriding procedure Operator_Symbol
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Operator_Symbols
+                              .Operator_Symbol_Access) is
+      begin
+         case Self.Solution.Kind is
+            when Program.Interpretations.Defining_Name_Solution =>
+               Self.Setter.Set_Corresponding_Defining_Name
+                 (Element.all'Unchecked_Access,
+                  Program.Visibility.Name (Self.Solution.Name_View));
+            when others =>
+               raise Program_Error;
+         end case;
+      end Operator_Symbol;
+
       overriding procedure Parameter_Association
         (Self    : in out Visitor;
          Element : not null Program.Elements.Parameter_Associations
-                              .Parameter_Association_Access)
-      is
+                              .Parameter_Association_Access) is
       begin
          Self.Visit (Element.Actual_Parameter);
       end Parameter_Association;
@@ -307,7 +339,7 @@ package body Program.Complete_Contexts is
          end;
       end loop;
 
-      if Count = 1 then
+      if Count > 0 then
          Down (Element.Called_Name, Found (0), Setter);
 
          for J in Element.Parameters.Each_Element loop

@@ -46,4 +46,8 @@ check: all .acats
 	curl -s -o .acats/ACATS41.ZIP https://www.ada-ru.org/files/ACATS41.ZIP
 	unzip -q -aa .acats/ACATS41.ZIP -d .acats
 	gnatchop -q .acats/SUPPORT/REPORT.A .acats
-	rm -v -f .acats/ACATS41.ZIP
+	gnatchop -q .acats/SUPPORT/MACROSUB.ADA /tmp/
+	(cd /tmp; gprbuild macrosub.adb)
+	find $(PWD)/.acats -name *.TST > .acats/SUPPORT/TSTTESTS.DAT
+	(cd .acats/SUPPORT/; /tmp/macrosub)
+	rm -v -f .acats/ACATS41.ZIP `cat .acats/SUPPORT/TSTTESTS.DAT`

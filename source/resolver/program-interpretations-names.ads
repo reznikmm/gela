@@ -27,7 +27,7 @@ private
    type Cursor_State (Is_Symbol : Boolean := False) is record
       case Is_Symbol is
          when True =>
-            Iter   : Program.Visibility.Direct_Visible_Name_Iterator;
+            Iter   : Program.Visibility.Directly_Visible_Name_Iterator;
             Cursor : Program.Visibility.View_Cursor;
          when False =>
             View   : Program.Visibility.View;

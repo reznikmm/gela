@@ -95,7 +95,7 @@ package body Program.Interpretations.Names is
                when Symbol =>
                   Cursor.State :=
                     (Is_Symbol => True,
-                     Iter      => Env.Direct_Visible (Item.Symbol),
+                     Iter      => Env.Directly_Visible (Item.Symbol),
                      Cursor    => <>);
 
                   Cursor.State.Cursor := Cursor.State.Iter.First;

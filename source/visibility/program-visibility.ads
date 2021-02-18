@@ -172,6 +172,9 @@ package Program.Visibility is
      (Self : in out Context'Class);
    --  Initialize a context to empty state before loading Standard package
 
+   procedure Leave_Declarative_Region (Self : in out Context'Class);
+   --  Leave current declarative region the context.
+
    function Create_Snapshot
      (Self    : in out Context'Class) return Snapshot_Access;
    --  Store state of the context into a snapshot
@@ -356,9 +359,6 @@ package Program.Visibility is
       Name   : Defining_Name);
    --  Add an exception view to the context. Don't create a region.
 
-   procedure Leave_Declarative_Region (Self : in out Context'Class);
-   --  Leave current declarative region the context.
-
    procedure Add_Use_Package
      (Self : in out Context'Class;
       Pkg  : View);
@@ -376,14 +376,22 @@ package Program.Visibility is
         return View_Iterator;
    --  Return iterator of views for use visible names with given symbol
 
-   type Direct_Visible_Name_Iterator is
+   type Directly_Visible_Name_Iterator is
      new Iterators.Forward_Iterator with private;
 
-   function Direct_Visible
+   overriding function First
+     (Self : Directly_Visible_Name_Iterator) return View_Cursor;
+
+   overriding function Next
+     (Self     : Directly_Visible_Name_Iterator;
+      Position : View_Cursor) return View_Cursor;
+
+   function Directly_Visible
      (Self   : Context'Class;
       Symbol : Program.Visibility.Symbol)
-        return Direct_Visible_Name_Iterator;
-   --  Return iterator of views for direct visible names with given symbol
+        return Directly_Visible_Name_Iterator;
+   --  Return iterator of views for directly visible (use or immediate) names
+   --  with given symbol
 
    function Latest_View (Self : Context'Class) return View;
    --  View that was added to the context
@@ -402,6 +410,9 @@ private
       Entity_Id : Entity_Identifier;
    end record;
 
+   No_Entity : constant Entity_Reference :=
+     (Region_Identifier'Last, Entity_Identifier'Last);
+
    package Entity_References is new Ada.Containers.Vectors
      (Index_Type   => Positive,
       Element_Type => Entity_Reference);
@@ -411,6 +422,7 @@ private
    type Entity (Kind : View_Kind := Package_View) is record
       Symbol    : Program.Visibility.Symbol;
       Name      : Defining_Name;
+      Prev      : Entity_Reference;  --  An upper entity with the same symbol
       --  Entity_Id : Entity_Identifier;
       --  The index of the item from which we copied this item
 
@@ -487,6 +499,13 @@ private
      (Index_Type   => Region_Identifier,
       Element_Type => Region);
 
+   package Entity_Maps is new Ada.Containers.Hashed_Maps
+     (Key_Type        => Program.Visibility.Symbol,
+      Element_Type    => Entity_Reference,
+      Hash            => Program.Symbols.Hash,
+      Equivalent_Keys => Program.Symbols."=",
+      "="             => "=");
+
    type Context is tagged limited record
       Data : Region_Vectors.Vector;
       --  All items are stored here
@@ -494,6 +513,8 @@ private
       --  Current region
       Xref : Defining_Name_Maps.Map;
       --  For each defining name a corresponding reference
+      Directly : Entity_Maps.Map;
+      --  A Directly visible symbols mapped to corresponding entities
    end record;
 
    type Constant_Context_Access is access constant Context'Class;
@@ -524,8 +545,11 @@ private
      (Self     : Region_Immediate_Visible_Iterator;
       Position : View_Cursor) return View_Cursor;
 
-   type Context_Immediate_Visible_Iterator is
-     new Region_Immediate_Visible_Iterator with null record;
+   type Context_Immediate_Visible_Iterator is new Iterators.Forward_Iterator
+   with record
+      Context : Constant_Context_Access;
+      First   : Entity_Reference;
+   end record;
 
    overriding function First
      (Self : Context_Immediate_Visible_Iterator) return View_Cursor;
@@ -544,7 +568,10 @@ private
      (Self     : Use_Visible_Iterator;
       Position : View_Cursor) return View_Cursor;
 
-   type Direct_Visible_Name_Iterator is
-     new Use_Visible_Iterator with null record;
+   type Directly_Visible_Name_Iterator is new Iterators.Forward_Iterator
+   with record
+      Immediate : Context_Immediate_Visible_Iterator;
+      Uses      : Use_Visible_Iterator;
+   end record;
 
 end Program.Visibility;

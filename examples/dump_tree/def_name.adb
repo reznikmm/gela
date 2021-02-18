@@ -13,6 +13,7 @@ with Program.Element_Iterators;
 with Program.Element_Visitors;
 with Program.Elements.Character_Literals;
 with Program.Elements.Defining_Identifiers;
+with Program.Elements.Defining_Operator_Symbols;
 with Program.Elements.Identifiers;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Procedure_Body_Declarations;
@@ -120,9 +121,41 @@ procedure Def_Name is
       procedure Operator_Symbol
         (Self    : in out Visitor;
          Element : not null Program.Elements.Operator_Symbols
-         .Operator_Symbol_Access) is
+           .Operator_Symbol_Access)
+      is
+         use type Program.Elements.Element_Access;
+         Text  : Program.Elements.Operator_Symbols.Operator_Symbol_Text_Access;
+         Token : Program.Lexical_Elements.Lexical_Element_Access;
+         Def   : Program.Elements.Defining_Operator_Symbols
+           .Defining_Operator_Symbol_Access;
+
+         Def_Text : Program.Elements.Defining_Operator_Symbols.
+           Defining_Operator_Symbol_Text_Access;
       begin
-         null;
+         if Self.End_Name = Program.Elements.Element_Access (Element) then
+            null;
+         elsif not Element.Is_Part_Of_Implicit then
+            Text := Element.To_Operator_Symbol_Text;
+            Token := Text.Operator_Symbol_Token;
+            Ada.Wide_Wide_Text_IO.Put (Token.Image);
+            Ada.Wide_Wide_Text_IO.Put (" ");
+            Ada.Wide_Wide_Text_IO.Put (Token.From_Image);
+            Ada.Wide_Wide_Text_IO.Put (" => ");
+
+            Def := Element.Corresponding_Defining_Operator_Symbol;
+
+            if not Def.Assigned then
+               Ada.Wide_Wide_Text_IO.Put_Line ("-");
+            elsif Def.Is_Part_Of_Implicit then
+               Ada.Wide_Wide_Text_IO.Put_Line (" implicit");
+            else
+               Enclosing_Unit_Name (Def);
+               Ada.Wide_Wide_Text_IO.Put (" ");
+               Def_Text := Def.To_Defining_Operator_Symbol_Text;
+               Token := Def_Text.Operator_Symbol_Token;
+               Ada.Wide_Wide_Text_IO.Put_Line (Token.From_Image);
+            end if;
+         end if;
       end Operator_Symbol;
 
       -----------------------

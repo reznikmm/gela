@@ -35,7 +35,16 @@ package body Program.Interpretations is
       Item : constant Interpretation :=
         (Expression, Tipe, new Solution_Array'(Down));
    begin
+      --  Only non-interrupted set allowed
+      pragma Assert
+        (Self.To < Self.From or Self.To = Self.Context.Data.Last_Index);
+
       Self.Context.Data.Append (Item);
+
+      if Self.To < Self.From then
+         Self.From := Self.Context.Data.Last_Index;
+      end if;
+
       Self.To := Self.Context.Data.Last_Index;
    end Add_Expression;
 

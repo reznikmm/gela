@@ -48,7 +48,7 @@ private
    type Cursor_State (Kind : Interpretation_Kind := Symbol) is record
       case Kind is
          when Symbol =>
-            Iter   : Program.Visibility.Direct_Visible_Name_Iterator;
+            Iter   : Program.Visibility.Directly_Visible_Name_Iterator;
             Cursor : Program.Visibility.View_Cursor;
          when Name =>
             View   : Program.Visibility.View;
