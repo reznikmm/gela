@@ -1611,7 +1611,7 @@ package Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
-     Expression           : not null Program.Elements.Expressions
+     Discriminant_Value   : not null Program.Elements.Expressions
          .Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -1622,7 +1622,7 @@ package Program.Implicit_Element_Factories is
    not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
      Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -1632,7 +1632,7 @@ package Program.Implicit_Element_Factories is
    not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
      Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)

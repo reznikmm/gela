@@ -46,6 +46,16 @@ package body Program.Nodes.Proxy_Associations is
       return Self.Choices;
    end Choices;
 
+   ---------------------
+   -- Component_Value --
+   ---------------------
+
+   overriding function Component_Value (Self : Proxy_Association)
+     return Program.Elements.Expressions.Expression_Access is
+   begin
+      return Self.Expression;
+   end Component_Value;
+
    ------------
    -- Create --
    ------------
@@ -74,16 +84,6 @@ package body Program.Nodes.Proxy_Associations is
          end if;
       end return;
    end Create;
-
-   ----------------
-   -- Expression --
-   ----------------
-
-   overriding function Expression (Self : Proxy_Association)
-     return Program.Elements.Expressions.Expression_Access is
-   begin
-      return Self.Expression;
-   end Expression;
 
    ----------------------
    -- Formal_Parameter --

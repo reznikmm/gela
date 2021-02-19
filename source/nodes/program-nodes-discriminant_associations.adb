@@ -6,14 +6,16 @@
 package body Program.Nodes.Discriminant_Associations is
 
    function Create
-    (Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
-     Arrow_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression     : not null Program.Elements.Expressions.Expression_Access)
+    (Selector_Names     : Program.Elements.Identifiers
+         .Identifier_Vector_Access;
+     Arrow_Token        : Program.Lexical_Elements.Lexical_Element_Access;
+     Discriminant_Value : not null Program.Elements.Expressions
+         .Expression_Access)
       return Discriminant_Association is
    begin
       return Result : Discriminant_Association :=
         (Selector_Names => Selector_Names, Arrow_Token => Arrow_Token,
-         Expression => Expression, Enclosing_Element => null)
+         Discriminant_Value => Discriminant_Value, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
@@ -22,7 +24,7 @@ package body Program.Nodes.Discriminant_Associations is
    function Create
     (Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
-     Expression           : not null Program.Elements.Expressions
+     Discriminant_Value   : not null Program.Elements.Expressions
          .Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -30,7 +32,8 @@ package body Program.Nodes.Discriminant_Associations is
       return Implicit_Discriminant_Association is
    begin
       return Result : Implicit_Discriminant_Association :=
-        (Selector_Names => Selector_Names, Expression => Expression,
+        (Selector_Names => Selector_Names,
+         Discriminant_Value => Discriminant_Value,
          Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
          Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
@@ -46,12 +49,12 @@ package body Program.Nodes.Discriminant_Associations is
       return Self.Selector_Names;
    end Selector_Names;
 
-   overriding function Expression
+   overriding function Discriminant_Value
     (Self : Base_Discriminant_Association)
       return not null Program.Elements.Expressions.Expression_Access is
    begin
-      return Self.Expression;
-   end Expression;
+      return Self.Discriminant_Value;
+   end Discriminant_Value;
 
    overriding function Arrow_Token
     (Self : Discriminant_Association)
@@ -87,7 +90,7 @@ package body Program.Nodes.Discriminant_Associations is
       for Item in Self.Selector_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
+      Set_Enclosing_Element (Self.Discriminant_Value, Self'Unchecked_Access);
       null;
    end Initialize;
 

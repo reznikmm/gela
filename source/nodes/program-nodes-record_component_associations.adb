@@ -6,15 +6,15 @@
 package body Program.Nodes.Record_Component_Associations is
 
    function Create
-    (Choices     : Program.Element_Vectors.Element_Vector_Access;
-     Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression  : Program.Elements.Expressions.Expression_Access;
-     Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
+    (Choices         : Program.Element_Vectors.Element_Vector_Access;
+     Arrow_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Component_Value : Program.Elements.Expressions.Expression_Access;
+     Box_Token       : Program.Lexical_Elements.Lexical_Element_Access)
       return Record_Component_Association is
    begin
       return Result : Record_Component_Association :=
         (Choices => Choices, Arrow_Token => Arrow_Token,
-         Expression => Expression, Box_Token => Box_Token,
+         Component_Value => Component_Value, Box_Token => Box_Token,
          Enclosing_Element => null)
       do
          Initialize (Result);
@@ -23,14 +23,14 @@ package body Program.Nodes.Record_Component_Associations is
 
    function Create
     (Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
       return Implicit_Record_Component_Association is
    begin
       return Result : Implicit_Record_Component_Association :=
-        (Choices => Choices, Expression => Expression,
+        (Choices => Choices, Component_Value => Component_Value,
          Is_Part_Of_Implicit => Is_Part_Of_Implicit,
          Is_Part_Of_Inherited => Is_Part_Of_Inherited,
          Is_Part_Of_Instance => Is_Part_Of_Instance, Enclosing_Element => null)
@@ -46,12 +46,12 @@ package body Program.Nodes.Record_Component_Associations is
       return Self.Choices;
    end Choices;
 
-   overriding function Expression
+   overriding function Component_Value
     (Self : Base_Record_Component_Association)
       return Program.Elements.Expressions.Expression_Access is
    begin
-      return Self.Expression;
-   end Expression;
+      return Self.Component_Value;
+   end Component_Value;
 
    overriding function Arrow_Token
     (Self : Record_Component_Association)
@@ -94,8 +94,8 @@ package body Program.Nodes.Record_Component_Associations is
       for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
       end loop;
-      if Self.Expression.Assigned then
-         Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
+      if Self.Component_Value.Assigned then
+         Set_Enclosing_Element (Self.Component_Value, Self'Unchecked_Access);
       end if;
       null;
    end Initialize;

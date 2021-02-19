@@ -3966,7 +3966,7 @@ package body Program.Implicit_Element_Factories is
     (Self : Element_Factory;
      Selector_Names       : Program.Elements.Identifiers
          .Identifier_Vector_Access;
-     Expression           : not null Program.Elements.Expressions
+     Discriminant_Value   : not null Program.Elements.Expressions
          .Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
@@ -3978,7 +3978,8 @@ package body Program.Implicit_Element_Factories is
           new (Self.Subpool) Program.Nodes.Discriminant_Associations
             .Implicit_Discriminant_Association'
             (Program.Nodes.Discriminant_Associations.Create
-               (Selector_Names => Selector_Names, Expression => Expression,
+               (Selector_Names => Selector_Names,
+                Discriminant_Value => Discriminant_Value,
                 Is_Part_Of_Implicit => Is_Part_Of_Implicit,
                 Is_Part_Of_Inherited => Is_Part_Of_Inherited,
                 Is_Part_Of_Instance => Is_Part_Of_Instance));
@@ -3991,7 +3992,7 @@ package body Program.Implicit_Element_Factories is
    not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
      Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -4002,7 +4003,7 @@ package body Program.Implicit_Element_Factories is
           new (Self.Subpool) Program.Nodes.Record_Component_Associations
             .Implicit_Record_Component_Association'
             (Program.Nodes.Record_Component_Associations.Create
-               (Choices => Choices, Expression => Expression,
+               (Choices => Choices, Component_Value => Component_Value,
                 Is_Part_Of_Implicit => Is_Part_Of_Implicit,
                 Is_Part_Of_Inherited => Is_Part_Of_Inherited,
                 Is_Part_Of_Instance => Is_Part_Of_Instance));
@@ -4015,7 +4016,7 @@ package body Program.Implicit_Element_Factories is
    not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
      Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -4026,7 +4027,7 @@ package body Program.Implicit_Element_Factories is
           new (Self.Subpool) Program.Nodes.Array_Component_Associations
             .Implicit_Array_Component_Association'
             (Program.Nodes.Array_Component_Associations.Create
-               (Choices => Choices, Expression => Expression,
+               (Choices => Choices, Component_Value => Component_Value,
                 Is_Part_Of_Implicit => Is_Part_Of_Implicit,
                 Is_Part_Of_Inherited => Is_Part_Of_Inherited,
                 Is_Part_Of_Instance => Is_Part_Of_Instance));

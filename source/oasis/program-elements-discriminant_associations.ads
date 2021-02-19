@@ -23,7 +23,7 @@ package Program.Elements.Discriminant_Associations is
     (Self : Discriminant_Association)
       return Program.Elements.Identifiers.Identifier_Vector_Access is abstract;
 
-   not overriding function Expression
+   not overriding function Discriminant_Value
     (Self : Discriminant_Association)
       return not null Program.Elements.Expressions.Expression_Access
      is abstract;

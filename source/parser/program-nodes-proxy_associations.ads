@@ -63,7 +63,7 @@ private
    overriding function Choices (Self : Proxy_Association)
      return Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Expression (Self : Proxy_Association)
+   overriding function Component_Value (Self : Proxy_Association)
      return Program.Elements.Expressions.Expression_Access;
 
    overriding function Is_Record_Component_Association

@@ -1911,27 +1911,29 @@ package Program.Element_Factories is
 
    not overriding function Create_Discriminant_Association
     (Self : Element_Factory;
-     Selector_Names : Program.Elements.Identifiers.Identifier_Vector_Access;
-     Arrow_Token    : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression     : not null Program.Elements.Expressions.Expression_Access)
+     Selector_Names     : Program.Elements.Identifiers
+         .Identifier_Vector_Access;
+     Arrow_Token        : Program.Lexical_Elements.Lexical_Element_Access;
+     Discriminant_Value : not null Program.Elements.Expressions
+         .Expression_Access)
       return not null Program.Elements.Discriminant_Associations
           .Discriminant_Association_Access;
 
    not overriding function Create_Record_Component_Association
     (Self : Element_Factory;
-     Choices     : Program.Element_Vectors.Element_Vector_Access;
-     Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression  : Program.Elements.Expressions.Expression_Access;
-     Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
+     Choices         : Program.Element_Vectors.Element_Vector_Access;
+     Arrow_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Component_Value : Program.Elements.Expressions.Expression_Access;
+     Box_Token       : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Record_Component_Associations
           .Record_Component_Association_Access;
 
    not overriding function Create_Array_Component_Association
     (Self : Element_Factory;
-     Choices     : Program.Element_Vectors.Element_Vector_Access;
-     Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression  : Program.Elements.Expressions.Expression_Access;
-     Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
+     Choices         : Program.Element_Vectors.Element_Vector_Access;
+     Arrow_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Component_Value : Program.Elements.Expressions.Expression_Access;
+     Box_Token       : Program.Lexical_Elements.Lexical_Element_Access)
       return not null Program.Elements.Array_Component_Associations
           .Array_Component_Association_Access;
 

@@ -4709,11 +4709,12 @@ package body Internal is
         Program.Elements.Discriminant_Associations.Discriminant_Association,
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
-      Get_Child    => Program.Elements.Discriminant_Associations.Expression);
+      Get_Child    =>
+        Program.Elements.Discriminant_Associations.Discriminant_Value);
 
    F107 : aliased constant Getter_Array :=
      (1 => (True, Selector_Names, F107_1'Access),
-      2 => (False, Expression, F107_2'Access));
+      2 => (False, Discriminant_Value, F107_2'Access));
 
    overriding procedure Discriminant_Association
     (Self    : in out Visitor;
@@ -4739,11 +4740,11 @@ package body Internal is
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    =>
-        Program.Elements.Record_Component_Associations.Expression);
+        Program.Elements.Record_Component_Associations.Component_Value);
 
    F108 : aliased constant Getter_Array :=
      (1 => (True, Choices, F108_1'Access),
-      2 => (False, Expression, F108_2'Access));
+      2 => (False, Component_Value, F108_2'Access));
 
    overriding procedure Record_Component_Association
     (Self    : in out Visitor;
@@ -4769,11 +4770,11 @@ package body Internal is
       Child        => Program.Elements.Expressions.Expression,
       Child_Access => Program.Elements.Expressions.Expression_Access,
       Get_Child    =>
-        Program.Elements.Array_Component_Associations.Expression);
+        Program.Elements.Array_Component_Associations.Component_Value);
 
    F109 : aliased constant Getter_Array :=
      (1 => (True, Choices, F109_1'Access),
-      2 => (False, Expression, F109_2'Access));
+      2 => (False, Component_Value, F109_2'Access));
 
    overriding procedure Array_Component_Association
     (Self    : in out Visitor;

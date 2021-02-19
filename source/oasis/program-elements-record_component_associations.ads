@@ -22,7 +22,7 @@ package Program.Elements.Record_Component_Associations is
     (Self : Record_Component_Association)
       return Program.Element_Vectors.Element_Vector_Access is abstract;
 
-   not overriding function Expression
+   not overriding function Component_Value
     (Self : Record_Component_Association)
       return Program.Elements.Expressions.Expression_Access is abstract;
 

@@ -22,10 +22,10 @@ package Program.Nodes.Array_Component_Associations is
      with private;
 
    function Create
-    (Choices     : Program.Element_Vectors.Element_Vector_Access;
-     Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
-     Expression  : Program.Elements.Expressions.Expression_Access;
-     Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
+    (Choices         : Program.Element_Vectors.Element_Vector_Access;
+     Arrow_Token     : Program.Lexical_Elements.Lexical_Element_Access;
+     Component_Value : Program.Elements.Expressions.Expression_Access;
+     Box_Token       : Program.Lexical_Elements.Lexical_Element_Access)
       return Array_Component_Association;
 
    type Implicit_Array_Component_Association is
@@ -36,7 +36,7 @@ package Program.Nodes.Array_Component_Associations is
 
    function Create
     (Choices              : Program.Element_Vectors.Element_Vector_Access;
-     Expression           : Program.Elements.Expressions.Expression_Access;
+     Component_Value      : Program.Elements.Expressions.Expression_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False)
@@ -50,8 +50,8 @@ private
        and Program.Elements.Array_Component_Associations
          .Array_Component_Association
      with record
-        Choices    : Program.Element_Vectors.Element_Vector_Access;
-        Expression : Program.Elements.Expressions.Expression_Access;
+        Choices         : Program.Element_Vectors.Element_Vector_Access;
+        Component_Value : Program.Elements.Expressions.Expression_Access;
      end record;
 
    procedure Initialize
@@ -65,7 +65,7 @@ private
     (Self : Base_Array_Component_Association)
       return Program.Element_Vectors.Element_Vector_Access;
 
-   overriding function Expression
+   overriding function Component_Value
     (Self : Base_Array_Component_Association)
       return Program.Elements.Expressions.Expression_Access;
 
