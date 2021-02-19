@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -663,15 +663,23 @@ package body Program.Parsers.Nodes is
    --------------------------
 
    function Assignment_Statement
-     (Self             : Node_Factory'Class; Assignment_Variable_Name : Node;
-      Assignment_Token : Node; Assignment_Expression : Node;
-      Semicolon_Token  : Node) return Node
+     (Self                     : Node_Factory'Class;
+      Assignment_Variable_Name : Node;
+      Assignment_Token         : Node;
+      Assignment_Expression    : Node;
+      Semicolon_Token          : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Assignment_Statement unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Assignment_Statement";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Assignment_Statement
+             (Variable_Name    => Program.Elements.Expressions
+                .Expression_Access (Assignment_Variable_Name.Element),
+              Assignment_Token => Assignment_Token.Token,
+              Expression       => Program.Elements.Expressions
+                .Expression_Access (Assignment_Expression.Element),
+              Semicolon_Token  => Semicolon_Token.Token)));
    end Assignment_Statement;
 
    -----------------
@@ -3866,10 +3874,15 @@ package body Program.Parsers.Nodes is
       Upper_Bound : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Simple_Expression_Range_Dr unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Simple_Expression_Range_Dr";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Discrete_Simple_Expression_Range
+             (Lower_Bound => Program.Elements.Expressions.Expression_Access
+                               (Lower_Bound.Element),
+              Double_Dot_Token => Double_Dot_Token.Token,
+              Upper_Bound => Program.Elements.Expressions.Expression_Access
+                               (Upper_Bound.Element))));
    end Simple_Expression_Range_Dr;
 
    -----------------------------
@@ -4111,22 +4124,39 @@ package body Program.Parsers.Nodes is
    ---------------------------
 
    function To_Subtype_Indication
-     (Self : Node_Factory'Class; Not_Token : Node; Null_Token : Node;
-      Mark : Node; Constraint : Node) return Node
+     (Self       : Node_Factory'Class;
+      Not_Token  : Node;
+      Null_Token : Node;
+      Mark       : Node;
+      Constraint : Node) return Node
    is
+      Prefix : Program.Elements.Expressions.Expression_Access;
+      Constr : Program.Elements.Constraints.Constraint_Access;
    begin
+      if Mark.Element.all in Program.Nodes.Proxy_Calls.Proxy_Call then
+         declare
+            Call : constant Program.Nodes.Proxy_Calls.Proxy_Call_Access :=
+              Program.Nodes.Proxy_Calls.Proxy_Call_Access
+                (Mark.Element);
+         begin
+            Call.Turn_To_Discriminant_Constraint (Prefix);
+            Constr := Program.Elements.Constraints.Constraint_Access (Call);
+         end;
+      else
+         Prefix := Program.Elements.Expressions.Expression_Access
+           (Mark.Element);
+         Constr := Program.Elements.Constraints.Constraint_Access
+           (Constraint.Element);
+      end if;
+
       return
         (Element_Node,
          Program.Elements.Element_Access
            (Self.EF.Create_Subtype_Indication
                 (Not_Token    => Not_Token.Token,
                  Null_Token   => Null_Token.Token,
-                 Subtype_Mark =>
-                   Program.Elements.Expressions.Expression_Access
-                     (Mark.Element),
-                 Constraint   =>
-                   Program.Elements.Constraints.Constraint_Access
-                     (Constraint.Element))));
+                 Subtype_Mark => Prefix,
+                 Constraint   => Constr)));
    end To_Subtype_Indication;
 
    -----------

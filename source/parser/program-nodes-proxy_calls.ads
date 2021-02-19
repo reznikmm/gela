@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2020-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -11,6 +11,8 @@ with Program.Elements.Function_Calls;
 with Program.Elements.Parameter_Associations;
 with Program.Elements.Record_Aggregates;
 with Program.Elements.Record_Component_Associations;
+with Program.Elements.Discriminant_Associations;
+with Program.Elements.Discriminant_Constraints;
 with Program.Lexical_Elements;
 
 package Program.Nodes.Proxy_Calls is
@@ -22,12 +24,14 @@ package Program.Nodes.Proxy_Calls is
      and Program.Elements.Call_Statements.Call_Statement_Text
      and Program.Elements.Function_Calls.Function_Call
      and Program.Elements.Function_Calls.Function_Call_Text
+     and Program.Elements.Discriminant_Constraints.Discriminant_Constraint
      and Program.Elements.Record_Aggregates.Record_Aggregate
        with private;
    --  Internal common representation of
    --  * Call_Statement
    --  * Function_Call
    --  * Record_Aggregate
+   --  * Discriminant_Constraint
    --  * TODO Function_Call, Slice, Type_Conv, etc
 
    type Proxy_Call_Access is access all Proxy_Call;
@@ -47,47 +51,70 @@ package Program.Nodes.Proxy_Calls is
      (Self            : in out Proxy_Call'Class;
       Semicolon_Token : Program.Lexical_Elements.Lexical_Element_Access);
 
+   procedure Turn_To_Discriminant_Constraint
+     (Self : in out Proxy_Call'Class;
+      Mark : out Program.Elements.Expressions.Expression_Access);
+
 private
 
    type Kind is
      (A_Call_Statement,
       A_Function_Call,
+      A_Discriminant_Constraint,
       A_Record_Aggregate);
 
    type Proxy_Call_Text (Parent : not null Proxy_Call_Access) is
      new Program.Elements.Record_Aggregates.Record_Aggregate_Text
+     and Program.Elements.Discriminant_Constraints.Discriminant_Constraint_Text
        with null record;
 
-   type Parameter_Vector (Parent : not null Proxy_Call_Access) is new
-     Program.Elements.Parameter_Associations.Parameter_Association_Vector
+   type Base_Vector (Parent : not null Proxy_Call_Access) is abstract new
+     Program.Element_Vectors.Element_Vector
        with null record;
 
-   overriding function Get_Length (Self : Parameter_Vector) return Positive;
+   overriding function Get_Length (Self : Base_Vector) return Positive;
+
+   overriding function Delimiter
+     (Self  : Base_Vector;
+      Index : Positive)
+     return Program.Lexical_Elements.Lexical_Element_Access;
+
+   type Parameter_Vector is new Base_Vector
+     and Program.Elements.Parameter_Associations.Parameter_Association_Vector
+   with null record;
 
    overriding function Element
      (Self  : Parameter_Vector;
       Index : Positive)
      return not null Program.Elements.Element_Access;
 
-   overriding function Delimiter
-     (Self  : Parameter_Vector;
+   type Discriminant_Association_Vector is new Base_Vector
+     and Program.Elements.Discriminant_Associations
+           .Discriminant_Association_Vector
+   with null record;
+
+   overriding function Element
+     (Self  : Discriminant_Association_Vector;
       Index : Positive)
-     return Program.Lexical_Elements.Lexical_Element_Access;
+     return not null Program.Elements.Element_Access;
 
    type Proxy_Call is new Program.Nodes.Node
      and Program.Elements.Call_Statements.Call_Statement
      and Program.Elements.Call_Statements.Call_Statement_Text
      and Program.Elements.Function_Calls.Function_Call
      and Program.Elements.Function_Calls.Function_Call_Text
+     and Program.Elements.Discriminant_Constraints.Discriminant_Constraint
      and Program.Elements.Record_Aggregates.Record_Aggregate with
    record
+      This        : Proxy_Call_Access := Proxy_Call'Unchecked_Access;
+      --  to get r/w access from constant Self parameter
       Current     : Kind;
       Text        : aliased Proxy_Call_Text (Proxy_Call'Unchecked_Access);
       Called_Name : Program.Elements.Expressions.Expression_Access;
       Components  : Program.Element_Vectors.Element_Vector_Access;
-      Parameters  : Program.Elements.Parameter_Associations
-                      .Parameter_Association_Vector_Access;
-      Params      : aliased Parameter_Vector (Proxy_Call'Unchecked_Access);
+      Parameters  : aliased Parameter_Vector (Proxy_Call'Unchecked_Access);
+      Discr       : aliased Discriminant_Association_Vector
+                              (Proxy_Call'Unchecked_Access);
       Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
       Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
       Semicolon_Token     : Program.Lexical_Elements.Lexical_Element_Access;
@@ -151,5 +178,16 @@ private
 
    overriding function Right_Bracket_Token (Self : Proxy_Call_Text)
       return not null Program.Lexical_Elements.Lexical_Element_Access;
+
+   --  Discriminant constraint
+
+   overriding function Discriminants (Self : Proxy_Call)
+     return not null Program.Elements.Discriminant_Associations
+       .Discriminant_Association_Vector_Access;
+
+   overriding function To_Discriminant_Constraint_Text
+     (Self : aliased in out Proxy_Call)
+      return Program.Elements.Discriminant_Constraints
+        .Discriminant_Constraint_Text_Access;
 
 end Program.Nodes.Proxy_Calls;

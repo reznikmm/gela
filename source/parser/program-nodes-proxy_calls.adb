@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2020-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -43,19 +43,18 @@ package body Program.Nodes.Proxy_Calls is
    begin
       pragma Warnings (Off, "others choice is redundant");  --  gpl 2019
       return Self : aliased Proxy_Call :=
-        (Current             => A_Record_Aggregate,
+        (This                => <>,
+         Current             => A_Record_Aggregate,
          Called_Name         => Called_Name,
          Left_Bracket_Token  => Left_Bracket_Token,
          Components          => Parameters,
-         Parameters          => null,
-         Params              => <>,
+         Parameters          => <>,
+         Discr               => <>,
          Right_Bracket_Token => Right_Bracket_Token,
          Semicolon_Token     => null,
          Enclosing_Element   => null,
          Text => <>)
       do
-         Self.Parameters := Self.Params'Unchecked_Access;
-
          if Called_Name.Assigned then
             Set_Enclosing_Element (Self.Called_Name, Self'Unchecked_Access);
          end if;
@@ -71,12 +70,23 @@ package body Program.Nodes.Proxy_Calls is
    ---------------
 
    overriding function Delimiter
-     (Self  : Parameter_Vector;
+     (Self  : Base_Vector;
       Index : Positive)
      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Parent.Components.Delimiter (Index);
    end Delimiter;
+
+   -------------------
+   -- Discriminants --
+   -------------------
+
+   overriding function Discriminants (Self : Proxy_Call)
+     return not null Program.Elements.Discriminant_Associations
+       .Discriminant_Association_Vector_Access is
+   begin
+      return Self.This.Discr'Unchecked_Access;
+   end Discriminants;
 
    -------------
    -- Element --
@@ -90,11 +100,23 @@ package body Program.Nodes.Proxy_Calls is
       return Self.Parent.Components.Element (Index);
    end Element;
 
+   -------------
+   -- Element --
+   -------------
+
+   overriding function Element
+     (Self  : Discriminant_Association_Vector;
+      Index : Positive)
+     return not null Program.Elements.Element_Access is
+   begin
+      return Self.Parent.Components.Element (Index);
+   end Element;
+
    ----------------
    -- Get_Length --
    ----------------
 
-   overriding function Get_Length (Self : Parameter_Vector) return Positive is
+   overriding function Get_Length (Self : Base_Vector) return Positive is
    begin
       return Self.Parent.Components.Get_Length;
    end Get_Length;
@@ -174,7 +196,7 @@ package body Program.Nodes.Proxy_Calls is
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Vector_Access is
    begin
-      return Self.Parameters;
+      return Self.This.Parameters'Unchecked_Access;
    end Parameters;
 
    ------------
@@ -228,6 +250,18 @@ package body Program.Nodes.Proxy_Calls is
       return Self'Unchecked_Access;
    end To_Call_Statement_Text;
 
+   -------------------------------------
+   -- To_Discriminant_Constraint_Text --
+   -------------------------------------
+
+   overriding function To_Discriminant_Constraint_Text
+     (Self : aliased in out Proxy_Call)
+      return Program.Elements.Discriminant_Constraints
+        .Discriminant_Constraint_Text_Access is
+   begin
+      return Self.Text'Unchecked_Access;
+   end To_Discriminant_Constraint_Text;
+
    ---------------------------
    -- To_Function_Call_Text --
    ---------------------------
@@ -248,6 +282,23 @@ package body Program.Nodes.Proxy_Calls is
    begin
       return Self.Text'Unchecked_Access;
    end To_Record_Aggregate_Text;
+
+   -------------------------------------
+   -- Turn_To_Discriminant_Constraint --
+   -------------------------------------
+
+   procedure Turn_To_Discriminant_Constraint
+     (Self : in out Proxy_Call'Class;
+      Mark : out Program.Elements.Expressions.Expression_Access) is
+   begin
+      Self.Current := A_Discriminant_Constraint;
+      Mark := Self.Called_Name;
+
+      for Item in Self.Components.Each_Element loop
+         Program.Nodes.Proxy_Associations.Proxy_Association_Access
+           (Item.Element).Turn_To_Discriminant_Association;
+      end loop;
+   end Turn_To_Discriminant_Constraint;
 
    ---------------------------
    -- Turn_To_Function_Call --
@@ -291,6 +342,8 @@ package body Program.Nodes.Proxy_Calls is
             Visitor.Call_Statement (Self);
          when A_Function_Call =>
             Visitor.Function_Call (Self);
+         when A_Discriminant_Constraint =>
+            Visitor.Discriminant_Constraint (Self);
          when A_Record_Aggregate =>
             Visitor.Record_Aggregate (Self);
       end case;

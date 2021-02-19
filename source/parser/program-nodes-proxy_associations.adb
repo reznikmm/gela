@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2020-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -85,6 +85,17 @@ package body Program.Nodes.Proxy_Associations is
       end return;
    end Create;
 
+   ------------------------
+   -- Discriminant_Value --
+   ------------------------
+
+   overriding function Discriminant_Value
+    (Self : Proxy_Association)
+      return not null Program.Elements.Expressions.Expression_Access is
+   begin
+      return Self.Expression;
+   end Discriminant_Value;
+
    ----------------------
    -- Formal_Parameter --
    ----------------------
@@ -111,6 +122,16 @@ package body Program.Nodes.Proxy_Associations is
       return True;
    end Is_Association;
 
+   ---------------------------------
+   -- Is_Discriminant_Association --
+   ---------------------------------
+
+   overriding function Is_Discriminant_Association
+    (Self : Proxy_Association) return Boolean is
+   begin
+      return Self.Current = A_Discriminant_Association;
+   end Is_Discriminant_Association;
+
    ------------------------------
    -- Is_Parameter_Association --
    ------------------------------
@@ -130,6 +151,30 @@ package body Program.Nodes.Proxy_Associations is
    begin
       return Self.Current = A_Record_Component_Association;
    end Is_Record_Component_Association;
+
+   --------------------
+   -- Selector_Names --
+   --------------------
+
+   overriding function Selector_Names
+    (Self : Proxy_Association)
+      return Program.Elements.Identifiers.Identifier_Vector_Access is
+   begin
+      return Program.Elements.Identifiers.Identifier_Vector_Access
+        (Self.Choices);
+   end Selector_Names;
+
+   --------------------------------------
+   -- To_Discriminant_Association_Text --
+   --------------------------------------
+
+   overriding function To_Discriminant_Association_Text
+    (Self : aliased in out Proxy_Association)
+      return Program.Elements.Discriminant_Associations
+        .Discriminant_Association_Text_Access is
+   begin
+      return Self'Unchecked_Access;
+   end To_Discriminant_Association_Text;
 
    ------------------------------------------
    -- To_Record_Component_Association_Text --
@@ -155,6 +200,16 @@ package body Program.Nodes.Proxy_Associations is
       return Self'Unchecked_Access;
    end To_Parameter_Association_Text;
 
+   --------------------------------------
+   -- Turn_To_Discriminant_Association --
+   --------------------------------------
+
+   procedure Turn_To_Discriminant_Association
+     (Self : in out Proxy_Association'Class) is
+   begin
+      Self.Current := A_Discriminant_Association;
+   end Turn_To_Discriminant_Association;
+
    -----------------------
    -- Turn_To_Parameter --
    -----------------------
@@ -177,6 +232,8 @@ package body Program.Nodes.Proxy_Associations is
             Visitor.Parameter_Association (Self);
          when A_Record_Component_Association =>
             Visitor.Record_Component_Association (Self);
+         when A_Discriminant_Association =>
+            Visitor.Discriminant_Association (Self);
       end case;
    end Visit;
 
