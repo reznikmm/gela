@@ -217,11 +217,23 @@ is
            .Signed_Integer_Type_Access)
       is
          pragma Unreferenced (Element);
+         Type_View : Program.Visibility.View;
+         Ignore    : Program.Element_Vectors.Element_Vector_Access;
       begin
          Self.Env.Create_Signed_Integer_Type
            (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
             Name   => Self.Type_Name);
+
+         Type_View := Self.Env.Latest_View;
          Self.Env.Leave_Declarative_Region;
+
+         Program.Predefined_Operators.Create_Operators_For_Integer
+           (Self      => Self.Env.all,
+            Type_View => Type_View,
+            Setter    => Setter,
+            Factory   => Factory,
+            Vectors   => Vectors,
+            Result    => Ignore);  --  FIXME: keep result in AST
       end Signed_Integer_Type;
 
       -------------------------
