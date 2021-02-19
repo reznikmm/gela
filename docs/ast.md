@@ -1212,20 +1212,20 @@
 > _[Association]_
  - Selector_Names              : [Identifier]*
  - Arrow_Token                 : Token?
- - Expression                  : _[Expression]_
+ - Discriminant_Value          : _[Expression]_
 
 ### Record_Component_Association
 > _[Association]_
  - Choices                     : _[Element]_* {[Identifier],[Others_Choice]}
  - Arrow_Token                 : Token?
- - Expression                  : _[Expression]_?
+ - Component_Value             : _[Expression]_?
  - Box_Token                   : Token?
 
 ### Array_Component_Association
 > _[Association]_
  - Choices                     : _[Element]_* {_[Expression]_,[Subtype_Indication],_[Discrete_Range]_,[Others_Choice]}
  - Arrow_Token                 : Token?
- - Expression                  : _[Expression]_?
+ - Component_Value             : _[Expression]_?
  - Box_Token                   : Token?
 
 ### Parameter_Association
