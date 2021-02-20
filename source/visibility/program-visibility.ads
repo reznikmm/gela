@@ -45,6 +45,7 @@ package Program.Visibility is
       Character_Literal_View,
       Subtype_View,
       Exception_View,
+      Variable_View,
       Parameter_View,
       Procedure_View,
       Function_View,
@@ -54,6 +55,10 @@ package Program.Visibility is
    subtype Type_View_Kind is View_Kind
      range Enumeration_Type_View .. Implicit_Type_View;
    --  Kind of type view
+
+   subtype Object_View is View_Kind
+     range Variable_View .. Parameter_View;
+   --  Kind of an object declaration
 
    type View (Kind : View_Kind := Unresolved_View) is private;
    --  An information about a program entity
@@ -81,8 +86,8 @@ package Program.Visibility is
    --  If given enumeration type is a character type
 
    function Subtype_Mark (Self : View) return View
-     with Pre => Self.Kind in Subtype_View | Parameter_View;
-   --  Return type of subtype, parameter declaration
+     with Pre => Self.Kind in Subtype_View | Object_View;
+   --  Return type of subtype, parameter, variable declarations
 
    function Has_Constraint (Self : View) return Boolean
      with Pre => Self.Kind = Subtype_View;
@@ -118,10 +123,10 @@ package Program.Visibility is
      with Pre => Self.Kind in
        Enumeration_Literal_View |
        Character_Literal_View |
-       Parameter_View;
+       Object_View;
    --  Return a corresponding type:
    --  * for enumeration/character literal - Enumeration_Type
-   --  * for parameter - Subtype_Mark
+   --  * for parameter/variable - Subtype_Mark
 
    function Is_Expected_Type (Self, Expected : View) return Boolean
      with Pre => Self.Kind in Type_View_Kind
@@ -318,7 +323,7 @@ package Program.Visibility is
    --  * Create_Procedure
    --  ** Create_Parameter
    --  ** Leave_Declarative_Region
-   --  ** Set_Parameter_Type
+   --  ** Set_Object_Type
    --  * Leave_Declarative_Region
 
    procedure Create_Parameter
@@ -330,7 +335,7 @@ package Program.Visibility is
    --  Add a parameter view to the context and to the topmost subprogram
    --  declaration. Create declarative region.
 
-   procedure Set_Parameter_Type
+   procedure Set_Object_Type
      (Self       : in out Context'Class;
       Definition : View);
    --  Assign given subtype to the topmost parameter declaration
@@ -344,7 +349,7 @@ package Program.Visibility is
    --  * Create_Procedure
    --  ** Create_Parameter
    --  ** Leave_Declarative_Region
-   --  ** Set_Parameter_Type
+   --  ** Set_Object_Type
    --  * Leave_Declarative_Region
    --  * Set_Result_Type
 
@@ -352,6 +357,16 @@ package Program.Visibility is
      (Self       : in out Context'Class;
       Definition : View);
    --  Assign given subtype as a result type to the topmost function decl.
+
+   procedure Create_Variable
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name);
+   --  Add a variable view to the context. Create declarative region.
+   --  The typical flow is
+   --  * Create_Variable
+   --  * Leave_Declarative_Region
+   --  * Set_Object_Type
 
    procedure Create_Exception
      (Self   : in out Context'Class;
@@ -458,6 +473,8 @@ private
                   Param_Def   : Entity_Reference;
                   Mode        : Parameter_Mode;
                   Has_Default : Boolean;
+               when Variable_View =>
+                  Object_Def   : Entity_Reference;
                when others =>
                   null;
             end case;

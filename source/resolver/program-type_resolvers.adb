@@ -3,9 +3,12 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Elements.Constraints;
 with Program.Elements.Defining_Names;
 with Program.Elements.Identifiers;
+with Program.Elements.Subtype_Indications;
 with Program.Node_Symbols;
+with Program.Nodes.Proxy_Calls;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 
@@ -24,6 +27,11 @@ package body Program.Type_Resolvers is
    overriding procedure Identifier
     (Self    : in out Visitor;
      Element : not null Program.Elements.Identifiers.Identifier_Access);
+
+   overriding procedure Subtype_Indication
+    (Self    : in out Visitor;
+     Element : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access);
 
    ----------------
    -- Identifier --
@@ -81,5 +89,29 @@ package body Program.Type_Resolvers is
       V.Visit (Element);
       Value := V.View;
    end Resolve_Type_Definition;
+
+   ------------------------
+   -- Subtype_Indication --
+   ------------------------
+
+   overriding procedure Subtype_Indication
+    (Self    : in out Visitor;
+     Element : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
+   is
+      Constr : constant Program.Elements.Constraints.Constraint_Access :=
+        Element.Constraint;
+   begin
+      Self.Visit (Element.Subtype_Mark);
+
+      if Constr.Assigned
+        and then Self.View.Kind in Program.Visibility.Array_Type_View
+        and then Constr.Is_Discriminant_Constraint
+        and then Constr.all in Program.Nodes.Proxy_Calls.Proxy_Call'Class
+      then
+         Program.Nodes.Proxy_Calls.Proxy_Call'Class (Constr.all)
+           .Turn_To_Index_Constraint;
+      end if;
+   end Subtype_Indication;
 
 end Program.Type_Resolvers;

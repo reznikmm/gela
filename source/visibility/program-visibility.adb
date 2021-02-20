@@ -475,6 +475,25 @@ package body Program.Visibility is
       Self.Append_Item (Value);
    end Create_Subtype;
 
+   ---------------------
+   -- Create_Variable --
+   ---------------------
+
+   procedure Create_Variable
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name)
+   is
+      Value : Entity :=
+        (Kind        => Variable_View,
+         Symbol      => Symbol,
+         Name        => Name,
+         Prev        => <>,
+         Object_Def  => (1, 1));
+   begin
+      Self.Append_Item (Value);
+   end Create_Variable;
+
    --------------------
    -- Enter_Snapshot --
    --------------------
@@ -1057,16 +1076,23 @@ package body Program.Visibility is
    -- Set_Parameter_Type --
    ------------------------
 
-   not overriding procedure Set_Parameter_Type
+   not overriding procedure Set_Object_Type
      (Self       : in out Context'Class;
       Definition : View)
    is
       Top : Region renames Self.Data (Self.Top);
       Last : Entity renames Top.Entities (Top.Entities.Last_Index);
    begin
-      pragma Assert (Last.Kind = Parameter_View);
-      Last.Param_Def := Definition.Index;
-   end Set_Parameter_Type;
+      pragma Assert (Last.Kind in Object_View);
+      case Last.Kind is
+         when Parameter_View =>
+            Last.Param_Def := Definition.Index;
+         when Variable_View =>
+            Last.Object_Def := Definition.Index;
+         when others =>
+            raise Program_Error;
+      end case;
+   end Set_Object_Type;
 
    ---------------------
    -- Set_Result_Type --
@@ -1166,6 +1192,8 @@ package body Program.Visibility is
             return Get_View (Self.Env, Value.Subtype_Mark);
          when Parameter_View =>
             return Get_View (Self.Env, Value.Param_Def);
+         when Variable_View =>
+            return Get_View (Self.Env, Value.Object_Def);
          when others =>
             raise Constraint_Error;
       end case;
@@ -1195,7 +1223,7 @@ package body Program.Visibility is
       case Self.Kind is
          when Enumeration_Literal_View | Character_Literal_View =>
             return Enumeration_Type (Self);
-         when Parameter_View =>
+         when Object_View =>
             return Subtype_Mark (Self);
          when others =>
             raise Program_Error;

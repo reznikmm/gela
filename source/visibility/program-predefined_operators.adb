@@ -80,7 +80,7 @@ package body Program.Predefined_Operators is
             Has_Default => False);
 
          Self.Leave_Declarative_Region;
-         Self.Set_Parameter_Type (Type_View);
+         Self.Set_Object_Type (Type_View);
       end New_Parameter;
 
       Type_Name : constant E.Defining_Names.Defining_Name_Access :=

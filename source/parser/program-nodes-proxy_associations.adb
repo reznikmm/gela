@@ -3,6 +3,8 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Elements.Discrete_Simple_Expression_Ranges;
+
 package body Program.Nodes.Proxy_Associations is
 
    ----------------------
@@ -122,6 +124,36 @@ package body Program.Nodes.Proxy_Associations is
       return True;
    end Is_Association;
 
+   -------------------
+   -- Is_Definition --
+   -------------------
+
+   overriding function Is_Definition
+     (Self : Proxy_Association) return Boolean is
+   begin
+      return Self.Current = A_Discrete_Simple_Expression_Range;
+   end Is_Definition;
+
+   -----------------------
+   -- Is_Discrete_Range --
+   -----------------------
+
+   overriding function Is_Discrete_Range
+     (Self : Proxy_Association) return Boolean is
+   begin
+      return Self.Current = A_Discrete_Simple_Expression_Range;
+   end Is_Discrete_Range;
+
+   -----------------------------------------
+   -- Is_Discrete_Simple_Expression_Range --
+   -----------------------------------------
+
+   overriding function Is_Discrete_Simple_Expression_Range
+     (Self : Proxy_Association) return Boolean is
+   begin
+      return Self.Current = A_Discrete_Simple_Expression_Range;
+   end Is_Discrete_Simple_Expression_Range;
+
    ---------------------------------
    -- Is_Discriminant_Association --
    ---------------------------------
@@ -200,6 +232,21 @@ package body Program.Nodes.Proxy_Associations is
       return Self'Unchecked_Access;
    end To_Parameter_Association_Text;
 
+   ----------------------------
+   -- Turn_To_Discrete_Range --
+   ----------------------------
+
+   procedure Turn_To_Discrete_Range (Self : in out Proxy_Association'Class) is
+   begin
+      if Self.Choices.Length = 1
+        and then Self.Choices.Element (1).Is_Discrete_Simple_Expression_Range
+      then
+         Self.Current := A_Discrete_Simple_Expression_Range;
+      else
+         raise Program_Error;
+      end if;
+   end Turn_To_Discrete_Range;
+
    --------------------------------------
    -- Turn_To_Discriminant_Association --
    --------------------------------------
@@ -234,6 +281,11 @@ package body Program.Nodes.Proxy_Associations is
             Visitor.Record_Component_Association (Self);
          when A_Discriminant_Association =>
             Visitor.Discriminant_Association (Self);
+         when A_Discrete_Simple_Expression_Range =>
+            Visitor.Discrete_Simple_Expression_Range
+              (Program.Elements.Discrete_Simple_Expression_Ranges
+                 .Discrete_Simple_Expression_Range_Access
+                    (Self.Choices.Element (1)));
       end case;
    end Visit;
 

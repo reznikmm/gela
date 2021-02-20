@@ -12,6 +12,7 @@ with Program.Elements.Call_Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Identifiers;
+with Program.Elements.Object_Declarations;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Specifications;
 with Program.Elements.Procedure_Body_Declarations;
@@ -63,6 +64,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Call_Statements
            .Call_Statement_Access);
+
+      overriding procedure Object_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Object_Declarations
+           .Object_Declaration_Access);
 
       overriding procedure Package_Declaration
         (Self    : in out Visitor;
@@ -364,6 +370,41 @@ package body Program.Resolvers is
            (Context'Unchecked_Access, Self.Setter, Element);
       end Call_Statement;
 
+      ------------------------
+      -- Object_Declaration --
+      ------------------------
+
+      overriding procedure Object_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Object_Declarations
+           .Object_Declaration_Access)
+      is
+         Type_View : Program.Visibility.View;
+
+         Names : constant Program.Elements.Defining_Identifiers
+           .Defining_Identifier_Vector_Access := Element.Names;
+      begin
+         for Name in Names.Each_Element loop
+            declare
+               Symbol : constant Program.Symbols.Symbol :=
+                 Program.Node_Symbols.Get_Symbol (Name.Element);
+            begin
+               Self.Env.Create_Variable
+                 (Symbol,
+                  Name.Element.To_Defining_Name);
+
+               Program.Type_Resolvers.Resolve_Type_Definition
+                 (Program.Elements.Element_Access (Element.Object_Subtype),
+                  Self.Env,
+                  Self.Setter,
+                  Type_View);
+
+               Self.Env.Leave_Declarative_Region;
+               Self.Env.Set_Object_Type (Type_View);
+            end;
+         end loop;
+      end Object_Declaration;
+
       -------------------------
       -- Package_Declaration --
       -------------------------
@@ -444,7 +485,7 @@ package body Program.Resolvers is
                   Type_View);
 
                Self.Env.Leave_Declarative_Region;
-               Self.Env.Set_Parameter_Type (Type_View);
+               Self.Env.Set_Object_Type (Type_View);
             end;
          end loop;
       end Parameter_Specification;

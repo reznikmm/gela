@@ -43,6 +43,7 @@ package Program.Nodes.Proxy_Associations is
    type Proxy_Association_Access is access all Proxy_Association;
 
    procedure Turn_To_Parameter (Self : in out Proxy_Association'Class);
+   procedure Turn_To_Discrete_Range (Self : in out Proxy_Association'Class);
    procedure Turn_To_Discriminant_Association
      (Self : in out Proxy_Association'Class);
 
@@ -51,7 +52,8 @@ private
    type Kind is
      (A_Parameter_Association,
       A_Record_Component_Association,
-      A_Discriminant_Association);
+      A_Discriminant_Association,
+      A_Discrete_Simple_Expression_Range);
 
    type Proxy_Association is new Program.Nodes.Node
      and Program.Elements.Parameter_Associations.Parameter_Association
@@ -83,8 +85,7 @@ private
      return Program.Elements.Expressions.Expression_Access;
 
    overriding function Is_Record_Component_Association
-    (Self : Proxy_Association)
-     return Boolean;
+    (Self : Proxy_Association) return Boolean;
 
    overriding function Is_Association (Self : Proxy_Association)
      return Boolean;
@@ -131,5 +132,15 @@ private
     (Self : aliased in out Proxy_Association)
       return Program.Elements.Discriminant_Associations
         .Discriminant_Association_Text_Access;
+
+   --  Discrete Simple_Expression_Range
+
+   overriding function Is_Definition (Self : Proxy_Association) return Boolean;
+
+   overriding function Is_Discrete_Range
+     (Self : Proxy_Association) return Boolean;
+
+   overriding function Is_Discrete_Simple_Expression_Range
+     (Self : Proxy_Association) return Boolean;
 
 end Program.Nodes.Proxy_Associations;

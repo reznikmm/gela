@@ -11,8 +11,10 @@ with Program.Elements.Function_Calls;
 with Program.Elements.Parameter_Associations;
 with Program.Elements.Record_Aggregates;
 with Program.Elements.Record_Component_Associations;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Discriminant_Associations;
 with Program.Elements.Discriminant_Constraints;
+with Program.Elements.Index_Constraints;
 with Program.Lexical_Elements;
 
 package Program.Nodes.Proxy_Calls is
@@ -25,6 +27,7 @@ package Program.Nodes.Proxy_Calls is
      and Program.Elements.Function_Calls.Function_Call
      and Program.Elements.Function_Calls.Function_Call_Text
      and Program.Elements.Discriminant_Constraints.Discriminant_Constraint
+     and Program.Elements.Index_Constraints.Index_Constraint
      and Program.Elements.Record_Aggregates.Record_Aggregate
        with private;
    --  Internal common representation of
@@ -55,17 +58,21 @@ package Program.Nodes.Proxy_Calls is
      (Self : in out Proxy_Call'Class;
       Mark : out Program.Elements.Expressions.Expression_Access);
 
+   procedure Turn_To_Index_Constraint (Self : in out Proxy_Call'Class);
+
 private
 
    type Kind is
      (A_Call_Statement,
       A_Function_Call,
       A_Discriminant_Constraint,
+      An_Index_Constraint,
       A_Record_Aggregate);
 
    type Proxy_Call_Text (Parent : not null Proxy_Call_Access) is
      new Program.Elements.Record_Aggregates.Record_Aggregate_Text
      and Program.Elements.Discriminant_Constraints.Discriminant_Constraint_Text
+     and Program.Elements.Index_Constraints.Index_Constraint_Text
        with null record;
 
    type Base_Vector (Parent : not null Proxy_Call_Access) is abstract new
@@ -98,12 +105,22 @@ private
       Index : Positive)
      return not null Program.Elements.Element_Access;
 
+   type Discrete_Range_Vector is new Base_Vector
+     and Program.Elements.Discrete_Ranges.Discrete_Range_Vector
+   with null record;
+
+   overriding function Element
+     (Self  : Discrete_Range_Vector;
+      Index : Positive)
+     return not null Program.Elements.Element_Access;
+
    type Proxy_Call is new Program.Nodes.Node
      and Program.Elements.Call_Statements.Call_Statement
      and Program.Elements.Call_Statements.Call_Statement_Text
      and Program.Elements.Function_Calls.Function_Call
      and Program.Elements.Function_Calls.Function_Call_Text
      and Program.Elements.Discriminant_Constraints.Discriminant_Constraint
+     and Program.Elements.Index_Constraints.Index_Constraint
      and Program.Elements.Record_Aggregates.Record_Aggregate with
    record
       This        : Proxy_Call_Access := Proxy_Call'Unchecked_Access;
@@ -115,6 +132,7 @@ private
       Parameters  : aliased Parameter_Vector (Proxy_Call'Unchecked_Access);
       Discr       : aliased Discriminant_Association_Vector
                               (Proxy_Call'Unchecked_Access);
+      Ranges : aliased Discrete_Range_Vector (Proxy_Call'Unchecked_Access);
       Left_Bracket_Token  : Program.Lexical_Elements.Lexical_Element_Access;
       Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access;
       Semicolon_Token     : Program.Lexical_Elements.Lexical_Element_Access;
@@ -181,6 +199,12 @@ private
 
    --  Discriminant constraint
 
+   overriding function Is_Definition (Self : Proxy_Call) return Boolean;
+   overriding function Is_Constraint (Self : Proxy_Call) return Boolean;
+
+   overriding function Is_Discriminant_Constraint (Self : Proxy_Call)
+      return Boolean;
+
    overriding function Discriminants (Self : Proxy_Call)
      return not null Program.Elements.Discriminant_Associations
        .Discriminant_Association_Vector_Access;
@@ -189,5 +213,17 @@ private
      (Self : aliased in out Proxy_Call)
       return Program.Elements.Discriminant_Constraints
         .Discriminant_Constraint_Text_Access;
+
+   --  Index constraint
+
+   overriding function Is_Index_Constraint (Self : Proxy_Call) return Boolean;
+
+   overriding function Ranges (Self : Proxy_Call)
+     return not null Program.Elements.Discrete_Ranges
+       .Discrete_Range_Vector_Access;
+
+   overriding function To_Index_Constraint_Text
+     (Self : aliased in out Proxy_Call)
+       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access;
 
 end Program.Nodes.Proxy_Calls;

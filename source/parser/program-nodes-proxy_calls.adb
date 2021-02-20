@@ -50,6 +50,7 @@ package body Program.Nodes.Proxy_Calls is
          Components          => Parameters,
          Parameters          => <>,
          Discr               => <>,
+         Ranges              => <>,
          Right_Bracket_Token => Right_Bracket_Token,
          Semicolon_Token     => null,
          Enclosing_Element   => null,
@@ -112,6 +113,26 @@ package body Program.Nodes.Proxy_Calls is
       return Self.Parent.Components.Element (Index);
    end Element;
 
+   -------------
+   -- Element --
+   -------------
+
+   overriding function Element
+     (Self  : Discrete_Range_Vector;
+      Index : Positive)
+      return not null Program.Elements.Element_Access
+   is
+      Result : not null Program.Elements.Element_Access :=
+        Self.Parent.Components.Element (Index);
+   begin
+      if Result.Is_Discrete_Simple_Expression_Range then
+         Result := Program.Nodes.Proxy_Associations.Proxy_Association_Access
+           (Result).Choices.Element (1);
+      end if;
+
+      return Result;
+   end Element;
+
    ----------------
    -- Get_Length --
    ----------------
@@ -131,6 +152,34 @@ package body Program.Nodes.Proxy_Calls is
    end Is_Call_Statement;
 
    -------------------
+   -- Is_Constraint --
+   -------------------
+
+   overriding function Is_Constraint (Self : Proxy_Call) return Boolean is
+   begin
+      return Self.Current in A_Discriminant_Constraint | An_Index_Constraint;
+   end Is_Constraint;
+
+   -------------------
+   -- Is_Definition --
+   -------------------
+
+   overriding function Is_Definition (Self : Proxy_Call) return Boolean is
+   begin
+      return Self.Current in A_Discriminant_Constraint | An_Index_Constraint;
+   end Is_Definition;
+
+   --------------------------------
+   -- Is_Discriminant_Constraint --
+   --------------------------------
+
+   overriding function Is_Discriminant_Constraint (Self : Proxy_Call)
+      return Boolean is
+   begin
+      return Self.Current = A_Discriminant_Constraint;
+   end Is_Discriminant_Constraint;
+
+   -------------------
    -- Is_Expression --
    -------------------
 
@@ -148,6 +197,16 @@ package body Program.Nodes.Proxy_Calls is
    begin
       return Self.Current = A_Function_Call;
    end Is_Function_Call;
+
+   -------------------------
+   -- Is_Index_Constraint --
+   -------------------------
+
+   overriding function Is_Index_Constraint (Self : Proxy_Call)
+     return Boolean is
+   begin
+      return Self.Current = An_Index_Constraint;
+   end Is_Index_Constraint;
 
    -------------------------
    -- Is_Record_Aggregate --
@@ -208,6 +267,17 @@ package body Program.Nodes.Proxy_Calls is
    begin
       return Self.Called_Name;
    end Prefix;
+
+   ------------
+   -- Ranges --
+   ------------
+
+   overriding function Ranges (Self : Proxy_Call)
+     return not null Program.Elements.Discrete_Ranges
+       .Discrete_Range_Vector_Access is
+   begin
+      return Self.This.Ranges'Unchecked_Access;
+   end Ranges;
 
    -------------------------
    -- Right_Bracket_Token --
@@ -273,6 +343,17 @@ package body Program.Nodes.Proxy_Calls is
    end To_Function_Call_Text;
 
    ------------------------------
+   -- To_Index_Constraint_Text --
+   ------------------------------
+
+   overriding function To_Index_Constraint_Text
+     (Self : aliased in out Proxy_Call)
+      return Program.Elements.Index_Constraints.Index_Constraint_Text_Access is
+   begin
+      return Self.Text'Unchecked_Access;
+   end To_Index_Constraint_Text;
+
+   ------------------------------
    -- To_Record_Aggregate_Text --
    ------------------------------
 
@@ -317,6 +398,20 @@ package body Program.Nodes.Proxy_Calls is
       end loop;
    end Turn_To_Function_Call;
 
+   ------------------------------
+   -- Turn_To_Index_Constraint --
+   ------------------------------
+
+   procedure Turn_To_Index_Constraint (Self : in out Proxy_Call'Class) is
+   begin
+      Self.Current := An_Index_Constraint;
+
+      for Item in Self.Components.Each_Element loop
+         Program.Nodes.Proxy_Associations.Proxy_Association_Access
+           (Item.Element).Turn_To_Discrete_Range;
+      end loop;
+   end Turn_To_Index_Constraint;
+
    ----------------------------
    -- Turn_To_Procedure_Call --
    ----------------------------
@@ -344,6 +439,8 @@ package body Program.Nodes.Proxy_Calls is
             Visitor.Function_Call (Self);
          when A_Discriminant_Constraint =>
             Visitor.Discriminant_Constraint (Self);
+         when An_Index_Constraint =>
+            Visitor.Index_Constraint (Self);
          when A_Record_Aggregate =>
             Visitor.Record_Aggregate (Self);
       end case;

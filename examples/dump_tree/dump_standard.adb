@@ -157,6 +157,11 @@ procedure Dump_Standard is
             if Program.Visibility.Has_Default (View) then
                Ada.Wide_Wide_Text_IO.Put ("?");
             end if;
+         when Variable_View =>
+            Print
+              (Program.Visibility.Subtype_Mark (View),
+               Padding & Indent,
+               Verbosity'Pred (Verbose));
          when Exception_View =>
             null;
          when Procedure_View .. Package_View =>
