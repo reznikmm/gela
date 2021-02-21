@@ -1281,6 +1281,9 @@ package Program.Elements is
    not overriding function Is_Exception_Handler (Self : Element) return Boolean
      is abstract;
 
+   function To_Element (Self : access Element'Class) return Element_Access
+     is (Element_Access (Self));
+
    function To_Pragma
     (Self : access Element'Class)
       return Program.Elements.Pragmas.Pragma_Access
