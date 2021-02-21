@@ -3,7 +3,7 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
-with Program.Complete_Contexts;
+with Program.Complete_Contexts.Call_Statements;
 with Program.Element_Filters;
 with Program.Element_Iterators;
 with Program.Element_Vectors;
@@ -366,7 +366,7 @@ package body Program.Resolvers is
       is
          Sets : aliased Program.Interpretations.Context (Self.Env);
       begin
-         Program.Complete_Contexts.Call_Statement
+         Program.Complete_Contexts.Call_Statements.Call_Statement
            (Sets'Unchecked_Access, Self.Setter, Element);
       end Call_Statement;
 
