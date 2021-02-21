@@ -93,6 +93,11 @@ package Program.Visibility is
      with Pre => Self.Kind = Subtype_View;
    --  If given subtype has a constraint
 
+   function First_Subtype (Self : View) return View
+     with Pre => Self.Kind in Subtype_View | Type_View_Kind,
+          Post => First_Subtype'Result.Kind in Type_View_Kind;
+   --  Return first subtype of a type
+
    function Indexes (Self : View) return View_Array
      with Pre => Self.Kind = Array_Type_View;
    --  Return index types for given array type

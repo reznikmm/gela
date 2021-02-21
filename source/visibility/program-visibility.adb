@@ -641,6 +641,20 @@ package body Program.Visibility is
    end First;
 
    -------------------
+   -- First_Subtype --
+   -------------------
+
+   function First_Subtype (Self : View) return View is
+      Result : View := Self;
+   begin
+      while Result.Kind = Subtype_View loop
+         Result := Subtype_Mark (Result);
+      end loop;
+
+      return Result;
+   end First_Subtype;
+
+   -------------------
    -- Get_Name_View --
    -------------------
 
