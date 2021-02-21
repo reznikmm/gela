@@ -424,6 +424,15 @@ package body Program.Resolvers is
                   Sets'Unchecked_Access,
                   Type_View);
 
+               if Element.Initialization_Expression.Assigned then
+                  Program.Complete_Contexts.Resolve_To_Expected_Type
+                    (Element => Program.Elements.Element_Access
+                       (Element.Initialization_Expression),
+                     Sets    => Sets'Unchecked_Access,
+                     Setter  => Self.Setter,
+                     Expect  => Type_View);
+               end if;
+
                Self.Env.Leave_Declarative_Region;
                Self.Env.Set_Object_Type (Type_View);
             end;
