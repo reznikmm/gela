@@ -704,7 +704,6 @@ package body Meta.Writes is
          Parameters    => F.New_Parameter
            (Name            => F.New_Name (+"Self"),
             Type_Definition => Name,
-            Is_Aliased      => True,
             Is_In           => True,
             Is_Out          => True),
          Result        => Text_Type);
@@ -966,12 +965,26 @@ package body Meta.Writes is
                 (F.New_Name (+"Self"),
                  F.New_Infix (+"/=", F.New_Name (+"null"))));
 
+      To_Element : constant Ada_Pretty.Node_Access :=
+        F.New_Subprogram_Declaration
+          (F.New_Subprogram_Specification
+             (Name          => F.New_Name (+"To_Element"),
+              Parameters    => F.New_Parameter
+                (Name            => F.New_Name (+"Self"),
+                 Type_Definition => F.New_Access
+                        (Target => Element_Class)),
+              Result => F.New_Name (+"Element_Access")),
+           Expression => F.New_Apply
+             (F.New_Name (+"Element_Access"),
+              F.New_Name (+"Self")));
+
       Public_Part : constant Ada_Pretty.Node_Access := F.New_List
         ((Pure,
          Element_Decl,
          Element_Access,
          Assigned,
          Classifications,
+         To_Element,
          Casts,
          Get_Props
            (F,
@@ -2039,7 +2052,6 @@ package body Meta.Writes is
                     Parameters    => F.New_Parameter
                       (Name            => F.New_Name (+"Self"),
                        Type_Definition => Element,
-                       Is_Aliased      => True,
                        Is_In           => True,
                        Is_Out          => True),
                     Result        => Access_Name),
@@ -2277,7 +2289,6 @@ package body Meta.Writes is
                 (Name            => F.New_Name (+"Self"),
                  Type_Definition => F.New_Name
                    ("Base_" & Item.Name & "'Class"),
-                 Is_Aliased => True,
                  Is_In => True,
                  Is_Out => True)));
 
@@ -2678,7 +2689,6 @@ package body Meta.Writes is
                 (Name            => F.New_Name (+"Self"),
                  Type_Definition => F.New_Name
                    ("Base_" & Item.Name & "'Class"),
-                 Is_Aliased => True,
                  Is_In => True,
                  Is_Out => True)),
            Statements => F.New_List
