@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -68,7 +68,8 @@ procedure Def_Name is
       End_Name : Program.Elements.Element_Access);
 
    procedure Enclosing_Unit_Name
-     (Element : access Program.Elements.Element'Class);
+     (Element  : access Program.Elements.Element'Class;
+      Position : Wide_Wide_String);
 
    package body Dump_Names is
 
@@ -105,11 +106,10 @@ procedure Def_Name is
             elsif Def.Is_Part_Of_Implicit then
                Ada.Wide_Wide_Text_IO.Put_Line (" implicit");
             else
-               Enclosing_Unit_Name (Def);
-               Ada.Wide_Wide_Text_IO.Put (" ");
                Def_Text := Def.To_Defining_Identifier_Text;
                Token := Def_Text.Identifier_Token;
-               Ada.Wide_Wide_Text_IO.Put_Line (Token.From_Image);
+               Enclosing_Unit_Name (Def, Token.From_Image);
+               Ada.Wide_Wide_Text_IO.New_Line;
             end if;
          end if;
       end Identifier;
@@ -149,11 +149,10 @@ procedure Def_Name is
             elsif Def.Is_Part_Of_Implicit then
                Ada.Wide_Wide_Text_IO.Put_Line (" implicit");
             else
-               Enclosing_Unit_Name (Def);
-               Ada.Wide_Wide_Text_IO.Put (" ");
                Def_Text := Def.To_Defining_Operator_Symbol_Text;
                Token := Def_Text.Operator_Symbol_Token;
-               Ada.Wide_Wide_Text_IO.Put_Line (Token.From_Image);
+               Enclosing_Unit_Name (Def, Token.From_Image);
+               Ada.Wide_Wide_Text_IO.New_Line;
             end if;
          end if;
       end Operator_Symbol;
@@ -235,7 +234,8 @@ procedure Def_Name is
    Ctx : aliased Program.Plain_Contexts.Context;
 
    procedure Enclosing_Unit_Name
-     (Element : access Program.Elements.Element'Class)
+     (Element  : access Program.Elements.Element'Class;
+      Position : Wide_Wide_String)
    is
       use type Program.Elements.Element_Access;
       Parent : Program.Elements.Element_Access := Element;
@@ -246,17 +246,26 @@ procedure Def_Name is
 
       for Cursor in Ctx.Library_Unit_Declarations.Each_Unit loop
          if Cursor.Unit.Unit_Declaration = Parent then
-            Ada.Wide_Wide_Text_IO.Put (Cursor.Unit.Full_Name);
-            return;
+
+            if Cursor.Unit.Full_Name = "" then
+               Ada.Wide_Wide_Text_IO.Put ("[Standard]");
+               return;  --  Don't print slocs in Standard (they could change)
+            else
+               Ada.Wide_Wide_Text_IO.Put (Cursor.Unit.Full_Name);
+               exit;
+            end if;
          end if;
       end loop;
 
       for Cursor in Ctx.Compilation_Unit_Bodies.Each_Unit loop
          if Cursor.Unit.Unit_Declaration = Parent then
             Ada.Wide_Wide_Text_IO.Put (Cursor.Unit.Full_Name);
-            return;
+            exit;
          end if;
       end loop;
+
+      Ada.Wide_Wide_Text_IO.Put (" ");
+      Ada.Wide_Wide_Text_IO.Put (Position);
    end Enclosing_Unit_Name;
 
    Err : aliased Errors.Error_Listener;
