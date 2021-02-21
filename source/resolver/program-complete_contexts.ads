@@ -5,6 +5,7 @@
 
 with Program.Cross_Reference_Updaters;
 with Program.Elements.Discrete_Ranges;
+with Program.Elements.Expressions;
 with Program.Interpretations;
 with Program.Visibility;
 
@@ -12,11 +13,18 @@ package Program.Complete_Contexts is
    pragma Preelaborate;
 
    procedure Resolve_To_Expected_Type
-     (Sets    : not null Program.Interpretations.Context_Access;
+     (Element : not null Program.Elements.Element_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
       Setter  : not null Program.Cross_Reference_Updaters
                            .Cross_Reference_Updater_Access;
-      Expect  : Program.Visibility.View;
-      Element : not null Program.Elements.Element_Access);
+      Expect  : Program.Visibility.View);
+
+   procedure Resolve_To_Any_Type
+     (Element : not null Program.Elements.Expressions.Expression_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
+      Setter  : not null Program.Cross_Reference_Updaters
+                           .Cross_Reference_Updater_Access;
+      Result  : out Program.Visibility.View);
 
 private
 

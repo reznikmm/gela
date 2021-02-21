@@ -391,21 +391,52 @@ package body Program.Complete_Contexts is
       end loop;
    end Resolve_Parameters;
 
-   ------------------------------
-   -- Resolve_To_Expected_Type --
-   ------------------------------
+   -------------------------
+   -- Resolve_To_Any_Type --
+   -------------------------
 
-   procedure Resolve_To_Expected_Type
-     (Sets    : not null Program.Interpretations.Context_Access;
+   procedure Resolve_To_Any_Type
+     (Element : not null Program.Elements.Expressions.Expression_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
       Setter  : not null Program.Cross_Reference_Updaters
                            .Cross_Reference_Updater_Access;
-      Expect  : Program.Visibility.View;
-      Element : not null Program.Elements.Element_Access)
+      Result  : out Program.Visibility.View)
    is
       use type Program.Interpretations.Expressions.Cursor;
 
       Set : constant Program.Interpretations.Interpretation_Set :=
         Up (Element.all'Unchecked_Access, Sets);
+
+      Found : Program.Interpretations.Solution;
+      Count : Natural := 0;
+
+   begin
+      for N in Program.Interpretations.Expressions.Each (Set) loop
+         Count := Count + 1;
+         Found := -N;
+         Result := +N;
+      end loop;
+
+      if Count > 0 then
+         Down (Element.all'Unchecked_Access, Found, Setter);
+      end if;
+   end Resolve_To_Any_Type;
+
+   ------------------------------
+   -- Resolve_To_Expected_Type --
+   ------------------------------
+
+   procedure Resolve_To_Expected_Type
+     (Element : not null Program.Elements.Element_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
+      Setter  : not null Program.Cross_Reference_Updaters
+                           .Cross_Reference_Updater_Access;
+      Expect  : Program.Visibility.View)
+   is
+      use type Program.Interpretations.Expressions.Cursor;
+
+      Set : constant Program.Interpretations.Interpretation_Set :=
+        Up (Element, Sets);
 
       Found : Program.Interpretations.Solution;
       Count : Natural := 0;

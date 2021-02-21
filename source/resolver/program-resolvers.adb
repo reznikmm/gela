@@ -3,11 +3,13 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Complete_Contexts.Assignment_Statements;
 with Program.Complete_Contexts.Call_Statements;
 with Program.Element_Filters;
 with Program.Element_Iterators;
 with Program.Element_Vectors;
 with Program.Element_Visitors;
+with Program.Elements.Assignment_Statements;
 with Program.Elements.Call_Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
@@ -59,6 +61,11 @@ package body Program.Resolvers is
 --    is new Program.Safe_Element_Visitors.Safe_Element_Visitor with record
          Snapshot_Registry : Snapshot_Registry_Access;
       end record;
+
+      overriding procedure Assignment_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Assignment_Statements
+           .Assignment_Statement_Access);
 
       overriding procedure Call_Statement
         (Self    : in out Visitor;
@@ -354,6 +361,21 @@ package body Program.Resolvers is
             end loop;
          end loop;
       end Append_Unit_Use_Clauses;
+
+      --------------------------
+      -- Assignment_Statement --
+      --------------------------
+
+      overriding procedure Assignment_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Assignment_Statements
+           .Assignment_Statement_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+      begin
+         Program.Complete_Contexts.Assignment_Statements.Assignment_Statement
+           (Sets'Unchecked_Access, Self.Setter, Element);
+      end Assignment_Statement;
 
       --------------------
       -- Call_Statement --

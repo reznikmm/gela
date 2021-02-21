@@ -115,7 +115,8 @@ package body Program.Interpretations.Expressions is
          use all type Program.Visibility.View_Kind;
       begin
          return View.Kind in
-           Enumeration_Literal_View | Character_Literal_View | Parameter_View
+           Enumeration_Literal_View | Character_Literal_View
+             | Program.Visibility.Object_View
            and then Check_Type (Program.Visibility.Type_Of (View));
       end Check_Name;
 
