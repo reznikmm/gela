@@ -48,7 +48,7 @@ private
         Parent : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Derived_Type'Class);
+   procedure Initialize (Self : in out Base_Derived_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Derived_Type;
@@ -78,7 +78,7 @@ private
      end record;
 
    overriding function To_Derived_Type_Text
-    (Self : aliased in out Derived_Type)
+    (Self : in out Derived_Type)
       return Program.Elements.Derived_Types.Derived_Type_Text_Access;
 
    overriding function Abstract_Token
@@ -108,7 +108,7 @@ private
      end record;
 
    overriding function To_Derived_Type_Text
-    (Self : aliased in out Implicit_Derived_Type)
+    (Self : in out Implicit_Derived_Type)
       return Program.Elements.Derived_Types.Derived_Type_Text_Access;
 
    overriding function Is_Part_Of_Implicit

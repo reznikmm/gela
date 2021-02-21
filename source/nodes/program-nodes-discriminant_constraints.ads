@@ -52,8 +52,7 @@ private
           .Discriminant_Association_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discriminant_Constraint'Class);
+   procedure Initialize (Self : in out Base_Discriminant_Constraint'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Constraint;
@@ -88,7 +87,7 @@ private
      end record;
 
    overriding function To_Discriminant_Constraint_Text
-    (Self : aliased in out Discriminant_Constraint)
+    (Self : in out Discriminant_Constraint)
       return Program.Elements.Discriminant_Constraints
           .Discriminant_Constraint_Text_Access;
 
@@ -109,7 +108,7 @@ private
      end record;
 
    overriding function To_Discriminant_Constraint_Text
-    (Self : aliased in out Implicit_Discriminant_Constraint)
+    (Self : in out Implicit_Discriminant_Constraint)
       return Program.Elements.Discriminant_Constraints
           .Discriminant_Constraint_Text_Access;
 

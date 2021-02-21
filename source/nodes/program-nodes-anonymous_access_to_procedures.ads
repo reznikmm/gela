@@ -63,7 +63,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Procedure'Class);
+    (Self : in out Base_Anonymous_Access_To_Procedure'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Anonymous_Access_To_Procedure;
@@ -103,7 +103,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Procedure_Text
-    (Self : aliased in out Anonymous_Access_To_Procedure)
+    (Self : in out Anonymous_Access_To_Procedure)
       return Program.Elements.Anonymous_Access_To_Procedures
           .Anonymous_Access_To_Procedure_Text_Access;
 
@@ -154,7 +154,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Procedure_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Procedure)
+    (Self : in out Implicit_Anonymous_Access_To_Procedure)
       return Program.Elements.Anonymous_Access_To_Procedures
           .Anonymous_Access_To_Procedure_Text_Access;
 

@@ -137,8 +137,7 @@ package body Program.Nodes.Formal_Type_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Type_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Formal_Type_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Discriminant_Part.Assigned then
@@ -175,7 +174,7 @@ package body Program.Nodes.Formal_Type_Declarations is
    end Visit;
 
    overriding function To_Formal_Type_Declaration_Text
-    (Self : aliased in out Formal_Type_Declaration)
+    (Self : in out Formal_Type_Declaration)
       return Program.Elements.Formal_Type_Declarations
           .Formal_Type_Declaration_Text_Access is
    begin
@@ -183,7 +182,7 @@ package body Program.Nodes.Formal_Type_Declarations is
    end To_Formal_Type_Declaration_Text;
 
    overriding function To_Formal_Type_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Type_Declaration)
+    (Self : in out Implicit_Formal_Type_Declaration)
       return Program.Elements.Formal_Type_Declarations
           .Formal_Type_Declaration_Text_Access is
       pragma Unreferenced (Self);

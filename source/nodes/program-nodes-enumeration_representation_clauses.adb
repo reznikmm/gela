@@ -104,7 +104,7 @@ package body Program.Nodes.Enumeration_Representation_Clauses is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Enumeration_Representation_Clause'Class) is
+    (Self : in out Base_Enumeration_Representation_Clause'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
@@ -143,7 +143,7 @@ package body Program.Nodes.Enumeration_Representation_Clauses is
    end Visit;
 
    overriding function To_Enumeration_Representation_Clause_Text
-    (Self : aliased in out Enumeration_Representation_Clause)
+    (Self : in out Enumeration_Representation_Clause)
       return Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause_Text_Access is
    begin
@@ -151,7 +151,7 @@ package body Program.Nodes.Enumeration_Representation_Clauses is
    end To_Enumeration_Representation_Clause_Text;
 
    overriding function To_Enumeration_Representation_Clause_Text
-    (Self : aliased in out Implicit_Enumeration_Representation_Clause)
+    (Self : in out Implicit_Enumeration_Representation_Clause)
       return Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause_Text_Access is
       pragma Unreferenced (Self);

@@ -63,7 +63,7 @@ private
         Else_Expression : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_If_Expression'Class);
+   procedure Initialize (Self : in out Base_If_Expression'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_If_Expression;
@@ -103,7 +103,7 @@ private
      end record;
 
    overriding function To_If_Expression_Text
-    (Self : aliased in out If_Expression)
+    (Self : in out If_Expression)
       return Program.Elements.If_Expressions.If_Expression_Text_Access;
 
    overriding function If_Token
@@ -127,7 +127,7 @@ private
      end record;
 
    overriding function To_If_Expression_Text
-    (Self : aliased in out Implicit_If_Expression)
+    (Self : in out Implicit_If_Expression)
       return Program.Elements.If_Expressions.If_Expression_Text_Access;
 
    overriding function Is_Part_Of_Implicit

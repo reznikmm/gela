@@ -55,8 +55,7 @@ private
           .Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Aspect_Specification'Class);
+   procedure Initialize (Self : in out Base_Aspect_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Aspect_Specification;
@@ -86,7 +85,7 @@ private
      end record;
 
    overriding function To_Aspect_Specification_Text
-    (Self : aliased in out Aspect_Specification)
+    (Self : in out Aspect_Specification)
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Text_Access;
 
@@ -103,7 +102,7 @@ private
      end record;
 
    overriding function To_Aspect_Specification_Text
-    (Self : aliased in out Implicit_Aspect_Specification)
+    (Self : in out Implicit_Aspect_Specification)
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Text_Access;
 

@@ -51,7 +51,7 @@ private
           .Array_Component_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Array_Aggregate'Class);
+   procedure Initialize (Self : in out Base_Array_Aggregate'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Array_Aggregate;
@@ -81,7 +81,7 @@ private
      end record;
 
    overriding function To_Array_Aggregate_Text
-    (Self : aliased in out Array_Aggregate)
+    (Self : in out Array_Aggregate)
       return Program.Elements.Array_Aggregates.Array_Aggregate_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -101,7 +101,7 @@ private
      end record;
 
    overriding function To_Array_Aggregate_Text
-    (Self : aliased in out Implicit_Array_Aggregate)
+    (Self : in out Implicit_Array_Aggregate)
       return Program.Elements.Array_Aggregates.Array_Aggregate_Text_Access;
 
    overriding function Is_Part_Of_Implicit

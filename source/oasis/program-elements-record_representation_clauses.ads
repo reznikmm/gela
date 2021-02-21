@@ -39,7 +39,7 @@ package Program.Elements.Record_Representation_Clauses is
      access all Record_Representation_Clause_Text'Class with Storage_Size => 0;
 
    not overriding function To_Record_Representation_Clause_Text
-    (Self : aliased in out Record_Representation_Clause)
+    (Self : in out Record_Representation_Clause)
       return Record_Representation_Clause_Text_Access is abstract;
 
    not overriding function For_Token

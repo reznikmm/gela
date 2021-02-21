@@ -90,8 +90,7 @@ package body Program.Nodes.Elsif_Expression_Paths is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Elsif_Expression_Path'Class) is
+   procedure Initialize (Self : in out Base_Elsif_Expression_Path'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
@@ -122,7 +121,7 @@ package body Program.Nodes.Elsif_Expression_Paths is
    end Visit;
 
    overriding function To_Elsif_Expression_Path_Text
-    (Self : aliased in out Elsif_Expression_Path)
+    (Self : in out Elsif_Expression_Path)
       return Program.Elements.Elsif_Expression_Paths
           .Elsif_Expression_Path_Text_Access is
    begin
@@ -130,7 +129,7 @@ package body Program.Nodes.Elsif_Expression_Paths is
    end To_Elsif_Expression_Path_Text;
 
    overriding function To_Elsif_Expression_Path_Text
-    (Self : aliased in out Implicit_Elsif_Expression_Path)
+    (Self : in out Implicit_Elsif_Expression_Path)
       return Program.Elements.Elsif_Expression_Paths
           .Elsif_Expression_Path_Text_Access is
       pragma Unreferenced (Self);

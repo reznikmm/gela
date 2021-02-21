@@ -202,7 +202,7 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
    end Has_Overriding;
 
    procedure Initialize
-    (Self : aliased in out Base_Procedure_Renaming_Declaration'Class) is
+    (Self : in out Base_Procedure_Renaming_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Parameters.Each_Element loop
@@ -241,7 +241,7 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
    end Visit;
 
    overriding function To_Procedure_Renaming_Declaration_Text
-    (Self : aliased in out Procedure_Renaming_Declaration)
+    (Self : in out Procedure_Renaming_Declaration)
       return Program.Elements.Procedure_Renaming_Declarations
           .Procedure_Renaming_Declaration_Text_Access is
    begin
@@ -249,7 +249,7 @@ package body Program.Nodes.Procedure_Renaming_Declarations is
    end To_Procedure_Renaming_Declaration_Text;
 
    overriding function To_Procedure_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Procedure_Renaming_Declaration)
+    (Self : in out Implicit_Procedure_Renaming_Declaration)
       return Program.Elements.Procedure_Renaming_Declarations
           .Procedure_Renaming_Declaration_Text_Access is
       pragma Unreferenced (Self);

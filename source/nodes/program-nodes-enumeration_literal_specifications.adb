@@ -62,7 +62,7 @@ package body Program.Nodes.Enumeration_Literal_Specifications is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Enumeration_Literal_Specification'Class) is
+    (Self : in out Base_Enumeration_Literal_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       null;
@@ -92,7 +92,7 @@ package body Program.Nodes.Enumeration_Literal_Specifications is
    end Visit;
 
    overriding function To_Enumeration_Literal_Specification_Text
-    (Self : aliased in out Enumeration_Literal_Specification)
+    (Self : in out Enumeration_Literal_Specification)
       return Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Text_Access is
    begin
@@ -100,7 +100,7 @@ package body Program.Nodes.Enumeration_Literal_Specifications is
    end To_Enumeration_Literal_Specification_Text;
 
    overriding function To_Enumeration_Literal_Specification_Text
-    (Self : aliased in out Implicit_Enumeration_Literal_Specification)
+    (Self : in out Implicit_Enumeration_Literal_Specification)
       return Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Text_Access is
       pragma Unreferenced (Self);

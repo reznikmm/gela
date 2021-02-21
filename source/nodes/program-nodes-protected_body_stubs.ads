@@ -65,7 +65,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Protected_Body_Stub'Class);
+   procedure Initialize (Self : in out Base_Protected_Body_Stub'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Body_Stub;
@@ -107,7 +107,7 @@ private
      end record;
 
    overriding function To_Protected_Body_Stub_Text
-    (Self : aliased in out Protected_Body_Stub)
+    (Self : in out Protected_Body_Stub)
       return Program.Elements.Protected_Body_Stubs
           .Protected_Body_Stub_Text_Access;
 
@@ -144,7 +144,7 @@ private
      end record;
 
    overriding function To_Protected_Body_Stub_Text
-    (Self : aliased in out Implicit_Protected_Body_Stub)
+    (Self : in out Implicit_Protected_Body_Stub)
       return Program.Elements.Protected_Body_Stubs
           .Protected_Body_Stub_Text_Access;
 

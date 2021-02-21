@@ -79,7 +79,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Procedure_Declaration'Class);
+    (Self : in out Base_Generic_Procedure_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Generic_Procedure_Declaration;
@@ -128,7 +128,7 @@ private
      end record;
 
    overriding function To_Generic_Procedure_Declaration_Text
-    (Self : aliased in out Generic_Procedure_Declaration)
+    (Self : in out Generic_Procedure_Declaration)
       return Program.Elements.Generic_Procedure_Declarations
           .Generic_Procedure_Declaration_Text_Access;
 
@@ -165,7 +165,7 @@ private
      end record;
 
    overriding function To_Generic_Procedure_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Procedure_Declaration)
+    (Self : in out Implicit_Generic_Procedure_Declaration)
       return Program.Elements.Generic_Procedure_Declarations
           .Generic_Procedure_Declaration_Text_Access;
 

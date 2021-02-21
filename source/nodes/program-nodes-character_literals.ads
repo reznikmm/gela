@@ -45,7 +45,7 @@ private
           .Defining_Character_Literals.Defining_Character_Literal_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Character_Literal'Class);
+   procedure Initialize (Self : in out Base_Character_Literal'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Character_Literal;
@@ -73,7 +73,7 @@ private
      end record;
 
    overriding function To_Character_Literal_Text
-    (Self : aliased in out Character_Literal)
+    (Self : in out Character_Literal)
       return Program.Elements.Character_Literals.Character_Literal_Text_Access;
 
    overriding function Character_Literal_Token
@@ -91,7 +91,7 @@ private
      end record;
 
    overriding function To_Character_Literal_Text
-    (Self : aliased in out Implicit_Character_Literal)
+    (Self : in out Implicit_Character_Literal)
       return Program.Elements.Character_Literals.Character_Literal_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -78,8 +78,7 @@ package body Program.Nodes.Explicit_Dereferences is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Explicit_Dereference'Class) is
+   procedure Initialize (Self : in out Base_Explicit_Dereference'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       null;
@@ -109,7 +108,7 @@ package body Program.Nodes.Explicit_Dereferences is
    end Visit;
 
    overriding function To_Explicit_Dereference_Text
-    (Self : aliased in out Explicit_Dereference)
+    (Self : in out Explicit_Dereference)
       return Program.Elements.Explicit_Dereferences
           .Explicit_Dereference_Text_Access is
    begin
@@ -117,7 +116,7 @@ package body Program.Nodes.Explicit_Dereferences is
    end To_Explicit_Dereference_Text;
 
    overriding function To_Explicit_Dereference_Text
-    (Self : aliased in out Implicit_Explicit_Dereference)
+    (Self : in out Implicit_Explicit_Dereference)
       return Program.Elements.Explicit_Dereferences
           .Explicit_Dereference_Text_Access is
       pragma Unreferenced (Self);

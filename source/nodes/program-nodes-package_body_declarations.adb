@@ -194,8 +194,7 @@ package body Program.Nodes.Package_Body_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Package_Body_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Package_Body_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Aspects.Each_Element loop
@@ -240,7 +239,7 @@ package body Program.Nodes.Package_Body_Declarations is
    end Visit;
 
    overriding function To_Package_Body_Declaration_Text
-    (Self : aliased in out Package_Body_Declaration)
+    (Self : in out Package_Body_Declaration)
       return Program.Elements.Package_Body_Declarations
           .Package_Body_Declaration_Text_Access is
    begin
@@ -248,7 +247,7 @@ package body Program.Nodes.Package_Body_Declarations is
    end To_Package_Body_Declaration_Text;
 
    overriding function To_Package_Body_Declaration_Text
-    (Self : aliased in out Implicit_Package_Body_Declaration)
+    (Self : in out Implicit_Package_Body_Declaration)
       return Program.Elements.Package_Body_Declarations
           .Package_Body_Declaration_Text_Access is
       pragma Unreferenced (Self);

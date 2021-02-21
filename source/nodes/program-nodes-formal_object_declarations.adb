@@ -214,8 +214,7 @@ package body Program.Nodes.Formal_Object_Declarations is
       return Self.Has_Not_Null;
    end Has_Not_Null;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Object_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Formal_Object_Declaration'Class) is
    begin
       for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -255,7 +254,7 @@ package body Program.Nodes.Formal_Object_Declarations is
    end Visit;
 
    overriding function To_Formal_Object_Declaration_Text
-    (Self : aliased in out Formal_Object_Declaration)
+    (Self : in out Formal_Object_Declaration)
       return Program.Elements.Formal_Object_Declarations
           .Formal_Object_Declaration_Text_Access is
    begin
@@ -263,7 +262,7 @@ package body Program.Nodes.Formal_Object_Declarations is
    end To_Formal_Object_Declaration_Text;
 
    overriding function To_Formal_Object_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Object_Declaration)
+    (Self : in out Implicit_Formal_Object_Declaration)
       return Program.Elements.Formal_Object_Declarations
           .Formal_Object_Declaration_Text_Access is
       pragma Unreferenced (Self);

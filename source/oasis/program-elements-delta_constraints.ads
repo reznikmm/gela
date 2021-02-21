@@ -32,7 +32,7 @@ package Program.Elements.Delta_Constraints is
      with Storage_Size => 0;
 
    not overriding function To_Delta_Constraint_Text
-    (Self : aliased in out Delta_Constraint)
+    (Self : in out Delta_Constraint)
       return Delta_Constraint_Text_Access is abstract;
 
    not overriding function Delta_Token

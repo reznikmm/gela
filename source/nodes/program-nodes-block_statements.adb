@@ -168,7 +168,7 @@ package body Program.Nodes.Block_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Block_Statement'Class) is
+   procedure Initialize (Self : in out Base_Block_Statement'Class) is
    begin
       if Self.Statement_Identifier.Assigned then
          Set_Enclosing_Element
@@ -214,14 +214,14 @@ package body Program.Nodes.Block_Statements is
    end Visit;
 
    overriding function To_Block_Statement_Text
-    (Self : aliased in out Block_Statement)
+    (Self : in out Block_Statement)
       return Program.Elements.Block_Statements.Block_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Block_Statement_Text;
 
    overriding function To_Block_Statement_Text
-    (Self : aliased in out Implicit_Block_Statement)
+    (Self : in out Implicit_Block_Statement)
       return Program.Elements.Block_Statements.Block_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

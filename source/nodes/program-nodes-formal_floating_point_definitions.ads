@@ -46,7 +46,7 @@ private
      with null record;
 
    procedure Initialize
-    (Self : aliased in out Base_Formal_Floating_Point_Definition'Class);
+    (Self : in out Base_Formal_Floating_Point_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Floating_Point_Definition;
@@ -76,7 +76,7 @@ private
      end record;
 
    overriding function To_Formal_Floating_Point_Definition_Text
-    (Self : aliased in out Formal_Floating_Point_Definition)
+    (Self : in out Formal_Floating_Point_Definition)
       return Program.Elements.Formal_Floating_Point_Definitions
           .Formal_Floating_Point_Definition_Text_Access;
 
@@ -97,7 +97,7 @@ private
      end record;
 
    overriding function To_Formal_Floating_Point_Definition_Text
-    (Self : aliased in out Implicit_Formal_Floating_Point_Definition)
+    (Self : in out Implicit_Formal_Floating_Point_Definition)
       return Program.Elements.Formal_Floating_Point_Definitions
           .Formal_Floating_Point_Definition_Text_Access;
 

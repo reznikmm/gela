@@ -94,7 +94,7 @@ package body Program.Nodes.Type_Conversions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Type_Conversion'Class) is
+   procedure Initialize (Self : in out Base_Type_Conversion'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Mark, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Operand, Self'Unchecked_Access);
@@ -125,14 +125,14 @@ package body Program.Nodes.Type_Conversions is
    end Visit;
 
    overriding function To_Type_Conversion_Text
-    (Self : aliased in out Type_Conversion)
+    (Self : in out Type_Conversion)
       return Program.Elements.Type_Conversions.Type_Conversion_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Type_Conversion_Text;
 
    overriding function To_Type_Conversion_Text
-    (Self : aliased in out Implicit_Type_Conversion)
+    (Self : in out Implicit_Type_Conversion)
       return Program.Elements.Type_Conversions.Type_Conversion_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -51,7 +51,7 @@ package Program.Elements.Task_Type_Declarations is
      access all Task_Type_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Task_Type_Declaration_Text
-    (Self : aliased in out Task_Type_Declaration)
+    (Self : in out Task_Type_Declaration)
       return Task_Type_Declaration_Text_Access is abstract;
 
    not overriding function Task_Token

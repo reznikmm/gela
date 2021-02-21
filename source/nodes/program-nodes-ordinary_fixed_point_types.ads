@@ -60,8 +60,7 @@ private
           .Real_Range_Specification_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Ordinary_Fixed_Point_Type'Class);
+   procedure Initialize (Self : in out Base_Ordinary_Fixed_Point_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Ordinary_Fixed_Point_Type;
@@ -97,7 +96,7 @@ private
      end record;
 
    overriding function To_Ordinary_Fixed_Point_Type_Text
-    (Self : aliased in out Ordinary_Fixed_Point_Type)
+    (Self : in out Ordinary_Fixed_Point_Type)
       return Program.Elements.Ordinary_Fixed_Point_Types
           .Ordinary_Fixed_Point_Type_Text_Access;
 
@@ -114,7 +113,7 @@ private
      end record;
 
    overriding function To_Ordinary_Fixed_Point_Type_Text
-    (Self : aliased in out Implicit_Ordinary_Fixed_Point_Type)
+    (Self : in out Implicit_Ordinary_Fixed_Point_Type)
       return Program.Elements.Ordinary_Fixed_Point_Types
           .Ordinary_Fixed_Point_Type_Text_Access;
 

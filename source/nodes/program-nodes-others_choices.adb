@@ -59,7 +59,7 @@ package body Program.Nodes.Others_Choices is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Others_Choice'Class) is
+   procedure Initialize (Self : in out Base_Others_Choice'Class) is
    begin
       null;
    end Initialize;
@@ -88,14 +88,14 @@ package body Program.Nodes.Others_Choices is
    end Visit;
 
    overriding function To_Others_Choice_Text
-    (Self : aliased in out Others_Choice)
+    (Self : in out Others_Choice)
       return Program.Elements.Others_Choices.Others_Choice_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Others_Choice_Text;
 
    overriding function To_Others_Choice_Text
-    (Self : aliased in out Implicit_Others_Choice)
+    (Self : in out Implicit_Others_Choice)
       return Program.Elements.Others_Choices.Others_Choice_Text_Access is
       pragma Unreferenced (Self);
    begin

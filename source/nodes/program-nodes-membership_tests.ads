@@ -53,7 +53,7 @@ private
         Choices    : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Membership_Test'Class);
+   procedure Initialize (Self : in out Base_Membership_Test'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Membership_Test;
@@ -84,7 +84,7 @@ private
      end record;
 
    overriding function To_Membership_Test_Text
-    (Self : aliased in out Membership_Test)
+    (Self : in out Membership_Test)
       return Program.Elements.Membership_Tests.Membership_Test_Text_Access;
 
    overriding function Not_Token
@@ -107,7 +107,7 @@ private
      end record;
 
    overriding function To_Membership_Test_Text
-    (Self : aliased in out Implicit_Membership_Test)
+    (Self : in out Implicit_Membership_Test)
       return Program.Elements.Membership_Tests.Membership_Test_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -101,7 +101,7 @@ package body Program.Nodes.Task_Definitions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Task_Definition'Class) is
+   procedure Initialize (Self : in out Base_Task_Definition'Class) is
    begin
       for Item in Self.Visible_Declarations.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -139,14 +139,14 @@ package body Program.Nodes.Task_Definitions is
    end Visit;
 
    overriding function To_Task_Definition_Text
-    (Self : aliased in out Task_Definition)
+    (Self : in out Task_Definition)
       return Program.Elements.Task_Definitions.Task_Definition_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Task_Definition_Text;
 
    overriding function To_Task_Definition_Text
-    (Self : aliased in out Implicit_Task_Definition)
+    (Self : in out Implicit_Task_Definition)
       return Program.Elements.Task_Definitions.Task_Definition_Text_Access is
       pragma Unreferenced (Self);
    begin

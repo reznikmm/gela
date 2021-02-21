@@ -54,8 +54,7 @@ private
         Component_Value : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Array_Component_Association'Class);
+   procedure Initialize (Self : in out Base_Array_Component_Association'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Array_Component_Association;
@@ -87,7 +86,7 @@ private
      end record;
 
    overriding function To_Array_Component_Association_Text
-    (Self : aliased in out Array_Component_Association)
+    (Self : in out Array_Component_Association)
       return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Text_Access;
 
@@ -108,7 +107,7 @@ private
      end record;
 
    overriding function To_Array_Component_Association_Text
-    (Self : aliased in out Implicit_Array_Component_Association)
+    (Self : in out Implicit_Array_Component_Association)
       return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Text_Access;
 

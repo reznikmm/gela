@@ -55,7 +55,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Record_Component_Association'Class);
+    (Self : in out Base_Record_Component_Association'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Component_Association;
@@ -87,7 +87,7 @@ private
      end record;
 
    overriding function To_Record_Component_Association_Text
-    (Self : aliased in out Record_Component_Association)
+    (Self : in out Record_Component_Association)
       return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Text_Access;
 
@@ -108,7 +108,7 @@ private
      end record;
 
    overriding function To_Record_Component_Association_Text
-    (Self : aliased in out Implicit_Record_Component_Association)
+    (Self : in out Implicit_Record_Component_Association)
       return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Text_Access;
 

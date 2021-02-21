@@ -44,7 +44,7 @@ package Program.Elements.Formal_Interface_Types is
      access all Formal_Interface_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Interface_Type_Text
-    (Self : aliased in out Formal_Interface_Type)
+    (Self : in out Formal_Interface_Type)
       return Formal_Interface_Type_Text_Access is abstract;
 
    not overriding function Limited_Token

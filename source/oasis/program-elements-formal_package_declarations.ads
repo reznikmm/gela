@@ -46,7 +46,7 @@ package Program.Elements.Formal_Package_Declarations is
      access all Formal_Package_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Package_Declaration_Text
-    (Self : aliased in out Formal_Package_Declaration)
+    (Self : in out Formal_Package_Declaration)
       return Formal_Package_Declaration_Text_Access is abstract;
 
    not overriding function With_Token

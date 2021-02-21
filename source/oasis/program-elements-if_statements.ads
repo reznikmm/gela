@@ -43,7 +43,7 @@ package Program.Elements.If_Statements is
      with Storage_Size => 0;
 
    not overriding function To_If_Statement_Text
-    (Self : aliased in out If_Statement)
+    (Self : in out If_Statement)
       return If_Statement_Text_Access is abstract;
 
    not overriding function If_Token

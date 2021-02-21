@@ -34,7 +34,7 @@ package Program.Elements.Attribute_Definition_Clauses is
      access all Attribute_Definition_Clause_Text'Class with Storage_Size => 0;
 
    not overriding function To_Attribute_Definition_Clause_Text
-    (Self : aliased in out Attribute_Definition_Clause)
+    (Self : in out Attribute_Definition_Clause)
       return Attribute_Definition_Clause_Text_Access is abstract;
 
    not overriding function For_Token

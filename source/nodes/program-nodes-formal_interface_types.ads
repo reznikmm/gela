@@ -56,8 +56,7 @@ private
         Progenitors : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Interface_Type'Class);
+   procedure Initialize (Self : in out Base_Formal_Interface_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Interface_Type;
@@ -92,7 +91,7 @@ private
      end record;
 
    overriding function To_Formal_Interface_Type_Text
-    (Self : aliased in out Formal_Interface_Type)
+    (Self : in out Formal_Interface_Type)
       return Program.Elements.Formal_Interface_Types
           .Formal_Interface_Type_Text_Access;
 
@@ -147,7 +146,7 @@ private
      end record;
 
    overriding function To_Formal_Interface_Type_Text
-    (Self : aliased in out Implicit_Formal_Interface_Type)
+    (Self : in out Implicit_Formal_Interface_Type)
       return Program.Elements.Formal_Interface_Types
           .Formal_Interface_Type_Text_Access;
 

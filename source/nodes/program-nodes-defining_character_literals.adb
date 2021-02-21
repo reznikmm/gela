@@ -75,7 +75,7 @@ package body Program.Nodes.Defining_Character_Literals is
    end Image;
 
    procedure Initialize
-    (Self : aliased in out Base_Defining_Character_Literal'Class) is
+    (Self : in out Base_Defining_Character_Literal'Class) is
    begin
       null;
    end Initialize;
@@ -104,7 +104,7 @@ package body Program.Nodes.Defining_Character_Literals is
    end Visit;
 
    overriding function To_Defining_Character_Literal_Text
-    (Self : aliased in out Defining_Character_Literal)
+    (Self : in out Defining_Character_Literal)
       return Program.Elements.Defining_Character_Literals
           .Defining_Character_Literal_Text_Access is
    begin
@@ -112,7 +112,7 @@ package body Program.Nodes.Defining_Character_Literals is
    end To_Defining_Character_Literal_Text;
 
    overriding function To_Defining_Character_Literal_Text
-    (Self : aliased in out Implicit_Defining_Character_Literal)
+    (Self : in out Implicit_Defining_Character_Literal)
       return Program.Elements.Defining_Character_Literals
           .Defining_Character_Literal_Text_Access is
       pragma Unreferenced (Self);

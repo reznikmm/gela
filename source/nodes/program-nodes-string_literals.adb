@@ -72,7 +72,7 @@ package body Program.Nodes.String_Literals is
       return "";
    end Image;
 
-   procedure Initialize (Self : aliased in out Base_String_Literal'Class) is
+   procedure Initialize (Self : in out Base_String_Literal'Class) is
    begin
       null;
    end Initialize;
@@ -101,14 +101,14 @@ package body Program.Nodes.String_Literals is
    end Visit;
 
    overriding function To_String_Literal_Text
-    (Self : aliased in out String_Literal)
+    (Self : in out String_Literal)
       return Program.Elements.String_Literals.String_Literal_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_String_Literal_Text;
 
    overriding function To_String_Literal_Text
-    (Self : aliased in out Implicit_String_Literal)
+    (Self : in out Implicit_String_Literal)
       return Program.Elements.String_Literals.String_Literal_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -71,8 +71,7 @@ private
           .Definition_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Derived_Record_Extension'Class);
+   procedure Initialize (Self : in out Base_Derived_Record_Extension'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Derived_Record_Extension;
@@ -117,7 +116,7 @@ private
      end record;
 
    overriding function To_Derived_Record_Extension_Text
-    (Self : aliased in out Derived_Record_Extension)
+    (Self : in out Derived_Record_Extension)
       return Program.Elements.Derived_Record_Extensions
           .Derived_Record_Extension_Text_Access;
 
@@ -160,7 +159,7 @@ private
      end record;
 
    overriding function To_Derived_Record_Extension_Text
-    (Self : aliased in out Implicit_Derived_Record_Extension)
+    (Self : in out Implicit_Derived_Record_Extension)
       return Program.Elements.Derived_Record_Extensions
           .Derived_Record_Extension_Text_Access;
 

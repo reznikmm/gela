@@ -58,8 +58,7 @@ private
           .Parameter_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Procedure_Access_Type'Class);
+   procedure Initialize (Self : in out Base_Procedure_Access_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Procedure_Access_Type;
@@ -102,7 +101,7 @@ private
      end record;
 
    overriding function To_Procedure_Access_Type_Text
-    (Self : aliased in out Procedure_Access_Type)
+    (Self : in out Procedure_Access_Type)
       return Program.Elements.Procedure_Access_Types
           .Procedure_Access_Type_Text_Access;
 
@@ -153,7 +152,7 @@ private
      end record;
 
    overriding function To_Procedure_Access_Type_Text
-    (Self : aliased in out Implicit_Procedure_Access_Type)
+    (Self : in out Implicit_Procedure_Access_Type)
       return Program.Elements.Procedure_Access_Types
           .Procedure_Access_Type_Text_Access;
 

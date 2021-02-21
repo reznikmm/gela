@@ -37,7 +37,7 @@ package Program.Elements.Exception_Handlers is
      access all Exception_Handler_Text'Class with Storage_Size => 0;
 
    not overriding function To_Exception_Handler_Text
-    (Self : aliased in out Exception_Handler)
+    (Self : in out Exception_Handler)
       return Exception_Handler_Text_Access is abstract;
 
    not overriding function When_Token

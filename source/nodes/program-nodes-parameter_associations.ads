@@ -51,8 +51,7 @@ private
           .Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Parameter_Association'Class);
+   procedure Initialize (Self : in out Base_Parameter_Association'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Parameter_Association;
@@ -82,7 +81,7 @@ private
      end record;
 
    overriding function To_Parameter_Association_Text
-    (Self : aliased in out Parameter_Association)
+    (Self : in out Parameter_Association)
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Text_Access;
 
@@ -99,7 +98,7 @@ private
      end record;
 
    overriding function To_Parameter_Association_Text
-    (Self : aliased in out Implicit_Parameter_Association)
+    (Self : in out Implicit_Parameter_Association)
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Text_Access;
 

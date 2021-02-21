@@ -158,7 +158,7 @@ package body Program.Nodes.Anonymous_Access_To_Procedures is
    end Has_Protected;
 
    procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Procedure'Class) is
+    (Self : in out Base_Anonymous_Access_To_Procedure'Class) is
    begin
       for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -198,7 +198,7 @@ package body Program.Nodes.Anonymous_Access_To_Procedures is
    end Visit;
 
    overriding function To_Anonymous_Access_To_Procedure_Text
-    (Self : aliased in out Anonymous_Access_To_Procedure)
+    (Self : in out Anonymous_Access_To_Procedure)
       return Program.Elements.Anonymous_Access_To_Procedures
           .Anonymous_Access_To_Procedure_Text_Access is
    begin
@@ -206,7 +206,7 @@ package body Program.Nodes.Anonymous_Access_To_Procedures is
    end To_Anonymous_Access_To_Procedure_Text;
 
    overriding function To_Anonymous_Access_To_Procedure_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Procedure)
+    (Self : in out Implicit_Anonymous_Access_To_Procedure)
       return Program.Elements.Anonymous_Access_To_Procedures
           .Anonymous_Access_To_Procedure_Text_Access is
       pragma Unreferenced (Self);

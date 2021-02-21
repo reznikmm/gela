@@ -74,8 +74,7 @@ package body Program.Nodes.Defining_Operator_Symbols is
       return "";
    end Image;
 
-   procedure Initialize
-    (Self : aliased in out Base_Defining_Operator_Symbol'Class) is
+   procedure Initialize (Self : in out Base_Defining_Operator_Symbol'Class) is
    begin
       null;
    end Initialize;
@@ -104,7 +103,7 @@ package body Program.Nodes.Defining_Operator_Symbols is
    end Visit;
 
    overriding function To_Defining_Operator_Symbol_Text
-    (Self : aliased in out Defining_Operator_Symbol)
+    (Self : in out Defining_Operator_Symbol)
       return Program.Elements.Defining_Operator_Symbols
           .Defining_Operator_Symbol_Text_Access is
    begin
@@ -112,7 +111,7 @@ package body Program.Nodes.Defining_Operator_Symbols is
    end To_Defining_Operator_Symbol_Text;
 
    overriding function To_Defining_Operator_Symbol_Text
-    (Self : aliased in out Implicit_Defining_Operator_Symbol)
+    (Self : in out Implicit_Defining_Operator_Symbol)
       return Program.Elements.Defining_Operator_Symbols
           .Defining_Operator_Symbol_Text_Access is
       pragma Unreferenced (Self);

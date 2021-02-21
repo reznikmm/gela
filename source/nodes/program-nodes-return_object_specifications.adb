@@ -152,7 +152,7 @@ package body Program.Nodes.Return_Object_Specifications is
    end Has_Constant;
 
    procedure Initialize
-    (Self : aliased in out Base_Return_Object_Specification'Class) is
+    (Self : in out Base_Return_Object_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Object_Subtype, Self'Unchecked_Access);
@@ -186,7 +186,7 @@ package body Program.Nodes.Return_Object_Specifications is
    end Visit;
 
    overriding function To_Return_Object_Specification_Text
-    (Self : aliased in out Return_Object_Specification)
+    (Self : in out Return_Object_Specification)
       return Program.Elements.Return_Object_Specifications
           .Return_Object_Specification_Text_Access is
    begin
@@ -194,7 +194,7 @@ package body Program.Nodes.Return_Object_Specifications is
    end To_Return_Object_Specification_Text;
 
    overriding function To_Return_Object_Specification_Text
-    (Self : aliased in out Implicit_Return_Object_Specification)
+    (Self : in out Implicit_Return_Object_Specification)
       return Program.Elements.Return_Object_Specifications
           .Return_Object_Specification_Text_Access is
       pragma Unreferenced (Self);

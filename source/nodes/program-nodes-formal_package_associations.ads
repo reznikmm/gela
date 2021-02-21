@@ -53,8 +53,7 @@ private
         Actual_Parameter : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Package_Association'Class);
+   procedure Initialize (Self : in out Base_Formal_Package_Association'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Package_Association;
@@ -86,7 +85,7 @@ private
      end record;
 
    overriding function To_Formal_Package_Association_Text
-    (Self : aliased in out Formal_Package_Association)
+    (Self : in out Formal_Package_Association)
       return Program.Elements.Formal_Package_Associations
           .Formal_Package_Association_Text_Access;
 
@@ -107,7 +106,7 @@ private
      end record;
 
    overriding function To_Formal_Package_Association_Text
-    (Self : aliased in out Implicit_Formal_Package_Association)
+    (Self : in out Implicit_Formal_Package_Association)
       return Program.Elements.Formal_Package_Associations
           .Formal_Package_Association_Text_Access;
 

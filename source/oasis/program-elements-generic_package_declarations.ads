@@ -52,7 +52,7 @@ package Program.Elements.Generic_Package_Declarations is
      access all Generic_Package_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Generic_Package_Declaration_Text
-    (Self : aliased in out Generic_Package_Declaration)
+    (Self : in out Generic_Package_Declaration)
       return Generic_Package_Declaration_Text_Access is abstract;
 
    not overriding function Generic_Token

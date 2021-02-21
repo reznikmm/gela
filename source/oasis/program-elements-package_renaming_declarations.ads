@@ -40,7 +40,7 @@ package Program.Elements.Package_Renaming_Declarations is
      access all Package_Renaming_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Package_Renaming_Declaration_Text
-    (Self : aliased in out Package_Renaming_Declaration)
+    (Self : in out Package_Renaming_Declaration)
       return Package_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Package_Token

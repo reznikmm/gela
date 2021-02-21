@@ -155,8 +155,7 @@ package body Program.Nodes.Formal_Object_Access_Types is
       return Self.Has_Constant;
    end Has_Constant;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Object_Access_Type'Class) is
+   procedure Initialize (Self : in out Base_Formal_Object_Access_Type'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Indication, Self'Unchecked_Access);
       null;
@@ -202,7 +201,7 @@ package body Program.Nodes.Formal_Object_Access_Types is
    end Visit;
 
    overriding function To_Formal_Object_Access_Type_Text
-    (Self : aliased in out Formal_Object_Access_Type)
+    (Self : in out Formal_Object_Access_Type)
       return Program.Elements.Formal_Object_Access_Types
           .Formal_Object_Access_Type_Text_Access is
    begin
@@ -210,7 +209,7 @@ package body Program.Nodes.Formal_Object_Access_Types is
    end To_Formal_Object_Access_Type_Text;
 
    overriding function To_Formal_Object_Access_Type_Text
-    (Self : aliased in out Implicit_Formal_Object_Access_Type)
+    (Self : in out Implicit_Formal_Object_Access_Type)
       return Program.Elements.Formal_Object_Access_Types
           .Formal_Object_Access_Type_Text_Access is
       pragma Unreferenced (Self);

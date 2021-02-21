@@ -62,7 +62,7 @@ private
           .Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Exception_Handler'Class);
+   procedure Initialize (Self : in out Base_Exception_Handler'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Exception_Handler;
@@ -94,7 +94,7 @@ private
      end record;
 
    overriding function To_Exception_Handler_Text
-    (Self : aliased in out Exception_Handler)
+    (Self : in out Exception_Handler)
       return Program.Elements.Exception_Handlers.Exception_Handler_Text_Access;
 
    overriding function When_Token
@@ -114,7 +114,7 @@ private
      end record;
 
    overriding function To_Exception_Handler_Text
-    (Self : aliased in out Implicit_Exception_Handler)
+    (Self : in out Implicit_Exception_Handler)
       return Program.Elements.Exception_Handlers.Exception_Handler_Text_Access;
 
    overriding function Is_Part_Of_Implicit

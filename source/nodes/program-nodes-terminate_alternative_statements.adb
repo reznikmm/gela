@@ -71,7 +71,7 @@ package body Program.Nodes.Terminate_Alternative_Statements is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Terminate_Alternative_Statement'Class) is
+    (Self : in out Base_Terminate_Alternative_Statement'Class) is
    begin
       null;
    end Initialize;
@@ -100,7 +100,7 @@ package body Program.Nodes.Terminate_Alternative_Statements is
    end Visit;
 
    overriding function To_Terminate_Alternative_Statement_Text
-    (Self : aliased in out Terminate_Alternative_Statement)
+    (Self : in out Terminate_Alternative_Statement)
       return Program.Elements.Terminate_Alternative_Statements
           .Terminate_Alternative_Statement_Text_Access is
    begin
@@ -108,7 +108,7 @@ package body Program.Nodes.Terminate_Alternative_Statements is
    end To_Terminate_Alternative_Statement_Text;
 
    overriding function To_Terminate_Alternative_Statement_Text
-    (Self : aliased in out Implicit_Terminate_Alternative_Statement)
+    (Self : in out Implicit_Terminate_Alternative_Statement)
       return Program.Elements.Terminate_Alternative_Statements
           .Terminate_Alternative_Statement_Text_Access is
       pragma Unreferenced (Self);

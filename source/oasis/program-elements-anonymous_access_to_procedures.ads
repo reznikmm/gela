@@ -39,7 +39,7 @@ package Program.Elements.Anonymous_Access_To_Procedures is
      with Storage_Size => 0;
 
    not overriding function To_Anonymous_Access_To_Procedure_Text
-    (Self : aliased in out Anonymous_Access_To_Procedure)
+    (Self : in out Anonymous_Access_To_Procedure)
       return Anonymous_Access_To_Procedure_Text_Access is abstract;
 
    not overriding function Not_Token

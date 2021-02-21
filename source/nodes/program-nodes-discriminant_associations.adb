@@ -84,8 +84,7 @@ package body Program.Nodes.Discriminant_Associations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discriminant_Association'Class) is
+   procedure Initialize (Self : in out Base_Discriminant_Association'Class) is
    begin
       for Item in Self.Selector_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -118,7 +117,7 @@ package body Program.Nodes.Discriminant_Associations is
    end Visit;
 
    overriding function To_Discriminant_Association_Text
-    (Self : aliased in out Discriminant_Association)
+    (Self : in out Discriminant_Association)
       return Program.Elements.Discriminant_Associations
           .Discriminant_Association_Text_Access is
    begin
@@ -126,7 +125,7 @@ package body Program.Nodes.Discriminant_Associations is
    end To_Discriminant_Association_Text;
 
    overriding function To_Discriminant_Association_Text
-    (Self : aliased in out Implicit_Discriminant_Association)
+    (Self : in out Implicit_Discriminant_Association)
       return Program.Elements.Discriminant_Associations
           .Discriminant_Association_Text_Access is
       pragma Unreferenced (Self);

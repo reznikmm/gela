@@ -172,7 +172,7 @@ package body Program.Nodes.Interface_Types is
       return Self.Has_Synchronized;
    end Has_Synchronized;
 
-   procedure Initialize (Self : aliased in out Base_Interface_Type'Class) is
+   procedure Initialize (Self : in out Base_Interface_Type'Class) is
    begin
       for Item in Self.Progenitors.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -212,14 +212,14 @@ package body Program.Nodes.Interface_Types is
    end Visit;
 
    overriding function To_Interface_Type_Text
-    (Self : aliased in out Interface_Type)
+    (Self : in out Interface_Type)
       return Program.Elements.Interface_Types.Interface_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Interface_Type_Text;
 
    overriding function To_Interface_Type_Text
-    (Self : aliased in out Implicit_Interface_Type)
+    (Self : in out Implicit_Interface_Type)
       return Program.Elements.Interface_Types.Interface_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -40,7 +40,7 @@ package Program.Elements.Subtype_Declarations is
      access all Subtype_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Subtype_Declaration_Text
-    (Self : aliased in out Subtype_Declaration)
+    (Self : in out Subtype_Declaration)
       return Subtype_Declaration_Text_Access is abstract;
 
    not overriding function Subtype_Token

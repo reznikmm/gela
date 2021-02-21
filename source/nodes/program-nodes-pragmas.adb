@@ -112,7 +112,7 @@ package body Program.Nodes.Pragmas is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Pragma'Class) is
+   procedure Initialize (Self : in out Base_Pragma'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Arguments.Each_Element loop
@@ -135,14 +135,14 @@ package body Program.Nodes.Pragmas is
    end Visit;
 
    overriding function To_Pragma_Text
-    (Self : aliased in out Pragma_Element)
+    (Self : in out Pragma_Element)
       return Program.Elements.Pragmas.Pragma_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Pragma_Text;
 
    overriding function To_Pragma_Text
-    (Self : aliased in out Implicit_Pragma)
+    (Self : in out Implicit_Pragma)
       return Program.Elements.Pragmas.Pragma_Text_Access is
       pragma Unreferenced (Self);
    begin

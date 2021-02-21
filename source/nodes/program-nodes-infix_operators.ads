@@ -52,7 +52,7 @@ private
         Right    : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Infix_Operator'Class);
+   procedure Initialize (Self : in out Base_Infix_Operator'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Infix_Operator;
@@ -84,7 +84,7 @@ private
      with null record;
 
    overriding function To_Infix_Operator_Text
-    (Self : aliased in out Infix_Operator)
+    (Self : in out Infix_Operator)
       return Program.Elements.Infix_Operators.Infix_Operator_Text_Access;
 
    type Implicit_Infix_Operator is
@@ -96,7 +96,7 @@ private
      end record;
 
    overriding function To_Infix_Operator_Text
-    (Self : aliased in out Implicit_Infix_Operator)
+    (Self : in out Implicit_Infix_Operator)
       return Program.Elements.Infix_Operators.Infix_Operator_Text_Access;
 
    overriding function Is_Part_Of_Implicit

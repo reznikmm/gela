@@ -69,7 +69,7 @@ package body Program.Nodes.Modular_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Modular_Type'Class) is
+   procedure Initialize (Self : in out Base_Modular_Type'Class) is
    begin
       Set_Enclosing_Element (Self.Modulus, Self'Unchecked_Access);
       null;
@@ -107,14 +107,14 @@ package body Program.Nodes.Modular_Types is
    end Visit;
 
    overriding function To_Modular_Type_Text
-    (Self : aliased in out Modular_Type)
+    (Self : in out Modular_Type)
       return Program.Elements.Modular_Types.Modular_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Modular_Type_Text;
 
    overriding function To_Modular_Type_Text
-    (Self : aliased in out Implicit_Modular_Type)
+    (Self : in out Implicit_Modular_Type)
       return Program.Elements.Modular_Types.Modular_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -92,7 +92,7 @@ package body Program.Nodes.Record_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Record_Type'Class) is
+   procedure Initialize (Self : in out Base_Record_Type'Class) is
    begin
       Set_Enclosing_Element (Self.Record_Definition, Self'Unchecked_Access);
       null;
@@ -130,14 +130,14 @@ package body Program.Nodes.Record_Types is
    end Visit;
 
    overriding function To_Record_Type_Text
-    (Self : aliased in out Record_Type)
+    (Self : in out Record_Type)
       return Program.Elements.Record_Types.Record_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Record_Type_Text;
 
    overriding function To_Record_Type_Text
-    (Self : aliased in out Implicit_Record_Type)
+    (Self : in out Implicit_Record_Type)
       return Program.Elements.Record_Types.Record_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

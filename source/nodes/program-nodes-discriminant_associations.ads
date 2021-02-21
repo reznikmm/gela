@@ -58,8 +58,7 @@ private
           .Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discriminant_Association'Class);
+   procedure Initialize (Self : in out Base_Discriminant_Association'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Association;
@@ -90,7 +89,7 @@ private
      end record;
 
    overriding function To_Discriminant_Association_Text
-    (Self : aliased in out Discriminant_Association)
+    (Self : in out Discriminant_Association)
       return Program.Elements.Discriminant_Associations
           .Discriminant_Association_Text_Access;
 
@@ -107,7 +106,7 @@ private
      end record;
 
    overriding function To_Discriminant_Association_Text
-    (Self : aliased in out Implicit_Discriminant_Association)
+    (Self : in out Implicit_Discriminant_Association)
       return Program.Elements.Discriminant_Associations
           .Discriminant_Association_Text_Access;
 

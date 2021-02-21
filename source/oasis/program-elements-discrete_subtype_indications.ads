@@ -32,7 +32,7 @@ package Program.Elements.Discrete_Subtype_Indications is
      access all Discrete_Subtype_Indication_Text'Class with Storage_Size => 0;
 
    not overriding function To_Discrete_Subtype_Indication_Text
-    (Self : aliased in out Discrete_Subtype_Indication)
+    (Self : in out Discrete_Subtype_Indication)
       return Discrete_Subtype_Indication_Text_Access is abstract;
 
 end Program.Elements.Discrete_Subtype_Indications;

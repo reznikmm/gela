@@ -102,7 +102,7 @@ package body Program.Nodes.Call_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Call_Statement'Class) is
+   procedure Initialize (Self : in out Base_Call_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Called_Name, Self'Unchecked_Access);
       for Item in Self.Parameters.Each_Element loop
@@ -135,14 +135,14 @@ package body Program.Nodes.Call_Statements is
    end Visit;
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Call_Statement)
+    (Self : in out Call_Statement)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Call_Statement_Text;
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Implicit_Call_Statement)
+    (Self : in out Implicit_Call_Statement)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

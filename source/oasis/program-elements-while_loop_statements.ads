@@ -45,7 +45,7 @@ package Program.Elements.While_Loop_Statements is
      access all While_Loop_Statement_Text'Class with Storage_Size => 0;
 
    not overriding function To_While_Loop_Statement_Text
-    (Self : aliased in out While_Loop_Statement)
+    (Self : in out While_Loop_Statement)
       return While_Loop_Statement_Text_Access is abstract;
 
    not overriding function Colon_Token

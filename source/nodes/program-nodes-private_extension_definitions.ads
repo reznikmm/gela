@@ -71,7 +71,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Private_Extension_Definition'Class);
+    (Self : in out Base_Private_Extension_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Private_Extension_Definition;
@@ -112,7 +112,7 @@ private
      end record;
 
    overriding function To_Private_Extension_Definition_Text
-    (Self : aliased in out Private_Extension_Definition)
+    (Self : in out Private_Extension_Definition)
       return Program.Elements.Private_Extension_Definitions
           .Private_Extension_Definition_Text_Access;
 
@@ -168,7 +168,7 @@ private
      end record;
 
    overriding function To_Private_Extension_Definition_Text
-    (Self : aliased in out Implicit_Private_Extension_Definition)
+    (Self : in out Implicit_Private_Extension_Definition)
       return Program.Elements.Private_Extension_Definitions
           .Private_Extension_Definition_Text_Access;
 

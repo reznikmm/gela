@@ -58,8 +58,7 @@ private
         Upper_Bound : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Real_Range_Specification'Class);
+   procedure Initialize (Self : in out Base_Real_Range_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Real_Range_Specification;
@@ -93,7 +92,7 @@ private
      end record;
 
    overriding function To_Real_Range_Specification_Text
-    (Self : aliased in out Real_Range_Specification)
+    (Self : in out Real_Range_Specification)
       return Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Text_Access;
 
@@ -114,7 +113,7 @@ private
      end record;
 
    overriding function To_Real_Range_Specification_Text
-    (Self : aliased in out Implicit_Real_Range_Specification)
+    (Self : in out Implicit_Real_Range_Specification)
       return Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Text_Access;
 

@@ -34,7 +34,7 @@ package Program.Elements.Private_Type_Definitions is
      access all Private_Type_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Private_Type_Definition_Text
-    (Self : aliased in out Private_Type_Definition)
+    (Self : in out Private_Type_Definition)
       return Private_Type_Definition_Text_Access is abstract;
 
    not overriding function Abstract_Token

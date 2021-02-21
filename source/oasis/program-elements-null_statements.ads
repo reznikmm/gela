@@ -22,7 +22,7 @@ package Program.Elements.Null_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Null_Statement_Text
-    (Self : aliased in out Null_Statement)
+    (Self : in out Null_Statement)
       return Null_Statement_Text_Access is abstract;
 
    not overriding function Null_Token

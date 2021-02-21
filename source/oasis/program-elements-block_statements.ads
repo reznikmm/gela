@@ -49,7 +49,7 @@ package Program.Elements.Block_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Block_Statement_Text
-    (Self : aliased in out Block_Statement)
+    (Self : in out Block_Statement)
       return Block_Statement_Text_Access is abstract;
 
    not overriding function Colon_Token

@@ -31,7 +31,7 @@ package Program.Elements.Slices is
      with Storage_Size => 0;
 
    not overriding function To_Slice_Text
-    (Self : aliased in out Slice)
+    (Self : in out Slice)
       return Slice_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

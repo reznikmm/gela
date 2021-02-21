@@ -57,7 +57,7 @@ private
           .Parameter_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Pragma'Class);
+   procedure Initialize (Self : in out Base_Pragma'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Pragma;
@@ -86,7 +86,7 @@ private
      end record;
 
    overriding function To_Pragma_Text
-    (Self : aliased in out Pragma_Element)
+    (Self : in out Pragma_Element)
       return Program.Elements.Pragmas.Pragma_Text_Access;
 
    overriding function Pragma_Token
@@ -114,7 +114,7 @@ private
      end record;
 
    overriding function To_Pragma_Text
-    (Self : aliased in out Implicit_Pragma)
+    (Self : in out Implicit_Pragma)
       return Program.Elements.Pragmas.Pragma_Text_Access;
 
    overriding function Is_Part_Of_Implicit

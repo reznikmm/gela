@@ -148,7 +148,7 @@ package body Program.Nodes.Select_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Select_Statement'Class) is
+   procedure Initialize (Self : in out Base_Select_Statement'Class) is
    begin
       for Item in Self.Paths.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -186,14 +186,14 @@ package body Program.Nodes.Select_Statements is
    end Visit;
 
    overriding function To_Select_Statement_Text
-    (Self : aliased in out Select_Statement)
+    (Self : in out Select_Statement)
       return Program.Elements.Select_Statements.Select_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Select_Statement_Text;
 
    overriding function To_Select_Statement_Text
-    (Self : aliased in out Implicit_Select_Statement)
+    (Self : in out Implicit_Select_Statement)
       return Program.Elements.Select_Statements.Select_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

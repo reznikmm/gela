@@ -36,7 +36,7 @@ package Program.Elements.Infix_Operators is
      with Storage_Size => 0;
 
    not overriding function To_Infix_Operator_Text
-    (Self : aliased in out Infix_Operator)
+    (Self : in out Infix_Operator)
       return Infix_Operator_Text_Access is abstract;
 
 end Program.Elements.Infix_Operators;

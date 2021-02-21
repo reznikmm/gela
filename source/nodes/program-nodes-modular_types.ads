@@ -44,7 +44,7 @@ private
         Modulus : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Modular_Type'Class);
+   procedure Initialize (Self : in out Base_Modular_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Modular_Type;
@@ -71,7 +71,7 @@ private
      end record;
 
    overriding function To_Modular_Type_Text
-    (Self : aliased in out Modular_Type)
+    (Self : in out Modular_Type)
       return Program.Elements.Modular_Types.Modular_Type_Text_Access;
 
    overriding function Mod_Token
@@ -87,7 +87,7 @@ private
      end record;
 
    overriding function To_Modular_Type_Text
-    (Self : aliased in out Implicit_Modular_Type)
+    (Self : in out Implicit_Modular_Type)
       return Program.Elements.Modular_Types.Modular_Type_Text_Access;
 
    overriding function Is_Part_Of_Implicit

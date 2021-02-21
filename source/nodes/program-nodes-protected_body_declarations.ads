@@ -80,8 +80,7 @@ private
         End_Name             : Program.Elements.Identifiers.Identifier_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Protected_Body_Declaration'Class);
+   procedure Initialize (Self : in out Base_Protected_Body_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Body_Declaration;
@@ -132,7 +131,7 @@ private
      end record;
 
    overriding function To_Protected_Body_Declaration_Text
-    (Self : aliased in out Protected_Body_Declaration)
+    (Self : in out Protected_Body_Declaration)
       return Program.Elements.Protected_Body_Declarations
           .Protected_Body_Declaration_Text_Access;
 
@@ -169,7 +168,7 @@ private
      end record;
 
    overriding function To_Protected_Body_Declaration_Text
-    (Self : aliased in out Implicit_Protected_Body_Declaration)
+    (Self : in out Implicit_Protected_Body_Declaration)
       return Program.Elements.Protected_Body_Declarations
           .Protected_Body_Declaration_Text_Access;
 

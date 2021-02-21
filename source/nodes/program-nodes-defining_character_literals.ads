@@ -45,8 +45,7 @@ private
          .Defining_Character_Literal
      with null record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Defining_Character_Literal'Class);
+   procedure Initialize (Self : in out Base_Defining_Character_Literal'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Character_Literal;
@@ -70,7 +69,7 @@ private
      end record;
 
    overriding function To_Defining_Character_Literal_Text
-    (Self : aliased in out Defining_Character_Literal)
+    (Self : in out Defining_Character_Literal)
       return Program.Elements.Defining_Character_Literals
           .Defining_Character_Literal_Text_Access;
 
@@ -89,7 +88,7 @@ private
      end record;
 
    overriding function To_Defining_Character_Literal_Text
-    (Self : aliased in out Implicit_Defining_Character_Literal)
+    (Self : in out Implicit_Defining_Character_Literal)
       return Program.Elements.Defining_Character_Literals
           .Defining_Character_Literal_Text_Access;
 

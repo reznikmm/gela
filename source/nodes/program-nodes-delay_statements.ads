@@ -51,7 +51,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Delay_Statement'Class);
+   procedure Initialize (Self : in out Base_Delay_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Delay_Statement;
@@ -82,7 +82,7 @@ private
      end record;
 
    overriding function To_Delay_Statement_Text
-    (Self : aliased in out Delay_Statement)
+    (Self : in out Delay_Statement)
       return Program.Elements.Delay_Statements.Delay_Statement_Text_Access;
 
    overriding function Delay_Token
@@ -106,7 +106,7 @@ private
      end record;
 
    overriding function To_Delay_Statement_Text
-    (Self : aliased in out Implicit_Delay_Statement)
+    (Self : in out Implicit_Delay_Statement)
       return Program.Elements.Delay_Statements.Delay_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -28,7 +28,7 @@ package Program.Elements.Record_Definitions is
      access all Record_Definition_Text'Class with Storage_Size => 0;
 
    not overriding function To_Record_Definition_Text
-    (Self : aliased in out Record_Definition)
+    (Self : in out Record_Definition)
       return Record_Definition_Text_Access is abstract;
 
    not overriding function Record_Token

@@ -34,7 +34,7 @@ package Program.Elements.Discrete_Simple_Expression_Ranges is
      with Storage_Size => 0;
 
    not overriding function To_Discrete_Simple_Expression_Range_Text
-    (Self : aliased in out Discrete_Simple_Expression_Range)
+    (Self : in out Discrete_Simple_Expression_Range)
       return Discrete_Simple_Expression_Range_Text_Access is abstract;
 
    not overriding function Double_Dot_Token

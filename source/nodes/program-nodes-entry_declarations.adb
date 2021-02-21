@@ -212,7 +212,7 @@ package body Program.Nodes.Entry_Declarations is
       return Self.Has_Overriding;
    end Has_Overriding;
 
-   procedure Initialize (Self : aliased in out Base_Entry_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Entry_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Entry_Family_Definition.Assigned then
@@ -252,7 +252,7 @@ package body Program.Nodes.Entry_Declarations is
    end Visit;
 
    overriding function To_Entry_Declaration_Text
-    (Self : aliased in out Entry_Declaration)
+    (Self : in out Entry_Declaration)
       return Program.Elements.Entry_Declarations
           .Entry_Declaration_Text_Access is
    begin
@@ -260,7 +260,7 @@ package body Program.Nodes.Entry_Declarations is
    end To_Entry_Declaration_Text;
 
    overriding function To_Entry_Declaration_Text
-    (Self : aliased in out Implicit_Entry_Declaration)
+    (Self : in out Implicit_Entry_Declaration)
       return Program.Elements.Entry_Declarations
           .Entry_Declaration_Text_Access is
       pragma Unreferenced (Self);

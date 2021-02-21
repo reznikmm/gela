@@ -52,7 +52,7 @@ private
         Constraint   : Program.Elements.Constraints.Constraint_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Subtype_Indication'Class);
+   procedure Initialize (Self : in out Base_Subtype_Indication'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Subtype_Indication;
@@ -83,7 +83,7 @@ private
      end record;
 
    overriding function To_Subtype_Indication_Text
-    (Self : aliased in out Subtype_Indication)
+    (Self : in out Subtype_Indication)
       return Program.Elements.Subtype_Indications
           .Subtype_Indication_Text_Access;
 
@@ -107,7 +107,7 @@ private
      end record;
 
    overriding function To_Subtype_Indication_Text
-    (Self : aliased in out Implicit_Subtype_Indication)
+    (Self : in out Implicit_Subtype_Indication)
       return Program.Elements.Subtype_Indications
           .Subtype_Indication_Text_Access;
 

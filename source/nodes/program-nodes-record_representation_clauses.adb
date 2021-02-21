@@ -152,7 +152,7 @@ package body Program.Nodes.Record_Representation_Clauses is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Record_Representation_Clause'Class) is
+    (Self : in out Base_Record_Representation_Clause'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Mod_Clause_Expression.Assigned then
@@ -197,7 +197,7 @@ package body Program.Nodes.Record_Representation_Clauses is
    end Visit;
 
    overriding function To_Record_Representation_Clause_Text
-    (Self : aliased in out Record_Representation_Clause)
+    (Self : in out Record_Representation_Clause)
       return Program.Elements.Record_Representation_Clauses
           .Record_Representation_Clause_Text_Access is
    begin
@@ -205,7 +205,7 @@ package body Program.Nodes.Record_Representation_Clauses is
    end To_Record_Representation_Clause_Text;
 
    overriding function To_Record_Representation_Clause_Text
-    (Self : aliased in out Implicit_Record_Representation_Clause)
+    (Self : in out Implicit_Record_Representation_Clause)
       return Program.Elements.Record_Representation_Clauses
           .Record_Representation_Clause_Text_Access is
       pragma Unreferenced (Self);

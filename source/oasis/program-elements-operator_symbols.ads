@@ -31,7 +31,7 @@ package Program.Elements.Operator_Symbols is
      with Storage_Size => 0;
 
    not overriding function To_Operator_Symbol_Text
-    (Self : aliased in out Operator_Symbol)
+    (Self : in out Operator_Symbol)
       return Operator_Symbol_Text_Access is abstract;
 
    not overriding function Operator_Symbol_Token

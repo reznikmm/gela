@@ -45,7 +45,7 @@ package Program.Elements.Single_Protected_Declarations is
      access all Single_Protected_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Single_Protected_Declaration_Text
-    (Self : aliased in out Single_Protected_Declaration)
+    (Self : in out Single_Protected_Declaration)
       return Single_Protected_Declaration_Text_Access is abstract;
 
    not overriding function Protected_Token

@@ -28,7 +28,7 @@ package Program.Elements.Discriminant_Constraints is
      access all Discriminant_Constraint_Text'Class with Storage_Size => 0;
 
    not overriding function To_Discriminant_Constraint_Text
-    (Self : aliased in out Discriminant_Constraint)
+    (Self : in out Discriminant_Constraint)
       return Discriminant_Constraint_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

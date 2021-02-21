@@ -71,7 +71,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Type_Declaration'Class);
+   procedure Initialize (Self : in out Base_Type_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Type_Declaration;
@@ -117,7 +117,7 @@ private
      end record;
 
    overriding function To_Type_Declaration_Text
-    (Self : aliased in out Type_Declaration)
+    (Self : in out Type_Declaration)
       return Program.Elements.Type_Declarations.Type_Declaration_Text_Access;
 
    overriding function Type_Token
@@ -145,7 +145,7 @@ private
      end record;
 
    overriding function To_Type_Declaration_Text
-    (Self : aliased in out Implicit_Type_Declaration)
+    (Self : in out Implicit_Type_Declaration)
       return Program.Elements.Type_Declarations.Type_Declaration_Text_Access;
 
    overriding function Is_Part_Of_Implicit

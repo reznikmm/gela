@@ -156,7 +156,7 @@ package body Program.Nodes.Anonymous_Access_To_Objects is
    end Has_Constant;
 
    procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Object'Class) is
+    (Self : in out Base_Anonymous_Access_To_Object'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Indication, Self'Unchecked_Access);
       null;
@@ -194,7 +194,7 @@ package body Program.Nodes.Anonymous_Access_To_Objects is
    end Visit;
 
    overriding function To_Anonymous_Access_To_Object_Text
-    (Self : aliased in out Anonymous_Access_To_Object)
+    (Self : in out Anonymous_Access_To_Object)
       return Program.Elements.Anonymous_Access_To_Objects
           .Anonymous_Access_To_Object_Text_Access is
    begin
@@ -202,7 +202,7 @@ package body Program.Nodes.Anonymous_Access_To_Objects is
    end To_Anonymous_Access_To_Object_Text;
 
    overriding function To_Anonymous_Access_To_Object_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Object)
+    (Self : in out Implicit_Anonymous_Access_To_Object)
       return Program.Elements.Anonymous_Access_To_Objects
           .Anonymous_Access_To_Object_Text_Access is
       pragma Unreferenced (Self);

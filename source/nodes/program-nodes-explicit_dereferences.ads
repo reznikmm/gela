@@ -47,8 +47,7 @@ private
         Prefix : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Explicit_Dereference'Class);
+   procedure Initialize (Self : in out Base_Explicit_Dereference'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Explicit_Dereference;
@@ -75,7 +74,7 @@ private
      end record;
 
    overriding function To_Explicit_Dereference_Text
-    (Self : aliased in out Explicit_Dereference)
+    (Self : in out Explicit_Dereference)
       return Program.Elements.Explicit_Dereferences
           .Explicit_Dereference_Text_Access;
 
@@ -96,7 +95,7 @@ private
      end record;
 
    overriding function To_Explicit_Dereference_Text
-    (Self : aliased in out Implicit_Explicit_Dereference)
+    (Self : in out Implicit_Explicit_Dereference)
       return Program.Elements.Explicit_Dereferences
           .Explicit_Dereference_Text_Access;
 

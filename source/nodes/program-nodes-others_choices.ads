@@ -38,7 +38,7 @@ private
        and Program.Elements.Others_Choices.Others_Choice
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_Others_Choice'Class);
+   procedure Initialize (Self : in out Base_Others_Choice'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Others_Choice;
@@ -61,7 +61,7 @@ private
      end record;
 
    overriding function To_Others_Choice_Text
-    (Self : aliased in out Others_Choice)
+    (Self : in out Others_Choice)
       return Program.Elements.Others_Choices.Others_Choice_Text_Access;
 
    overriding function Others_Token
@@ -77,7 +77,7 @@ private
      end record;
 
    overriding function To_Others_Choice_Text
-    (Self : aliased in out Implicit_Others_Choice)
+    (Self : in out Implicit_Others_Choice)
       return Program.Elements.Others_Choices.Others_Choice_Text_Access;
 
    overriding function Is_Part_Of_Implicit

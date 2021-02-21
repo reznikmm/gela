@@ -137,8 +137,7 @@ package body Program.Nodes.Component_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Component_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Component_Declaration'Class) is
    begin
       for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -178,7 +177,7 @@ package body Program.Nodes.Component_Declarations is
    end Visit;
 
    overriding function To_Component_Declaration_Text
-    (Self : aliased in out Component_Declaration)
+    (Self : in out Component_Declaration)
       return Program.Elements.Component_Declarations
           .Component_Declaration_Text_Access is
    begin
@@ -186,7 +185,7 @@ package body Program.Nodes.Component_Declarations is
    end To_Component_Declaration_Text;
 
    overriding function To_Component_Declaration_Text
-    (Self : aliased in out Implicit_Component_Declaration)
+    (Self : in out Implicit_Component_Declaration)
       return Program.Elements.Component_Declarations
           .Component_Declaration_Text_Access is
       pragma Unreferenced (Self);

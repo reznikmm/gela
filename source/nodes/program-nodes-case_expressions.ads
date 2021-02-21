@@ -58,7 +58,7 @@ private
           .Case_Expression_Path_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Case_Expression'Class);
+   procedure Initialize (Self : in out Base_Case_Expression'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Case_Expression;
@@ -90,7 +90,7 @@ private
      end record;
 
    overriding function To_Case_Expression_Text
-    (Self : aliased in out Case_Expression)
+    (Self : in out Case_Expression)
       return Program.Elements.Case_Expressions.Case_Expression_Text_Access;
 
    overriding function Case_Token
@@ -110,7 +110,7 @@ private
      end record;
 
    overriding function To_Case_Expression_Text
-    (Self : aliased in out Implicit_Case_Expression)
+    (Self : in out Implicit_Case_Expression)
       return Program.Elements.Case_Expressions.Case_Expression_Text_Access;
 
    overriding function Is_Part_Of_Implicit

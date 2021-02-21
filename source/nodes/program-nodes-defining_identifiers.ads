@@ -41,7 +41,7 @@ private
        and Program.Elements.Defining_Identifiers.Defining_Identifier
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_Defining_Identifier'Class);
+   procedure Initialize (Self : in out Base_Defining_Identifier'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Identifier;
@@ -64,7 +64,7 @@ private
      end record;
 
    overriding function To_Defining_Identifier_Text
-    (Self : aliased in out Defining_Identifier)
+    (Self : in out Defining_Identifier)
       return Program.Elements.Defining_Identifiers
           .Defining_Identifier_Text_Access;
 
@@ -83,7 +83,7 @@ private
      end record;
 
    overriding function To_Defining_Identifier_Text
-    (Self : aliased in out Implicit_Defining_Identifier)
+    (Self : in out Implicit_Defining_Identifier)
       return Program.Elements.Defining_Identifiers
           .Defining_Identifier_Text_Access;
 

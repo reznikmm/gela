@@ -82,7 +82,7 @@ private
           .Identifier_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Block_Statement'Class);
+   procedure Initialize (Self : in out Base_Block_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Block_Statement;
@@ -133,7 +133,7 @@ private
      end record;
 
    overriding function To_Block_Statement_Text
-    (Self : aliased in out Block_Statement)
+    (Self : in out Block_Statement)
       return Program.Elements.Block_Statements.Block_Statement_Text_Access;
 
    overriding function Colon_Token
@@ -169,7 +169,7 @@ private
      end record;
 
    overriding function To_Block_Statement_Text
-    (Self : aliased in out Implicit_Block_Statement)
+    (Self : in out Implicit_Block_Statement)
       return Program.Elements.Block_Statements.Block_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

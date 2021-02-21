@@ -40,7 +40,7 @@ package Program.Elements.Short_Circuit_Operations is
      access all Short_Circuit_Operation_Text'Class with Storage_Size => 0;
 
    not overriding function To_Short_Circuit_Operation_Text
-    (Self : aliased in out Short_Circuit_Operation)
+    (Self : in out Short_Circuit_Operation)
       return Short_Circuit_Operation_Text_Access is abstract;
 
    not overriding function And_Token

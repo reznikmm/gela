@@ -53,7 +53,7 @@ private
           .Parameter_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Function_Call'Class);
+   procedure Initialize (Self : in out Base_Function_Call'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Function_Call;
@@ -85,7 +85,7 @@ private
      end record;
 
    overriding function To_Function_Call_Text
-    (Self : aliased in out Function_Call)
+    (Self : in out Function_Call)
       return Program.Elements.Function_Calls.Function_Call_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -105,7 +105,7 @@ private
      end record;
 
    overriding function To_Function_Call_Text
-    (Self : aliased in out Implicit_Function_Call)
+    (Self : in out Implicit_Function_Call)
       return Program.Elements.Function_Calls.Function_Call_Text_Access;
 
    overriding function Is_Part_Of_Implicit

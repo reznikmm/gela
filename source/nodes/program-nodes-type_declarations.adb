@@ -136,7 +136,7 @@ package body Program.Nodes.Type_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Type_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Type_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Discriminant_Part.Assigned then
@@ -173,14 +173,14 @@ package body Program.Nodes.Type_Declarations is
    end Visit;
 
    overriding function To_Type_Declaration_Text
-    (Self : aliased in out Type_Declaration)
+    (Self : in out Type_Declaration)
       return Program.Elements.Type_Declarations.Type_Declaration_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Type_Declaration_Text;
 
    overriding function To_Type_Declaration_Text
-    (Self : aliased in out Implicit_Type_Declaration)
+    (Self : in out Implicit_Type_Declaration)
       return Program.Elements.Type_Declarations.Type_Declaration_Text_Access is
       pragma Unreferenced (Self);
    begin

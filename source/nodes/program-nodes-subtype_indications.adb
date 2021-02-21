@@ -105,8 +105,7 @@ package body Program.Nodes.Subtype_Indications is
       return Self.Has_Not_Null;
    end Has_Not_Null;
 
-   procedure Initialize
-    (Self : aliased in out Base_Subtype_Indication'Class) is
+   procedure Initialize (Self : in out Base_Subtype_Indication'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Mark, Self'Unchecked_Access);
       if Self.Constraint.Assigned then
@@ -139,7 +138,7 @@ package body Program.Nodes.Subtype_Indications is
    end Visit;
 
    overriding function To_Subtype_Indication_Text
-    (Self : aliased in out Subtype_Indication)
+    (Self : in out Subtype_Indication)
       return Program.Elements.Subtype_Indications
           .Subtype_Indication_Text_Access is
    begin
@@ -147,7 +146,7 @@ package body Program.Nodes.Subtype_Indications is
    end To_Subtype_Indication_Text;
 
    overriding function To_Subtype_Indication_Text
-    (Self : aliased in out Implicit_Subtype_Indication)
+    (Self : in out Implicit_Subtype_Indication)
       return Program.Elements.Subtype_Indications
           .Subtype_Indication_Text_Access is
       pragma Unreferenced (Self);

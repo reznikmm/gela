@@ -108,7 +108,7 @@ package body Program.Nodes.Generalized_Iterator_Specifications is
    end Has_Reverse;
 
    procedure Initialize
-    (Self : aliased in out Base_Generalized_Iterator_Specification'Class) is
+    (Self : in out Base_Generalized_Iterator_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Iterator_Name, Self'Unchecked_Access);
@@ -139,7 +139,7 @@ package body Program.Nodes.Generalized_Iterator_Specifications is
    end Visit;
 
    overriding function To_Generalized_Iterator_Specification_Text
-    (Self : aliased in out Generalized_Iterator_Specification)
+    (Self : in out Generalized_Iterator_Specification)
       return Program.Elements.Generalized_Iterator_Specifications
           .Generalized_Iterator_Specification_Text_Access is
    begin
@@ -147,7 +147,7 @@ package body Program.Nodes.Generalized_Iterator_Specifications is
    end To_Generalized_Iterator_Specification_Text;
 
    overriding function To_Generalized_Iterator_Specification_Text
-    (Self : aliased in out Implicit_Generalized_Iterator_Specification)
+    (Self : in out Implicit_Generalized_Iterator_Specification)
       return Program.Elements.Generalized_Iterator_Specifications
           .Generalized_Iterator_Specification_Text_Access is
       pragma Unreferenced (Self);

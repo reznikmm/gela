@@ -84,8 +84,7 @@ package body Program.Nodes.Discriminant_Constraints is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discriminant_Constraint'Class) is
+   procedure Initialize (Self : in out Base_Discriminant_Constraint'Class) is
    begin
       for Item in Self.Discriminants.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -125,7 +124,7 @@ package body Program.Nodes.Discriminant_Constraints is
    end Visit;
 
    overriding function To_Discriminant_Constraint_Text
-    (Self : aliased in out Discriminant_Constraint)
+    (Self : in out Discriminant_Constraint)
       return Program.Elements.Discriminant_Constraints
           .Discriminant_Constraint_Text_Access is
    begin
@@ -133,7 +132,7 @@ package body Program.Nodes.Discriminant_Constraints is
    end To_Discriminant_Constraint_Text;
 
    overriding function To_Discriminant_Constraint_Text
-    (Self : aliased in out Implicit_Discriminant_Constraint)
+    (Self : in out Implicit_Discriminant_Constraint)
       return Program.Elements.Discriminant_Constraints
           .Discriminant_Constraint_Text_Access is
       pragma Unreferenced (Self);

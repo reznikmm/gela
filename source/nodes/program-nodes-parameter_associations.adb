@@ -82,8 +82,7 @@ package body Program.Nodes.Parameter_Associations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Parameter_Association'Class) is
+   procedure Initialize (Self : in out Base_Parameter_Association'Class) is
    begin
       if Self.Formal_Parameter.Assigned then
          Set_Enclosing_Element (Self.Formal_Parameter, Self'Unchecked_Access);
@@ -116,7 +115,7 @@ package body Program.Nodes.Parameter_Associations is
    end Visit;
 
    overriding function To_Parameter_Association_Text
-    (Self : aliased in out Parameter_Association)
+    (Self : in out Parameter_Association)
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Text_Access is
    begin
@@ -124,7 +123,7 @@ package body Program.Nodes.Parameter_Associations is
    end To_Parameter_Association_Text;
 
    overriding function To_Parameter_Association_Text
-    (Self : aliased in out Implicit_Parameter_Association)
+    (Self : in out Implicit_Parameter_Association)
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Text_Access is
       pragma Unreferenced (Self);

@@ -121,7 +121,7 @@ package body Program.Nodes.If_Expressions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_If_Expression'Class) is
+   procedure Initialize (Self : in out Base_If_Expression'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Then_Expression, Self'Unchecked_Access);
@@ -158,14 +158,14 @@ package body Program.Nodes.If_Expressions is
    end Visit;
 
    overriding function To_If_Expression_Text
-    (Self : aliased in out If_Expression)
+    (Self : in out If_Expression)
       return Program.Elements.If_Expressions.If_Expression_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_If_Expression_Text;
 
    overriding function To_If_Expression_Text
-    (Self : aliased in out Implicit_If_Expression)
+    (Self : in out Implicit_If_Expression)
       return Program.Elements.If_Expressions.If_Expression_Text_Access is
       pragma Unreferenced (Self);
    begin

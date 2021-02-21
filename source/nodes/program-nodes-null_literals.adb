@@ -60,7 +60,7 @@ package body Program.Nodes.Null_Literals is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Null_Literal'Class) is
+   procedure Initialize (Self : in out Base_Null_Literal'Class) is
    begin
       null;
    end Initialize;
@@ -89,14 +89,14 @@ package body Program.Nodes.Null_Literals is
    end Visit;
 
    overriding function To_Null_Literal_Text
-    (Self : aliased in out Null_Literal)
+    (Self : in out Null_Literal)
       return Program.Elements.Null_Literals.Null_Literal_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Null_Literal_Text;
 
    overriding function To_Null_Literal_Text
-    (Self : aliased in out Implicit_Null_Literal)
+    (Self : in out Implicit_Null_Literal)
       return Program.Elements.Null_Literals.Null_Literal_Text_Access is
       pragma Unreferenced (Self);
    begin

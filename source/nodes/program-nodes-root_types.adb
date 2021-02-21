@@ -49,7 +49,7 @@ package body Program.Nodes.Root_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Root_Type'Class) is
+   procedure Initialize (Self : in out Base_Root_Type'Class) is
    begin
       null;
    end Initialize;
@@ -82,14 +82,14 @@ package body Program.Nodes.Root_Types is
    end Visit;
 
    overriding function To_Root_Type_Text
-    (Self : aliased in out Root_Type)
+    (Self : in out Root_Type)
       return Program.Elements.Root_Types.Root_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Root_Type_Text;
 
    overriding function To_Root_Type_Text
-    (Self : aliased in out Implicit_Root_Type)
+    (Self : in out Implicit_Root_Type)
       return Program.Elements.Root_Types.Root_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

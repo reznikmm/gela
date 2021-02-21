@@ -71,7 +71,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Function'Class);
+    (Self : in out Base_Anonymous_Access_To_Function'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Anonymous_Access_To_Function;
@@ -119,7 +119,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Function_Text
-    (Self : aliased in out Anonymous_Access_To_Function)
+    (Self : in out Anonymous_Access_To_Function)
       return Program.Elements.Anonymous_Access_To_Functions
           .Anonymous_Access_To_Function_Text_Access;
 
@@ -187,7 +187,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Function_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Function)
+    (Self : in out Implicit_Anonymous_Access_To_Function)
       return Program.Elements.Anonymous_Access_To_Functions
           .Anonymous_Access_To_Function_Text_Access;
 

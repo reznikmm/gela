@@ -34,7 +34,7 @@ package Program.Elements.Protected_Body_Stubs is
      access all Protected_Body_Stub_Text'Class with Storage_Size => 0;
 
    not overriding function To_Protected_Body_Stub_Text
-    (Self : aliased in out Protected_Body_Stub)
+    (Self : in out Protected_Body_Stub)
       return Protected_Body_Stub_Text_Access is abstract;
 
    not overriding function Protected_Token

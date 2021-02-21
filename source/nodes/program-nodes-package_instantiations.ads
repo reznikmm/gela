@@ -79,8 +79,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Package_Instantiation'Class);
+   procedure Initialize (Self : in out Base_Package_Instantiation'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Package_Instantiation;
@@ -130,7 +129,7 @@ private
      end record;
 
    overriding function To_Package_Instantiation_Text
-    (Self : aliased in out Package_Instantiation)
+    (Self : in out Package_Instantiation)
       return Program.Elements.Package_Instantiations
           .Package_Instantiation_Text_Access;
 
@@ -171,7 +170,7 @@ private
      end record;
 
    overriding function To_Package_Instantiation_Text
-    (Self : aliased in out Implicit_Package_Instantiation)
+    (Self : in out Implicit_Package_Instantiation)
       return Program.Elements.Package_Instantiations
           .Package_Instantiation_Text_Access;
 

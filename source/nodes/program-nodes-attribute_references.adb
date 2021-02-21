@@ -112,8 +112,7 @@ package body Program.Nodes.Attribute_References is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Attribute_Reference'Class) is
+   procedure Initialize (Self : in out Base_Attribute_Reference'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Attribute_Designator, Self'Unchecked_Access);
@@ -147,7 +146,7 @@ package body Program.Nodes.Attribute_References is
    end Visit;
 
    overriding function To_Attribute_Reference_Text
-    (Self : aliased in out Attribute_Reference)
+    (Self : in out Attribute_Reference)
       return Program.Elements.Attribute_References
           .Attribute_Reference_Text_Access is
    begin
@@ -155,7 +154,7 @@ package body Program.Nodes.Attribute_References is
    end To_Attribute_Reference_Text;
 
    overriding function To_Attribute_Reference_Text
-    (Self : aliased in out Implicit_Attribute_Reference)
+    (Self : in out Implicit_Attribute_Reference)
       return Program.Elements.Attribute_References
           .Attribute_Reference_Text_Access is
       pragma Unreferenced (Self);

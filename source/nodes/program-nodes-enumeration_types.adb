@@ -84,7 +84,7 @@ package body Program.Nodes.Enumeration_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Enumeration_Type'Class) is
+   procedure Initialize (Self : in out Base_Enumeration_Type'Class) is
    begin
       for Item in Self.Literals.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -124,14 +124,14 @@ package body Program.Nodes.Enumeration_Types is
    end Visit;
 
    overriding function To_Enumeration_Type_Text
-    (Self : aliased in out Enumeration_Type)
+    (Self : in out Enumeration_Type)
       return Program.Elements.Enumeration_Types.Enumeration_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Enumeration_Type_Text;
 
    overriding function To_Enumeration_Type_Text
-    (Self : aliased in out Implicit_Enumeration_Type)
+    (Self : in out Implicit_Enumeration_Type)
       return Program.Elements.Enumeration_Types.Enumeration_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

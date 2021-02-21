@@ -91,8 +91,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Function_Declaration'Class);
+   procedure Initialize (Self : in out Base_Formal_Function_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Function_Declaration;
@@ -152,7 +151,7 @@ private
      end record;
 
    overriding function To_Formal_Function_Declaration_Text
-    (Self : aliased in out Formal_Function_Declaration)
+    (Self : in out Formal_Function_Declaration)
       return Program.Elements.Formal_Function_Declarations
           .Formal_Function_Declaration_Text_Access;
 
@@ -228,7 +227,7 @@ private
      end record;
 
    overriding function To_Formal_Function_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Function_Declaration)
+    (Self : in out Implicit_Formal_Function_Declaration)
       return Program.Elements.Formal_Function_Declarations
           .Formal_Function_Declaration_Text_Access;
 

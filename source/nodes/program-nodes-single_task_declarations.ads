@@ -76,8 +76,7 @@ private
           .Task_Definition_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Single_Task_Declaration'Class);
+   procedure Initialize (Self : in out Base_Single_Task_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Single_Task_Declaration;
@@ -126,7 +125,7 @@ private
      end record;
 
    overriding function To_Single_Task_Declaration_Text
-    (Self : aliased in out Single_Task_Declaration)
+    (Self : in out Single_Task_Declaration)
       return Program.Elements.Single_Task_Declarations
           .Single_Task_Declaration_Text_Access;
 
@@ -163,7 +162,7 @@ private
      end record;
 
    overriding function To_Single_Task_Declaration_Text
-    (Self : aliased in out Implicit_Single_Task_Declaration)
+    (Self : in out Implicit_Single_Task_Declaration)
       return Program.Elements.Single_Task_Declarations
           .Single_Task_Declaration_Text_Access;
 

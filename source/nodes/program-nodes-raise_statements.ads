@@ -52,7 +52,7 @@ private
         Associated_Message : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Raise_Statement'Class);
+   procedure Initialize (Self : in out Base_Raise_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Raise_Statement;
@@ -86,7 +86,7 @@ private
      end record;
 
    overriding function To_Raise_Statement_Text
-    (Self : aliased in out Raise_Statement)
+    (Self : in out Raise_Statement)
       return Program.Elements.Raise_Statements.Raise_Statement_Text_Access;
 
    overriding function Raise_Token
@@ -110,7 +110,7 @@ private
      end record;
 
    overriding function To_Raise_Statement_Text
-    (Self : aliased in out Implicit_Raise_Statement)
+    (Self : in out Implicit_Raise_Statement)
       return Program.Elements.Raise_Statements.Raise_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

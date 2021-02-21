@@ -60,8 +60,7 @@ private
         Is_Discrete_Subtype_Definition : Boolean;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discrete_Subtype_Indication'Class);
+   procedure Initialize (Self : in out Base_Discrete_Subtype_Indication'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Discrete_Subtype_Indication;
@@ -98,7 +97,7 @@ private
      with null record;
 
    overriding function To_Discrete_Subtype_Indication_Text
-    (Self : aliased in out Discrete_Subtype_Indication)
+    (Self : in out Discrete_Subtype_Indication)
       return Program.Elements.Discrete_Subtype_Indications
           .Discrete_Subtype_Indication_Text_Access;
 
@@ -111,7 +110,7 @@ private
      end record;
 
    overriding function To_Discrete_Subtype_Indication_Text
-    (Self : aliased in out Implicit_Discrete_Subtype_Indication)
+    (Self : in out Implicit_Discrete_Subtype_Indication)
       return Program.Elements.Discrete_Subtype_Indications
           .Discrete_Subtype_Indication_Text_Access;
 

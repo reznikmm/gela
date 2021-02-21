@@ -116,7 +116,7 @@ package body Program.Nodes.Allocators is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Allocator'Class) is
+   procedure Initialize (Self : in out Base_Allocator'Class) is
    begin
       if Self.Subpool_Name.Assigned then
          Set_Enclosing_Element (Self.Subpool_Name, Self'Unchecked_Access);
@@ -152,14 +152,14 @@ package body Program.Nodes.Allocators is
    end Visit;
 
    overriding function To_Allocator_Text
-    (Self : aliased in out Allocator)
+    (Self : in out Allocator)
       return Program.Elements.Allocators.Allocator_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Allocator_Text;
 
    overriding function To_Allocator_Text
-    (Self : aliased in out Implicit_Allocator)
+    (Self : in out Implicit_Allocator)
       return Program.Elements.Allocators.Allocator_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -56,7 +56,7 @@ private
           .Subtype_Indication_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Object_Access_Type'Class);
+   procedure Initialize (Self : in out Base_Object_Access_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Object_Access_Type;
@@ -96,7 +96,7 @@ private
      end record;
 
    overriding function To_Object_Access_Type_Text
-    (Self : aliased in out Object_Access_Type)
+    (Self : in out Object_Access_Type)
       return Program.Elements.Object_Access_Types
           .Object_Access_Type_Text_Access;
 
@@ -138,7 +138,7 @@ private
      end record;
 
    overriding function To_Object_Access_Type_Text
-    (Self : aliased in out Implicit_Object_Access_Type)
+    (Self : in out Implicit_Object_Access_Type)
       return Program.Elements.Object_Access_Types
           .Object_Access_Type_Text_Access;
 

@@ -65,7 +65,7 @@ private
         Else_Statements       : Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Select_Statement'Class);
+   procedure Initialize (Self : in out Base_Select_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Select_Statement;
@@ -109,7 +109,7 @@ private
      end record;
 
    overriding function To_Select_Statement_Text
-    (Self : aliased in out Select_Statement)
+    (Self : in out Select_Statement)
       return Program.Elements.Select_Statements.Select_Statement_Text_Access;
 
    overriding function Select_Token
@@ -149,7 +149,7 @@ private
      end record;
 
    overriding function To_Select_Statement_Text
-    (Self : aliased in out Implicit_Select_Statement)
+    (Self : in out Implicit_Select_Statement)
       return Program.Elements.Select_Statements.Select_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

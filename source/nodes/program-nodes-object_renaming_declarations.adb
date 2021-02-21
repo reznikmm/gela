@@ -168,7 +168,7 @@ package body Program.Nodes.Object_Renaming_Declarations is
    end Has_Not_Null;
 
    procedure Initialize
-    (Self : aliased in out Base_Object_Renaming_Declaration'Class) is
+    (Self : in out Base_Object_Renaming_Declaration'Class) is
    begin
       for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -205,7 +205,7 @@ package body Program.Nodes.Object_Renaming_Declarations is
    end Visit;
 
    overriding function To_Object_Renaming_Declaration_Text
-    (Self : aliased in out Object_Renaming_Declaration)
+    (Self : in out Object_Renaming_Declaration)
       return Program.Elements.Object_Renaming_Declarations
           .Object_Renaming_Declaration_Text_Access is
    begin
@@ -213,7 +213,7 @@ package body Program.Nodes.Object_Renaming_Declarations is
    end To_Object_Renaming_Declaration_Text;
 
    overriding function To_Object_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Object_Renaming_Declaration)
+    (Self : in out Implicit_Object_Renaming_Declaration)
       return Program.Elements.Object_Renaming_Declarations
           .Object_Renaming_Declaration_Text_Access is
       pragma Unreferenced (Self);

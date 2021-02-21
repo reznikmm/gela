@@ -41,7 +41,7 @@ package Program.Elements.Component_Clauses is
      with Storage_Size => 0;
 
    not overriding function To_Component_Clause_Text
-    (Self : aliased in out Component_Clause)
+    (Self : in out Component_Clause)
       return Component_Clause_Text_Access is abstract;
 
    not overriding function At_Token

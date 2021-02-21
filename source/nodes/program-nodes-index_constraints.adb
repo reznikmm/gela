@@ -82,7 +82,7 @@ package body Program.Nodes.Index_Constraints is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Index_Constraint'Class) is
+   procedure Initialize (Self : in out Base_Index_Constraint'Class) is
    begin
       for Item in Self.Ranges.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -122,14 +122,14 @@ package body Program.Nodes.Index_Constraints is
    end Visit;
 
    overriding function To_Index_Constraint_Text
-    (Self : aliased in out Index_Constraint)
+    (Self : in out Index_Constraint)
       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Index_Constraint_Text;
 
    overriding function To_Index_Constraint_Text
-    (Self : aliased in out Implicit_Index_Constraint)
+    (Self : in out Implicit_Index_Constraint)
       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access is
       pragma Unreferenced (Self);
    begin

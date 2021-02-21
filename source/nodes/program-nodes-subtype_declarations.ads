@@ -68,7 +68,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Subtype_Declaration'Class);
+   procedure Initialize (Self : in out Base_Subtype_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Subtype_Declaration;
@@ -111,7 +111,7 @@ private
      end record;
 
    overriding function To_Subtype_Declaration_Text
-    (Self : aliased in out Subtype_Declaration)
+    (Self : in out Subtype_Declaration)
       return Program.Elements.Subtype_Declarations
           .Subtype_Declaration_Text_Access;
 
@@ -140,7 +140,7 @@ private
      end record;
 
    overriding function To_Subtype_Declaration_Text
-    (Self : aliased in out Implicit_Subtype_Declaration)
+    (Self : in out Implicit_Subtype_Declaration)
       return Program.Elements.Subtype_Declarations
           .Subtype_Declaration_Text_Access;
 

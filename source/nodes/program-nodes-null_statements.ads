@@ -41,7 +41,7 @@ private
        and Program.Elements.Null_Statements.Null_Statement
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_Null_Statement'Class);
+   procedure Initialize (Self : in out Base_Null_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Null_Statement;
@@ -66,7 +66,7 @@ private
      end record;
 
    overriding function To_Null_Statement_Text
-    (Self : aliased in out Null_Statement)
+    (Self : in out Null_Statement)
       return Program.Elements.Null_Statements.Null_Statement_Text_Access;
 
    overriding function Null_Token
@@ -86,7 +86,7 @@ private
      end record;
 
    overriding function To_Null_Statement_Text
-    (Self : aliased in out Implicit_Null_Statement)
+    (Self : in out Implicit_Null_Statement)
       return Program.Elements.Null_Statements.Null_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

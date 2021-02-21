@@ -66,8 +66,7 @@ private
         Default_Expression : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Discriminant_Specification'Class);
+   procedure Initialize (Self : in out Base_Discriminant_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Discriminant_Specification;
@@ -109,7 +108,7 @@ private
      end record;
 
    overriding function To_Discriminant_Specification_Text
-    (Self : aliased in out Discriminant_Specification)
+    (Self : in out Discriminant_Specification)
       return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Text_Access;
 
@@ -147,7 +146,7 @@ private
      end record;
 
    overriding function To_Discriminant_Specification_Text
-    (Self : aliased in out Implicit_Discriminant_Specification)
+    (Self : in out Implicit_Discriminant_Specification)
       return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Text_Access;
 

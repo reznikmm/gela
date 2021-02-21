@@ -177,7 +177,7 @@ package body Program.Nodes.Protected_Type_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Protected_Type_Declaration'Class) is
+    (Self : in out Base_Protected_Type_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Discriminant_Part.Assigned then
@@ -217,7 +217,7 @@ package body Program.Nodes.Protected_Type_Declarations is
    end Visit;
 
    overriding function To_Protected_Type_Declaration_Text
-    (Self : aliased in out Protected_Type_Declaration)
+    (Self : in out Protected_Type_Declaration)
       return Program.Elements.Protected_Type_Declarations
           .Protected_Type_Declaration_Text_Access is
    begin
@@ -225,7 +225,7 @@ package body Program.Nodes.Protected_Type_Declarations is
    end To_Protected_Type_Declaration_Text;
 
    overriding function To_Protected_Type_Declaration_Text
-    (Self : aliased in out Implicit_Protected_Type_Declaration)
+    (Self : in out Implicit_Protected_Type_Declaration)
       return Program.Elements.Protected_Type_Declarations
           .Protected_Type_Declaration_Text_Access is
       pragma Unreferenced (Self);

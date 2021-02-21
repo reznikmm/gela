@@ -103,7 +103,7 @@ package body Program.Nodes.Membership_Tests is
       return Self.Has_Not;
    end Has_Not;
 
-   procedure Initialize (Self : aliased in out Base_Membership_Test'Class) is
+   procedure Initialize (Self : in out Base_Membership_Test'Class) is
    begin
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
       for Item in Self.Choices.Each_Element loop
@@ -136,14 +136,14 @@ package body Program.Nodes.Membership_Tests is
    end Visit;
 
    overriding function To_Membership_Test_Text
-    (Self : aliased in out Membership_Test)
+    (Self : in out Membership_Test)
       return Program.Elements.Membership_Tests.Membership_Test_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Membership_Test_Text;
 
    overriding function To_Membership_Test_Text
-    (Self : aliased in out Implicit_Membership_Test)
+    (Self : in out Implicit_Membership_Test)
       return Program.Elements.Membership_Tests.Membership_Test_Text_Access is
       pragma Unreferenced (Self);
    begin

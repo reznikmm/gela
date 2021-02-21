@@ -90,7 +90,7 @@ package body Program.Nodes.Formal_Package_Associations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Formal_Package_Association'Class) is
+    (Self : in out Base_Formal_Package_Association'Class) is
    begin
       if Self.Formal_Parameter.Assigned then
          Set_Enclosing_Element (Self.Formal_Parameter, Self'Unchecked_Access);
@@ -125,7 +125,7 @@ package body Program.Nodes.Formal_Package_Associations is
    end Visit;
 
    overriding function To_Formal_Package_Association_Text
-    (Self : aliased in out Formal_Package_Association)
+    (Self : in out Formal_Package_Association)
       return Program.Elements.Formal_Package_Associations
           .Formal_Package_Association_Text_Access is
    begin
@@ -133,7 +133,7 @@ package body Program.Nodes.Formal_Package_Associations is
    end To_Formal_Package_Association_Text;
 
    overriding function To_Formal_Package_Association_Text
-    (Self : aliased in out Implicit_Formal_Package_Association)
+    (Self : in out Implicit_Formal_Package_Association)
       return Program.Elements.Formal_Package_Associations
           .Formal_Package_Association_Text_Access is
       pragma Unreferenced (Self);

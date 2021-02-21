@@ -89,7 +89,7 @@ package body Program.Nodes.Array_Component_Associations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Array_Component_Association'Class) is
+    (Self : in out Base_Array_Component_Association'Class) is
    begin
       for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -124,7 +124,7 @@ package body Program.Nodes.Array_Component_Associations is
    end Visit;
 
    overriding function To_Array_Component_Association_Text
-    (Self : aliased in out Array_Component_Association)
+    (Self : in out Array_Component_Association)
       return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Text_Access is
    begin
@@ -132,7 +132,7 @@ package body Program.Nodes.Array_Component_Associations is
    end To_Array_Component_Association_Text;
 
    overriding function To_Array_Component_Association_Text
-    (Self : aliased in out Implicit_Array_Component_Association)
+    (Self : in out Implicit_Array_Component_Association)
       return Program.Elements.Array_Component_Associations
           .Array_Component_Association_Text_Access is
       pragma Unreferenced (Self);

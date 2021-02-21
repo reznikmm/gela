@@ -107,8 +107,7 @@ package body Program.Nodes.Decimal_Fixed_Point_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Decimal_Fixed_Point_Type'Class) is
+   procedure Initialize (Self : in out Base_Decimal_Fixed_Point_Type'Class) is
    begin
       Set_Enclosing_Element (Self.Delta_Expression, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Digits_Expression, Self'Unchecked_Access);
@@ -150,7 +149,7 @@ package body Program.Nodes.Decimal_Fixed_Point_Types is
    end Visit;
 
    overriding function To_Decimal_Fixed_Point_Type_Text
-    (Self : aliased in out Decimal_Fixed_Point_Type)
+    (Self : in out Decimal_Fixed_Point_Type)
       return Program.Elements.Decimal_Fixed_Point_Types
           .Decimal_Fixed_Point_Type_Text_Access is
    begin
@@ -158,7 +157,7 @@ package body Program.Nodes.Decimal_Fixed_Point_Types is
    end To_Decimal_Fixed_Point_Type_Text;
 
    overriding function To_Decimal_Fixed_Point_Type_Text
-    (Self : aliased in out Implicit_Decimal_Fixed_Point_Type)
+    (Self : in out Implicit_Decimal_Fixed_Point_Type)
       return Program.Elements.Decimal_Fixed_Point_Types
           .Decimal_Fixed_Point_Type_Text_Access is
       pragma Unreferenced (Self);

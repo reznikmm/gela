@@ -81,8 +81,7 @@ package body Program.Nodes.Parenthesized_Expressions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Parenthesized_Expression'Class) is
+   procedure Initialize (Self : in out Base_Parenthesized_Expression'Class) is
    begin
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
       null;
@@ -112,7 +111,7 @@ package body Program.Nodes.Parenthesized_Expressions is
    end Visit;
 
    overriding function To_Parenthesized_Expression_Text
-    (Self : aliased in out Parenthesized_Expression)
+    (Self : in out Parenthesized_Expression)
       return Program.Elements.Parenthesized_Expressions
           .Parenthesized_Expression_Text_Access is
    begin
@@ -120,7 +119,7 @@ package body Program.Nodes.Parenthesized_Expressions is
    end To_Parenthesized_Expression_Text;
 
    overriding function To_Parenthesized_Expression_Text
-    (Self : aliased in out Implicit_Parenthesized_Expression)
+    (Self : in out Implicit_Parenthesized_Expression)
       return Program.Elements.Parenthesized_Expressions
           .Parenthesized_Expression_Text_Access is
       pragma Unreferenced (Self);

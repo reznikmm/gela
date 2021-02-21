@@ -49,8 +49,7 @@ private
          .Unknown_Discriminant_Part
      with null record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Unknown_Discriminant_Part'Class);
+   procedure Initialize (Self : in out Base_Unknown_Discriminant_Part'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Unknown_Discriminant_Part;
@@ -78,7 +77,7 @@ private
      end record;
 
    overriding function To_Unknown_Discriminant_Part_Text
-    (Self : aliased in out Unknown_Discriminant_Part)
+    (Self : in out Unknown_Discriminant_Part)
       return Program.Elements.Unknown_Discriminant_Parts
           .Unknown_Discriminant_Part_Text_Access;
 
@@ -103,7 +102,7 @@ private
      end record;
 
    overriding function To_Unknown_Discriminant_Part_Text
-    (Self : aliased in out Implicit_Unknown_Discriminant_Part)
+    (Self : in out Implicit_Unknown_Discriminant_Part)
       return Program.Elements.Unknown_Discriminant_Parts
           .Unknown_Discriminant_Part_Text_Access;
 

@@ -50,7 +50,7 @@ private
         Selector : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Selected_Component'Class);
+   procedure Initialize (Self : in out Base_Selected_Component'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Selected_Component;
@@ -80,7 +80,7 @@ private
      end record;
 
    overriding function To_Selected_Component_Text
-    (Self : aliased in out Selected_Component)
+    (Self : in out Selected_Component)
       return Program.Elements.Selected_Components
           .Selected_Component_Text_Access;
 
@@ -97,7 +97,7 @@ private
      end record;
 
    overriding function To_Selected_Component_Text
-    (Self : aliased in out Implicit_Selected_Component)
+    (Self : in out Implicit_Selected_Component)
       return Program.Elements.Selected_Components
           .Selected_Component_Text_Access;
 

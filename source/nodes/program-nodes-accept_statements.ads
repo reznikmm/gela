@@ -93,7 +93,7 @@ private
           .Identifier_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Accept_Statement'Class);
+   procedure Initialize (Self : in out Base_Accept_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Accept_Statement;
@@ -158,7 +158,7 @@ private
      end record;
 
    overriding function To_Accept_Statement_Text
-    (Self : aliased in out Accept_Statement)
+    (Self : in out Accept_Statement)
       return Program.Elements.Accept_Statements.Accept_Statement_Text_Access;
 
    overriding function Accept_Token
@@ -206,7 +206,7 @@ private
      end record;
 
    overriding function To_Accept_Statement_Text
-    (Self : aliased in out Implicit_Accept_Statement)
+    (Self : in out Implicit_Accept_Statement)
       return Program.Elements.Accept_Statements.Accept_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

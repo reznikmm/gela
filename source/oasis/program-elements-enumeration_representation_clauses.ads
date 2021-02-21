@@ -36,7 +36,7 @@ package Program.Elements.Enumeration_Representation_Clauses is
      with Storage_Size => 0;
 
    not overriding function To_Enumeration_Representation_Clause_Text
-    (Self : aliased in out Enumeration_Representation_Clause)
+    (Self : in out Enumeration_Representation_Clause)
       return Enumeration_Representation_Clause_Text_Access is abstract;
 
    not overriding function For_Token

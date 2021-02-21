@@ -55,7 +55,7 @@ private
         Operand      : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Type_Conversion'Class);
+   procedure Initialize (Self : in out Base_Type_Conversion'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Type_Conversion;
@@ -88,7 +88,7 @@ private
      end record;
 
    overriding function To_Type_Conversion_Text
-    (Self : aliased in out Type_Conversion)
+    (Self : in out Type_Conversion)
       return Program.Elements.Type_Conversions.Type_Conversion_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -108,7 +108,7 @@ private
      end record;
 
    overriding function To_Type_Conversion_Text
-    (Self : aliased in out Implicit_Type_Conversion)
+    (Self : in out Implicit_Type_Conversion)
       return Program.Elements.Type_Conversions.Type_Conversion_Text_Access;
 
    overriding function Is_Part_Of_Implicit

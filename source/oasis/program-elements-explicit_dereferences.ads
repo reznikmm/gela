@@ -27,7 +27,7 @@ package Program.Elements.Explicit_Dereferences is
      access all Explicit_Dereference_Text'Class with Storage_Size => 0;
 
    not overriding function To_Explicit_Dereference_Text
-    (Self : aliased in out Explicit_Dereference)
+    (Self : in out Explicit_Dereference)
       return Explicit_Dereference_Text_Access is abstract;
 
    not overriding function Dot_Token

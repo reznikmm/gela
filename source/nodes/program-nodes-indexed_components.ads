@@ -55,7 +55,7 @@ private
         Expressions : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Indexed_Component'Class);
+   procedure Initialize (Self : in out Base_Indexed_Component'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Indexed_Component;
@@ -88,7 +88,7 @@ private
      end record;
 
    overriding function To_Indexed_Component_Text
-    (Self : aliased in out Indexed_Component)
+    (Self : in out Indexed_Component)
       return Program.Elements.Indexed_Components.Indexed_Component_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -108,7 +108,7 @@ private
      end record;
 
    overriding function To_Indexed_Component_Text
-    (Self : aliased in out Implicit_Indexed_Component)
+    (Self : in out Implicit_Indexed_Component)
       return Program.Elements.Indexed_Components.Indexed_Component_Text_Access;
 
    overriding function Is_Part_Of_Implicit

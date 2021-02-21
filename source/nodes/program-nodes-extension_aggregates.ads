@@ -59,7 +59,7 @@ private
           .Record_Component_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Extension_Aggregate'Class);
+   procedure Initialize (Self : in out Base_Extension_Aggregate'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Extension_Aggregate;
@@ -95,7 +95,7 @@ private
      end record;
 
    overriding function To_Extension_Aggregate_Text
-    (Self : aliased in out Extension_Aggregate)
+    (Self : in out Extension_Aggregate)
       return Program.Elements.Extension_Aggregates
           .Extension_Aggregate_Text_Access;
 
@@ -120,7 +120,7 @@ private
      end record;
 
    overriding function To_Extension_Aggregate_Text
-    (Self : aliased in out Implicit_Extension_Aggregate)
+    (Self : in out Implicit_Extension_Aggregate)
       return Program.Elements.Extension_Aggregates
           .Extension_Aggregate_Text_Access;
 

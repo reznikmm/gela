@@ -102,7 +102,7 @@ package body Program.Nodes.Attribute_Definition_Clauses is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Attribute_Definition_Clause'Class) is
+    (Self : in out Base_Attribute_Definition_Clause'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
@@ -141,7 +141,7 @@ package body Program.Nodes.Attribute_Definition_Clauses is
    end Visit;
 
    overriding function To_Attribute_Definition_Clause_Text
-    (Self : aliased in out Attribute_Definition_Clause)
+    (Self : in out Attribute_Definition_Clause)
       return Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause_Text_Access is
    begin
@@ -149,7 +149,7 @@ package body Program.Nodes.Attribute_Definition_Clauses is
    end To_Attribute_Definition_Clause_Text;
 
    overriding function To_Attribute_Definition_Clause_Text
-    (Self : aliased in out Implicit_Attribute_Definition_Clause)
+    (Self : in out Implicit_Attribute_Definition_Clause)
       return Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause_Text_Access is
       pragma Unreferenced (Self);

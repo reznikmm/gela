@@ -78,8 +78,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Formal_Object_Declaration'Class);
+   procedure Initialize (Self : in out Base_Formal_Object_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Object_Declaration;
@@ -129,7 +128,7 @@ private
      end record;
 
    overriding function To_Formal_Object_Declaration_Text
-    (Self : aliased in out Formal_Object_Declaration)
+    (Self : in out Formal_Object_Declaration)
       return Program.Elements.Formal_Object_Declarations
           .Formal_Object_Declaration_Text_Access;
 
@@ -189,7 +188,7 @@ private
      end record;
 
    overriding function To_Formal_Object_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Object_Declaration)
+    (Self : in out Implicit_Formal_Object_Declaration)
       return Program.Elements.Formal_Object_Declarations
           .Formal_Object_Declaration_Text_Access;
 

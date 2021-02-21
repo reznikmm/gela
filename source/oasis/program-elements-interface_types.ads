@@ -40,7 +40,7 @@ package Program.Elements.Interface_Types is
      with Storage_Size => 0;
 
    not overriding function To_Interface_Type_Text
-    (Self : aliased in out Interface_Type)
+    (Self : in out Interface_Type)
       return Interface_Type_Text_Access is abstract;
 
    not overriding function Limited_Token

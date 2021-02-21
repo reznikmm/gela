@@ -133,7 +133,7 @@ package body Program.Nodes.Formal_Private_Type_Definitions is
    end Has_Limited;
 
    procedure Initialize
-    (Self : aliased in out Base_Formal_Private_Type_Definition'Class) is
+    (Self : in out Base_Formal_Private_Type_Definition'Class) is
    begin
       null;
    end Initialize;
@@ -170,7 +170,7 @@ package body Program.Nodes.Formal_Private_Type_Definitions is
    end Visit;
 
    overriding function To_Formal_Private_Type_Definition_Text
-    (Self : aliased in out Formal_Private_Type_Definition)
+    (Self : in out Formal_Private_Type_Definition)
       return Program.Elements.Formal_Private_Type_Definitions
           .Formal_Private_Type_Definition_Text_Access is
    begin
@@ -178,7 +178,7 @@ package body Program.Nodes.Formal_Private_Type_Definitions is
    end To_Formal_Private_Type_Definition_Text;
 
    overriding function To_Formal_Private_Type_Definition_Text
-    (Self : aliased in out Implicit_Formal_Private_Type_Definition)
+    (Self : in out Implicit_Formal_Private_Type_Definition)
       return Program.Elements.Formal_Private_Type_Definitions
           .Formal_Private_Type_Definition_Text_Access is
       pragma Unreferenced (Self);

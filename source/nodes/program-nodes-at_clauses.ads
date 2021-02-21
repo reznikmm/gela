@@ -55,7 +55,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_At_Clause'Class);
+   procedure Initialize (Self : in out Base_At_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_At_Clause;
@@ -91,7 +91,7 @@ private
      end record;
 
    overriding function To_At_Clause_Text
-    (Self : aliased in out At_Clause)
+    (Self : in out At_Clause)
       return Program.Elements.At_Clauses.At_Clause_Text_Access;
 
    overriding function For_Token
@@ -119,7 +119,7 @@ private
      end record;
 
    overriding function To_At_Clause_Text
-    (Self : aliased in out Implicit_At_Clause)
+    (Self : in out Implicit_At_Clause)
       return Program.Elements.At_Clauses.At_Clause_Text_Access;
 
    overriding function Is_Part_Of_Implicit

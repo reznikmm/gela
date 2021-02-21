@@ -49,7 +49,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Enumeration_Literal_Specification'Class);
+    (Self : in out Base_Enumeration_Literal_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Enumeration_Literal_Specification;
@@ -74,7 +74,7 @@ private
      with null record;
 
    overriding function To_Enumeration_Literal_Specification_Text
-    (Self : aliased in out Enumeration_Literal_Specification)
+    (Self : in out Enumeration_Literal_Specification)
       return Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Text_Access;
 
@@ -87,7 +87,7 @@ private
      end record;
 
    overriding function To_Enumeration_Literal_Specification_Text
-    (Self : aliased in out Implicit_Enumeration_Literal_Specification)
+    (Self : in out Implicit_Enumeration_Literal_Specification)
       return Program.Elements.Enumeration_Literal_Specifications
           .Enumeration_Literal_Specification_Text_Access;
 

@@ -104,7 +104,7 @@ package body Program.Nodes.Exception_Handlers is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Exception_Handler'Class) is
+   procedure Initialize (Self : in out Base_Exception_Handler'Class) is
    begin
       if Self.Choice_Parameter.Assigned then
          Set_Enclosing_Element (Self.Choice_Parameter, Self'Unchecked_Access);
@@ -134,7 +134,7 @@ package body Program.Nodes.Exception_Handlers is
    end Visit;
 
    overriding function To_Exception_Handler_Text
-    (Self : aliased in out Exception_Handler)
+    (Self : in out Exception_Handler)
       return Program.Elements.Exception_Handlers
           .Exception_Handler_Text_Access is
    begin
@@ -142,7 +142,7 @@ package body Program.Nodes.Exception_Handlers is
    end To_Exception_Handler_Text;
 
    overriding function To_Exception_Handler_Text
-    (Self : aliased in out Implicit_Exception_Handler)
+    (Self : in out Implicit_Exception_Handler)
       return Program.Elements.Exception_Handlers
           .Exception_Handler_Text_Access is
       pragma Unreferenced (Self);

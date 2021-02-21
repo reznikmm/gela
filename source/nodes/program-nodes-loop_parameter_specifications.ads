@@ -62,7 +62,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Loop_Parameter_Specification'Class);
+    (Self : in out Base_Loop_Parameter_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Loop_Parameter_Specification;
@@ -96,7 +96,7 @@ private
      end record;
 
    overriding function To_Loop_Parameter_Specification_Text
-    (Self : aliased in out Loop_Parameter_Specification)
+    (Self : in out Loop_Parameter_Specification)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Text_Access;
 
@@ -122,7 +122,7 @@ private
      end record;
 
    overriding function To_Loop_Parameter_Specification_Text
-    (Self : aliased in out Implicit_Loop_Parameter_Specification)
+    (Self : in out Implicit_Loop_Parameter_Specification)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Text_Access;
 

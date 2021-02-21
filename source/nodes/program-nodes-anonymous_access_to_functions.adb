@@ -211,7 +211,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
    end Has_Not_Null_2;
 
    procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Function'Class) is
+    (Self : in out Base_Anonymous_Access_To_Function'Class) is
    begin
       for Item in Self.Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -252,7 +252,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
    end Visit;
 
    overriding function To_Anonymous_Access_To_Function_Text
-    (Self : aliased in out Anonymous_Access_To_Function)
+    (Self : in out Anonymous_Access_To_Function)
       return Program.Elements.Anonymous_Access_To_Functions
           .Anonymous_Access_To_Function_Text_Access is
    begin
@@ -260,7 +260,7 @@ package body Program.Nodes.Anonymous_Access_To_Functions is
    end To_Anonymous_Access_To_Function_Text;
 
    overriding function To_Anonymous_Access_To_Function_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Function)
+    (Self : in out Implicit_Anonymous_Access_To_Function)
       return Program.Elements.Anonymous_Access_To_Functions
           .Anonymous_Access_To_Function_Text_Access is
       pragma Unreferenced (Self);

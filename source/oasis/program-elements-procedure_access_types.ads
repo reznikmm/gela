@@ -36,7 +36,7 @@ package Program.Elements.Procedure_Access_Types is
      access all Procedure_Access_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Procedure_Access_Type_Text
-    (Self : aliased in out Procedure_Access_Type)
+    (Self : in out Procedure_Access_Type)
       return Procedure_Access_Type_Text_Access is abstract;
 
    not overriding function Not_Token

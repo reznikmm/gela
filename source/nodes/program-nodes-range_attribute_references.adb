@@ -64,8 +64,7 @@ package body Program.Nodes.Range_Attribute_References is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Range_Attribute_Reference'Class) is
+   procedure Initialize (Self : in out Base_Range_Attribute_Reference'Class) is
    begin
       Set_Enclosing_Element (Self.Range_Attribute, Self'Unchecked_Access);
       null;
@@ -103,7 +102,7 @@ package body Program.Nodes.Range_Attribute_References is
    end Visit;
 
    overriding function To_Range_Attribute_Reference_Text
-    (Self : aliased in out Range_Attribute_Reference)
+    (Self : in out Range_Attribute_Reference)
       return Program.Elements.Range_Attribute_References
           .Range_Attribute_Reference_Text_Access is
    begin
@@ -111,7 +110,7 @@ package body Program.Nodes.Range_Attribute_References is
    end To_Range_Attribute_Reference_Text;
 
    overriding function To_Range_Attribute_Reference_Text
-    (Self : aliased in out Implicit_Range_Attribute_Reference)
+    (Self : in out Implicit_Range_Attribute_Reference)
       return Program.Elements.Range_Attribute_References
           .Range_Attribute_Reference_Text_Access is
       pragma Unreferenced (Self);

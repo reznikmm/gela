@@ -86,7 +86,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Formal_Procedure_Declaration'Class);
+    (Self : in out Base_Formal_Procedure_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Formal_Procedure_Declaration;
@@ -140,7 +140,7 @@ private
      end record;
 
    overriding function To_Formal_Procedure_Declaration_Text
-    (Self : aliased in out Formal_Procedure_Declaration)
+    (Self : in out Formal_Procedure_Declaration)
       return Program.Elements.Formal_Procedure_Declarations
           .Formal_Procedure_Declaration_Text_Access;
 
@@ -208,7 +208,7 @@ private
      end record;
 
    overriding function To_Formal_Procedure_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Procedure_Declaration)
+    (Self : in out Implicit_Formal_Procedure_Declaration)
       return Program.Elements.Formal_Procedure_Declarations
           .Formal_Procedure_Declaration_Text_Access;
 

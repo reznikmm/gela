@@ -73,8 +73,7 @@ package body Program.Nodes.Defining_Identifiers is
       return "";
    end Image;
 
-   procedure Initialize
-    (Self : aliased in out Base_Defining_Identifier'Class) is
+   procedure Initialize (Self : in out Base_Defining_Identifier'Class) is
    begin
       null;
    end Initialize;
@@ -103,7 +102,7 @@ package body Program.Nodes.Defining_Identifiers is
    end Visit;
 
    overriding function To_Defining_Identifier_Text
-    (Self : aliased in out Defining_Identifier)
+    (Self : in out Defining_Identifier)
       return Program.Elements.Defining_Identifiers
           .Defining_Identifier_Text_Access is
    begin
@@ -111,7 +110,7 @@ package body Program.Nodes.Defining_Identifiers is
    end To_Defining_Identifier_Text;
 
    overriding function To_Defining_Identifier_Text
-    (Self : aliased in out Implicit_Defining_Identifier)
+    (Self : in out Implicit_Defining_Identifier)
       return Program.Elements.Defining_Identifiers
           .Defining_Identifier_Text_Access is
       pragma Unreferenced (Self);

@@ -50,7 +50,7 @@ private
         Statements : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Elsif_Path'Class);
+   procedure Initialize (Self : in out Base_Elsif_Path'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Elsif_Path;
@@ -76,7 +76,7 @@ private
      end record;
 
    overriding function To_Elsif_Path_Text
-    (Self : aliased in out Elsif_Path)
+    (Self : in out Elsif_Path)
       return Program.Elements.Elsif_Paths.Elsif_Path_Text_Access;
 
    overriding function Elsif_Token
@@ -96,7 +96,7 @@ private
      end record;
 
    overriding function To_Elsif_Path_Text
-    (Self : aliased in out Implicit_Elsif_Path)
+    (Self : in out Implicit_Elsif_Path)
       return Program.Elements.Elsif_Paths.Elsif_Path_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -155,7 +155,7 @@ package body Program.Nodes.Protected_Body_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Protected_Body_Declaration'Class) is
+    (Self : in out Base_Protected_Body_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Aspects.Each_Element loop
@@ -194,7 +194,7 @@ package body Program.Nodes.Protected_Body_Declarations is
    end Visit;
 
    overriding function To_Protected_Body_Declaration_Text
-    (Self : aliased in out Protected_Body_Declaration)
+    (Self : in out Protected_Body_Declaration)
       return Program.Elements.Protected_Body_Declarations
           .Protected_Body_Declaration_Text_Access is
    begin
@@ -202,7 +202,7 @@ package body Program.Nodes.Protected_Body_Declarations is
    end To_Protected_Body_Declaration_Text;
 
    overriding function To_Protected_Body_Declaration_Text
-    (Self : aliased in out Implicit_Protected_Body_Declaration)
+    (Self : in out Implicit_Protected_Body_Declaration)
       return Program.Elements.Protected_Body_Declarations
           .Protected_Body_Declaration_Text_Access is
       pragma Unreferenced (Self);

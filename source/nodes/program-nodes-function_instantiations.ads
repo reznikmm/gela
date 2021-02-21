@@ -84,8 +84,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Function_Instantiation'Class);
+   procedure Initialize (Self : in out Base_Function_Instantiation'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Function_Instantiation;
@@ -137,7 +136,7 @@ private
      end record;
 
    overriding function To_Function_Instantiation_Text
-    (Self : aliased in out Function_Instantiation)
+    (Self : in out Function_Instantiation)
       return Program.Elements.Function_Instantiations
           .Function_Instantiation_Text_Access;
 
@@ -194,7 +193,7 @@ private
      end record;
 
    overriding function To_Function_Instantiation_Text
-    (Self : aliased in out Implicit_Function_Instantiation)
+    (Self : in out Implicit_Function_Instantiation)
       return Program.Elements.Function_Instantiations
           .Function_Instantiation_Text_Access;
 

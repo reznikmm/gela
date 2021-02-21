@@ -55,8 +55,7 @@ private
         End_Name             : Program.Elements.Identifiers.Identifier_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Protected_Definition'Class);
+   procedure Initialize (Self : in out Base_Protected_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Definition;
@@ -93,7 +92,7 @@ private
      end record;
 
    overriding function To_Protected_Definition_Text
-    (Self : aliased in out Protected_Definition)
+    (Self : in out Protected_Definition)
       return Program.Elements.Protected_Definitions
           .Protected_Definition_Text_Access;
 
@@ -114,7 +113,7 @@ private
      end record;
 
    overriding function To_Protected_Definition_Text
-    (Self : aliased in out Implicit_Protected_Definition)
+    (Self : in out Implicit_Protected_Definition)
       return Program.Elements.Protected_Definitions
           .Protected_Definition_Text_Access;
 

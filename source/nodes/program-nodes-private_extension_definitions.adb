@@ -186,7 +186,7 @@ package body Program.Nodes.Private_Extension_Definitions is
    end Has_Synchronized;
 
    procedure Initialize
-    (Self : aliased in out Base_Private_Extension_Definition'Class) is
+    (Self : in out Base_Private_Extension_Definition'Class) is
    begin
       Set_Enclosing_Element (Self.Ancestor, Self'Unchecked_Access);
       for Item in Self.Progenitors.Each_Element loop
@@ -219,7 +219,7 @@ package body Program.Nodes.Private_Extension_Definitions is
    end Visit;
 
    overriding function To_Private_Extension_Definition_Text
-    (Self : aliased in out Private_Extension_Definition)
+    (Self : in out Private_Extension_Definition)
       return Program.Elements.Private_Extension_Definitions
           .Private_Extension_Definition_Text_Access is
    begin
@@ -227,7 +227,7 @@ package body Program.Nodes.Private_Extension_Definitions is
    end To_Private_Extension_Definition_Text;
 
    overriding function To_Private_Extension_Definition_Text
-    (Self : aliased in out Implicit_Private_Extension_Definition)
+    (Self : in out Implicit_Private_Extension_Definition)
       return Program.Elements.Private_Extension_Definitions
           .Private_Extension_Definition_Text_Access is
       pragma Unreferenced (Self);

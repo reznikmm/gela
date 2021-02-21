@@ -60,7 +60,7 @@ private
           .Variant_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Variant_Part'Class);
+   procedure Initialize (Self : in out Base_Variant_Part'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Variant_Part;
@@ -96,7 +96,7 @@ private
      end record;
 
    overriding function To_Variant_Part_Text
-    (Self : aliased in out Variant_Part)
+    (Self : in out Variant_Part)
       return Program.Elements.Variant_Parts.Variant_Part_Text_Access;
 
    overriding function Case_Token
@@ -128,7 +128,7 @@ private
      end record;
 
    overriding function To_Variant_Part_Text
-    (Self : aliased in out Implicit_Variant_Part)
+    (Self : in out Implicit_Variant_Part)
       return Program.Elements.Variant_Parts.Variant_Part_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -39,7 +39,7 @@ package Program.Elements.Object_Access_Types is
      access all Object_Access_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Object_Access_Type_Text
-    (Self : aliased in out Object_Access_Type)
+    (Self : in out Object_Access_Type)
       return Object_Access_Type_Text_Access is abstract;
 
    not overriding function Not_Token

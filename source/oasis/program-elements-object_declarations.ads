@@ -53,7 +53,7 @@ package Program.Elements.Object_Declarations is
      access all Object_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Object_Declaration_Text
-    (Self : aliased in out Object_Declaration)
+    (Self : in out Object_Declaration)
       return Object_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

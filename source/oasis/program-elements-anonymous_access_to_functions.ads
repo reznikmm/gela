@@ -46,7 +46,7 @@ package Program.Elements.Anonymous_Access_To_Functions is
      access all Anonymous_Access_To_Function_Text'Class with Storage_Size => 0;
 
    not overriding function To_Anonymous_Access_To_Function_Text
-    (Self : aliased in out Anonymous_Access_To_Function)
+    (Self : in out Anonymous_Access_To_Function)
       return Anonymous_Access_To_Function_Text_Access is abstract;
 
    not overriding function Not_Token

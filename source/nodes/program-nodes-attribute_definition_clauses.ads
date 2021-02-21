@@ -59,8 +59,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Attribute_Definition_Clause'Class);
+   procedure Initialize (Self : in out Base_Attribute_Definition_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Attribute_Definition_Clause;
@@ -100,7 +99,7 @@ private
      end record;
 
    overriding function To_Attribute_Definition_Clause_Text
-    (Self : aliased in out Attribute_Definition_Clause)
+    (Self : in out Attribute_Definition_Clause)
       return Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause_Text_Access;
 
@@ -125,7 +124,7 @@ private
      end record;
 
    overriding function To_Attribute_Definition_Clause_Text
-    (Self : aliased in out Implicit_Attribute_Definition_Clause)
+    (Self : in out Implicit_Attribute_Definition_Clause)
       return Program.Elements.Attribute_Definition_Clauses
           .Attribute_Definition_Clause_Text_Access;
 

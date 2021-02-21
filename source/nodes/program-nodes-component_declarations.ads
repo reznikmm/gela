@@ -71,8 +71,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Component_Declaration'Class);
+   procedure Initialize (Self : in out Base_Component_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Component_Declaration;
@@ -118,7 +117,7 @@ private
      end record;
 
    overriding function To_Component_Declaration_Text
-    (Self : aliased in out Component_Declaration)
+    (Self : in out Component_Declaration)
       return Program.Elements.Component_Declarations
           .Component_Declaration_Text_Access;
 
@@ -147,7 +146,7 @@ private
      end record;
 
    overriding function To_Component_Declaration_Text
-    (Self : aliased in out Implicit_Component_Declaration)
+    (Self : in out Implicit_Component_Declaration)
       return Program.Elements.Component_Declarations
           .Component_Declaration_Text_Access;
 

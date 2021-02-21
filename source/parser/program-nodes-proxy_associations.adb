@@ -201,7 +201,7 @@ package body Program.Nodes.Proxy_Associations is
    --------------------------------------
 
    overriding function To_Discriminant_Association_Text
-    (Self : aliased in out Proxy_Association)
+    (Self : in out Proxy_Association)
       return Program.Elements.Discriminant_Associations
         .Discriminant_Association_Text_Access is
    begin
@@ -213,7 +213,7 @@ package body Program.Nodes.Proxy_Associations is
    ------------------------------------------
 
    overriding function To_Record_Component_Association_Text
-    (Self : aliased in out Proxy_Association)
+    (Self : in out Proxy_Association)
       return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Text_Access is
    begin
@@ -225,7 +225,7 @@ package body Program.Nodes.Proxy_Associations is
    -----------------------------------
 
    overriding function To_Parameter_Association_Text
-    (Self : aliased in out Proxy_Association)
+    (Self : in out Proxy_Association)
       return Program.Elements.Parameter_Associations
           .Parameter_Association_Text_Access is
    begin

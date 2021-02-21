@@ -47,8 +47,7 @@ private
        and Program.Elements.Private_Type_Definitions.Private_Type_Definition
      with null record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Private_Type_Definition'Class);
+   procedure Initialize (Self : in out Base_Private_Type_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Private_Type_Definition;
@@ -75,7 +74,7 @@ private
      end record;
 
    overriding function To_Private_Type_Definition_Text
-    (Self : aliased in out Private_Type_Definition)
+    (Self : in out Private_Type_Definition)
       return Program.Elements.Private_Type_Definitions
           .Private_Type_Definition_Text_Access;
 
@@ -119,7 +118,7 @@ private
      end record;
 
    overriding function To_Private_Type_Definition_Text
-    (Self : aliased in out Implicit_Private_Type_Definition)
+    (Self : in out Implicit_Private_Type_Definition)
       return Program.Elements.Private_Type_Definitions
           .Private_Type_Definition_Text_Access;
 

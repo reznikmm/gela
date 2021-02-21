@@ -72,7 +72,7 @@ package body Program.Nodes.Numeric_Literals is
       return "";
    end Image;
 
-   procedure Initialize (Self : aliased in out Base_Numeric_Literal'Class) is
+   procedure Initialize (Self : in out Base_Numeric_Literal'Class) is
    begin
       null;
    end Initialize;
@@ -101,14 +101,14 @@ package body Program.Nodes.Numeric_Literals is
    end Visit;
 
    overriding function To_Numeric_Literal_Text
-    (Self : aliased in out Numeric_Literal)
+    (Self : in out Numeric_Literal)
       return Program.Elements.Numeric_Literals.Numeric_Literal_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Numeric_Literal_Text;
 
    overriding function To_Numeric_Literal_Text
-    (Self : aliased in out Implicit_Numeric_Literal)
+    (Self : in out Implicit_Numeric_Literal)
       return Program.Elements.Numeric_Literals.Numeric_Literal_Text_Access is
       pragma Unreferenced (Self);
    begin

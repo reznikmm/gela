@@ -62,8 +62,7 @@ private
           .Discrete_Range_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Entry_Index_Specification'Class);
+   procedure Initialize (Self : in out Base_Entry_Index_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Entry_Index_Specification;
@@ -96,7 +95,7 @@ private
      end record;
 
    overriding function To_Entry_Index_Specification_Text
-    (Self : aliased in out Entry_Index_Specification)
+    (Self : in out Entry_Index_Specification)
       return Program.Elements.Entry_Index_Specifications
           .Entry_Index_Specification_Text_Access;
 
@@ -117,7 +116,7 @@ private
      end record;
 
    overriding function To_Entry_Index_Specification_Text
-    (Self : aliased in out Implicit_Entry_Index_Specification)
+    (Self : in out Implicit_Entry_Index_Specification)
       return Program.Elements.Entry_Index_Specifications
           .Entry_Index_Specification_Text_Access;
 

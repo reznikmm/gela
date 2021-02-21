@@ -94,8 +94,7 @@ package body Program.Nodes.Assignment_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Assignment_Statement'Class) is
+   procedure Initialize (Self : in out Base_Assignment_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Variable_Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
@@ -126,7 +125,7 @@ package body Program.Nodes.Assignment_Statements is
    end Visit;
 
    overriding function To_Assignment_Statement_Text
-    (Self : aliased in out Assignment_Statement)
+    (Self : in out Assignment_Statement)
       return Program.Elements.Assignment_Statements
           .Assignment_Statement_Text_Access is
    begin
@@ -134,7 +133,7 @@ package body Program.Nodes.Assignment_Statements is
    end To_Assignment_Statement_Text;
 
    overriding function To_Assignment_Statement_Text
-    (Self : aliased in out Implicit_Assignment_Statement)
+    (Self : in out Implicit_Assignment_Statement)
       return Program.Elements.Assignment_Statements
           .Assignment_Statement_Text_Access is
       pragma Unreferenced (Self);

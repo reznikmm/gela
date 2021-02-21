@@ -79,8 +79,7 @@ package body Program.Nodes.Unknown_Discriminant_Parts is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Unknown_Discriminant_Part'Class) is
+   procedure Initialize (Self : in out Base_Unknown_Discriminant_Part'Class) is
    begin
       null;
    end Initialize;
@@ -109,7 +108,7 @@ package body Program.Nodes.Unknown_Discriminant_Parts is
    end Visit;
 
    overriding function To_Unknown_Discriminant_Part_Text
-    (Self : aliased in out Unknown_Discriminant_Part)
+    (Self : in out Unknown_Discriminant_Part)
       return Program.Elements.Unknown_Discriminant_Parts
           .Unknown_Discriminant_Part_Text_Access is
    begin
@@ -117,7 +116,7 @@ package body Program.Nodes.Unknown_Discriminant_Parts is
    end To_Unknown_Discriminant_Part_Text;
 
    overriding function To_Unknown_Discriminant_Part_Text
-    (Self : aliased in out Implicit_Unknown_Discriminant_Part)
+    (Self : in out Implicit_Unknown_Discriminant_Part)
       return Program.Elements.Unknown_Discriminant_Parts
           .Unknown_Discriminant_Part_Text_Access is
       pragma Unreferenced (Self);

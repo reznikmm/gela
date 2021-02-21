@@ -89,8 +89,7 @@ private
           .Protected_Definition_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Protected_Type_Declaration'Class);
+   procedure Initialize (Self : in out Base_Protected_Type_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Protected_Type_Declaration;
@@ -147,7 +146,7 @@ private
      end record;
 
    overriding function To_Protected_Type_Declaration_Text
-    (Self : aliased in out Protected_Type_Declaration)
+    (Self : in out Protected_Type_Declaration)
       return Program.Elements.Protected_Type_Declarations
           .Protected_Type_Declaration_Text_Access;
 
@@ -188,7 +187,7 @@ private
      end record;
 
    overriding function To_Protected_Type_Declaration_Text
-    (Self : aliased in out Implicit_Protected_Type_Declaration)
+    (Self : in out Implicit_Protected_Type_Declaration)
       return Program.Elements.Protected_Type_Declarations
           .Protected_Type_Declaration_Text_Access;
 

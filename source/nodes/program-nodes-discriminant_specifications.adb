@@ -146,7 +146,7 @@ package body Program.Nodes.Discriminant_Specifications is
    end Has_Not_Null;
 
    procedure Initialize
-    (Self : aliased in out Base_Discriminant_Specification'Class) is
+    (Self : in out Base_Discriminant_Specification'Class) is
    begin
       for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -183,7 +183,7 @@ package body Program.Nodes.Discriminant_Specifications is
    end Visit;
 
    overriding function To_Discriminant_Specification_Text
-    (Self : aliased in out Discriminant_Specification)
+    (Self : in out Discriminant_Specification)
       return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Text_Access is
    begin
@@ -191,7 +191,7 @@ package body Program.Nodes.Discriminant_Specifications is
    end To_Discriminant_Specification_Text;
 
    overriding function To_Discriminant_Specification_Text
-    (Self : aliased in out Implicit_Discriminant_Specification)
+    (Self : in out Implicit_Discriminant_Specification)
       return Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Text_Access is
       pragma Unreferenced (Self);

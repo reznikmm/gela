@@ -122,7 +122,7 @@ package body Program.Nodes.Case_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Case_Statement'Class) is
+   procedure Initialize (Self : in out Base_Case_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Selecting_Expression, Self'Unchecked_Access);
       for Item in Self.Paths.Each_Element loop
@@ -155,14 +155,14 @@ package body Program.Nodes.Case_Statements is
    end Visit;
 
    overriding function To_Case_Statement_Text
-    (Self : aliased in out Case_Statement)
+    (Self : in out Case_Statement)
       return Program.Elements.Case_Statements.Case_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Case_Statement_Text;
 
    overriding function To_Case_Statement_Text
-    (Self : aliased in out Implicit_Case_Statement)
+    (Self : in out Implicit_Case_Statement)
       return Program.Elements.Case_Statements.Case_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

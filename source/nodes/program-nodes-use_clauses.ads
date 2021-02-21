@@ -53,7 +53,7 @@ private
           .Expression_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Use_Clause'Class);
+   procedure Initialize (Self : in out Base_Use_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Use_Clause;
@@ -79,7 +79,7 @@ private
      end record;
 
    overriding function To_Use_Clause_Text
-    (Self : aliased in out Use_Clause)
+    (Self : in out Use_Clause)
       return Program.Elements.Use_Clauses.Use_Clause_Text_Access;
 
    overriding function Use_Token
@@ -113,7 +113,7 @@ private
      end record;
 
    overriding function To_Use_Clause_Text
-    (Self : aliased in out Implicit_Use_Clause)
+    (Self : in out Implicit_Use_Clause)
       return Program.Elements.Use_Clauses.Use_Clause_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -67,8 +67,7 @@ private
         Default_Expression : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Parameter_Specification'Class);
+   procedure Initialize (Self : in out Base_Parameter_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Parameter_Specification;
@@ -111,7 +110,7 @@ private
      end record;
 
    overriding function To_Parameter_Specification_Text
-    (Self : aliased in out Parameter_Specification)
+    (Self : in out Parameter_Specification)
       return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Text_Access;
 
@@ -168,7 +167,7 @@ private
      end record;
 
    overriding function To_Parameter_Specification_Text
-    (Self : aliased in out Implicit_Parameter_Specification)
+    (Self : in out Implicit_Parameter_Specification)
       return Program.Elements.Parameter_Specifications
           .Parameter_Specification_Text_Access;
 

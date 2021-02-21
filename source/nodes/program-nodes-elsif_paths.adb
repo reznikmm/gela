@@ -90,7 +90,7 @@ package body Program.Nodes.Elsif_Paths is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Elsif_Path'Class) is
+   procedure Initialize (Self : in out Base_Elsif_Path'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
       for Item in Self.Statements.Each_Element loop
@@ -119,14 +119,14 @@ package body Program.Nodes.Elsif_Paths is
    end Visit;
 
    overriding function To_Elsif_Path_Text
-    (Self : aliased in out Elsif_Path)
+    (Self : in out Elsif_Path)
       return Program.Elements.Elsif_Paths.Elsif_Path_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Elsif_Path_Text;
 
    overriding function To_Elsif_Path_Text
-    (Self : aliased in out Implicit_Elsif_Path)
+    (Self : in out Implicit_Elsif_Path)
       return Program.Elements.Elsif_Paths.Elsif_Path_Text_Access is
       pragma Unreferenced (Self);
    begin

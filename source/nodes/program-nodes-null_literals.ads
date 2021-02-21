@@ -39,7 +39,7 @@ private
        and Program.Elements.Null_Literals.Null_Literal
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_Null_Literal'Class);
+   procedure Initialize (Self : in out Base_Null_Literal'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Null_Literal;
@@ -59,7 +59,7 @@ private
      end record;
 
    overriding function To_Null_Literal_Text
-    (Self : aliased in out Null_Literal)
+    (Self : in out Null_Literal)
       return Program.Elements.Null_Literals.Null_Literal_Text_Access;
 
    overriding function Null_Literal_Token
@@ -75,7 +75,7 @@ private
      end record;
 
    overriding function To_Null_Literal_Text
-    (Self : aliased in out Implicit_Null_Literal)
+    (Self : in out Implicit_Null_Literal)
       return Program.Elements.Null_Literals.Null_Literal_Text_Access;
 
    overriding function Is_Part_Of_Implicit

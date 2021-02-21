@@ -63,7 +63,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Discrete_Simple_Expression_Range'Class);
+    (Self : in out Base_Discrete_Simple_Expression_Range'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Discrete_Simple_Expression_Range;
@@ -103,7 +103,7 @@ private
      end record;
 
    overriding function To_Discrete_Simple_Expression_Range_Text
-    (Self : aliased in out Discrete_Simple_Expression_Range)
+    (Self : in out Discrete_Simple_Expression_Range)
       return Program.Elements.Discrete_Simple_Expression_Ranges
           .Discrete_Simple_Expression_Range_Text_Access;
 
@@ -120,7 +120,7 @@ private
      end record;
 
    overriding function To_Discrete_Simple_Expression_Range_Text
-    (Self : aliased in out Implicit_Discrete_Simple_Expression_Range)
+    (Self : in out Implicit_Discrete_Simple_Expression_Range)
       return Program.Elements.Discrete_Simple_Expression_Ranges
           .Discrete_Simple_Expression_Range_Text_Access;
 

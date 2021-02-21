@@ -37,7 +37,7 @@ package Program.Elements.Select_Statements is
      with Storage_Size => 0;
 
    not overriding function To_Select_Statement_Text
-    (Self : aliased in out Select_Statement)
+    (Self : in out Select_Statement)
       return Select_Statement_Text_Access is abstract;
 
    not overriding function Select_Token

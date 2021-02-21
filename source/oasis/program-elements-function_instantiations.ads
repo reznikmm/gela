@@ -54,7 +54,7 @@ package Program.Elements.Function_Instantiations is
      access all Function_Instantiation_Text'Class with Storage_Size => 0;
 
    not overriding function To_Function_Instantiation_Text
-    (Self : aliased in out Function_Instantiation)
+    (Self : in out Function_Instantiation)
       return Function_Instantiation_Text_Access is abstract;
 
    not overriding function Not_Token

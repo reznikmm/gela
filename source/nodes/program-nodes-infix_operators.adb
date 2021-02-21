@@ -84,7 +84,7 @@ package body Program.Nodes.Infix_Operators is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Infix_Operator'Class) is
+   procedure Initialize (Self : in out Base_Infix_Operator'Class) is
    begin
       if Self.Left.Assigned then
          Set_Enclosing_Element (Self.Left, Self'Unchecked_Access);
@@ -118,14 +118,14 @@ package body Program.Nodes.Infix_Operators is
    end Visit;
 
    overriding function To_Infix_Operator_Text
-    (Self : aliased in out Infix_Operator)
+    (Self : in out Infix_Operator)
       return Program.Elements.Infix_Operators.Infix_Operator_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Infix_Operator_Text;
 
    overriding function To_Infix_Operator_Text
-    (Self : aliased in out Implicit_Infix_Operator)
+    (Self : in out Implicit_Infix_Operator)
       return Program.Elements.Infix_Operators.Infix_Operator_Text_Access is
       pragma Unreferenced (Self);
    begin

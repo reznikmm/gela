@@ -86,8 +86,7 @@ package body Program.Nodes.Component_Definitions is
       return Self.Has_Aliased;
    end Has_Aliased;
 
-   procedure Initialize
-    (Self : aliased in out Base_Component_Definition'Class) is
+   procedure Initialize (Self : in out Base_Component_Definition'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Indication, Self'Unchecked_Access);
       null;
@@ -117,7 +116,7 @@ package body Program.Nodes.Component_Definitions is
    end Visit;
 
    overriding function To_Component_Definition_Text
-    (Self : aliased in out Component_Definition)
+    (Self : in out Component_Definition)
       return Program.Elements.Component_Definitions
           .Component_Definition_Text_Access is
    begin
@@ -125,7 +124,7 @@ package body Program.Nodes.Component_Definitions is
    end To_Component_Definition_Text;
 
    overriding function To_Component_Definition_Text
-    (Self : aliased in out Implicit_Component_Definition)
+    (Self : in out Implicit_Component_Definition)
       return Program.Elements.Component_Definitions
           .Component_Definition_Text_Access is
       pragma Unreferenced (Self);

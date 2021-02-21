@@ -103,8 +103,7 @@ package body Program.Nodes.Qualified_Expressions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Qualified_Expression'Class) is
+   procedure Initialize (Self : in out Base_Qualified_Expression'Class) is
    begin
       Set_Enclosing_Element (Self.Subtype_Mark, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Operand, Self'Unchecked_Access);
@@ -135,7 +134,7 @@ package body Program.Nodes.Qualified_Expressions is
    end Visit;
 
    overriding function To_Qualified_Expression_Text
-    (Self : aliased in out Qualified_Expression)
+    (Self : in out Qualified_Expression)
       return Program.Elements.Qualified_Expressions
           .Qualified_Expression_Text_Access is
    begin
@@ -143,7 +142,7 @@ package body Program.Nodes.Qualified_Expressions is
    end To_Qualified_Expression_Text;
 
    overriding function To_Qualified_Expression_Text
-    (Self : aliased in out Implicit_Qualified_Expression)
+    (Self : in out Implicit_Qualified_Expression)
       return Program.Elements.Qualified_Expressions
           .Qualified_Expression_Text_Access is
       pragma Unreferenced (Self);

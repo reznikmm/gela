@@ -81,8 +81,7 @@ package body Program.Nodes.Selected_Components is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Selected_Component'Class) is
+   procedure Initialize (Self : in out Base_Selected_Component'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Selector, Self'Unchecked_Access);
@@ -113,7 +112,7 @@ package body Program.Nodes.Selected_Components is
    end Visit;
 
    overriding function To_Selected_Component_Text
-    (Self : aliased in out Selected_Component)
+    (Self : in out Selected_Component)
       return Program.Elements.Selected_Components
           .Selected_Component_Text_Access is
    begin
@@ -121,7 +120,7 @@ package body Program.Nodes.Selected_Components is
    end To_Selected_Component_Text;
 
    overriding function To_Selected_Component_Text
-    (Self : aliased in out Implicit_Selected_Component)
+    (Self : in out Implicit_Selected_Component)
       return Program.Elements.Selected_Components
           .Selected_Component_Text_Access is
       pragma Unreferenced (Self);

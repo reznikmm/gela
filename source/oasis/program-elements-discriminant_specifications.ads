@@ -42,7 +42,7 @@ package Program.Elements.Discriminant_Specifications is
      access all Discriminant_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Discriminant_Specification_Text
-    (Self : aliased in out Discriminant_Specification)
+    (Self : in out Discriminant_Specification)
       return Discriminant_Specification_Text_Access is abstract;
 
    not overriding function Colon_Token

@@ -61,7 +61,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Number_Declaration'Class);
+   procedure Initialize (Self : in out Base_Number_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Number_Declaration;
@@ -99,7 +99,7 @@ private
      end record;
 
    overriding function To_Number_Declaration_Text
-    (Self : aliased in out Number_Declaration)
+    (Self : in out Number_Declaration)
       return Program.Elements.Number_Declarations
           .Number_Declaration_Text_Access;
 
@@ -128,7 +128,7 @@ private
      end record;
 
    overriding function To_Number_Declaration_Text
-    (Self : aliased in out Implicit_Number_Declaration)
+    (Self : in out Implicit_Number_Declaration)
       return Program.Elements.Number_Declarations
           .Number_Declaration_Text_Access;
 

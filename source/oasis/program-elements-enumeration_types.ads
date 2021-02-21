@@ -28,7 +28,7 @@ package Program.Elements.Enumeration_Types is
      with Storage_Size => 0;
 
    not overriding function To_Enumeration_Type_Text
-    (Self : aliased in out Enumeration_Type)
+    (Self : in out Enumeration_Type)
       return Enumeration_Type_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

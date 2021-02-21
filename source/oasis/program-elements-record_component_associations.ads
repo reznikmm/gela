@@ -32,7 +32,7 @@ package Program.Elements.Record_Component_Associations is
      access all Record_Component_Association_Text'Class with Storage_Size => 0;
 
    not overriding function To_Record_Component_Association_Text
-    (Self : aliased in out Record_Component_Association)
+    (Self : in out Record_Component_Association)
       return Record_Component_Association_Text_Access is abstract;
 
    not overriding function Arrow_Token

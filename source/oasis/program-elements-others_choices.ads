@@ -22,7 +22,7 @@ package Program.Elements.Others_Choices is
      with Storage_Size => 0;
 
    not overriding function To_Others_Choice_Text
-    (Self : aliased in out Others_Choice)
+    (Self : in out Others_Choice)
       return Others_Choice_Text_Access is abstract;
 
    not overriding function Others_Token

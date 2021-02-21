@@ -141,8 +141,7 @@ package body Program.Nodes.Extended_Return_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Extended_Return_Statement'Class) is
+   procedure Initialize (Self : in out Base_Extended_Return_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Return_Object, Self'Unchecked_Access);
       for Item in Self.Statements.Each_Element loop
@@ -178,7 +177,7 @@ package body Program.Nodes.Extended_Return_Statements is
    end Visit;
 
    overriding function To_Extended_Return_Statement_Text
-    (Self : aliased in out Extended_Return_Statement)
+    (Self : in out Extended_Return_Statement)
       return Program.Elements.Extended_Return_Statements
           .Extended_Return_Statement_Text_Access is
    begin
@@ -186,7 +185,7 @@ package body Program.Nodes.Extended_Return_Statements is
    end To_Extended_Return_Statement_Text;
 
    overriding function To_Extended_Return_Statement_Text
-    (Self : aliased in out Implicit_Extended_Return_Statement)
+    (Self : in out Implicit_Extended_Return_Statement)
       return Program.Elements.Extended_Return_Statements
           .Extended_Return_Statement_Text_Access is
       pragma Unreferenced (Self);

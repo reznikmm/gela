@@ -94,8 +94,7 @@ package body Program.Nodes.Real_Range_Specifications is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Real_Range_Specification'Class) is
+   procedure Initialize (Self : in out Base_Real_Range_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Lower_Bound, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Upper_Bound, Self'Unchecked_Access);
@@ -126,7 +125,7 @@ package body Program.Nodes.Real_Range_Specifications is
    end Visit;
 
    overriding function To_Real_Range_Specification_Text
-    (Self : aliased in out Real_Range_Specification)
+    (Self : in out Real_Range_Specification)
       return Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Text_Access is
    begin
@@ -134,7 +133,7 @@ package body Program.Nodes.Real_Range_Specifications is
    end To_Real_Range_Specification_Text;
 
    overriding function To_Real_Range_Specification_Text
-    (Self : aliased in out Implicit_Real_Range_Specification)
+    (Self : in out Implicit_Real_Range_Specification)
       return Program.Elements.Real_Range_Specifications
           .Real_Range_Specification_Text_Access is
       pragma Unreferenced (Self);

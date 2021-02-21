@@ -113,7 +113,7 @@ package body Program.Nodes.Requeue_Statements is
       return Self.Has_With_Abort;
    end Has_With_Abort;
 
-   procedure Initialize (Self : aliased in out Base_Requeue_Statement'Class) is
+   procedure Initialize (Self : in out Base_Requeue_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Entry_Name, Self'Unchecked_Access);
       null;
@@ -143,7 +143,7 @@ package body Program.Nodes.Requeue_Statements is
    end Visit;
 
    overriding function To_Requeue_Statement_Text
-    (Self : aliased in out Requeue_Statement)
+    (Self : in out Requeue_Statement)
       return Program.Elements.Requeue_Statements
           .Requeue_Statement_Text_Access is
    begin
@@ -151,7 +151,7 @@ package body Program.Nodes.Requeue_Statements is
    end To_Requeue_Statement_Text;
 
    overriding function To_Requeue_Statement_Text
-    (Self : aliased in out Implicit_Requeue_Statement)
+    (Self : in out Implicit_Requeue_Statement)
       return Program.Elements.Requeue_Statements
           .Requeue_Statement_Text_Access is
       pragma Unreferenced (Self);

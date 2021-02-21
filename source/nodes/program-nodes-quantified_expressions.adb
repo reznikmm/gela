@@ -169,8 +169,7 @@ package body Program.Nodes.Quantified_Expressions is
       return Self.Has_Some;
    end Has_Some;
 
-   procedure Initialize
-    (Self : aliased in out Base_Quantified_Expression'Class) is
+   procedure Initialize (Self : in out Base_Quantified_Expression'Class) is
    begin
       if Self.Parameter.Assigned then
          Set_Enclosing_Element (Self.Parameter, Self'Unchecked_Access);
@@ -210,7 +209,7 @@ package body Program.Nodes.Quantified_Expressions is
    end Visit;
 
    overriding function To_Quantified_Expression_Text
-    (Self : aliased in out Quantified_Expression)
+    (Self : in out Quantified_Expression)
       return Program.Elements.Quantified_Expressions
           .Quantified_Expression_Text_Access is
    begin
@@ -218,7 +217,7 @@ package body Program.Nodes.Quantified_Expressions is
    end To_Quantified_Expression_Text;
 
    overriding function To_Quantified_Expression_Text
-    (Self : aliased in out Implicit_Quantified_Expression)
+    (Self : in out Implicit_Quantified_Expression)
       return Program.Elements.Quantified_Expressions
           .Quantified_Expression_Text_Access is
       pragma Unreferenced (Self);

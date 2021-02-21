@@ -155,7 +155,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Procedure_Declaration'Class) is
+    (Self : in out Base_Generic_Procedure_Declaration'Class) is
    begin
       for Item in Self.Formal_Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -194,7 +194,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    end Visit;
 
    overriding function To_Generic_Procedure_Declaration_Text
-    (Self : aliased in out Generic_Procedure_Declaration)
+    (Self : in out Generic_Procedure_Declaration)
       return Program.Elements.Generic_Procedure_Declarations
           .Generic_Procedure_Declaration_Text_Access is
    begin
@@ -202,7 +202,7 @@ package body Program.Nodes.Generic_Procedure_Declarations is
    end To_Generic_Procedure_Declaration_Text;
 
    overriding function To_Generic_Procedure_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Procedure_Declaration)
+    (Self : in out Implicit_Generic_Procedure_Declaration)
       return Program.Elements.Generic_Procedure_Declarations
           .Generic_Procedure_Declaration_Text_Access is
       pragma Unreferenced (Self);

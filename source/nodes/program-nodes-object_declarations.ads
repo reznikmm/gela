@@ -82,7 +82,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Object_Declaration'Class);
+   procedure Initialize (Self : in out Base_Object_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Object_Declaration;
@@ -129,7 +129,7 @@ private
      end record;
 
    overriding function To_Object_Declaration_Text
-    (Self : aliased in out Object_Declaration)
+    (Self : in out Object_Declaration)
       return Program.Elements.Object_Declarations
           .Object_Declaration_Text_Access;
 
@@ -172,7 +172,7 @@ private
      end record;
 
    overriding function To_Object_Declaration_Text
-    (Self : aliased in out Implicit_Object_Declaration)
+    (Self : in out Implicit_Object_Declaration)
       return Program.Elements.Object_Declarations
           .Object_Declaration_Text_Access;
 

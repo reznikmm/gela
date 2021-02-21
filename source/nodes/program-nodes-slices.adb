@@ -94,7 +94,7 @@ package body Program.Nodes.Slices is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Slice'Class) is
+   procedure Initialize (Self : in out Base_Slice'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Slice_Range, Self'Unchecked_Access);
@@ -121,14 +121,14 @@ package body Program.Nodes.Slices is
    end Visit;
 
    overriding function To_Slice_Text
-    (Self : aliased in out Slice)
+    (Self : in out Slice)
       return Program.Elements.Slices.Slice_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Slice_Text;
 
    overriding function To_Slice_Text
-    (Self : aliased in out Implicit_Slice)
+    (Self : in out Implicit_Slice)
       return Program.Elements.Slices.Slice_Text_Access is
       pragma Unreferenced (Self);
    begin

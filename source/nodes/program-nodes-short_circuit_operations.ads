@@ -56,8 +56,7 @@ private
         Right : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Short_Circuit_Operation'Class);
+   procedure Initialize (Self : in out Base_Short_Circuit_Operation'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Short_Circuit_Operation;
@@ -91,7 +90,7 @@ private
      end record;
 
    overriding function To_Short_Circuit_Operation_Text
-    (Self : aliased in out Short_Circuit_Operation)
+    (Self : in out Short_Circuit_Operation)
       return Program.Elements.Short_Circuit_Operations
           .Short_Circuit_Operation_Text_Access;
 
@@ -130,7 +129,7 @@ private
      end record;
 
    overriding function To_Short_Circuit_Operation_Text
-    (Self : aliased in out Implicit_Short_Circuit_Operation)
+    (Self : in out Implicit_Short_Circuit_Operation)
       return Program.Elements.Short_Circuit_Operations
           .Short_Circuit_Operation_Text_Access;
 

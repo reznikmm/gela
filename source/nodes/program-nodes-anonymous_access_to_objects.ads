@@ -60,8 +60,7 @@ private
           .Subtype_Indication_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Anonymous_Access_To_Object'Class);
+   procedure Initialize (Self : in out Base_Anonymous_Access_To_Object'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Anonymous_Access_To_Object;
@@ -98,7 +97,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Object_Text
-    (Self : aliased in out Anonymous_Access_To_Object)
+    (Self : in out Anonymous_Access_To_Object)
       return Program.Elements.Anonymous_Access_To_Objects
           .Anonymous_Access_To_Object_Text_Access;
 
@@ -146,7 +145,7 @@ private
      end record;
 
    overriding function To_Anonymous_Access_To_Object_Text
-    (Self : aliased in out Implicit_Anonymous_Access_To_Object)
+    (Self : in out Implicit_Anonymous_Access_To_Object)
       return Program.Elements.Anonymous_Access_To_Objects
           .Anonymous_Access_To_Object_Text_Access;
 

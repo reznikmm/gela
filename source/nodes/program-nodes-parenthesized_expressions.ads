@@ -53,8 +53,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Parenthesized_Expression'Class);
+   procedure Initialize (Self : in out Base_Parenthesized_Expression'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Parenthesized_Expression;
@@ -84,7 +83,7 @@ private
      end record;
 
    overriding function To_Parenthesized_Expression_Text
-    (Self : aliased in out Parenthesized_Expression)
+    (Self : in out Parenthesized_Expression)
       return Program.Elements.Parenthesized_Expressions
           .Parenthesized_Expression_Text_Access;
 
@@ -105,7 +104,7 @@ private
      end record;
 
    overriding function To_Parenthesized_Expression_Text
-    (Self : aliased in out Implicit_Parenthesized_Expression)
+    (Self : in out Implicit_Parenthesized_Expression)
       return Program.Elements.Parenthesized_Expressions
           .Parenthesized_Expression_Text_Access;
 

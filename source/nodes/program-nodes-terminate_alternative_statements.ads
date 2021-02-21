@@ -48,7 +48,7 @@ private
      with null record;
 
    procedure Initialize
-    (Self : aliased in out Base_Terminate_Alternative_Statement'Class);
+    (Self : in out Base_Terminate_Alternative_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Terminate_Alternative_Statement;
@@ -74,7 +74,7 @@ private
      end record;
 
    overriding function To_Terminate_Alternative_Statement_Text
-    (Self : aliased in out Terminate_Alternative_Statement)
+    (Self : in out Terminate_Alternative_Statement)
       return Program.Elements.Terminate_Alternative_Statements
           .Terminate_Alternative_Statement_Text_Access;
 
@@ -95,7 +95,7 @@ private
      end record;
 
    overriding function To_Terminate_Alternative_Statement_Text
-    (Self : aliased in out Implicit_Terminate_Alternative_Statement)
+    (Self : in out Implicit_Terminate_Alternative_Statement)
       return Program.Elements.Terminate_Alternative_Statements
           .Terminate_Alternative_Statement_Text_Access;
 

@@ -29,7 +29,7 @@ package Program.Elements.Choice_Parameter_Specifications is
      with Storage_Size => 0;
 
    not overriding function To_Choice_Parameter_Specification_Text
-    (Self : aliased in out Choice_Parameter_Specification)
+    (Self : in out Choice_Parameter_Specification)
       return Choice_Parameter_Specification_Text_Access is abstract;
 
    not overriding function Colon_Token

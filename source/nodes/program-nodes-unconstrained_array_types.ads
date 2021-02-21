@@ -65,8 +65,7 @@ private
           .Component_Definition_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Unconstrained_Array_Type'Class);
+   procedure Initialize (Self : in out Base_Unconstrained_Array_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Unconstrained_Array_Type;
@@ -109,7 +108,7 @@ private
      end record;
 
    overriding function To_Unconstrained_Array_Type_Text
-    (Self : aliased in out Unconstrained_Array_Type)
+    (Self : in out Unconstrained_Array_Type)
       return Program.Elements.Unconstrained_Array_Types
           .Unconstrained_Array_Type_Text_Access;
 
@@ -138,7 +137,7 @@ private
      end record;
 
    overriding function To_Unconstrained_Array_Type_Text
-    (Self : aliased in out Implicit_Unconstrained_Array_Type)
+    (Self : in out Implicit_Unconstrained_Array_Type)
       return Program.Elements.Unconstrained_Array_Types
           .Unconstrained_Array_Type_Text_Access;
 

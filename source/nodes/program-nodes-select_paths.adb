@@ -88,7 +88,7 @@ package body Program.Nodes.Select_Paths is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Select_Path'Class) is
+   procedure Initialize (Self : in out Base_Select_Path'Class) is
    begin
       if Self.Guard.Assigned then
          Set_Enclosing_Element (Self.Guard, Self'Unchecked_Access);
@@ -121,14 +121,14 @@ package body Program.Nodes.Select_Paths is
    end Visit;
 
    overriding function To_Select_Path_Text
-    (Self : aliased in out Select_Path)
+    (Self : in out Select_Path)
       return Program.Elements.Select_Paths.Select_Path_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Select_Path_Text;
 
    overriding function To_Select_Path_Text
-    (Self : aliased in out Implicit_Select_Path)
+    (Self : in out Implicit_Select_Path)
       return Program.Elements.Select_Paths.Select_Path_Text_Access is
       pragma Unreferenced (Self);
    begin

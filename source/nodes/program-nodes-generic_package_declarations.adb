@@ -183,7 +183,7 @@ package body Program.Nodes.Generic_Package_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Package_Declaration'Class) is
+    (Self : in out Base_Generic_Package_Declaration'Class) is
    begin
       for Item in Self.Formal_Parameters.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -228,7 +228,7 @@ package body Program.Nodes.Generic_Package_Declarations is
    end Visit;
 
    overriding function To_Generic_Package_Declaration_Text
-    (Self : aliased in out Generic_Package_Declaration)
+    (Self : in out Generic_Package_Declaration)
       return Program.Elements.Generic_Package_Declarations
           .Generic_Package_Declaration_Text_Access is
    begin
@@ -236,7 +236,7 @@ package body Program.Nodes.Generic_Package_Declarations is
    end To_Generic_Package_Declaration_Text;
 
    overriding function To_Generic_Package_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Package_Declaration)
+    (Self : in out Implicit_Generic_Package_Declaration)
       return Program.Elements.Generic_Package_Declarations
           .Generic_Package_Declaration_Text_Access is
       pragma Unreferenced (Self);

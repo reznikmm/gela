@@ -132,8 +132,7 @@ package body Program.Nodes.Private_Type_Definitions is
       return Self.Has_Limited;
    end Has_Limited;
 
-   procedure Initialize
-    (Self : aliased in out Base_Private_Type_Definition'Class) is
+   procedure Initialize (Self : in out Base_Private_Type_Definition'Class) is
    begin
       null;
    end Initialize;
@@ -162,7 +161,7 @@ package body Program.Nodes.Private_Type_Definitions is
    end Visit;
 
    overriding function To_Private_Type_Definition_Text
-    (Self : aliased in out Private_Type_Definition)
+    (Self : in out Private_Type_Definition)
       return Program.Elements.Private_Type_Definitions
           .Private_Type_Definition_Text_Access is
    begin
@@ -170,7 +169,7 @@ package body Program.Nodes.Private_Type_Definitions is
    end To_Private_Type_Definition_Text;
 
    overriding function To_Private_Type_Definition_Text
-    (Self : aliased in out Implicit_Private_Type_Definition)
+    (Self : in out Implicit_Private_Type_Definition)
       return Program.Elements.Private_Type_Definitions
           .Private_Type_Definition_Text_Access is
       pragma Unreferenced (Self);

@@ -45,7 +45,7 @@ package Program.Elements.Formal_Type_Declarations is
      access all Formal_Type_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Formal_Type_Declaration_Text
-    (Self : aliased in out Formal_Type_Declaration)
+    (Self : in out Formal_Type_Declaration)
       return Formal_Type_Declaration_Text_Access is abstract;
 
    not overriding function Type_Token

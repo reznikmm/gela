@@ -99,7 +99,7 @@ package body Program.Nodes.Raise_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Raise_Statement'Class) is
+   procedure Initialize (Self : in out Base_Raise_Statement'Class) is
    begin
       if Self.Raised_Exception.Assigned then
          Set_Enclosing_Element (Self.Raised_Exception, Self'Unchecked_Access);
@@ -135,14 +135,14 @@ package body Program.Nodes.Raise_Statements is
    end Visit;
 
    overriding function To_Raise_Statement_Text
-    (Self : aliased in out Raise_Statement)
+    (Self : in out Raise_Statement)
       return Program.Elements.Raise_Statements.Raise_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Raise_Statement_Text;
 
    overriding function To_Raise_Statement_Text
-    (Self : aliased in out Implicit_Raise_Statement)
+    (Self : in out Implicit_Raise_Statement)
       return Program.Elements.Raise_Statements.Raise_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

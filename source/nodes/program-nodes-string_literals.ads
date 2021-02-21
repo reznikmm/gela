@@ -39,7 +39,7 @@ private
        and Program.Elements.String_Literals.String_Literal
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_String_Literal'Class);
+   procedure Initialize (Self : in out Base_String_Literal'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_String_Literal;
@@ -62,7 +62,7 @@ private
      end record;
 
    overriding function To_String_Literal_Text
-    (Self : aliased in out String_Literal)
+    (Self : in out String_Literal)
       return Program.Elements.String_Literals.String_Literal_Text_Access;
 
    overriding function String_Literal_Token
@@ -80,7 +80,7 @@ private
      end record;
 
    overriding function To_String_Literal_Text
-    (Self : aliased in out Implicit_String_Literal)
+    (Self : in out Implicit_String_Literal)
       return Program.Elements.String_Literals.String_Literal_Text_Access;
 
    overriding function Is_Part_Of_Implicit

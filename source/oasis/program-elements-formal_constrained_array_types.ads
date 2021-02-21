@@ -36,7 +36,7 @@ package Program.Elements.Formal_Constrained_Array_Types is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Constrained_Array_Type_Text
-    (Self : aliased in out Formal_Constrained_Array_Type)
+    (Self : in out Formal_Constrained_Array_Type)
       return Formal_Constrained_Array_Type_Text_Access is abstract;
 
    not overriding function Array_Token

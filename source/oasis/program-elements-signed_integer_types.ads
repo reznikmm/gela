@@ -33,7 +33,7 @@ package Program.Elements.Signed_Integer_Types is
      access all Signed_Integer_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Signed_Integer_Type_Text
-    (Self : aliased in out Signed_Integer_Type)
+    (Self : in out Signed_Integer_Type)
       return Signed_Integer_Type_Text_Access is abstract;
 
    not overriding function Range_Token

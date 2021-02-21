@@ -48,7 +48,7 @@ private
         Components : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Variant'Class);
+   procedure Initialize (Self : in out Base_Variant'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Variant;
@@ -74,7 +74,7 @@ private
      end record;
 
    overriding function To_Variant_Text
-    (Self : aliased in out Variant)
+    (Self : in out Variant)
       return Program.Elements.Variants.Variant_Text_Access;
 
    overriding function When_Token
@@ -94,7 +94,7 @@ private
      end record;
 
    overriding function To_Variant_Text
-    (Self : aliased in out Implicit_Variant)
+    (Self : in out Implicit_Variant)
       return Program.Elements.Variants.Variant_Text_Access;
 
    overriding function Is_Part_Of_Implicit

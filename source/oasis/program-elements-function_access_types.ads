@@ -44,7 +44,7 @@ package Program.Elements.Function_Access_Types is
      access all Function_Access_Type_Text'Class with Storage_Size => 0;
 
    not overriding function To_Function_Access_Type_Text
-    (Self : aliased in out Function_Access_Type)
+    (Self : in out Function_Access_Type)
       return Function_Access_Type_Text_Access is abstract;
 
    not overriding function Not_Token

@@ -81,7 +81,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Entry_Declaration'Class);
+   procedure Initialize (Self : in out Base_Entry_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Entry_Declaration;
@@ -139,7 +139,7 @@ private
      end record;
 
    overriding function To_Entry_Declaration_Text
-    (Self : aliased in out Entry_Declaration)
+    (Self : in out Entry_Declaration)
       return Program.Elements.Entry_Declarations.Entry_Declaration_Text_Access;
 
    overriding function Not_Token
@@ -195,7 +195,7 @@ private
      end record;
 
    overriding function To_Entry_Declaration_Text
-    (Self : aliased in out Implicit_Entry_Declaration)
+    (Self : in out Implicit_Entry_Declaration)
       return Program.Elements.Entry_Declarations.Entry_Declaration_Text_Access;
 
    overriding function Is_Part_Of_Implicit

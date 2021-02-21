@@ -51,7 +51,7 @@ private
           .Record_Component_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Record_Aggregate'Class);
+   procedure Initialize (Self : in out Base_Record_Aggregate'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Aggregate;
@@ -81,7 +81,7 @@ private
      end record;
 
    overriding function To_Record_Aggregate_Text
-    (Self : aliased in out Record_Aggregate)
+    (Self : in out Record_Aggregate)
       return Program.Elements.Record_Aggregates.Record_Aggregate_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -101,7 +101,7 @@ private
      end record;
 
    overriding function To_Record_Aggregate_Text
-    (Self : aliased in out Implicit_Record_Aggregate)
+    (Self : in out Implicit_Record_Aggregate)
       return Program.Elements.Record_Aggregates.Record_Aggregate_Text_Access;
 
    overriding function Is_Part_Of_Implicit

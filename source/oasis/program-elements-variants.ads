@@ -32,7 +32,7 @@ package Program.Elements.Variants is
      with Storage_Size => 0;
 
    not overriding function To_Variant_Text
-    (Self : aliased in out Variant)
+    (Self : in out Variant)
       return Variant_Text_Access is abstract;
 
    not overriding function When_Token

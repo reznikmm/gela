@@ -134,7 +134,7 @@ package body Program.Nodes.Generic_Package_Renaming_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Package_Renaming_Declaration'Class) is
+    (Self : in out Base_Generic_Package_Renaming_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Renamed_Package, Self'Unchecked_Access);
@@ -168,7 +168,7 @@ package body Program.Nodes.Generic_Package_Renaming_Declarations is
    end Visit;
 
    overriding function To_Generic_Package_Renaming_Declaration_Text
-    (Self : aliased in out Generic_Package_Renaming_Declaration)
+    (Self : in out Generic_Package_Renaming_Declaration)
       return Program.Elements.Generic_Package_Renaming_Declarations
           .Generic_Package_Renaming_Declaration_Text_Access is
    begin
@@ -176,7 +176,7 @@ package body Program.Nodes.Generic_Package_Renaming_Declarations is
    end To_Generic_Package_Renaming_Declaration_Text;
 
    overriding function To_Generic_Package_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Package_Renaming_Declaration)
+    (Self : in out Implicit_Generic_Package_Renaming_Declaration)
       return Program.Elements.Generic_Package_Renaming_Declarations
           .Generic_Package_Renaming_Declaration_Text_Access is
       pragma Unreferenced (Self);

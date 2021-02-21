@@ -75,7 +75,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Generic_Function_Renaming_Declaration'Class);
+    (Self : in out Base_Generic_Function_Renaming_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Generic_Function_Renaming_Declaration;
@@ -119,7 +119,7 @@ private
      end record;
 
    overriding function To_Generic_Function_Renaming_Declaration_Text
-    (Self : aliased in out Generic_Function_Renaming_Declaration)
+    (Self : in out Generic_Function_Renaming_Declaration)
       return Program.Elements.Generic_Function_Renaming_Declarations
           .Generic_Function_Renaming_Declaration_Text_Access;
 
@@ -152,7 +152,7 @@ private
      end record;
 
    overriding function To_Generic_Function_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Function_Renaming_Declaration)
+    (Self : in out Implicit_Generic_Function_Renaming_Declaration)
       return Program.Elements.Generic_Function_Renaming_Declarations
           .Generic_Function_Renaming_Declaration_Text_Access;
 

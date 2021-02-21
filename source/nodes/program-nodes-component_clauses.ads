@@ -63,7 +63,7 @@ private
           .Simple_Expression_Range_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Component_Clause'Class);
+   procedure Initialize (Self : in out Base_Component_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Component_Clause;
@@ -101,7 +101,7 @@ private
      end record;
 
    overriding function To_Component_Clause_Text
-    (Self : aliased in out Component_Clause)
+    (Self : in out Component_Clause)
       return Program.Elements.Component_Clauses.Component_Clause_Text_Access;
 
    overriding function At_Token
@@ -125,7 +125,7 @@ private
      end record;
 
    overriding function To_Component_Clause_Text
-    (Self : aliased in out Implicit_Component_Clause)
+    (Self : in out Implicit_Component_Clause)
       return Program.Elements.Component_Clauses.Component_Clause_Text_Access;
 
    overriding function Is_Part_Of_Implicit

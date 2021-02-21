@@ -94,7 +94,7 @@ package body Program.Nodes.Indexed_Components is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Indexed_Component'Class) is
+   procedure Initialize (Self : in out Base_Indexed_Component'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       for Item in Self.Expressions.Each_Element loop
@@ -127,7 +127,7 @@ package body Program.Nodes.Indexed_Components is
    end Visit;
 
    overriding function To_Indexed_Component_Text
-    (Self : aliased in out Indexed_Component)
+    (Self : in out Indexed_Component)
       return Program.Elements.Indexed_Components
           .Indexed_Component_Text_Access is
    begin
@@ -135,7 +135,7 @@ package body Program.Nodes.Indexed_Components is
    end To_Indexed_Component_Text;
 
    overriding function To_Indexed_Component_Text
-    (Self : aliased in out Implicit_Indexed_Component)
+    (Self : in out Implicit_Indexed_Component)
       return Program.Elements.Indexed_Components
           .Indexed_Component_Text_Access is
       pragma Unreferenced (Self);

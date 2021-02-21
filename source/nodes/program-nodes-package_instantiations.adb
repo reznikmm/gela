@@ -164,8 +164,7 @@ package body Program.Nodes.Package_Instantiations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Package_Instantiation'Class) is
+   procedure Initialize (Self : in out Base_Package_Instantiation'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Generic_Package_Name, Self'Unchecked_Access);
@@ -202,7 +201,7 @@ package body Program.Nodes.Package_Instantiations is
    end Visit;
 
    overriding function To_Package_Instantiation_Text
-    (Self : aliased in out Package_Instantiation)
+    (Self : in out Package_Instantiation)
       return Program.Elements.Package_Instantiations
           .Package_Instantiation_Text_Access is
    begin
@@ -210,7 +209,7 @@ package body Program.Nodes.Package_Instantiations is
    end To_Package_Instantiation_Text;
 
    overriding function To_Package_Instantiation_Text
-    (Self : aliased in out Implicit_Package_Instantiation)
+    (Self : in out Implicit_Package_Instantiation)
       return Program.Elements.Package_Instantiations
           .Package_Instantiation_Text_Access is
       pragma Unreferenced (Self);

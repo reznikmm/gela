@@ -54,7 +54,7 @@ private
         Progenitors : Program.Elements.Expressions.Expression_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Interface_Type'Class);
+   procedure Initialize (Self : in out Base_Interface_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Interface_Type;
@@ -89,7 +89,7 @@ private
      end record;
 
    overriding function To_Interface_Type_Text
-    (Self : aliased in out Interface_Type)
+    (Self : in out Interface_Type)
       return Program.Elements.Interface_Types.Interface_Type_Text_Access;
 
    overriding function Limited_Token
@@ -137,7 +137,7 @@ private
      end record;
 
    overriding function To_Interface_Type_Text
-    (Self : aliased in out Implicit_Interface_Type)
+    (Self : in out Implicit_Interface_Type)
       return Program.Elements.Interface_Types.Interface_Type_Text_Access;
 
    overriding function Is_Part_Of_Implicit

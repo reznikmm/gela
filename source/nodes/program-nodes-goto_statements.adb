@@ -80,7 +80,7 @@ package body Program.Nodes.Goto_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Goto_Statement'Class) is
+   procedure Initialize (Self : in out Base_Goto_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Goto_Label, Self'Unchecked_Access);
       null;
@@ -110,14 +110,14 @@ package body Program.Nodes.Goto_Statements is
    end Visit;
 
    overriding function To_Goto_Statement_Text
-    (Self : aliased in out Goto_Statement)
+    (Self : in out Goto_Statement)
       return Program.Elements.Goto_Statements.Goto_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Goto_Statement_Text;
 
    overriding function To_Goto_Statement_Text
-    (Self : aliased in out Implicit_Goto_Statement)
+    (Self : in out Implicit_Goto_Statement)
       return Program.Elements.Goto_Statements.Goto_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

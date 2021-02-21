@@ -81,7 +81,7 @@ package body Program.Nodes.Identifiers is
       return "";
    end Image;
 
-   procedure Initialize (Self : aliased in out Base_Identifier'Class) is
+   procedure Initialize (Self : in out Base_Identifier'Class) is
    begin
       null;
    end Initialize;
@@ -106,14 +106,14 @@ package body Program.Nodes.Identifiers is
    end Visit;
 
    overriding function To_Identifier_Text
-    (Self : aliased in out Identifier)
+    (Self : in out Identifier)
       return Program.Elements.Identifiers.Identifier_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Identifier_Text;
 
    overriding function To_Identifier_Text
-    (Self : aliased in out Implicit_Identifier)
+    (Self : in out Implicit_Identifier)
       return Program.Elements.Identifiers.Identifier_Text_Access is
       pragma Unreferenced (Self);
    begin

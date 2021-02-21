@@ -47,7 +47,7 @@ private
           .Qualified_Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Code_Statement'Class);
+   procedure Initialize (Self : in out Base_Code_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Code_Statement;
@@ -75,7 +75,7 @@ private
      end record;
 
    overriding function To_Code_Statement_Text
-    (Self : aliased in out Code_Statement)
+    (Self : in out Code_Statement)
       return Program.Elements.Code_Statements.Code_Statement_Text_Access;
 
    overriding function Semicolon_Token
@@ -91,7 +91,7 @@ private
      end record;
 
    overriding function To_Code_Statement_Text
-    (Self : aliased in out Implicit_Code_Statement)
+    (Self : in out Implicit_Code_Statement)
       return Program.Elements.Code_Statements.Code_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

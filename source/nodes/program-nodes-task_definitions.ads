@@ -55,7 +55,7 @@ private
         End_Name             : Program.Elements.Identifiers.Identifier_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Task_Definition'Class);
+   procedure Initialize (Self : in out Base_Task_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Task_Definition;
@@ -92,7 +92,7 @@ private
      end record;
 
    overriding function To_Task_Definition_Text
-    (Self : aliased in out Task_Definition)
+    (Self : in out Task_Definition)
       return Program.Elements.Task_Definitions.Task_Definition_Text_Access;
 
    overriding function Private_Token
@@ -112,7 +112,7 @@ private
      end record;
 
    overriding function To_Task_Definition_Text
-    (Self : aliased in out Implicit_Task_Definition)
+    (Self : in out Implicit_Task_Definition)
       return Program.Elements.Task_Definitions.Task_Definition_Text_Access;
 
    overriding function Is_Part_Of_Implicit

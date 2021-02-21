@@ -32,7 +32,7 @@ package Program.Elements.Selected_Components is
      access all Selected_Component_Text'Class with Storage_Size => 0;
 
    not overriding function To_Selected_Component_Text
-    (Self : aliased in out Selected_Component)
+    (Self : in out Selected_Component)
       return Selected_Component_Text_Access is abstract;
 
    not overriding function Dot_Token

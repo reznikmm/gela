@@ -51,7 +51,7 @@ private
           .Expression_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Abort_Statement'Class);
+   procedure Initialize (Self : in out Base_Abort_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Abort_Statement;
@@ -80,7 +80,7 @@ private
      end record;
 
    overriding function To_Abort_Statement_Text
-    (Self : aliased in out Abort_Statement)
+    (Self : in out Abort_Statement)
       return Program.Elements.Abort_Statements.Abort_Statement_Text_Access;
 
    overriding function Abort_Token
@@ -100,7 +100,7 @@ private
      end record;
 
    overriding function To_Abort_Statement_Text
-    (Self : aliased in out Implicit_Abort_Statement)
+    (Self : in out Implicit_Abort_Statement)
       return Program.Elements.Abort_Statements.Abort_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -138,8 +138,7 @@ package body Program.Nodes.Short_Circuit_Operations is
       return Self.Has_Or_Else;
    end Has_Or_Else;
 
-   procedure Initialize
-    (Self : aliased in out Base_Short_Circuit_Operation'Class) is
+   procedure Initialize (Self : in out Base_Short_Circuit_Operation'Class) is
    begin
       Set_Enclosing_Element (Self.Left, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Right, Self'Unchecked_Access);
@@ -170,7 +169,7 @@ package body Program.Nodes.Short_Circuit_Operations is
    end Visit;
 
    overriding function To_Short_Circuit_Operation_Text
-    (Self : aliased in out Short_Circuit_Operation)
+    (Self : in out Short_Circuit_Operation)
       return Program.Elements.Short_Circuit_Operations
           .Short_Circuit_Operation_Text_Access is
    begin
@@ -178,7 +177,7 @@ package body Program.Nodes.Short_Circuit_Operations is
    end To_Short_Circuit_Operation_Text;
 
    overriding function To_Short_Circuit_Operation_Text
-    (Self : aliased in out Implicit_Short_Circuit_Operation)
+    (Self : in out Implicit_Short_Circuit_Operation)
       return Program.Elements.Short_Circuit_Operations
           .Short_Circuit_Operation_Text_Access is
       pragma Unreferenced (Self);

@@ -36,7 +36,7 @@ package Program.Elements.Formal_Private_Type_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Private_Type_Definition_Text
-    (Self : aliased in out Formal_Private_Type_Definition)
+    (Self : in out Formal_Private_Type_Definition)
       return Formal_Private_Type_Definition_Text_Access is abstract;
 
    not overriding function Abstract_Token

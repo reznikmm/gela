@@ -87,7 +87,7 @@ package body Program.Nodes.Record_Definitions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Record_Definition'Class) is
+   procedure Initialize (Self : in out Base_Record_Definition'Class) is
    begin
       for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -119,7 +119,7 @@ package body Program.Nodes.Record_Definitions is
    end Visit;
 
    overriding function To_Record_Definition_Text
-    (Self : aliased in out Record_Definition)
+    (Self : in out Record_Definition)
       return Program.Elements.Record_Definitions
           .Record_Definition_Text_Access is
    begin
@@ -127,7 +127,7 @@ package body Program.Nodes.Record_Definitions is
    end To_Record_Definition_Text;
 
    overriding function To_Record_Definition_Text
-    (Self : aliased in out Implicit_Record_Definition)
+    (Self : in out Implicit_Record_Definition)
       return Program.Elements.Record_Definitions
           .Record_Definition_Text_Access is
       pragma Unreferenced (Self);

@@ -45,7 +45,7 @@ private
           .Defining_Operator_Symbols.Defining_Operator_Symbol_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Operator_Symbol'Class);
+   procedure Initialize (Self : in out Base_Operator_Symbol'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Operator_Symbol;
@@ -73,7 +73,7 @@ private
      end record;
 
    overriding function To_Operator_Symbol_Text
-    (Self : aliased in out Operator_Symbol)
+    (Self : in out Operator_Symbol)
       return Program.Elements.Operator_Symbols.Operator_Symbol_Text_Access;
 
    overriding function Operator_Symbol_Token
@@ -91,7 +91,7 @@ private
      end record;
 
    overriding function To_Operator_Symbol_Text
-    (Self : aliased in out Implicit_Operator_Symbol)
+    (Self : in out Implicit_Operator_Symbol)
       return Program.Elements.Operator_Symbols.Operator_Symbol_Text_Access;
 
    overriding function Is_Part_Of_Implicit

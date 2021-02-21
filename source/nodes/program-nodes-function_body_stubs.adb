@@ -252,8 +252,7 @@ package body Program.Nodes.Function_Body_Stubs is
       return Self.Has_Not_Null;
    end Has_Not_Null;
 
-   procedure Initialize
-    (Self : aliased in out Base_Function_Body_Stub'Class) is
+   procedure Initialize (Self : in out Base_Function_Body_Stub'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Parameters.Each_Element loop
@@ -290,7 +289,7 @@ package body Program.Nodes.Function_Body_Stubs is
    end Visit;
 
    overriding function To_Function_Body_Stub_Text
-    (Self : aliased in out Function_Body_Stub)
+    (Self : in out Function_Body_Stub)
       return Program.Elements.Function_Body_Stubs
           .Function_Body_Stub_Text_Access is
    begin
@@ -298,7 +297,7 @@ package body Program.Nodes.Function_Body_Stubs is
    end To_Function_Body_Stub_Text;
 
    overriding function To_Function_Body_Stub_Text
-    (Self : aliased in out Implicit_Function_Body_Stub)
+    (Self : in out Implicit_Function_Body_Stub)
       return Program.Elements.Function_Body_Stubs
           .Function_Body_Stub_Text_Access is
       pragma Unreferenced (Self);

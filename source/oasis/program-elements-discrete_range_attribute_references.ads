@@ -29,7 +29,7 @@ package Program.Elements.Discrete_Range_Attribute_References is
      with Storage_Size => 0;
 
    not overriding function To_Discrete_Range_Attribute_Reference_Text
-    (Self : aliased in out Discrete_Range_Attribute_Reference)
+    (Self : in out Discrete_Range_Attribute_Reference)
       return Discrete_Range_Attribute_Reference_Text_Access is abstract;
 
 end Program.Elements.Discrete_Range_Attribute_References;

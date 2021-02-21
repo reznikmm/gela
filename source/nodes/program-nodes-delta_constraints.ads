@@ -54,7 +54,7 @@ private
         Real_Range_Constraint : Program.Elements.Constraints.Constraint_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Delta_Constraint'Class);
+   procedure Initialize (Self : in out Base_Delta_Constraint'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Delta_Constraint;
@@ -89,7 +89,7 @@ private
      end record;
 
    overriding function To_Delta_Constraint_Text
-    (Self : aliased in out Delta_Constraint)
+    (Self : in out Delta_Constraint)
       return Program.Elements.Delta_Constraints.Delta_Constraint_Text_Access;
 
    overriding function Delta_Token
@@ -109,7 +109,7 @@ private
      end record;
 
    overriding function To_Delta_Constraint_Text
-    (Self : aliased in out Implicit_Delta_Constraint)
+    (Self : in out Implicit_Delta_Constraint)
       return Program.Elements.Delta_Constraints.Delta_Constraint_Text_Access;
 
    overriding function Is_Part_Of_Implicit

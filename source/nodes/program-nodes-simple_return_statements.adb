@@ -79,8 +79,7 @@ package body Program.Nodes.Simple_Return_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Simple_Return_Statement'Class) is
+   procedure Initialize (Self : in out Base_Simple_Return_Statement'Class) is
    begin
       if Self.Expression.Assigned then
          Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
@@ -112,7 +111,7 @@ package body Program.Nodes.Simple_Return_Statements is
    end Visit;
 
    overriding function To_Simple_Return_Statement_Text
-    (Self : aliased in out Simple_Return_Statement)
+    (Self : in out Simple_Return_Statement)
       return Program.Elements.Simple_Return_Statements
           .Simple_Return_Statement_Text_Access is
    begin
@@ -120,7 +119,7 @@ package body Program.Nodes.Simple_Return_Statements is
    end To_Simple_Return_Statement_Text;
 
    overriding function To_Simple_Return_Statement_Text
-    (Self : aliased in out Implicit_Simple_Return_Statement)
+    (Self : in out Implicit_Simple_Return_Statement)
       return Program.Elements.Simple_Return_Statements
           .Simple_Return_Statement_Text_Access is
       pragma Unreferenced (Self);

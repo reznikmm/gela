@@ -34,7 +34,7 @@ package Program.Elements.Package_Body_Stubs is
      access all Package_Body_Stub_Text'Class with Storage_Size => 0;
 
    not overriding function To_Package_Body_Stub_Text
-    (Self : aliased in out Package_Body_Stub)
+    (Self : in out Package_Body_Stub)
       return Package_Body_Stub_Text_Access is abstract;
 
    not overriding function Package_Token

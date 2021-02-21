@@ -34,7 +34,7 @@ package Program.Elements.Exception_Declarations is
      access all Exception_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Exception_Declaration_Text
-    (Self : aliased in out Exception_Declaration)
+    (Self : in out Exception_Declaration)
       return Exception_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

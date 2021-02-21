@@ -92,7 +92,7 @@ package body Program.Nodes.Raise_Expressions is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Raise_Expression'Class) is
+   procedure Initialize (Self : in out Base_Raise_Expression'Class) is
    begin
       Set_Enclosing_Element (Self.Exception_Name, Self'Unchecked_Access);
       if Self.Associated_Message.Assigned then
@@ -126,14 +126,14 @@ package body Program.Nodes.Raise_Expressions is
    end Visit;
 
    overriding function To_Raise_Expression_Text
-    (Self : aliased in out Raise_Expression)
+    (Self : in out Raise_Expression)
       return Program.Elements.Raise_Expressions.Raise_Expression_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Raise_Expression_Text;
 
    overriding function To_Raise_Expression_Text
-    (Self : aliased in out Implicit_Raise_Expression)
+    (Self : in out Implicit_Raise_Expression)
       return Program.Elements.Raise_Expressions.Raise_Expression_Text_Access is
       pragma Unreferenced (Self);
    begin

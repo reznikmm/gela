@@ -82,7 +82,7 @@ package body Program.Nodes.Operator_Symbols is
       return "";
    end Image;
 
-   procedure Initialize (Self : aliased in out Base_Operator_Symbol'Class) is
+   procedure Initialize (Self : in out Base_Operator_Symbol'Class) is
    begin
       null;
    end Initialize;
@@ -111,14 +111,14 @@ package body Program.Nodes.Operator_Symbols is
    end Visit;
 
    overriding function To_Operator_Symbol_Text
-    (Self : aliased in out Operator_Symbol)
+    (Self : in out Operator_Symbol)
       return Program.Elements.Operator_Symbols.Operator_Symbol_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Operator_Symbol_Text;
 
    overriding function To_Operator_Symbol_Text
-    (Self : aliased in out Implicit_Operator_Symbol)
+    (Self : in out Implicit_Operator_Symbol)
       return Program.Elements.Operator_Symbols.Operator_Symbol_Text_Access is
       pragma Unreferenced (Self);
    begin

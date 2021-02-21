@@ -126,8 +126,7 @@ package body Program.Nodes.Subtype_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Subtype_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Subtype_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Subtype_Indication, Self'Unchecked_Access);
@@ -161,7 +160,7 @@ package body Program.Nodes.Subtype_Declarations is
    end Visit;
 
    overriding function To_Subtype_Declaration_Text
-    (Self : aliased in out Subtype_Declaration)
+    (Self : in out Subtype_Declaration)
       return Program.Elements.Subtype_Declarations
           .Subtype_Declaration_Text_Access is
    begin
@@ -169,7 +168,7 @@ package body Program.Nodes.Subtype_Declarations is
    end To_Subtype_Declaration_Text;
 
    overriding function To_Subtype_Declaration_Text
-    (Self : aliased in out Implicit_Subtype_Declaration)
+    (Self : in out Implicit_Subtype_Declaration)
       return Program.Elements.Subtype_Declarations
           .Subtype_Declaration_Text_Access is
       pragma Unreferenced (Self);

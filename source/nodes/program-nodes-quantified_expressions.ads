@@ -79,8 +79,7 @@ private
           .Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Quantified_Expression'Class);
+   procedure Initialize (Self : in out Base_Quantified_Expression'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Quantified_Expression;
@@ -124,7 +123,7 @@ private
      end record;
 
    overriding function To_Quantified_Expression_Text
-    (Self : aliased in out Quantified_Expression)
+    (Self : in out Quantified_Expression)
       return Program.Elements.Quantified_Expressions
           .Quantified_Expression_Text_Access;
 
@@ -159,7 +158,7 @@ private
      end record;
 
    overriding function To_Quantified_Expression_Text
-    (Self : aliased in out Implicit_Quantified_Expression)
+    (Self : in out Implicit_Quantified_Expression)
       return Program.Elements.Quantified_Expressions
           .Quantified_Expression_Text_Access;
 

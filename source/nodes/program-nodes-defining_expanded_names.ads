@@ -54,8 +54,7 @@ private
           .Defining_Identifier_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Defining_Expanded_Name'Class);
+   procedure Initialize (Self : in out Base_Defining_Expanded_Name'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Defining_Expanded_Name;
@@ -86,7 +85,7 @@ private
      end record;
 
    overriding function To_Defining_Expanded_Name_Text
-    (Self : aliased in out Defining_Expanded_Name)
+    (Self : in out Defining_Expanded_Name)
       return Program.Elements.Defining_Expanded_Names
           .Defining_Expanded_Name_Text_Access;
 
@@ -105,7 +104,7 @@ private
      end record;
 
    overriding function To_Defining_Expanded_Name_Text
-    (Self : aliased in out Implicit_Defining_Expanded_Name)
+    (Self : in out Implicit_Defining_Expanded_Name)
       return Program.Elements.Defining_Expanded_Names
           .Defining_Expanded_Name_Text_Access;
 

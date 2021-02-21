@@ -55,7 +55,7 @@ private
           .Parameter_Association_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Call_Statement'Class);
+   procedure Initialize (Self : in out Base_Call_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Call_Statement;
@@ -89,7 +89,7 @@ private
      end record;
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Call_Statement)
+    (Self : in out Call_Statement)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -113,7 +113,7 @@ private
      end record;
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Implicit_Call_Statement)
+    (Self : in out Implicit_Call_Statement)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

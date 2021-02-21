@@ -22,7 +22,7 @@ package Program.Elements.Defining_Operator_Symbols is
      access all Defining_Operator_Symbol_Text'Class with Storage_Size => 0;
 
    not overriding function To_Defining_Operator_Symbol_Text
-    (Self : aliased in out Defining_Operator_Symbol)
+    (Self : in out Defining_Operator_Symbol)
       return Defining_Operator_Symbol_Text_Access is abstract;
 
    not overriding function Operator_Symbol_Token

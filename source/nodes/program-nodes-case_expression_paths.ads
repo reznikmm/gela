@@ -52,8 +52,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Case_Expression_Path'Class);
+   procedure Initialize (Self : in out Base_Case_Expression_Path'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Case_Expression_Path;
@@ -84,7 +83,7 @@ private
      end record;
 
    overriding function To_Case_Expression_Path_Text
-    (Self : aliased in out Case_Expression_Path)
+    (Self : in out Case_Expression_Path)
       return Program.Elements.Case_Expression_Paths
           .Case_Expression_Path_Text_Access;
 
@@ -105,7 +104,7 @@ private
      end record;
 
    overriding function To_Case_Expression_Path_Text
-    (Self : aliased in out Implicit_Case_Expression_Path)
+    (Self : in out Implicit_Case_Expression_Path)
       return Program.Elements.Case_Expression_Paths
           .Case_Expression_Path_Text_Access;
 

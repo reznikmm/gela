@@ -34,7 +34,7 @@ package Program.Elements.Task_Body_Stubs is
      with Storage_Size => 0;
 
    not overriding function To_Task_Body_Stub_Text
-    (Self : aliased in out Task_Body_Stub)
+    (Self : in out Task_Body_Stub)
       return Task_Body_Stub_Text_Access is abstract;
 
    not overriding function Task_Token

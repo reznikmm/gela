@@ -48,7 +48,7 @@ package Program.Elements.Object_Renaming_Declarations is
      access all Object_Renaming_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Object_Renaming_Declaration_Text
-    (Self : aliased in out Object_Renaming_Declaration)
+    (Self : in out Object_Renaming_Declaration)
       return Object_Renaming_Declaration_Text_Access is abstract;
 
    not overriding function Colon_Token

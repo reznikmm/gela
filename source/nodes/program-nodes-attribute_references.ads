@@ -61,7 +61,7 @@ private
         Expressions          : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Attribute_Reference'Class);
+   procedure Initialize (Self : in out Base_Attribute_Reference'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Attribute_Reference;
@@ -98,7 +98,7 @@ private
      end record;
 
    overriding function To_Attribute_Reference_Text
-    (Self : aliased in out Attribute_Reference)
+    (Self : in out Attribute_Reference)
       return Program.Elements.Attribute_References
           .Attribute_Reference_Text_Access;
 
@@ -123,7 +123,7 @@ private
      end record;
 
    overriding function To_Attribute_Reference_Text
-    (Self : aliased in out Implicit_Attribute_Reference)
+    (Self : in out Implicit_Attribute_Reference)
       return Program.Elements.Attribute_References
           .Attribute_Reference_Text_Access;
 

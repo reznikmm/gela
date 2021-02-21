@@ -117,8 +117,7 @@ package body Program.Nodes.Constrained_Array_Types is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Constrained_Array_Type'Class) is
+   procedure Initialize (Self : in out Base_Constrained_Array_Type'Class) is
    begin
       for Item in Self.Index_Subtypes.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -159,7 +158,7 @@ package body Program.Nodes.Constrained_Array_Types is
    end Visit;
 
    overriding function To_Constrained_Array_Type_Text
-    (Self : aliased in out Constrained_Array_Type)
+    (Self : in out Constrained_Array_Type)
       return Program.Elements.Constrained_Array_Types
           .Constrained_Array_Type_Text_Access is
    begin
@@ -167,7 +166,7 @@ package body Program.Nodes.Constrained_Array_Types is
    end To_Constrained_Array_Type_Text;
 
    overriding function To_Constrained_Array_Type_Text
-    (Self : aliased in out Implicit_Constrained_Array_Type)
+    (Self : in out Implicit_Constrained_Array_Type)
       return Program.Elements.Constrained_Array_Types
           .Constrained_Array_Type_Text_Access is
       pragma Unreferenced (Self);

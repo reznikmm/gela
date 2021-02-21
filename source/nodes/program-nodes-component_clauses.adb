@@ -115,7 +115,7 @@ package body Program.Nodes.Component_Clauses is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Component_Clause'Class) is
+   procedure Initialize (Self : in out Base_Component_Clause'Class) is
    begin
       Set_Enclosing_Element (Self.Clause_Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Position, Self'Unchecked_Access);
@@ -147,14 +147,14 @@ package body Program.Nodes.Component_Clauses is
    end Visit;
 
    overriding function To_Component_Clause_Text
-    (Self : aliased in out Component_Clause)
+    (Self : in out Component_Clause)
       return Program.Elements.Component_Clauses.Component_Clause_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Component_Clause_Text;
 
    overriding function To_Component_Clause_Text
-    (Self : aliased in out Implicit_Component_Clause)
+    (Self : in out Implicit_Component_Clause)
       return Program.Elements.Component_Clauses.Component_Clause_Text_Access is
       pragma Unreferenced (Self);
    begin

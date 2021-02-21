@@ -96,8 +96,7 @@ package body Program.Nodes.Defining_Expanded_Names is
       return "";
    end Image;
 
-   procedure Initialize
-    (Self : aliased in out Base_Defining_Expanded_Name'Class) is
+   procedure Initialize (Self : in out Base_Defining_Expanded_Name'Class) is
    begin
       Set_Enclosing_Element (Self.Prefix, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Selector, Self'Unchecked_Access);
@@ -128,7 +127,7 @@ package body Program.Nodes.Defining_Expanded_Names is
    end Visit;
 
    overriding function To_Defining_Expanded_Name_Text
-    (Self : aliased in out Defining_Expanded_Name)
+    (Self : in out Defining_Expanded_Name)
       return Program.Elements.Defining_Expanded_Names
           .Defining_Expanded_Name_Text_Access is
    begin
@@ -136,7 +135,7 @@ package body Program.Nodes.Defining_Expanded_Names is
    end To_Defining_Expanded_Name_Text;
 
    overriding function To_Defining_Expanded_Name_Text
-    (Self : aliased in out Implicit_Defining_Expanded_Name)
+    (Self : in out Implicit_Defining_Expanded_Name)
       return Program.Elements.Defining_Expanded_Names
           .Defining_Expanded_Name_Text_Access is
       pragma Unreferenced (Self);

@@ -109,7 +109,7 @@ package body Program.Nodes.Loop_Parameter_Specifications is
    end Has_Reverse;
 
    procedure Initialize
-    (Self : aliased in out Base_Loop_Parameter_Specification'Class) is
+    (Self : in out Base_Loop_Parameter_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Definition, Self'Unchecked_Access);
@@ -140,7 +140,7 @@ package body Program.Nodes.Loop_Parameter_Specifications is
    end Visit;
 
    overriding function To_Loop_Parameter_Specification_Text
-    (Self : aliased in out Loop_Parameter_Specification)
+    (Self : in out Loop_Parameter_Specification)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Text_Access is
    begin
@@ -148,7 +148,7 @@ package body Program.Nodes.Loop_Parameter_Specifications is
    end To_Loop_Parameter_Specification_Text;
 
    overriding function To_Loop_Parameter_Specification_Text
-    (Self : aliased in out Implicit_Loop_Parameter_Specification)
+    (Self : in out Implicit_Loop_Parameter_Specification)
       return Program.Elements.Loop_Parameter_Specifications
           .Loop_Parameter_Specification_Text_Access is
       pragma Unreferenced (Self);

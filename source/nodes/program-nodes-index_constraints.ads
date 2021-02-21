@@ -51,7 +51,7 @@ private
           .Discrete_Range_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Index_Constraint'Class);
+   procedure Initialize (Self : in out Base_Index_Constraint'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Index_Constraint;
@@ -85,7 +85,7 @@ private
      end record;
 
    overriding function To_Index_Constraint_Text
-    (Self : aliased in out Index_Constraint)
+    (Self : in out Index_Constraint)
       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -105,7 +105,7 @@ private
      end record;
 
    overriding function To_Index_Constraint_Text
-    (Self : aliased in out Implicit_Index_Constraint)
+    (Self : in out Implicit_Index_Constraint)
       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access;
 
    overriding function Is_Part_Of_Implicit

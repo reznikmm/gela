@@ -32,7 +32,7 @@ package Program.Elements.Qualified_Expressions is
      access all Qualified_Expression_Text'Class with Storage_Size => 0;
 
    not overriding function To_Qualified_Expression_Text
-    (Self : aliased in out Qualified_Expression)
+    (Self : in out Qualified_Expression)
       return Qualified_Expression_Text_Access is abstract;
 
    not overriding function Apostrophe_Token

@@ -49,7 +49,7 @@ private
         Statements : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Select_Path'Class);
+   procedure Initialize (Self : in out Base_Select_Path'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Select_Path;
@@ -75,7 +75,7 @@ private
      end record;
 
    overriding function To_Select_Path_Text
-    (Self : aliased in out Select_Path)
+    (Self : in out Select_Path)
       return Program.Elements.Select_Paths.Select_Path_Text_Access;
 
    overriding function When_Token
@@ -95,7 +95,7 @@ private
      end record;
 
    overriding function To_Select_Path_Text
-    (Self : aliased in out Implicit_Select_Path)
+    (Self : in out Implicit_Select_Path)
       return Program.Elements.Select_Paths.Select_Path_Text_Access;
 
    overriding function Is_Part_Of_Implicit

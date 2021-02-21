@@ -162,8 +162,7 @@ package body Program.Nodes.Derived_Record_Extensions is
       return Self.Has_Limited;
    end Has_Limited;
 
-   procedure Initialize
-    (Self : aliased in out Base_Derived_Record_Extension'Class) is
+   procedure Initialize (Self : in out Base_Derived_Record_Extension'Class) is
    begin
       Set_Enclosing_Element (Self.Parent, Self'Unchecked_Access);
       for Item in Self.Progenitors.Each_Element loop
@@ -205,7 +204,7 @@ package body Program.Nodes.Derived_Record_Extensions is
    end Visit;
 
    overriding function To_Derived_Record_Extension_Text
-    (Self : aliased in out Derived_Record_Extension)
+    (Self : in out Derived_Record_Extension)
       return Program.Elements.Derived_Record_Extensions
           .Derived_Record_Extension_Text_Access is
    begin
@@ -213,7 +212,7 @@ package body Program.Nodes.Derived_Record_Extensions is
    end To_Derived_Record_Extension_Text;
 
    overriding function To_Derived_Record_Extension_Text
-    (Self : aliased in out Implicit_Derived_Record_Extension)
+    (Self : in out Implicit_Derived_Record_Extension)
       return Program.Elements.Derived_Record_Extensions
           .Derived_Record_Extension_Text_Access is
       pragma Unreferenced (Self);

@@ -114,7 +114,7 @@ package body Program.Nodes.Derived_Types is
       return Self.Has_Limited;
    end Has_Limited;
 
-   procedure Initialize (Self : aliased in out Base_Derived_Type'Class) is
+   procedure Initialize (Self : in out Base_Derived_Type'Class) is
    begin
       Set_Enclosing_Element (Self.Parent, Self'Unchecked_Access);
       null;
@@ -152,14 +152,14 @@ package body Program.Nodes.Derived_Types is
    end Visit;
 
    overriding function To_Derived_Type_Text
-    (Self : aliased in out Derived_Type)
+    (Self : in out Derived_Type)
       return Program.Elements.Derived_Types.Derived_Type_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Derived_Type_Text;
 
    overriding function To_Derived_Type_Text
-    (Self : aliased in out Implicit_Derived_Type)
+    (Self : in out Implicit_Derived_Type)
       return Program.Elements.Derived_Types.Derived_Type_Text_Access is
       pragma Unreferenced (Self);
    begin

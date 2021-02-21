@@ -93,7 +93,7 @@ package body Program.Nodes.Delta_Constraints is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Delta_Constraint'Class) is
+   procedure Initialize (Self : in out Base_Delta_Constraint'Class) is
    begin
       Set_Enclosing_Element (Self.Delta_Expression, Self'Unchecked_Access);
       if Self.Real_Range_Constraint.Assigned then
@@ -135,14 +135,14 @@ package body Program.Nodes.Delta_Constraints is
    end Visit;
 
    overriding function To_Delta_Constraint_Text
-    (Self : aliased in out Delta_Constraint)
+    (Self : in out Delta_Constraint)
       return Program.Elements.Delta_Constraints.Delta_Constraint_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Delta_Constraint_Text;
 
    overriding function To_Delta_Constraint_Text
-    (Self : aliased in out Implicit_Delta_Constraint)
+    (Self : in out Implicit_Delta_Constraint)
       return Program.Elements.Delta_Constraints.Delta_Constraint_Text_Access is
       pragma Unreferenced (Self);
    begin

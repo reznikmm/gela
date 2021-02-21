@@ -41,7 +41,7 @@ private
        and Program.Elements.Null_Components.Null_Component
      with null record;
 
-   procedure Initialize (Self : aliased in out Base_Null_Component'Class);
+   procedure Initialize (Self : in out Base_Null_Component'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Null_Component;
@@ -66,7 +66,7 @@ private
      end record;
 
    overriding function To_Null_Component_Text
-    (Self : aliased in out Null_Component)
+    (Self : in out Null_Component)
       return Program.Elements.Null_Components.Null_Component_Text_Access;
 
    overriding function Null_Token
@@ -86,7 +86,7 @@ private
      end record;
 
    overriding function To_Null_Component_Text
-    (Self : aliased in out Implicit_Null_Component)
+    (Self : in out Implicit_Null_Component)
       return Program.Elements.Null_Components.Null_Component_Text_Access;
 
    overriding function Is_Part_Of_Implicit

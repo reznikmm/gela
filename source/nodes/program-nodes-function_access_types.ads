@@ -66,8 +66,7 @@ private
         Result_Subtype : not null Program.Elements.Element_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Function_Access_Type'Class);
+   procedure Initialize (Self : in out Base_Function_Access_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Function_Access_Type;
@@ -118,7 +117,7 @@ private
      end record;
 
    overriding function To_Function_Access_Type_Text
-    (Self : aliased in out Function_Access_Type)
+    (Self : in out Function_Access_Type)
       return Program.Elements.Function_Access_Types
           .Function_Access_Type_Text_Access;
 
@@ -186,7 +185,7 @@ private
      end record;
 
    overriding function To_Function_Access_Type_Text
-    (Self : aliased in out Implicit_Function_Access_Type)
+    (Self : in out Implicit_Function_Access_Type)
       return Program.Elements.Function_Access_Types
           .Function_Access_Type_Text_Access;
 

@@ -263,7 +263,7 @@ package body Program.Nodes.Formal_Function_Declarations is
    end Has_Box;
 
    procedure Initialize
-    (Self : aliased in out Base_Formal_Function_Declaration'Class) is
+    (Self : in out Base_Formal_Function_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       for Item in Self.Parameters.Each_Element loop
@@ -304,7 +304,7 @@ package body Program.Nodes.Formal_Function_Declarations is
    end Visit;
 
    overriding function To_Formal_Function_Declaration_Text
-    (Self : aliased in out Formal_Function_Declaration)
+    (Self : in out Formal_Function_Declaration)
       return Program.Elements.Formal_Function_Declarations
           .Formal_Function_Declaration_Text_Access is
    begin
@@ -312,7 +312,7 @@ package body Program.Nodes.Formal_Function_Declarations is
    end To_Formal_Function_Declaration_Text;
 
    overriding function To_Formal_Function_Declaration_Text
-    (Self : aliased in out Implicit_Formal_Function_Declaration)
+    (Self : in out Implicit_Formal_Function_Declaration)
       return Program.Elements.Formal_Function_Declarations
           .Formal_Function_Declaration_Text_Access is
       pragma Unreferenced (Self);

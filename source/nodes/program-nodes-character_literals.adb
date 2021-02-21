@@ -82,7 +82,7 @@ package body Program.Nodes.Character_Literals is
       return "";
    end Image;
 
-   procedure Initialize (Self : aliased in out Base_Character_Literal'Class) is
+   procedure Initialize (Self : in out Base_Character_Literal'Class) is
    begin
       null;
    end Initialize;
@@ -111,7 +111,7 @@ package body Program.Nodes.Character_Literals is
    end Visit;
 
    overriding function To_Character_Literal_Text
-    (Self : aliased in out Character_Literal)
+    (Self : in out Character_Literal)
       return Program.Elements.Character_Literals
           .Character_Literal_Text_Access is
    begin
@@ -119,7 +119,7 @@ package body Program.Nodes.Character_Literals is
    end To_Character_Literal_Text;
 
    overriding function To_Character_Literal_Text
-    (Self : aliased in out Implicit_Character_Literal)
+    (Self : in out Implicit_Character_Literal)
       return Program.Elements.Character_Literals
           .Character_Literal_Text_Access is
       pragma Unreferenced (Self);

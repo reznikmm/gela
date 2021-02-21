@@ -61,7 +61,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Generalized_Iterator_Specification'Class);
+    (Self : in out Base_Generalized_Iterator_Specification'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Generalized_Iterator_Specification;
@@ -95,7 +95,7 @@ private
      end record;
 
    overriding function To_Generalized_Iterator_Specification_Text
-    (Self : aliased in out Generalized_Iterator_Specification)
+    (Self : in out Generalized_Iterator_Specification)
       return Program.Elements.Generalized_Iterator_Specifications
           .Generalized_Iterator_Specification_Text_Access;
 
@@ -121,7 +121,7 @@ private
      end record;
 
    overriding function To_Generalized_Iterator_Specification_Text
-    (Self : aliased in out Implicit_Generalized_Iterator_Specification)
+    (Self : in out Implicit_Generalized_Iterator_Specification)
       return Program.Elements.Generalized_Iterator_Specifications
           .Generalized_Iterator_Specification_Text_Access;
 

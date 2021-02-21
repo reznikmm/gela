@@ -63,8 +63,7 @@ private
           .Component_Definition_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Constrained_Array_Type'Class);
+   procedure Initialize (Self : in out Base_Constrained_Array_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Constrained_Array_Type;
@@ -107,7 +106,7 @@ private
      end record;
 
    overriding function To_Constrained_Array_Type_Text
-    (Self : aliased in out Constrained_Array_Type)
+    (Self : in out Constrained_Array_Type)
       return Program.Elements.Constrained_Array_Types
           .Constrained_Array_Type_Text_Access;
 
@@ -136,7 +135,7 @@ private
      end record;
 
    overriding function To_Constrained_Array_Type_Text
-    (Self : aliased in out Implicit_Constrained_Array_Type)
+    (Self : in out Implicit_Constrained_Array_Type)
       return Program.Elements.Constrained_Array_Types
           .Constrained_Array_Type_Text_Access;
 

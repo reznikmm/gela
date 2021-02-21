@@ -49,8 +49,7 @@ private
         Expression : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Simple_Return_Statement'Class);
+   procedure Initialize (Self : in out Base_Simple_Return_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Simple_Return_Statement;
@@ -80,7 +79,7 @@ private
      end record;
 
    overriding function To_Simple_Return_Statement_Text
-    (Self : aliased in out Simple_Return_Statement)
+    (Self : in out Simple_Return_Statement)
       return Program.Elements.Simple_Return_Statements
           .Simple_Return_Statement_Text_Access;
 
@@ -101,7 +100,7 @@ private
      end record;
 
    overriding function To_Simple_Return_Statement_Text
-    (Self : aliased in out Implicit_Simple_Return_Statement)
+    (Self : in out Implicit_Simple_Return_Statement)
       return Program.Elements.Simple_Return_Statements
           .Simple_Return_Statement_Text_Access;
 

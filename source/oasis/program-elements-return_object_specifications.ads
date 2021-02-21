@@ -45,7 +45,7 @@ package Program.Elements.Return_Object_Specifications is
      access all Return_Object_Specification_Text'Class with Storage_Size => 0;
 
    not overriding function To_Return_Object_Specification_Text
-    (Self : aliased in out Return_Object_Specification)
+    (Self : in out Return_Object_Specification)
       return Return_Object_Specification_Text_Access is abstract;
 
    not overriding function Colon_Token

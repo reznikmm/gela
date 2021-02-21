@@ -63,7 +63,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Enumeration_Representation_Clause'Class);
+    (Self : in out Base_Enumeration_Representation_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Enumeration_Representation_Clause;
@@ -103,7 +103,7 @@ private
      end record;
 
    overriding function To_Enumeration_Representation_Clause_Text
-    (Self : aliased in out Enumeration_Representation_Clause)
+    (Self : in out Enumeration_Representation_Clause)
       return Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause_Text_Access;
 
@@ -128,7 +128,7 @@ private
      end record;
 
    overriding function To_Enumeration_Representation_Clause_Text
-    (Self : aliased in out Implicit_Enumeration_Representation_Clause)
+    (Self : in out Implicit_Enumeration_Representation_Clause)
       return Program.Elements.Enumeration_Representation_Clauses
           .Enumeration_Representation_Clause_Text_Access;
 

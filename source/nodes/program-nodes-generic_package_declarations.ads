@@ -84,8 +84,7 @@ private
         End_Name             : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Generic_Package_Declaration'Class);
+   procedure Initialize (Self : in out Base_Generic_Package_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Generic_Package_Declaration;
@@ -144,7 +143,7 @@ private
      end record;
 
    overriding function To_Generic_Package_Declaration_Text
-    (Self : aliased in out Generic_Package_Declaration)
+    (Self : in out Generic_Package_Declaration)
       return Program.Elements.Generic_Package_Declarations
           .Generic_Package_Declaration_Text_Access;
 
@@ -185,7 +184,7 @@ private
      end record;
 
    overriding function To_Generic_Package_Declaration_Text
-    (Self : aliased in out Implicit_Generic_Package_Declaration)
+    (Self : in out Implicit_Generic_Package_Declaration)
       return Program.Elements.Generic_Package_Declarations
           .Generic_Package_Declaration_Text_Access;
 

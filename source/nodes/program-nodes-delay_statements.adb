@@ -90,7 +90,7 @@ package body Program.Nodes.Delay_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Delay_Statement'Class) is
+   procedure Initialize (Self : in out Base_Delay_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
       null;
@@ -120,14 +120,14 @@ package body Program.Nodes.Delay_Statements is
    end Visit;
 
    overriding function To_Delay_Statement_Text
-    (Self : aliased in out Delay_Statement)
+    (Self : in out Delay_Statement)
       return Program.Elements.Delay_Statements.Delay_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Delay_Statement_Text;
 
    overriding function To_Delay_Statement_Text
-    (Self : aliased in out Implicit_Delay_Statement)
+    (Self : in out Implicit_Delay_Statement)
       return Program.Elements.Delay_Statements.Delay_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

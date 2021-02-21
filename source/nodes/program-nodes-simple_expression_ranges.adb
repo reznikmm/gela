@@ -84,8 +84,7 @@ package body Program.Nodes.Simple_Expression_Ranges is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Simple_Expression_Range'Class) is
+   procedure Initialize (Self : in out Base_Simple_Expression_Range'Class) is
    begin
       Set_Enclosing_Element (Self.Lower_Bound, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Upper_Bound, Self'Unchecked_Access);
@@ -124,7 +123,7 @@ package body Program.Nodes.Simple_Expression_Ranges is
    end Visit;
 
    overriding function To_Simple_Expression_Range_Text
-    (Self : aliased in out Simple_Expression_Range)
+    (Self : in out Simple_Expression_Range)
       return Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Text_Access is
    begin
@@ -132,7 +131,7 @@ package body Program.Nodes.Simple_Expression_Ranges is
    end To_Simple_Expression_Range_Text;
 
    overriding function To_Simple_Expression_Range_Text
-    (Self : aliased in out Implicit_Simple_Expression_Range)
+    (Self : in out Implicit_Simple_Expression_Range)
       return Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Text_Access is
       pragma Unreferenced (Self);

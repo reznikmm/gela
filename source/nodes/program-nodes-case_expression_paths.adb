@@ -90,8 +90,7 @@ package body Program.Nodes.Case_Expression_Paths is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Case_Expression_Path'Class) is
+   procedure Initialize (Self : in out Base_Case_Expression_Path'Class) is
    begin
       for Item in Self.Choices.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -124,7 +123,7 @@ package body Program.Nodes.Case_Expression_Paths is
    end Visit;
 
    overriding function To_Case_Expression_Path_Text
-    (Self : aliased in out Case_Expression_Path)
+    (Self : in out Case_Expression_Path)
       return Program.Elements.Case_Expression_Paths
           .Case_Expression_Path_Text_Access is
    begin
@@ -132,7 +131,7 @@ package body Program.Nodes.Case_Expression_Paths is
    end To_Case_Expression_Path_Text;
 
    overriding function To_Case_Expression_Path_Text
-    (Self : aliased in out Implicit_Case_Expression_Path)
+    (Self : in out Implicit_Case_Expression_Path)
       return Program.Elements.Case_Expression_Paths
           .Case_Expression_Path_Text_Access is
       pragma Unreferenced (Self);

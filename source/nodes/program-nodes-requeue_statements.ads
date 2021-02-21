@@ -52,7 +52,7 @@ private
         Entry_Name : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Requeue_Statement'Class);
+   procedure Initialize (Self : in out Base_Requeue_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Requeue_Statement;
@@ -83,7 +83,7 @@ private
      end record;
 
    overriding function To_Requeue_Statement_Text
-    (Self : aliased in out Requeue_Statement)
+    (Self : in out Requeue_Statement)
       return Program.Elements.Requeue_Statements.Requeue_Statement_Text_Access;
 
    overriding function Requeue_Token
@@ -116,7 +116,7 @@ private
      end record;
 
    overriding function To_Requeue_Statement_Text
-    (Self : aliased in out Implicit_Requeue_Statement)
+    (Self : in out Implicit_Requeue_Statement)
       return Program.Elements.Requeue_Statements.Requeue_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

@@ -57,8 +57,7 @@ private
           .Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Assignment_Statement'Class);
+   procedure Initialize (Self : in out Base_Assignment_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Assignment_Statement;
@@ -91,7 +90,7 @@ private
      end record;
 
    overriding function To_Assignment_Statement_Text
-    (Self : aliased in out Assignment_Statement)
+    (Self : in out Assignment_Statement)
       return Program.Elements.Assignment_Statements
           .Assignment_Statement_Text_Access;
 
@@ -112,7 +111,7 @@ private
      end record;
 
    overriding function To_Assignment_Statement_Text
-    (Self : aliased in out Implicit_Assignment_Statement)
+    (Self : in out Implicit_Assignment_Statement)
       return Program.Elements.Assignment_Statements
           .Assignment_Statement_Text_Access;
 

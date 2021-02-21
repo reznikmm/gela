@@ -77,8 +77,7 @@ private
           .Aspect_Specification_Vector_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Object_Renaming_Declaration'Class);
+   procedure Initialize (Self : in out Base_Object_Renaming_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Object_Renaming_Declaration;
@@ -127,7 +126,7 @@ private
      end record;
 
    overriding function To_Object_Renaming_Declaration_Text
-    (Self : aliased in out Object_Renaming_Declaration)
+    (Self : in out Object_Renaming_Declaration)
       return Program.Elements.Object_Renaming_Declarations
           .Object_Renaming_Declaration_Text_Access;
 
@@ -169,7 +168,7 @@ private
      end record;
 
    overriding function To_Object_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Object_Renaming_Declaration)
+    (Self : in out Implicit_Object_Renaming_Declaration)
       return Program.Elements.Object_Renaming_Declarations
           .Object_Renaming_Declaration_Text_Access;
 

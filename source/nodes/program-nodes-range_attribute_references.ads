@@ -50,8 +50,7 @@ private
           .Attribute_Reference_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Range_Attribute_Reference'Class);
+   procedure Initialize (Self : in out Base_Range_Attribute_Reference'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Range_Attribute_Reference;
@@ -81,7 +80,7 @@ private
      with null record;
 
    overriding function To_Range_Attribute_Reference_Text
-    (Self : aliased in out Range_Attribute_Reference)
+    (Self : in out Range_Attribute_Reference)
       return Program.Elements.Range_Attribute_References
           .Range_Attribute_Reference_Text_Access;
 
@@ -94,7 +93,7 @@ private
      end record;
 
    overriding function To_Range_Attribute_Reference_Text
-    (Self : aliased in out Implicit_Range_Attribute_Reference)
+    (Self : in out Implicit_Range_Attribute_Reference)
       return Program.Elements.Range_Attribute_References
           .Range_Attribute_Reference_Text_Access;
 

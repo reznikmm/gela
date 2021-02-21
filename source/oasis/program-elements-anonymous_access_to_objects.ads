@@ -42,7 +42,7 @@ package Program.Elements.Anonymous_Access_To_Objects is
      access all Anonymous_Access_To_Object_Text'Class with Storage_Size => 0;
 
    not overriding function To_Anonymous_Access_To_Object_Text
-    (Self : aliased in out Anonymous_Access_To_Object)
+    (Self : in out Anonymous_Access_To_Object)
       return Anonymous_Access_To_Object_Text_Access is abstract;
 
    not overriding function Not_Token

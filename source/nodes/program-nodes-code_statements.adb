@@ -73,7 +73,7 @@ package body Program.Nodes.Code_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Code_Statement'Class) is
+   procedure Initialize (Self : in out Base_Code_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Expression, Self'Unchecked_Access);
       null;
@@ -103,14 +103,14 @@ package body Program.Nodes.Code_Statements is
    end Visit;
 
    overriding function To_Code_Statement_Text
-    (Self : aliased in out Code_Statement)
+    (Self : in out Code_Statement)
       return Program.Elements.Code_Statements.Code_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Code_Statement_Text;
 
    overriding function To_Code_Statement_Text
-    (Self : aliased in out Implicit_Code_Statement)
+    (Self : in out Implicit_Code_Statement)
       return Program.Elements.Code_Statements.Code_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

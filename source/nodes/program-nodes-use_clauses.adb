@@ -122,7 +122,7 @@ package body Program.Nodes.Use_Clauses is
       return Self.Has_Type;
    end Has_Type;
 
-   procedure Initialize (Self : aliased in out Base_Use_Clause'Class) is
+   procedure Initialize (Self : in out Base_Use_Clause'Class) is
    begin
       for Item in Self.Clause_Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -150,14 +150,14 @@ package body Program.Nodes.Use_Clauses is
    end Visit;
 
    overriding function To_Use_Clause_Text
-    (Self : aliased in out Use_Clause)
+    (Self : in out Use_Clause)
       return Program.Elements.Use_Clauses.Use_Clause_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Use_Clause_Text;
 
    overriding function To_Use_Clause_Text
-    (Self : aliased in out Implicit_Use_Clause)
+    (Self : in out Implicit_Use_Clause)
       return Program.Elements.Use_Clauses.Use_Clause_Text_Access is
       pragma Unreferenced (Self);
    begin

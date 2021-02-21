@@ -54,7 +54,7 @@ private
           .Discrete_Range_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Slice'Class);
+   procedure Initialize (Self : in out Base_Slice'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Slice;
@@ -82,7 +82,7 @@ private
      end record;
 
    overriding function To_Slice_Text
-    (Self : aliased in out Slice)
+    (Self : in out Slice)
       return Program.Elements.Slices.Slice_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -102,7 +102,7 @@ private
      end record;
 
    overriding function To_Slice_Text
-    (Self : aliased in out Implicit_Slice)
+    (Self : in out Implicit_Slice)
       return Program.Elements.Slices.Slice_Text_Access;
 
    overriding function Is_Part_Of_Implicit

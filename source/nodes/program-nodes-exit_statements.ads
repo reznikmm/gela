@@ -50,7 +50,7 @@ private
         Condition      : Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Exit_Statement'Class);
+   procedure Initialize (Self : in out Base_Exit_Statement'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Exit_Statement;
@@ -84,7 +84,7 @@ private
      end record;
 
    overriding function To_Exit_Statement_Text
-    (Self : aliased in out Exit_Statement)
+    (Self : in out Exit_Statement)
       return Program.Elements.Exit_Statements.Exit_Statement_Text_Access;
 
    overriding function Exit_Token
@@ -108,7 +108,7 @@ private
      end record;
 
    overriding function To_Exit_Statement_Text
-    (Self : aliased in out Implicit_Exit_Statement)
+    (Self : in out Implicit_Exit_Statement)
       return Program.Elements.Exit_Statements.Exit_Statement_Text_Access;
 
    overriding function Is_Part_Of_Implicit

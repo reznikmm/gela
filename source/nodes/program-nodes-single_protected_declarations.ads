@@ -80,7 +80,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Single_Protected_Declaration'Class);
+    (Self : in out Base_Single_Protected_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Single_Protected_Declaration;
@@ -130,7 +130,7 @@ private
      end record;
 
    overriding function To_Single_Protected_Declaration_Text
-    (Self : aliased in out Single_Protected_Declaration)
+    (Self : in out Single_Protected_Declaration)
       return Program.Elements.Single_Protected_Declarations
           .Single_Protected_Declaration_Text_Access;
 
@@ -167,7 +167,7 @@ private
      end record;
 
    overriding function To_Single_Protected_Declaration_Text
-    (Self : aliased in out Implicit_Single_Protected_Declaration)
+    (Self : in out Implicit_Single_Protected_Declaration)
       return Program.Elements.Single_Protected_Declarations
           .Single_Protected_Declaration_Text_Access;
 

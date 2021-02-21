@@ -70,7 +70,7 @@ package body Program.Nodes.Null_Components is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Null_Component'Class) is
+   procedure Initialize (Self : in out Base_Null_Component'Class) is
    begin
       null;
    end Initialize;
@@ -99,14 +99,14 @@ package body Program.Nodes.Null_Components is
    end Visit;
 
    overriding function To_Null_Component_Text
-    (Self : aliased in out Null_Component)
+    (Self : in out Null_Component)
       return Program.Elements.Null_Components.Null_Component_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Null_Component_Text;
 
    overriding function To_Null_Component_Text
-    (Self : aliased in out Implicit_Null_Component)
+    (Self : in out Implicit_Null_Component)
       return Program.Elements.Null_Components.Null_Component_Text_Access is
       pragma Unreferenced (Self);
    begin

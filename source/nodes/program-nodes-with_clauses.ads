@@ -53,7 +53,7 @@ private
           .Expression_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_With_Clause'Class);
+   procedure Initialize (Self : in out Base_With_Clause'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_With_Clause;
@@ -79,7 +79,7 @@ private
      end record;
 
    overriding function To_With_Clause_Text
-    (Self : aliased in out With_Clause)
+    (Self : in out With_Clause)
       return Program.Elements.With_Clauses.With_Clause_Text_Access;
 
    overriding function Limited_Token
@@ -113,7 +113,7 @@ private
      end record;
 
    overriding function To_With_Clause_Text
-    (Self : aliased in out Implicit_With_Clause)
+    (Self : in out Implicit_With_Clause)
       return Program.Elements.With_Clauses.With_Clause_Text_Access;
 
    overriding function Is_Part_Of_Implicit

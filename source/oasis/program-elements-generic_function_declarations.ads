@@ -53,7 +53,7 @@ package Program.Elements.Generic_Function_Declarations is
      access all Generic_Function_Declaration_Text'Class with Storage_Size => 0;
 
    not overriding function To_Generic_Function_Declaration_Text
-    (Self : aliased in out Generic_Function_Declaration)
+    (Self : in out Generic_Function_Declaration)
       return Generic_Function_Declaration_Text_Access is abstract;
 
    not overriding function Generic_Token

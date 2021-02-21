@@ -25,7 +25,7 @@ package Program.Elements.Formal_Signed_Integer_Type_Definitions is
      with Storage_Size => 0;
 
    not overriding function To_Formal_Signed_Integer_Type_Definition_Text
-    (Self : aliased in out Formal_Signed_Integer_Type_Definition)
+    (Self : in out Formal_Signed_Integer_Type_Definition)
       return Formal_Signed_Integer_Type_Definition_Text_Access is abstract;
 
    not overriding function Range_Token

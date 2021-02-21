@@ -136,7 +136,7 @@ package body Program.Nodes.Exception_Renaming_Declarations is
    end Is_Part_Of_Instance;
 
    procedure Initialize
-    (Self : aliased in out Base_Exception_Renaming_Declaration'Class) is
+    (Self : in out Base_Exception_Renaming_Declaration'Class) is
    begin
       for Item in Self.Names.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -172,7 +172,7 @@ package body Program.Nodes.Exception_Renaming_Declarations is
    end Visit;
 
    overriding function To_Exception_Renaming_Declaration_Text
-    (Self : aliased in out Exception_Renaming_Declaration)
+    (Self : in out Exception_Renaming_Declaration)
       return Program.Elements.Exception_Renaming_Declarations
           .Exception_Renaming_Declaration_Text_Access is
    begin
@@ -180,7 +180,7 @@ package body Program.Nodes.Exception_Renaming_Declarations is
    end To_Exception_Renaming_Declaration_Text;
 
    overriding function To_Exception_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Exception_Renaming_Declaration)
+    (Self : in out Implicit_Exception_Renaming_Declaration)
       return Program.Elements.Exception_Renaming_Declarations
           .Exception_Renaming_Declaration_Text_Access is
       pragma Unreferenced (Self);

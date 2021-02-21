@@ -45,8 +45,7 @@ private
         Subtype_Indication : not null Program.Elements.Element_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Component_Definition'Class);
+   procedure Initialize (Self : in out Base_Component_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Component_Definition;
@@ -72,7 +71,7 @@ private
      end record;
 
    overriding function To_Component_Definition_Text
-    (Self : aliased in out Component_Definition)
+    (Self : in out Component_Definition)
       return Program.Elements.Component_Definitions
           .Component_Definition_Text_Access;
 
@@ -94,7 +93,7 @@ private
      end record;
 
    overriding function To_Component_Definition_Text
-    (Self : aliased in out Implicit_Component_Definition)
+    (Self : in out Implicit_Component_Definition)
       return Program.Elements.Component_Definitions
           .Component_Definition_Text_Access;
 

@@ -46,7 +46,7 @@ package Program.Elements.Package_Instantiations is
      access all Package_Instantiation_Text'Class with Storage_Size => 0;
 
    not overriding function To_Package_Instantiation_Text
-    (Self : aliased in out Package_Instantiation)
+    (Self : in out Package_Instantiation)
       return Package_Instantiation_Text_Access is abstract;
 
    not overriding function Package_Token

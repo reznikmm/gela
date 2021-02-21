@@ -55,7 +55,7 @@ private
         Upper_Bound : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Signed_Integer_Type'Class);
+   procedure Initialize (Self : in out Base_Signed_Integer_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Signed_Integer_Type;
@@ -92,7 +92,7 @@ private
      end record;
 
    overriding function To_Signed_Integer_Type_Text
-    (Self : aliased in out Signed_Integer_Type)
+    (Self : in out Signed_Integer_Type)
       return Program.Elements.Signed_Integer_Types
           .Signed_Integer_Type_Text_Access;
 
@@ -113,7 +113,7 @@ private
      end record;
 
    overriding function To_Signed_Integer_Type_Text
-    (Self : aliased in out Implicit_Signed_Integer_Type)
+    (Self : in out Implicit_Signed_Integer_Type)
       return Program.Elements.Signed_Integer_Types
           .Signed_Integer_Type_Text_Access;
 

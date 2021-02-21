@@ -154,7 +154,7 @@ private
    overriding function Is_Statement (Self : Proxy_Call) return Boolean;
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Proxy_Call)
+    (Self : in out Proxy_Call)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access;
 
    overriding function Left_Bracket_Token (Self : Proxy_Call)
@@ -174,7 +174,7 @@ private
    overriding function Is_Function_Call (Self : Proxy_Call)
       return Boolean;
 
-   overriding function To_Function_Call_Text (Self : aliased in out Proxy_Call)
+   overriding function To_Function_Call_Text (Self : in out Proxy_Call)
       return Program.Elements.Function_Calls.Function_Call_Text_Access;
 
    --  Record aggregate
@@ -188,7 +188,7 @@ private
    overriding function Is_Expression (Self : Proxy_Call) return Boolean;
 
    overriding function To_Record_Aggregate_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Record_Aggregates.Record_Aggregate_Text_Access;
 
    overriding function Left_Bracket_Token (Self : Proxy_Call_Text)
@@ -210,7 +210,7 @@ private
        .Discriminant_Association_Vector_Access;
 
    overriding function To_Discriminant_Constraint_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Discriminant_Constraints
         .Discriminant_Constraint_Text_Access;
 
@@ -223,7 +223,7 @@ private
        .Discrete_Range_Vector_Access;
 
    overriding function To_Index_Constraint_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
        return Program.Elements.Index_Constraints.Index_Constraint_Text_Access;
 
 end Program.Nodes.Proxy_Calls;

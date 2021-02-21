@@ -51,8 +51,7 @@ private
         Expression : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Elsif_Expression_Path'Class);
+   procedure Initialize (Self : in out Base_Elsif_Expression_Path'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Elsif_Expression_Path;
@@ -83,7 +82,7 @@ private
      end record;
 
    overriding function To_Elsif_Expression_Path_Text
-    (Self : aliased in out Elsif_Expression_Path)
+    (Self : in out Elsif_Expression_Path)
       return Program.Elements.Elsif_Expression_Paths
           .Elsif_Expression_Path_Text_Access;
 
@@ -104,7 +103,7 @@ private
      end record;
 
    overriding function To_Elsif_Expression_Path_Text
-    (Self : aliased in out Implicit_Elsif_Expression_Path)
+    (Self : in out Implicit_Elsif_Expression_Path)
       return Program.Elements.Elsif_Expression_Paths
           .Elsif_Expression_Path_Text_Access;
 

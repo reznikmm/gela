@@ -53,7 +53,7 @@ private
           .Enumeration_Literal_Specification_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Enumeration_Type'Class);
+   procedure Initialize (Self : in out Base_Enumeration_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Enumeration_Type;
@@ -87,7 +87,7 @@ private
      end record;
 
    overriding function To_Enumeration_Type_Text
-    (Self : aliased in out Enumeration_Type)
+    (Self : in out Enumeration_Type)
       return Program.Elements.Enumeration_Types.Enumeration_Type_Text_Access;
 
    overriding function Left_Bracket_Token
@@ -107,7 +107,7 @@ private
      end record;
 
    overriding function To_Enumeration_Type_Text
-    (Self : aliased in out Implicit_Enumeration_Type)
+    (Self : in out Implicit_Enumeration_Type)
       return Program.Elements.Enumeration_Types.Enumeration_Type_Text_Access;
 
    overriding function Is_Part_Of_Implicit

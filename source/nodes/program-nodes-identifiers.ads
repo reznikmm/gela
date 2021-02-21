@@ -43,7 +43,7 @@ private
           .Defining_Identifiers.Defining_Identifier_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Identifier'Class);
+   procedure Initialize (Self : in out Base_Identifier'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Identifier;
@@ -65,7 +65,7 @@ private
      end record;
 
    overriding function To_Identifier_Text
-    (Self : aliased in out Identifier)
+    (Self : in out Identifier)
       return Program.Elements.Identifiers.Identifier_Text_Access;
 
    overriding function Identifier_Token
@@ -83,7 +83,7 @@ private
      end record;
 
    overriding function To_Identifier_Text
-    (Self : aliased in out Implicit_Identifier)
+    (Self : in out Implicit_Identifier)
       return Program.Elements.Identifiers.Identifier_Text_Access;
 
    overriding function Is_Part_Of_Implicit

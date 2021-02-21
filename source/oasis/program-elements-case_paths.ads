@@ -31,7 +31,7 @@ package Program.Elements.Case_Paths is
      with Storage_Size => 0;
 
    not overriding function To_Case_Path_Text
-    (Self : aliased in out Case_Path)
+    (Self : in out Case_Path)
       return Case_Path_Text_Access is abstract;
 
    not overriding function When_Token

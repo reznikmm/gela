@@ -51,7 +51,7 @@ private
           .Definition_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Record_Type'Class);
+   procedure Initialize (Self : in out Base_Record_Type'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Type;
@@ -81,7 +81,7 @@ private
      end record;
 
    overriding function To_Record_Type_Text
-    (Self : aliased in out Record_Type)
+    (Self : in out Record_Type)
       return Program.Elements.Record_Types.Record_Type_Text_Access;
 
    overriding function Abstract_Token
@@ -105,7 +105,7 @@ private
      end record;
 
    overriding function To_Record_Type_Text
-    (Self : aliased in out Implicit_Record_Type)
+    (Self : in out Implicit_Record_Type)
       return Program.Elements.Record_Types.Record_Type_Text_Access;
 
    overriding function Is_Part_Of_Implicit

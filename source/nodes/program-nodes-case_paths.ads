@@ -48,7 +48,7 @@ private
         Statements : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Case_Path'Class);
+   procedure Initialize (Self : in out Base_Case_Path'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Case_Path;
@@ -74,7 +74,7 @@ private
      end record;
 
    overriding function To_Case_Path_Text
-    (Self : aliased in out Case_Path)
+    (Self : in out Case_Path)
       return Program.Elements.Case_Paths.Case_Path_Text_Access;
 
    overriding function When_Token
@@ -94,7 +94,7 @@ private
      end record;
 
    overriding function To_Case_Path_Text
-    (Self : aliased in out Implicit_Case_Path)
+    (Self : in out Implicit_Case_Path)
       return Program.Elements.Case_Paths.Case_Path_Text_Access;
 
    overriding function Is_Part_Of_Implicit

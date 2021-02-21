@@ -54,7 +54,7 @@ private
         Real_Range_Constraint : Program.Elements.Constraints.Constraint_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Digits_Constraint'Class);
+   procedure Initialize (Self : in out Base_Digits_Constraint'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Digits_Constraint;
@@ -90,7 +90,7 @@ private
      end record;
 
    overriding function To_Digits_Constraint_Text
-    (Self : aliased in out Digits_Constraint)
+    (Self : in out Digits_Constraint)
       return Program.Elements.Digits_Constraints.Digits_Constraint_Text_Access;
 
    overriding function Digits_Token
@@ -110,7 +110,7 @@ private
      end record;
 
    overriding function To_Digits_Constraint_Text
-    (Self : aliased in out Implicit_Digits_Constraint)
+    (Self : in out Implicit_Digits_Constraint)
       return Program.Elements.Digits_Constraints.Digits_Constraint_Text_Access;
 
    overriding function Is_Part_Of_Implicit

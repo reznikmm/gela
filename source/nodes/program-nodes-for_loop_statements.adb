@@ -190,8 +190,7 @@ package body Program.Nodes.For_Loop_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_For_Loop_Statement'Class) is
+   procedure Initialize (Self : in out Base_For_Loop_Statement'Class) is
    begin
       if Self.Statement_Identifier.Assigned then
          Set_Enclosing_Element
@@ -241,7 +240,7 @@ package body Program.Nodes.For_Loop_Statements is
    end Visit;
 
    overriding function To_For_Loop_Statement_Text
-    (Self : aliased in out For_Loop_Statement)
+    (Self : in out For_Loop_Statement)
       return Program.Elements.For_Loop_Statements
           .For_Loop_Statement_Text_Access is
    begin
@@ -249,7 +248,7 @@ package body Program.Nodes.For_Loop_Statements is
    end To_For_Loop_Statement_Text;
 
    overriding function To_For_Loop_Statement_Text
-    (Self : aliased in out Implicit_For_Loop_Statement)
+    (Self : in out Implicit_For_Loop_Statement)
       return Program.Elements.For_Loop_Statements
           .For_Loop_Statement_Text_Access is
       pragma Unreferenced (Self);

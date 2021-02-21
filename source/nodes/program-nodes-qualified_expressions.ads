@@ -57,8 +57,7 @@ private
         Operand      : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Qualified_Expression'Class);
+   procedure Initialize (Self : in out Base_Qualified_Expression'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Qualified_Expression;
@@ -93,7 +92,7 @@ private
      end record;
 
    overriding function To_Qualified_Expression_Text
-    (Self : aliased in out Qualified_Expression)
+    (Self : in out Qualified_Expression)
       return Program.Elements.Qualified_Expressions
           .Qualified_Expression_Text_Access;
 
@@ -118,7 +117,7 @@ private
      end record;
 
    overriding function To_Qualified_Expression_Text
-    (Self : aliased in out Implicit_Qualified_Expression)
+    (Self : in out Implicit_Qualified_Expression)
       return Program.Elements.Qualified_Expressions
           .Qualified_Expression_Text_Access;
 

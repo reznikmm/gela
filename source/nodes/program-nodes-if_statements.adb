@@ -150,7 +150,7 @@ package body Program.Nodes.If_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_If_Statement'Class) is
+   procedure Initialize (Self : in out Base_If_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Condition, Self'Unchecked_Access);
       for Item in Self.Then_Statements.Each_Element loop
@@ -189,14 +189,14 @@ package body Program.Nodes.If_Statements is
    end Visit;
 
    overriding function To_If_Statement_Text
-    (Self : aliased in out If_Statement)
+    (Self : in out If_Statement)
       return Program.Elements.If_Statements.If_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_If_Statement_Text;
 
    overriding function To_If_Statement_Text
-    (Self : aliased in out Implicit_If_Statement)
+    (Self : in out Implicit_If_Statement)
       return Program.Elements.If_Statements.If_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -121,7 +121,7 @@ package body Program.Nodes.Variant_Parts is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Variant_Part'Class) is
+   procedure Initialize (Self : in out Base_Variant_Part'Class) is
    begin
       Set_Enclosing_Element (Self.Discriminant, Self'Unchecked_Access);
       for Item in Self.Variants.Each_Element loop
@@ -154,14 +154,14 @@ package body Program.Nodes.Variant_Parts is
    end Visit;
 
    overriding function To_Variant_Part_Text
-    (Self : aliased in out Variant_Part)
+    (Self : in out Variant_Part)
       return Program.Elements.Variant_Parts.Variant_Part_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Variant_Part_Text;
 
    overriding function To_Variant_Part_Text
-    (Self : aliased in out Implicit_Variant_Part)
+    (Self : in out Implicit_Variant_Part)
       return Program.Elements.Variant_Parts.Variant_Part_Text_Access is
       pragma Unreferenced (Self);
    begin

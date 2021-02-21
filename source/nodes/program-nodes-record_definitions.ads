@@ -48,7 +48,7 @@ private
         Components : not null Program.Element_Vectors.Element_Vector_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Record_Definition'Class);
+   procedure Initialize (Self : in out Base_Record_Definition'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Record_Definition;
@@ -79,7 +79,7 @@ private
      end record;
 
    overriding function To_Record_Definition_Text
-    (Self : aliased in out Record_Definition)
+    (Self : in out Record_Definition)
       return Program.Elements.Record_Definitions.Record_Definition_Text_Access;
 
    overriding function Record_Token
@@ -103,7 +103,7 @@ private
      end record;
 
    overriding function To_Record_Definition_Text
-    (Self : aliased in out Implicit_Record_Definition)
+    (Self : in out Implicit_Record_Definition)
       return Program.Elements.Record_Definitions.Record_Definition_Text_Access;
 
    overriding function Is_Part_Of_Implicit

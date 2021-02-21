@@ -75,7 +75,7 @@ private
      end record;
 
    procedure Initialize
-    (Self : aliased in out Base_Exception_Renaming_Declaration'Class);
+    (Self : in out Base_Exception_Renaming_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Exception_Renaming_Declaration;
@@ -120,7 +120,7 @@ private
      end record;
 
    overriding function To_Exception_Renaming_Declaration_Text
-    (Self : aliased in out Exception_Renaming_Declaration)
+    (Self : in out Exception_Renaming_Declaration)
       return Program.Elements.Exception_Renaming_Declarations
           .Exception_Renaming_Declaration_Text_Access;
 
@@ -153,7 +153,7 @@ private
      end record;
 
    overriding function To_Exception_Renaming_Declaration_Text
-    (Self : aliased in out Implicit_Exception_Renaming_Declaration)
+    (Self : in out Implicit_Exception_Renaming_Declaration)
       return Program.Elements.Exception_Renaming_Declarations
           .Exception_Renaming_Declaration_Text_Access;
 

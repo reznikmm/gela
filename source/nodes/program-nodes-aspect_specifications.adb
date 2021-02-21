@@ -84,8 +84,7 @@ package body Program.Nodes.Aspect_Specifications is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Aspect_Specification'Class) is
+   procedure Initialize (Self : in out Base_Aspect_Specification'Class) is
    begin
       Set_Enclosing_Element (Self.Aspect_Mark, Self'Unchecked_Access);
       Set_Enclosing_Element (Self.Aspect_Definition, Self'Unchecked_Access);
@@ -116,7 +115,7 @@ package body Program.Nodes.Aspect_Specifications is
    end Visit;
 
    overriding function To_Aspect_Specification_Text
-    (Self : aliased in out Aspect_Specification)
+    (Self : in out Aspect_Specification)
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Text_Access is
    begin
@@ -124,7 +123,7 @@ package body Program.Nodes.Aspect_Specifications is
    end To_Aspect_Specification_Text;
 
    overriding function To_Aspect_Specification_Text
-    (Self : aliased in out Implicit_Aspect_Specification)
+    (Self : in out Implicit_Aspect_Specification)
       return Program.Elements.Aspect_Specifications
           .Aspect_Specification_Text_Access is
       pragma Unreferenced (Self);

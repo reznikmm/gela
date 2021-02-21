@@ -314,7 +314,7 @@ package body Program.Nodes.Proxy_Calls is
    ----------------------------
 
    overriding function To_Call_Statement_Text
-    (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Call_Statements.Call_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
@@ -325,9 +325,9 @@ package body Program.Nodes.Proxy_Calls is
    -------------------------------------
 
    overriding function To_Discriminant_Constraint_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Discriminant_Constraints
-        .Discriminant_Constraint_Text_Access is
+     .Discriminant_Constraint_Text_Access is
    begin
       return Self.Text'Unchecked_Access;
    end To_Discriminant_Constraint_Text;
@@ -336,8 +336,8 @@ package body Program.Nodes.Proxy_Calls is
    -- To_Function_Call_Text --
    ---------------------------
 
-   overriding function To_Function_Call_Text (Self : aliased in out Proxy_Call)
-      return Program.Elements.Function_Calls.Function_Call_Text_Access is
+   overriding function To_Function_Call_Text (Self : in out Proxy_Call)
+     return Program.Elements.Function_Calls.Function_Call_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Function_Call_Text;
@@ -347,7 +347,7 @@ package body Program.Nodes.Proxy_Calls is
    ------------------------------
 
    overriding function To_Index_Constraint_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Index_Constraints.Index_Constraint_Text_Access is
    begin
       return Self.Text'Unchecked_Access;
@@ -358,7 +358,7 @@ package body Program.Nodes.Proxy_Calls is
    ------------------------------
 
    overriding function To_Record_Aggregate_Text
-     (Self : aliased in out Proxy_Call)
+     (Self : in out Proxy_Call)
       return Program.Elements.Record_Aggregates.Record_Aggregate_Text_Access is
    begin
       return Self.Text'Unchecked_Access;

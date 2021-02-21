@@ -176,8 +176,7 @@ package body Program.Nodes.Task_Type_Declarations is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Task_Type_Declaration'Class) is
+   procedure Initialize (Self : in out Base_Task_Type_Declaration'Class) is
    begin
       Set_Enclosing_Element (Self.Name, Self'Unchecked_Access);
       if Self.Discriminant_Part.Assigned then
@@ -217,7 +216,7 @@ package body Program.Nodes.Task_Type_Declarations is
    end Visit;
 
    overriding function To_Task_Type_Declaration_Text
-    (Self : aliased in out Task_Type_Declaration)
+    (Self : in out Task_Type_Declaration)
       return Program.Elements.Task_Type_Declarations
           .Task_Type_Declaration_Text_Access is
    begin
@@ -225,7 +224,7 @@ package body Program.Nodes.Task_Type_Declarations is
    end To_Task_Type_Declaration_Text;
 
    overriding function To_Task_Type_Declaration_Text
-    (Self : aliased in out Implicit_Task_Type_Declaration)
+    (Self : in out Implicit_Task_Type_Declaration)
       return Program.Elements.Task_Type_Declarations
           .Task_Type_Declaration_Text_Access is
       pragma Unreferenced (Self);

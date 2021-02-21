@@ -54,8 +54,7 @@ private
         Upper_Bound : not null Program.Elements.Expressions.Expression_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Simple_Expression_Range'Class);
+   procedure Initialize (Self : in out Base_Simple_Expression_Range'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Simple_Expression_Range;
@@ -91,7 +90,7 @@ private
      end record;
 
    overriding function To_Simple_Expression_Range_Text
-    (Self : aliased in out Simple_Expression_Range)
+    (Self : in out Simple_Expression_Range)
       return Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Text_Access;
 
@@ -108,7 +107,7 @@ private
      end record;
 
    overriding function To_Simple_Expression_Range_Text
-    (Self : aliased in out Implicit_Simple_Expression_Range)
+    (Self : in out Implicit_Simple_Expression_Range)
       return Program.Elements.Simple_Expression_Ranges
           .Simple_Expression_Range_Text_Access;
 

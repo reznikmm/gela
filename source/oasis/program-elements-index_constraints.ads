@@ -28,7 +28,7 @@ package Program.Elements.Index_Constraints is
      with Storage_Size => 0;
 
    not overriding function To_Index_Constraint_Text
-    (Self : aliased in out Index_Constraint)
+    (Self : in out Index_Constraint)
       return Index_Constraint_Text_Access is abstract;
 
    not overriding function Left_Bracket_Token

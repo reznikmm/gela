@@ -82,7 +82,7 @@ package body Program.Nodes.Array_Aggregates is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Array_Aggregate'Class) is
+   procedure Initialize (Self : in out Base_Array_Aggregate'Class) is
    begin
       for Item in Self.Components.Each_Element loop
          Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
@@ -114,14 +114,14 @@ package body Program.Nodes.Array_Aggregates is
    end Visit;
 
    overriding function To_Array_Aggregate_Text
-    (Self : aliased in out Array_Aggregate)
+    (Self : in out Array_Aggregate)
       return Program.Elements.Array_Aggregates.Array_Aggregate_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Array_Aggregate_Text;
 
    overriding function To_Array_Aggregate_Text
-    (Self : aliased in out Implicit_Array_Aggregate)
+    (Self : in out Implicit_Array_Aggregate)
       return Program.Elements.Array_Aggregates.Array_Aggregate_Text_Access is
       pragma Unreferenced (Self);
    begin

@@ -104,8 +104,7 @@ package body Program.Nodes.Extension_Aggregates is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize
-    (Self : aliased in out Base_Extension_Aggregate'Class) is
+   procedure Initialize (Self : in out Base_Extension_Aggregate'Class) is
    begin
       Set_Enclosing_Element (Self.Ancestor, Self'Unchecked_Access);
       for Item in Self.Components.Each_Element loop
@@ -138,7 +137,7 @@ package body Program.Nodes.Extension_Aggregates is
    end Visit;
 
    overriding function To_Extension_Aggregate_Text
-    (Self : aliased in out Extension_Aggregate)
+    (Self : in out Extension_Aggregate)
       return Program.Elements.Extension_Aggregates
           .Extension_Aggregate_Text_Access is
    begin
@@ -146,7 +145,7 @@ package body Program.Nodes.Extension_Aggregates is
    end To_Extension_Aggregate_Text;
 
    overriding function To_Extension_Aggregate_Text
-    (Self : aliased in out Implicit_Extension_Aggregate)
+    (Self : in out Implicit_Extension_Aggregate)
       return Program.Elements.Extension_Aggregates
           .Extension_Aggregate_Text_Access is
       pragma Unreferenced (Self);

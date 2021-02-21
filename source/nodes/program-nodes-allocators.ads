@@ -59,7 +59,7 @@ private
           .Qualified_Expression_Access;
      end record;
 
-   procedure Initialize (Self : aliased in out Base_Allocator'Class);
+   procedure Initialize (Self : in out Base_Allocator'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Allocator;
@@ -92,7 +92,7 @@ private
      end record;
 
    overriding function To_Allocator_Text
-    (Self : aliased in out Allocator)
+    (Self : in out Allocator)
       return Program.Elements.Allocators.Allocator_Text_Access;
 
    overriding function New_Token
@@ -116,7 +116,7 @@ private
      end record;
 
    overriding function To_Allocator_Text
-    (Self : aliased in out Implicit_Allocator)
+    (Self : in out Implicit_Allocator)
       return Program.Elements.Allocators.Allocator_Text_Access;
 
    overriding function Is_Part_Of_Implicit

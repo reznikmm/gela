@@ -25,7 +25,7 @@ package Program.Elements.Numeric_Literals is
      with Storage_Size => 0;
 
    not overriding function To_Numeric_Literal_Text
-    (Self : aliased in out Numeric_Literal)
+    (Self : in out Numeric_Literal)
       return Numeric_Literal_Text_Access is abstract;
 
    not overriding function Numeric_Literal_Token

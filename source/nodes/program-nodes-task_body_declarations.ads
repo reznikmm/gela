@@ -89,8 +89,7 @@ private
         End_Name           : Program.Elements.Identifiers.Identifier_Access;
      end record;
 
-   procedure Initialize
-    (Self : aliased in out Base_Task_Body_Declaration'Class);
+   procedure Initialize (Self : in out Base_Task_Body_Declaration'Class);
 
    overriding procedure Visit
     (Self    : not null access Base_Task_Body_Declaration;
@@ -152,7 +151,7 @@ private
      end record;
 
    overriding function To_Task_Body_Declaration_Text
-    (Self : aliased in out Task_Body_Declaration)
+    (Self : in out Task_Body_Declaration)
       return Program.Elements.Task_Body_Declarations
           .Task_Body_Declaration_Text_Access;
 
@@ -197,7 +196,7 @@ private
      end record;
 
    overriding function To_Task_Body_Declaration_Text
-    (Self : aliased in out Implicit_Task_Body_Declaration)
+    (Self : in out Implicit_Task_Body_Declaration)
       return Program.Elements.Task_Body_Declarations
           .Task_Body_Declaration_Text_Access;
 

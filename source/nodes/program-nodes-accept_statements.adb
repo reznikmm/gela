@@ -207,7 +207,7 @@ package body Program.Nodes.Accept_Statements is
       return Self.Is_Part_Of_Instance;
    end Is_Part_Of_Instance;
 
-   procedure Initialize (Self : aliased in out Base_Accept_Statement'Class) is
+   procedure Initialize (Self : in out Base_Accept_Statement'Class) is
    begin
       Set_Enclosing_Element (Self.Entry_Name, Self'Unchecked_Access);
       if Self.Entry_Index.Assigned then
@@ -253,14 +253,14 @@ package body Program.Nodes.Accept_Statements is
    end Visit;
 
    overriding function To_Accept_Statement_Text
-    (Self : aliased in out Accept_Statement)
+    (Self : in out Accept_Statement)
       return Program.Elements.Accept_Statements.Accept_Statement_Text_Access is
    begin
       return Self'Unchecked_Access;
    end To_Accept_Statement_Text;
 
    overriding function To_Accept_Statement_Text
-    (Self : aliased in out Implicit_Accept_Statement)
+    (Self : in out Implicit_Accept_Statement)
       return Program.Elements.Accept_Statements.Accept_Statement_Text_Access is
       pragma Unreferenced (Self);
    begin

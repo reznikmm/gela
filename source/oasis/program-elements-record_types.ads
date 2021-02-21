@@ -28,7 +28,7 @@ package Program.Elements.Record_Types is
      with Storage_Size => 0;
 
    not overriding function To_Record_Type_Text
-    (Self : aliased in out Record_Type)
+    (Self : in out Record_Type)
       return Record_Type_Text_Access is abstract;
 
    not overriding function Abstract_Token
