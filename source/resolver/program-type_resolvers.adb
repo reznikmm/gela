@@ -1,12 +1,14 @@
---  SPDX-FileCopyrightText: 2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2020-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
 with Program.Elements.Constraints;
 with Program.Elements.Defining_Names;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Identifiers;
 with Program.Elements.Subtype_Indications;
+with Program.Complete_Contexts;
 with Program.Node_Symbols;
 with Program.Nodes.Proxy_Calls;
 with Program.Safe_Element_Visitors;
@@ -17,7 +19,8 @@ package body Program.Type_Resolvers is
    type Visitor
      (Env    : not null Program.Visibility.Context_Access;
       Setter : not null
-        Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access)
+        Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access;
+      Sets   : not null Program.Interpretations.Context_Access)
           is new Program.Safe_Element_Visitors.Safe_Element_Visitor
    with record
       Has_View : Boolean := False;
@@ -65,9 +68,10 @@ package body Program.Type_Resolvers is
       Context : not null Program.Visibility.Context_Access;
       Setter  : not null Program.Cross_Reference_Updaters
         .Cross_Reference_Updater_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
       Value : out Program.Visibility.View)
    is
-      V : Visitor (Context, Setter);
+      V : Visitor (Context, Setter, Sets);
    begin
       V.Visit (Element);
       Value := V.View;
@@ -82,9 +86,10 @@ package body Program.Type_Resolvers is
       Context : not null Program.Visibility.Context_Access;
       Setter  : not null
         Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
       Value   : out Program.Visibility.View)
    is
-      V : Visitor (Context, Setter);
+      V : Visitor (Context, Setter, Sets);
    begin
       V.Visit (Element);
       Value := V.View;
@@ -104,13 +109,41 @@ package body Program.Type_Resolvers is
    begin
       Self.Visit (Element.Subtype_Mark);
 
-      if Constr.Assigned
-        and then Self.View.Kind in Program.Visibility.Array_Type_View
-        and then Constr.Is_Discriminant_Constraint
-        and then Constr.all in Program.Nodes.Proxy_Calls.Proxy_Call'Class
-      then
-         Program.Nodes.Proxy_Calls.Proxy_Call'Class (Constr.all)
-           .Turn_To_Index_Constraint;
+      if not Constr.Assigned then
+         return;
+      end if;
+
+      if Self.View.Kind in Program.Visibility.Array_Type_View then
+         if Constr.Is_Discriminant_Constraint
+           and then Constr.all in Program.Nodes.Proxy_Calls.Proxy_Call'Class
+         then
+            --  Fix parser assumption for `F(X)` to make it index constraint
+            Program.Nodes.Proxy_Calls.Proxy_Call'Class (Constr.all)
+              .Turn_To_Index_Constraint;
+         end if;
+
+         --  ARM:3.6.1(4): each discrete_range shall resolve to be of the type
+         --  of the corresponding index.
+
+         declare
+            List : constant Program.Visibility.View_Array :=
+              Program.Visibility.Indexes (Self.View);
+
+            Args : constant Program.Elements.Discrete_Ranges
+                             .Discrete_Range_Vector_Access :=
+                                Constr.To_Index_Constraint.Ranges;
+         begin
+            pragma Assert (List'Length = Args.Length);
+
+            for J in Args.Each_Element loop
+               Program.Complete_Contexts.Resolve_To_Expected_Type
+                 (Sets    => Self.Sets,
+                  Setter  => Self.Setter,
+                  Expect  => Program.Visibility.First_Subtype (List (J.Index)),
+                  Element => J.Element);
+            end loop;
+         end;
+
       end if;
    end Subtype_Indication;
 

@@ -364,10 +364,10 @@ package body Program.Resolvers is
          Element : not null Program.Elements.Call_Statements
            .Call_Statement_Access)
       is
-         Context : aliased Program.Interpretations.Context (Self.Env);
+         Sets : aliased Program.Interpretations.Context (Self.Env);
       begin
          Program.Complete_Contexts.Call_Statement
-           (Context'Unchecked_Access, Self.Setter, Element);
+           (Sets'Unchecked_Access, Self.Setter, Element);
       end Call_Statement;
 
       ------------------------
@@ -380,6 +380,8 @@ package body Program.Resolvers is
            .Object_Declaration_Access)
       is
          Type_View : Program.Visibility.View;
+
+         Sets : aliased Program.Interpretations.Context (Self.Env);
 
          Names : constant Program.Elements.Defining_Identifiers
            .Defining_Identifier_Vector_Access := Element.Names;
@@ -397,6 +399,7 @@ package body Program.Resolvers is
                  (Program.Elements.Element_Access (Element.Object_Subtype),
                   Self.Env,
                   Self.Setter,
+                  Sets'Unchecked_Access,
                   Type_View);
 
                Self.Env.Leave_Declarative_Region;
@@ -449,6 +452,8 @@ package body Program.Resolvers is
          Element : not null Program.Elements.Parameter_Specifications
          .Parameter_Specification_Access)
       is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+
          Modes : constant array (Boolean, Boolean) of
            Program.Visibility.Parameter_Mode :=
              (False =>
@@ -482,6 +487,7 @@ package body Program.Resolvers is
                  (Element.Parameter_Subtype,
                   Self.Env,
                   Self.Setter,
+                  Sets'Unchecked_Access,
                   Type_View);
 
                Self.Env.Leave_Declarative_Region;
@@ -571,6 +577,8 @@ package body Program.Resolvers is
          Element : not null Program.Elements.Subtype_Declarations
            .Subtype_Declaration_Access)
       is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+
          Subtype_Name : constant
            Program.Elements.Defining_Names.Defining_Name_Access :=
              Element.Name.To_Defining_Name;
@@ -584,6 +592,7 @@ package body Program.Resolvers is
            (Element.Subtype_Indication.Subtype_Mark,
             Self.Env,
             Self.Setter,
+            Sets'Unchecked_Access,
             Type_View);
 
          Self.Env.Create_Subtype

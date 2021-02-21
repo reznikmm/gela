@@ -3,17 +3,18 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Elements.Discrete_Simple_Expression_Ranges;
 with Program.Elements.Identifiers;
+with Program.Elements.Infix_Operators;
+with Program.Elements.Numeric_Literals;
+with Program.Elements.Operator_Symbols;
 with Program.Elements.Parameter_Associations;
 with Program.Elements.String_Literals;
-with Program.Elements.Infix_Operators;
-with Program.Elements.Operator_Symbols;
 with Program.Interpretations.Expressions;
 with Program.Interpretations.Names;
 with Program.Node_Symbols;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
-with Program.Visibility;
 
 package body Program.Complete_Contexts is
 
@@ -44,6 +45,7 @@ package body Program.Complete_Contexts is
    --  Down and call Callback (Down).
 
    package Up_Visitors is
+
       type Visitor
         (Sets : not null Program.Interpretations.Context_Access)
       is new
@@ -51,6 +53,11 @@ package body Program.Complete_Contexts is
       with record
          Result : Program.Interpretations.Interpretation_Set;
       end record;
+
+      overriding procedure Discrete_Simple_Expression_Range
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+           .Discrete_Simple_Expression_Range_Access);
 
       overriding procedure Identifier
         (Self    : in out Visitor;
@@ -60,6 +67,11 @@ package body Program.Complete_Contexts is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Infix_Operators
            .Infix_Operator_Access);
+
+      overriding procedure Numeric_Literal
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Numeric_Literals
+           .Numeric_Literal_Access);
 
       overriding procedure Operator_Symbol
         (Self    : in out Visitor;
@@ -79,6 +91,31 @@ package body Program.Complete_Contexts is
    end Up_Visitors;
 
    package body Up_Visitors is
+
+      overriding procedure Discrete_Simple_Expression_Range
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+           .Discrete_Simple_Expression_Range_Access)
+      is
+         use type Program.Interpretations.Expressions.Cursor;
+
+         Left  : constant Program.Interpretations.Interpretation_Set :=
+           Up (Element.Lower_Bound, Self.Sets);
+         Right : constant Program.Interpretations.Interpretation_Set :=
+           Up (Element.Upper_Bound, Self.Sets);
+      begin
+         Self.Result := Self.Sets.Create_Interpretation_Set;
+
+         for N in Program.Interpretations.Expressions.Each (Left) loop
+            for K in Program.Interpretations.Expressions.Each_Of_Type
+              (Right, +N)
+            loop
+               Self.Result.Add_Expression
+                 (+N,  --  FIXME: choose between +N, +K to avoid universal_int
+                  (1 => -N, 2 => -K));
+            end loop;
+         end loop;
+      end Discrete_Simple_Expression_Range;
 
       overriding procedure Identifier
         (Self    : in out Visitor;
@@ -140,6 +177,27 @@ package body Program.Complete_Contexts is
          end loop;
       end Infix_Operator;
 
+      overriding procedure Numeric_Literal
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Numeric_Literals
+           .Numeric_Literal_Access)
+      is
+         pragma Unreferenced (Element);
+         use type Program.Visibility.View_Cursor;
+      begin
+         Self.Result := Self.Sets.Create_Interpretation_Set;
+
+         for Std in Self.Sets.Env.Immediate_Visible
+                      (Program.Symbols.Standard)
+         loop
+            for Str in Program.Visibility.Immediate_Visible
+              (+Std, Program.Symbols.Integer)
+            loop
+               Self.Result.Add_Expression (+Str);
+            end loop;
+         end loop;
+      end Numeric_Literal;
+
       overriding procedure Operator_Symbol
         (Self    : in out Visitor;
          Element : not null Program.Elements.Operator_Symbols
@@ -196,6 +254,11 @@ package body Program.Complete_Contexts is
          Solution : Program.Interpretations.Solution;
       end record;
 
+      overriding procedure Discrete_Simple_Expression_Range
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+           .Discrete_Simple_Expression_Range_Access);
+
       overriding procedure Identifier
         (Self    : in out Visitor;
          Element : not null Program.Elements.Identifiers.Identifier_Access);
@@ -204,6 +267,11 @@ package body Program.Complete_Contexts is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Infix_Operators
                               .Infix_Operator_Access);
+
+      overriding procedure Numeric_Literal
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Numeric_Literals
+           .Numeric_Literal_Access);
 
       overriding procedure Operator_Symbol
         (Self    : in out Visitor;
@@ -223,6 +291,15 @@ package body Program.Complete_Contexts is
    end Down_Visitors;
 
    package body Down_Visitors is
+
+      overriding procedure Discrete_Simple_Expression_Range
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+           .Discrete_Simple_Expression_Range_Access) is
+      begin
+         Down (Element.Lower_Bound, Self.Solution.Tuple (1), Self.Setter);
+         Down (Element.Upper_Bound, Self.Solution.Tuple (2), Self.Setter);
+      end Discrete_Simple_Expression_Range;
 
       ----------------
       -- Identifier --
@@ -251,6 +328,14 @@ package body Program.Complete_Contexts is
          Down (Element.Left,     Self.Solution.Tuple (1), Self.Setter);
          Down (Element.Right,    Self.Solution.Tuple (2), Self.Setter);
       end Infix_Operator;
+
+      overriding procedure Numeric_Literal
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Numeric_Literals
+           .Numeric_Literal_Access) is
+      begin
+         null;
+      end Numeric_Literal;
 
       overriding procedure Operator_Symbol
         (Self    : in out Visitor;
@@ -394,6 +479,38 @@ package body Program.Complete_Contexts is
            (Arguments, Parameters, Callback, Down, Index + 1);
       end loop;
    end Resolve_Parameters;
+
+   ------------------------------
+   -- Resolve_To_Expected_Type --
+   ------------------------------
+
+   procedure Resolve_To_Expected_Type
+     (Sets    : not null Program.Interpretations.Context_Access;
+      Setter  : not null Program.Cross_Reference_Updaters
+                           .Cross_Reference_Updater_Access;
+      Expect  : Program.Visibility.View;
+      Element : not null Program.Elements.Element_Access)
+   is
+      use type Program.Interpretations.Expressions.Cursor;
+
+      Set : constant Program.Interpretations.Interpretation_Set :=
+        Up (Element.all'Unchecked_Access, Sets);
+
+      Found : Program.Interpretations.Solution;
+      Count : Natural := 0;
+
+   begin
+      for N in Program.Interpretations.Expressions.Each_Of_Type
+        (Set, Expect)
+      loop
+         Count := Count + 1;
+         Found := -N;
+      end loop;
+
+      if Count > 0 then
+         Down (Element.all'Unchecked_Access, Found, Setter);
+      end if;
+   end Resolve_To_Expected_Type;
 
    --------
    -- Up --
