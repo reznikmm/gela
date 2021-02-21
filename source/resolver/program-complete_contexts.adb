@@ -286,7 +286,7 @@ package body Program.Complete_Contexts is
          case Self.Solution.Kind is
             when Program.Interpretations.Defining_Name_Solution =>
                Self.Setter.Set_Corresponding_Defining_Name
-                 (Element.all'Unchecked_Access,
+                 (Element.To_Element,
                   Program.Visibility.Name (Self.Solution.Name_View));
             when others =>
                raise Program_Error;
@@ -319,7 +319,7 @@ package body Program.Complete_Contexts is
          case Self.Solution.Kind is
             when Program.Interpretations.Defining_Name_Solution =>
                Self.Setter.Set_Corresponding_Defining_Name
-                 (Element.all'Unchecked_Access,
+                 (Element.To_Element,
                   Program.Visibility.Name (Self.Solution.Name_View));
             when others =>
                raise Program_Error;
@@ -405,7 +405,7 @@ package body Program.Complete_Contexts is
       use type Program.Interpretations.Expressions.Cursor;
 
       Set : constant Program.Interpretations.Interpretation_Set :=
-        Up (Element.all'Unchecked_Access, Sets);
+        Up (Element.To_Element, Sets);
 
       Found : Program.Interpretations.Solution;
       Count : Natural := 0;
@@ -418,7 +418,7 @@ package body Program.Complete_Contexts is
       end loop;
 
       if Count > 0 then
-         Down (Element.all'Unchecked_Access, Found, Setter);
+         Down (Element.To_Element, Found, Setter);
       end if;
    end Resolve_To_Any_Type;
 
@@ -450,7 +450,7 @@ package body Program.Complete_Contexts is
       end loop;
 
       if Count > 0 then
-         Down (Element.all'Unchecked_Access, Found, Setter);
+         Down (Element.To_Element, Found, Setter);
       end if;
    end Resolve_To_Expected_Type;
 

@@ -25,7 +25,7 @@ package body Program.Complete_Contexts.Assignment_Statements is
          Result  => View);
 
       Resolve_To_Expected_Type
-        (Element => Element.Expression.all'Unchecked_Access,
+        (Element => Element.Expression.To_Element,
          Sets    => Sets,
          Setter  => Setter,
          Expect  => View);

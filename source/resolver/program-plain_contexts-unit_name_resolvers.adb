@@ -34,7 +34,7 @@ package body Program.Plain_Contexts.Unit_Name_Resolvers is
       Element : not null Program.Elements.Defining_Identifiers
         .Defining_Identifier_Access) is
    begin
-      Self.Value := Element.all'Unchecked_Access;
+      Self.Value := Element.To_Defining_Name;
    end Defining_Identifier;
 
    -------------------------
@@ -78,7 +78,7 @@ package body Program.Plain_Contexts.Unit_Name_Resolvers is
       Unit.Unit_Declaration.Visit (V);
 
       Setter.Set_Corresponding_Defining_Name
-        (Name.all'Unchecked_Access, V.Value);
+        (Name.To_Element, V.Value);
    end Resolve_Identifier;
 
 end Program.Plain_Contexts.Unit_Name_Resolvers;

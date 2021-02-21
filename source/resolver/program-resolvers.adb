@@ -418,7 +418,7 @@ package body Program.Resolvers is
                   Name.Element.To_Defining_Name);
 
                Program.Type_Resolvers.Resolve_Type_Definition
-                 (Program.Elements.Element_Access (Element.Object_Subtype),
+                 (Element.Object_Subtype.To_Element,
                   Self.Env,
                   Self.Setter,
                   Sets'Unchecked_Access,
