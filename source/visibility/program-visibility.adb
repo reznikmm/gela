@@ -1149,7 +1149,7 @@ package body Program.Visibility is
          end if;
       end loop;
 
-      Cursor := (Cursor.Region, Entity => 0, others => <>);
+      Cursor.Entity := 0;
    end Step;
 
    --------------
