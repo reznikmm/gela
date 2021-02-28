@@ -21,11 +21,14 @@ all:
 	# .objs/ada-larl/ada_larl source/parser/ada-lalr.ag > /tmp/aaa
 	# gnatchop -w /tmp/aaa source/parser/
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis.gpr
+	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis_plain.gpr \
+	  -u program-parsers-data.adb -cargs -O0
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/oasis_plain.gpr
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/examples.gpr
 
 install:
 	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/oasis.gpr
+	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/oasis_plain.gpr
 clean:
 	gprclean -q -P gnat/oasis.gpr
 
