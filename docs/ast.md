@@ -1598,9 +1598,9 @@
 
 ### Record_Type
 > _[Type_Definition]_
- - Abstract_Token                : Token
- - Tagged_Token                  : Token
- - Limited_Token                 : Token
+ - Abstract_Token                : Token?
+ - Tagged_Token                  : Token?
+ - Limited_Token                 : Token?
  - Record_Definition             : _[Definition]_
 
 ### Interface_Type
