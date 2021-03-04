@@ -174,7 +174,6 @@
  - Object_Subtype             : _[Element]_ {[Identifier],[Selected_Component],[Attribute_Reference]}
  - Assignment_Token           : Token?
  - Default_Expression         : _[Expression]_?
- - Semicolon_Token            : Token
  - Has_Not_Null               : Boolean
 
 ### Component_Declaration
