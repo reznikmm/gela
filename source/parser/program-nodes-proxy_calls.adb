@@ -389,7 +389,7 @@ package body Program.Nodes.Proxy_Calls is
      (Self        : in out Proxy_Call'Class;
       Called_Name : not null Program.Elements.Expressions.Expression_Access) is
    begin
-      Self.Current := A_Call_Statement;
+      Self.Current := A_Function_Call;
       Self.Called_Name := Called_Name;
 
       for Item in Self.Components.Each_Element loop

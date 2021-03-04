@@ -3,7 +3,9 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Discrete_Simple_Expression_Ranges;
+with Program.Elements.Function_Calls;
 with Program.Elements.Identifiers;
 with Program.Elements.Infix_Operators;
 with Program.Elements.Numeric_Literals;
@@ -28,10 +30,22 @@ package body Program.Complete_Contexts is
          Result : Program.Interpretations.Interpretation_Set;
       end record;
 
+      procedure Call_Up
+        (Self   : in out Visitor'Class;
+         Prefix : not null Program.Elements.Element_Access;
+         Arg    : Program.Element_Vectors.Iterators.Forward_Iterator'Class;
+         Arity  : Positive);
+      --  Common procedure from Infix_Operator and Function_Call
+
       overriding procedure Discrete_Simple_Expression_Range
         (Self    : in out Visitor;
          Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
            .Discrete_Simple_Expression_Range_Access);
+
+      overriding procedure Function_Call
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Calls
+           .Function_Call_Access);
 
       overriding procedure Identifier
         (Self    : in out Visitor;
@@ -66,62 +80,24 @@ package body Program.Complete_Contexts is
 
    package body Up_Visitors is
 
-      overriding procedure Discrete_Simple_Expression_Range
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
-           .Discrete_Simple_Expression_Range_Access)
-      is
-         use type Program.Interpretations.Expressions.Cursor;
-
-         Left  : constant Program.Interpretations.Interpretation_Set :=
-           Up (Element.Lower_Bound, Self.Sets);
-         Right : constant Program.Interpretations.Interpretation_Set :=
-           Up (Element.Upper_Bound, Self.Sets);
-      begin
-         Self.Result := Self.Sets.Create_Interpretation_Set;
-
-         for N in Program.Interpretations.Expressions.Each (Left) loop
-            for K in Program.Interpretations.Expressions.Each_Of_Type
-              (Right, +N)
-            loop
-               Self.Result.Add_Expression
-                 (+N,  --  FIXME: choose between +N, +K to avoid universal_int
-                  (1 => -N, 2 => -K));
-            end loop;
-         end loop;
-      end Discrete_Simple_Expression_Range;
-
-      overriding procedure Identifier
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Identifiers.Identifier_Access)
-      is
-         Symbol : constant Program.Symbols.Symbol :=
-           Program.Node_Symbols.Get_Symbol (Element);
-      begin
-         Self.Result := Self.Sets.Create_Interpretation_Set;
-         Self.Result.Add_Symbol (Symbol);
-      end Identifier;
-
-      overriding procedure Infix_Operator
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Infix_Operators
-         .Infix_Operator_Access)
+      procedure Call_Up
+        (Self   : in out Visitor'Class;
+         Prefix : not null Program.Elements.Element_Access;
+         Arg    : Program.Element_Vectors.Iterators.Forward_Iterator'Class;
+         Arity  : Positive)
       is
          use type Program.Interpretations.Names.Cursor;
          use all type Program.Visibility.View_Kind;
-         Arity : constant Positive := 1 + Boolean'Pos (Element.Left.Assigned);
          Name  : Program.Interpretations.Interpretation_Set;
          Args  : Program.Interpretations.Interpretation_Set_Array (1 .. Arity);
          Down  : Program.Interpretations.Solution_Array (0 .. Arity);
       begin
          Self.Result := Self.Sets.Create_Interpretation_Set;
-         Name := Up (Element.Operator, Self.Sets);
+         Name := Up (Prefix, Self.Sets);
 
-         if Element.Left.Assigned then
-            Args (1) := Up (Element.Left, Self.Sets);
-         end if;
-
-         Args (Args'Last) := Up (Element.Right, Self.Sets);
+         for J in Arg loop
+            Args (J.Index) := Up (J.Element, Self.Sets);
+         end loop;
 
          for N in Program.Interpretations.Names.Each (Name) loop
             declare
@@ -149,6 +125,77 @@ package body Program.Complete_Contexts is
                end if;
             end;
          end loop;
+      end Call_Up;
+
+      overriding procedure Discrete_Simple_Expression_Range
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
+           .Discrete_Simple_Expression_Range_Access)
+      is
+         use type Program.Interpretations.Expressions.Cursor;
+
+         Left  : constant Program.Interpretations.Interpretation_Set :=
+           Up (Element.Lower_Bound, Self.Sets);
+         Right : constant Program.Interpretations.Interpretation_Set :=
+           Up (Element.Upper_Bound, Self.Sets);
+      begin
+         Self.Result := Self.Sets.Create_Interpretation_Set;
+
+         for N in Program.Interpretations.Expressions.Each (Left) loop
+            for K in Program.Interpretations.Expressions.Each_Of_Type
+              (Right, +N)
+            loop
+               Self.Result.Add_Expression
+                 (+N,  --  FIXME: choose between +N, +K to avoid universal_int
+                  (1 => -N, 2 => -K));
+            end loop;
+         end loop;
+      end Discrete_Simple_Expression_Range;
+
+      overriding procedure Function_Call
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Calls
+           .Function_Call_Access) is
+      begin
+         Self.Call_Up
+           (Prefix => Element.Prefix.To_Element,
+            Arg    => Element.Parameters.Each_Element,
+            Arity  => Element.Parameters.Length);
+         null;
+      end Function_Call;
+
+      overriding procedure Identifier
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Identifiers.Identifier_Access)
+      is
+         Symbol : constant Program.Symbols.Symbol :=
+           Program.Node_Symbols.Get_Symbol (Element);
+      begin
+         Self.Result := Self.Sets.Create_Interpretation_Set;
+         Self.Result.Add_Symbol (Symbol);
+      end Identifier;
+
+      overriding procedure Infix_Operator
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Infix_Operators
+           .Infix_Operator_Access)
+      is
+         Arity : constant Positive := 1 + Boolean'Pos (Element.Left.Assigned);
+      begin
+         if Arity = 1 then
+            Self.Call_Up
+              (Prefix => Element.Operator.To_Element,
+               Arg    => Program.Element_Vectors.Single_Element
+                 (Element.Right.To_Element),
+               Arity  => Arity);
+         else
+            Self.Call_Up
+              (Prefix => Element.Operator.To_Element,
+               Arg    => Program.Element_Vectors.Two_Elements
+                 (Element.Left.To_Element,
+                  Element.Right.To_Element),
+               Arity  => Arity);
+         end if;
       end Infix_Operator;
 
       overriding procedure Numeric_Literal
@@ -233,6 +280,11 @@ package body Program.Complete_Contexts is
          Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
            .Discrete_Simple_Expression_Range_Access);
 
+      overriding procedure Function_Call
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Calls
+           .Function_Call_Access);
+
       overriding procedure Identifier
         (Self    : in out Visitor;
          Element : not null Program.Elements.Identifiers.Identifier_Access);
@@ -274,6 +326,19 @@ package body Program.Complete_Contexts is
          Down (Element.Lower_Bound, Self.Solution.Tuple (1), Self.Setter);
          Down (Element.Upper_Bound, Self.Solution.Tuple (2), Self.Setter);
       end Discrete_Simple_Expression_Range;
+
+      overriding procedure Function_Call
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Calls
+           .Function_Call_Access)
+      is
+      begin
+         Down (Element.Prefix, Self.Solution.Tuple (0), Self.Setter);
+
+         for J in Element.Parameters.Each_Element loop
+            Down (J.Element, Self.Solution.Tuple (J.Index), Self.Setter);
+         end loop;
+      end Function_Call;
 
       ----------------
       -- Identifier --
