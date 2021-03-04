@@ -17,7 +17,8 @@ package Program.Complete_Contexts is
       Sets    : not null Program.Interpretations.Context_Access;
       Setter  : not null Program.Cross_Reference_Updaters
                            .Cross_Reference_Updater_Access;
-      Expect  : Program.Visibility.View);
+      Expect  : Program.Visibility.View)
+        with Pre => Expect.Kind in Program.Visibility.Type_View_Kind;
 
    procedure Resolve_To_Any_Type
      (Element : not null Program.Elements.Expressions.Expression_Access;

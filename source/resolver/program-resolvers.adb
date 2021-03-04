@@ -13,6 +13,7 @@ with Program.Elements.Assignment_Statements;
 with Program.Elements.Call_Statements;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
+with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
 with Program.Elements.Object_Declarations;
 with Program.Elements.Package_Declarations;
@@ -71,6 +72,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Call_Statements
            .Call_Statement_Access);
+
+      overriding procedure Function_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Declarations
+           .Function_Declaration_Access);
 
       overriding procedure Object_Declaration
         (Self    : in out Visitor;
@@ -430,7 +436,7 @@ package body Program.Resolvers is
                        (Element.Initialization_Expression),
                      Sets    => Sets'Unchecked_Access,
                      Setter  => Self.Setter,
-                     Expect  => Type_View);
+                     Expect  => Program.Visibility.First_Subtype (Type_View));
                end if;
 
                Self.Env.Leave_Declarative_Region;
@@ -566,6 +572,44 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Procedure_Body_Declaration;
+
+      overriding procedure Function_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Function_Declarations
+           .Function_Declaration_Access)
+      is
+         Name   : constant
+           Program.Elements.Defining_Names.Defining_Name_Access :=
+             Element.Name;
+         Symbol : constant Program.Symbols.Symbol :=
+           Program.Node_Symbols.Get_Symbol (Name);
+         Type_View : Program.Visibility.View;
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+      begin
+         Self.Env.Create_Function
+           (Symbol => Symbol,
+            Name   => Name);
+
+         Self.Append_Unit_Use_Clauses (Element.all'Access);
+
+         for Cursor in Element.Parameters.Each_Element loop
+            Cursor.Element.Visit (Self);
+         end loop;
+
+         for Aspect in Element.Aspects.Each_Element loop
+            Aspect.Element.Visit (Self);
+         end loop;
+
+         Program.Type_Resolvers.Resolve_Type_Definition
+           (Element.Result_Subtype,
+            Self.Env,
+            Self.Setter,
+            Sets'Unchecked_Access,
+            Type_View);
+
+         Self.Env.Set_Result_Type (Type_View);
+         Self.Env.Leave_Declarative_Region;
+      end Function_Declaration;
 
       ---------------------------
       -- Procedure_Declaration --
