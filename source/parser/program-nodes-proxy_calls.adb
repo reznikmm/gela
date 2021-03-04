@@ -17,6 +17,31 @@ package body Program.Nodes.Proxy_Calls is
       return Self.Called_Name;
    end Called_Name;
 
+   -------------------------------------
+   -- Can_Be_Parenthesized_Expression --
+   -------------------------------------
+
+   function Can_Be_Parenthesized_Expression
+     (Self : Proxy_Call'Class) return Boolean is
+   begin
+      for J in Self.Components.Each_Element loop
+         declare
+            Item : constant Program.Elements.Record_Component_Associations
+              .Record_Component_Association_Access :=
+                J.Element.To_Record_Component_Association;
+         begin
+            if Item.Choices.Length /= 0
+              or else not Item.Component_Value.Assigned
+              or else J.Index > 1
+            then
+               return False;
+            end if;
+         end;
+      end loop;
+
+      return Self.Components.Length = 1;
+   end Can_Be_Parenthesized_Expression;
+
    ----------------
    -- Components --
    ----------------
@@ -411,6 +436,17 @@ package body Program.Nodes.Proxy_Calls is
            (Item.Element).Turn_To_Discrete_Range;
       end loop;
    end Turn_To_Index_Constraint;
+
+   --------------------------------------
+   -- Turn_To_Parenthesized_Expression --
+   --------------------------------------
+
+   procedure Turn_To_Parenthesized_Expression
+     (Self : in out Proxy_Call'Class)
+   is
+   begin
+      raise Program_Error;
+   end Turn_To_Parenthesized_Expression;
 
    ----------------------------
    -- Turn_To_Procedure_Call --

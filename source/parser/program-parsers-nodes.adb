@@ -8,11 +8,13 @@ with Ada.Strings.Wide_Wide_Unbounded;
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
 with Program.Elements.Aspect_Specifications;
+with Program.Elements.Case_Paths;
 with Program.Elements.Component_Definitions;
 with Program.Elements.Constraints;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
+with Program.Elements.Discriminant_Specifications;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Exception_Handlers;
 with Program.Elements.Expressions;
@@ -25,6 +27,7 @@ with Program.Elements.Procedure_Body_Declarations;
 with Program.Elements.Real_Range_Specifications;
 with Program.Elements.Record_Component_Associations;
 with Program.Elements.Subtype_Indications;
+with Program.Elements.Variants;
 with Program.Nodes.Proxy_Associations;
 with Program.Nodes.Proxy_Calls;
 with Program.Safe_Element_Visitors;
@@ -160,11 +163,24 @@ package body Program.Parsers.Nodes is
       Create_Vector =>
          Program.Element_Vector_Factories.Create_Aspect_Specification_Vector);
 
+   function To_Case_Path_Vector is
+     new Generic_Vector_Cast
+       (Vector_Access => Program.Elements.Case_Paths.Case_Path_Vector_Access,
+        Create_Vector => Program.Element_Vector_Factories
+           .Create_Case_Path_Vector);
+
    function To_Defining_Identifier_Vector is new Generic_Vector_Cast
      (Vector_Access => Program.Elements
          .Defining_Identifiers.Defining_Identifier_Vector_Access,
       Create_Vector =>
          Program.Element_Vector_Factories.Create_Defining_Identifier_Vector);
+
+   function To_Discriminant_Specification_Vector is
+     new Generic_Vector_Cast
+       (Vector_Access => Program.Elements.Discriminant_Specifications
+           .Discriminant_Specification_Vector_Access,
+        Create_Vector => Program.Element_Vector_Factories
+           .Create_Discriminant_Specification_Vector);
 
    function To_Enumeration_Literal_Specification_Vector is
      new Generic_Vector_Cast
@@ -197,6 +213,12 @@ package body Program.Parsers.Nodes is
       Create_Vector => Program.Element_Vector_Factories.
         Create_Record_Component_Association_Vector);
    pragma Unreferenced (To_Record_Component_Association_Vector);
+
+   function To_Variant_Vector is new Generic_Vector_Cast
+     (Vector_Access => Program.Elements.Variants.
+        Variant_Vector_Access,
+      Create_Vector => Program.Element_Vector_Factories.
+        Create_Variant_Vector);
 
    function To_Element_Vector is new Generic_Vector_Cast
      (Vector_Access => Program.Element_Vectors.Element_Vector_Access,
@@ -879,8 +901,18 @@ package body Program.Parsers.Nodes is
       Arrow_Token : Node; Sequence_Of_Statements : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Case_Path unimplemented");
-      return raise Program_Error with "Unimplemented function Case_Path";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Case_Path
+             (When_Token  => When_Token.Token,
+              Choices     => To_Element_Vector
+                               (Variant_Choices.Vector'Unchecked_Access,
+                                Self.Subpool),
+              Arrow_Token => Arrow_Token.Token,
+              Statements  => To_Element_Vector
+                               (Sequence_Of_Statements.Vector'Unchecked_Access,
+                                Self.Subpool))));
    end Case_Path;
 
    ------------------------
@@ -900,9 +932,19 @@ package body Program.Parsers.Nodes is
       Endcase  : Node; Semicolon_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Case_Statement unimplemented");
-      return raise Program_Error with "Unimplemented function Case_Statement";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Case_Statement
+             (Case_Token           => Case_Token.Token,
+              Selecting_Expression => Case_Expression.Element.To_Expression,
+              Is_Token             => Is_Token.Token,
+              Paths                => To_Case_Path_Vector
+                (Case_Statement_Paths.Vector'Unchecked_Access,
+                 Self.Subpool),
+              End_Token            => End_Token.Token,
+              Case_Token_2         => Endcase.Token,
+              Semicolon_Token      => Semicolon_Token.Token)));
    end Case_Statement;
 
    -----------------------
@@ -1041,10 +1083,21 @@ package body Program.Parsers.Nodes is
       Semicolon_Token            : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Component_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Component_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Component_Declaration
+            (Names              => To_Defining_Identifier_Vector
+              (Names.Vector'Unchecked_Access, Self.Subpool),
+             Colon_Token        => Colon_Token.Token,
+             Object_Subtype     => Object_Declaration_Subtype.Element.
+                                     To_Component_Definition,
+             Assignment_Token   => Assignment_Token.Token,
+             Default_Expression => Initialization_Expression.Element.
+                                     To_Expression,
+             With_Token         => null,
+             Aspects            => null,
+             Semicolon_Token    => Semicolon_Token.Token)));
    end Component_Declaration;
 
    --------------------------
@@ -1341,10 +1394,19 @@ package body Program.Parsers.Nodes is
       Assignment_Token : Node; Initialization_Expression : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Discriminant_Specification unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Discriminant_Specification";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Discriminant_Specification
+            (Names              => To_Defining_Identifier_Vector
+              (Names.Vector'Unchecked_Access, Self.Subpool),
+             Colon_Token        => Colon_Token.Token,
+             Not_Token          => Not_Token.Token,
+             Null_Token         => Null_Token.Token,
+             Object_Subtype     => Object_Declaration_Subtype.Element,
+             Assignment_Token   => Assignment_Token.Token,
+             Default_Expression => Initialization_Expression.Element.
+                                            To_Expression)));
    end Discriminant_Specification;
 
    -----------------------------------------
@@ -1569,10 +1631,20 @@ package body Program.Parsers.Nodes is
       return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Exception_Handler unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Exception_Handler";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Exception_Handler
+             (When_Token       => When_Token.Token,
+              Choice_Parameter => Choice_Parameter_Specification.Element
+                                    .To_Choice_Parameter_Specification,
+              Choices          => To_Element_Vector
+                                   (Exception_Choices.Vector'Unchecked_Access,
+                                    Self.Subpool),
+              Arrow_Token      => Arrow_Token.Token,
+              Statements       => To_Element_Vector
+                                   (Handler_Statements.Vector'Unchecked_Access,
+                                    Self.Subpool))));
    end Exception_Handler;
 
    --------------------------------
@@ -2549,10 +2621,15 @@ package body Program.Parsers.Nodes is
       Discriminants : Node; Right_Parenthesis_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Known_Discriminant_Part unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Known_Discriminant_Part";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Known_Discriminant_Part
+            (Left_Bracket_Token  => Left_Parenthesis_Token.Token,
+             Discriminants       => To_Discriminant_Specification_Vector
+                                      (Discriminants.Vector'Unchecked_Access,
+                                       Self.Subpool),
+             Right_Bracket_Token => Right_Parenthesis_Token.Token)));
    end Known_Discriminant_Part;
 
    ---------------------
@@ -2705,9 +2782,12 @@ package body Program.Parsers.Nodes is
       return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Null_Statement unimplemented");
-      return raise Program_Error with "Unimplemented function Null_Statement";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Null_Statement
+                (Null_Token      => Null_Token.Token,
+                 Semicolon_Token => Semicolon_Token.Token)));
    end Null_Statement;
 
    ------------------------
@@ -3657,10 +3737,16 @@ package body Program.Parsers.Nodes is
       End_Token : Node; End_Record_Token : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Record_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Record_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Record_Definition
+             (Record_Token   => Record_Token.Token,
+              Components     => To_Element_Vector
+                                  (Record_Components.Vector'Unchecked_Access,
+                                   Self.Subpool),
+              End_Token      => End_Token.Token,
+              Record_Token_2 => End_Record_Token.Token)));
    end Record_Definition;
 
    ----------------------------------
@@ -3690,10 +3776,14 @@ package body Program.Parsers.Nodes is
       Limited_Token : Node; Record_Definition : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Record_Type_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Record_Type_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Record_Type
+             (Abstract_Token    => Abstract_Token.Token,
+              Tagged_Token      => Tagged_Token.Token,
+              Limited_Token     => Limited_Token.Token,
+              Record_Definition => Record_Definition.Element.To_Definition)));
    end Record_Type_Definition;
 
    -----------------------
@@ -4098,11 +4188,16 @@ package body Program.Parsers.Nodes is
    function To_Aggregate_Or_Expression
      (Self : Node_Factory'Class; Association_List : Node) return Node
    is
+      Element : constant
+        Program.Nodes.Proxy_Calls.Proxy_Call_Access :=
+          Program.Nodes.Proxy_Calls.Proxy_Call_Access
+            (Association_List.Element);
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "To_Aggregate_Or_Expression unimplemented");
-      return raise Program_Error
-          with "Unimplemented function To_Aggregate_Or_Expression";
+      if Element.Can_Be_Parenthesized_Expression then
+         Element.Turn_To_Parenthesized_Expression;
+      end if;
+
+      return Association_List;
    end To_Aggregate_Or_Expression;
 
    -----------------------------------
@@ -4258,8 +4353,18 @@ package body Program.Parsers.Nodes is
       Arrow_Token : Node; Record_Components : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Variant unimplemented");
-      return raise Program_Error with "Unimplemented function Variant";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Variant
+             (When_Token  => When_Token.Token,
+              Choices     => To_Element_Vector
+                               (Variant_Choices.Vector'Unchecked_Access,
+                                Self.Subpool),
+              Arrow_Token => Arrow_Token.Token,
+              Components  => To_Element_Vector
+                               (Record_Components.Vector'Unchecked_Access,
+                                Self.Subpool))));
    end Variant;
 
    ------------------
@@ -4273,9 +4378,20 @@ package body Program.Parsers.Nodes is
       return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Variant_Part unimplemented");
-      return raise Program_Error with "Unimplemented function Variant_Part";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Variant_Part
+             (Case_Token      => Case_Token.Token,
+              Discriminant    => Discriminant_Direct_Name.Element
+                                   .To_Identifier,
+              Is_Token        => Is_Token.Token,
+              Variants        => To_Variant_Vector
+                                   (Variants.Vector'Unchecked_Access,
+                                    Self.Subpool),
+              End_Token       => End_Token.Token,
+              Case_Token_2    => End_Case_Token.Token,
+              Semicolon_Token => Semicolon_Token.Token)));
    end Variant_Part;
 
    ----------------------

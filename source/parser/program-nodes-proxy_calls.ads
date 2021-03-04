@@ -45,6 +45,7 @@ package Program.Nodes.Proxy_Calls is
      Parameters          : Program.Element_Vectors.Element_Vector_Access;
      Right_Bracket_Token : Program.Lexical_Elements.Lexical_Element_Access)
       return Proxy_Call;
+   --  Return Proxy_Call configured as a record_aggregate
 
    procedure Turn_To_Function_Call
      (Self        : in out Proxy_Call'Class;
@@ -59,6 +60,11 @@ package Program.Nodes.Proxy_Calls is
       Mark : out Program.Elements.Expressions.Expression_Access);
 
    procedure Turn_To_Index_Constraint (Self : in out Proxy_Call'Class);
+
+   function Can_Be_Parenthesized_Expression
+     (Self : Proxy_Call'Class) return Boolean;
+
+   procedure Turn_To_Parenthesized_Expression (Self : in out Proxy_Call'Class);
 
 private
 
