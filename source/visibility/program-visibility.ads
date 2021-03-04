@@ -351,12 +351,12 @@ package Program.Visibility is
       Name   : Defining_Name);
    --  Add a function view to the context. Create declarative region.
    --  The typical flow is
-   --  * Create_Procedure
+   --  * Create_Function
    --  ** Create_Parameter
    --  ** Leave_Declarative_Region
    --  ** Set_Object_Type
-   --  * Leave_Declarative_Region
    --  * Set_Result_Type
+   --  * Leave_Declarative_Region
 
    procedure Set_Result_Type
      (Self       : in out Context'Class;

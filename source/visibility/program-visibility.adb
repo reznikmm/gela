@@ -208,8 +208,14 @@ package body Program.Visibility is
    procedure Create_Empty_Context (Self : in out Context'Class) is
    begin
       Self.Data.Clear;
+      --  Reserve the very first region to be always empty
       Self.Data.Append
-        ((Enclosing => Self.Data.Last_Index,
+        ((Enclosing => 0,
+          Entities  => Entity_Vectors.Empty_Vector,
+          Uses      => Region_Id_Vectors.Empty_Vector));
+      --  Append a root region
+      Self.Data.Append
+        ((Enclosing => 0,
           Entities  => Entity_Vectors.Empty_Vector,
           Uses      => Region_Id_Vectors.Empty_Vector));
       Self.Top := Self.Data.Last_Index;
@@ -854,6 +860,18 @@ package body Program.Visibility is
       then
          --  Delete an unused (without any entity) region
          Self.Data.Delete_Last;
+
+         declare
+            Reg  : Region renames Self.Data (Enclosing);
+            Item : Entity renames Reg.Entities (Reg.Entities.Last_Index);
+         begin
+            if Item.Kind in Has_Region_Kind
+              and then
+                Item.Region = Self.Top
+            then
+               Item.Region := 1;  --  Reserver always empty region
+            end if;
+         end;
       end if;
 
       Self.Top := Enclosing;
