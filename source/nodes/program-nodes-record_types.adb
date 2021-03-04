@@ -6,12 +6,9 @@
 package body Program.Nodes.Record_Types is
 
    function Create
-    (Abstract_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Tagged_Token      : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Limited_Token     : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+    (Abstract_Token    : Program.Lexical_Elements.Lexical_Element_Access;
+     Tagged_Token      : Program.Lexical_Elements.Lexical_Element_Access;
+     Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Record_Definition : not null Program.Elements.Definitions
          .Definition_Access)
       return Record_Type is
@@ -52,21 +49,21 @@ package body Program.Nodes.Record_Types is
 
    overriding function Abstract_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Abstract_Token;
    end Abstract_Token;
 
    overriding function Tagged_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Tagged_Token;
    end Tagged_Token;
 
    overriding function Limited_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Limited_Token;
    end Limited_Token;

@@ -14,17 +14,14 @@ package body Program.Nodes.Discriminant_Specifications is
      Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Object_Subtype     : not null Program.Elements.Element_Access;
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Default_Expression : Program.Elements.Expressions.Expression_Access;
-     Semicolon_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Default_Expression : Program.Elements.Expressions.Expression_Access)
       return Discriminant_Specification is
    begin
       return Result : Discriminant_Specification :=
         (Names => Names, Colon_Token => Colon_Token, Not_Token => Not_Token,
          Null_Token => Null_Token, Object_Subtype => Object_Subtype,
          Assignment_Token => Assignment_Token,
-         Default_Expression => Default_Expression,
-         Semicolon_Token => Semicolon_Token, Enclosing_Element => null)
+         Default_Expression => Default_Expression, Enclosing_Element => null)
       do
          Initialize (Result);
       end return;
@@ -102,13 +99,6 @@ package body Program.Nodes.Discriminant_Specifications is
    begin
       return Self.Assignment_Token;
    end Assignment_Token;
-
-   overriding function Semicolon_Token
-    (Self : Discriminant_Specification)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
-   begin
-      return Self.Semicolon_Token;
-   end Semicolon_Token;
 
    overriding function Has_Not_Null
     (Self : Discriminant_Specification)

@@ -1399,9 +1399,7 @@ package body Program.Element_Factories is
      Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Object_Subtype     : not null Program.Elements.Element_Access;
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Default_Expression : Program.Elements.Expressions.Expression_Access;
-     Semicolon_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Default_Expression : Program.Elements.Expressions.Expression_Access)
       return not null Program.Elements.Discriminant_Specifications
           .Discriminant_Specification_Access is
       Result : constant Discriminant_Specification_Access :=
@@ -1413,8 +1411,7 @@ package body Program.Element_Factories is
                 Not_Token => Not_Token, Null_Token => Null_Token,
                 Object_Subtype => Object_Subtype,
                 Assignment_Token => Assignment_Token,
-                Default_Expression => Default_Expression,
-                Semicolon_Token => Semicolon_Token));
+                Default_Expression => Default_Expression));
    begin
       return Program.Elements.Discriminant_Specifications
         .Discriminant_Specification_Access
@@ -5308,12 +5305,9 @@ package body Program.Element_Factories is
 
    not overriding function Create_Record_Type
     (Self : Element_Factory;
-     Abstract_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Tagged_Token      : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Limited_Token     : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+     Abstract_Token    : Program.Lexical_Elements.Lexical_Element_Access;
+     Tagged_Token      : Program.Lexical_Elements.Lexical_Element_Access;
+     Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Record_Definition : not null Program.Elements.Definitions
          .Definition_Access)
       return not null Program.Elements.Record_Types.Record_Type_Access is

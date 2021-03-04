@@ -30,9 +30,7 @@ package Program.Nodes.Discriminant_Specifications is
      Null_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Object_Subtype     : not null Program.Elements.Element_Access;
      Assignment_Token   : Program.Lexical_Elements.Lexical_Element_Access;
-     Default_Expression : Program.Elements.Expressions.Expression_Access;
-     Semicolon_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access)
+     Default_Expression : Program.Elements.Expressions.Expression_Access)
       return Discriminant_Specification;
 
    type Implicit_Discriminant_Specification is
@@ -103,8 +101,6 @@ private
         Not_Token        : Program.Lexical_Elements.Lexical_Element_Access;
         Null_Token       : Program.Lexical_Elements.Lexical_Element_Access;
         Assignment_Token : Program.Lexical_Elements.Lexical_Element_Access;
-        Semicolon_Token  : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
      end record;
 
    overriding function To_Discriminant_Specification_Text
@@ -127,10 +123,6 @@ private
    overriding function Assignment_Token
     (Self : Discriminant_Specification)
       return Program.Lexical_Elements.Lexical_Element_Access;
-
-   overriding function Semicolon_Token
-    (Self : Discriminant_Specification)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
 
    overriding function Has_Not_Null
     (Self : Discriminant_Specification)

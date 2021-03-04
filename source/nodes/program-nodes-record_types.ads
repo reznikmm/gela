@@ -18,12 +18,9 @@ package Program.Nodes.Record_Types is
      with private;
 
    function Create
-    (Abstract_Token    : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Tagged_Token      : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Limited_Token     : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+    (Abstract_Token    : Program.Lexical_Elements.Lexical_Element_Access;
+     Tagged_Token      : Program.Lexical_Elements.Lexical_Element_Access;
+     Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      Record_Definition : not null Program.Elements.Definitions
          .Definition_Access)
       return Record_Type;
@@ -72,12 +69,9 @@ private
    type Record_Type is
      new Base_Record_Type and Program.Elements.Record_Types.Record_Type_Text
      with record
-        Abstract_Token : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
-        Tagged_Token   : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
-        Limited_Token  : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
+        Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
+        Tagged_Token   : Program.Lexical_Elements.Lexical_Element_Access;
+        Limited_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      end record;
 
    overriding function To_Record_Type_Text
@@ -86,15 +80,15 @@ private
 
    overriding function Abstract_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    overriding function Tagged_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    overriding function Limited_Token
     (Self : Record_Type)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    type Implicit_Record_Type is
      new Base_Record_Type

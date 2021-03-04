@@ -33,17 +33,14 @@ package Program.Elements.Record_Types is
 
    not overriding function Abstract_Token
     (Self : Record_Type_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Tagged_Token
     (Self : Record_Type_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Limited_Token
     (Self : Record_Type_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
 end Program.Elements.Record_Types;

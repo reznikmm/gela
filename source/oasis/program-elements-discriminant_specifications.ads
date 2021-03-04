@@ -62,11 +62,6 @@ package Program.Elements.Discriminant_Specifications is
     (Self : Discriminant_Specification_Text)
       return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
-   not overriding function Semicolon_Token
-    (Self : Discriminant_Specification_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
-
    type Discriminant_Specification_Vector is
      limited interface and Program.Element_Vectors.Element_Vector;
 
