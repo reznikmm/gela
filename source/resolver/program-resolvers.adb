@@ -6,21 +6,16 @@
 with Program.Complete_Contexts.Assignment_Statements;
 with Program.Complete_Contexts.Call_Statements;
 with Program.Element_Filters;
-with Program.Element_Iterators;
 with Program.Element_Vectors;
-with Program.Element_Visitors;
 with Program.Elements.Assignment_Statements;
 with Program.Elements.Call_Statements;
 with Program.Elements.Defining_Identifiers;
-with Program.Elements.Defining_Names;
 with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
 with Program.Elements.Object_Declarations;
-with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Specifications;
 with Program.Elements.Procedure_Body_Declarations;
 with Program.Elements.Procedure_Declarations;
-with Program.Elements.Subtype_Declarations;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
 with Program.Elements;
@@ -30,6 +25,9 @@ with Program.Node_Symbols;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 with Program.Type_Resolvers;
+with Program.Elements.Package_Declarations;
+with Program.Elements.Defining_Names;
+with Program.Resolvers.Basic;
 
 package body Program.Resolvers is
 
@@ -58,7 +56,7 @@ package body Program.Resolvers is
          Clause : Program.Element_Vectors.Element_Vector_Access;
          Setter : not null
            Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access)
-      is new Program.Element_Visitors.Element_Visitor with record
+      is new Program.Resolvers.Basic.Visitor (Env, Setter) with record
 --    is new Program.Safe_Element_Visitors.Safe_Element_Visitor with record
          Snapshot_Registry : Snapshot_Registry_Access;
       end record;
@@ -102,11 +100,6 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Procedure_Declarations
            .Procedure_Declaration_Access);
-
-      overriding procedure Subtype_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Subtype_Declarations
-           .Subtype_Declaration_Access);
 
    end Visitors;
 
@@ -323,11 +316,6 @@ package body Program.Resolvers is
    --------------
 
    package body Visitors is
-
-      procedure Visit_Each_Child
-        (Self    : in out Visitor;
-         Element : access Program.Elements.Element'Class);
-      pragma Unreferenced (Visit_Each_Child);
 
       procedure Append_Unit_Use_Clauses
         (Self    : in out Visitor'Class;
@@ -642,63 +630,6 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Procedure_Declaration;
-
-      -------------------------
-      -- Subtype_Declaration --
-      -------------------------
-
-      overriding procedure Subtype_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Subtype_Declarations
-           .Subtype_Declaration_Access)
-      is
-         Sets : aliased Program.Interpretations.Context (Self.Env);
-
-         Subtype_Name : constant
-           Program.Elements.Defining_Names.Defining_Name_Access :=
-             Element.Name.To_Defining_Name;
-
-         Type_View : Program.Visibility.View;
-
-         Has_Constraint : constant Boolean :=
-           Element.Subtype_Indication.Constraint.Assigned;
-      begin
-         Program.Type_Resolvers.Resolve_Type
-           (Element.Subtype_Indication.Subtype_Mark,
-            Self.Env,
-            Self.Setter,
-            Sets'Unchecked_Access,
-            Type_View);
-
-         Self.Env.Create_Subtype
-           (Symbol         => Program.Node_Symbols.Get_Symbol (Subtype_Name),
-            Name           => Subtype_Name,
-            Subtype_Mark   => Type_View,
-            Has_Constraint => Has_Constraint);
-
-         if Has_Constraint then
-            Element.Subtype_Indication.Constraint.Visit (Self);
-         end if;
-
-         for Aspect in Element.Aspects.Each_Element loop
-            Aspect.Element.Visit (Self);
-         end loop;
-
-         Self.Env.Leave_Declarative_Region;
-      end Subtype_Declaration;
-
-      ----------------------
-      -- Visit_Each_Child --
-      ----------------------
-
-      procedure Visit_Each_Child
-        (Self    : in out Visitor;
-         Element : access Program.Elements.Element'Class) is
-      begin
-         for Cursor in Element.Each_Child loop
-            Cursor.Element.Visit (Self);
-         end loop;
-      end Visit_Each_Child;
 
    end Visitors;
 

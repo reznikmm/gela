@@ -1,4 +1,4 @@
---  SPDX-FileCopyrightText: 2019-2020 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2019-2021 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
@@ -10,6 +10,7 @@ with Program.Symbol_Lists;
 with Program.Visibility;
 with Program.Cross_Reference_Updaters;
 with Program.Simple_Resolvers;
+
 private package Program.Resolvers is
    pragma Preelaborate;
 

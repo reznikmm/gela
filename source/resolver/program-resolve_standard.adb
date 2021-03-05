@@ -3,7 +3,6 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
-with Program.Element_Iterators;
 with Program.Element_Vector_Factories;
 with Program.Element_Vectors;
 with Program.Element_Visitors;
@@ -11,15 +10,11 @@ with Program.Elements.Component_Definitions;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Enumeration_Literal_Specifications;
-with Program.Elements.Enumeration_Types;
-with Program.Elements.Exception_Declarations;
-with Program.Elements.Floating_Point_Types;
 with Program.Elements.Identifiers;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Signed_Integer_Types;
 with Program.Elements.Subtype_Declarations;
 with Program.Elements.Subtype_Indications;
-with Program.Elements.Type_Declarations;
 with Program.Elements.Unconstrained_Array_Types;
 with Program.Implicit_Element_Factories;
 with Program.Lexical_Elements;
@@ -29,6 +24,7 @@ with Program.Predefined_Operators;
 with Program.Symbol_Lists;
 with Program.Symbols;
 with Program.Visibility;
+with Program.Resolvers.Basic;
 
 procedure Program.Resolve_Standard
   (Unit    : not null Program.Compilation_Units.Compilation_Unit_Access;
@@ -48,37 +44,15 @@ is
 
    package Visitors is
       type Visitor
-        (Env : not null access Program.Visibility.Context)
-      is new Program.Element_Visitors.Element_Visitor with record
-         Type_Name : Program.Elements.Defining_Names.Defining_Name_Access;
-         Type_View : Program.Visibility.View;
+      is new Program.Resolvers.Basic.Visitor with record
          Meta_Char : Program.Visibility.Meta_Character_Literal_Kind :=
            Program.Visibility.Meta_Character;
       end record;
-
-      procedure Visit_Each_Child
-        (Self    : in out Visitor;
-         Element : access Program.Elements.Element'Class);
 
       overriding procedure Enumeration_Literal_Specification
         (Self    : in out Visitor;
          Element : not null Program.Elements.Enumeration_Literal_Specifications
            .Enumeration_Literal_Specification_Access);
-
-      overriding procedure Enumeration_Type
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Enumeration_Types
-           .Enumeration_Type_Access);
-
-      overriding procedure Exception_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Exception_Declarations
-           .Exception_Declaration_Access);
-
-      overriding procedure Floating_Point_Type
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Floating_Point_Types
-           .Floating_Point_Type_Access);
 
       overriding procedure Package_Declaration
         (Self    : in out Visitor;
@@ -94,11 +68,6 @@ is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Subtype_Declarations
            .Subtype_Declaration_Access);
-
-      overriding procedure Type_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Type_Declarations
-           .Type_Declaration_Access);
 
       overriding procedure Unconstrained_Array_Type
         (Self    : in out Visitor;
@@ -139,58 +108,6 @@ is
                Self.Type_View);
          end if;
       end Enumeration_Literal_Specification;
-
-      ----------------------
-      -- Enumeration_Type --
-      ----------------------
-
-      overriding procedure Enumeration_Type
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Enumeration_Types
-           .Enumeration_Type_Access) is
-      begin
-         Self.Env.Create_Enumeration_Type
-           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
-            Name   => Self.Type_Name);
-         Self.Type_View := Self.Env.Latest_View;
-         Self.Visit_Each_Child (Element);
-      end Enumeration_Type;
-
-      ---------------------------
-      -- Exception_Declaration --
-      ---------------------------
-
-      overriding procedure Exception_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Exception_Declarations
-         .Exception_Declaration_Access)
-      is
-         Name : constant Program.Elements.Defining_Identifiers
-           .Defining_Identifier_Access :=
-             Element.Names.To_Defining_Identifier (1);
-      begin
-         Self.Env.Create_Exception
-           (Symbol => Program.Node_Symbols.Get_Symbol (Name),
-            Name   => Program.Elements.Defining_Names.Defining_Name_Access
-                        (Name));
-      end Exception_Declaration;
-
-      -------------------------
-      -- Floating_Point_Type --
-      -------------------------
-
-      overriding procedure Floating_Point_Type
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Floating_Point_Types
-           .Floating_Point_Type_Access)
-      is
-         pragma Unreferenced (Element);
-      begin
-         Self.Env.Create_Float_Point_Type
-           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
-            Name   => Self.Type_Name);
-         Self.Env.Leave_Declarative_Region;
-      end Floating_Point_Type;
 
       -------------------------
       -- Package_Declaration --
@@ -272,22 +189,6 @@ is
          raise Program_Error;
       end Subtype_Declaration;
 
-      ----------------------
-      -- Type_Declaration --
-      ----------------------
-
-      overriding procedure Type_Declaration
-        (Self    : in out Visitor;
-         Element : not null Program.Elements.Type_Declarations
-           .Type_Declaration_Access) is
-      begin
-         Self.Type_Name :=
-           Program.Elements.Defining_Names.Defining_Name_Access (Element.Name);
-
-         Self.Visit_Each_Child (Element);
-         Self.Type_Name := null;
-      end Type_Declaration;
-
       ------------------------------
       -- Unconstrained_Array_Type --
       ------------------------------
@@ -331,19 +232,6 @@ is
 
          raise Program_Error;
       end Unconstrained_Array_Type;
-
-      ----------------------
-      -- Visit_Each_Child --
-      ----------------------
-
-      procedure Visit_Each_Child
-        (Self    : in out Visitor;
-         Element : access Program.Elements.Element'Class) is
-      begin
-         for Cursor in Element.Each_Child loop
-            Cursor.Element.Visit (Self);
-         end loop;
-      end Visit_Each_Child;
 
    end Visitors;
 
@@ -419,7 +307,7 @@ is
    end To_Symbol;
 
 
-   Visitor : Visitors.Visitor (Context'Access);
+   Visitor : Visitors.Visitor (Context'Unchecked_Access, Setter);
    Root    : constant Program.Elements.Element_Access := Unit.Unit_Declaration;
 begin
    Context.Create_Empty_Context;
