@@ -35,25 +35,25 @@ package Program.Visibility is
 
    type View_Kind is
      (Unresolved_View,
+      Subtype_View,
+      Exception_View,
+      Enumeration_Literal_View,
+      Character_Literal_View,
+      Implicit_Type_View,         --  Type_View_Kind v
       Enumeration_Type_View,
       Signed_Integer_Type_View,
       Modular_Type_View,
       Float_Point_Type_View,
-      Array_Type_View,
-      Implicit_Type_View,
-      Enumeration_Literal_View,
-      Character_Literal_View,
-      Subtype_View,
-      Exception_View,
-      Variable_View,
-      Parameter_View,
+      Array_Type_View,            --  Type_View_Kind ^, Has_Region v
+      Variable_View,              --  Object_View v
+      Parameter_View,             --  Object_View ^
       Procedure_View,
       Function_View,
-      Package_View);
+      Package_View);              --  Has_Region                   ^
    --  Kind of entity view
 
    subtype Type_View_Kind is View_Kind
-     range Enumeration_Type_View .. Implicit_Type_View;
+     range Implicit_Type_View .. Array_Type_View;
    --  Kind of type view
 
    subtype Object_View is View_Kind
@@ -437,7 +437,7 @@ private
      (Index_Type   => Positive,
       Element_Type => Entity_Reference);
 
-   subtype Has_Region_Kind is View_Kind range Procedure_View .. Package_View;
+   subtype Has_Region_Kind is View_Kind range Array_Type_View .. Package_View;
 
    type Entity (Kind : View_Kind := Package_View) is record
       Symbol    : Program.Visibility.Symbol;
@@ -453,6 +453,15 @@ private
             case Kind is
                when Function_View =>
                   Result_Def   : Entity_Reference;
+               when Array_Type_View =>
+                  Indexes   : Entity_References.Vector;
+                  Component : Entity_Reference;
+               when Parameter_View =>
+                  Param_Def   : Entity_Reference;
+                  Mode        : Parameter_Mode;
+                  Has_Default : Boolean;
+               when Variable_View =>
+                  Object_Def   : Entity_Reference;
                when others =>
                   null;
             end case;
@@ -471,15 +480,6 @@ private
                when Subtype_View =>
                   Subtype_Mark   : Entity_Reference;
                   Has_Constraint : Boolean;
-               when Array_Type_View =>
-                  Indexes   : Entity_References.Vector;
-                  Component : Entity_Reference;
-               when Parameter_View =>
-                  Param_Def   : Entity_Reference;
-                  Mode        : Parameter_Mode;
-                  Has_Default : Boolean;
-               when Variable_View =>
-                  Object_Def   : Entity_Reference;
                when others =>
                   null;
             end case;

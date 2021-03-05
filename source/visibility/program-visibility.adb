@@ -150,7 +150,8 @@ package body Program.Visibility is
          Name      => Name,
          Prev      => <>,
          Indexes   => To_Vector (Indexes),
-         Component => Component.Index);
+         Component => Component.Index,
+         Region    => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
    end Create_Array_Type;
@@ -401,7 +402,8 @@ package body Program.Visibility is
          Prev        => <>,
          Param_Def   => (1, 1),
          Mode        => Mode,
-         Has_Default => Has_Default);
+         Has_Default => Has_Default,
+         Region      => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
    end Create_Parameter;
@@ -495,7 +497,8 @@ package body Program.Visibility is
          Symbol      => Symbol,
          Name        => Name,
          Prev        => <>,
-         Object_Def  => (1, 1));
+         Object_Def  => (1, 1),
+         Region      => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
    end Create_Variable;
