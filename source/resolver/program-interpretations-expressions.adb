@@ -68,7 +68,7 @@ package body Program.Interpretations.Expressions is
                if Program.Visibility.Has_Element (Result.State.Cursor) then
                   return;
                end if;
-            when Name | Expression =>
+            when Name | Expression | Expression_Category =>
                null;
          end case;
 
@@ -91,6 +91,8 @@ package body Program.Interpretations.Expressions is
             return (Defining_Name_Solution, Self.State.View);
          when Expression =>
             return (Tuple_Solution, Self.State.Tuple);
+         when Expression_Category =>
+            return (Expression_Solution, Self.State.Type_View);
       end case;
 
    end Solution;
@@ -170,6 +172,17 @@ package body Program.Interpretations.Expressions is
 
                      return;
                   end if;
+               when Expression_Category =>
+                  if Self.Expected.Is_Set and then
+                    Item.Matcher.Is_Matched (Self.Expected.View)
+                  then
+                     Cursor.State :=
+                       (Kind      => Expression_Category,
+                        Type_View => Self.Expected.View,
+                        Tuple     => null);
+
+                     return;
+                  end if;
             end case;
          end;
 
@@ -191,7 +204,7 @@ package body Program.Interpretations.Expressions is
             Object := Program.Visibility.Get_View (Self.State.Cursor);
          when Name =>
             Object := Self.State.View;
-         when Expression =>
+         when Expression | Expression_Category =>
             return Self.State.Type_View;
       end case;
 

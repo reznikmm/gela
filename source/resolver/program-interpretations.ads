@@ -8,6 +8,7 @@ private with Ada.Finalization;
 
 with Program.Visibility;
 with Program.Symbols;
+with Program.Type_Matchers;
 
 package Program.Interpretations is
    pragma Preelaborate;
@@ -73,11 +74,15 @@ package Program.Interpretations is
 --      Apply : Apply_Kind := Unknown;  ???
       Down  : Solution_Array := Empty_Solution_Array);
 
+   procedure Add_Expression_Category
+     (Self    : in out Interpretation_Set'Class;
+      Matcher : not null Program.Type_Matchers.Type_Matcher_Access);
+
 private
 
    type Solution_Array_Access is access all Solution_Array;
 
-   type Interpretation_Kind is (Symbol, Name, Expression);
+   type Interpretation_Kind is (Symbol, Name, Expression, Expression_Category);
 
    type Interpretation (Kind : Interpretation_Kind := Symbol) is record
       case Kind is
@@ -88,6 +93,8 @@ private
          when Expression =>
             Type_View : Program.Visibility.View;
             Solutions : Solution_Array_Access;
+         when Expression_Category =>
+            Matcher   : not null Program.Type_Matchers.Type_Matcher_Access;
       end case;
    end record;
 

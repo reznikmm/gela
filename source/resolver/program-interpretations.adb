@@ -48,6 +48,29 @@ package body Program.Interpretations is
       Self.To := Self.Context.Data.Last_Index;
    end Add_Expression;
 
+   -----------------------------
+   -- Add_Expression_Category --
+   -----------------------------
+
+   procedure Add_Expression_Category
+     (Self    : in out Interpretation_Set'Class;
+      Matcher : not null Program.Type_Matchers.Type_Matcher_Access)
+   is
+      Item : constant Interpretation := (Expression_Category, Matcher);
+   begin
+      --  Only non-interrupted set allowed
+      pragma Assert
+        (Self.To < Self.From or Self.To = Self.Context.Data.Last_Index);
+
+      Self.Context.Data.Append (Item);
+
+      if Self.To < Self.From then
+         Self.From := Self.Context.Data.Last_Index;
+      end if;
+
+      Self.To := Self.Context.Data.Last_Index;
+   end Add_Expression_Category;
+
    ----------------
    -- Add_Symbol --
    ----------------
@@ -83,7 +106,7 @@ package body Program.Interpretations is
         (Solution_Array, Solution_Array_Access);
    begin
       for X of Self.Data loop
-         if X.Kind = Expression then
+         if X.Kind in Expression then
             Free (X.Solutions);
          end if;
       end loop;

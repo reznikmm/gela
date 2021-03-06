@@ -33,6 +33,7 @@ package Program.Interpretations.Expressions is
      (Set           : Interpretation_Set;
       Expected_Type : Program.Visibility.View) return Iterator;
    --  Return expression interpretation of given Expected_Type.
+   --  Include expression category is matching expected type.
 
 private
 
@@ -52,7 +53,7 @@ private
             Cursor : Program.Visibility.View_Cursor;
          when Name =>
             View   : Program.Visibility.View;
-         when Expression =>
+         when Expression | Expression_Category =>
             Type_View : Program.Visibility.View;
             Tuple     : Solution_Tuple_Access;
       end case;

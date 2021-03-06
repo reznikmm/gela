@@ -104,7 +104,7 @@ package body Program.Interpretations.Names is
                      return;
                   end if;
 
-               when Expression =>
+               when Expression | Expression_Category =>
                   null;
             end case;
          end;
