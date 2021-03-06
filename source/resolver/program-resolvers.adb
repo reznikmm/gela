@@ -25,11 +25,14 @@ with Program.Elements.Record_Definitions;
 with Program.Elements.Record_Types;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
+with Program.Elements.Variant_Parts;
+with Program.Elements.Variants;
 with Program.Elements;
 with Program.Interpretations;
 with Program.Lexical_Elements;
 with Program.Node_Symbols;
 with Program.Resolvers.Basic;
+with Program.Resolvers.Name_In_Region;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 with Program.Type_Resolvers;
@@ -64,6 +67,7 @@ package body Program.Resolvers is
       is new Program.Resolvers.Basic.Visitor (Env, Setter) with record
 --    is new Program.Safe_Element_Visitors.Safe_Element_Visitor with record
          Snapshot_Registry : Snapshot_Registry_Access;
+         Discriminant      : Program.Visibility.View;
       end record;
 
       overriding procedure Assignment_Statement
@@ -129,6 +133,15 @@ package body Program.Resolvers is
       overriding procedure Record_Type
         (Self    : in out Visitor;
          Element : not null Program.Elements.Record_Types.Record_Type_Access);
+
+      overriding procedure Variant
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Variants.Variant_Access);
+
+      overriding procedure Variant_Part
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Variant_Parts
+           .Variant_Part_Access);
 
    end Visitors;
 
@@ -801,6 +814,39 @@ package body Program.Resolvers is
       begin
          Self.Visit_Each_Child (Element);
       end Record_Type;
+
+      overriding procedure Variant
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Variants.Variant_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+      begin
+         for J in Element.Choices.Each_Element loop
+            Program.Complete_Contexts.Resolve_To_Expected_Type
+              (Element => J.Element,
+               Sets    => Sets'Unchecked_Access,
+               Setter  => Self.Setter,
+               Expect  => Program.Visibility.Subtype_Mark (Self.Discriminant));
+         end loop;
+
+         Self.Visit_Each_Child (Element);
+      end Variant;
+
+      overriding procedure Variant_Part
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Variant_Parts
+           .Variant_Part_Access) is
+      begin
+         Program.Resolvers.Name_In_Region.Resolve_Name
+           (Region => Self.Type_View,
+            Name   => Element.Discriminant.To_Expression,
+            Setter => Self.Setter);
+
+         Self.Discriminant := Self.Env.Get_Name_View
+           (Element.Discriminant.To_Element);
+
+         Self.Visit_Each_Child (Element);
+      end Variant_Part;
 
    end Visitors;
 

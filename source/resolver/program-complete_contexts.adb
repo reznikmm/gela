@@ -17,6 +17,7 @@ with Program.Elements.String_Literals;
 with Program.Interpretations.Expressions;
 with Program.Interpretations.Names;
 with Program.Node_Symbols;
+with Program.Resolvers.Name_In_Region;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 with Program.Type_Matchers;
@@ -448,29 +449,30 @@ package body Program.Complete_Contexts is
       begin
          for J in Element.Components.Each_Element loop
             declare
-               use type Program.Visibility.View_Cursor;
+               Compon : Program.Visibility.View;
 
-               Symbol : Program.Symbols.Symbol;
                Assoc  : constant Program.Elements.Record_Component_Associations
-                 .Record_Component_Association_Access
-                   := J.Element.To_Record_Component_Association;
-               Choices : constant Program.Element_Vectors.Element_Vector_Access
-                 := Assoc.Choices;
+                 .Record_Component_Association_Access :=
+                   J.Element.To_Record_Component_Association;
+
+               Choices : constant Program.Element_Vectors
+                 .Element_Vector_Access := Assoc.Choices;
             begin
                pragma Assert (Choices.Length > 0);
 
                for K in Choices.Each_Element loop
-                  Symbol := Program.Node_Symbols.Get_Symbol (K.Element);
+                  Program.Resolvers.Name_In_Region.Resolve_Name
+                    (Region => View,
+                     Name   => K.Element.To_Expression,
+                     Setter => Self.Setter);
 
-                  for Comp in
-                    Program.Visibility.Immediate_Visible (View, Symbol)
-                  loop
-                     Resolve_To_Expected_Type
-                       (Assoc.Component_Value.To_Element,
-                        Self.Sets,
-                        Self.Setter,
-                        Expect => Program.Visibility.Subtype_Mark (+Comp));
-                  end loop;
+                  Compon := Self.Sets.Env.Get_Name_View (K.Element);
+
+                  Resolve_To_Expected_Type
+                    (Assoc.Component_Value.To_Element,
+                     Self.Sets,
+                     Self.Setter,
+                     Expect => Program.Visibility.Subtype_Mark (Compon));
                end loop;
             end;
          end loop;
