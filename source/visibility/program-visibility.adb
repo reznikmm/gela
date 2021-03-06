@@ -202,6 +202,29 @@ package body Program.Visibility is
       Self.Create_Character_Literal (Symbol, Name, Enumeration_Type);
    end Create_Character_Literal;
 
+   ----------------------
+   -- Create_Component --
+   ----------------------
+
+   procedure Create_Component
+     (Self        : in out Context'Class;
+      Symbol      : Program.Visibility.Symbol;
+      Name        : Defining_Name;
+      Has_Default : Boolean)
+   is
+      Value : Entity :=
+        (Kind        => Component_View,
+         Symbol      => Symbol,
+         Name        => Name,
+         Prev        => <>,
+         Object_Def  => (1, 1),
+         Mode        => <>,
+         Has_Default => Has_Default,
+         Region      => Self.Data.Last_Index + 1);
+   begin
+      Self.Append_Item (Value);
+   end Create_Component;
+
    --------------------------
    -- Create_Empty_Context --
    --------------------------
@@ -400,7 +423,7 @@ package body Program.Visibility is
          Symbol      => Symbol,
          Name        => Name,
          Prev        => <>,
-         Param_Def   => (1, 1),
+         Object_Def  => (1, 1),
          Mode        => Mode,
          Has_Default => Has_Default,
          Region      => Self.Data.Last_Index + 1);
@@ -426,6 +449,25 @@ package body Program.Visibility is
    begin
       Self.Append_Item (Value);
    end Create_Procedure;
+
+   ------------------------
+   -- Create_Record_Type --
+   ------------------------
+
+   procedure Create_Record_Type
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name)
+   is
+      Value : Entity :=
+        (Kind      => Record_Type_View,
+         Symbol    => Symbol,
+         Name      => Name,
+         Prev      => <>,
+         Region    => Self.Data.Last_Index + 1);
+   begin
+      Self.Append_Item (Value);
+   end Create_Record_Type;
 
    --------------------------------
    -- Create_Signed_Integer_Type --
@@ -498,6 +540,8 @@ package body Program.Visibility is
          Name        => Name,
          Prev        => <>,
          Object_Def  => (1, 1),
+         Mode        => <>,
+         Has_Default => <>,
          Region      => Self.Data.Last_Index + 1);
    begin
       Self.Append_Item (Value);
@@ -1119,14 +1163,7 @@ package body Program.Visibility is
       Last : Entity renames Top.Entities (Top.Entities.Last_Index);
    begin
       pragma Assert (Last.Kind in Object_View);
-      case Last.Kind is
-         when Parameter_View =>
-            Last.Param_Def := Definition.Index;
-         when Variable_View =>
-            Last.Object_Def := Definition.Index;
-         when others =>
-            raise Program_Error;
-      end case;
+      Last.Object_Def := Definition.Index;
    end Set_Object_Type;
 
    ---------------------
@@ -1225,9 +1262,7 @@ package body Program.Visibility is
       case Value.Kind is
          when Subtype_View =>
             return Get_View (Self.Env, Value.Subtype_Mark);
-         when Parameter_View =>
-            return Get_View (Self.Env, Value.Param_Def);
-         when Variable_View =>
+         when Object_View =>
             return Get_View (Self.Env, Value.Object_Def);
          when others =>
             raise Constraint_Error;

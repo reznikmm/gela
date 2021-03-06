@@ -44,16 +44,18 @@ package Program.Visibility is
       Signed_Integer_Type_View,
       Modular_Type_View,
       Float_Point_Type_View,
-      Array_Type_View,            --  Type_View_Kind ^, Has_Region v
+      Array_Type_View,            --                     Has_Region v
+      Record_Type_View,           --  Type_View_Kind ^,
       Variable_View,              --  Object_View v
+      Component_View,
       Parameter_View,             --  Object_View ^
       Procedure_View,
       Function_View,
-      Package_View);              --  Has_Region                   ^
+      Package_View);              --                     Has_Region ^
    --  Kind of entity view
 
    subtype Type_View_Kind is View_Kind
-     range Implicit_Type_View .. Array_Type_View;
+     range Implicit_Type_View .. Record_Type_View;
    --  Kind of type view
 
    subtype Object_View is View_Kind
@@ -304,6 +306,12 @@ package Program.Visibility is
         with Pre => Component.Kind in Type_View_Kind;
    --  Add an array type view to the context. Create a region.
 
+   procedure Create_Record_Type
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name);
+   --  Add a (untagged) record type view to the context.
+
    procedure Create_Subtype
      (Self           : in out Context'Class;
       Symbol         : Program.Visibility.Symbol;
@@ -340,10 +348,18 @@ package Program.Visibility is
    --  Add a parameter view to the context and to the topmost subprogram
    --  declaration. Create declarative region.
 
+   procedure Create_Component
+     (Self        : in out Context'Class;
+      Symbol      : Program.Visibility.Symbol;
+      Name        : Defining_Name;
+      Has_Default : Boolean);
+   --  Add a component view to the context and to the topmost record
+   --  declaration. Create declarative region.
+
    procedure Set_Object_Type
      (Self       : in out Context'Class;
       Definition : View);
-   --  Assign given subtype to the topmost parameter declaration
+   --  Assign given subtype to the topmost Object_View declaration
 
    procedure Create_Function
      (Self   : in out Context'Class;
@@ -456,12 +472,10 @@ private
                when Array_Type_View =>
                   Indexes   : Entity_References.Vector;
                   Component : Entity_Reference;
-               when Parameter_View =>
-                  Param_Def   : Entity_Reference;
+               when Parameter_View | Component_View | Variable_View =>
+                  Object_Def  : Entity_Reference;
                   Mode        : Parameter_Mode;
                   Has_Default : Boolean;
-               when Variable_View =>
-                  Object_Def   : Entity_Reference;
                when others =>
                   null;
             end case;
