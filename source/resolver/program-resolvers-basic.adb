@@ -34,15 +34,13 @@ package body Program.Resolvers.Basic is
    overriding procedure Exception_Declaration
      (Self    : in out Visitor;
       Element : not null Program.Elements.Exception_Declarations
-      .Exception_Declaration_Access)
-   is
-      Name : constant Program.Elements.Defining_Identifiers
-        .Defining_Identifier_Access :=
-          Element.Names.To_Defining_Identifier (1);
+        .Exception_Declaration_Access) is
    begin
-      Self.Env.Create_Exception
-        (Symbol => Program.Node_Symbols.Get_Symbol (Name),
-         Name   => Name.To_Defining_Name);
+      for J in Element.Names.Each_Element loop
+         Self.Env.Create_Exception
+           (Symbol => Program.Node_Symbols.Get_Symbol (J.Element),
+            Name   => J.Element.To_Defining_Name);
+      end loop;
    end Exception_Declaration;
 
    -------------------------

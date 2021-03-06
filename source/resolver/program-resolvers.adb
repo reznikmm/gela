@@ -15,6 +15,7 @@ with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Discriminant_Specifications;
 with Program.Elements.Enumeration_Literal_Specifications;
+with Program.Elements.Exception_Handlers;
 with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
 with Program.Elements.Object_Declarations;
@@ -101,6 +102,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Enumeration_Literal_Specifications
            .Enumeration_Literal_Specification_Access);
+
+      overriding procedure Exception_Handler
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Exception_Handlers
+           .Exception_Handler_Access);
 
       overriding procedure Function_Declaration
         (Self    : in out Visitor;
@@ -729,6 +735,30 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Procedure_Body_Declaration;
+
+      overriding procedure Exception_Handler
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Exception_Handlers
+           .Exception_Handler_Access)
+      is
+         use all type Program.Visibility.View_Kind;
+
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+         View : Program.Visibility.View;
+      begin
+         for J in Element.Choices.Each_Element loop
+            if J.Element.Is_Expression then
+               Program.Type_Resolvers.Resolve_Type
+                 (Element => J.Element.To_Expression,
+                  Context => Self.Env,
+                  Setter  => Self.Setter,
+                  Sets    => Sets'Unchecked_Access,
+                  Value   => View);
+
+               pragma Assert (View.Kind = Exception_View);
+            end if;
+         end loop;
+      end Exception_Handler;
 
       overriding procedure Function_Declaration
         (Self    : in out Visitor;
