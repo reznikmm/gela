@@ -5,6 +5,7 @@
 
 with Program.Complete_Contexts.Assignment_Statements;
 with Program.Complete_Contexts.Call_Statements;
+with Program.Complete_Contexts.Case_Statements;
 with Program.Element_Filters;
 with Program.Element_Vectors;
 with Program.Elements.Assignment_Statements;
@@ -36,6 +37,7 @@ with Program.Resolvers.Name_In_Region;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 with Program.Type_Resolvers;
+with Program.Elements.Case_Statements;
 
 package body Program.Resolvers is
 
@@ -79,6 +81,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Call_Statements
            .Call_Statement_Access);
+
+      overriding procedure Case_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Case_Statements
+           .Case_Statement_Access);
 
       overriding procedure Component_Declaration
         (Self    : in out Visitor;
@@ -427,6 +434,21 @@ package body Program.Resolvers is
          Program.Complete_Contexts.Call_Statements.Call_Statement
            (Sets'Unchecked_Access, Self.Setter, Element);
       end Call_Statement;
+
+      --------------------
+      -- Case_Statement --
+      --------------------
+
+      overriding procedure Case_Statement
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Case_Statements
+           .Case_Statement_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+      begin
+         Program.Complete_Contexts.Case_Statements.Case_Statement
+           (Sets'Unchecked_Access, Self.Setter, Element);
+      end Case_Statement;
 
       ---------------------------
       -- Component_Declaration --

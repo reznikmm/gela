@@ -250,7 +250,7 @@ package body Program.Complete_Contexts is
          pragma Assert (not Element.Formal_Parameter.Assigned);
       end Parameter_Association;
 
-      Only_Records : aliased Program.Type_Matchers.Record_Matcher;
+      Only_Records : aliased Program.Type_Matchers.Record_Type_Matcher;
 
       overriding procedure Record_Aggregate
         (Self    : in out Visitor;
@@ -566,6 +566,40 @@ package body Program.Complete_Contexts is
          Down (Element.To_Element, Found, Setter, Sets);
       end if;
    end Resolve_To_Any_Type;
+
+   ------------------------------
+   -- Resolve_To_Discrete_Type --
+   ------------------------------
+
+   procedure Resolve_To_Discrete_Type
+     (Element : not null Program.Elements.Expressions.Expression_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
+      Setter  : not null Program.Cross_Reference_Updaters
+                           .Cross_Reference_Updater_Access;
+      Result  : out Program.Visibility.View)
+   is
+      use type Program.Interpretations.Expressions.Cursor;
+
+      Set : constant Program.Interpretations.Interpretation_Set :=
+        Up (Element, Sets);
+
+      Found   : Program.Interpretations.Solution;
+      Count   : Natural := 0;
+      Matcher : Program.Type_Matchers.Discrete_Type_Matcher;
+
+   begin
+      for N in Program.Interpretations.Expressions.Each (Set) loop
+         if Matcher.Is_Matched (+N) then
+            Count := Count + 1;
+            Found := -N;
+            Result := +N;
+         end if;
+      end loop;
+
+      if Count > 0 then
+         Down (Element.To_Element, Found, Setter, Sets);
+      end if;
+   end Resolve_To_Discrete_Type;
 
    ------------------------------
    -- Resolve_To_Expected_Type --

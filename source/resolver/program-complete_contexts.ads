@@ -27,6 +27,13 @@ package Program.Complete_Contexts is
                            .Cross_Reference_Updater_Access;
       Result  : out Program.Visibility.View);
 
+   procedure Resolve_To_Discrete_Type
+     (Element : not null Program.Elements.Expressions.Expression_Access;
+      Sets    : not null Program.Interpretations.Context_Access;
+      Setter  : not null Program.Cross_Reference_Updaters
+                           .Cross_Reference_Updater_Access;
+      Result  : out Program.Visibility.View);
+
 private
 
    function Up
