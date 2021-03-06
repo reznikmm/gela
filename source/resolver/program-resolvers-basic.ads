@@ -7,6 +7,7 @@
 
 with Program.Element_Visitors;
 with Program.Elements.Defining_Names;
+with Program.Elements.Definitions;
 with Program.Elements.Enumeration_Types;
 with Program.Elements.Exception_Declarations;
 with Program.Elements.Floating_Point_Types;
@@ -23,8 +24,9 @@ package Program.Resolvers.Basic is
       Setter : not null
         Program.Cross_Reference_Updaters.Cross_Reference_Updater_Access)
    is new Program.Element_Visitors.Element_Visitor with record
-      Type_Name : Program.Elements.Defining_Names.Defining_Name_Access;
-      Type_View : Program.Visibility.View;
+      Discriminants : Program.Elements.Definitions.Definition_Access;
+      Type_Name     : Program.Elements.Defining_Names.Defining_Name_Access;
+      Type_View     : Program.Visibility.View;
    end record;
 
    procedure Visit_Each_Child

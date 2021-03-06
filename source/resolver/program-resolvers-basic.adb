@@ -117,9 +117,12 @@ package body Program.Resolvers.Basic is
    begin
       Self.Type_Name :=
         Program.Elements.Defining_Names.Defining_Name_Access (Element.Name);
+      Self.Discriminants := Element.Discriminant_Part;
 
       Self.Visit_Each_Child (Element);
+
       Self.Type_Name := null;
+      Self.Discriminants := null;
    end Type_Declaration;
 
    ----------------------

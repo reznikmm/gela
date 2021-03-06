@@ -9,25 +9,30 @@ with Program.Element_Filters;
 with Program.Element_Vectors;
 with Program.Elements.Assignment_Statements;
 with Program.Elements.Call_Statements;
+with Program.Elements.Component_Declarations;
 with Program.Elements.Defining_Identifiers;
+with Program.Elements.Defining_Names;
+with Program.Elements.Discriminant_Specifications;
+with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
 with Program.Elements.Object_Declarations;
+with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Specifications;
 with Program.Elements.Procedure_Body_Declarations;
 with Program.Elements.Procedure_Declarations;
+with Program.Elements.Record_Definitions;
+with Program.Elements.Record_Types;
 with Program.Elements.Use_Clauses;
 with Program.Elements.With_Clauses;
 with Program.Elements;
 with Program.Interpretations;
 with Program.Lexical_Elements;
 with Program.Node_Symbols;
+with Program.Resolvers.Basic;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 with Program.Type_Resolvers;
-with Program.Elements.Package_Declarations;
-with Program.Elements.Defining_Names;
-with Program.Resolvers.Basic;
 
 package body Program.Resolvers is
 
@@ -71,6 +76,21 @@ package body Program.Resolvers is
          Element : not null Program.Elements.Call_Statements
            .Call_Statement_Access);
 
+      overriding procedure Component_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Component_Declarations
+           .Component_Declaration_Access);
+
+      overriding procedure Discriminant_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discriminant_Specifications
+           .Discriminant_Specification_Access);
+
+      overriding procedure Enumeration_Literal_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Enumeration_Literal_Specifications
+           .Enumeration_Literal_Specification_Access);
+
       overriding procedure Function_Declaration
         (Self    : in out Visitor;
          Element : not null Program.Elements.Function_Declarations
@@ -100,6 +120,15 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Procedure_Declarations
            .Procedure_Declaration_Access);
+
+      overriding procedure Record_Definition
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Definitions
+           .Record_Definition_Access);
+
+      overriding procedure Record_Type
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Types.Record_Type_Access);
 
    end Visitors;
 
@@ -386,6 +415,111 @@ package body Program.Resolvers is
            (Sets'Unchecked_Access, Self.Setter, Element);
       end Call_Statement;
 
+      ---------------------------
+      -- Component_Declaration --
+      ---------------------------
+
+      overriding procedure Component_Declaration
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Component_Declarations
+           .Component_Declaration_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+
+         Has_Default : constant Boolean := Element.Default_Expression.Assigned;
+         Type_View : Program.Visibility.View;
+
+         Names : constant Program.Elements.Defining_Identifiers
+           .Defining_Identifier_Vector_Access := Element.Names;
+      begin
+         for Name in Names.Each_Element loop
+            declare
+               Symbol : constant Program.Symbols.Symbol :=
+                 Program.Node_Symbols.Get_Symbol (Name.Element);
+            begin
+               Self.Env.Create_Component
+                 (Symbol,
+                  Name.Element.To_Defining_Name,
+                  Has_Default);
+
+               Program.Type_Resolvers.Resolve_Type_Definition
+                 (Element.Object_Subtype.Subtype_Indication,
+                  Self.Env,
+                  Self.Setter,
+                  Sets'Unchecked_Access,
+                  Type_View);
+
+               Self.Env.Leave_Declarative_Region;
+               Self.Env.Set_Object_Type (Type_View);
+            end;
+         end loop;
+      end Component_Declaration;
+
+      --------------------------------
+      -- Discriminant_Specification --
+      --------------------------------
+
+      overriding procedure Discriminant_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Discriminant_Specifications
+           .Discriminant_Specification_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+
+         Has_Default : constant Boolean := Element.Default_Expression.Assigned;
+         Type_View : Program.Visibility.View;
+
+         Names : constant Program.Elements.Defining_Identifiers
+           .Defining_Identifier_Vector_Access := Element.Names;
+      begin
+         for Name in Names.Each_Element loop
+            declare
+               Symbol : constant Program.Symbols.Symbol :=
+                 Program.Node_Symbols.Get_Symbol (Name.Element);
+            begin
+               Self.Env.Create_Component
+                 (Symbol,
+                  Name.Element.To_Defining_Name,
+                  Has_Default);
+
+               Program.Type_Resolvers.Resolve_Type_Definition
+                 (Element.Object_Subtype.To_Element,
+                  Self.Env,
+                  Self.Setter,
+                  Sets'Unchecked_Access,
+                  Type_View);
+
+               Self.Env.Leave_Declarative_Region;
+               Self.Env.Set_Object_Type (Type_View);
+            end;
+         end loop;
+      end Discriminant_Specification;
+
+      ---------------------------------------
+      -- Enumeration_Literal_Specification --
+      ---------------------------------------
+
+      overriding procedure Enumeration_Literal_Specification
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Enumeration_Literal_Specifications
+           .Enumeration_Literal_Specification_Access)
+      is
+         Symbol : constant Program.Symbols.Symbol :=
+           Program.Node_Symbols.Get_Symbol (Element.Name);
+      begin
+         if Program.Symbols.Is_Character_Literal (Symbol) then
+            Self.Env.Create_Character_Literal
+              (Symbol,
+               Element.Name,
+               Self.Type_View);
+         else
+            Self.Env.Create_Enumeration_Literal
+              (Symbol,
+               Element.Name,
+               Self.Type_View);
+         end if;
+      end Enumeration_Literal_Specification;
+
       ------------------------
       -- Object_Declaration --
       ------------------------
@@ -630,6 +764,43 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Procedure_Declaration;
+
+      overriding procedure Record_Definition
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Definitions
+           .Record_Definition_Access) is
+      begin
+         Self.Env.Create_Record_Type
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
+            Name   => Self.Type_Name);
+         Self.Type_View := Self.Env.Latest_View;
+
+         if Self.Discriminants.Is_Known_Discriminant_Part then
+            declare
+               List : constant Program.Elements.Discriminant_Specifications
+                 .Discriminant_Specification_Vector_Access :=
+                   Self.Discriminants.To_Known_Discriminant_Part.Discriminants;
+            begin
+               for J in List.Each_Element loop
+                  J.Element.Visit (Self);
+               end loop;
+            end;
+         end if;
+
+         for J in Element.Components.Each_Element loop
+            J.Element.Visit (Self);
+         end loop;
+
+         Self.Env.Leave_Declarative_Region;
+      end Record_Definition;
+
+      overriding procedure Record_Type
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Types.Record_Type_Access)
+      is
+      begin
+         Self.Visit_Each_Child (Element);
+      end Record_Type;
 
    end Visitors;
 
