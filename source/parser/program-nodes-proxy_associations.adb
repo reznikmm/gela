@@ -69,14 +69,20 @@ package body Program.Nodes.Proxy_Associations is
      Box_Token   : Program.Lexical_Elements.Lexical_Element_Access)
       return Proxy_Association is
    begin
+      pragma Warnings (Off, "others choice is redundant");  --  gpl 2019
+
       return Result : aliased Proxy_Association :=
-        (Choices     => Choices,
+        (This        => null,
+         Choices     => Choices,
+         Selectors   => <>,
          Arrow_Token => Arrow_Token,
          Expression  => Expression,
          Box_Token   => Box_Token,
          Enclosing_Element => null,
          Current => A_Record_Component_Association)
       do
+         Result.This := Result'Unchecked_Access;
+
          for Item in Result.Choices.Each_Element loop
             Set_Enclosing_Element (Item.Element, Result'Unchecked_Access);
          end loop;
@@ -86,6 +92,18 @@ package body Program.Nodes.Proxy_Associations is
          end if;
       end return;
    end Create;
+
+   ---------------
+   -- Delimiter --
+   ---------------
+
+   overriding function Delimiter
+     (Self  : Identifier_Vector;
+      Index : Positive)
+     return Program.Lexical_Elements.Lexical_Element_Access is
+   begin
+      return Self.Parent.Choices.Delimiter (Index);
+   end Delimiter;
 
    ------------------------
    -- Discriminant_Value --
@@ -97,6 +115,27 @@ package body Program.Nodes.Proxy_Associations is
    begin
       return Self.Expression;
    end Discriminant_Value;
+
+   -------------
+   -- Element --
+   -------------
+
+   overriding function Element
+     (Self  : Identifier_Vector;
+      Index : Positive)
+     return not null Program.Elements.Element_Access is
+   begin
+      return Self.Parent.Choices.Element (Index);
+   end Element;
+
+   ----------------
+   -- Get_Length --
+   ----------------
+
+   overriding function Get_Length (Self : Identifier_Vector) return Positive is
+   begin
+      return Self.Parent.Choices.Get_Length;
+   end Get_Length;
 
    ----------------------
    -- Formal_Parameter --
@@ -192,8 +231,7 @@ package body Program.Nodes.Proxy_Associations is
     (Self : Proxy_Association)
       return Program.Elements.Identifiers.Identifier_Vector_Access is
    begin
-      return Program.Elements.Identifiers.Identifier_Vector_Access
-        (Self.Choices);
+      return Self.This.Selectors'Unchecked_Access;
    end Selector_Names;
 
    --------------------------------------

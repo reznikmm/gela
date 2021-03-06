@@ -49,6 +49,20 @@ package Program.Nodes.Proxy_Associations is
 
 private
 
+   type Identifier_Vector (Parent : not null Proxy_Association_Access) is new
+     Program.Elements.Identifiers.Identifier_Vector
+       with null record;
+
+   overriding function Get_Length (Self : Identifier_Vector) return Positive;
+
+   overriding function Delimiter
+     (Self  : Identifier_Vector;
+      Index : Positive) return Program.Lexical_Elements.Lexical_Element_Access;
+
+   overriding function Element
+     (Self  : Identifier_Vector;
+      Index : Positive) return not null Program.Elements.Element_Access;
+
    type Kind is
      (A_Parameter_Association,
       A_Record_Component_Association,
@@ -67,11 +81,16 @@ private
      and Program.Elements.Discriminant_Associations
            .Discriminant_Association_Text
      with record
+        This        : Proxy_Association_Access :=
+                        Proxy_Association'Unchecked_Access;
+        --  to get r/w access from constant Self parameter
         Current     : Kind;
         Choices     : Program.Element_Vectors.Element_Vector_Access;
         Expression  : Program.Elements.Expressions.Expression_Access;
         Arrow_Token : Program.Lexical_Elements.Lexical_Element_Access;
         Box_Token   : Program.Lexical_Elements.Lexical_Element_Access;
+        Selectors   : aliased Identifier_Vector
+                        (Proxy_Association'Unchecked_Access);
      end record;
 
    overriding procedure Visit
