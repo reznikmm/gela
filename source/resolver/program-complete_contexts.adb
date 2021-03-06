@@ -11,12 +11,15 @@ with Program.Elements.Infix_Operators;
 with Program.Elements.Numeric_Literals;
 with Program.Elements.Operator_Symbols;
 with Program.Elements.Parameter_Associations;
+with Program.Elements.Record_Component_Associations;
+with Program.Elements.Record_Aggregates;
 with Program.Elements.String_Literals;
 with Program.Interpretations.Expressions;
 with Program.Interpretations.Names;
 with Program.Node_Symbols;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
+with Program.Type_Matchers;
 
 package body Program.Complete_Contexts is
 
@@ -70,6 +73,11 @@ package body Program.Complete_Contexts is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Parameter_Associations
                               .Parameter_Association_Access);
+
+      overriding procedure Record_Aggregate
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Aggregates
+                              .Record_Aggregate_Access);
 
       overriding procedure String_Literal
         (Self    : in out Visitor;
@@ -241,6 +249,19 @@ package body Program.Complete_Contexts is
          pragma Assert (not Element.Formal_Parameter.Assigned);
       end Parameter_Association;
 
+      Only_Records : aliased Program.Type_Matchers.Record_Matcher;
+
+      overriding procedure Record_Aggregate
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Aggregates
+                              .Record_Aggregate_Access)
+      is
+         pragma Unreferenced (Element);
+      begin
+         Self.Result := Self.Sets.Create_Interpretation_Set;
+         Self.Result.Add_Expression_Category (Only_Records'Access);
+      end Record_Aggregate;
+
       overriding procedure String_Literal
         (Self    : in out Visitor;
          Element : not null Program.Elements.String_Literals
@@ -267,7 +288,8 @@ package body Program.Complete_Contexts is
    package Down_Visitors is
 
       type Visitor
-        (Setter : not null Program.Cross_Reference_Updaters
+        (Sets   : not null Program.Interpretations.Context_Access;
+         Setter : not null Program.Cross_Reference_Updaters
            .Cross_Reference_Updater_Access)
       is new
         Program.Safe_Element_Visitors.Safe_Element_Visitor
@@ -309,6 +331,11 @@ package body Program.Complete_Contexts is
          Element : not null Program.Elements.Parameter_Associations
                               .Parameter_Association_Access);
 
+      overriding procedure Record_Aggregate
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Aggregates
+                              .Record_Aggregate_Access);
+
       overriding procedure String_Literal
         (Self    : in out Visitor;
          Element : not null Program.Elements.String_Literals
@@ -318,13 +345,26 @@ package body Program.Complete_Contexts is
 
    package body Down_Visitors is
 
+      procedure Down
+        (Self     : in out Visitor'Class;
+         Element  : not null access Program.Elements.Element'Class;
+         Solution : Program.Interpretations.Solution);
+
+      procedure Down
+        (Self     : in out Visitor'Class;
+         Element  : not null access Program.Elements.Element'Class;
+         Solution : Program.Interpretations.Solution) is
+      begin
+         Down (Element, Solution, Self.Setter, Self.Sets);
+      end Down;
+
       overriding procedure Discrete_Simple_Expression_Range
         (Self    : in out Visitor;
          Element : not null Program.Elements.Discrete_Simple_Expression_Ranges
            .Discrete_Simple_Expression_Range_Access) is
       begin
-         Down (Element.Lower_Bound, Self.Solution.Tuple (1), Self.Setter);
-         Down (Element.Upper_Bound, Self.Solution.Tuple (2), Self.Setter);
+         Self.Down (Element.Lower_Bound, Self.Solution.Tuple (1));
+         Self.Down (Element.Upper_Bound, Self.Solution.Tuple (2));
       end Discrete_Simple_Expression_Range;
 
       overriding procedure Function_Call
@@ -333,10 +373,10 @@ package body Program.Complete_Contexts is
            .Function_Call_Access)
       is
       begin
-         Down (Element.Prefix, Self.Solution.Tuple (0), Self.Setter);
+         Self.Down (Element.Prefix, Self.Solution.Tuple (0));
 
          for J in Element.Parameters.Each_Element loop
-            Down (J.Element, Self.Solution.Tuple (J.Index), Self.Setter);
+            Self.Down (J.Element, Self.Solution.Tuple (J.Index));
          end loop;
       end Function_Call;
 
@@ -363,9 +403,9 @@ package body Program.Complete_Contexts is
          Element : not null Program.Elements.Infix_Operators
                               .Infix_Operator_Access) is
       begin
-         Down (Element.Operator, Self.Solution.Tuple (0), Self.Setter);
-         Down (Element.Left,     Self.Solution.Tuple (1), Self.Setter);
-         Down (Element.Right,    Self.Solution.Tuple (2), Self.Setter);
+         Self.Down (Element.Operator, Self.Solution.Tuple (0));
+         Self.Down (Element.Left,     Self.Solution.Tuple (1));
+         Self.Down (Element.Right,    Self.Solution.Tuple (2));
       end Infix_Operator;
 
       overriding procedure Numeric_Literal
@@ -399,6 +439,43 @@ package body Program.Complete_Contexts is
          Self.Visit (Element.Actual_Parameter);
       end Parameter_Association;
 
+      overriding procedure Record_Aggregate
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Record_Aggregates
+                              .Record_Aggregate_Access)
+      is
+         View : constant Program.Visibility.View := Self.Solution.Type_View;
+      begin
+         for J in Element.Components.Each_Element loop
+            declare
+               use type Program.Visibility.View_Cursor;
+
+               Symbol : Program.Symbols.Symbol;
+               Assoc  : constant Program.Elements.Record_Component_Associations
+                 .Record_Component_Association_Access
+                   := J.Element.To_Record_Component_Association;
+               Choices : constant Program.Element_Vectors.Element_Vector_Access
+                 := Assoc.Choices;
+            begin
+               pragma Assert (Choices.Length > 0);
+
+               for K in Choices.Each_Element loop
+                  Symbol := Program.Node_Symbols.Get_Symbol (K.Element);
+
+                  for Comp in
+                    Program.Visibility.Immediate_Visible (View, Symbol)
+                  loop
+                     Resolve_To_Expected_Type
+                       (Assoc.Component_Value.To_Element,
+                        Self.Sets,
+                        Self.Setter,
+                        Expect => Program.Visibility.Subtype_Mark (+Comp));
+                  end loop;
+               end loop;
+            end;
+         end loop;
+      end Record_Aggregate;
+
       overriding procedure String_Literal
         (Self    : in out Visitor;
          Element : not null Program.Elements.String_Literals
@@ -417,9 +494,10 @@ package body Program.Complete_Contexts is
      (Element  : not null access Program.Elements.Element'Class;
       Solution : Program.Interpretations.Solution;
       Setter   : not null Program.Cross_Reference_Updaters
-        .Cross_Reference_Updater_Access)
+        .Cross_Reference_Updater_Access;
+      Sets    : not null Program.Interpretations.Context_Access)
    is
-      Down : Down_Visitors.Visitor := (Setter, False, Solution);
+      Down : Down_Visitors.Visitor := (Sets, Setter, False, Solution);
    begin
       Down.Visit (Element);
    end Down;
@@ -483,7 +561,7 @@ package body Program.Complete_Contexts is
       end loop;
 
       if Count > 0 then
-         Down (Element.To_Element, Found, Setter);
+         Down (Element.To_Element, Found, Setter, Sets);
       end if;
    end Resolve_To_Any_Type;
 
@@ -515,7 +593,7 @@ package body Program.Complete_Contexts is
       end loop;
 
       if Count > 0 then
-         Down (Element.To_Element, Found, Setter);
+         Down (Element.To_Element, Found, Setter, Sets);
       end if;
    end Resolve_To_Expected_Type;
 

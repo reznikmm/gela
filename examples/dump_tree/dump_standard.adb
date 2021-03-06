@@ -148,7 +148,7 @@ procedure Dump_Standard is
               (Program.Visibility.Subtype_Mark (View),
                Padding & Indent,
                Short);
-         when Parameter_View =>
+         when Parameter_View | Component_View =>
             Print
               (Program.Visibility.Subtype_Mark (View),
                Padding & Indent,
@@ -164,7 +164,7 @@ procedure Dump_Standard is
                Verbosity'Pred (Verbose));
          when Exception_View =>
             null;
-         when Procedure_View .. Package_View =>
+         when Procedure_View .. Package_View | Record_Type_View =>
             if Verbose = Long then
                Print (Region_Items (View), Padding & Indent, Normal);
             end if;

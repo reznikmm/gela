@@ -62,10 +62,10 @@ package body Program.Complete_Contexts.Call_Statements is
       end loop;
 
       if Count > 0 then
-         Down (Element.Called_Name, Found (0), Setter);
+         Down (Element.Called_Name, Found (0), Setter, Sets);
 
          for J in Element.Parameters.Each_Element loop
-            Down (J.Element, Found (J.Index), Setter);
+            Down (J.Element, Found (J.Index), Setter, Sets);
          end loop;
       end if;
    end Call_Statement;

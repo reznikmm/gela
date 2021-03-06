@@ -40,7 +40,8 @@ private
      (Element  : not null access Program.Elements.Element'Class;
       Solution : Program.Interpretations.Solution;
       Setter   : not null Program.Cross_Reference_Updaters
-                   .Cross_Reference_Updater_Access);
+        .Cross_Reference_Updater_Access;
+      Sets     : not null Program.Interpretations.Context_Access);
    --  Assign solution to the Element and all its children.
 
    procedure Resolve_Parameters
