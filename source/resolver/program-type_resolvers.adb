@@ -3,14 +3,17 @@
 --  SPDX-License-Identifier: MIT
 -------------------------------------------------------------
 
+with Program.Element_Vectors;
 with Program.Elements.Constraints;
 with Program.Elements.Defining_Names;
 with Program.Elements.Discrete_Ranges;
+with Program.Elements.Discriminant_Associations;
 with Program.Elements.Identifiers;
 with Program.Elements.Subtype_Indications;
 with Program.Complete_Contexts;
 with Program.Node_Symbols;
 with Program.Nodes.Proxy_Calls;
+with Program.Resolvers.Name_In_Region;
 with Program.Safe_Element_Visitors;
 with Program.Symbols;
 
@@ -143,6 +146,40 @@ package body Program.Type_Resolvers is
                   Element => J.Element);
             end loop;
          end;
+
+      elsif Self.View.Kind in Program.Visibility.Record_Type_View then
+         pragma Assert (Constr.Is_Discriminant_Constraint);
+
+         for J in
+           Constr.To_Discriminant_Constraint.Discriminants.Each_Element
+         loop
+            declare
+               Compon : Program.Visibility.View;
+               Assoc  : constant Program.Elements.Discriminant_Associations
+                 .Discriminant_Association_Access :=
+                   J.Element.To_Discriminant_Association;
+
+               Choices : constant Program.Elements.Identifiers
+                 .Identifier_Vector_Access := Assoc.Selector_Names;
+            begin
+               pragma Assert (Choices.Length > 0);
+
+               for K in Choices.Each_Element loop
+                  Program.Resolvers.Name_In_Region.Resolve_Name
+                    (Region => Self.View,
+                     Name   => K.Element.To_Expression,
+                     Setter => Self.Setter);
+
+                  Compon := Self.Sets.Env.Get_Name_View (K.Element);
+
+                  Program.Complete_Contexts.Resolve_To_Expected_Type
+                    (Assoc.Discriminant_Value.To_Element,
+                     Self.Sets,
+                     Self.Setter,
+                     Expect => Program.Visibility.Subtype_Mark (Compon));
+               end loop;
+            end;
+         end loop;
 
       end if;
    end Subtype_Indication;
