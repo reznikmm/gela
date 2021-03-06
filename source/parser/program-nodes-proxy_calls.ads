@@ -111,6 +111,16 @@ private
       Index : Positive)
      return not null Program.Elements.Element_Access;
 
+   type Record_Component_Association_Vector is new Base_Vector
+     and Program.Elements.Record_Component_Associations
+           .Record_Component_Association_Vector
+   with null record;
+
+   overriding function Element
+     (Self  : Record_Component_Association_Vector;
+      Index : Positive)
+     return not null Program.Elements.Element_Access;
+
    type Discrete_Range_Vector is new Base_Vector
      and Program.Elements.Discrete_Ranges.Discrete_Range_Vector
    with null record;
@@ -134,7 +144,9 @@ private
       Current     : Kind;
       Text        : aliased Proxy_Call_Text (Proxy_Call'Unchecked_Access);
       Called_Name : Program.Elements.Expressions.Expression_Access;
-      Components  : Program.Element_Vectors.Element_Vector_Access;
+      Elements    : Program.Element_Vectors.Element_Vector_Access;
+      Components  : aliased Record_Component_Association_Vector
+                              (Proxy_Call'Unchecked_Access);
       Parameters  : aliased Parameter_Vector (Proxy_Call'Unchecked_Access);
       Discr       : aliased Discriminant_Association_Vector
                               (Proxy_Call'Unchecked_Access);

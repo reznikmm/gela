@@ -24,7 +24,7 @@ package body Program.Nodes.Proxy_Calls is
    function Can_Be_Parenthesized_Expression
      (Self : Proxy_Call'Class) return Boolean is
    begin
-      for J in Self.Components.Each_Element loop
+      for J in Self.Elements.Each_Element loop
          declare
             Item : constant Program.Elements.Record_Component_Associations
               .Record_Component_Association_Access :=
@@ -39,7 +39,7 @@ package body Program.Nodes.Proxy_Calls is
          end;
       end loop;
 
-      return Self.Components.Length = 1;
+      return Self.Elements.Length = 1;
    end Can_Be_Parenthesized_Expression;
 
    ----------------
@@ -50,9 +50,7 @@ package body Program.Nodes.Proxy_Calls is
       return Program.Elements.Record_Component_Associations
           .Record_Component_Association_Vector_Access is
    begin
-      return Program.Elements.Record_Component_Associations
-        .Record_Component_Association_Vector_Access
-          (Self.Components);
+      return Self.This.Components'Unchecked_Access;
    end Components;
 
    ------------
@@ -72,7 +70,8 @@ package body Program.Nodes.Proxy_Calls is
          Current             => A_Record_Aggregate,
          Called_Name         => Called_Name,
          Left_Bracket_Token  => Left_Bracket_Token,
-         Components          => Parameters,
+         Elements            => Parameters,
+         Components          => <>,
          Parameters          => <>,
          Discr               => <>,
          Ranges              => <>,
@@ -85,7 +84,7 @@ package body Program.Nodes.Proxy_Calls is
             Set_Enclosing_Element (Self.Called_Name, Self'Unchecked_Access);
          end if;
 
-         for Item in Self.Components.Each_Element loop
+         for Item in Self.Elements.Each_Element loop
             Set_Enclosing_Element (Item.Element, Self'Unchecked_Access);
          end loop;
       end return;
@@ -100,7 +99,7 @@ package body Program.Nodes.Proxy_Calls is
       Index : Positive)
      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
-      return Self.Parent.Components.Delimiter (Index);
+      return Self.Parent.Elements.Delimiter (Index);
    end Delimiter;
 
    -------------------
@@ -119,11 +118,23 @@ package body Program.Nodes.Proxy_Calls is
    -------------
 
    overriding function Element
+     (Self  : Record_Component_Association_Vector;
+      Index : Positive)
+     return not null Program.Elements.Element_Access is
+   begin
+      return Self.Parent.Elements.Element (Index);
+   end Element;
+
+   -------------
+   -- Element --
+   -------------
+
+   overriding function Element
      (Self  : Parameter_Vector;
       Index : Positive)
       return not null Program.Elements.Element_Access is
    begin
-      return Self.Parent.Components.Element (Index);
+      return Self.Parent.Elements.Element (Index);
    end Element;
 
    -------------
@@ -135,7 +146,7 @@ package body Program.Nodes.Proxy_Calls is
       Index : Positive)
      return not null Program.Elements.Element_Access is
    begin
-      return Self.Parent.Components.Element (Index);
+      return Self.Parent.Elements.Element (Index);
    end Element;
 
    -------------
@@ -148,7 +159,7 @@ package body Program.Nodes.Proxy_Calls is
       return not null Program.Elements.Element_Access
    is
       Result : not null Program.Elements.Element_Access :=
-        Self.Parent.Components.Element (Index);
+        Self.Parent.Elements.Element (Index);
    begin
       if Result.Is_Discrete_Simple_Expression_Range then
          Result := Program.Nodes.Proxy_Associations.Proxy_Association_Access
@@ -164,7 +175,7 @@ package body Program.Nodes.Proxy_Calls is
 
    overriding function Get_Length (Self : Base_Vector) return Positive is
    begin
-      return Self.Parent.Components.Get_Length;
+      return Self.Parent.Elements.Get_Length;
    end Get_Length;
 
    -----------------------
@@ -400,7 +411,7 @@ package body Program.Nodes.Proxy_Calls is
       Self.Current := A_Discriminant_Constraint;
       Mark := Self.Called_Name;
 
-      for Item in Self.Components.Each_Element loop
+      for Item in Self.Elements.Each_Element loop
          Program.Nodes.Proxy_Associations.Proxy_Association_Access
            (Item.Element).Turn_To_Discriminant_Association;
       end loop;
@@ -417,7 +428,7 @@ package body Program.Nodes.Proxy_Calls is
       Self.Current := A_Function_Call;
       Self.Called_Name := Called_Name;
 
-      for Item in Self.Components.Each_Element loop
+      for Item in Self.Elements.Each_Element loop
          Program.Nodes.Proxy_Associations.Proxy_Association_Access
            (Item.Element).Turn_To_Parameter;
       end loop;
@@ -431,7 +442,7 @@ package body Program.Nodes.Proxy_Calls is
    begin
       Self.Current := An_Index_Constraint;
 
-      for Item in Self.Components.Each_Element loop
+      for Item in Self.Elements.Each_Element loop
          Program.Nodes.Proxy_Associations.Proxy_Association_Access
            (Item.Element).Turn_To_Discrete_Range;
       end loop;
