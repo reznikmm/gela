@@ -252,8 +252,7 @@ package Program.Element_Factories is
      Name              : not null Program.Elements.Defining_Identifiers
          .Defining_Identifier_Access;
      Discriminant_Part : Program.Elements.Definitions.Definition_Access;
-     Is_Token          : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
+     Is_Token          : Program.Lexical_Elements.Lexical_Element_Access;
      Definition        : not null Program.Elements.Definitions
          .Definition_Access;
      With_Token        : Program.Lexical_Elements.Lexical_Element_Access;

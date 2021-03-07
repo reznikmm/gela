@@ -54,8 +54,7 @@ package Program.Elements.Type_Declarations is
 
    not overriding function Is_Token
     (Self : Type_Declaration_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function With_Token
     (Self : Type_Declaration_Text)
