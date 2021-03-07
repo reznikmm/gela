@@ -367,8 +367,27 @@ package body Program.Visibility is
          Name   => Name,
          Prev   => <>);
    begin
-      Self.Append_Item (Value);
+      Self.Append_Item (Value, Region => False);
    end Create_Implicit_Type;
+
+   ----------------------------
+   -- Create_Incomplete_Type --
+   ----------------------------
+
+   procedure Create_Incomplete_Type
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name)
+   is
+      Value : Entity :=
+        (Kind   => Incomplete_Type_View,
+         Symbol => Symbol,
+         Name   => Name,
+         Prev   => <>,
+         Region => Self.Data.Last_Index + 1);
+   begin
+      Self.Append_Item (Value);
+   end Create_Incomplete_Type;
 
    -------------------------
    -- Create_Modular_Type --

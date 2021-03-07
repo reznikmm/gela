@@ -44,7 +44,8 @@ package Program.Visibility is
       Signed_Integer_Type_View,
       Modular_Type_View,
       Float_Point_Type_View,
-      Array_Type_View,            --                     Has_Region v
+      Incomplete_Type_View,       --                     Has_Region v
+      Array_Type_View,
       Record_Type_View,           --  Type_View_Kind ^,
       Variable_View,              --  Object_View v
       Component_View,
@@ -242,6 +243,12 @@ package Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an implicit type view to the context. Don't create a region.
+
+   procedure Create_Incomplete_Type
+     (Self   : in out Context'Class;
+      Symbol : Program.Visibility.Symbol;
+      Name   : Defining_Name);
+   --  Add an incomplete type view to the context. Create a region.
 
    procedure Create_Enumeration_Type
      (Self   : in out Context'Class;
@@ -453,7 +460,8 @@ private
      (Index_Type   => Positive,
       Element_Type => Entity_Reference);
 
-   subtype Has_Region_Kind is View_Kind range Array_Type_View .. Package_View;
+   subtype Has_Region_Kind is
+     View_Kind range Incomplete_Type_View .. Package_View;
 
    type Entity (Kind : View_Kind := Package_View) is record
       Symbol    : Program.Visibility.Symbol;

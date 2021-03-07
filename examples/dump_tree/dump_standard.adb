@@ -137,7 +137,7 @@ procedure Dump_Standard is
                   Padding & Indent,
                   Short);
             end;
-         when Implicit_Type_View =>
+         when Implicit_Type_View | Incomplete_Type_View =>
             null;
          when Enumeration_Literal_View =>
             null;
