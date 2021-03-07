@@ -64,7 +64,7 @@
  - Type_Token            : Token
  - Name                  : [Defining_Identifier]
  - Discriminant_Part     : _[Definition]_? {[Known_Discriminant_Part],[Unknown_Discriminant_Part]}
- - Is_Token              : Token
+ - Is_Token              : Token?
  - Definition            : _[Definition]_ {_[Type_Definition]_,[Private_Type_Definition],[Private_Extension_Definition],[Incomplete_Type_Definition]}
  - With_Token            : Token?
  - Aspects               : [Aspect_Specification]*
