@@ -18,6 +18,7 @@ with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Exception_Handlers;
 with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
+with Program.Elements.Incomplete_Type_Definitions;
 with Program.Elements.Object_Declarations;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Specifications;
@@ -112,6 +113,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Function_Declarations
            .Function_Declaration_Access);
+
+      overriding procedure Incomplete_Type_Definition
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Incomplete_Type_Definitions
+           .Incomplete_Type_Definition_Access);
 
       overriding procedure Object_Declaration
         (Self    : in out Visitor;
@@ -560,6 +566,39 @@ package body Program.Resolvers is
                Self.Type_View);
          end if;
       end Enumeration_Literal_Specification;
+
+      --------------------------------
+      -- Incomplete_Type_Definition --
+      --------------------------------
+
+      overriding procedure Incomplete_Type_Definition
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Incomplete_Type_Definitions
+           .Incomplete_Type_Definition_Access)
+      is
+         pragma Unreferenced (Element);
+      begin
+         Self.Env.Create_Incomplete_Type
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
+            Name   => Self.Type_Name);
+         Self.Type_View := Self.Env.Latest_View;
+
+         if Self.Discriminants.Assigned
+           and then Self.Discriminants.Is_Known_Discriminant_Part
+         then
+            declare
+               List : constant Program.Elements.Discriminant_Specifications
+                 .Discriminant_Specification_Vector_Access :=
+                   Self.Discriminants.To_Known_Discriminant_Part.Discriminants;
+            begin
+               for J in List.Each_Element loop
+                  J.Element.Visit (Self);
+               end loop;
+            end;
+         end if;
+
+         Self.Env.Leave_Declarative_Region;
+      end Incomplete_Type_Definition;
 
       ------------------------
       -- Object_Declaration --
