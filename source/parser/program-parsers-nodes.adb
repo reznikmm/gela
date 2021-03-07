@@ -288,11 +288,30 @@ package body Program.Parsers.Nodes is
       Access_Token : Node; Constant_Token : Node; Subtype_Indication : Node)
       return Node
    is
+      use all type Program.Lexical_Elements.Lexical_Element_Kind;
+
+      All_Token : Program.Lexical_Elements.Lexical_Element_Access;
+      Const_Token : Program.Lexical_Elements.Lexical_Element_Access;
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Access_To_Object_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Access_To_Object_Definition";
+      if Constant_Token.Token.Assigned
+        and then Constant_Token.Token.Kind = All_Keyword
+      then
+         All_Token := Constant_Token.Token;
+      else
+         Const_Token := Constant_Token.Token;
+      end if;
+
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Object_Access_Type
+             (Not_Token          => Not_Token.Token,
+              Null_Token         => Null_Token.Token,
+              Access_Token       => Access_Token.Token,
+              All_Token          => All_Token,
+              Constant_Token     => Const_Token,
+              Subtype_Indication => Subtype_Indication.Element
+                                      .To_Subtype_Indication)));
    end Access_To_Object_Definition;
 
    ------------------------------------
@@ -2556,10 +2575,21 @@ package body Program.Parsers.Nodes is
       Semicolon_Token   : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Incomplete_Type_Declaration unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Incomplete_Type_Declaration";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Type_Declaration
+                (Type_Token        => Type_Token.Token,
+                 Name              => Program.Elements.Defining_Identifiers
+                    .Defining_Identifier_Access (Names.Element),
+                 Discriminant_Part => Program.Elements.Definitions
+                    .Definition_Access (Discriminant_Part.Element),
+                 Is_Token          => Is_Token.Token,
+                 Definition        => Type_Declaration_View.Element
+                                        .To_Definition,
+                 With_Token        => null,
+                 Aspects           => null,
+                 Semicolon_Token   => Semicolon_Token.Token)));
    end Incomplete_Type_Declaration;
 
    --------------------------------
@@ -2567,13 +2597,13 @@ package body Program.Parsers.Nodes is
    --------------------------------
 
    function Incomplete_Type_Definition
-     (Self : Node_Factory'Class; Tagged_Token : Node) return Node
-   is
+     (Self : Node_Factory'Class; Tagged_Token : Node) return Node is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Incomplete_Type_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Incomplete_Type_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Incomplete_Type_Definition
+                (Tagged_Token => Tagged_Token.Token)));
    end Incomplete_Type_Definition;
 
    ----------------

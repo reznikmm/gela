@@ -840,7 +840,9 @@ package body Program.Resolvers is
             Name   => Self.Type_Name);
          Self.Type_View := Self.Env.Latest_View;
 
-         if Self.Discriminants.Is_Known_Discriminant_Part then
+         if Self.Discriminants.Assigned
+           and then Self.Discriminants.Is_Known_Discriminant_Part
+         then
             declare
                List : constant Program.Elements.Discriminant_Specifications
                  .Discriminant_Specification_Vector_Access :=
