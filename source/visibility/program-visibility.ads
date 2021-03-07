@@ -44,6 +44,7 @@ package Program.Visibility is
       Signed_Integer_Type_View,
       Modular_Type_View,
       Float_Point_Type_View,
+      Object_Access_Type_View,
       Incomplete_Type_View,       --                     Has_Region v
       Array_Type_View,
       Record_Type_View,           --  Type_View_Kind ^,
@@ -91,6 +92,10 @@ package Program.Visibility is
    function Subtype_Mark (Self : View) return View
      with Pre => Self.Kind in Subtype_View | Object_View;
    --  Return type of subtype, parameter, variable declarations
+
+   function Designated_Type (Self : View) return View
+     with Pre => Self.Kind in Object_Access_Type_View;
+   --  Return designated type of an access-to-object type
 
    function Has_Constraint (Self : View) return Boolean
      with Pre => Self.Kind = Subtype_View;
@@ -249,6 +254,14 @@ package Program.Visibility is
       Symbol : Program.Visibility.Symbol;
       Name   : Defining_Name);
    --  Add an incomplete type view to the context. Create a region.
+
+   procedure Create_Object_Access_Type
+     (Self       : in out Context'Class;
+      Symbol     : Program.Visibility.Symbol;
+      Name       : Defining_Name;
+      Designated : View);
+   --  Add an access-to-object type view to the context.
+   --  Don't create a region.
 
    procedure Create_Enumeration_Type
      (Self   : in out Context'Class;
@@ -502,6 +515,8 @@ private
                when Subtype_View =>
                   Subtype_Mark   : Entity_Reference;
                   Has_Constraint : Boolean;
+               when Object_Access_Type_View =>
+                  Designated_Type : Entity_Reference;
                when others =>
                   null;
             end case;

@@ -143,6 +143,11 @@ procedure Dump_Standard is
             null;
          when Character_Literal_View =>
             null;
+         when Object_Access_Type_View =>
+            Print
+              (Program.Visibility.Designated_Type (View),
+               Padding & Indent,
+               Short);
          when Subtype_View =>
             Print
               (Program.Visibility.Subtype_Mark (View),

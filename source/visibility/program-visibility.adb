@@ -407,6 +407,26 @@ package body Program.Visibility is
       Self.Append_Item (Value);
    end Create_Modular_Type;
 
+   -------------------------------
+   -- Create_Object_Access_Type --
+   -------------------------------
+
+   procedure Create_Object_Access_Type
+     (Self       : in out Context'Class;
+      Symbol     : Program.Visibility.Symbol;
+      Name       : Defining_Name;
+      Designated : View)
+   is
+      Value : Entity :=
+        (Kind   => Object_Access_Type_View,
+         Symbol => Symbol,
+         Name   => Name,
+         Prev            => <>,
+         Designated_Type => Designated.Index);
+   begin
+      Self.Append_Item (Value, Region => False);
+   end Create_Object_Access_Type;
+
    --------------------
    -- Create_Package --
    --------------------
@@ -617,6 +637,17 @@ package body Program.Visibility is
    begin
       return Get_View (Self.Env, (Self.Index.Region, Item.Enumeration_Type));
    end Enumeration_Type;
+
+   ---------------------
+   -- Designated_Type --
+   ---------------------
+
+   function Designated_Type (Self : View) return View is
+      Value : Entity renames
+        Self.Env.Data (Self.Index.Region).Entities (Self.Index.Entity_Id);
+   begin
+      return Get_View (Self.Env, Value.Designated_Type);
+   end Designated_Type;
 
    ----------------------
    -- Directly_Visible --

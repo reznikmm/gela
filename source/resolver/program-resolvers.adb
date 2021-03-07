@@ -19,6 +19,7 @@ with Program.Elements.Exception_Handlers;
 with Program.Elements.Function_Declarations;
 with Program.Elements.Identifiers;
 with Program.Elements.Incomplete_Type_Definitions;
+with Program.Elements.Object_Access_Types;
 with Program.Elements.Object_Declarations;
 with Program.Elements.Package_Declarations;
 with Program.Elements.Parameter_Specifications;
@@ -118,6 +119,11 @@ package body Program.Resolvers is
         (Self    : in out Visitor;
          Element : not null Program.Elements.Incomplete_Type_Definitions
            .Incomplete_Type_Definition_Access);
+
+      overriding procedure Object_Access_Type
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Object_Access_Types
+           .Object_Access_Type_Access);
 
       overriding procedure Object_Declaration
         (Self    : in out Visitor;
@@ -599,6 +605,31 @@ package body Program.Resolvers is
 
          Self.Env.Leave_Declarative_Region;
       end Incomplete_Type_Definition;
+
+      ------------------------
+      -- Object_Access_Type --
+      ------------------------
+
+      overriding procedure Object_Access_Type
+        (Self    : in out Visitor;
+         Element : not null Program.Elements.Object_Access_Types
+         .Object_Access_Type_Access)
+      is
+         Sets : aliased Program.Interpretations.Context (Self.Env);
+         Type_View : Program.Visibility.View;
+      begin
+         Program.Type_Resolvers.Resolve_Type
+           (Element.Subtype_Indication.Subtype_Mark,
+            Self.Env,
+            Self.Setter,
+            Sets'Unchecked_Access,
+            Type_View);
+
+         Self.Env.Create_Object_Access_Type
+           (Symbol => Program.Node_Symbols.Get_Symbol (Self.Type_Name),
+            Name   => Self.Type_Name,
+            Designated => Type_View);
+      end Object_Access_Type;
 
       ------------------------
       -- Object_Declaration --
