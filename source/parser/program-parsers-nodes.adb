@@ -14,6 +14,7 @@ with Program.Elements.Constraints;
 with Program.Elements.Defining_Identifiers;
 with Program.Elements.Defining_Names;
 with Program.Elements.Definitions;
+with Program.Elements.Discrete_Ranges;
 with Program.Elements.Discriminant_Specifications;
 with Program.Elements.Enumeration_Literal_Specifications;
 with Program.Elements.Exception_Handlers;
@@ -174,6 +175,13 @@ package body Program.Parsers.Nodes is
          .Defining_Identifiers.Defining_Identifier_Vector_Access,
       Create_Vector =>
          Program.Element_Vector_Factories.Create_Defining_Identifier_Vector);
+
+   function To_Discrete_Range_Vector is
+     new Generic_Vector_Cast
+       (Vector_Access => Program.Elements.Discrete_Ranges
+           .Discrete_Range_Vector_Access,
+        Create_Vector => Program.Element_Vector_Factories
+           .Create_Discrete_Range_Vector);
 
    function To_Discriminant_Specification_Vector is
      new Generic_Vector_Cast
@@ -869,9 +877,30 @@ package body Program.Parsers.Nodes is
       Semicolon_Token    : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Block_Statement unimplemented");
-      return raise Program_Error with "Unimplemented function Block_Statement";
+      pragma Assert (not Identifier_Token.Token.Assigned);
+
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Block_Statement
+            (Statement_Identifier     => Statement_Identifier.Element
+                                           .To_Defining_Identifier,
+             Colon_Token              => Colon_Token.Token,
+             Declare_Token            => Declare_Token.Token,
+             Declarations             => To_Element_Vector
+                   (Block_Declarative_Items.Vector'Unchecked_Access,
+                    Self.Subpool),
+             Begin_Token              => Begin_Token.Token,
+             Statements               => To_Element_Vector
+                   (Block_Statements.Vector'Unchecked_Access,
+                    Self.Subpool),
+             Exception_Token          => Exception_Token.Token,
+             Exception_Handlers       => To_Exception_Handler_Vector
+                   (Exception_Handlers.Vector'Unchecked_Access,
+                    Self.Subpool),
+             End_Token                => End_Token.Token,
+             End_Statement_Identifier => null,
+             Semicolon_Token          => Semicolon_Token.Token)));
    end Block_Statement;
 
    ---------------------
@@ -1154,10 +1183,19 @@ package body Program.Parsers.Nodes is
       Array_Component_Definition   : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Constrained_Array_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Constrained_Array_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Constrained_Array_Type
+            (Array_Token          => Array_Token.Token,
+             Left_Bracket_Token   => Left_Token.Token,
+             Index_Subtypes       => To_Discrete_Range_Vector
+                (Discrete_Subtype_Definitions.Vector'Unchecked_Access,
+                 Self.Subpool),
+             Right_Bracket_Token  => Right_Token.Token,
+             Of_Token             => Of_Token.Token,
+             Component_Definition => Array_Component_Definition.Element
+                                       .To_Component_Definition)));
    end Constrained_Array_Definition;
 
    ---------------------------
@@ -1309,10 +1347,15 @@ package body Program.Parsers.Nodes is
       New_Token : Node; Parent_Subtype_Indication : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Derived_Type_Definition unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Derived_Type_Definition";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Derived_Type
+            (Abstract_Token => Abstract_Token.Token,
+             Limited_Token  => Limited_Token.Token,
+             New_Token      => New_Token.Token,
+             Parent         => Parent_Subtype_Indication.Element
+                                 .To_Subtype_Indication)));
    end Derived_Type_Definition;
 
    -----------------------
@@ -1360,10 +1403,14 @@ package body Program.Parsers.Nodes is
       Upper_Bound : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Discrete_Simple_Expression_Range unimplemented");
-      return raise Program_Error
-          with "Unimplemented function Discrete_Simple_Expression_Range";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+          (Self.EF.Create_Discrete_Simple_Expression_Range
+            (Lower_Bound      => Lower_Bound.Element.To_Expression,
+             Double_Dot_Token => Double_Dot_Token.Token,
+             Upper_Bound      => Upper_Bound.Element.To_Expression,
+             Is_Discrete_Subtype_Definition => True)));  --  ???
    end Discrete_Simple_Expression_Range;
 
    ------------------------------------------
@@ -1573,8 +1620,7 @@ package body Program.Parsers.Nodes is
         (Element_Node,
          Program.Elements.Element_Access
            (Self.EF.Create_Enumeration_Literal_Specification
-             (Program.Elements.Defining_Names.Defining_Name_Access
-                (Names.Element))));
+             (Names.Element.To_Defining_Name)));
    end Enumeration_Literal_Specification;
 
    ------------------------------------------------
@@ -2973,9 +3019,30 @@ package body Program.Parsers.Nodes is
       Semicolon_Token        : Node) return Node
    is
    begin
-      pragma Compile_Time_Warning (Standard.True,
-         "Package_Body unimplemented");
-      return raise Program_Error with "Unimplemented function Package_Body";
+      return
+        (Element_Node,
+         Program.Elements.Element_Access
+           (Self.EF.Create_Package_Body_Declaration
+             (Package_Token      => Package_Token.Token,
+              Body_Token         => Body_Token.Token,
+              Name               => Names.Element.To_Defining_Name,
+              With_Token         => null,
+              Aspects            => null,
+              Is_Token           => Is_Token.Token,
+              Declarations       => To_Element_Vector
+                   (Body_Declarative_Items.Vector'Unchecked_Access,
+                    Self.Subpool),
+              Begin_Token        => Begin_Token.Token,
+              Statements         => To_Element_Vector
+                   (Body_Statements.Vector'Unchecked_Access,
+                    Self.Subpool),
+              Exception_Token    => Exception_Token.Token,
+              Exception_Handlers => To_Exception_Handler_Vector
+                   (Exception_Handlers.Vector'Unchecked_Access,
+                    Self.Subpool),
+              End_Token          => End_Token.Token,
+              End_Name           => End_Name.Element.To_Expression,
+              Semicolon_Token    => Semicolon_Token.Token)));
    end Package_Body;
 
    -----------------------
@@ -3011,9 +3078,7 @@ package body Program.Parsers.Nodes is
          Program.Elements.Element_Access
            (Self.EF.Create_Package_Declaration
                 (Package_Token        => Package_Token.Token,
-                 Name                 =>
-                   Program.Elements.Defining_Names.Defining_Name_Access
-                     (Names.Element),
+                 Name                 => Names.Element.To_Defining_Name,
                  With_Token           => null,
                  Aspects              => To_Aspect_Specification_Vector
                    (Aspect_Specifications.Vector'Unchecked_Access,
