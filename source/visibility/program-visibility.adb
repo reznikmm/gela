@@ -22,9 +22,15 @@ package body Program.Visibility is
    type Allocated_Snapshot is access all Snapshot;
 
    procedure Append_Item
-     (Self   : in out Context'Class;
-      Value  : in out Entity;
-      Region : Boolean := True);
+     (Self    : in out Context'Class;
+      Value   : in out Entity;
+      Region  : Boolean := True;
+      Replace : Boolean := False);
+   --  Append new Value to the Self.Top region, updating Value.Prev by
+   --  pointer to an entity with the same symbol (or No_Entity if no such
+   --  entity found). If Replace = True and there is an entity with the same
+   --  Symbol in the region, the replace it by Value and don't appent the new
+   --  entity
 
    function Get_View
      (Env   : not null Constant_Context_Access;
@@ -93,24 +99,42 @@ package body Program.Visibility is
    -----------------
 
    procedure Append_Item
-     (Self   : in out Context'Class;
-      Value  : in out Entity;
-      Region : Boolean := True)
+     (Self    : in out Context'Class;
+      Value   : in out Entity;
+      Region  : Boolean := True;
+      Replace : Boolean := False)
    is
       Prev : constant Entity_Maps.Cursor := Self.Directly.Find (Value.Symbol);
       Next : constant Entity_Reference :=
         (Self.Top, Self.Data (Self.Top).Entities.Last_Index + 1);
    begin
       if Entity_Maps.Has_Element (Prev) then
-         Value.Prev := Entity_Maps.Element (Prev);
-         Self.Directly.Replace_Element (Prev, Next);
+
+         declare
+            Ref : constant Entity_Reference := Entity_Maps.Element (Prev);
+         begin
+            if Replace and then Ref.Region = Self.Top then
+               Value.Prev :=
+                 Self.Data (Self.Top).Entities (Ref.Entity_Id).Prev;
+
+               Self.Data (Self.Top).Entities.Replace_Element
+                 (Ref.Entity_Id, Value);
+            else
+               Value.Prev := Ref;
+               Self.Directly.Replace_Element (Prev, Next);
+
+               Self.Data (Self.Top).Entities.Append (Value);
+               Self.Xref.Insert (Value.Name, Next);
+            end if;
+         end;
       else
+
          Value.Prev := No_Entity;
          Self.Directly.Insert (Value.Symbol, Next);
-      end if;
 
-      Self.Data (Self.Top).Entities.Append (Value);
-      Self.Xref.Insert (Value.Name, Next);
+         Self.Data (Self.Top).Entities.Append (Value);
+         Self.Xref.Insert (Value.Name, Next);
+      end if;
 
       if Region then
          Self.Data.Append
@@ -505,7 +529,7 @@ package body Program.Visibility is
          Prev      => <>,
          Region    => Self.Data.Last_Index + 1);
    begin
-      Self.Append_Item (Value);
+      Self.Append_Item (Value, Replace => True);
    end Create_Record_Type;
 
    --------------------------------
