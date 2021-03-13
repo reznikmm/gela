@@ -590,8 +590,7 @@ package Program.Implicit_Element_Factories is
      Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Declarations         : Program.Element_Vectors.Element_Vector_Access;
-     Statements           : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements           : Program.Element_Vectors.Element_Vector_Access;
      Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -1996,8 +1995,8 @@ package Program.Implicit_Element_Factories is
 
    not overriding function Create_Derived_Type
     (Self : Element_Factory;
-     Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+     Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Has_Abstract         : Boolean := False;
      Has_Limited          : Boolean := False;
      Is_Part_Of_Implicit  : Boolean := False;
@@ -2007,8 +2006,8 @@ package Program.Implicit_Element_Factories is
 
    not overriding function Create_Derived_Record_Extension
     (Self : Element_Factory;
-     Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+     Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Record_Definition    : not null Program.Elements.Definitions

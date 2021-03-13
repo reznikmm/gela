@@ -5,7 +5,7 @@
 
 with Program.Elements.Type_Definitions;
 with Program.Lexical_Elements;
-with Program.Elements.Expressions;
+with Program.Elements.Subtype_Indications;
 
 package Program.Elements.Derived_Types is
 
@@ -19,8 +19,8 @@ package Program.Elements.Derived_Types is
 
    not overriding function Parent
     (Self : Derived_Type)
-      return not null Program.Elements.Expressions.Expression_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
    not overriding function Has_Abstract (Self : Derived_Type) return Boolean
      is abstract;

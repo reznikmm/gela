@@ -5676,8 +5676,9 @@ package body Internal is
 
    function F141_1 is new Generic_Child
      (Element      => Program.Elements.Derived_Types.Derived_Type,
-      Child        => Program.Elements.Expressions.Expression,
-      Child_Access => Program.Elements.Expressions.Expression_Access,
+      Child        => Program.Elements.Subtype_Indications.Subtype_Indication,
+      Child_Access =>
+        Program.Elements.Subtype_Indications.Subtype_Indication_Access,
       Get_Child    => Program.Elements.Derived_Types.Parent);
 
    F141 : aliased constant Getter_Array :=
@@ -5694,8 +5695,9 @@ package body Internal is
    function F142_1 is new Generic_Child
      (Element      =>
         Program.Elements.Derived_Record_Extensions.Derived_Record_Extension,
-      Child        => Program.Elements.Expressions.Expression,
-      Child_Access => Program.Elements.Expressions.Expression_Access,
+      Child        => Program.Elements.Subtype_Indications.Subtype_Indication,
+      Child_Access =>
+        Program.Elements.Subtype_Indications.Subtype_Indication_Access,
       Get_Child    => Program.Elements.Derived_Record_Extensions.Parent);
 
    function F142_2 is new Generic_Vector

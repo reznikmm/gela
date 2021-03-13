@@ -4,7 +4,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
-with Program.Elements.Expressions;
+with Program.Elements.Subtype_Indications;
 with Program.Elements.Derived_Types;
 with Program.Element_Visitors;
 
@@ -21,7 +21,8 @@ package Program.Nodes.Derived_Types is
     (Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
-     Parent         : not null Program.Elements.Expressions.Expression_Access)
+     Parent         : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
       return Derived_Type;
 
    type Implicit_Derived_Type is
@@ -29,8 +30,8 @@ package Program.Nodes.Derived_Types is
      with private;
 
    function Create
-    (Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+    (Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False;
@@ -45,7 +46,8 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Derived_Types.Derived_Type
      with record
-        Parent : not null Program.Elements.Expressions.Expression_Access;
+        Parent : not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access;
      end record;
 
    procedure Initialize (Self : in out Base_Derived_Type'Class);
@@ -56,7 +58,8 @@ private
 
    overriding function Parent
     (Self : Base_Derived_Type)
-      return not null Program.Elements.Expressions.Expression_Access;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access;
 
    overriding function Is_Derived_Type
     (Self : Base_Derived_Type)

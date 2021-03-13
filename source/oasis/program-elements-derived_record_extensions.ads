@@ -5,6 +5,7 @@
 
 with Program.Elements.Type_Definitions;
 with Program.Lexical_Elements;
+with Program.Elements.Subtype_Indications;
 with Program.Elements.Expressions;
 with Program.Elements.Definitions;
 
@@ -20,8 +21,8 @@ package Program.Elements.Derived_Record_Extensions is
 
    not overriding function Parent
     (Self : Derived_Record_Extension)
-      return not null Program.Elements.Expressions.Expression_Access
-     is abstract;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is abstract;
 
    not overriding function Progenitors
     (Self : Derived_Record_Extension)

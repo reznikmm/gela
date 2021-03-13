@@ -37,8 +37,7 @@ package Program.Elements.Package_Body_Declarations is
 
    not overriding function Statements
     (Self : Package_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access
-     is abstract;
+      return Program.Element_Vectors.Element_Vector_Access is abstract;
 
    not overriding function Exception_Handlers
     (Self : Package_Body_Declaration)
@@ -79,8 +78,7 @@ package Program.Elements.Package_Body_Declarations is
 
    not overriding function Begin_Token
     (Self : Package_Body_Declaration_Text)
-      return not null Program.Lexical_Elements.Lexical_Element_Access
-     is abstract;
+      return Program.Lexical_Elements.Lexical_Element_Access is abstract;
 
    not overriding function Exception_Token
     (Self : Package_Body_Declaration_Text)

@@ -4,6 +4,7 @@
 -------------------------------------------------------------
 
 with Program.Lexical_Elements;
+with Program.Elements.Subtype_Indications;
 with Program.Elements.Expressions;
 with Program.Elements.Definitions;
 with Program.Elements.Derived_Record_Extensions;
@@ -26,8 +27,8 @@ package Program.Nodes.Derived_Record_Extensions is
      Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Parent            : not null Program.Elements.Expressions
-         .Expression_Access;
+     Parent            : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      And_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token        : not null Program.Lexical_Elements
@@ -43,8 +44,8 @@ package Program.Nodes.Derived_Record_Extensions is
      with private;
 
    function Create
-    (Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+    (Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Record_Definition    : not null Program.Elements.Definitions
@@ -63,8 +64,8 @@ private
      abstract new Program.Nodes.Node
        and Program.Elements.Derived_Record_Extensions.Derived_Record_Extension
      with record
-        Parent            : not null Program.Elements.Expressions
-          .Expression_Access;
+        Parent            : not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access;
         Progenitors       : Program.Elements.Expressions
           .Expression_Vector_Access;
         Record_Definition : not null Program.Elements.Definitions
@@ -79,7 +80,8 @@ private
 
    overriding function Parent
     (Self : Base_Derived_Record_Extension)
-      return not null Program.Elements.Expressions.Expression_Access;
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access;
 
    overriding function Progenitors
     (Self : Base_Derived_Record_Extension)

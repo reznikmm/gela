@@ -37,10 +37,8 @@ package Program.Nodes.Package_Body_Declarations is
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Declarations       : Program.Element_Vectors.Element_Vector_Access;
-     Begin_Token        : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Statements         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Begin_Token        : Program.Lexical_Elements.Lexical_Element_Access;
+     Statements         : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
@@ -63,8 +61,7 @@ package Program.Nodes.Package_Body_Declarations is
      Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Declarations         : Program.Element_Vectors.Element_Vector_Access;
-     Statements           : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements           : Program.Element_Vectors.Element_Vector_Access;
      Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -85,8 +82,7 @@ private
         Aspects            : Program.Elements.Aspect_Specifications
           .Aspect_Specification_Vector_Access;
         Declarations       : Program.Element_Vectors.Element_Vector_Access;
-        Statements         : not null Program.Element_Vectors
-          .Element_Vector_Access;
+        Statements         : Program.Element_Vectors.Element_Vector_Access;
         Exception_Handlers : Program.Elements.Exception_Handlers
           .Exception_Handler_Vector_Access;
         End_Name           : Program.Elements.Expressions.Expression_Access;
@@ -113,7 +109,7 @@ private
 
    overriding function Statements
     (Self : Base_Package_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access;
+      return Program.Element_Vectors.Element_Vector_Access;
 
    overriding function Exception_Handlers
     (Self : Base_Package_Body_Declaration)
@@ -144,8 +140,7 @@ private
         With_Token      : Program.Lexical_Elements.Lexical_Element_Access;
         Is_Token        : not null Program.Lexical_Elements
           .Lexical_Element_Access;
-        Begin_Token     : not null Program.Lexical_Elements
-          .Lexical_Element_Access;
+        Begin_Token     : Program.Lexical_Elements.Lexical_Element_Access;
         Exception_Token : Program.Lexical_Elements.Lexical_Element_Access;
         End_Token       : not null Program.Lexical_Elements
           .Lexical_Element_Access;
@@ -176,7 +171,7 @@ private
 
    overriding function Begin_Token
     (Self : Package_Body_Declaration)
-      return not null Program.Lexical_Elements.Lexical_Element_Access;
+      return Program.Lexical_Elements.Lexical_Element_Access;
 
    overriding function Exception_Token
     (Self : Package_Body_Declaration)

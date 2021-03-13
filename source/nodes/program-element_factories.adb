@@ -1849,10 +1849,8 @@ package body Program.Element_Factories is
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Declarations       : Program.Element_Vectors.Element_Vector_Access;
-     Begin_Token        : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Statements         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Begin_Token        : Program.Lexical_Elements.Lexical_Element_Access;
+     Statements         : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
@@ -5044,7 +5042,8 @@ package body Program.Element_Factories is
      Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
-     Parent         : not null Program.Elements.Expressions.Expression_Access)
+     Parent         : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
       return not null Program.Elements.Derived_Types.Derived_Type_Access is
       Result : constant Derived_Type_Access :=
 
@@ -5063,8 +5062,8 @@ package body Program.Element_Factories is
      Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Parent            : not null Program.Elements.Expressions
-         .Expression_Access;
+     Parent            : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      And_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token        : not null Program.Lexical_Elements

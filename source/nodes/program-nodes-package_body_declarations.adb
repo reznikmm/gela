@@ -18,10 +18,8 @@ package body Program.Nodes.Package_Body_Declarations is
      Is_Token           : not null Program.Lexical_Elements
          .Lexical_Element_Access;
      Declarations       : Program.Element_Vectors.Element_Vector_Access;
-     Begin_Token        : not null Program.Lexical_Elements
-         .Lexical_Element_Access;
-     Statements         : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Begin_Token        : Program.Lexical_Elements.Lexical_Element_Access;
+     Statements         : Program.Element_Vectors.Element_Vector_Access;
      Exception_Token    : Program.Lexical_Elements.Lexical_Element_Access;
      Exception_Handlers : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
@@ -52,8 +50,7 @@ package body Program.Nodes.Package_Body_Declarations is
      Aspects              : Program.Elements.Aspect_Specifications
          .Aspect_Specification_Vector_Access;
      Declarations         : Program.Element_Vectors.Element_Vector_Access;
-     Statements           : not null Program.Element_Vectors
-         .Element_Vector_Access;
+     Statements           : Program.Element_Vectors.Element_Vector_Access;
      Exception_Handlers   : Program.Elements.Exception_Handlers
          .Exception_Handler_Vector_Access;
      End_Name             : Program.Elements.Expressions.Expression_Access;
@@ -97,7 +94,7 @@ package body Program.Nodes.Package_Body_Declarations is
 
    overriding function Statements
     (Self : Base_Package_Body_Declaration)
-      return not null Program.Element_Vectors.Element_Vector_Access is
+      return Program.Element_Vectors.Element_Vector_Access is
    begin
       return Self.Statements;
    end Statements;
@@ -147,7 +144,7 @@ package body Program.Nodes.Package_Body_Declarations is
 
    overriding function Begin_Token
     (Self : Package_Body_Declaration)
-      return not null Program.Lexical_Elements.Lexical_Element_Access is
+      return Program.Lexical_Elements.Lexical_Element_Access is
    begin
       return Self.Begin_Token;
    end Begin_Token;

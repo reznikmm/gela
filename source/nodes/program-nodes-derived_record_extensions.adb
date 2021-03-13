@@ -10,8 +10,8 @@ package body Program.Nodes.Derived_Record_Extensions is
      Limited_Token     : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token         : not null Program.Lexical_Elements
          .Lexical_Element_Access;
-     Parent            : not null Program.Elements.Expressions
-         .Expression_Access;
+     Parent            : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      And_Token         : Program.Lexical_Elements.Lexical_Element_Access;
      Progenitors       : Program.Elements.Expressions.Expression_Vector_Access;
      With_Token        : not null Program.Lexical_Elements
@@ -31,8 +31,8 @@ package body Program.Nodes.Derived_Record_Extensions is
    end Create;
 
    function Create
-    (Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+    (Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Progenitors          : Program.Elements.Expressions
          .Expression_Vector_Access;
      Record_Definition    : not null Program.Elements.Definitions
@@ -59,7 +59,8 @@ package body Program.Nodes.Derived_Record_Extensions is
 
    overriding function Parent
     (Self : Base_Derived_Record_Extension)
-      return not null Program.Elements.Expressions.Expression_Access is
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is
    begin
       return Self.Parent;
    end Parent;

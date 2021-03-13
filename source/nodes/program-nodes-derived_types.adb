@@ -9,7 +9,8 @@ package body Program.Nodes.Derived_Types is
     (Abstract_Token : Program.Lexical_Elements.Lexical_Element_Access;
      Limited_Token  : Program.Lexical_Elements.Lexical_Element_Access;
      New_Token      : not null Program.Lexical_Elements.Lexical_Element_Access;
-     Parent         : not null Program.Elements.Expressions.Expression_Access)
+     Parent         : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access)
       return Derived_Type is
    begin
       return Result : Derived_Type :=
@@ -21,8 +22,8 @@ package body Program.Nodes.Derived_Types is
    end Create;
 
    function Create
-    (Parent               : not null Program.Elements.Expressions
-         .Expression_Access;
+    (Parent               : not null Program.Elements.Subtype_Indications
+         .Subtype_Indication_Access;
      Is_Part_Of_Implicit  : Boolean := False;
      Is_Part_Of_Inherited : Boolean := False;
      Is_Part_Of_Instance  : Boolean := False;
@@ -43,7 +44,8 @@ package body Program.Nodes.Derived_Types is
 
    overriding function Parent
     (Self : Base_Derived_Type)
-      return not null Program.Elements.Expressions.Expression_Access is
+      return not null Program.Elements.Subtype_Indications
+          .Subtype_Indication_Access is
    begin
       return Self.Parent;
    end Parent;
