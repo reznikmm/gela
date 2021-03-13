@@ -12,9 +12,9 @@ INSTALL_INCLUDE_DIR    ?= $(DESTDIR)$(PREFIX)/include/oasis
 INSTALL_LIBRARY_DIR    ?= $(DESTDIR)$(LIBDIR)
 INSTALL_ALI_DIR        ?= ${INSTALL_LIBRARY_DIR}/oasis
 
-GPRINSTALL_FLAGS = --prefix=$(PREFIX) --sources-subdir=$(INSTALL_INCLUDE_DIR)\
+GPRINSTALL_FLAGS = --prefix=$(PREFIX) --link-lib-subdir=$(INSTALL_LIBRARY_DIR)\
  --lib-subdir=$(INSTALL_ALI_DIR) --project-subdir=$(INSTALL_PROJECT_DIR)\
- --link-lib-subdir=$(INSTALL_LIBRARY_DIR)
+ --sources-subdir=$(INSTALL_INCLUDE_DIR)
 
 all:
 	gprbuild $(GPRBUILD_FLAGS) -P gnat/ada_larl.gpr
@@ -28,7 +28,7 @@ all:
 
 install:
 	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/oasis.gpr
-	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/oasis_plain.gpr
+	gprinstall $(GPRINSTALL_FLAGS)/plain -p -P gnat/oasis_plain.gpr
 clean:
 	gprclean -q -P gnat/oasis.gpr
 
