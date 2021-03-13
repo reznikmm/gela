@@ -358,8 +358,8 @@
  - Aspects                    : [Aspect_Specification]*
  - Is_Token                   : Token
  - Declarations               : _[Element]_* {[Pragma],_[Declaration]_,_[Clause]_}
- - Begin_Token                : Token
- - Statements                 : _[Element]_+ {[Pragma],_[Statement]_}
+ - Begin_Token                : Token?
+ - Statements                 : _[Element]_* {[Pragma],_[Statement]_}
  - Exception_Token            : Token?
  - Exception_Handlers         : [Exception_Handler]*
  - End_Token                  : Token
@@ -1520,7 +1520,7 @@
  - Abstract_Token             : Token?
  - Limited_Token              : Token?
  - New_Token                  : Token
- - Parent                     : _[Expression]_
+ - Parent                     : [Subtype_Indication]
  - Has_Abstract               : Boolean
  - Has_Limited                : Boolean
 
@@ -1529,7 +1529,7 @@
  - Abstract_Token             : Token?
  - Limited_Token              : Token?
  - New_Token                  : Token
- - Parent                     : _[Expression]_
+ - Parent                     : [Subtype_Indication]
  - And_Token                  : Token?
  - Progenitors                : _[Expression]_* {[Identifier],[Selected_Component]}
  - With_Token                 : Token
